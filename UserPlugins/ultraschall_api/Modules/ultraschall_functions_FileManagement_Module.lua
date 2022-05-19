@@ -1244,13 +1244,13 @@ function ultraschall.CreateValidTempFile(filename_with_path, create, suffix, ret
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateValidTempFile</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.4
     Reaper=5.40
     Lua=5.3
   </requires>
   <functioncall>string tempfilename = ultraschall.CreateValidTempFile(string filename_with_path, boolean create, string suffix, boolean retainextension)</functioncall>
   <description>
-    Tries to determine a valid temporary filename. Will check filename_with_path with an included number between 0 and 16384 to create such a filename.
+    Tries to determine a valid temporary filename. Will check filename_with_path with an included number between 0 and 2147483648 to create such a filename.
     You can also add your own suffix to the filename.
     
     The pattern is: filename_with_path$Suffix~$number.ext (when retainextension is set to true!)
@@ -1286,7 +1286,7 @@ function ultraschall.CreateValidTempFile(filename_with_path, create, suffix, ret
   local extension, tempfilename, A
   if retainextension==true then extension=filename_with_path:match(".*(%..*)") end
   if extension==nil then extension="" end
-  for i=0, 16384 do
+  for i=0, 2147483648 do
     tempfilename=filename_with_path..suffix.."~"..i..extension
     if reaper.file_exists(tempfilename)==false then
       if create==true then 
@@ -2029,7 +2029,7 @@ function ultraschall.CopyFile_IsCurrentlyCopying()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.CopyFile_IsCurrentlyCopying()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns, if the any copying-instance is (still) currently copying files.
   </description>
   <retvals>    
@@ -2085,7 +2085,7 @@ function ultraschall.CopyFile_GetCurrentlyCopiedFile()
     Lua=5.3
   </requires>
   <functioncall>integer number_of_remaining_files, string filename, integer remaining_bytes_to_copy, integer percentage = ultraschall.CopyFile_GetCurrentlyCopiedFile()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the information about the file currently copied
   </description>
   <retvals>    
@@ -2116,7 +2116,7 @@ function ultraschall.CopyFile_SetBufferSize(buffersize)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.CopyFile_SetBufferSize(integer buffersize)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the buffer-size of the background-copy-instances in bytes.
     
     That means, each copying-instance will copy this amount of data per defer-cycle.
@@ -2156,7 +2156,7 @@ function ultraschall.CopyFile_GetBufferSize()
     Lua=5.3
   </requires>
   <functioncall>integer buffer_size = ultraschall.CopyFile_GetBufferSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the current buffer-size in bytes.
   </description>
   <retvals>    
@@ -2244,7 +2244,7 @@ function ultraschall.CopyFile_GetCopiedStatus(fileindex)
     Lua=5.3
   </requires>
   <functioncall>string filename, boolean already_processed, string error_message, string error_code = ultraschall.CopyFile_GetCopiedStatus(integer fileindex)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the copystatus of a file in the copy-queue
     
     Will return -1 in case of an error.
@@ -2317,7 +2317,7 @@ function ultraschall.CopyFile_StopCopying()
     Lua=5.3
   </requires>
   <functioncall>ultraschall.CopyFile_StopCopying()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Stops copying of all files immediately. If the currently file isn't finished copying yet, it will remain incomplete.
     
     Returns the last file processed, so you can check, if the file has been copied properly.
@@ -2361,7 +2361,7 @@ function ultraschall.CopyFile_Pause(toggle)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.CopyFile_Pause(boolean toggle)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Pauses the copying of the files in the copying-queue.
     
     Will return false in case of an error.
@@ -2396,7 +2396,7 @@ function ultraschall.CopyFile_GetPausedState()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.CopyFile_GetPausedState()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the current paused-state of the background-copying
   </description>
   <retvals>    
@@ -2424,7 +2424,7 @@ function ultraschall.CopyFile_GetRemainingFilesToCopy()
     Lua=5.3
   </requires>
   <functioncall>integer filecount = ultraschall.CopyFile_GetRemainingFilesToCopy()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the number of files that still need to be copied.
   </description>
   <retvals>    
@@ -2442,134 +2442,3 @@ function ultraschall.CopyFile_GetRemainingFilesToCopy()
   return ultraschall.CopyFile_NumberOfFiles
 end
 
-function ultraschall.BatchConvertFiles(inputfilelist, outputfilelist, RenderTable, BWFStart, PadStart, PadEnd, FXStateChunk, MetaDataStateChunk, UseRCMetaData)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>BatchConvertFiles</slug>
-  <requires>
-    Ultraschall=4.2
-    Reaper=6.32
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.BatchConvertFiles(table inputfilelist, table outputfilelist, table RenderTable, optional boolean BWFStart, optional integer PadStart, optional integer PadEnd, optional string FXStateChunk, optional boolean UseRCMetaData)</functioncall>
-  <description>
-    Converts files using Reaper's own BatchConverter.
-    
-    This function will open another instance of Reaper that runs the batchconverter, so it will still open the batch-converter-list for the time of conversion.
-    Though as it is another instance, you can safely go back to the old instance of Reaper.
-    
-    This function will probably NOT finish before the batch-converter is finished with conversion, keep this in mind.
-    
-    Will take away the focus from the currently focused window, as Reaper puts keyboard-focus to the newly started Reaper-instance that does the batch-conversion.    
-    
-    returns nil in case of an error
-  </description>
-  <retvals>
-    table inputfilelist - a table of filenames+path, that shall be converted
-    table outputfilelist - a table of the target filenames+path, where the first filename is the target for the first inputfilename, etc
-    table RenderTable - the settings for the conversion; just use the render-table-functions to create one
-    optional boolean BWFStart - true, include BWF-start; false or nil, don't include BWF-start
-    optional integer PadStart - the start of the padding in seconds; nil, to omit it
-    optional integer PadEnd - the end of the padding in seconds; nil, to omit it
-    optional string FXStateChunk - an FXChain as FXStateChunk; with that you can add fx on top of the to-convert-files.
-    optional boolean UseRCMetaData - true, tries to retain the metadata from the sourcefile; false, doesn't try to retain metadata
-  </retvals>
-  <parameters>
-    boolean retval - true, conversion was successfully started; false, conversion didn't start
-  </parameters>
-  <chapter_context>
-    File Management
-    Misc
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>
-  <tags>file management, convert, files, rendertable, fxchain</tags>
-</US_DocBloc>
---]]
-  if type(inputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "must be a table of string", -1) return false end
-  
-  if #inputfilelist~=#outputfilelist then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist and outputfilelist", "both filelist-tables must have the same number of entries", -2) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -3) return false end
-    if reaper.file_exists(inputfilelist[i])==false then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be valid filenames", -4) return false end
-  end
-
-  if type(outputfilelist)~="table" then ultraschall.AddErrorMessage("BatchConvertFiles", "outputfilelist", "must be a table of string", -5) return false end
-  for i=1, #inputfilelist do
-    if type(inputfilelist[i])~="string" then ultraschall.AddErrorMessage("BatchConvertFiles", "inputfilelist", "all entries of the table must be strings", -6) return false end
-  end
-  
-  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "RenderTable", "must be a valid RenderTable", -7) return false end
-  
-  -- temporary solution:
-  if type(MetaDataStateChunk)~="string" then MetaDataStateChunk="" end  
-
-
-  local BatchConvertData=""
-  local ExeFile, filename, path
-  if FXStateChunk~=nil and FXStateChunk~="" and ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("BatchConvertFiles", "FXStateChunk", "must be a valid FXStateChunk", -7) return false end
-  if FXStateChunk==nil then FXStateChunk="" end
-  if MetaDataStateChunk==nil then MetaDataStateChunk="" end
-  if BWFStart==true then BWFStart="    USERCSTART 1\n" else BWFStart="" end
-  if PadStart~=nil  then PadStart="    PAD_START "..PadStart.."\n" else PadStart="" end
-  if PadEnd~=nil  then PadEnd="    PAD_END "..PadEnd.."\n" else PadEnd="" end
-  if UseRCMetaData==true then UseRCMetaData="    USERCMETADATA 1\n" else UseRCMetaData="" end
-  local i=1
-  local outputfile
-  while inputfilelist[i]~=nil do
-    if ultraschall.type(inputfilelist[i])=="string" then
-      if outputfilelist[i]==nil then outputfile="" else outputfile=outputfilelist[i] end
-      BatchConvertData=BatchConvertData..inputfilelist[i].."\t"..outputfile.."\n"
-    end
-    i=i+1
-  end
-    
-  BatchConvertData=BatchConvertData..[[
-<CONFIG
-    SRATE ]]..RenderTable["SampleRate"]..[[
-    
-    NCH ]]..RenderTable["Channels"]..[[
-    
-    RSMODE ]]..RenderTable["RenderResample"]..[[
-    
-    DITHER ]]..RenderTable["Dither"]..[[
-    
-]]..BWFStart..[[
-]]..UseRCMetaData..[[
-]]..PadStart..[[
-]]..PadEnd..[[
-    OUTPATH ]]..RenderTable["RenderFile"]..[[
-    
-    OUTPATTERN ']]..[['
-  <OUTFMT 
-    ]]      ..RenderTable["RenderString"]..[[
-
-  >
-  ]]..FXStateChunk..[[
-  ]]..string.gsub(MetaDataStateChunk, "<RENDER_METADATA", "<METADATA")..[[
-
->
-]]
-
-  ultraschall.WriteValueToFile(ultraschall.API_TempPath.."/filelist.txt", BatchConvertData)
-
-  local ExeFile, AAAA, AAAAAA
-  if ultraschall.IsOS_Windows()==true then
-    -- Batchconvert On Windows
-    ExeFile=reaper.GetExePath().."\\reaper.exe"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "/", "\\").."\\filelist.txt\"", -1)
-  elseif ultraschall.IsOS_Mac()==true then
-    -- Batchconvert On Mac
-    ExeFile=reaper.GetExePath().."/Reaper64.app/Contents/MacOS/reaper"
-    if reaper.file_exists(ExeFile)==false then
-      ExeFile=reaper.GetExePath().."/Reaper.app/Contents/MacOS/reaper"
-    end
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  else
-    -- Batchconvert On Linux
-    ExeFile=reaper.GetExePath().."/reaper"
-    AAAA, AAAAAA=reaper.ExecProcess(ExeFile.." -batchconvert \""..string.gsub(ultraschall.API_TempPath, "\\\\", "/").."/filelist.txt\"", -1)
-  end
-  
-  return true
-end

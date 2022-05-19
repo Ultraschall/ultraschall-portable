@@ -619,8 +619,8 @@ function ultraschall.GFX_GetWindowHWND()
     Lua=5.3
   </requires>
   <functioncall>HWND hwnd = ultraschall.GFX_GetWindowHWND()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns the HWND of the currently opened gfx-window. You need to use [ultraschall.GFX_Init()](#GFX_Init), otherwise 
+  <description>
+    Returns the HWND of the currently opened gfx-window. You need to use ultraschall.GFX_Init(), otherwise 
     it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
   </description>
   <retvals>
@@ -960,7 +960,7 @@ function ultraschall.GFX_GetDropFile()
     Lua=5.3
   </requires>
   <functioncall>boolean changed, integer num_dropped_files, array dropped_files, integer drop_mouseposition_x, integer drop_mouseposition_y = ultraschall.GFX_GetDropFile()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.
     
     if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.
@@ -1156,7 +1156,7 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
     Lua=5.3
   </requires>
   <functioncall>integer first_typed_character, integer num_characters, table character_queue = ultraschall.GFX_GetChar(optional integer character, optional boolean manage_clipboard, optional string to_clipboard, optional boolean readable_characters)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     gets all characters from the keyboard-queue of gfx.getchar as a handy table.
     
     the returned table character_queue is of the following format:

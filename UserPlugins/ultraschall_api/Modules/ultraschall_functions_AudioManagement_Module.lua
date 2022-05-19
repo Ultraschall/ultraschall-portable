@@ -63,7 +63,7 @@ function ultraschall.GetHWInputs_Aliasnames()
       Lua=5.3
     </requires>
     <functioncall>integer number_of_aliases, table aliases = ultraschall.GetHWInputs_Aliasnames()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Returns the aliasnames and their associated channels of the currently selected audio-device.
       
       The returned table is of the format
@@ -111,7 +111,7 @@ function ultraschall.GetHWOutputs_Aliasnames()
       Lua=5.3
     </requires>
     <functioncall>integer number_of_aliases, table aliases = ultraschall.GetHWOutputs_Aliasnames()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Returns the aliasnames and their associated channels of the currently selected audio-device.
       
       The returned table is of the format

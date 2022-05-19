@@ -186,7 +186,7 @@ function ultraschall.StopDeferCycle(identifier)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.StopDeferCycle(string defer_identifier)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops a running ultraschall.Defer-instance of a script-instance.
             
       returns false in case of an error

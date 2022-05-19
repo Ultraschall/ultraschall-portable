@@ -3353,117 +3353,118 @@ function ultraschall.CreateDefaultParmModTable()
        
       The table's format and its default-values is as follows:
       
-        ParmModTable["PARAM_NR"]                - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
-        ParmModTable["PARAM_TYPE"]              - the type of the parameter, usually "", "wet" or "bypass"
+                ParmModTable["PARAM_NR"]                - the parameter that you want to modulate; 1 for the first, 2 for the second, etc
+                ParmModTable["PARAM_TYPE"]              - the type of the parameter, usually "", "wet" or "bypass"
 
-        ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
-                                                - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
-                                                  true, checked; false, unchecked
-        ParmModTable["PARAMOD_BASELINE"]        - Enable parameter modulation, baseline value(envelope overrides)-slider; 
-                                                    0.000 to 1.000
+                ParmModTable["PARAMOD_ENABLE_PARAMETER_MODULATION"] 
+                                                        - Enable parameter modulation, baseline value(envelope overrides)-checkbox; 
+                                                          true, checked; false, unchecked
+                ParmModTable["PARAMOD_BASELINE"]        - Enable parameter modulation, baseline value(envelope overrides)-slider; 
+                                                            0.000 to 1.000
 
-        ParmModTable["AUDIOCONTROL"]            - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
-                                                    Note: if true, this needs all AUDIOCONTROL_-entries to be set
-        ParmModTable["AUDIOCONTROL_CHAN"]       - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
-                                                  nil, if not available
-        ParmModTable["AUDIOCONTROL_STEREO"]     - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
-                                                    AUDIOCONTROL_CHAN+1; nil, if not available
-        ParmModTable["AUDIOCONTROL_ATTACK"]     - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
-        ParmModTable["AUDIOCONTROL_RELEASE"]    - the Release-slider; 0-1000ms; nil, if not available
-        ParmModTable["AUDIOCONTROL_MINVOLUME"]  - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
-                                                  nil, if not available
-        ParmModTable["AUDIOCONTROL_MAXVOLUME"]  - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
-                                                  nil, if not available
-        ParmModTable["AUDIOCONTROL_STRENGTH"]   - the Strength-slider; 0(0%) to 1000(100%)
-        ParmModTable["AUDIOCONTROL_DIRECTION"]  - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
-        ParmModTable["X2"]=0.5                  - the audiocontrol signal shaping-x-coordinate
-        ParmModTable["Y2"]=0.5                  - the audiocontrol signal shaping-y-coordinate    
-        
-        ParmModTable["LFO"]                     - if the LFO-checkbox checked; true, checked; false, unchecked
-                                                    Note: if true, this needs all LFO_-entries to be set
-        ParmModTable["LFO_SHAPE"]               - the LFO Shape-dropdownlist; 
-                                                    0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
-                                                    nil, if not available
-        ParmModTable["LFO_SHAPEOLD"]            - use the old-style of the LFO_SHAPE; 
-                                                    0, use current style of LFO_SHAPE; 
-                                                    1, use old style of LFO_SHAPE; 
-                                                    nil, if not available
-        ParmModTable["LFO_TEMPOSYNC"]           - the Tempo sync-checkbox; true, checked; false, unchecked
-        ParmModTable["LFO_SPEED"]               - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
-        ParmModTable["LFO_STRENGTH"]            - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
-        ParmModTable["LFO_PHASE"]               - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
-        ParmModTable["LFO_DIRECTION"]           - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
-        ParmModTable["LFO_PHASERESET"]          - the LFO Phase reset-dropdownlist; 
-                                                    0, On seek/loop(deterministic output)
-                                                    1, Free-running(non-deterministic output)
-                                                    nil, if not available
-        
-        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-        ParmModTable["PARMLINK"]                - the Link from MIDI or FX parameter-checkbox
-                                                  true, checked; false, unchecked
-        ParmModTable["PARMLINK_LINKEDPLUGIN"]   - the selected plugin; nil, if not available
-                                                - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
-                                                    -1, nothing selected yet
-                                                    -100, MIDI-parameter-settings
-                                                    1 - the first fx-plugin
-                                                    2 - the second fx-plugin
-                                                    3 - the third fx-plugin, etc
-        ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
-                                                       - 0, use parameter of the current fx-plugin
-                                                       - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
-                                                       - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
-                                                       - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
-        ParmModTable["PARMLINK_LINKEDPARMIDX"]  - the id of the linked parameter; -1, if none is linked yet; nil, if not available
-                                                    When MIDI, this is irrelevant.
-                                                    When FX-parameter:
-                                                      0 to n; 0 for the first; 1, for the second, etc
+                ParmModTable["AUDIOCONTROL"]            - is the Audio control signal(sidechain)-checkbox checked; true, checked; false, unchecked
+                                                            Note: if true, this needs all AUDIOCONTROL_-entries to be set
+                ParmModTable["AUDIOCONTROL_CHAN"]       - the Track audio channel-dropdownlist; When stereo, the first stereo-channel;
+                                                          nil, if not available
+                ParmModTable["AUDIOCONTROL_STEREO"]     - 0, just use mono-channels; 1, use the channel AUDIOCONTROL_CHAN plus 
+                                                            AUDIOCONTROL_CHAN+1; nil, if not available
+                ParmModTable["AUDIOCONTROL_ATTACK"]     - the Attack-slider of Audio Control Signal; 0-1000 ms; nil, if not available
+                ParmModTable["AUDIOCONTROL_RELEASE"]    - the Release-slider; 0-1000ms; nil, if not available
+                ParmModTable["AUDIOCONTROL_MINVOLUME"]  - the Min volume-slider; -60dB to 11.9dB; must be smaller than AUDIOCONTROL_MAXVOLUME; 
+                                                          nil, if not available
+                ParmModTable["AUDIOCONTROL_MAXVOLUME"]  - the Max volume-slider; -59.9dB to 12dB; must be bigger than AUDIOCONTROL_MINVOLUME; 
+                                                          nil, if not available
+                ParmModTable["AUDIOCONTROL_STRENGTH"]   - the Strength-slider; 0(0%) to 1000(100%)
+                ParmModTable["AUDIOCONTROL_DIRECTION"]  - the direction-radiobuttons; -1, negative; 0, centered; 1, positive
+                ParmModTable["X2"]=0.5                  - the audiocontrol signal shaping-x-coordinate
+                ParmModTable["Y2"]=0.5                  - the audiocontrol signal shaping-y-coordinate    
+                
+                ParmModTable["LFO"]                     - if the LFO-checkbox checked; true, checked; false, unchecked
+                                                            Note: if true, this needs all LFO_-entries to be set
+                ParmModTable["LFO_SHAPE"]               - the LFO Shape-dropdownlist; 
+                                                            0, sine; 1, square; 2, saw L; 3, saw R; 4, triangle; 5, random
+                                                            nil, if not available
+                ParmModTable["LFO_SHAPEOLD"]            - use the old-style of the LFO_SHAPE; 
+                                                            0, use current style of LFO_SHAPE; 
+                                                            1, use old style of LFO_SHAPE; 
+                                                            nil, if not available
+                ParmModTable["LFO_TEMPOSYNC"]           - the Tempo sync-checkbox; true, checked; false, unchecked
+                ParmModTable["LFO_SPEED"]               - the LFO Speed-slider; 0(0.0039Hz) to 1(8.0000Hz); nil, if not available
+                ParmModTable["LFO_STRENGTH"]            - the LFO Strength-slider; 0.000(0.0%) to 1.000(100.0%)
+                ParmModTable["LFO_PHASE"]               - the LFO Phase-slider; 0.000 to 1.000; nil, if not available
+                ParmModTable["LFO_DIRECTION"]           - the LFO Direction-radiobuttons; -1, Negative; 0, Centered; 1, Positive
+                ParmModTable["LFO_PHASERESET"]          - the LFO Phase reset-dropdownlist; 
+                                                            0, On seek/loop(deterministic output)
+                                                            1, Free-running(non-deterministic output)
+                                                            nil, if not available
+                
+                ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+                ParmModTable["PARMLINK"]                - the Link from MIDI or FX parameter-checkbox
+                                                          true, checked; false, unchecked
+                ParmModTable["PARMLINK_LINKEDPLUGIN"]   - the selected plugin; nil, if not available
+                                                        - will be ignored, when PARMLINK_LINKEDPLUGIN_RELATIVE is set
+                                                            -1, nothing selected yet
+                                                            -100, MIDI-parameter-settings
+                                                            1 - the first fx-plugin
+                                                            2 - the second fx-plugin
+                                                            3 - the third fx-plugin, etc
+                ParmModTable["PARMLINK_LINKEDPLUGIN_RELATIVE"] - the linked plugin relative to the current one in the FXChain
+                                                               - 0, use parameter of the current fx-plugin
+                                                               - negative, use parameter of a plugin above of the current plugin(-1, the one above; -2, two above, etc)
+                                                               - positive, use parameter of a plugin below the current plugin(1, the one below; 2, two below, etc)
+                                                               - nil, use only the plugin linked absolute(the one linked with PARMLINK_LINKEDPARMIDX)
+                ParmModTable["PARMLINK_LINKEDPARMIDX"]  - the id of the linked parameter; -1, if none is linked yet; nil, if not available
+                                                            When MIDI, this is irrelevant.
+                                                            When FX-parameter:
+                                                              0 to n; 0 for the first; 1, for the second, etc
 
-        ParmModTable["PARMLINK_OFFSET"]         - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
-        ParmModTable["PARMLINK_SCALE"]          - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+                ParmModTable["PARMLINK_OFFSET"]         - the Offset-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
+                ParmModTable["PARMLINK_SCALE"]          - the Scale-slider; -1.00(-100%) to 1.00(+100%); nil, if not available
 
-        ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
-                                                    Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
-        ParmModTable["MIDIPLINK_BUS"]           - the MIDI-bus selected in the button-menu; 
-                                                    0 to 15 for bus 1 to 16; 
-                                                    nil, if not available
-        ParmModTable["MIDIPLINK_CHANNEL"]       - the MIDI-channel selected in the button-menu; 
-                                                    0, omni; 1 to 16 for channel 1 to 16; 
-                                                    nil, if not available
-        ParmModTable["MIDIPLINK_MIDICATEGORY"]  - the MIDI_Category selected in the button-menu; nil, if not available
-                                                    144, MIDI note
-                                                    160, Aftertouch
-                                                    176, CC 14Bit and CC
-                                                    192, Program Change
-                                                    208, Channel Pressure
-                                                    224, Pitch
-        ParmModTable["MIDIPLINK_MIDINOTE"]      - the MIDI-note selected in the button-menu; nil, if not available
-                                                  When MIDI note:
-                                                       0(C-2) to 127(G8)
-                                                  When Aftertouch:
-                                                       0(C-2) to 127(G8)
-                                                  When CC14 Bit:
-                                                       128 to 159; see dropdownlist for the commands(the order of the list 
-                                                       is the same as this numbering)
-                                                  When CC:
-                                                       0 to 119; see dropdownlist for the commands(the order of the list 
-                                                       is the same as this numbering)
-                                                  When Program Change:
-                                                       0
-                                                  When Channel Pressure:
-                                                       0
-                                                  When Pitch:
-                                                       0
-        ParmModTable["WINDOW_ALTERED"]          - false, if the windowposition hasn't been altered yet; true, if the window has been altered
-                                                    Note: if true, this needs all WINDOW_-entries to be set
-        ParmModTable["WINDOW_ALTEREDOPEN"]      - if the position of the ParmMod-window is altered and currently open; 
-                                                    nil, unchanged; 0, unopened; 1, open
-        ParmModTable["WINDOW_XPOS"]             - the x-position of the altered ParmMod-window in pixels; nil, default position
-        ParmModTable["WINDOW_YPOS"]             - the y-position of the altered ParmMod-window in pixels; nil, default position
-        ParmModTable["WINDOW_RIGHT"]            - the right-position of the altered ParmMod-window in pixels; 
-                                                    nil, default position; only readable
-        ParmModTable["WINDOW_BOTTOM"]           - the bottom-position of the altered ParmMod-window in pixels; 
-                                                    nil, default position; only readable
+                ParmModTable["MIDIPLINK"]               - true, if any parameter-linking with MIDI-stuff; false, if not
+                                                            Note: if true, this needs all MIDIPLINK_-entries and PARMLINK_LINKEDPLUGIN=-100 to be set
+                ParmModTable["MIDIPLINK_BUS"]           - the MIDI-bus selected in the button-menu; 
+                                                            0 to 15 for bus 1 to 16; 
+                                                            nil, if not available
+                ParmModTable["MIDIPLINK_CHANNEL"]       - the MIDI-channel selected in the button-menu; 
+                                                            0, omni; 1 to 16 for channel 1 to 16; 
+                                                            nil, if not available
+                ParmModTable["MIDIPLINK_MIDICATEGORY"]  - the MIDI_Category selected in the button-menu; nil, if not available
+                                                            144, MIDI note
+                                                            160, Aftertouch
+                                                            176, CC 14Bit and CC
+                                                            192, Program Change
+                                                            208, Channel Pressure
+                                                            224, Pitch
+                ParmModTable["MIDIPLINK_MIDINOTE"]      - the MIDI-note selected in the button-menu; nil, if not available
+                                                          When MIDI note:
+                                                               0(C-2) to 127(G8)
+                                                          When Aftertouch:
+                                                               0(C-2) to 127(G8)
+                                                          When CC14 Bit:
+                                                               128 to 159; see dropdownlist for the commands(the order of the list 
+                                                               is the same as this numbering)
+                                                          When CC:
+                                                               0 to 119; see dropdownlist for the commands(the order of the list 
+                                                               is the same as this numbering)
+                                                          When Program Change:
+                                                               0
+                                                          When Channel Pressure:
+                                                               0
+                                                          When Pitch:
+                                                               0
+                ParmModTable["WINDOW_ALTERED"]          - false, if the windowposition hasn't been altered yet; true, if the window has been altered
+                                                            Note: if true, this needs all WINDOW_-entries to be set
+                ParmModTable["WINDOW_ALTEREDOPEN"]      - if the position of the ParmMod-window is altered and currently open; 
+                                                            nil, unchanged; 0, unopened; 1, open
+                ParmModTable["WINDOW_XPOS"]             - the x-position of the altered ParmMod-window in pixels; nil, default position
+                ParmModTable["WINDOW_YPOS"]             - the y-position of the altered ParmMod-window in pixels; nil, default position
+                ParmModTable["WINDOW_RIGHT"]            - the right-position of the altered ParmMod-window in pixels; 
+                                                            nil, default position; only readable
+                ParmModTable["WINDOW_BOTTOM"]           - the bottom-position of the altered ParmMod-window in pixels; 
+                                                            nil, default position; only readable
+                                                            
     </description>
     <retvals>
       table ParmModTable - a ParmModTable with all settings set to Reaper's defaults 
@@ -5216,7 +5217,7 @@ function ultraschall.InputFX_GetOffline(fxindex, tracknumber)
     Reaper=6.05
     Lua=5.3
   </requires>
-  <functioncall>boolean is_offline = ultraschall.InputFX_GetOffline(integer fxindex)</functioncall>
+  <functioncall>boolean is_offline = ultraschall.InputFX_GetOffline(integer fxindex, optional integer tracknumber)</functioncall>
   <description>
     returns the offline-state of a monitoring-fx
     
@@ -8933,7 +8934,7 @@ function ultraschall.GetParmLearn_Default()
     Lua=5.3
   </requires>
   <functioncall>integer enable_state, boolean softtakeover, integer ccmode = ultraschall.GetParmLearn_Default()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     allows getting the current default-settings for the parmlearn-dialog
   </description>
   <retvals>
@@ -8989,7 +8990,7 @@ function ultraschall.SetParmLearn_Default(enable_state, softtakeover, ccmode)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetParmLearn_Default(integer enable_state, boolean softtakeover, integer ccmode)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     allows setting the current default-settings for the parmlearn-dialog
     
     set to 0, false, 0 for the factory defaults
@@ -9050,3 +9051,236 @@ function ultraschall.SetParmLearn_Default(enable_state, softtakeover, ccmode)
 end
 
 
+function ultraschall.GetBatchConverter_FXStateChunk()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetBatchConverter_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.GetBatchConverter_FXStateChunk()</functioncall>
+  <description>
+    Returns the FXStateChunk stored and used by the BatchConverter.
+    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem or inputFX.
+  </description>
+  <retvals>
+    string FXStateChunk - the FXStateChunk of the BatchConverter
+  </retvals>
+  <chapter_context>
+    FX-Management
+    FXStateChunks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, fxstatechunk, batchconverter</tags>
+</US_DocBloc>
+]]
+  local FXStateChunk=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-convertfx.ini")
+  FXStateChunk=string.gsub(FXStateChunk, "\n", "\n  ")..">"
+  return "<FXCHAIN\n  "..FXStateChunk:sub(1,-3)..">"
+end
+
+--A=ultraschall.GetBatchConverterFXStateChunk()
+
+function ultraschall.SetBatchConverter_FXStateChunk(FXStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetBatchConverter_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string OldFXStateChunk = ultraschall.GetBatchConverter_FXStateChunk(string FXStateChunk)</functioncall>
+  <description>
+    Sets the FXStateChunk used by the BatchConverter. Returns the previously used FXStateChunk.
+    
+    The BatchConverter uses this FXStateChunk when it's opened the next time.
+    So if you want to use different FXStateChunks with the BatchConverter, set it first, then (re-)open the BatchConverter.
+    
+    An FXStateChunk holds all FX-plugin-settings for a specific MediaTrack or MediaItem or inputFX.
+    
+    Returns false in case of an error.
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+    string FXStateChunk - the FXStateChunk of the BatchConverter
+  </retvals>
+  <parameters>
+    string FXStateChunk - the new FXStateChunk to us with the BatchConverter
+  </parameters>
+  <chapter_context>
+    FX-Management
+    FXStateChunks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, set, fxstatechunk, batchconverter</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetBatchConverter_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return false end
+  local OldFXStateChunk=ultraschall.GetBatchConverterFXStateChunk()
+  FXStateChunk=string.gsub(FXStateChunk, "\n  ", "\n"):match(".-\n(.*)\n.->")
+
+  local retval=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/reaper-convertfx.ini", FXStateChunk)
+  return retval==1, OldFXStateChunk
+end
+
+--B,C=ultraschall.SetBatchConverterFXStateChunk(A)
+--A=ultraschall.IsValidFXStateChunk()
+
+function ultraschall.TrackFX_JSFX_Reload(track, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TrackFX_JSFX_Reload</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.TrackFX_JSFX_Reload(MediaTrack track, integer fxindex)</functioncall>
+  <description>
+    Updates a jsfx in a track.
+    
+    if the desc-line in the jsfx changes, it will not update the name of the jsfx in the fx-chain-list
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, fx has been updated; false, fx has not been updated
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose jsfx you want to update
+    integer fxindex - the index of the track-jsfx, that you want to refresh
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, update, jsfx, trackfx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("TrackFX_JSFX_Reload", "track", "must be a valid MediaTrack", -1) return false end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("TrackFX_JSFX_Reload", "fx_id", "must be an integer", -2) return false end
+  fx_id=fx_id-1
+  local Aretval, Abuf = reaper.TrackFX_GetFXName(track, fx_id)
+  if Abuf:sub(1,4)~="JS: " then ultraschall.AddErrorMessage("TrackFX_JSFX_Reload", "fx_id", "fx is not jsfx-fx", -3) return false end
+  local Aretval2, Abuf2 = reaper.TrackFX_GetNamedConfigParm(track, fx_id, "fx_ident")
+  reaper.PreventUIRefresh(1)
+  local retval = reaper.TrackFX_Delete(track, fx_id)
+  local count=reaper.TrackFX_GetCount(track)
+  local retval = reaper.TrackFX_AddByName(track, Abuf2, false, 1)
+  reaper.TrackFX_CopyToTrack(track, count, track, fx_id, true)
+  reaper.PreventUIRefresh(-1)
+  return true
+end
+
+--A,B=ultraschall.TrackFX_JSFX_Reload(reaper.GetTrack(0,0), 1)
+
+function ultraschall.TakeFX_JSFX_Reload(take, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TakeFX_JSFX_Reload</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.TakeFX_JSFX_Reload(MediaItem_take take, integer fxindex)</functioncall>
+  <description>
+    Updates a jsfx in a take.
+    
+    if the desc-line in the jsfx changes, it will not update the name of the jsfx in the fx-chain-list
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, fx has been updated; false, fx has not been updated
+  </retvals>
+  <parameters>
+    MediaItem_take - the take, whose jsfx you want to update
+    integer fxindex - the index of the take-jsfx, that you want to refresh
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, update, jsfx, takefx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("TakeFX_JSFX_Reload", "track", "must be a valid MediaTrack", -1) return false end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("TakeFX_JSFX_Reload", "fx_id", "must be an integer", -2) return false end
+  fx_id=fx_id-1
+  local Aretval, Abuf = reaper.TakeFX_GetFXName(take, fx_id)
+  if Abuf:sub(1,4)~="JS: " then ultraschall.AddErrorMessage("TakeFX_JSFX_Reload", "fx_id", "fx is not jsfx-fx", -3) return false end
+  local Aretval2, Abuf2 = reaper.TakeFX_GetNamedConfigParm(take, fx_id, "fx_ident")
+  reaper.PreventUIRefresh(1)
+  local retval = reaper.TakeFX_Delete(take, fx_id)
+  local count=reaper.TakeFX_GetCount(take)
+  local retval = reaper.TakeFX_AddByName(take, Abuf2, 1)
+  reaper.TakeFX_CopyToTake(take, count, take, fx_id, true)
+  reaper.PreventUIRefresh(-1)
+  return true
+end
+
+--item=reaper.GetMediaItem(0,0)
+--take=reaper.GetMediaItemTake(item, 0)
+--A=ultraschall.TakeFX_JSFX_Reload(take, 1)
+
+
+function ultraschall.InputFX_JSFX_Reload(track, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>InputFX_JSFX_Reload</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.InputFX_JSFX_Reload(MediaTrack track, integer fxindex)</functioncall>
+  <description>
+    Updates a jsfx in monitoring-fx/rec-input-fx
+    
+    if the desc-line in the jsfx changes, it will not update the name of the jsfx in the fx-chain-list
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, fx has been updated; false, fx has not been updated
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose rec-inputfx-jsfx you want to update; use master track to update within input-monitoring-fx 
+    integer fxindex - the index of the track-jsfx, that you want to refresh
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, update, jsfx, monitoring fx, rec input fx</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("InputFX_JSFX_Reload", "track", "must be a valid MediaTrack", -1) return false end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("InputFX_JSFX_Reload", "fx_id", "must be an integer", -2) return false end
+  fx_id=fx_id-1
+  local Aretval, Abuf = reaper.TrackFX_GetFXName(track, fx_id|0x1000000)
+  if Abuf:sub(1,4)~="JS: " then ultraschall.AddErrorMessage("InputFX_JSFX_Reload", "fx_id", "fx is not jsfx-fx", -3) return false end
+  local Aretval2, Abuf2 = reaper.TrackFX_GetNamedConfigParm(track, fx_id|0x1000000, "fx_ident")
+  reaper.PreventUIRefresh(1)
+  local retval = reaper.TrackFX_Delete(track, fx_id|0x1000000)
+  local count=reaper.TrackFX_GetRecCount(track)
+  local retval = reaper.TrackFX_AddByName(track, Abuf2, true, 1)
+  reaper.TrackFX_CopyToTrack(track, count|0x1000000, track, fx_id|0x1000000, true)
+  reaper.PreventUIRefresh(-1)
+  return true
+end
+
+
+--A,B=ultraschall.InputFX_JSFX_Reload(reaper.GetTrack(0,0), 1)

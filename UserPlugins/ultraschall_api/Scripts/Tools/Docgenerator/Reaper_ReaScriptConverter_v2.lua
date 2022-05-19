@@ -199,5 +199,6 @@ FunctionList=FunctionList..[[
 --]]
 FunctionList=FunctionList.."<div class=\"ch\"><p></p>\n"
 FunctionList=FunctionList.."<h2>Reaper Reascript-Api-Documentation "..versionnumbering.."<br>\""..tagline.."\"</h2><h3>The Functions Reference</h3></div>"
+--FunctionList=FunctionList.."<p>All functions are sorted by use-case in the document's index. If you're looking for functions of a specific extension, look in the index for:<br>(JS) - JS-extension<br>(SWS) - SWS-extension<br>(ReaImGui) - ReaImGui-extension<br>(Blink) - Blink extension<br>(Osara) - Osara Extension<br>(ReaPack) - ReaPack-extension<br></p>"
 
 dofile(ultraschall.Api_Path.."/Scripts/Tools/DocGenerator/DocGenerator_v2.lua")

@@ -3121,6 +3121,8 @@ function ultraschall.RunBackgroundHelperFeatures(switch_on)
   </requires>
   <functioncall>ultraschall.RunBackgroundHelperFeatures(boolean switch_on)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated
+    
     Starts background-scripts supplied with the Ultraschall-API, like:  
 
       - a script for getting the last edit-cursor-position before the current one -> [GetLastCursorPosition()](#GetLastCursorPosition)
@@ -3139,6 +3141,8 @@ function ultraschall.RunBackgroundHelperFeatures(switch_on)
   <tags>helper functions, defer scripts, background scripts</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("RunBackgroundHelperFeatures")
+
   local filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Scripts/HelperDeferScripts/")
   local filename
   for i=1, filecount do
@@ -3163,7 +3167,7 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Main_OnCommandByFilename</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.4
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -3198,6 +3202,13 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   -- check parameters
   if type(filename)~="string" then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "Must be a string.", -1) return false end
   if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "File does not exist.", -2) return false end
+  
+  if ultraschall.IsOS_Win()==true then    
+    filename=string.gsub(filename, "/", "\\")
+    --print2("", filename)
+  else
+    filename=string.gsub(filename, "\\", "/")
+  end
   
   -- create temporary copy of the scriptfile, with a guid in its name  
   local filename2
@@ -3242,7 +3253,7 @@ function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MIDI_OnCommandByFilename</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.4
     Reaper=5.965
     JS=0.962
     Lua=5.3
@@ -3284,6 +3295,13 @@ function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
     if pcall(reaper.JS_Window_GetTitle(MIDIEditor_HWND, ""):match("MIDI"))==false then ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "Not a valid MIDI-Editor-HWND.", -4) return false end
   end  
 
+  if ultraschall.IsOS_Win()==true then    
+    filename=string.gsub(filename, "/", "\\")
+    --print2("", filename)
+  else
+    filename=string.gsub(filename, "\\", "/")
+  end
+
   -- create temporary scriptcopy with a guid in its filename
   local filename2
   if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
@@ -3307,6 +3325,10 @@ function ultraschall.MIDI_OnCommandByFilename(filename, MIDIEditor_HWND, ...)
     if A2==false then 
       ultraschall.AddErrorMessage("MIDI_OnCommandByFilename", "MIDIEditor_HWND", "No last focused MIDI-Editor open.", -6) 
       ultraschall.GetScriptParameters(string.gsub("ScriptIdentifier:"..filename2, "\\", "/"), true)
+      reaper.AddRemoveReaScript(false, 32060, filename2, true)
+      reaper.AddRemoveReaScript(false, 32061, filename2, true)
+      reaper.AddRemoveReaScript(false, 32062, filename2, true)
+      os.remove(filename2)
       return false 
     end
   end
@@ -3334,7 +3356,7 @@ function ultraschall.GetScriptParameters(script_identifier, remove)
     Lua=5.3
   </requires>
   <functioncall>integer num_params, array params, string caller_script_identifier = ultraschall.GetScriptParameters(optional string script_identifier, optional boolean remove)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the parameters stored for a specific script_identifier.
     
     returns -1 in case of an error
@@ -3389,7 +3411,7 @@ function ultraschall.SetScriptParameters(script_identifier, ...)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string script_identifier = ultraschall.SetScriptParameters(string script_identifier, string ...)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the parameters stored for a specific script_identifier.
   </description>
   <retvals>
@@ -3500,7 +3522,7 @@ function ultraschall.SetScriptReturnvalues(script_identifier, ...)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetScriptReturnvalues(string script_identifier, string ...)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Send return-values back to the script, that has a specific script_identifier.
     
     returns false in case of an error
@@ -3555,7 +3577,7 @@ function ultraschall.GetScriptReturnvalues_Sender()
     Lua=5.3
   </requires>
   <functioncall>integer count, array retval_sender = ultraschall.GetScriptReturnvalues_Sender()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Retrieves, which scripts sent returnvalues to the current script.
   </description>
   <retvals>
@@ -3596,7 +3618,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     Lua=5.3
   </requires>
   <functioncall>string encoded_string = ultraschall.Base64_Encoder(string source_string, optional integer base64_type, optional integer remove_newlines, optional integer remove_tabs)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Converts a string into a Base64-Encoded string. 
     Currently, only standard Base64-encoding is supported.
     
@@ -3712,7 +3734,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     Lua=5.3
   </requires>
   <functioncall>string decoded_string = ultraschall.Base64_Decoder(string source_string, optional integer base64_type)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Converts a Base64-encoded string into a normal string. 
     Currently, only standard Base64-encoding is supported.
     
@@ -4137,14 +4159,12 @@ function ultraschall.GetScriptIdentifier()
       Lua=5.3
     </requires>
     <functioncall>string script_identifier = ultraschall.GetScriptIdentifier()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       The Ultraschall-API gives any script, that uses the API, a unique identifier generated when the script is run.
       This identifier can be used to communicate with this script. If you start numerous instances of a script, it will create for each instance
       its own script-identifier, so you can be sure, that you communicate with the right instance.
       
       The identifier is of the format "ScriptIdentifier:scriptfilename-{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}.ext", where the {}-part is a guid and ext either .lua .py or .eel
-      
-      [Defer1](#Defer1) to [Defer20](#Defer20) make use of this to stop a running defer-loop from the outside of a deferred-script.
     </description>
     <retvals>
       string script_identifier - a unique script-identifier for this script-instance, of the format:
@@ -4287,7 +4307,7 @@ function ultraschall.MKVOL2DB(mkvol_value)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MKVOL2DB</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.5
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -4319,7 +4339,7 @@ function ultraschall.MKVOL2DB(mkvol_value)
 </US_DocBloc>
 --]]
   if type(mkvol_value)~="number" then ultraschall.AddErrorMessage("MKVOL2DB", "mkvol_value", "must be a number" ,-1) return nil end
-  if mkvol_value < 0.00000002980232 then return -44 end
+  if mkvol_value < 0.00000002980232 then return -144 end
   mkvol_value = math.log(mkvol_value)*8.68588963806
   return mkvol_value
 end
@@ -4599,7 +4619,7 @@ function ultraschall.SetScriptIdentifier_Title(title)
       With this function, you can set its title, that is less cryptic than the ScriptIdentifier itself.
       No \n-newlines, \r-carriage returns or \0-nullbytes are allowed and will be removed
       
-      You can get it using [GetScriptIdentifier_Title](#GetScriptIdentifier_Title).
+      You can get it using [GetScriptIdentifier\_Title](#GetScriptIdentifier_Title).
       
       returns -1 in case of an error
     </description>
@@ -4645,7 +4665,7 @@ function ultraschall.GetScriptIdentifier_Title()
       
       Default is the script's filename.
       
-      You can set it using [SetScriptIdentifier_Title](#SetScriptIdentifier_Title).
+      You can set it using [SetScriptIdentifier\_Title](#SetScriptIdentifier_Title).
     </description>
     <retvals>
       string script_identifier_title - the title of your script; default is the filename of the script
@@ -4675,7 +4695,7 @@ function ultraschall.ResetProgressBar()
       Lua=5.3
     </requires>
     <functioncall>ultraschall.ResetProgressBar()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Resets the initial-values of the progressbar. Should be called, if you want to start a new progressbar after you filled up the former one, or you may have update-issues.
     </description>
     <chapter_context>
@@ -5419,7 +5439,7 @@ function ultraschall.FindPatternsInString(SourceString, pattern, sort_after_find
     Lua=5.3
   </requires>
   <functioncall>integer count_found_items, array found_items = ultraschall.FindPatternsInString(string SourceString, string pattern, boolean sort_after_finding)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Finds all occurrences of matching-patterns in a string. You can sort them optionally.
     
     returns -1 in case of an error
@@ -5579,7 +5599,7 @@ function ultraschall.ReplacePatternInString(OriginalString, pattern, replacestri
     Lua=5.3
   </requires>
   <functioncall>string altered_string, boolean replaced = ultraschall.ReplacePatternInString(string OriginalString, string pattern, string replacestring, integer index)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Replaces the index'th occurrence of pattern in OriginalString with replacepattern.
     
     Unlike string.gsub, this replaces only the selected pattern!
@@ -5813,7 +5833,7 @@ function ultraschall.Benchmark_GetStartTime(slot)
   <functioncall>number starttime = ultraschall.Benchmark_GetStartTime(optional integer slot)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     This function is for benchmarking parts of your code.
-    It returns the starttime of the last benchmark-start.
+    It returns the starttime of the last benchmark-start, started by [Benchmark_MeasureTime](#Benchmark_MeasureTime).
     
     returns nil, if no benchmark has been made yet.
     
@@ -5964,7 +5984,7 @@ function ultraschall.TimeToMeasures(project, Time)
       Lua=5.3
     </requires>
     <functioncall>number measure = ultraschall.TimeToMeasures(ReaProject project, number Time)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
        a function which converts a time into current projects time-measures
        only useful, when there are no tempo-changes in the project
        
@@ -6016,12 +6036,12 @@ function ultraschall.Create2DTable(maxx, maxy, defval)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>Create2DTable</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.5
       Reaper=6.10
       Lua=5.3
     </requires>
-    <functioncall>table 2dtable = ultraschall.Create2DTable(integer maxx, integer maxy, optional anytype defval)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <functioncall>table Two_D_table = ultraschall.Create2DTable(integer maxx, integer maxy, optional anytype defval)</functioncall>
+    <description>
        creates a 2-dimensional table with x-lines and y-rows, of which all entries are indexable right away.
        
        It also has two additional fields ["x"] and ["y"] who hold the x and y-dimensions of the table you've set for later reference.
@@ -6029,7 +6049,7 @@ function ultraschall.Create2DTable(maxx, maxy, defval)
        returns nil in case of an error
     </description>
     <retvals>
-      table 2dtable - the 2d-table you've created
+      table Two_D_table - the 2d-table you've created
     </retvals>
     <parameters>
         integer maxx - the number of rows in the table(x-dimension)
@@ -6055,7 +6075,7 @@ function ultraschall.Create2DTable(maxx, maxy, defval)
   for x=1, maxx do
     Table[x]={}
     for y=1, maxy do
-      Table[x][y]={defval}
+      Table[x][y]=defval
     end
   end
   
@@ -6076,12 +6096,12 @@ function ultraschall.Create3DTable(maxx, maxy, maxz, defval)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>Create3DTable</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.5
       Reaper=6.10
       Lua=5.3
     </requires>
-    <functioncall>table 3dtable = ultraschall.Create3DTable(integer maxx, integer maxy, integer maxz, optional anytype defval)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <functioncall>table ThreeD_table = ultraschall.Create3DTable(integer maxx, integer maxy, integer maxz, optional anytype defval)</functioncall>
+    <description>
        creates a 3-dimensional table with x-lines and y-rows and z-depths, of which all entries are indexable right away.
        
        It also has two additional fields ["x"], ["y"] and ["z"] who hold the x, y and z-dimensions of the table you've set for later reference.
@@ -6089,7 +6109,7 @@ function ultraschall.Create3DTable(maxx, maxy, maxz, defval)
        returns nil in case of an error
     </description>
     <retvals>
-      table 3dtable - the 3d-table you've created
+      table ThreeD_table - the 3d-table you've created
     </retvals>
     <parameters>
         integer maxx - the number of rows in the table(x-dimension)
@@ -6121,7 +6141,7 @@ function ultraschall.Create3DTable(maxx, maxy, maxz, defval)
     for y=1, maxy do
       Table[x][y]={}
       for z=1, maxz do
-        Table[x][y][z]={defval}
+        Table[x][y][z]=defval
       end
     end
   end
@@ -6150,7 +6170,7 @@ function ultraschall.CreateMultiDimTable(defval, ...)
       Lua=5.3
     </requires>
     <functioncall>table multidimtable = ultraschall.CreateMultiDimTable(optional anytype defval, optional integer dimension1, optional integer dimension2, ... , optional integer dimensionN)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
        creates a multidimensional table
        
        It also adds additional fields ["dimension1"] to ["dimension10"] who hold the number of available entries in this dimension for later reference.
@@ -6282,7 +6302,7 @@ function ultraschall.GMem_Read_ValueRange(startindex, number_of_indices, use_gme
     Lua=5.3
   </requires>
   <functioncall>table gmem_values = ultraschall.GMem_Read_ValueRange(integer startindex, integer number_of_indices, optional boolean use_gmem_indices_for_table, optional string gmem_attachname)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns a table with all values of a gmem between startindex and startindex+number_of_indices.
     You can optionally set a specific gmem-attachname or leave it blank to get the values from the currently attached gmem.
     
@@ -6344,7 +6364,7 @@ function ultraschall.GMem_GetValues_VideoSamplePeeker(samplesize)
     Lua=5.3
   </requires>
   <functioncall>number play_pos, integer samplerate, integer num_channels, integer requested_samplebuffer_length, table samplebuffer = ultraschall.GMem_GetValues_VideoSamplePeeker(optional integer samplesize)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     For usage together with the JSFX-fx- "Video Sample Peeker", which sends samples to a gmem, that can be used(for instance by video processor's presets "Synthesis: Decorative Oscilloscope with Blitter" and "Synthesis: Decorative Spectrum Analyzer").
     
     Ths returns all important values and the samples-values.
@@ -6790,4 +6810,92 @@ function ultraschall.MediaExplorer_SetVolume(value)
     ultraschall.AddErrorMessage("MediaExplorer_SetVolume", "", "Media Explorer isn't open", -2) 
     return false 
   end
+end
+
+function ultraschall.IsValidReaProject(ReaProject)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>IsValidReaProject</slug>
+  <requires>
+    Ultraschall=4.00
+    Reaper=5.77
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.IsValidReaProject(ReaProject ReaProject)</functioncall>
+  <description>
+    Returns, if parameter ReaProject is a valid ReaProject(means, an existing opened project) or not.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, if parameter ReaProject is a valid ReaProject; false, if parameter ReaProject isn't a valid ReaProject
+  </retvals>
+  <parameters>
+    ReaProject ReaProject - the object that you want to check for being a valid ReaProject
+  </parameters>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>projectmanagement, check, reaproject, project, object, valid</tags>
+</US_DocBloc>
+]]
+  --if ReaProject==nil or type(ReaProject)~="number" then return false end
+  if ReaProject==nil then return false end
+  if ReaProject==0 then return true end
+  local count=0
+  while reaper.EnumProjects(count,"")~=nil do
+    if reaper.EnumProjects(count,"")==ReaProject then return true end
+    count=count+1
+  end
+  return false
+end
+
+--K=ultraschall.IsValidReaProject(reaper.EnumProjects(0,""))
+
+function ultraschall.GetSetIDEAutocompleteSuggestions(is_set, value)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetSetIDEAutocompleteSuggestions</slug>
+    <requires>
+      Ultraschall=4.5
+      Reaper=6.20
+      SWS=2.10.01
+      Lua=5.3
+    </requires>
+    <functioncall>integer suggestions = ultraschall.GetSetIDEAutocompleteSuggestions(boolean is_set, integer value)</functioncall>
+    <description>
+      gets/sets the number of shown suggestions for autocomplete in the IDE
+      
+      affects all IDEs immediately
+      
+      Returns nil in case of an error
+    </description>
+    <retvals>
+      integer suggestions - the number of shown suggestions
+    </retvals>
+    <parameters>
+      boolean is_set - true, set a new value; false, get the current one
+      integer value - the new value, must be between 0 and 2147483647; default is 50
+    </parameters>
+    <chapter_context>
+      API-Helper functions
+      Various
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+    <tags>ide, get, set, autocomplete, suggestions</tags>
+  </US_DocBloc>
+  ]]
+  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetIDEAutocompleteSuggestions", "is_set", "must be a boolean", -1) return end
+  if math.type(value)~="integer" then ultraschall.AddErrorMessage("GetSetIDEAutocompleteSuggestions", "value", "must be an integer", -2) return end
+  if value<0 then value=0 end
+  if value>2147483647 then value=2147483647 end
+  if is_set~=true then
+    return reaper.SNM_GetIntConfigVar("edit_sug", -111)
+  end
+  reaper.SNM_SetIntConfigVar("edit_sug", value)
+  return value
 end

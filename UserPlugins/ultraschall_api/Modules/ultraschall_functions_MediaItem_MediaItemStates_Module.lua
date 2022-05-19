@@ -3256,7 +3256,7 @@ function ultraschall.GetItem_Video_IgnoreAudio(Item, take_index, StateChunk)
     Lua=5.3
   </requires>
   <functioncall>boolean checked_state = ultraschall.GetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, optional string StateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
     
     It's the AUDIO-entry in the <SOURCE-statechunk of the take
@@ -3336,7 +3336,7 @@ function ultraschall.SetItem_Video_IgnoreAudio(Item, take_index, checkbox_state,
     Lua=5.3
   </requires>
   <functioncall>string statechunk = ultraschall.SetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, boolean checkbox_state, optional string StateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
     
     Returns nil in case of an error(no video source in take)

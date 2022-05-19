@@ -1268,7 +1268,7 @@ function ultraschall.GetProject_RecordCFG(projectfilename_with_path, ProjectStat
     optional string ProjectStateChunk - a ProjectStateChunk to use instead if a filename; only used, when projectfilename_with_path is nil
   </parameters>
   <retvals>
-    recording_cfg_string - the record-configuration as encoded string
+    string recording_cfg_string - the record-configuration as encoded string
   </retvals>
   <chapter_context>
     Project-Management
@@ -1742,10 +1742,13 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - &16, Tracks with only Mono-Media to Mono Files,  
     - 32, Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
     - 64,  Selected media items via master
-    - 128, Selected tracks via master
+    - 128, Selected tracks via master    
     - &256, Embed stretch markers/transient guides-checkbox
+    - &512, Embed metadata-checkbox
     - &1024, Embed Take markers
     - &2048, enable second pass rendering
+    - 4096, Razor edit areas
+    - 4224, Razor edit areas via master
   </retvals>
   <chapter_context>
     Project-Management
@@ -6047,8 +6050,11 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - 64, Selected media items via master
     - 128, Selected tracks via master
     - &256, Embed stretch markers/transient guides-checkbox 
+    - &512, Embed metadata-checkbox
     - &1024, Embed Take markers
     - &2048, enable second pass rendering
+    - 4096, Razor edit areas
+    - 4224, Razor edit areas via master
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -8467,46 +8473,6 @@ function ultraschall.GetProject_MarkersAndRegions(projectfilename_with_path, Pro
   return MarkerCount, NumMarker, NumRegions, MarkerArray
 end
 
-function ultraschall.IsValidReaProject(ReaProject)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>IsValidReaProject</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.77
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval = ultraschall.IsValidReaProject(ReaProject ReaProject)</functioncall>
-  <description>
-    Returns, if parameter ReaProject is a valid ReaProject(means, an existing opened project) or not.
-    
-    returns false in case of an error
-  </description>
-  <retvals>
-    boolean retval - true, if parameter ReaProject is a valid ReaProject; false, if parameter ReaProject isn't a valid ReaProject
-  </retvals>
-  <parameters>
-    ReaProject ReaProject - the object that you want to check for being a valid ReaProject
-  </parameters>
-  <chapter_context>
-    Project-Management
-    Helper functions
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
-  <tags>projectmanagement, check, reaproject, project, object, valid</tags>
-</US_DocBloc>
-]]
-  if ReaProject==nil or type(ReaProject)=="number" then return false end
-  local count=0
-  while reaper.EnumProjects(count,"")~=nil do
-    if reaper.EnumProjects(count,"")==ReaProject then return true end
-    count=count+1
-  end
-  return false
-end
-
---K=ultraschall.IsValidReaProject(reaper.EnumProjects(0,""))
 
 
 function ultraschall.NewProjectTab(switch_to_new_tab)
@@ -11781,7 +11747,7 @@ function ultraschall.SetProject_MasterPanMode(projectfilename_with_path, panmode
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetProject_MasterPanMode(string projectfilename_with_path, integer panmode, optional string ProjectStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
     It's the entry MASTER_PANMODE 
@@ -11986,7 +11952,7 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
     It's the entry RENDER_NORMALIZE

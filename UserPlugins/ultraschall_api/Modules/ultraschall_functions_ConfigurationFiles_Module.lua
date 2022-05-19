@@ -1857,7 +1857,7 @@ function ultraschall.CharacterCodes_ReverseLookup(byte1, byte2, byte3, lang, smm
     Lua=5.3
   </requires>
   <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup(integer byte1, integer byte2, integer byte3, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the character-code+modifiers of a control-message-character as sent by reaper.StuffMIDIMessage with mode=1
     they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
     
@@ -2087,7 +2087,7 @@ function ultraschall.CharacterCodes_ReverseLookup_KBIni(byte1, byte2, lang)
     Lua=5.3
   </requires>
   <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup_KBIni(integer byte1, integer byte2, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the character-code+modifiers of a control-message-character as stored in the KEY-entries in the reaper-kb.ini
     they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
     
@@ -2163,7 +2163,7 @@ function ultraschall.KBIniGetAllShortcuts(exclude_factory_default, lang)
     Lua=5.3
   </requires>
   <functioncall>integer number_of_shortcuts, table shortcut_attributes = ultraschall.KBIniGetAllShortcuts(optional boolean exclude_factory_default, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns all shortcuts currently set in the current Reaper-installation(as stored in reaper-kb.ini) as a handy table.
     
     The table is of the following format:

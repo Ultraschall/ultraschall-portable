@@ -614,7 +614,7 @@ function ultraschall.ActivateMute(track, visible)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateMute(integer track, optional boolean visible)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a mute-envelope of a track
         
       returns false in case of error
@@ -664,7 +664,7 @@ function ultraschall.DeactivateMute(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.DeactivateMute(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       deactivates a mute-envelope of a track
         
       returns false in case of error
@@ -706,7 +706,7 @@ function ultraschall.ActivateMute_TrackObject(track, visible)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateMute_TrackObject(MediaTrack track, optional boolean visible)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a mute-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -758,7 +758,7 @@ function ultraschall.DeactivateMute_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.DeactivateMute_TrackObject(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       deactivates a mute-envelope of a MediaTrack-object
         
       returns false in case of error

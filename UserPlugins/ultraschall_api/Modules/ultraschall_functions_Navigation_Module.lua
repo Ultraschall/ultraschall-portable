@@ -1116,6 +1116,8 @@ function ultraschall.GetLastCursorPosition()
   </requires>
   <functioncall>number last_editcursor_position, number new_editcursor_position, number statechangetime = ultraschall.GetLastCursorPosition()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated.
+  
     Returns the last and current editcursor-position. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     Has an issue, when editcursor-position was changed using a modifier, like alt+click or shift+click! Because of that, you should use this only in defer-scripts.
@@ -1135,6 +1137,7 @@ function ultraschall.GetLastCursorPosition()
   <tags>navigation, last position, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastCursorPosition")
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_cursorposition.lua")~="true" then return -1 end
   return tonumber(reaper.GetExtState("ultraschall", "editcursor_position_old")), tonumber(reaper.GetExtState("ultraschall", "editcursor_position_new")), tonumber(reaper.GetExtState("ultraschall", "editcursor_position_changetime"))
 end
@@ -1150,6 +1153,8 @@ function ultraschall.GetLastPlayState()
   </requires>
   <functioncall>string last_play_state, string new_play_state, number statechangetime = ultraschall.GetLastPlayState()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated
+    
     Returns the last and current playstate. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     possible states are STOP, PLAY, PLAYPAUSE, REC, RECPAUSE
@@ -1169,6 +1174,7 @@ function ultraschall.GetLastPlayState()
   <tags>navigation, last playstate, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastPlayState")
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_playstate.lua")~="true" then return -1 end
   return reaper.GetExtState("ultraschall", "playstate_old"), reaper.GetExtState("ultraschall", "playstate_new"), tonumber(reaper.GetExtState("ultraschall", "playstate_changetime"))
 end
@@ -1186,6 +1192,8 @@ function ultraschall.GetLastLoopState()
   </requires>
   <functioncall>string last_loop_state, string new_loop_state, number statechangetime = ultraschall.GetLastLoopState()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated
+    
     Returns the last and current loopstate. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     Possible states are LOOPED, UNLOOPED
@@ -1205,6 +1213,8 @@ function ultraschall.GetLastLoopState()
   <tags>navigation, last loopstate, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastLoopState")
+  
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_loopstate.lua")~="true" then return -1 end
   return reaper.GetExtState("ultraschall", "loopstate_old"), reaper.GetExtState("ultraschall", "loopstate_new"), tonumber(reaper.GetExtState("ultraschall", "loopstate_changetime"))
 end

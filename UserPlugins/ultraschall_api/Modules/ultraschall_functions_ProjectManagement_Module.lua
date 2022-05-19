@@ -337,7 +337,7 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
   -- old settings will be restored later
   local oldsource2   = reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
   local oldsource
-  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 or oldsource2==1 then
+  if reaper.CountTracks()==0 or reaper.GetProjectLength()==0 or oldsource2&4096~=0 or oldsource2==1 or oldsource2==3 then
   --  print2("Tudel")
     -- get old settings
     oldbounds   =reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, false)
@@ -346,8 +346,7 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
     oldsource   =reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 1, false)  
        
     -- set useful defaults that'll make adding the project to the render-queue possible always
-    if oldsource&4096~=0 then
-      
+    if oldsource&4096~=0 or oldsource==3 then
       reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", 0, true)
     end
     reaper.GetSetProjectInfo(0, "RENDER_BOUNDSFLAG", 0, true)
@@ -544,7 +543,7 @@ function ultraschall.GetRecentProjects()
     Lua=5.3
   </requires>
   <functioncall>integer count_of_RecentProjects, array RecentProjectsFilenamesWithPath = ultraschall.GetRecentProjects()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns all available recent projects, as listed in the File -> Recent projects-menu
   </description>
   <retvals>
@@ -867,4 +866,93 @@ function ultraschall.AutoSave_GetOptions()
 ]]
   return reaper.SNM_GetIntConfigVar("saveopts", -1)&4==4, reaper.SNM_GetIntConfigVar("saveundostatesproj", -1)&2==2
 end
+
+function ultraschall.Main_SaveProject(proj, filename_with_path, options, overwrite, create_backup)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Main_SaveProject</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=6.53
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.Main_SaveProject(ReaProject proj, string filename_with_path, integer options, boolean overwrite, boolean create_backup)</functioncall>
+  <description>
+    Saves a project/project template as rpp-project file. Basically like Reaper's own Main_SaveProjectEx but 
+    gives hint if a file was saved and has more options.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, projectfile was saved; false, projectfile was not saved
+  </retvals>
+  <parameters>
+    ReaProject proj - the project, that you want to save as rpp-file
+    string filename_with_path - the filename with path of the project
+    integer options - options to save with:
+                            - &1, save selected tracks as track template
+                            - &2, include media with track templates 
+                            - &4, include envelopes with track template
+    boolean overwrite - true, overwrite an already existing file; false, don't overwrite an already existing file
+    boolean create_backup - true, make already existing project into a -bak-file; false, don't make backup file
+  </parameters>
+  <chapter_context>
+    Project-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_Module.lua</source_document>
+  <tags>helperfunctions, projectfiles, write, save, projecttab</tags>
+</US_DocBloc>
+]]
+  if ultraschall.IsValidReaProject(proj)==false then ultraschall.AddErrorMessage("Main_SaveProject", "proj", "must be a valid ReaProject-file", -1) return false end
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("Main_SaveProject", "filename_with_path", "must be a string", -2) return false end
+  if math.type(options)~="integer" then ultraschall.AddErrorMessage("Main_SaveProject", "options", "must be an integer", -3) return false end
+  if type(overwrite)~="boolean" then ultraschall.AddErrorMessage("Main_SaveProject", "overwrite", "must be a boolean", -4) return false end
+  if type(create_backup)~="boolean" then ultraschall.AddErrorMessage("Main_SaveProject", "create_backup", "must be a boolean", -5) return false end
+  
+  
+  -- needs to be playtested...but should work
+  
+  -- if file already exists and shall not be overwritten, simply return with false
+  if reaper.file_exists(filename_with_path)==true and overwrite~=true then
+    return false
+  end
+  
+  -- if file already exists
+  if reaper.file_exists(filename_with_path)==true then
+    -- create temp-copy of the file
+    local tempfilename = ultraschall.CreateValidTempFile(filename_with_path, false, "", true)
+    reaper.Main_SaveProjectEx(proj, tempfilename, options)
+    
+    -- if it got created
+    if reaper.file_exists(tempfilename)==true then
+      -- create a backup or just overwrite the file?
+      if create_backup~=false then
+        os.remove(filename_with_path.."-bak")
+        os.rename(filename_with_path, filename_with_path.."-bak")
+      else
+        os.remove(filename_with_path)
+      end
+      os.rename(tempfilename, filename_with_path)
+      
+      return true
+    -- if it didn't get created
+    else
+      return false
+    end
+  -- if file doesn't exist, simply create it and check, whether it exists afterwards to return true or false
+  elseif reaper.file_exists(filename_with_path)==false then
+    reaper.Main_SaveProjectEx(proj, filename_with_path, options)
+    if reaper.file_exists(filename_with_path)==false then 
+      return false 
+    else 
+      return true
+    end
+  end
+  return false
+end
+
+--A,B=ultraschall.Main_SaveProject(0, "c:\\pudel2.rpp", 0, false, true)
+
 

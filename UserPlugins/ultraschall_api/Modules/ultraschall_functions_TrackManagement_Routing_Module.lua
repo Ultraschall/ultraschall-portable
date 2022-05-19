@@ -72,12 +72,12 @@ function ultraschall.GetTrackHWOut(tracknumber, idx, TrackStateChunk)
     
     returns -1 in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose HWOut you want, 0 for Master Track
     integer idx - the id-number of the HWOut, beginning with 1 for the first HWOut-Settings
     optional string TrackStateChunk - a TrackStateChunk, whose HWOUT-entries you want to get
   </parameters>
-  <retvals markup_type="markdown" markup_version="1.0.1" indent="default">
+  <retvals>
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
     number volume - volume, as set in the Destination "Controls for Track"-dialogue
@@ -421,7 +421,7 @@ function ultraschall.AddTrackHWOut(tracknumber, outputchannel, post_pre_fader, v
     
     returns false in case of failure
   </description>
-  <parameters markup_type="markdown" markup_version="1.0.1" indent="default">
+  <parameters>
     integer tracknumber - the number of the track, whose HWOut you want. 0 for Master Track; -1, use parameter TrackStateChunk instead
     integer outputchannel - outputchannel, with 1024+x the individual hw-outputchannels, 0,2,4,etc stereo output channels
     integer post_pre_fader - 0-post-fader(post pan), 1-preFX, 3-pre-fader(Post-FX), as set in the Destination "Controls for Track"-dialogue
@@ -1168,21 +1168,21 @@ function ultraschall.GetAllHWOuts()
     returns a table with all HWOut-settings of all tracks, including master-track(track index: 0)
     
     returned table is of structure:
-      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
-      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
-      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
-      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1
+      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!  
+      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n  
+      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1  
+      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1  
       table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
       
-      See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
+      See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.  
   </description>
   <retvals>
     table AllHWOuts - a table with all HWOuts of the current project.
@@ -1250,19 +1250,19 @@ function ultraschall.ApplyAllHWOuts(AllHWOuts, option)
     
     expected table is of structure:
       
-      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
-      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
-      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
-      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1
-      table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
+      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!  
+      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n  
+      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1  
+      table[tracknumber]["TrackID"]                     - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan\_law"]         - pan-law, default is -1  
+      table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber   
           
       See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
       
@@ -1339,23 +1339,23 @@ function ultraschall.GetAllAUXSendReceives()
     returns a table with all AUX-SendReceive-settings of all tracks, excluding master-track
     
     returned table is of structure:
-      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
-      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
-      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
-      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes
-      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
-      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
-      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
+      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!  
+      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n  
+      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1  
+      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes  
+      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1  
+      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0  
+      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber  
       
       See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.
   </description>
@@ -1426,23 +1426,23 @@ function ultraschall.ApplyAllAUXSendReceives(AllAUXSendReceives, option)
 
     
     expected table is of structure:
-      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
-      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
-      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
-      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes
-      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
-      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
-      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
+      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!  
+      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n  
+      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1  
+      table[tracknumber]["TrackID"]                                 - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_track\_guid"] - the guid of the receive-track; with that, you can be sure to get the right receive-track, even if trackorder changes  
+      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1  
+      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0  
+      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber  
       
       See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.
       
@@ -1533,11 +1533,11 @@ function ultraschall.GetAllMainSendStates()
     The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track
     
     returned table is of structure:
-      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table["MainSend"]=true               - signals, this is an AllMainSends-table
-      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
-      Table[tracknumber]["ParentChannels"] - the parent channels of this track
+      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n  
+      Table["MainSend"]=true               - signals, this is an AllMainSends-table  
+      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)  
+      Table[tracknumber]["ParentChannels"] - the parent channels of this track  
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
   </description>
@@ -1590,11 +1590,11 @@ function ultraschall.ApplyAllMainSendStates(AllMainSendsTable, option)
     This influences the MasterTrack as well!
     
     expected table is of structure:
-      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table["MainSend"]=true               - signals, this is an AllMainSends-table
-      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)
-      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)
-      Table[tracknumber]["ParentChannels"] - the parent channels of this track
+      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n  
+      Table["MainSend"]=true               - signals, this is an AllMainSends-table  
+      table[tracknumber]["TrackID"]        - the unique id of the track as guid; can be used to get the MediaTrack using reaper.BR_GetMediaTrackByGUID(0, guid)  
+      Table[tracknumber]["MainSendOn"]     - Send to Master on(1) or off(1)  
+      Table[tracknumber]["ParentChannels"] - the parent channels of this track  
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
       

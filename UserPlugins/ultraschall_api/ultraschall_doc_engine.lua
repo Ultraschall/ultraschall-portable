@@ -49,16 +49,16 @@ if type(ultraschall)~="table" then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 end
 
-function ultraschall.Docs_ConvertPlainTextToHTML(text, nobsp)
+function ultraschall.Docs_ConvertPlainTextToHTML(text, nobsp, ignore_pre)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Docs_ConvertPlainTextToHTML</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.4
     Reaper=5.978
     Lua=5.3
   </requires>
-  <functioncall>string html_text = ultraschall.Docs_ConvertPlainTextToHTML(string String)</functioncall>
+  <functioncall>string html_text = ultraschall.Docs_ConvertPlainTextToHTML(string String, optional boolean nobsp, optional boolean ignore_pre)</functioncall>
   <description>
     Converts a plaintext into HTML.
     
@@ -70,6 +70,8 @@ function ultraschall.Docs_ConvertPlainTextToHTML(text, nobsp)
   </retvals>
   <parameters>
     string text - the text, which shall be converted to html
+    optional boolean nobsp - true, keep tabs and whitespaces as they are; false or nil, replace tabs with &nbsp;&nbsp;&nbsp;&nbsp; and two whitespaces in a row with two &nbsp;&nbsp;
+    optional boolean ignore_pre - true, do not insert <br> between lines using <pre> and </pre>; false or nil; always end each line with <br>
   </parameters>
   <chapter_context>
     Helper functions
@@ -80,8 +82,24 @@ function ultraschall.Docs_ConvertPlainTextToHTML(text, nobsp)
 </US_DocBloc>
 ]]
   if type(text)~="string" then ultraschall.AddErrorMessage("Docs_ConvertPlainTextToHTML", "text", "must be a string", -1) return nil end
-  text=string.gsub(text, "\r", "")
-  text=string.gsub(text, "\n", "<br/>\n")
+  if ignore_pre~=true then
+    text=string.gsub(text, "\r", "")
+    text=string.gsub(text, "\n", "<br/>\n")
+  else
+    local text2=""
+    local pre
+    for k in string.gmatch(text.."\n", "(.-)\n") do
+      if k:match("<pre>")~=nil then pre=true end
+      if k:match("</pre>")~=nil then pre=false end
+      if pre~=true then
+        text2=text2..k.."<br>\n"
+      else
+        text2=text2..k.."\n"
+      end
+      --print2(k)
+    end
+    text=text2
+  end
   if nobsp~=true then
     text=string.gsub(text, "  ", "&nbsp;&nbsp;")
     text=string.gsub(text, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")

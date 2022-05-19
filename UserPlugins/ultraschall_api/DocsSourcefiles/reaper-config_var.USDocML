@@ -3,12 +3,13 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.48 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.57 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
             >For Integer-values, use [SNM\_GetIntConfigVar()](Reaper_Api_Documentation.html#SNM_GetIntConfigVar), [SNM\_SetIntConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar),  
-             For Double/Float-values, use [SNM\_GetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar) and [SNM\_SetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetDoubleConfigVar), 
+             For Double/Float-values, use [SNM\_GetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetIntConfigVar) and [SNM\_SetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetDoubleConfigVar),  
+             For String-values, use [get\_config\_var\_string()](Reaper_Api_Documentation.html#get_config_var_string) and [SNM\_SetDoubleConfigVar()](Reaper_Api_Documentation.html#SNM_SetStringConfigVar)
 
          as well as the C++-only API-functions:
          
@@ -24,7 +25,7 @@
          Some variables are string-variables, but they can be accessed with get\_config\_var\_string(), which is available in pre-releases of Reaper only, at the time of writing(I tried to document them as well anyway).  
          They can also be accessed as integer, but only have the first 8 bytes available(64bits)  
           
-         Integer-variables are usually 32bits, only those who can be accessed as string-variable can be read as up to 64bits-integers as well.  
+         Integer-variables are usually 32bits, only those who can be accessed as string-variable can be read as integer as well up to 64bits-integers.  
           
          I documented bitfields differently than you usually use them. That means, &16384=1 is actually &16384=16384, while &16384=0 is &16384=0. This is only for better readability of the document, not for any technical reasons.  
          Some bitfields are documented as "unknown", though it's uncertain if they're unknown or just unused.  
@@ -38,7 +39,7 @@
          Setting some of the variables results in a different behavior, as you might expect them to behave.   
          Such example is [mastermutesolo](#mastermutesolo), where you can set the master's mute and solo-states successfully, however, the UserInterface of Reaper will NOT reflect that. It rather will show the old mute-solo-state instead.  
          Another such example is [reccfg](#reccfg), where you can set another recording-audio-format, but setting it to Video, GIF or AudioCD will result in strange behavior of the Project Settings-dialog, even though you can successfully record in these formats as well.  
-         So doublecheck them twice for any side-effects. These sideeffects aren't documented much in here(too much work for one young fellow like me ;) )  
+         So doublecheck them twice for any side-effects. These sideeffects aren't documented much in here(too much work for one young gal like me ;) )  
           
          I also document limitations with variables within this textfile. These are not taken from actually setting these variables, but rather taken from the limitations imposed by setting-dialogs. So, even if I write about limitations, 
          other values may be possible as well, though I would say, this could lead to unpredictable behavior of Reaper.  
@@ -54,12 +55,12 @@
             >If you change settings, these changes might not be stored in Reaper's setting-files, so they may get lost, when Reaper is exited.  
             >If you want to retain settings, you need to set them in the corresponding ini-files as well(usually the reaper.ini) 
             >with BR\_Win32\_WritePrivateProfileString()
-            >Only exception I know of it is [edit\_fontsize](#edit_fontsize), which sets the fontsize in Reaper's IDE. Changing this makes this setting immediately persisting.
+            >Only exception I know of is [edit\_fontsize](#edit_fontsize), which sets the fontsize in Reaper's IDE. Changing this makes this setting immediately persisting.
           
             >Project-settings should be stored the next time a project is saved, but doublecheck that, if storing projectsettings into a projectfile is a must in your script!  
             >Some project-settings can be stored into the reaper.ini as default-project-settings. I documented that as well, when I could find that out.  
           
-         documented by Meo Mespotine mespotine.de for the [ultraschall.fm](http://www.ultraschall.fm)-project  
+         documented by Meo-Ada Mespotine mespotine.de for the [ultraschall.fm](http://www.ultraschall.fm)-project  
          some of the variable-names were collected by various users in the Reaper-forums, thanx for that :)  
          This document is licensed under creative-commons cc-by-sa-nc license. More information about Creative Commons, at [creativecommons.org](http://www.creativecommons.org)  
           
@@ -931,6 +932,9 @@
            
            >&4=0, Removing trailing numbers - checked  
            >&4=1, Removing trailing numbers - unchecked  
+           
+           >&8=0, Allow drag-import to insert tracks - unchecked
+           >&8=1, Allow drag-import to insert tracks - checked
            
           For other settings, set in the preferences -> Media, see [showpeaksbuild](#showpeaksbuild), [relativeedges](#relativeedges), [applyfxtail](#applyfxtail), [itemfxtail](#itemfxtail), [peakcachegenmode](#peakcachegenmode), [opencopyprompt](#opencopyprompt)  
                                                 [altpeaks](#altpeaks), [showpeaks](#showpeaks), [peakcachegenrs](#peakcachegenrs), [offlineinact](#offlineinact), [insertmtrack](#insertmtrack)  
@@ -4364,6 +4368,8 @@
            >&65536=0, Do not create undo points when closing FX windows-checkbox - unchecked
            >&65536=1, Do not create undo points when closing FX windows-checkbox - checked
            
+           >&524288=0, Hide FXChain until added - checked
+           >&524288=1, Hide FXChain until added - unchecked
            
             
           For other settings in Preferences -> Plugins, see [fxresize](#fxresize) and [maxrecentfx](#maxrecentfx)  
@@ -4673,6 +4679,26 @@
           
            >0 to 2147483647; higher values become negative  
            
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>ide_font_face</slug>  
+      <title>ide_font_face</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The currently used font in Reaper's IDE.
+          It is a string  
+          
+          When storing a new font, use "" to use the default-IDE-font.
+          
+          Keep in mind, that only mono-spaced-fonts will look good. Other fonts might have artifacts.
+           
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
          Config Variables  
@@ -5016,10 +5042,31 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>itemlabel_hideheight</slug>  
+      <title>itemlabel_hideheight</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Hide labels when media item height is less than-inputbox, as set in Preferences -> Media  
+          This is not(!) located in Preferences -> Appearances-Media!  
+          It is an integer  
+          
+           >0 to 2147483647; in pixels  
+           
+          For other settings set in Preferences -> Media, see [labelitems2](#labelitems2), [peaksedges](#peaksedges), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+            
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>itemlabel_minheight</slug>  
       <title>itemlabel_minheight</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          Hide labels when media item take lane height is less than-inputbox, as set in Preferences -> Media  
+          Hide buttons when take height is less than-inputbox, as set in Preferences -> Media  
           This is not(!) located in Preferences -> Appearances-Media!  
           It is an integer  
           
@@ -5029,7 +5076,24 @@
             
                     
           Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>itemlane_minheight</slug>  
+      <title>itemlane_minheight</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Collapse free item positioning when track height is less than-inputbox, as set in Preferences -> Media Item Positioning
+          It is an integer  
+          
+            >0 to 2147483647; in pixels
             
+          Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
          Config Variables  
@@ -5104,6 +5168,25 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>    
+  
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>itemoverlap_offspct</slug>  
+      <title>itemoverlap_offspct</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          Offset by xx precentage of item height and Draw as opaque-checkbox, as set in Preferences -> Media Item Positioning  
+          It is an integer  
+            
+            >0 to 255; add 256 to set the Draw as opaque-checkbox
+            
+          Stored in reaper.ini under the same name in the section REAPER.
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc> 
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>itemprops</slug>  
@@ -7550,6 +7633,29 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>peaks_minheight</slug>  
+      <title>peaks_minheight</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The minimum height-inputbox as set in Preferences -> Appearances -> Peaks/Waveforms.  
+          It is an integer
+          
+            >0 to 999 pixels
+           
+          For other settings set in Preferences -> Media, see [itemlabel\_minheight](#itemlabel_minheight), [labelitems2](#labelitems2), [itemicons](#itemicons), [itemicons\_minheight](#itemicons_minheight), [itemvolmode](#itemvolmode)  
+          For other settings in Preferences -> Peaks/Waveforms, see [envlanes](#envlanes), [sampleedges](#sampleedges), [selitem\_tintalpha](#selitem_tintalpha), [showpeaks](#showpeaks),   
+                                                 [unselitem\_tintalpha](#unselitem_tintalpha), [tinttcp](#tinttcp)  
+                    
+          Stored in reaper.ini under the same name in the section REAPER.  
+            
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>pitchenvrange</slug>  
@@ -7559,12 +7665,12 @@
           It is an integer  
           
            >1 to 2147483647;   
-             add 256 for 1 semitone-snap,  
-             add 512 for 50 cent-snap,  
-             add 768 for 25 cent-snap,  
-             add 1024 for 10 cent-snap,  
-             add 1280 for 5 cent-snap,  
-             add 1537 for 1 cent-snap.  
+           >add 256 for 1 semitone-snap,  
+           >add 512 for 50 cent-snap,  
+           >add 768 for 25 cent-snap,  
+           >add 1024 for 10 cent-snap,  
+           >add 1280 for 5 cent-snap,  
+           >add 1537 for 1 cent-snap.  
             
           For other settings as set in Preferences -> Envelope Display, see [volenvrange](#volenvrange), [tempoenvmax](#tempoenvmax), [tempoenvmin](#tempoenvmin), [env\_deffoc](#env_deffoc), [env\_ol\_minh](#env_ol_minh),   
                                                    [env\_reduce](#env_reduce), [envclicksegmode](#envclicksegmode), [envlanes](#envlanes), [envtranstime](#envtranstime), [pooledenvs](#pooledenvs)  
@@ -8199,6 +8305,73 @@
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
+  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projmasterpanlaw</slug>  
+      <title>projmasterpanlaw</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The Pan-Law value, as MKVOL-value
+          Use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL to convert from/to dB
+          It is a double-float.  
+          
+           >Defaults:
+           >+0.0dB = 1
+           >-2.5dB = 0.74989420933246
+           >-3.0dB = 0.70794578438414
+           >-4.5dB = 0.59566214352901
+           >-6.0dB = 0.50118723362727
+           >-6.02dB= 0.5
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>    
+ 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projmasterpanlawflags</slug>  
+      <title>projmasterpanlawflags</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+       
+          It is an integer  
+          
+           >&1=0, Linear scale above -3dB pan law - unchecked
+           >&1=1, Linear scale above -3dB pan law - checked
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projmasterpanmode</slug>  
+      <title>projmasterpanmode</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The pan-mode of the project master's pan-law.
+          It is an integer  
+          
+           >-1, project default
+           >3, Stereo balance / mono pan (default)
+           >5, Stereo Pan
+           >6, Dual Pan
+           >0, REAPER 3.x balance(deprecated)
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+ 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>projmastervuflags</slug>  
       <title>projmastervuflags</title>  
@@ -8869,10 +9042,14 @@
            >1, Master mix + stems  
            >3, Stems (selected tracks)  
            >8, Region render matrix  
+           >&16, Tracks with only Mono-Media to Mono Files; 
            >32, Selected media items  
+           >128, selected tracks via master
            >&256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
            >&512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked  
            >&1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
+           >4096, Razor edit areas
+           >4224, Razor edit areas via master
            
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
@@ -10321,25 +10498,25 @@
            >&16=0, Silently increment filenames to avoid overwriting - unchecked  
            >&16=1, Silently increment filenames to avoid overwriting - checked  
            
-           >&32=0, Always embed title/date/time - unchecked
+           >&32=0, Always embed title/date/time - unchecked  
            >&32=1, Always embed title/date/time - checked
            
-           >&64=0, Always embed start offset (media position in project) - unchecked
+           >&64=0, Always embed start offset (media position in project) - unchecked  
            >&64=1, Always embed start offset (media position in project) - checked
            
-           >&128=0, Mark overs in render peaks display - checked
+           >&128=0, Mark overs in render peaks display - checked  
            >&128=1, Mark overs in render peaks display - unchecked
            
-           >&256=0, True Peak -> Calculate statistics when rendering-button - unchecked
+           >&256=0, True Peak -> Calculate statistics when rendering-button - unchecked  
            >&256=1, True Peak -> Calculate statistics when rendering-button - checked
            
            >&512=0, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - checked
            >&512=1, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - unchecked
            
-           >&1024=0, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - checked
+           >&1024=0, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - checked  
            >&1024=1, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - unchecked
 
-           >&2048=0, Calculate and embed peak/loudness value-checkbox - unchecked
+           >&2048=0, Calculate and embed peak/loudness value-checkbox - unchecked  
            >&2048=0, Calculate and embed peak/loudness value-checkbox - checked
            
            >seems not to be available anymore as of Reaper 5.977:  

@@ -28,8 +28,13 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Scripts/Tools/DeveloperScripts")
 
+print_update("Adding Ultraschall-API Developer Scripts")
+commit=false
 for i=1, filecount do
-  reaper.AddRemoveReaScript(true, 0, files[i], true)
+  if i==filecount then commit=true end
+  O=reaper.AddRemoveReaScript(true, 0, files[i], commit)
+  if O~=0 then O="success" else O="failed " end
+  print(O.." - "..files[i]:match(".*/(.*)"))
 end
 
 reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/3rd_party_modules/Lokasenna_GUI v2/Developer Tools/GUI Builder/Lokasenna_GUI Builder.lua", true)

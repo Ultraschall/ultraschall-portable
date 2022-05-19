@@ -64,6 +64,7 @@ REAPER Filetype-descriptions
                 <a href="#Reaper-dxplugins64.ini">Reaper-dxplugins[64].ini</a> - caches the DirectX-Plugin-information(Windows)<br>
                 <a href="#Reaper-extstate.ini">reaper-extstate.ini</a> - stores external states from scripts and Reaper-plugins.<br>
                 <a href="#ReaperFileList">ReaperFileList</a> - The database-files for the Media-Explorer<br>
+                <a href="#reaper-convertfx.ini">Reaper-convertfx.ini</a> - the FXChain for the Batch Converter<br>
                 <a href="#Reaper-fxfolders.ini">Reaper-fxfolders.ini</a> - manages the "My Folders"-section for FX-selection dialogue<br>
                 <a href="#ReaperIDETheme">ReaperIDETheme</a> - stores the color-theme of the Reaper-ReaScriptIDE<br>
                 <a href="#Reaper-kb.ini">Reaper-kb.ini</a> - stores custom ActionCommandIDs, Script/Action-Descriptions, Shortcuts(Key/Midi)<br>
@@ -541,7 +542,28 @@ REAPER Filetype-descriptions
                         <i>Name</i> - Name of the plugin, as it will be displayed within Reaper. No empty names are allowed; a simple space is also not sufficient. Unicode doesn't work well; avoid it.<p>
                         <i>Load</i> - 0 - ignored by Reaper, any other number - it shows up in the FX-Plugin selection folder DX/DXi. When scanning plugins, Reaper seems to determine automatically, if a given DX-Plugin is useable within Reaper. You should trust Reaper about this, as some DX-Plugins may render Reaper busy to unresponsiveness.<p>
                     </div>
-            </div>
+                </div>
+                
+                <div style="wisth: 95%;">
+                    <hr>
+                    <a id="reaper-convertfx.ini"></a><h2>reaper-convertfx.ini</h2>
+                    The reaper-convertfx.ini can be found in the resource-folder of Reaper or in the Reaper-Application-Folder(with portable installations).<p>
+                    
+                    This is basically an FXChain. It stores the FX used in the FXChain of the Batch-Converter.<br>
+                    
+                    The format is like a regular FXChain, except, that it's not enclosed into<p>
+                    
+                    <pre><code>
+                    &lt;FXCHAIN
+                    
+                    &gt;
+                    </code></pre>
+                    
+                    tags, but rather the content of an FXChain only.<p>
+                    So if you want to read this FXChain and add it in a MediaTrack or MediaItem_Take-statechunk, you need to put the 
+                    &lt;FXCHAIN-tags surrounding it, or it will not be accepted.
+                </div>
+                
                 <div style="width: 95%;">
                     <hr>
                     <a id="Reaper-fxfolders.ini"></a><h2>Reaper-fxfolders.ini</h2>

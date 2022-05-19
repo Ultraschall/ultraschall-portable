@@ -65,7 +65,7 @@ Ultraschall API GFX-Functions
 </td></tr><tr><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Key-Management"><a href="#Key-Management">^</a></a><strong> <u>Key-Management</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetChar">GFX_GetChar</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Mouse Handling"><a href="#Mouse Handling">^</a></a><strong> <u>Mouse Handling</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
-<b style="font-size:small;"><br><a class="inpad" id=" Lokasenna Gui Lib v2"><a href="# Lokasenna Gui Lib v2">^</a></a>  Lokasenna Gui Lib v2</b>
+<b style="font-size:small;"><br><a class="inpad" id="Lokasenna Gui Lib v2"><a href="#Lokasenna Gui Lib v2">^</a></a> Lokasenna Gui Lib v2</b>
 </td></tr><tr><td class="tdsm"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Window Handling"><a href="#Window Handling">^</a></a><strong> <u>Window Handling</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetDropFile">GFX_GetDropFile</a></td><td class="tdsm"><a href="#GFX_GetWindowHWND">GFX_GetWindowHWND</a></td><td class="tdsm"><a href="#GFX_Init">GFX_Init</a></td></tr></table><br></div><div class="ch">
 <hr>
@@ -77,9 +77,9 @@ Ultraschall API GFX-Functions
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawEmbossedSquare</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>optional</i> <i>integer</i> rgb, <i>optional</i> <i>integer</i> gbg, <i>optional</i> <i>integer</i> bbg, <i>optional</i> <i>integer</i> r, <i>optional</i> <i>integer</i> g, <i>optional</i> <i>integer</i> b)</code></div>
 </div><p>
 <div class="ch">
-draws an embossed rectangle, optionally with a background-color<br/>
-<br/>
-returns false in case of an error              
+draws an embossed rectangle, optionally with a background-color<br>
+<br>
+returns false in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -140,11 +140,11 @@ returns false in case of an error
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_DrawThickRoundRect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>number</i> thickness, <i>number</i> roundness, <i>boolean</i> antialias)</code></div>
 </div><p>
 <div class="ch">
-draws a round-rectangle with a custom thickness.<br/>
-<br/>
-You shouldn't redraw with it too often, as it eats many ressources<br/>
-<br/>
-returns false in case of an error              
+draws a round-rectangle with a custom thickness.<br>
+<br>
+You shouldn't redraw with it too often, as it eats many ressources<br>
+<br>
+returns false in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -193,11 +193,11 @@ returns false in case of an error
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitFramebuffer</em>(<i>integer</i> framebufferidx, <i>optional</i> <i>boolean</i> showidx)</code></div>
 </div><p>
 <div class="ch">
-blits a framebuffer at position 0,0. If the gfx-window is smaller than the contents of the framebuffer, it will resize it before blitting to window size, retaining the correct aspect-ratio.<br/>
-<br/>
-Mostly intended for debugging-purposes, when you want to track, if a certain framebuffer contains, what you expect it to contain.<br/>
-<br/>
-returns false in case of an error              
+blits a framebuffer at position 0,0. If the gfx-window is smaller than the contents of the framebuffer, it will resize it before blitting to window size, retaining the correct aspect-ratio.<br>
+<br>
+Mostly intended for debugging-purposes, when you want to track, if a certain framebuffer contains, what you expect it to contain.<br>
+<br>
+returns false in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -226,11 +226,11 @@ returns false in case of an error
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_BlitImageCentered</em>(<i>integer</i> image, <i>integer</i> x, <i>integer</i> y, <i>number</i> scale, <i>number</i> rotate, <i>optional</i> <i>number</i> srcx, <i>optional</i> <i>number</i> srcy, <i>optional</i> <i>number</i> srcw, <i>optional</i> <i>number</i> srch, <i>optional</i> <i>integer</i> destx, <i>optional</i> <i>integer</i> desty, <i>optional</i> <i>integer</i> destw, <i>optional</i> <i>integer</i> desth, <i>optional</i> <i>integer</i> rotxoffs, <i>optional</i> <i>integer</i> rotyoffs)</code></div>
 </div><p>
 <div class="ch">
-Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.<br/>
-<br/>
-All the rest basically works like the regular gfx.blit-function.<br/>
-<br/>
-returns false in case of an error              
+Blits a centered image at the position given by parameter x and y. That means, the center of the image will be at x and y.<br>
+<br>
+All the rest basically works like the regular gfx.blit-function.<br>
+<br>
+returns false in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -312,11 +312,11 @@ has no effect, when destx, desty, destw, desth are given</td></tr>
 <div class="l">Lua: <code> <i>integer</i> font_layout = <em>ultraschall.GFX_GetTextLayout</em>(<i>optional</i> <i>boolean</i> bold, <i>optional</i> <i>boolean</i> italic, <i>optional</i> <i>boolean</i> underline, <i>optional</i> <i>boolean</i> outline, <i>optional</i> <i>boolean</i> nonaliased, <i>optional</i> <i>boolean</i> inverse, <i>optional</i> <i>boolean</i> rotate, <i>optional</i> <i>boolean</i> rotate2)</code></div>
 </div><p>
 <div class="ch">
-Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.<br/>
-<br/>
-Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.<br/>
-<br/>
-Some combinations do not work together, so you need to experiment.              
+Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.<br>
+<br>
+Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.<br>
+<br>
+Some combinations do not work together, so you need to experiment.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -369,11 +369,11 @@ Some combinations do not work together, so you need to experiment.
 <div class="l">Lua: <code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
 </div><p>
 <div class="ch">
-Sets the font of the gfx-window.<br/>
-<br/>
-As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br/>
-<br/>
-returns false in case of an error              
+Sets the font of the gfx-window.<br>
+<br>
+As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br>
+<br>
+returns false in case of an error<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> fontindex</td></tr>
@@ -411,15 +411,23 @@ v - inverse</td></tr>
 <div class="l">Lua: <code> <i>integer</i> first_typed_character, <i>integer</i> num_characters, <i>table</i> character_queue = <em>ultraschall.GFX_GetChar</em>(<i>optional</i> <i>integer</i> character, <i>optional</i> <i>boolean</i> manage_clipboard, <i>optional</i> <i>string</i> to_clipboard, <i>optional</i> <i>boolean</i> readable_characters)</code></div>
 </div><p>
 <div class="ch">
-<p>gets all characters from the keyboard-queue of gfx.getchar as a handy table.</p>
-<p>the returned table character_queue is of the following format:</p>
-<pre><code>character_queue[index][&quot;Code&quot;] - the character-code
-character_queue[index][&quot;Ansi&quot;] - the character-code converted into Ansi
-character_queue[index][&quot;UTF8&quot;] - the character-code converted into UTF8</code></pre>
-<p>When readable<em>characters=true, the entries of the character</em>queue for Ansi and UTF8 will hold readable strings for non-printable characters, like: "ins ", "del ", "home", "F1 "-"F12 ", "tab ", "esc ", "pgup", "pgdn", "up ", "down", "left", "rght", "bspc", "ente"</p>
-<p>You can optionally let this function manage clipboard. So hitting Ctrl+V will get put the content of the clipboard into the character<em>queue of Ansi/UTF8 in the specific position of the character-queue, while hitting Ctrl+C will put the contents of the parameter to</em>clipboard into the clipboard in this case.</p>
-<p>Retval first<em>typed</em>character behaves basically like the returned character of Reaper's native function gfx.getchar()</p>
-<p>returns -2 in case of an error</p>
+gets all characters from the keyboard-queue of gfx.getchar as a handy table.<br>
+<br>
+the returned table character_queue is of the following format:<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;character_queue[index]["Code"] - the character-code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;character_queue[index]["Ansi"] - the character-code converted into Ansi<br>
+&nbsp;&nbsp;&nbsp;&nbsp;character_queue[index]["UTF8"] - the character-code converted into UTF8<br>
+&nbsp;&nbsp;<br>
+When readable_characters=true, the entries of the character_queue for Ansi and UTF8 will hold readable strings for non-printable characters, like:<br>
+&nbsp;&nbsp;"ins ", "del ", "home", "F1&nbsp;&nbsp;"-"F12 ", "tab ", "esc ", "pgup", "pgdn", "up&nbsp;&nbsp;", "down", "left", "rght", "bspc", "ente"<br>
+&nbsp;&nbsp;<br>
+You can optionally let this function manage clipboard. So hitting Ctrl+V will get put the content of the clipboard into the character_queue of Ansi/UTF8 in the specific position of the character-queue,<br>
+while hitting Ctrl+C will put the contents of the parameter to_clipboard into the clipboard in this case.<br>
+<br>
+Retval first_typed_character behaves basically like the returned character of Reaper's native function gfx.getchar()<br>
+<br>
+returns -2 in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -466,13 +474,13 @@ false, treat ctrl+v/cmd+v as regular typed character</td></tr>
 <div class="l">Lua: <code> <i>string</i> clickstate, <i>string</i> specific_clickstate, <i>integer</i> mouse_cap, <i>integer</i> click_x, <i>integer</i> click_y, <i>integer</i> drag_x, <i>integer</i> drag_y, <i>integer</i> mouse_wheel, <i>integer</i> mouse_hwheel = <em>ultraschall.GFX_GetMouseCap</em>(<i>optional</i> <i>integer</i> doubleclick_wait, <i>optional</i> <i>integer</i> drag_wait)</code></div>
 </div><p>
 <div class="ch">
-Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.<br/>
-Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.<br/>
-<br/>
-Much more convenient, than fiddling around with gfx.mouse_cap<br/>
-<br/>
-Note: After doubleclicked, this will not return mouse-clicked-states, until the mouse-button is released. So any mouse-clicks during that can be only gotten from the retval mouse_cap.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is to prevent automatic mouse-dragging after double-clicks.              
+Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.<br>
+Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.<br>
+<br>
+Much more convenient, than fiddling around with gfx.mouse_cap<br>
+<br>
+Note: After doubleclicked, this will not return mouse-clicked-states, until the mouse-button is released. So any mouse-clicks during that can be only gotten from the retval mouse_cap.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is to prevent automatic mouse-dragging after double-clicks.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -540,15 +548,15 @@ Note: After doubleclicked, this will not return mouse-clicked-states, until the 
 <div class="l">Lua: <code> <em>ultraschall.Lokasenna_LoadGuiLib_v2</em>()</code></div>
 </div><p>
 <div class="ch">
-loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.<br/>
-<br/>
-This prevents the need to use dofile, require, loadfile to load Lokasenna's Gui Lib, so you can code the actual Gui right after calling this function.<br/>
-<br/>
-It gives you access to all classes immediately.<br/>
-<br/>
-It uses a version of Lokasenna's Gui Lib v2 included with Ultraschall-API, so it doesn't get into conflict with other installed versions on your system.<br/>
-<br/>
-You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GUI%20v2/Developer%20Tools/Documentation.html">at this location.</a>              
+loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.<br>
+<br>
+This prevents the need to use dofile, require, loadfile to load Lokasenna's Gui Lib, so you can code the actual Gui right after calling this function.<br>
+<br>
+It gives you access to all classes immediately.<br>
+<br>
+It uses a version of Lokasenna's Gui Lib v2 included with Ultraschall-API, so it doesn't get into conflict with other installed versions on your system.<br>
+<br>
+You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GUI%20v2/Developer%20Tools/Documentation.html">at this location.</a><br>
 </div><br>
 </div>
 <div class="ch">
@@ -561,10 +569,15 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <div class="l">Lua: <code> <i>boolean</i> changed, <i>integer</i> num_dropped_files, <i>array</i> dropped_files, <i>integer</i> drop_mouseposition_x, <i>integer</i> drop_mouseposition_y = <em>ultraschall.GFX_GetDropFile</em>()</code></div>
 </div><p>
 <div class="ch">
-<p>returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.</p>
-<p>if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again. Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated. That way, dropping the same files in differen places is recognised by this function.</p>
-<p>Call repeatedly in every defer-cycle to get the latest files and coordinates.</p>
-<p>Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.</p>
+returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.<br>
+<br>
+if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.<br>
+Note: when the same files will be dropped, changed==true will also be dropped with only the mouse-position updated.<br>
+That way, dropping the same files in differen places is recognised by this function.<br>
+<br>
+Call repeatedly in every defer-cycle to get the latest files and coordinates.<br>
+<br>
+Important: Don't use Reaper's own gfx.dropfile while using this, as this could intefere with this function.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -599,7 +612,8 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <div class="l">Lua: <code> <i>HWND</i> hwnd = <em>ultraschall.GFX_GetWindowHWND</em>()</code></div>
 </div><p>
 <div class="ch">
-<p>Returns the HWND of the currently opened gfx-window. You need to use <a href="#GFX_Init">ultraschall.GFX_Init()</a>, otherwise it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."</p>
+Returns the HWND of the currently opened gfx-window. You need to use ultraschall.GFX_Init(), otherwise <br>
+it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -619,7 +633,7 @@ You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GU
 <div class="l">Lua: <code> <i>integer</i> retval, <i>HWND</i> hwnd = <em>ultraschall.GFX_Init</em>(<i>string</i> "name", <i>optional</i> <i>integer</i> width, <i>optional</i> <i>integer</i> height, <i>optional</i> <i>integer</i> dockstate, <i>optional</i> <i>integer</i> xpos, <i>optional</i> <i>integer</i> ypos)</code></div>
 </div><p>
 <div class="ch">
-Opens a new graphics window and returns its HWND-windowhandler object.              
+Opens a new graphics window and returns its HWND-windowhandler object.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -661,7 +675,7 @@ Opens a new graphics window and returns its HWND-windowhandler object.
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.3  - 12 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.6  - 12 elements available <br></td></table>
         <hr>
       </div>
       <br>

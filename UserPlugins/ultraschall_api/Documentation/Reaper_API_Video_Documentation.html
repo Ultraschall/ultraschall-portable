@@ -70,49 +70,59 @@ End of Header
 <a href="#Coding Introduction"> ^</a> 
 <img width="3%" src="gfx/reaper6.13.png" alt="Reaper version 6.13"><u><b>Coding Introduction</b></u><br>			<p>
 <div class="ch">
-<p>To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin. Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.</p>
-<p>Example code, with a knob for turning the video on the current track on and off(use this as track-fx!):</p>
-<pre><code>                                //A small demo-script that turns video of the current track on and off
-//@param 1:VideoOnOff &#39;Video Off(0) On(1)&#39; 1 0 1 0.5 1
+To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.<br>
+Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). <br>
+Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.<br>
+<br>
+Example code, with a knob for turning the video on the current track on and off(use this as track-fx!):<br>
+<pre><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//A small demo-script that turns video of the current track on and off
+//@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
 
 frame=1; // variable frame set with the videoframe from the first 
-         // videoitem in the project at a given position
-                                  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // videoitem in the project at a given position
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                       // to prevent from having the last frame(s) be shown indefinately
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to prevent from having the last frame(s) be shown indefinately
 
-//Now, put the picture to the framebuffer -&gt; outputting the video
-gfx_blit(frame,  // the current video-frame
-                 1,  // don&#39;t preserve aspect-ratio
-                 0,0, // put upper right corner of the video at position 0,0
-              project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                                        //   multiplied by the VideoOnOff-Parameter
-                                                        //   1=video squeezed to 100% height and width 
-                                                        //   0=video squeezed to 0% height and width
-                                                    );</code></pre>
-<p>The following code allows turning the video of the track above(!) the current track on/off and allows moving it and turning it on and off</p>
-<pre><code>                                // A small demo-script that turns video of the current track on and off
-//@param 1:VideoOnOff &#39;Video Off(0) On(1)&#39; 1 0 1 0.5 1
-//@param 2:MoveX &#39;Move X&#39; 0 0 2048 1024 1
-//@param 3:MoveY &#39;Move Y&#39; 0 0 2048 1024 1
+//Now, put the picture to the framebuffer -> outputting the video
+gfx_blit(frame,&nbsp;&nbsp;// the current video-frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// don't preserve aspect-ratio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0,0,&nbsp;&nbsp;&nbsp;&nbsp;// put upper right corner of the video at position 0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp; multiplied by the VideoOnOff-Parameter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp; 1=video squeezed to 100% height and width 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp; 0=video squeezed to 0% height and width
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+</code></pre><br>
+The following code allows turning the video of the track above(!) the current track on/off and allows moving it and turning it on and off<br>
+<pre><code>
+// A small demo-script that turns video of the current track on and off
+//@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+//@param 2:MoveX 'Move X' 0 0 2048 1024 1
+//@param 3:MoveY 'Move Y' 0 0 2048 1024 1
 
 frame=input_track(0); // variable frame set with the videoframe from the first 
-                      // videoitem in the project at a given position above the current one
-                                  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// videoitem in the project at a given position above the current one
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                       // to prevent from having the last frame(s) be shown indefinately
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to prevent from having the last frame(s) be shown indefinately
 
-//Now, put the picture to the framebuffer -&gt; outputting the video
-gfx_blit(frame,            // the current video-frame
-         1,                // don&#39;t preserve aspect-ratio
-         0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
-                           // and add the knob-value of MoveX and MoveY to the position
-                           // so changing position is possible
-         project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
-                          //   multiplied by the VideoOnOff-Parameter
-                          //   1=video squeezed to 100% height and width 
-                          //   0=video squeezed to 0% height and width
-                                            );</code></pre>
+//Now, put the picture to the framebuffer -> outputting the video
+gfx_blit(frame,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the current video-frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// don't preserve aspect-ratio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0+MoveX,0+MoveY,&nbsp;&nbsp;// put upper right corner of the video at position 0,0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // and add the knob-value of MoveX and MoveY to the position
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // so changing position is possible
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;multiplied by the VideoOnOff-Parameter
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;1=video squeezed to 100% height and width 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;0=video squeezed to 0% height and width
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);
+</code></pre><br>
 </div><br>
 </div>
 <div class="ch">
@@ -121,16 +131,16 @@ gfx_blit(frame,            // the current video-frame
 <a href="#Introduction"> ^</a> 
 <img width="3%" src="gfx/reaper6.47.png" alt="Reaper version 6.47"><u><b>Introduction</b></u><br>			<p>
 <div class="ch">
-Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.<br/>
-Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.<br/>
-It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.<br/>
-<br/>
-Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.<br/>
-<br/>
-Some general notes on the video-processor-plugin:<br/>
-It has a very limited set of programmable UI-elements, means, only a knob (refer the param-variable for more details) at the time.<br/>
-The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).<br/>
-This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.              
+Since Reaper 5, Reaper has proper video-editing support. In addition to that, Reaper has a plugin, called "Video Processor Plugin", that is focused on video-effect handling.<br>
+Though it is still in it's very early stages, it supports already a handful of useful effects that can be selected via the presets-selection.<br>
+It is also programmable. It opens up a small IDE-window, as part of the "Video-Processor-Plugin"-UI, in which you can put Eel-code(no Lua or Python!), that processes the video.<br>
+<br>
+Unlike with other scripts, the scripts for the video processor plugin do not support the standard-reaper-API-commands, but have an own set of variables and functions. The list of functions can be reached by clicking into the IDE-window of the "video processor plugin" and hitting the F1-key.<br>
+<br>
+Some general notes on the video-processor-plugin:<br>
+It has a very limited set of programmable UI-elements, means, only a knob (refer the param-variable for more details) at the time.<br>
+The plugin has also sometimes the behaviour of "added effects". That means: If you have several tracks whith video items and you put a video processor plugin on every track as track-FX, they do not only influence the video-items in this track. In fact, they also influence the video-items on the other tracks as well. If you have 10 tracks and every track has a video-effect as track-FX that turns the brightness down by 10%, the resulting image will be a black one. All effects added up each other (10 times -10% brightness).<br>
+This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.<br>
 </div><br>
 </div>
 <div class="ch">
@@ -142,11 +152,11 @@ This effect can be circumvented by putting the video-processor-plugin as item-FX
 <div class="e">EEL2: <code><em> colorspace</em></code></div>
 </div><p>
 <div class="ch">
-current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. <br/>
-You can override this before drawing (or between drawing). <br/>
-<br/>
-This may be set to 0 initially if the user has the Auto project colorspace set. <br/>
-It will be automatically changed if 0 and a drawing operation occurs or an input is successfully queried via input_info().              
+current rendering colorspace, e.g. 'RGBA', 'YV12', or 'YUY2'. <br>
+You can override this before drawing (or between drawing). <br>
+<br>
+This may be set to 0 initially if the user has the Auto project colorspace set. <br>
+It will be automatically changed if 0 and a drawing operation occurs or an input is successfully queried via input_info().<br>
 </div><br>
 </div>
 <div class="ch">
@@ -158,7 +168,7 @@ It will be automatically changed if 0 and a drawing operation occurs or an input
 <div class="e">EEL2: <code><em> framerate</em></code></div>
 </div><p>
 <div class="ch">
-project FPS (30.0, 29.97, etc)              
+project FPS (30.0, 29.97, etc)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -170,7 +180,7 @@ project FPS (30.0, 29.97, etc)
 <div class="e">EEL2: <code><em> gfx_a</em></code></div>
 </div><p>
 <div class="ch">
-current drawing color (alpha 0..1)              
+current drawing color (alpha 0..1)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -182,7 +192,7 @@ current drawing color (alpha 0..1)
 <div class="e">EEL2: <code><em> gfx_a2</em></code></div>
 </div><p>
 <div class="ch">
-current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)              
+current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -194,7 +204,7 @@ current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)
 <div class="e">EEL2: <code><em> gfx_b</em></code></div>
 </div><p>
 <div class="ch">
-current drawing color (blue 0..1)              
+current drawing color (blue 0..1)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -206,7 +216,7 @@ current drawing color (blue 0..1)
 <div class="e">EEL2: <code><em> gfx_dest</em></code></div>
 </div><p>
 <div class="ch">
-destination image handle, or -1 for main framebuffer              
+destination image handle, or -1 for main framebuffer<br>
 </div><br>
 </div>
 <div class="ch">
@@ -218,7 +228,7 @@ destination image handle, or -1 for main framebuffer
 <div class="e">EEL2: <code><em> gfx_g</em></code></div>
 </div><p>
 <div class="ch">
-current drawing color (green 0..1)              
+current drawing color (green 0..1)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -230,18 +240,18 @@ current drawing color (green 0..1)
 <div class="e">EEL2: <code><em> gfx_mode</em></code></div>
 </div><p>
 <div class="ch">
-drawing mode<br/>
-<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0 = normal<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;1 = additive<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;3 = multiply (very different in YUV vs RGBA)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;17 = (dest + src*gfx_a)*.5 + .5 (only valid when using YUV colorspaces)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;18 = dest + (src-0.5)*gfx_a*2.0 (only valid when using YUV colorspaces)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;19 = absolute difference: abs(dest-src)*gfx_a (only valid when using YUV colorspaces)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0x100 (flag ORed to above mode) for blit() to enable filtering (if possible)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0x10000 (flag ORed to above mode) to use source alpha (only valid when using RGBA colorspace)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0x40000 (flag ORed to above mode) to use extra clamping in normal mode (for out of range alpha/gradient values)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;0x80000 (flag ORed to above mode) to interpret gfx_r/gfx_g/gfx_b as YUV values (in YUV colorspaces)              
+drawing mode<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0 = normal<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1 = additive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3 = multiply (very different in YUV vs RGBA)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;17 = (dest + src*gfx_a)*.5 + .5 (only valid when using YUV colorspaces)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;18 = dest + (src-0.5)*gfx_a*2.0 (only valid when using YUV colorspaces)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;19 = absolute difference: abs(dest-src)*gfx_a (only valid when using YUV colorspaces)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0x100 (flag ORed to above mode) for blit() to enable filtering (if possible)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0x10000 (flag ORed to above mode) to use source alpha (only valid when using RGBA colorspace)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0x40000 (flag ORed to above mode) to use extra clamping in normal mode (for out of range alpha/gradient values)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0x80000 (flag ORed to above mode) to interpret gfx_r/gfx_g/gfx_b as YUV values (in YUV colorspaces)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -253,7 +263,7 @@ drawing mode<br/>
 <div class="e">EEL2: <code><em> gfx_r</em></code></div>
 </div><p>
 <div class="ch">
-current drawing color (red 0..1)              
+current drawing color (red 0..1)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -265,12 +275,12 @@ current drawing color (red 0..1)
 <div class="e">EEL2: <code><em> param1..param24</em></code></div>
 </div><p>
 <div class="ch">
-Manage the knobs of your video-processor-script.<br/>
-param1 hold the value for parameter 1 .. param24 for parameter 24.<br/>
-<br/>
-used as:<br/>
-<br/>
-//@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size              
+Manage the knobs of your video-processor-script.<br>
+param1 hold the value for parameter 1 .. param24 for parameter 24.<br>
+<br>
+used as:<br>
+<br>
+//@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr">@param X:</td></tr>
@@ -315,7 +325,7 @@ used as:<br/>
 <div class="e">EEL2: <code><em> param_wet</em></code></div>
 </div><p>
 <div class="ch">
-if in FX form, wet/dry mix of effect.               
+if in FX form, wet/dry mix of effect. <br>
 </div><br>
 </div>
 <div class="ch">
@@ -327,7 +337,7 @@ if in FX form, wet/dry mix of effect.
 <div class="e">EEL2: <code><em> project_h</em></code></div>
 </div><p>
 <div class="ch">
-project preferred video height (code can override this before drawing)              
+project preferred video height (code can override this before drawing)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -339,7 +349,7 @@ project preferred video height (code can override this before drawing)
 <div class="e">EEL2: <code><em> project_tempo</em></code></div>
 </div><p>
 <div class="ch">
-current tempo in BPM              
+current tempo in BPM<br>
 </div><br>
 </div>
 <div class="ch">
@@ -351,7 +361,7 @@ current tempo in BPM
 <div class="e">EEL2: <code><em> project_time</em></code></div>
 </div><p>
 <div class="ch">
-project time in seconds              
+project time in seconds<br>
 </div><br>
 </div>
 <div class="ch">
@@ -363,7 +373,7 @@ project time in seconds
 <div class="e">EEL2: <code><em> project_time_qn</em></code></div>
 </div><p>
 <div class="ch">
-current project position in QN              
+current project position in QN<br>
 </div><br>
 </div>
 <div class="ch">
@@ -375,7 +385,7 @@ current project position in QN
 <div class="e">EEL2: <code><em> project_timeoffs</em></code></div>
 </div><p>
 <div class="ch">
-project setting time offset in seconds              
+project setting time offset in seconds<br>
 </div><br>
 </div>
 <div class="ch">
@@ -387,7 +397,7 @@ project setting time offset in seconds
 <div class="e">EEL2: <code><em> project_ts_denom</em></code></div>
 </div><p>
 <div class="ch">
-current time signature denominator              
+current time signature denominator<br>
 </div><br>
 </div>
 <div class="ch">
@@ -399,7 +409,7 @@ current time signature denominator
 <div class="e">EEL2: <code><em> project_ts_num</em></code></div>
 </div><p>
 <div class="ch">
-current time signature numerator              
+current time signature numerator<br>
 </div><br>
 </div>
 <div class="ch">
@@ -411,7 +421,7 @@ current time signature numerator
 <div class="e">EEL2: <code><em> project_w</em></code></div>
 </div><p>
 <div class="ch">
-project preferred video width (code can override this before drawing)              
+project preferred video width (code can override this before drawing)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -423,7 +433,7 @@ project preferred video width (code can override this before drawing)
 <div class="e">EEL2: <code><em> project_wh_valid</em></code></div>
 </div><p>
 <div class="ch">
-set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)              
+set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -435,7 +445,7 @@ set nonzero if project_w/project_h reflect actual project setting (otherwise cou
 <div class="e">EEL2: <code><em> time</em></code></div>
 </div><p>
 <div class="ch">
-item time in seconds (if in item)              
+item time in seconds (if in item)<br>
 </div><br>
 </div>
 <div class="ch">
@@ -447,7 +457,7 @@ item time in seconds (if in item)
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_blit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> preserve_aspect=0, <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> srcw, <i>optional</i> <i>integer</i> srch])</code></div>
 </div><p>
 <div class="ch">
-Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas              
+Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -507,13 +517,13 @@ Draws input to framebuffer. preserve_aspect=-1 for no fill in pad areas
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_deltablit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>integer</i> srcx, <i>integer</i> srcy, <i>integer</i> dsdx, <i>integer</i> dtdx, <i>integer</i> dsdy, <i>integer</i> dtdy, <i>integer</i> dsdxdy, <i>integer</i> dtdxdy[, <i>optional</i> <i>integer</i> dadx, <i>optional</i> <i>integer</i> dady, <i>optional</i> <i>integer</i> dadxdy])</code></div>
 </div><p>
 <div class="ch">
-Blits with source pixel transformation control. <br/>
-<br/>
-S and T refer to source coordinates: <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;dsdx is how much the source X position changes with each X destination pixel, <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;dtdx is how much the source Y position changes with each X destination pixel, etc.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-All of the S, T and A parameters accept negative values as well.              
+Blits with source pixel transformation control. <br>
+<br>
+S and T refer to source coordinates: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;dsdx is how much the source X position changes with each X destination pixel, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;dtdx is how much the source Y position changes with each X destination pixel, etc.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+All of the S, T and A parameters accept negative values as well.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -597,8 +607,19 @@ All of the S, T and A parameters accept negative values as well.
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_destkeyedblit</em>(input input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
 </div><p>
 <div class="ch">
-<p>Chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode.</p>
-<p>See <a href="#gfx_keyedblit">gfx_keyedblit()</a> for kv1-kv4 explanation.</p>
+Chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode. <br>
+<br>
+kv1-kv4 meaning depends on colorspace:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;YV12/YUY2:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is U target (-0.5 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is V target (-0.5 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is closeness-factor (0.4 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 is the gain (2.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RGBA:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is green-factor (1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is blue-factor (-1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is offset (-1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 enables spill removal (1.0 default)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -662,28 +683,28 @@ All of the S, T and A parameters accept negative values as well.
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_evalrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>string</i> code_string[, <i>optional</i> <i>integer</i> flags, <i>optional</i> <i>integer</i> src, <i>optional</i> <i>string</i> init_code_string, <i>optional</i> <i>string</i> src2])</code></div>
 </div><p>
 <div class="ch">
-Processes a rectangle with code_string being executed for every pixel/pixel-group. <br/>
-<br/>
-Returns -1 if code_string failed to compile. <br/>
-<br/>
-Code should reference per pixel values (0-255, unclamped), depending on colorspace:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;RGBA:&nbsp;&nbsp;r/g/b/a (0-255, unclamped)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;YUY2: y1,y2, u, v (0-255, unclamped; u/v are centered at 128)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;YV12: y1-y4, u, v (0-255, unclamped; u/v are centered at 128)<br/>
-<br/>
-example for a codestring:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;"r[0]+=1; g[256]+=1; b[512]+=1;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(0.299*r + 0.587*g + 0.114*b)[768] += 1;"<br/>
-<br/>
-<br/>
-Additional options:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;flags|=1 in order to prevent multiprocessing (if your routine needs&nbsp;&nbsp;to process pixels in-order)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;flags|=2 to ignore output (analysis-only). This is only valid when not using src2 and not using one of the 4/8 modes.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;flags|=4,8 -- only valid in RGBA/YV12, and only if src/src2 not specified. flags&8 means process in vertical slices (top to bottom unless flags&4). flags&4 but not flags&8 means right-to-left. In each case y1-y4 are reordered for convenience (the same filter code can typically be used in various orientations).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;If init_code_string specified, it will be executed in each thread context before processing<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;If src specified (and >= -1), sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src and the destination buffer will be processed. <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;If src and src2 specified (and >= -1), s2r/s2g/s2b/s2a, s2y1/s2u/s2v etc will also be available to read. <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1)              
+Processes a rectangle with code_string being executed for every pixel/pixel-group. <br>
+<br>
+Returns -1 if code_string failed to compile. <br>
+<br>
+Code should reference per pixel values (0-255, unclamped), depending on colorspace:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RGBA:&nbsp;&nbsp;r/g/b/a (0-255, unclamped)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;YUY2: y1,y2, u, v (0-255, unclamped; u/v are centered at 128)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;YV12: y1-y4, u, v (0-255, unclamped; u/v are centered at 128)<br>
+<br>
+example for a codestring:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"r[0]+=1; g[256]+=1; b[512]+=1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(0.299*r + 0.587*g + 0.114*b)[768] += 1;"<br>
+<br>
+<br>
+Additional options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;flags|=1 in order to prevent multiprocessing (if your routine needs&nbsp;&nbsp;to process pixels in-order)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;flags|=2 to ignore output (analysis-only). This is only valid when not using src2 and not using one of the 4/8 modes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;flags|=4,8 -- only valid in RGBA/YV12, and only if src/src2 not specified. flags&8 means process in vertical slices (top to bottom unless flags&4). flags&4 but not flags&8 means right-to-left. In each case y1-y4 are reordered for convenience (the same filter code can typically be used in various orientations).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If init_code_string specified, it will be executed in each thread context before processing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If src specified (and >= -1), sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src and the destination buffer will be processed. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;If src and src2 specified (and >= -1), s2r/s2g/s2b/s2a, s2y1/s2u/s2v etc will also be available to read. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -739,7 +760,7 @@ Additional options:<br/>
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_fillrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h)</code></div>
 </div><p>
 <div class="ch">
-<p>Fills a rectangle with the current color/mode/alpha set by <a href="#gfx_set">gfx_set</a></p>
+Fills a rectangle with the current color/mode/alpha set by gfx_set<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -775,9 +796,9 @@ Additional options:<br/>
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_getpixel</em>(<i>integer</i> input, <i>integer</i> x, <i>integer</i> y, <i>integer</i> #v1, <i>integer</i> #v2, <i>integer</i> #v3[, <i>optional</i> <i>integer</i> #v4])</code></div>
 </div><p>
 <div class="ch">
-Gets the value of a pixel from input at x,y. <br/>
-<br/>
-v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on success              
+Gets the value of a pixel from input at x,y. <br>
+<br>
+v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on success<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -825,7 +846,7 @@ v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on suc
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_gradrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>float</i> r, <i>float</i> g, <i>float</i> b, <i>float</i> a [, <i>optional</i> <i>float</i> drdx, <i>optional</i> <i>float</i> dgdx, <i>optional</i> <i>float</i> dbdx, <i>optional</i> <i>float</i> dadx, <i>optional</i> <i>float</i> drdy, <i>optional</i> <i>float</i> dgdy, <i>optional</i> <i>float</i> dbdy, <i>optional</i> <i>float</i> dady])</code></div>
 </div><p>
 <div class="ch">
-Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.              
+Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is amount red changes per X-pixel, etc.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -909,7 +930,7 @@ Fills rectangle. r/g/b/a supply color at top left corner, drdx (if specified) is
 <div class="e">EEL2: <code> <i>integer</i> image_index = <em>gfx_img_alloc</em>([<i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> clear])</code></div>
 </div><p>
 <div class="ch">
-Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.              
+Returns an image index for drawing (can create up to 32 images). Contents of image undefined unless clear set.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -941,7 +962,7 @@ Returns an image index for drawing (can create up to 32 images). Contents of ima
 <div class="e">EEL2: <code> <em>gfx_img_free</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
-Releases an earlier allocated image index.              
+Releases an earlier allocated image index.<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> handle</td></tr>
@@ -958,8 +979,9 @@ Releases an earlier allocated image index.
 <div class="e">EEL2: <code> <i>integer</i> unique_identifier = <em>gfx_img_getptr</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
-<p>Gets a unique identifier for an image, valid for while the image is retained.</p>
-<p>Can be used (along with <a href="#gfx_img_hold">gfx_img_hold</a>) to detect when frames change in a low frame rate video</p>
+Gets a unique identifier for an image, valid for while the image is retained. <br>
+<br>
+Can be used (along with gfx_img_hold) to detect when frames change in a low frame rate video<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -983,8 +1005,9 @@ Releases an earlier allocated image index.
 <div class="e">EEL2: <code> <em>gfx_img_hold</em>(<i>integer</i> handle)</code></div>
 </div><p>
 <div class="ch">
-<p>Retains (cheaply) a read-only copy of an image in handle.</p>
-<p>This copy should be released using <a href="#gfx_img_free">gfx_img_free()</a> when finished. Up to 32 images can be held.</p>
+Retains (cheaply) a read-only copy of an image in handle. <br>
+<br>
+This copy should be released using gfx_img_free() when finished. Up to 32 images can be held.<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> handle</td></tr>
@@ -1001,7 +1024,7 @@ Releases an earlier allocated image index.
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_img_info</em>(<i>integer</i> handle, <i>integer</i> #w, <i>integer</i> #h)</code></div>
 </div><p>
 <div class="ch">
-Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)              
+Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably invalidated)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1033,13 +1056,13 @@ Gets dimensions of image, returns 1 if valid (resize it if it's inexplicably inv
 <div class="e">EEL2: <code> <i>integer</i> image_handle = <em>gfx_img_resize</em>(<i>integer</i> handle, <i>integer</i> w, <i>integer</i> h[, <i>optional</i> <i>integer</i> clear])</code></div>
 </div><p>
 <div class="ch">
-Sets an image size (handle can be -1 for main framebuffer). <br/>
-<br/>
-Contents of image undefined after resize, unless clear set. <br/>
-<br/>
-Clear=-1 will only clear if resize occurred. <br/>
-<br/>
-Returns the image handle (if handle is invalid, returns a newly-allocated image handle)              
+Sets an image size (handle can be -1 for main framebuffer). <br>
+<br>
+Contents of image undefined after resize, unless clear set. <br>
+<br>
+Clear=-1 will only clear if resize occurred. <br>
+<br>
+Returns the image handle (if handle is invalid, returns a newly-allocated image handle)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1075,17 +1098,17 @@ Returns the image handle (if handle is invalid, returns a newly-allocated image 
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_keyedblit</em>(<i>integer</i> input[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>float</i> kv1, <i>optional</i> <i>float</i> kv2, <i>optional</i> <i>float</i> kv3, <i>optional</i> <i>float</i> kv4])</code></div>
 </div><p>
 <div class="ch">
-Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;YV12/YUY2:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is U target (-0.5 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is V target (-0.5 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is closeness-factor (0.4 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 is the gain (2.0 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;RGBA:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is green-factor (1.0 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is blue-factor (-1.0 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is offset (-1.0 default)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 enables spill removal (1.0 default)              
+Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colorspace:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;YV12/YUY2:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is U target (-0.5 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is V target (-0.5 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is closeness-factor (0.4 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 is the gain (2.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RGBA:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv1 is green-factor (1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv2 is blue-factor (-1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv3 is offset (-1.0 default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kv4 enables spill removal (1.0 default)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1149,9 +1172,9 @@ Chroma-key blits, using the source color as key. kv1-kv4 meaning depends on colo
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_procrect</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h, <i>table</i> channel_tab[, <i>optional</i> <i>integer</i> mode])</code></div>
 </div><p>
 <div class="ch">
-Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. <br/>
-<br/>
-Specify mode=1 to use Y value for U/V source channels (colorization mode).              
+Processes a rectangle with 768-entry channel table [256 items of 0..1 per channel]. <br>
+<br>
+Specify mode=1 to use Y value for U/V source channels (colorization mode).<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1195,7 +1218,7 @@ Specify mode=1 to use Y value for U/V source channels (colorization mode).
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_rotoblit</em>(<i>integer</i> srcidx, <i>float</i> angle [, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> srcx, <i>optional</i> <i>integer</i> srcy, <i>optional</i> <i>integer</i> w, <i>optional</i> <i>integer</i> h, <i>optional</i> <i>integer</i> cliptosrcrect, <i>optional</i> <i>integer</i> centxoffs, <i>optional</i> <i>integer</i> centyoffs])</code></div>
 </div><p>
 <div class="ch">
-<p>Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so <a href="#gfx_deltablit">gfx_deltablit()</a> is generally more useful.</p>
+Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so gfx_deltablit is generally more useful.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1267,7 +1290,7 @@ Specify mode=1 to use Y value for U/V source channels (colorization mode).
 <div class="e">EEL2: <code> <em>gfx_set</em>(<i>float</i> r,[<i>optional</i> <i>float</i> g, <i>optional</i> <i>float</i> b, <i>optional</i> <i>float</i> a=1, <i>integer</i> mode=0, <i>optional</i> <i>integer</i> dest, <i>optional</i> <i>float</i> a2=1])</code></div>
 </div><p>
 <div class="ch">
-Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.              
+Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>float</i> r</td></tr>
@@ -1287,7 +1310,7 @@ Updates r/g/b/a/mode to values specified, dest is only updated if parameter spec
 </table>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> mode</td></tr>
-<tr><td class="ch2">see [gfx_mode](#gfx_mode) for the available modes; if unset, defaults to 0</td></tr>
+<tr><td class="ch2">see gfx_mode for the available modes; if unset, defaults to 0</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>integer</i> dest</td></tr>
@@ -1295,7 +1318,7 @@ Updates r/g/b/a/mode to values specified, dest is only updated if parameter spec
 </table>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>float</i> a2</td></tr>
-<tr><td class="ch2">the alpha2-value, see[gfx_a2](#gfx_a2); if unset, defaults to 1</td></tr>
+<tr><td class="ch2">the alpha2-value, see gfx_a2; if unset, defaults to 1</td></tr>
 </table>
 <br>
 </div>
@@ -1308,14 +1331,14 @@ Updates r/g/b/a/mode to values specified, dest is only updated if parameter spec
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_setfont</em>(<i>integer</i> pxsize[, <i>optional</i> <i>string</i> #fontname, <i>optional</i> <i>integer</i> flags)</code></div>
 </div><p>
 <div class="ch">
-Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'B' - Bold<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'I' - Italics<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'R' - Blur<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'V' - Invert<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'M' - Mono<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'S' - Shadow<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;'O' - Outline              
+Sets a font. flags are specified as a multibyte integer, using a combination of the following flags (specify multiple as 'BI' or 'OI' or 'OBI' etc):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'B' - Bold<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'I' - Italics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'R' - Blur<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'V' - Invert<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'M' - Mono<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'S' - Shadow<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'O' - Outline<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1355,7 +1378,7 @@ Sets a font. flags are specified as a multibyte integer, using a combination of 
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_str_draw</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y, <i>optional</i> <i>float</i> fxc_r, <i>optional</i> <i>float</i> fxc_g, <i>optional</i> <i>float</i> fxc_b])</code></div>
 </div><p>
 <div class="ch">
-Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font              
+Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1399,7 +1422,7 @@ Draw string, fxc_r/g/b are the FX color if Shadow/Outline are set in the font
 <div class="e">EEL2: <code> <i>integer</i> string_length = <em>gfx_str_measure</em>(<i>string</i> #string[, <i>optional</i> <i>integer</i> #w, <i>optional</i> <i>integer</i> #h])</code></div>
 </div><p>
 <div class="ch">
-Measures the size of #string, returns width              
+Measures the size of #string, returns width<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1431,10 +1454,10 @@ Measures the size of #string, returns width
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>gfx_xformblit</em>(<i>integer</i> srcidx, <i>integer</i> x, <i>integer</i> y, <i>integer</i> w, <i>integer</i> h,  <i>integer</i> wdiv, <i>integer</i> hdiv, <i>table</i> tab[, <i>optional</i> <i>integer</i> wantalpha])</code></div>
 </div><p>
 <div class="ch">
-Blits with a transformation table. <br/>
-tab is wdiv*hdiv*2 table of source point coordinates in float-values.<br/>
-<br/>
-If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each point.              
+Blits with a transformation table. <br>
+tab is wdiv*hdiv*2 table of source point coordinates in float-values.<br>
+<br>
+If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each point.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1490,7 +1513,7 @@ If wantalpha=1, tab is wdiv*hdiv*3 table of src points including alpha for each 
 <div class="e">EEL2: <code> <i>integer</i> count_inputs = <em>input_count</em>()</code></div>
 </div><p>
 <div class="ch">
-Returns number of inputs available (total), range [0..n)              
+Returns number of inputs available (total), range [0..n)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1508,7 +1531,7 @@ Returns number of inputs available (total), range [0..n)
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>input_get_name</em>(<i>integer</i> input, <i>string</i> #str)</code></div>
 </div><p>
 <div class="ch">
-Gets the input take name or track name. returns >0 on success              
+Gets the input take name or track name. returns >0 on success<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1536,11 +1559,11 @@ Gets the input take name or track name. returns >0 on success
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>input_info</em>(<i>integer</i> input, <i>integer</i> w, <i>integer</i> h[, <i>double</i> srctime, <i>double</i> wet, <i>double</i> parm1, ...])</code></div>
 </div><p>
 <div class="ch">
-Returns 1 if input is available, sets w/h to dimensions. <br/>
-<br/>
-If srctime specified, it will be set with the source-local time of the underlying media. <br/>
-<br/>
-If input is a video processor in effect form, automated parameters can be queried via wet/parm1/...              
+Returns 1 if input is available, sets w/h to dimensions. <br>
+<br>
+If srctime specified, it will be set with the source-local time of the underlying media. <br>
+<br>
+If input is a video processor in effect form, automated parameters can be queried via wet/parm1/...<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1584,7 +1607,7 @@ If input is a video processor in effect form, automated parameters can be querie
 <div class="e">EEL2: <code> <i>float</i> fx_position = <em>input_ismaster</em>()</code></div>
 </div><p>
 <div class="ch">
-Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain              
+Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1602,7 +1625,7 @@ Returns 1.0 if current FX is on master chain, 2.0 if on monitoring FX chain
 <div class="e">EEL2: <code> <i>integer</i> next_input = <em>input_next_item</em>(<i>integer</i> input)</code></div>
 </div><p>
 <div class="ch">
-Returns the next_input after input which is on a different item or track              
+Returns the next_input after input which is on a different item or track<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1626,7 +1649,7 @@ Returns the next_input after input which is on a different item or track
 <div class="e">EEL2: <code> <i>integer</i> next_input = <em>input_next_track</em>(<i>integer</i> input)</code></div>
 </div><p>
 <div class="ch">
-Returns the next_input after input which is on a different track.              
+Returns the next_input after input which is on a different track.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1650,7 +1673,7 @@ Returns the next_input after input which is on a different track.
 <div class="e">EEL2: <code> <i>integer</i> input = <em>input_track</em>(<i>integer</i> track)</code></div>
 </div><p>
 <div class="ch">
-Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)              
+Returns input for bottommost item or FX on discrete-track track (0 is first track with video item above current, etc)<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1674,7 +1697,7 @@ Returns input for bottommost item or FX on discrete-track track (0 is first trac
 <div class="e">EEL2: <code> <i>integer</i> count_tracks = <em>input_track_count</em>()</code></div>
 </div><p>
 <div class="ch">
-Returns the number of available inputs on discrete tracks              
+Returns the number of available inputs on discrete tracks<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1692,9 +1715,9 @@ Returns the number of available inputs on discrete tracks
 <div class="e">EEL2: <code> <i>integer</i> inputs = <em>input_track_exact</em>(<i>integer</i> track)</code></div>
 </div><p>
 <div class="ch">
-Returns input for bottommost item or FX on track relative to current track. <br/>
-<br/>
-Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.              
+Returns input for bottommost item or FX on track relative to current track. <br>
+<br>
+Returns -1000 if track does not contain any video items at the current time, or -10000 if no further tracks contain video.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1718,7 +1741,7 @@ Returns -1000 if track does not contain any video items at the current time, or 
 <div class="e">EEL2: <code> nteger num_tracks = <em>input_track_exact_count</em>()</code></div>
 </div><p>
 <div class="ch">
-Returns the number of tracks above the current track that could possibly contain video items.              
+Returns the number of tracks above the current track that could possibly contain video items.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1736,7 +1759,7 @@ Returns the number of tracks above the current track that could possibly contain
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>rgb2yuv</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
 </div><p>
 <div class="ch">
-Converts r,g,b to YUV, does not clamp [0..1]              
+Converts r,g,b to YUV, does not clamp [0..1]<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1768,7 +1791,7 @@ Converts r,g,b to YUV, does not clamp [0..1]
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>yuv2rgb</em>(<i>float</i> #r, <i>float</i> #g, <i>float</i> #b)</code></div>
 </div><p>
 <div class="ch">
-Converts YUV to r,g,b, not clamping [0..1]              
+Converts YUV to r,g,b, not clamping [0..1]<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1800,7 +1823,7 @@ Converts YUV to r,g,b, not clamping [0..1]
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>convolve_c</em>(<i>table</i> dest, <i>table</i> src, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.              
+Multiplies each of size complex pairs in dest by the complex pairs in src. Often used for convolution.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1832,13 +1855,13 @@ Multiplies each of size complex pairs in dest by the complex pairs in src. Often
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>fft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. <br/>
-The size of the FFT is specified by the second parameter, which must be a power of two 16-32768. <br/>
-The outputs are permuted, so if you plan to use them in-order, call fft_permute(buffer, size) before and fft_ipermute(buffer,size) after in-order use. <br/>
-Inputs or outputs will need to be scaled down by 1/size. <br/>
-Notes:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() require real / imaginary input pairs, so a 256 point FFT actually works with 512 items.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() must NOT cross a 65,536 item boundary, so be sure to specify the offset accordingly.              
+Performs a FFT on the data in the local memory buffer at the offset specified by the first parameter. <br>
+The size of the FFT is specified by the second parameter, which must be a power of two 16-32768. <br>
+The outputs are permuted, so if you plan to use them in-order, call fft_permute(buffer, size) before and fft_ipermute(buffer,size) after in-order use. <br>
+Inputs or outputs will need to be scaled down by 1/size. <br>
+Notes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() require real / imaginary input pairs, so a 256 point FFT actually works with 512 items.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fft()/ifft() must NOT cross a 65,536 item boundary, so be sure to specify the offset accordingly.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1866,7 +1889,7 @@ Notes:<br/>
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_ipermute</em>(buffer,size)</code></div>
 </div><p>
 <div class="ch">
-Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.              
+Permutes the input for ifft(), taking bands from in-order to the order ifft() requires. See fft() for more information.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1894,7 +1917,7 @@ Permutes the input for ifft(), taking bands from in-order to the order ifft() re
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_permute</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Permutes the output of fft() to have bands in-order.              
+Permutes the output of fft() to have bands in-order.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1922,8 +1945,8 @@ Permutes the output of fft() to have bands in-order.
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>fft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). <br/>
-Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair will be (DC, nyquist).              
+Performs a real FFT, taking size input samples and producing size/2 complex output pairs. Usually used along with fft_permute(size/2). <br>
+Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair will be (DC, nyquist).<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -1951,21 +1974,22 @@ Inputs/outputs will need to be scaled by 0.5/size. The first output complex pair
 <div class="e">EEL2: <code><em> gmem</em></code></div>
 </div><p>
 <div class="ch">
-gmem[] can be used for a shared memory buffer (similar to JSFX) -- <br/>
-<br/>
-you can specify a named buffer which can be shared with EEL2 ReaScripts and JSFX, by using:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;//@gmem=sharedBufferName<br/>
-on a line by itself. <br/>
-<br/>
-Note that when synchronizing with ReaScripts or JSFX, all processing is asynchronous, so your code will have to deal with <br/>
-synchronization issues (including vast differences between project_time and playback_position, and including race conditions). For Lua ReaScripts, see the function Lua-ReaScript function gmem_attach(), gmem_write() and gmem_read().<br/>
-<br/>
-To get/set values from gmem, use gmem[index].<br/>
-Example:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;variable=gmem[7]; // put the value from gmem with index 7 into variable<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;gmem[8]=project_time; // put the current project_time into gmem with index 8<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-Note: you can have only one gmem-buffername attached per video-processor-script.              
+gmem[] can be used for a shared memory buffer (similar to JSFX) -- <br>
+<br>
+you can specify a named buffer which can be shared with EEL2 ReaScripts and JSFX, by using:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;//@gmem=sharedBufferName<br>
+on a line by itself. <br>
+<br>
+Note that when synchronizing with ReaScripts or JSFX, all processing is asynchronous, so your code will have to deal with <br>
+synchronization issues (including vast differences between project_time and playback_position, and including race conditions). For Lua ReaScripts, see the function Lua-ReaScript function gmem_attach(), gmem_write() and gmem_read().<br>
+<br>
+To get/set values from gmem, use gmem[index].<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;variable=gmem[7]; // put the value from gmem with index 7 into variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gmem[8]=project_time; // put the current project_time into gmem with index 8<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Note: you can have only one gmem-buffername attached per video-processor-script.<br>
 </div><br>
 </div>
 <div class="ch">
@@ -1977,7 +2001,7 @@ Note: you can have only one gmem-buffername attached per video-processor-script.
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>ifft</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Performs an inverse FFT. For more information see fft().              
+Performs an inverse FFT. For more information see fft().<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -2005,8 +2029,8 @@ Performs an inverse FFT. For more information see fft().
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>ifft_real</em>(<i>table</i> buffer, <i>integer</i> size)</code></div>
 </div><p>
 <div class="ch">
-Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. <br/>
-Usually used along with fft_ipermute(size/2).              
+Performs an inverse FFT, taking size/2 complex input pairs (the first being DC, nyquist) and producing size real output values. <br>
+Usually used along with fft_ipermute(size/2).<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -2034,9 +2058,9 @@ Usually used along with fft_ipermute(size/2).
 <div class="e">EEL2: <code> <em>on_parameter_change</em>(<i>float</i> pvar[, <i>optional</i> <i>integer</i> isdone])</code></div>
 </div><p>
 <div class="ch">
-Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. <br/>
-<br/>
-Specify isdone=1 when done modifying parameter (e.g. releasing touch)              
+Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. <br>
+<br>
+Specify isdone=1 when done modifying parameter (e.g. releasing touch)<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>float</i> pvar</td></tr>
@@ -2057,9 +2081,9 @@ Specify isdone=1 when done modifying parameter (e.g. releasing touch)
 <div class="e">EEL2: <code> <i>integer</i> retval = <em>time_precise</em>([<i>optional</i> <i>float</i> #val])</code></div>
 </div><p>
 <div class="ch">
-Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. <br/>
-<br/>
-The granularity of the value returned is system defined (but generally significantly smaller than one second).              
+Sets the parameter (or a temporary buffer if omitted) to a system-local timestamp in seconds, and returns a reference to that value. <br>
+<br>
+The granularity of the value returned is system defined (but generally significantly smaller than one second).<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -2083,15 +2107,15 @@ The granularity of the value returned is system defined (but generally significa
 <div class="e">EEL2: <code> <i>integer</i> click_modifier_state = <em>ui_get_state</em>(<i>integer</i> #ctx[, <i>optional</i> <i>integer</i> #mouse_x, <i>optional</i> <i>integer</i> #mouse_y, <i>optional</i> <i>integer</i> force_frame_in, <i>optional</i> <i>integer</i> #mouse_wheel_state, <i>optional</i> <i>integer</i> #mouse_hwheel_state])</code></div>
 </div><p>
 <div class="ch">
-Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). <br/>
-Returns state <br/>
-&nbsp;&nbsp; (1/2/4 are l/r/m mouse buttons, <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;8/16/32 are ctrl/shift/alt, <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;1024 is whether configuration for this processor is visible). <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-If 'ctx' set to -1, context is video window and any returned mouse coordinates are [0..1] (where 0,0 is upper left corner, 1,1 is lower right corner of the video area). <br/>
-If 'ctx' is set to [1..24], it means the user is editing that knob. <br/>
-If force_frame_in is specified and is positive, then the processor will be re-executed in this amount of time (even if no new video source is available), otherwise only updated during playback or change of the video.              
+Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). <br>
+Returns state <br>
+&nbsp;&nbsp; (1/2/4 are l/r/m mouse buttons, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;8/16/32 are ctrl/shift/alt, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;1024 is whether configuration for this processor is visible). <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+If 'ctx' set to -1, context is video window and any returned mouse coordinates are [0..1] (where 0,0 is upper left corner, 1,1 is lower right corner of the video area). <br>
+If 'ctx' is set to [1..24], it means the user is editing that knob. <br>
+If force_frame_in is specified and is positive, then the processor will be re-executed in this amount of time (even if no new video source is available), otherwise only updated during playback or change of the video.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -2131,7 +2155,7 @@ If force_frame_in is specified and is positive, then the processor will be re-ex
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.3  - 67 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.6  - 67 elements available <br></td></table>
         <hr>
       </div>
       <br>

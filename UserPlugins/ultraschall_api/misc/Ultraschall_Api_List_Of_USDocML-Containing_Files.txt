@@ -1,3 +1,4 @@
+ultraschall_api/Modules/ultraschall_functions_BatchConverter.lua
 ultraschall_api/Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua
 ultraschall_api/Modules/ultraschall_functions_FXManagement_Module.lua
 ultraschall_api/Modules/ultraschall_functions_Render_Module.lua

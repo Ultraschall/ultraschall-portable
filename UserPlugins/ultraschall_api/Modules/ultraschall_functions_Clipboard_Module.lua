@@ -128,7 +128,7 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>PutMediaItemsToClipboard_MediaItemArray</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.6
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -155,10 +155,15 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
   if ultraschall.IsValidMediaItemArray(MediaItemArray)==false then ultraschall.AddErrorMessage("PutMediaItemsToClipboard_MediaItemArray", "MediaItemArray", "must be a valid MediaItemArray", -1) return false end
   reaper.PreventUIRefresh(1)
   local count, MediaItemArray_selected = ultraschall.GetAllSelectedMediaItems() -- get old selection
-  reaper.SelectAllMediaItems(0, false) -- deselect all MediaItems
+  for i=1, reaper.CountMediaItems(0)-1 do
+    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)
+  end
   local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray) -- select to-be-cut-MediaItems
   reaper.Main_OnCommand(40057,0) -- copy them into clipboard
-  reaper.SelectAllMediaItems(0, false) -- deselect all MediaItems
+
+  for i=1, reaper.CountMediaItems(0)-1 do
+    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)
+  end
   local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray_selected) -- select formerly selected MediaItems
   reaper.PreventUIRefresh(-1)
   reaper.UpdateArrange()
