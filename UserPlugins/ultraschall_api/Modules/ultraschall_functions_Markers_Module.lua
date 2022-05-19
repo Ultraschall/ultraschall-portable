@@ -5369,9 +5369,9 @@ function ultraschall.AddShownoteMarker(pos, name)
   local Count = ultraschall.CountAllCustomMarkers("Shownote")
   local Color
   if reaper.GetOS():sub(1,3)=="Win" then
-    Color = 0xA8A800|0x1000000
+    Color = 0x3E90FF|0x1000000
   else
-    Color = 0x00A8A8|0x1000000
+    Color = 0xFF903E|0x1000000
   end
   local name2=reaper.genGuid("")..reaper.time_precise()..reaper.genGuid("")
   local A={ultraschall.AddCustomMarker("Shownote", pos, name2, Count+1, Color)}  
@@ -5430,9 +5430,9 @@ function ultraschall.SetShownoteMarker(idx, pos, name)
   local Count = ultraschall.CountAllCustomMarkers("Shownote")
   local Color
   if reaper.GetOS():sub(1,3)=="Win" then
-    Color = 0xA8A800|0x1000000
+    Color = 0x3E90FF|0x1000000
   else
-    Color = 0x00A8A8|0x1000000
+    Color = 0xFF903E|0x1000000
   end
   local A={ultraschall.SetCustomMarker("Shownote", idx, pos, name, shown_number, Color)}
   return table.unpack(A)
