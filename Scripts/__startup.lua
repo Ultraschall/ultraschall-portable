@@ -292,6 +292,8 @@ if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value
 
 end
 
+cmd=reaper.NamedCommandLookup("_RSd2ea650246bf35fed24583acb8cf8acf7f227b0a")
+reaper.Main_OnCommand(cmd,0)
 
 --------------------------
 -- Starte die Ulraclock

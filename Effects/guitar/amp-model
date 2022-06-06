@@ -7,7 +7,7 @@ desc: Convolution Amp/Cab Modeler
 
 slider1:/amp_models:none:Model
 slider2:0<-120,30,1>Preamp (dB)
-slider3:1<0,1,1{No,Yes}>Upsample Impulse If Required
+slider3:2<0,2,1{No,Yes (no gain adjust),Yes (correct gain)}>Upsample Impulse If Required
 slider4:0<0,1,1{L-Stereo,Stereo-Stereo}>Channel Mode
 slider5:0,Filter Size
 slider6:0,FFT Size
@@ -62,10 +62,15 @@ need_refft ? (  // prepare convolution source, here...
   useresample && srate > impbuf_srate && impbuf_srate > 1 ? 
   (
     filtersize = ((srate*impbuf_l)/impbuf_srate)|0;
+    filtersize > 16384 ? (
+      filtersize = 16384;
+      impbuf_l = ((filtersize * impbuf_srate) / srate)|0;
+    );
     isc=impbuf_srate/srate;
   )
   : 
   (
+    impbuf_l > 16384 ? impbuf_l = 16384;
     filtersize=impbuf_l;
     isc=1.0;
   );
@@ -88,6 +93,12 @@ need_refft ? (  // prepare convolution source, here...
   curblock=0;
   lastblock=64*1024;
   invfsize=1/fftsize;
+  pre_sum = post_sum = i = 0;
+  loop(impbuf_l,
+    pre_sum += impbuf[i];
+    stereo_mode == 0 ? pre_sum += impbuf[i + impbuf_nch - 1];
+    i+=impbuf_nch;
+  );
   i=0;
   i2=0;
   loop(min(fftsize,filtersize),
@@ -95,13 +106,18 @@ need_refft ? (  // prepare convolution source, here...
      ipart=(i-ipos);
      convsrc[i2]=impbuf[ipos*impbuf_nch]*(1-ipart) + impbuf[(ipos+1)*impbuf_nch]*ipart;
      convsrc[i2+1]=stereo_mode ? 0.0 : (impbuf[(ipos+1)*impbuf_nch-1]*(1-ipart) +
-                   impbuf[(ipos+1)*impbuf_nch-1]*(ipart));
+                                        impbuf[(ipos+2)*impbuf_nch-1]*(ipart));
+     post_sum += convsrc[i2] + convsrc[i2+1];
      i += isc;
      i2+=2;
   );
   loop(fftsize-filtersize,
      convsrc[i2]=convsrc[i2+1]=0;
      i2+=2;
+  );
+  isc != 1 && useresample>=2 && abs(post_sum) > 0.0001*fftsize*(stereo_mode?1:2) &&
+      abs(pre_sum) > 0.0001*impbuf_l*(stereo_mode?1:2) ? (
+    invfsize *= abs(pre_sum / post_sum);
   );
   fft(convsrc,fftsize);
   i=0;
@@ -124,18 +140,6 @@ bpos >= chunksize ?
 
   fft(curblock,fftsize);
   convolve_c(curblock,convsrc,fftsize);
-
-
-/*
-  i=0;
-  loop(fftsize,
-    r=curblock[i]; im=curblock[i+1];   
-    cr=convsrc[i]; ci=convsrc[i+1];
-    curblock[i]=r*cr-im*ci;
-    curblock[i+1]=r*ci+im*cr;
-    i+=2;
-  );
-*/
 
   ifft(curblock,fftsize);
 

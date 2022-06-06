@@ -1648,10 +1648,12 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>string marker = ultraschall.GetMarkerByScreenCoordinates(integer xmouseposition)</functioncall>
+  <functioncall>string marker, string marker_index = ultraschall.GetMarkerByScreenCoordinates(integer xmouseposition)</functioncall>
   <description>
-    returns the markers at a given absolute-x-pixel-position. It sees markers according their graphical representation in the arrange-view, not just their position! Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".
+    returns the markers at a given absolute-x-pixel-position. It sees markers according their graphical representation in the arrange-view, not just their position! Returned string will be "Markeridx\npos\nName\nMarkeridx2\npos2\nName2\n...".    
     Will return "", if no marker has been found.
+    
+    The second returnvalue has the index of the marker within all markers and regions.
     
     Returns only markers, no time markers or regions!
     
@@ -1690,6 +1692,7 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
   one=12*scale
   
   local retstring=""
+  local retstring2=""
   local temp
   
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
@@ -1709,10 +1712,10 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
       end
       local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
       local ALABAMA=xmouseposition
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name end
+      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" retstring2=retstring2..retval.."\n" end
     end
   end
-  return retstring--:match("(.-)%c.-%c")), tonumber(retstring:match(".-%c(.-)%c")), retstring:match(".-%c.-%c(.*)")
+  return retstring, retstring2--:match("(.-)%c.-%c")), tonumber(retstring:match(".-%c(.-)%c")), retstring:match(".-%c.-%c(.*)")
 end
 
 function ultraschall.GetMarkerByTime(position)
@@ -4624,7 +4627,7 @@ function ultraschall.IsMarkerValidCustomMarker(custom_marker_name, markeridx)
   if math.type(markeridx)~="integer" then ultraschall.AddErrorMessage("IsMarkerValidCustomMarker", "markeridx", "must be an integer", -3) return false end
   local A,B=ultraschall.GetAllCustomMarkers(custom_marker_name)
   for i=1, A do
-    if B[i]["index"]==markeridx then return true end
+    if B[i]["index"]==markeridx then return true, i end
   end
   return false
 end
@@ -5214,7 +5217,7 @@ function ultraschall.StoreTemporaryMarker(marker_id, index)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>StoreTemporaryMarker</slug>
   <requires>
-    Ultraschall=4.5
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -5232,7 +5235,7 @@ function ultraschall.StoreTemporaryMarker(marker_id, index)
     boolean retval - true, storing temporary marker was successful; false, storing temporary marker was unsuccessful
   </retvals>
   <parameters>
-    integer marker_id - the index of the marker/region within all markers and regions, that you want to temporarily store; -1, to remove this temporary marker
+    integer marker_id - the index of the marker/region within all markers and regions, that you want to temporarily store; 0-based; -1, to remove this temporary marker
     optional integer index - a numerical index, if you want to temporarily store multiple markers/regions; default is 1
   </parameters>
   <chapter_context>
@@ -5245,6 +5248,7 @@ function ultraschall.StoreTemporaryMarker(marker_id, index)
 </US_DocBloc>
 --]]  
   if math.type(marker_id)~="integer" then ultraschall.AddErrorMessage("StoreTemporaryMarker", "marker_id", "must be an integer", -1) return false end
+  if marker_id~=-1 then marker_id=marker_id+1 end
   if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("StoreTemporaryMarker", "index", "must be an integer", -2) return false end
   if index==nil then index=1 end
   if marker_id==-1 then 
@@ -5263,7 +5267,7 @@ function ultraschall.GetTemporaryMarker(index)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTemporaryMarker</slug>
   <requires>
-    Ultraschall=4.5
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -5278,7 +5282,7 @@ function ultraschall.GetTemporaryMarker(index)
     returns -1 in case of an error
   </description>
   <retvals>
-    integer marker_id - the current id of the stored marker/region; -1, in case of an error
+    integer marker_id - the current id of the stored marker/region; 0-based; -1, in case of an error
     string guid - the guid of the marker
   </retvals>
   <parameters>
@@ -5296,7 +5300,7 @@ function ultraschall.GetTemporaryMarker(index)
   if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("GetTemporaryMarker", "index", "must be an integer", -1) return false end
   if index==nil then index=1 end
   local marker=reaper.GetExtState("ultraschall_api", "Temporary_Marker_"..index)
-  if marker=="" then return -1 else return ultraschall.GetMarkerIDFromGuid(marker), marker end
+  if marker=="" then return -1 else return ultraschall.GetMarkerIDFromGuid(marker)-1, marker  end
 end
 
 
@@ -5703,11 +5707,11 @@ function ultraschall.IsMarkerShownote(marker_id)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsMarkerShownote</slug>
   <requires>
-    Ultraschall=4.6
+    Ultraschall=4.7
     Reaper=6.43
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.IsMarkerShownote(integer markerid)</functioncall>
+  <functioncall>boolean retval, integer shownote_idx = ultraschall.IsMarkerShownote(integer markerid)</functioncall>
   <description>
     returns true, if the marker is a shownote-marker, false if not. Returns nil, if markerid is invalid.
     Markerid is the marker-number for all markers, as used by marker-functions from Reaper.
@@ -5716,6 +5720,7 @@ function ultraschall.IsMarkerShownote(marker_id)
   </description>
   <retvals>
     boolean retval - true, if it's an shownote-marker, false if not
+    integer shownote_idx - the index of the shownote; 1-based
   </retvals>
   <parameters>
     integer markerid - the markerid of all markers in the project, beginning with 0 for the first marker
@@ -5733,7 +5738,7 @@ function ultraschall.IsMarkerShownote(marker_id)
   for i=1, ultraschall.CountShownoteMarkers() do
     local retval, marker_index, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(i)
     if marker_index==marker_id then
-      return true
+      return true, i
     end
   end
   return false
