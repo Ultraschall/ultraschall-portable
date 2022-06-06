@@ -24,9 +24,13 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
-versionnumber, version, date, beta, tagline = ultraschall.GetApiVersion()
+versionnumber, version, api_date, beta, tagline = ultraschall.GetApiVersion()
 majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 
 SWS=reaper.CF_GetSWSVersion("")

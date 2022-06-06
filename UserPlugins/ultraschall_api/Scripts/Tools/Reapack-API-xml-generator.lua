@@ -24,16 +24,21 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 ultraschall.ShowErrorMessagesInReascriptConsole(true)
 
 NumFuncs=progresscounter()
 
 --os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_ModulatorLoad3000.lua-")
-os.remove(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Documentation/Reaper_StateChunk_Docs.html")
+os.remove(ultraschall.Api_Path.."ultraschall_api/Documentation/Reaper_StateChunk_Docs.html")
 
 -- set this to the folder, that you want to create a reapack of
-SourceDir=reaper.GetResourcePath().."/UserPlugins/"--"c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
+SourceDir=ultraschall.Api_InstallPath--reaper.GetResourcePath().."/UserPlugins/"--"c:/Ultraschall-Hackversion_3.2_alpha_Februar2019/UserPlugins/"
 
 retval, Version = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", SourceDir.."/ultraschall_api/IniFiles/ultraschall_api.ini")
 

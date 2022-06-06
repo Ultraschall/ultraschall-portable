@@ -45,7 +45,11 @@ version="2.3.1 - 1. 5. 2021"
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
 -- load configvars
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 if reaper.file_exists(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini")==false then
   os.rename(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.inidef", Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini")

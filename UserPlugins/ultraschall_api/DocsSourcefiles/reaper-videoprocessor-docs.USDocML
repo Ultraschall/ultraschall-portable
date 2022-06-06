@@ -32,59 +32,60 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1">  
+        <description>  
             To write code, load the Video Processor Plugin into item-FX of the video or track-FX of the track containing your video. It opens a editor window, in which you can write the code. Hit F1 for commands and variables valid for use in the video processor plugin.
             Next to it, on the left side of the editor-field, your parameter-knobs will appear(if you've defined some). 
             Code for the Video-Processor-Plugin must be written in EEL, not in Lua or Python.
             
             Example code, with a knob for turning the video on the current track on and off(use this as track-fx!):
+            <pre><code>                                
+            //A small demo-script that turns video of the current track on and off
+            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
 
-                                                
-                                                //A small demo-script that turns video of the current track on and off
-                //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
-
-                frame=1; // variable frame set with the videoframe from the first 
-                         // videoitem in the project at a given position
+            frame=1; // variable frame set with the videoframe from the first 
+                     // videoitem in the project at a given position
                                                   
-                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                       // to prevent from having the last frame(s) be shown indefinately
+            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                   // to prevent from having the last frame(s) be shown indefinately
 
-                //Now, put the picture to the framebuffer -> outputting the video
-                gfx_blit(frame,  // the current video-frame
-                                 1,  // don't preserve aspect-ratio
-                                 0,0, // put upper right corner of the video at position 0,0
-                              project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
-                                                                        //   multiplied by the VideoOnOff-Parameter
-                                                                        //   1=video squeezed to 100% height and width 
-                                                                        //   0=video squeezed to 0% height and width
-                                                                    );
-
-
+            //Now, put the picture to the framebuffer -> outputting the video
+            gfx_blit(frame,  // the current video-frame
+                     1,      // don't preserve aspect-ratio
+                             
+                     0,0,    // put upper right corner of the video at position 0,0
+                     project_w*VideoOnOff,project_h*VideoOnOff // size of the video width, height, 
+                                                               //   multiplied by the VideoOnOff-Parameter
+                                                               //   1=video squeezed to 100% height and width 
+                                                               //   0=video squeezed to 0% height and width
+                    );
+            </code></pre>
             The following code allows turning the video of the track above(!) the current track on/off and allows moving it and turning it on and off
+            <pre><code>
+            // A small demo-script that turns video of the current track on and off
+            //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
+            //@param 2:MoveX 'Move X' 0 0 2048 1024 1
+            //@param 3:MoveY 'Move Y' 0 0 2048 1024 1
 
-
-                                                // A small demo-script that turns video of the current track on and off
-                //@param 1:VideoOnOff 'Video Off(0) On(1)' 1 0 1 0.5 1
-                //@param 2:MoveX 'Move X' 0 0 2048 1024 1
-                //@param 3:MoveY 'Move Y' 0 0 2048 1024 1
-
-                frame=input_track(0); // variable frame set with the videoframe from the first 
-                                      // videoitem in the project at a given position above the current one
+            frame=input_track(0); // variable frame set with the videoframe from the first 
+                                  // videoitem in the project at a given position above the current one
                                                   
-                gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
-                                                       // to prevent from having the last frame(s) be shown indefinately
+            gfx_fillrect(0,0,project_w,project_h); // deletes last frame, by putting a black rectangle on top of it
+                                                   // to prevent from having the last frame(s) be shown indefinately
 
-                //Now, put the picture to the framebuffer -> outputting the video
-                gfx_blit(frame,            // the current video-frame
-                         1,                // don't preserve aspect-ratio
-                         0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
-                                           // and add the knob-value of MoveX and MoveY to the position
-                                           // so changing position is possible
-                         project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
-                                          //   multiplied by the VideoOnOff-Parameter
-                                          //   1=video squeezed to 100% height and width 
-                                          //   0=video squeezed to 0% height and width
-                                                            );
+            //Now, put the picture to the framebuffer -> outputting the video
+            gfx_blit(frame,            // the current video-frame
+                     1,                // don't preserve aspect-ratio
+                         
+                     0+MoveX,0+MoveY,  // put upper right corner of the video at position 0,0
+                                       // and add the knob-value of MoveX and MoveY to the position
+                                       // so changing position is possible
+                                           
+                     project_w*VideoOnOff, project_h*VideoOnOff // size of the video width, height, 
+                                       //  multiplied by the VideoOnOff-Parameter
+                                       //  1=video squeezed to 100% height and width 
+                                       //  0=video squeezed to 0% height and width
+                    );
+            </code></pre>
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -814,14 +815,18 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+        <description>
             Retains (cheaply) a read-only copy of an image in handle. 
             
-            This copy should be released using [gfx\_img\_free()](#gfx_img_free) when finished. Up to 32 images can be held.
+            This copy should be released using gfx_img_free() when finished. Up to 32 images can be held.
         </description>
         <parameters>
             integer handle - the handle, that you want to make read-only
         </parameters>
+        <linked_to desc="see:">
+            inline:gfx_img_free
+                   releases an image after it was used
+        </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -837,10 +842,10 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
+        <description>
             Gets a unique identifier for an image, valid for while the image is retained. 
             
-            Can be used (along with [gfx\_img_hold](#gfx_img_hold)) to detect when frames change in a low frame rate video
+            Can be used (along with gfx_img_hold) to detect when frames change in a low frame rate video
         </description>
         <retvals>
             integer unique_identifier - the unique identifier for image "handle"
@@ -848,6 +853,12 @@
         <parameters>
             integer handle - the image-handle, of which you want to have a unique identifier
         </parameters>
+        <linked_to desc="see:">
+            inline:gfx_img_free
+                   releases an image after it was used
+            inline:gfx_img_hold
+                   holds an image for further analysis
+        </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -913,14 +924,14 @@
         <description prog_lang="*">
             Updates r/g/b/a/mode to values specified, dest is only updated if parameter specified.
         </description>
-        <parameters markup_type="markdown" markup_version="1.0.1">
+        <parameters>
             float r - the red-value(0 to 1); if set as the only parameter, this will be used for g and b as well
             optional float g - the green-value(0 to 1); if unset, the value of r will be used
             optional float b - the blue-value(0 to 1); if unset, the value of r will be used
             optional float a=1 - the alpha-value(0 to 1); if unset, the value defaults to 1
-            integer mode - see [gfx_mode](#gfx_mode) for the available modes; if unset, defaults to 0
+            integer mode - see gfx_mode for the available modes; if unset, defaults to 0
             optional integer dest - the destination, into which to draw
-            optional float a2 - the alpha2-value, see[gfx_a2](#gfx_a2); if unset, defaults to 1
+            optional float a2 - the alpha2-value, see gfx_a2; if unset, defaults to 1
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
@@ -970,8 +981,8 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
-            Fills a rectangle with the current color/mode/alpha set by [gfx\_set](#gfx_set)
+        <description>
+            Fills a rectangle with the current color/mode/alpha set by gfx_set
         </description>
         <retvals>
             integer retval - 0, in case of an error; 1, in case of success
@@ -982,6 +993,10 @@
             integer w - the width of the rectangle in pixels
             integer h - the height of the rectangle in pixels
         </parameters>
+        <linked_to desc="see:">
+            inline:gfx_set
+                   sets color, alpha and mode for drawing
+        </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -1120,8 +1135,8 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
-            Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so [gfx\_deltablit()](#gfx_deltablit) is generally more useful.
+        <description>
+            Blits with rotate. This function behaves a bit odd when the source and destination sizes/aspect ratios differ, so gfx_deltablit is generally more useful.
         </description>
         <retvals>
             integer retval - 0, blitting was unsuccessful(possibly due invalid image-source); 1, blitting was successful
@@ -1141,6 +1156,10 @@
             optional integer centxoffs=0 - adds an offset to the center of the image at x-position in pixels
             optional integer centyoffs=0 - adds an offset to the center of the image at x-position in pixels
         </parameters>
+        <linked_to desc="see:">
+            inline:gfx_deltablit
+                   alternative blitting method with source pixel transformation control
+        </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -1280,10 +1299,20 @@
         <requires>
             Reaper=6.13
         </requires>
-        <description prog_lang="*" markup_type="markdown" markup_version="1.0.1">
-            Chroma-key blits, using destination color as key. ignores gfx\_a and gfx\_mode. 
+        <description>
+            Chroma-key blits, using destination color as key. ignores gfx_a and gfx_mode. 
             
-            See [gfx\_keyedblit()](#gfx_keyedblit) for kv1-kv4 explanation.
+            kv1-kv4 meaning depends on colorspace:
+                YV12/YUY2:
+                    kv1 is U target (-0.5 default)
+                    kv2 is V target (-0.5 default)
+                    kv3 is closeness-factor (0.4 default)
+                    kv4 is the gain (2.0 default)
+                RGBA:
+                    kv1 is green-factor (1.0 default)
+                    kv2 is blue-factor (-1.0 default)
+                    kv3 is offset (-1.0 default)
+                    kv4 enables spill removal (1.0 default)
         </description>
         <retvals>
             integer retval - unknown
@@ -1301,6 +1330,10 @@
             optional float kv3 - closeness-factor(YV12/YUV2) / offset(RGBA)
             optional float kv4 - gain(YV12/YUV2) / spill removal(RGBA)
         </parameters>
+        <linked_to desc="see:">
+            inline:gfx_keyedblit
+                   alternative chroma-key blitting method, using sourcecolor as key
+        </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
         <source_document></source_document>
         <chapter_context>
@@ -1693,6 +1726,7 @@
             To get/set values from gmem, use gmem[index].
             Example:
                 variable=gmem[7]; // put the value from gmem with index 7 into variable
+                
                 gmem[8]=project_time; // put the current project_time into gmem with index 8
                 
             Note: you can have only one gmem-buffername attached per video-processor-script.

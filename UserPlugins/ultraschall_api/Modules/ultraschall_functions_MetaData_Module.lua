@@ -30,27 +30,6 @@
 ---        MetaData Module        ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "MetaData-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
 
 function ultraschall.DeleteProjExtState_Section(section)
 --[[
@@ -416,11 +395,11 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_ID3_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored ID3-metadata-tag into the current project(for Wav or MP3).
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
-    Note: APIC\_TYPE allows only specific values, as listed below!
+    Note: APIC_TYPE allows only specific values, as listed below!
     
     Supported tags are:
       TIT2 - Title
@@ -447,8 +426,8 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
       TRCK - Track number
       TSRC - International Standard Recording Code
       TCOP - Copyright Message
-      COMM\_LANG - Comment language, 3-character code like "eng"
-      APIC\_TYPE - the type of the cover-image, which can be of the following:
+      COMM_LANG - Comment language, 3-character code like "eng"
+      APIC_TYPE - the type of the cover-image, which can be of the following:
       
         "", unset
         0, Other
@@ -473,8 +452,8 @@ function ultraschall.Metadata_ID3_GetSet(Tag, Value)
         19, Band/Artist logotype
         20, Publisher/Studiotype
     
-    APIC\_DESC - the description of the cover-image
-    APIC\_FILE - the filename+absolute path of the cover-image; must be either png or jpg
+    APIC_DESC - the description of the cover-image
+    APIC_FILE - the filename+absolute path of the cover-image; must be either png or jpg
     
     Note: Chapters are added via marker with the name: "CHAP=chaptername"
     
@@ -526,7 +505,7 @@ function ultraschall.Metadata_BWF_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_BWF_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored BWF-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -576,7 +555,7 @@ function ultraschall.Metadata_IXML_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_IXML_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored IXML-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -633,7 +612,7 @@ function ultraschall.Metadata_INFO_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_INFO_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored INFO-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -695,7 +674,7 @@ function ultraschall.Metadata_CART_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_CART_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored CART-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -762,7 +741,7 @@ function ultraschall.Metadata_AIFF_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_AIFF_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored AIFF-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -820,7 +799,7 @@ function ultraschall.Metadata_XMP_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_XMP_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored XMP-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -879,7 +858,7 @@ function ultraschall.Metadata_VORBIS_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_VORBIS_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored VORBIS-metadata-tag into the current project.
     This is for OPUS and OGG-VORBIS-files.
     
@@ -970,7 +949,7 @@ function ultraschall.Metadata_CUE_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_CUE_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored CUE-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1026,7 +1005,7 @@ function ultraschall.Metadata_APE_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_APE_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored APE-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1114,7 +1093,7 @@ function ultraschall.Metadata_ASWG_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_ASWG_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored ASWG-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1257,7 +1236,7 @@ function ultraschall.Metadata_AXML_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_AXML_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored ASWG-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1303,7 +1282,7 @@ function ultraschall.Metadata_CAFINFO_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_CAFINFO_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored CAFINFO-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1383,7 +1362,7 @@ function ultraschall.Metadata_FLACPIC_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_FLACPIC_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored FLACPIC-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1391,9 +1370,9 @@ function ultraschall.Metadata_FLACPIC_GetSet(Tag, Value)
     Supported tags are:
     
     Binary:
-    APIC\_TYPE - Image Type
-    APIC\_DESC - Image Description
-    APIC\_FILE - Image File
+    APIC_TYPE - Image Type
+    APIC_DESC - Image Description
+    APIC_FILE - Image File
 
     Returns nil in case of an error
   </description>
@@ -1431,7 +1410,7 @@ function ultraschall.Metadata_IFF_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_IFF_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored IFF-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1484,7 +1463,7 @@ function ultraschall.Metadata_WAVEXT_GetSet(Tag, Value)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Metadata_WAVEXT_GetSet(string Tag, optional string Value)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets/Sets a stored WAVEXT-metadata-tag into the current project.
     
     To get a value, set parameter Value to nil; to set a value, set the parameter Value to the desired value
@@ -1833,3 +1812,73 @@ function ultraschall.Metadata_GetAllPresetNames()
 end
 
 --A,B=ultraschall.Metadata_GetAllPresetNames()
+
+function ultraschall.MetaDataTable_Create()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MetaDataTable_Create</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>table MetaDataTable = ultraschall.MetaDataTable_Create()</functioncall>
+  <description>
+    Returns an empty MetaDataTable for all possible metadata, in which metadata can be set.
+  </description> 
+  <retvals>
+    table MetaDataTable - a table with all metadata-entries available in Reaper
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Reaper Metadata Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, create, metadatatable</tags>
+</US_DocBloc>
+]]
+  local A="APE:Album;APE:Artist;APE:BPM;APE:Catalog;APE:Comment;APE:Composer;APE:Conductor;APE:Copyright;APE:Genre;APE:ISRC;APE:Key;APE:Language;APE:Publisher;APE:REAPER;APE:Record Date;APE:Record Location;APE:Subtitle;APE:Title;APE:Track;APE:User Defined:a;APE:User Defined:User;APE:Year;ASWG:accent;ASWG:actorGender;ASWG:actorName;ASWG:ambisonicChnOrder;ASWG:ambisonicFormat;ASWG:ambisonicNorm;ASWG:artist;ASWG:billingCode;ASWG:category;ASWG:catId;ASWG:channelConfig;ASWG:characterAge;ASWG:characterGender;ASWG:characterName;ASWG:characterRole;ASWG:composer;ASWG:contentType;ASWG:creatorId;ASWG:direction;ASWG:director;ASWG:editor;ASWG:efforts;ASWG:effortType;ASWG:emotion;ASWG:fxChainName;ASWG:fxName;ASWG:fxUsed;ASWG:genre;ASWG:impulseLocation;ASWG:inKey;ASWG:instrument;ASWG:intensity;ASWG:isCinematic;ASWG:isDesigned;ASWG:isDiegetic;ASWG:isFinal;ASWG:isLicensed;ASWG:isLoop;ASWG:isOst;ASWG:isrcId;ASWG:isSource;ASWG:isUnion;ASWG:language;ASWG:library;ASWG:loudness;ASWG:loudnessRange;ASWG:maxPeak;ASWG:micConfig;ASWG:micDistance;ASWG:micType;ASWG:mixer;ASWG:musicPublisher;ASWG:musicSup;ASWG:musicVersion;ASWG:notes;ASWG:orderRef;ASWG:originator;ASWG:originatorStudio;ASWG:papr;ASWG:producer;ASWG:project;ASWG:projection;ASWG:recEngineer;ASWG:recordingLoc;ASWG:recStudio;ASWG:rightsOwner;ASWG:rmsPower;ASWG:session;ASWG:songTitle;ASWG:sourceId;ASWG:specDensity;ASWG:state;ASWG:subCategory;ASWG:subGenre;ASWG:tempo;ASWG:text;ASWG:timeSig;ASWG:timingRestriction;ASWG:usageRights;ASWG:userCategory;ASWG:userData;ASWG:vendorCategory;ASWG:zeroCrossRate;AXML:ISRC;BWF:Description;BWF:LoudnessRange;BWF:LoudnessValue;BWF:MaxMomentaryLoudness;BWF:MaxShortTermLoudness;BWF:MaxTruePeakLevel;BWF:OriginationDate;BWF:OriginationTime;BWF:Originator;BWF:OriginatorReference;CAFINFO:album;CAFINFO:artist;CAFINFO:channel configuration;CAFINFO:channel layout;CAFINFO:comments;CAFINFO:composer;CAFINFO:copyright;CAFINFO:encoding application;CAFINFO:genre;CAFINFO:key signature;CAFINFO:lyricist;CAFINFO:nominal bit rate;CAFINFO:recorded date;CAFINFO:source encoder;CAFINFO:tempo;CAFINFO:time signature;CAFINFO:title;CAFINFO:track number;CAFINFO:year;CART:Artist;CART:Category;CART:ClientID;CART:CutID;CART:EndDate;CART:INT1;CART:SEG1;CART:StartDate;CART:TagText;CART:Title;CART:URL;CUE:DISC_CATALOG;CUE:DISC_PERFORMER;CUE:DISC_REM;CUE:DISC_SONGWRITER;CUE:DISC_TITLE;CUE:INDEX;CUE:TRACK_ISRC;FLACPIC:APIC_DESC;FLACPIC:APIC_FILE;FLACPIC:APIC_TYPE;ID3:APIC_DESC;ID3:APIC_FILE;ID3:APIC_TYPE;ID3:COMM;ID3:COMM_LANG;ID3:TALB;ID3:TBPM;ID3:TCOM;ID3:TCON;ID3:TCOP;ID3:TDRC;ID3:TEXT;ID3:TIME;ID3:TIPL;ID3:TIT1;ID3:TIT2;ID3:TIT3;ID3:TKEY;ID3:TMCL;ID3:TPE1;ID3:TPE2;ID3:TPOS;ID3:TRCK;ID3:TSRC;ID3:TXXX:a;ID3:TXXX:REAPER;ID3:TXXX:User;ID3:TYER;IFF:ANNO;IFF:AUTH;IFF:COPY;IFF:NAME;INFO:IART;INFO:ICMT;INFO:ICOP;INFO:ICRD;INFO:IENG;INFO:IGNR;INFO:IKEY;INFO:INAM;INFO:IPRD;INFO:ISBJ;INFO:ISRC;INFO:TRCK;IXML:CIRCLED;IXML:FILE_UID;IXML:NOTE;IXML:PROJECT;IXML:SCENE;IXML:TAKE;IXML:TAPE;IXML:USER:a;IXML:USER:REAPER;IXML:USER:User;VORBIS:ALBUM;VORBIS:ALBUMARTIST;VORBIS:ARRANGER;VORBIS:ARTIST;VORBIS:AUTHOR;VORBIS:BPM;VORBIS:COMMENT;VORBIS:COMPOSER;VORBIS:CONDUCTOR;VORBIS:COPYRIGHT;VORBIS:DATE;VORBIS:DESCRIPTION;VORBIS:DISCNUMBER;VORBIS:EAN/UPN;VORBIS:ENCODED-BY;VORBIS:ENCODING;VORBIS:ENSEMBLE;VORBIS:GENRE;VORBIS:ISRC;VORBIS:KEY;VORBIS:LABEL;VORBIS:LABELNO;VORBIS:LANGUAGE;VORBIS:LICENSE;VORBIS:LOCATION;VORBIS:LYRICIST;VORBIS:OPUS;VORBIS:PART;VORBIS:PARTNUMBER;VORBIS:PERFORMER;VORBIS:PRODUCER;VORBIS:PUBLISHER;VORBIS:REAPER;VORBIS:SOURCEMEDIA;VORBIS:TITLE;VORBIS:TRACKNUMBER;VORBIS:USER:a;VORBIS:USER:User;VORBIS:VERSION;WAVEXT:channel configuration;XMP:dc/creator;XMP:dc/date;XMP:dc/description;XMP:dc/language;XMP:dc/title;XMP:dm/album;XMP:dm/artist;XMP:dm/composer;XMP:dm/copyright;XMP:dm/engineer;XMP:dm/genre;XMP:dm/key;XMP:dm/logComment;XMP:dm/scene;XMP:dm/tempo;XMP:dm/timeSignature;XMP:dm/trackNumber"
+  local B={}
+
+  for k in string.gmatch(A..";", "(.-);") do
+    B[k]=""
+  end
+  return B
+end
+
+function ultraschall.MetaDataTable_GetProject()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MetaDataTable_GetProject</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>table MetaDataTable = ultraschall.MetaDataTable_GetProject()</functioncall>
+  <description>
+    Returns a MetaDataTable for all possible metadata, in which metadata can be set.
+    
+    All metadata currently set in the active project will be set in the MetaDataTable.
+  </description> 
+  <retvals>
+    table MetaDataTable - a table with all metadata-entries available in Reaper and set with all metadata of current project
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Reaper Metadata Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, metadatatable</tags>
+</US_DocBloc>
+]]
+  local MetaDataTable=ultraschall.MetaDataTable_Create()
+  local retval, ProjMetDat=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "", false)  
+
+  for k in string.gmatch(ProjMetDat..";", "(.-);") do
+    _retval, MetaDataTable[k]=reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", k, false)
+  end
+  return MetaDataTable
+end

@@ -28,7 +28,11 @@
 -- when toggled on, all get/set-accesses to extstates and projextstates in scripts using Ultraschall-API will be
 -- shown in the ReaScript-console
   
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 
 if reaper.GetExtState("ultraschall_api", "debug_extstate")=="true" then

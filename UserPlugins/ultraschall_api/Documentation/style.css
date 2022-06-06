@@ -2,7 +2,8 @@
 
 .anch{
   width:90.5%;  
-  padding-top: 14%;
+  padding-top: 15%;
+  
 }
 
 
@@ -68,6 +69,7 @@
 
 .inpad{ /*padding of index-entrylinks-*/
     margin-left:-14;
+    padding-top: 33%;
 }
 
 /*style of the View-selector in the ReaScript-API-docs

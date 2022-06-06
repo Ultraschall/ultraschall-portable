@@ -28,30 +28,15 @@
 --- ULTRASCHALL - API - FUNCTIONS ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, String = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if String=="" then string=10000 
-  else 
-    String=tonumber(String) 
-    String=String+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
 
 -- deprecated stuff
-  runcommand = ultraschall.RunCommand
-  Msg=ultraschall.Msg
+  if runcommand==nil then
+    runcommand = ultraschall.RunCommand
+  end
+  
+  if Msg==nil then
+    Msg=ultraschall.Msg
+  end
 
 -- initialize some used variables
 ultraschall.ErrorCounter=0
@@ -60,9 +45,6 @@ ultraschall.temp,ultraschall.tempfilename=reaper.get_action_context()
 ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\n","")
 ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\r","")  
 ultraschall.Dump, ultraschall.ScriptFileName=reaper.get_action_context()
-
--- create the right separator for the current system
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then ultraschall.Separator = "\\" else ultraschall.Separator = "/" end
 
 -- Let's create a unique script-identifier for childscripts
 ultraschall.dump=ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")
@@ -88,11 +70,7 @@ ultraschall.snowoldgfx=gfx.update
 
 -- lets initialize some API-Variables
 ultraschall.StartTime=os.clock()
---ultraschall.Script_Path = reaper.GetResourcePath().."/Scripts/"
-local script_path = reaper.GetResourcePath().."/UserPlugins/ultraschall_api"..ultraschall.Separator
---ultraschall.Api_Path="HH"..script_path
---ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
---ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
+
 
 function ultraschall.CountProjectTabs()
 --[[
@@ -211,8 +189,8 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 440, "4.4","XX of XXXXX 2022", "",  "\"\"", "xx of xxxx xxxx", BuildNumber..".00"
+  local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
+  return 470, "4.7","XX of XXXX 2022", "",  "\" - \"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -251,7 +229,7 @@ function ultraschall.IntToDouble(integer, selector)
     -- convert integer-value to 14f-float, by reading it from the double_to_int_24bit-inifile
     integer=integer-4000000 -- subtract the value I haven't stored in double_to_int_24bit-inifile as it was redundant
     -- read through the whole file to get the correct entry and return the entry
-    for c in io.lines(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini") do
+    for c in io.lines(ultraschall.Api_Path.."IniFiles/double_to_int_24bit.ini") do
       if c:match(integer)~=nil then return tonumber(c:match("(.-)=")) end
     end  
   end
@@ -296,12 +274,14 @@ function ultraschall.DoubleToInt(float, selector)
     return found --return the integer-value.
   else
     -- for 14f-floats, use this file and read it like any regular ini-file
-    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", math.tointeger(float), "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini")
+    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", math.tointeger(float), "-1", ultraschall.Api_Path.."IniFiles/double_to_int_24bit.ini")
     -- add an offset(I removed it from the ini-file, as it was redundant. So I need to readd that value again in here)
     String=tonumber(String)+4000000
   end
   return String
 end
+
+
 
 function ultraschall.SuppressErrorMessages(flag)
 --[[
@@ -772,13 +752,43 @@ function ultraschall.DeleteAllErrorMessages()
   <tags>developer, error, delete, message</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.ErrorCounter==0 then ultraschall.AddErrorMessage("DeleteAllErrorMessages","","No Error Message available!",-1) return false
+  if ultraschall.ErrorCounter==0 then return false
   else
     ultraschall.ErrorCounter=0
     ultraschall.ErrorMessage={}
     return true
   end
 end
+
+DAEM=ultraschall.DeleteAllErrorMessages
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>DAEM</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = DAEM()</functioncall>
+  <description>
+    Deletes all error-messages and returns a boolean value.
+    
+    this is like ultraschall.DeleteAllErrorMessages(), just shorter
+    
+    returns false in case of failure
+  </description>
+  <retvals>
+    boolean retval - true, if it worked; false if it didn't
+  </retvals>
+  <chapter_context>
+    Developer
+    Error Handling
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>developer, error, delete, message</tags>
+</US_DocBloc>
+]]
 
 function ultraschall.GetLastErrorMessage2(count,setread)
 --[[
@@ -1120,15 +1130,13 @@ function progresscounter(state)
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
   
-  local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
+  local filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Modules/")
   for i=1, filecount do
     A=A..ultraschall.ReadFullFile(files[i]).."\n"
   end
 
 if ultraschall.US_BetaFunctions==true then
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine_beta.lua")
 end
   A=A.."function ultraschall."
   A=A:match("function ultraschall%..*")
@@ -2486,16 +2494,16 @@ function ultraschall.BringReaScriptConsoleToFront()
   end
 end
 
-function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2)
+function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2, default_script_content)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.5
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2)</functioncall>
+  <functioncall>boolean retval, optional command_id, boolean created_new_script = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2, optional string default_script_content)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
@@ -2527,10 +2535,12 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     optional integer watchlist_size - sets the size of the watchlist, from 80 to screenwidth-80
     optional integer watchlist_size_row1 - sets the size of the Name-row in the watchlist
     optional integer watchlist_size_row2 - sets the size of the Value-row in the watchlist
+    optional string default_script_content - a string that shall be added to the beginning of the new script, when a script is newly created
   </parameters>
   <retvals>
     boolean retval - true, opening was successful; false, opening was unsuccessful
-    optional integer command_id - the command-id of the script, when it gets newly created
+    optional integer command_id - the command-id of the script, when it gets newly created; nil, if script wasn't added
+    boolean created_new_script - true, a new script had been created; false, the script already existed
   </retvals>
   <chapter_context>
     Developer
@@ -2550,17 +2560,20 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   if watchlist_size~=nil and math.type(watchlist_size)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size", "must be nil or an integer", -7) return false end
   if watchlist_size_row1~=nil and math.type(watchlist_size_row1)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row1", "must be nil or an integer", -8) return false end  
   if watchlist_size_row2~=nil and math.type(watchlist_size_row2)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row2", "must be nil or an integer", -9) return false end
+  if default_script_content~=nil and type(default_script_content)~="string" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row2", "must be nil or an integer", -10) return false end
+  if default_script_content==nil then default_script_content="" end
   
   if filename==nil then 
     -- when user has not set a filename, use the last edited on(with this function) or 
     -- the last created one(using the action-list-dialog), checked in that order
-    filename=reaper.GetExtState("ultraschall_api", "last_edited_script") 
-    if filename=="" then 
-        filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
-    end
+    --filename=reaper.GetExtState("ultraschall_api", "last_edited_script") 
+    --if filename=="" then 
+      filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
+    --end
   end
   
   local command_id
+  local created_new_script=false
   
   if reaper.file_exists(filename)==false and ultraschall.DirectoryExists2(ultraschall.GetPath(filename))==false then
     -- if path does not exist, create filename in the scripts-folder
@@ -2569,13 +2582,14 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   end
   if reaper.file_exists(filename)==false then
     -- create new file if not yet existing
-    local content  
+    local content=default_script_content
+    if content~="" then content=content.."\n" end
     if add_ultraschall_api==true then 
-      content="dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
+      content=content.."dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
     else
-      content=""
+      content=content
     end
-  
+    created_new_script=reaper.file_exists(filename)
     ultraschall.WriteValueToFile(filename, content)
   end
   
@@ -2657,7 +2671,7 @@ end
   reaper.Main_OnCommand(41931,0)
 
   -- reset old edited script in reaper.ini
-  C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
+  --C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
   
   -- reset old IDE-window-position in reaper.ini
   if x_pos~=nil then
@@ -2695,7 +2709,7 @@ end
   -- store last created/edited file using this function, so it can be opened with filename=nil
   reaper.SetExtState("ultraschall_api", "last_edited_script", filename, true)
 
-  return true, command_id
+  return true, command_id, created_new_script
 end
 
 function SFEM(dunk, target, message_type)
@@ -2823,8 +2837,7 @@ function RFR(length, ...)
       
       You can put the return-values of another function and just get the first x ones. So if the function returns 10 returnvalues, 
       but you only need the first two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
-      
-      
+        
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
@@ -2832,8 +2845,6 @@ function RFR(length, ...)
       returns three colorvalues. If you only want the first one(r), use it this way:
       
       r=RFR(1, reaper.ColorFromNative(12739))
-      
-      
       
       returns nil in case of an error
     </description>
@@ -2882,7 +2893,6 @@ function RLR(length, ...)
       You can put the return-values of another function and just get the last x ones. So if the function returns 10 returnvalues, 
       but you only need the last two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
       
-      
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
@@ -2890,8 +2900,6 @@ function RLR(length, ...)
       returns three colorvalues. If you only want the last one(b), use it this way:
       
       b=RLR(1, reaper.ColorFromNative(12739))
-      
-      
       
       returns nil in case of an error
     </description>
@@ -2942,17 +2950,14 @@ function RRR(position, length, ...)
       You can put the return-values of another function and just get the ones between position and position+length. So if the function returns 10 returnvalues, 
       but you only need the third through the fifth, set position=3 and length=3 and add the function(with the 10 returnvalues) after it as third parameter.
       
-      
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
       
       returns three colorvalues. If you only want the middle one(g), use it this way:
       
-      g=RLR(2, 1, reaper.ColorFromNative(12739))
-      
-      
-      
+      g=RRR(2, 1, reaper.ColorFromNative(12739))
+         
       returns nil in case of an error
     </description>
     <retvals>
@@ -2989,6 +2994,77 @@ function RRR(position, length, ...)
   return table.unpack(Table2)
 end
 
+function ultraschall.Statechunk_ReplaceEntry(StateChunk, Entry, EntryPositionAbove, EntryPositionBelow, values, nil_defaults)
+  --[[
+    Helperfunction for replacement of statechunk-entries
+    
+    Note: this is still experimental, so test all functions, who use this, intensively.
+          Might have trouble with nested statechunks and with statechunks who have multiple same-named-entries.
+          Tries to replace the very first entry found, which should be fairly stable...
+          
+          If not, add StateChunk-Layouter into this code, so you can use spaces as pattern to check, which entry
+          to replace...
+          
+          Unchecked: what happens, with layouted statechunks?
+  
+    StateChunk    - TrackStateChunk
+    Entry         - the entry to add/replace
+    EntryPositionAbove - this entry must be above the inserted statechunk-entry; will be ignored, if Entry already exists and can be replaced
+    EntryPositionBelow - this entry must be below the inserted statechunk-entry; will be ignored, if Entry already exists and can be replaced or if EntryPositionAbove is already set
+    values        - the parameter-values to set the statechunk entry with; string is allowed and will be converted to "" if needed
+    nil_defaults  - the values, that must be met, to remove the entry from the statechunk; keep nil to always add/replace
+  --]]
+  local default, Start, End, statechunk_entry
+  -- check for default-values to eliminate the entry
+  default=true
+  if nil_defaults~=nil then
+    for i=1, #values do
+      if values[i]~=nil_defaults[i] then
+        default=false
+        break
+      end
+    end
+  else
+    default=false
+  end
+
+  -- if no defaults, create the statechunk_entry
+  if default==false then
+    statechunk_entry=Entry
+    for i=1, #values do
+      if type(values[i])=="string" then
+        if values[i]:match(" ")~=nil then
+          values[i]="\""..values[i].."\""
+        end
+      end
+      statechunk_entry=statechunk_entry.." "..values[i]
+    end
+  else
+    statechunk_entry=""
+  end
+  
+  if statechunk_entry~="" then statechunk_entry=statechunk_entry.."\n" end
+  
+  -- if statechunk-entry already exists, simply replace it and return the statechunk
+  if StateChunk:match(Entry)~=nil then
+    StateChunk=string.gsub(StateChunk, Entry.." .-\n", statechunk_entry)
+    return StateChunk
+  end
+  
+  -- if the entry didn't exist, add it either underneath another statechunk-entry
+  if EntryPositionAbove~=nil then 
+    Start=StateChunk:match("(.-"..EntryPositionAbove..".-\n)")
+    End=StateChunk:match(EntryPositionAbove..".-\n".."(.*)") 
+    
+    return Start..statechunk_entry..End
+  -- or add it above another statechunk-entry
+  elseif EntryPositionBelow~=nil then
+    Start=StateChunk:match("(.-)"..EntryPositionBelow)
+    End=StateChunk:match("("..EntryPositionBelow..".-%c.*)") 
+    
+    return Start..statechunk_entry..End    
+  end
+end
 
 ultraschall.WalterElements={"tcp.dragdropinfo",
 "tcp.env",
@@ -3286,12 +3362,12 @@ ultraschall.WalterElements={"tcp.dragdropinfo",
 -- Load ModulatorLoad3000
 
 if ultraschall.US_BetaFunctions==false then
-  dofile(script_path.."ultraschall_ModulatorLoad3000.lua")
+  dofile(ultraschall.Api_Path.."ultraschall_ModulatorLoad3000.lua")
 else
   for i=0, 1024 do
-    file=reaper.EnumerateFiles(script_path.."/Modules/", i)
-    if file==nil then break end
-    dofile(script_path.."/Modules/"..file)
+    ultraschall.temp_file=reaper.EnumerateFiles(ultraschall.Api_Path.."/Modules/", i)
+    if ultraschall.temp_file==nil then break end
+    dofile(ultraschall.Api_Path.."/Modules/"..ultraschall.temp_file)
   end
 end
 ultraschall.ShowLastErrorMessage()

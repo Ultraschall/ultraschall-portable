@@ -29,7 +29,12 @@
 --
 -- will put the found entries into the clipboard after that
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 reaper.ClearConsole()
 path=reaper.GetExtState("ultraschall", "LangPack_Compare_Path")
 

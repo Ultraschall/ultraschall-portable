@@ -24,6 +24,29 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-ultraschall.OpenURL("file://"..ultraschall.Api_Path .."Documentation/US_Api_Introduction_and_Concepts.html")
+--ultraschall.OpenURL("file://"..ultraschall.Api_Path .."Documentation/US_Api_Introduction_and_Concepts.html")
+
+function OpenURL(url)
+  local OS=reaper.GetOS()
+  url="\""..url.."\""
+  if OS=="OSX32" or OS=="OSX64" or OS=="macOS-arm64" then
+    os.execute("open ".. url)
+  elseif OS=="Other" then
+    os.execute("xdg-open "..url)
+  else
+    B="start \"Ultraschall-URL\" /B ".. url
+    os.execute("start \"Ultraschall-URL\" /B ".. url)
+  end
+  return true
+end
+
+_,filename=reaper.get_action_context()
+
+Sep=package.config:sub(1,1)
+
+filename=filename:match("(.*)[\\/]"):sub(1,-2)
+filename=filename:match("(.*)[\\/]")..Sep.."Documentation"..Sep.."US_Api_Introduction_and_Concepts.html"
+
+
+OpenURL("file:///"..string.gsub(filename, "\\", "/"))

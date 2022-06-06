@@ -27,7 +27,11 @@
 -- checks USDocML-docs for common parameter/retvals mismatches in docs and puts findings into the clipboard
 -- currently only Reaper-API-docs supported, for whatever reason.
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 Found=""
 
@@ -68,21 +72,17 @@ Filelist={
 "Modules/ultraschall_functions_WebInterface_Module.lua",
 
 "ultraschall_doc_engine.lua", 
-"ultraschall_doc_engine_beta.lua", 
 "ultraschall_functions_engine.lua", 
 "ultraschall_functions_engine_beta.lua", 
 "ultraschall_gfx_engine.lua", 
-"ultraschall_gfx_engine_beta.lua", 
 "ultraschall_ModulatorLoad3000.lua", 
 "ultraschall_tag_engine.lua", 
-"ultraschall_tag_engine_beta.lua", 
 "ultraschall_video_engine.lua", 
-"ultraschall_video_engine_beta.lua",
 "DocsSourcefiles/reaper-videoprocessor-docs.USDocML"
 }
 
 for i=1, 1 do
-  A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/"..Filelist[i])
+  A=ultraschall.ReadFullFile(ultraschall.Api_Path..Filelist[i])
   
   --A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourcefiles/reaper-apidocs.USDocML")
   

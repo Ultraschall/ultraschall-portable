@@ -30,28 +30,6 @@
 ---     Track: States Module     ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "TrackManagement-States-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.GetTrackStateChunk_Tracknumber(tracknumber)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -2222,13 +2200,15 @@ function ultraschall.SetTrackAutoRecArmState(tracknumber, autorecarmstate, Track
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackAutoRecArmState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.5
     Reaper=5.40
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string TrackStateChunk = ultraschall.SetTrackAutoRecArmState(integer tracknumber, integer autorecarmstate, optional string TrackStateChunk)</functioncall>
   <description>
     Set the AutoRecArmState for a track or a TrackStateChunk.
+    
+    It's the entry AUTO_RECARM
     
     returns false in case of an error
   </description>
@@ -2238,7 +2218,7 @@ function ultraschall.SetTrackAutoRecArmState(tracknumber, autorecarmstate, Track
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master-track; -1 if you want to use parameter TrackStateChunk
-    integer autorecarmstate - autorecarmstate - 1 - autorecarm on, <> than 1 - off
+    integer autorecarmstate - the autorecarmstate; 1, autorecarm on; 0, autorecarm off
     optional string TrackStateChunk - use a trackstatechunk instead of a track; only used when tracknumber is -1
   </parameters>
   <chapter_context>
@@ -2255,36 +2235,28 @@ function ultraschall.SetTrackAutoRecArmState(tracknumber, autorecarmstate, Track
   if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackAutoRecArmState", "tracknumber", "no such track in the project", -2) return false end
   if math.type(autorecarmstate)~="integer" then ultraschall.AddErrorMessage("SetTrackAutoRecArmState", "autorecarmstate", "must be an integer", -3) return false end
   
-  local str=""
-  
-  -- create state-entry
-  if autorecarmstate==1 then str="AUTO_RECARM "..autorecarmstate end
+  -- create state-entry; remove if recarmstate==1
+  if autorecarmstate~=1 then autorecarmstate=0 end
   
   -- get trackstatechunk
-  local Mediatrack, A, AA, B
+  local Mediatrack, StateChunk, A
   if tracknumber~=-1 then
-    if tracknumber==0 then Mediatrack=reaper.GetMasterTrack(0)
-    else
-      Mediatrack=reaper.GetTrack(0,tracknumber-1)
-    end
-    A,AA=ultraschall.GetTrackStateChunk(Mediatrack,str,false)
+    if tracknumber==0 then Mediatrack=reaper.GetMasterTrack(0) else Mediatrack=reaper.GetTrack(0,tracknumber-1) end
+    A, StateChunk=ultraschall.GetTrackStateChunk(Mediatrack, "" ,false)
   else
-    if type(TrackStateChunk)~="string" then ultraschall.AddErrorMessage("SetTrackAutoRecArmState", "TrackStateChunk", "must be a string", -4) return false end
-    AA=TrackStateChunk
+    if type(TrackStateChunk)~="string" then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "TrackStateChunk", "must be a string", -5) return false end
+    StateChunk=TrackStateChunk
   end
   
   -- remove old state from trackstatechunk
-  local B1=AA:match("(.-)AUTO_RECARM")
-  local B3=AA:match("AUTO_RECARM.-%c(.*)")
+  StateChunk = ultraschall.Statechunk_ReplaceEntry(StateChunk, "AUTO_RECARM", "REC", nil, {autorecarmstate}, {0})
   
-  -- set trackstatechunk and include new-state
-  if B1==nil then B1=AA:match("(.-TRACK)") B3=AA:match(".-TRACK(.*)") end
+  -- set-trackstatechunk, if requested
   if tracknumber~=-1 then
-    B=reaper.SetTrackStateChunk(Mediatrack,B1.."\n"..str.."\n"..B3,false)
-  else
-    B=true
+    reaper.SetTrackStateChunk(Mediatrack, StateChunk, false)
   end  
-  return B, B1.."\n"..str.."\n"..B3
+  
+  return true, StateChunk
 end
 
 function ultraschall.SetTrackMuteSoloState(tracknumber, Mute, Solo, SoloDefeat, TrackStateChunk)
@@ -5172,4 +5144,124 @@ function ultraschall.ConvertTrackstringToArray(trackstring)
   if retval==false then ultraschall.AddErrorMessage("ConvertTrackstringToArray", "trackstring", "not a valid trackstring", -1) return end
 
   return count, individual_tracknumbers
+end
+
+function ultraschall.GetTrackPlayOffsState(tracknumber, str)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackPlayOffsState</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>number offset, integer media_playback_flags = ultraschall.GetTrackPlayOffsState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <description>
+    returns state of Media playback offset
+    
+    It's the entry PLAYOFFS
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    number offset - common values settable via UI are: -0.5(-500ms) to 0.5(500ms) or -8192 to 8192(samples) 
+    integer media_playback_flags - flags for Media playback offset-settings
+                                 - &1=0, Media playback offset-checkbox is on; &1=1, Media playback offset-checkbox is off
+                                 - &2=0, value is in milliseconds; &2=2, value is in samples
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
+    optional string TrackStateChunk - a TrackStateChunk that you want to use, instead of a given track
+  </parameters>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, media playback offset, milliseconds, samples, state, get, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  local A,B=ultraschall.GetTrackState_NumbersOnly("PLAYOFFS", str, "GetTrackMuteSoloState", true)
+  --if PLAYOFFS doesn't exist as value in statechunk, return defaults (offset=0 and media_playback_flags=0)
+  if A==nil then A=0 B=0 end
+  return A,B
+end
+
+
+function ultraschall.SetTrackPlayOffsState(tracknumber, TrackStateChunk, offset, media_playback_flags)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetTrackPlayOffsState</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string TrackStateChunk = ultraschall.SetTrackPlayOffsState(integer tracknumber, optional string TrackStateChunk, number offset, integer media_playback_flags)</functioncall>
+  <description>
+    Set the AutoRecArmState for a track or a TrackStateChunk.
+    
+    It's the entry PLAYOFFS
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval  - true, if successful, false if unsuccessful
+    string TrackStateChunk - the altered TrackStateChunk
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master-track; -1 if you want to use parameter TrackStateChunk
+    optional string TrackStateChunk - use a trackstatechunk instead of a track; only used when tracknumber is -1
+    number offset - common values settable via UI are: -0.5(-500ms) to 0.5(500ms) or -8192 to 8192(samples) 
+    integer media_playback_flags - flags for Media playback offset-settings
+                                 - &1=0, Media playback offset-checkbox is on; &1=1, Media playback offset-checkbox is off
+                                 - &2=0, value is in milliseconds; &2=2, value is in samples
+  </parameters>
+  <chapter_context>
+    Track Management
+    Set Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, media playback offset, track, set, state, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  -- check parameters
+  if math.type(tracknumber)~="integer" then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "tracknumber", "must be an integer", -1) return false end
+  if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "tracknumber", "no such track in the project", -2) return false end
+  if type(offset)~="number" then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "offset", "must be a number", -3) return false end
+  if math.type(media_playback_flags)~="integer" then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "media_playback_flags", "must be an integer", -4) return false end
+  
+  -- get trackstatechunk
+  local Mediatrack, StateChunk, A
+  if tracknumber~=-1 then
+    if tracknumber==0 then Mediatrack=reaper.GetMasterTrack(0)
+    else
+      Mediatrack=reaper.GetTrack(0,tracknumber-1)
+    end
+    A, StateChunk=ultraschall.GetTrackStateChunk(Mediatrack, str ,false)
+  else
+    if type(TrackStateChunk)~="string" then ultraschall.AddErrorMessage("SetTrackPlayOffsState", "TrackStateChunk", "must be a string", -5) return false end
+    StateChunk=TrackStateChunk
+  end
+  
+  -- replace Statechunk-entry with undocumented helper function(can be found in functions-engine.lua)
+  StateChunk = ultraschall.Statechunk_ReplaceEntry(StateChunk, "PLAYOFFS", "IPHASE", nil, {offset, media_playback_flags})
+  
+  -- set-trackstatechunk, if requested
+  if tracknumber~=-1 then
+    reaper.SetTrackStateChunk(Mediatrack, StateChunk, false)
+  end  
+  
+  -- remove entry, with default values, as Reaper needs the PLAYOFFS-entry added into the statechunk for
+  -- it to be removed with default values
+  -- So we need to remove them from the statechunk right now, or it's inconsistent.
+  if offset==0 and media_playback_flags==0 then
+    return true, string.gsub(StateChunk, "PLAYOFFS.-\n", "")
+  else
+    return true, StateChunk
+  end
 end

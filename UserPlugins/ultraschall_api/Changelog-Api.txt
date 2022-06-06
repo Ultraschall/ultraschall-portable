@@ -1,5 +1,5 @@
 <TODO>
-    -- SPectral Edit: supports takes, but do the functions support takes too?
+    -- SPectral Edit: supports takes, but do the functions support takes too? Answer: NO, not yet...
 
     -- later releases
         - IsTakeEnvelopeVisible(könnt knifflig werden)
@@ -123,8 +123,6 @@ TODO:
     - Rendering: CalculateLoudness - calculates loudness of tracks/items and returns its stats  
  
   - Normalization in BatchConverter?
-
-  - GetItemButtonsVisible/SetItemButtonsVisible - add "hide buttons when lane is less than x pixels"-feature to the parameters/retvals too
   
   - Docs: mach mal Abstand zwischen retvals/params und der description kürzer, dafür aber evtl den Abstand ÜBER den retval/param-names etwas höher.
           Mach mal auch den Abstand zwischen <u>Return Values</u> und <u>Parameters</u> etwas kürzer, siehe ShowEnvelopePointMenu. Da ist zuviel Abstand dazwischen.
@@ -167,56 +165,383 @@ TODO:
                                                             - needs to be inserted manually -_-
                                                             
                                                             
-Chapters: attribute "url" broke due regression, so old US4 and US5-projects break in new implementation -> GO FIX IT!
-                                                            
-</TODO>
+ConfigVarDisplayer - Layout sometimes break, with too short double-values; pad the value instead with spaces to keep layout clean!
+                   -- example: in Peak Display Settings, set noise threshold to 1.86, which leads to specpeak_na being 2.14920621243, which breaks "\tDifference to old value:"
 
+
+Bug with INI-Files-read-functions:
+    Cannot read keys with multiple lines(probably limitation of standard), so you need to rewrite your 
+    GetIni-Parser....
+    Otherwise ini-files and podcast-presets break.
+
+ - Podcast/Episode-Presets have problems with newlines when stored into ini-file -> find a workaround
+
+ - Docs: API - rename parameters of EEL/Python/CPP to their Lua-counterparts
+ 
+ - DeveloperTools: get all default-factory-shortcuts: löschen eines Shortcuts für ne Action.
+                   wenn kb.ini einen neuen Eintrag bekommt für KEY mit 0 als action, dann loggen
+ 
+-- Docs: the index is still sorted the wrong way and should be alphabetically downwards, not sidewards
+Use this function to do the sorting of slugs for variable HeaderList[i] in line 273 of docgenerator_v2(before the sorting happens with table.sort())
+
+NOTE: check, if the resulting string has the same amount of lines as the one I passed over to it and output an error-message, if it doesn't.
+Otherwise, you might miss missing functions in the index, if the code is buggy...
+
+function ConvertIndexToAlphabeticalRows(A, columns)
+  local FinalString, B_count, B, Row1, Row2, Row3, Row_Count, Offset, D
+  if columns==1 then return A end
+  if columns>1 then
+    B_count, B = ultraschall.CSV2IndividualLinesAsArray(A, "\n")
+    if columns==2 then
+      Row1={}
+      Row2={}
+      Row_Count=0
+      for i=1, #B, 2 do
+        Row_Count=Row_Count+1
+        Row1[Row_Count]=B[i]
+        Row2[Row_Count]=B[i+1]
+      end
+      
+      for i=1, #Row1 do
+        Row1[i]=B[i]
+      end
+      for i=0, #Row2 do
+        Row2[i+1]=B[i+#Row1+1]
+      end
+      FinalString=""
+      for i=1, #Row1 do
+        if Row1[i]~=nil then FinalString=FinalString..Row1[i].."\n" end
+        if Row2[i]~=nil then FinalString=FinalString..Row2[i].."\n" end
+      end
+    elseif columns==3 then
+      Row1={}
+      Row2={}
+      Row3={}
+      Row_Count=0
+      for i=1, #B, 3 do
+        Row_Count=Row_Count+1
+        Row1[Row_Count]=B[i]
+        Row2[Row_Count]=B[i+1]
+        Row3[Row_Count]=B[i+2]
+      end
+      
+      for i=1, #Row1 do
+        Row1[i]=B[i]
+      end
+      for i=0, #Row2 do
+        Row2[i+1]=B[i+#Row1+1]
+      end
+      Offset=0
+      D=B_count%3
+      if B_count%3==0 then Offset=-1 
+      elseif B_count%3==2 then Offset=-1 end
+      for i=1, #Row3 do
+        Row3[i]=B[i+#Row1+#Row2+Offset]
+      end
+      FinalString=""
+      for i=1, #Row1 do
+        if Row1[i]~=nil then FinalString=FinalString..Row1[i].."\n" end
+        if Row2[i]~=nil then FinalString=FinalString..Row2[i].."\n" end
+        if Row3[i]~=nil then FinalString=FinalString..Row3[i].."\n" end
+      end
+    end
+  end
+  return FinalString
+end
+
+Note: Doesn't fucking work...
+
+- IsEnvelopeTakeFXEnvelope, IsEnvelopeTrackFXEnvelope, IsEnvelopeInputFXEnvelope, IsEnvelopeTakeEnvelope
+
+
+readd in next version:
+  
+
+  
+</TODO>
 
 ## Ultraschall Framework - Changelog
 
-### 4.4 - "" - XX of XXXX 2022
+### 4.7 - " - " - XX of XXXX 2022
 
-Has now 1457 functions, with XX new ones
+Has now 1532 functions, with XX new ones
 
 **new in this release:**  
 
   - **Bla**  
   Bla
-
   
-#### New features in 4.4  
-  - Markers: AddShownoteMarker - adds a shownote-marker
-  - Markers: CountShownoteMarkers - counts shownote-markers in a project
-  - Markers: DeleteShownoteMarker - deletes a shownote-marker
-  - Markers: EnumerateShownoteMarkers - gets a shownote-marker    
-  - Markers: GetGuidFromShownoteMarkerID - gets the guid of a shownote marker by its index
-  - Markers: GetShownoteMarkerIDFromGuid - gets the index of a shownote marker by its guid
-  - Markers: SetShownoteMarker - sets an already existing shownote-marker
-  - MetaData: MetaDataTable\_Create - returns an empty metadatatable, which holds all possible metadata-entries
-  - MetaData: MetaDataTable\_GetProject - returns a metadatatable, which holds all metadata-entries of the current project
-  - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastChapter\_MetaDataEntry - returns a podcast's chapter-metadata-entry according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisode\_MetaDataEntry - returns the podcast's episode-related metadata-entry according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisodeMetadataPreset\_Name - gets the name of an episode -metadata-preset
-  - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastMetadataPreset\_Name - gets the name of a podcast-metadata-preset
+
+#### New features in 4.7  
+  - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
+  - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
+  - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetPodcastChapter\_MetaDataEntry - returns a podcast's chapter-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetPodcastEpisode\_MetaDataEntry - returns the podcast's episode-related metadata-entry according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode -metadata-preset
+  - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
+  - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
   - PodcastMetadata: GetSetChapterMarker\_Attributes - gets/sets metadata-attributes of a chapter-marker(using Ultraschall 4+ methods)
-  - PodcastMetadata: GetSetPodcast\_MetaData - gets/sets metadata-attributes of a podcast
-  - PodcastMetadata: GetSetPodcastEpisode\_MetaData - gets/sets metadata-attributes of a podcast-episode
+  - PodcastMetadata: GetSetPodcast\_Attributes - gets/sets metadata-attributes of a podcast
+  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - gets/sets metadata-attributes of a podcast-episode
   - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
   - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
   - PodcastMetadata: GetSetShownoteMarker\_Attributes - gets/sets additional attributes of a shownote-marker
   - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
+  - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
+  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
+  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes      
+  - UserInterface: GetReaperWindow\_Position - returns the Reaper-window-position and various of its elements  
+  
+#### Changes from 4.6 to 4.7  
+  - API: cleanup - a lot of cleanup in codebase and improvements in stability for future enhancements
+  - API: Modulator3000 - readded api-load-speedup after I found out how to circumvent a bug in Reaper's Lua-implementation  
+  - DeveloperTools: GetPitchShiftModes - improved layout; crashed in my parser due addition of Rrreeeaaa -> fixed
+  - DeveloperTools: ItemStateChunk from Clipboard to item under mouse - copied statechunk into clipboard instead of setting it oooppsss -> fixed
+  - DeveloperTools: LangPack2Developer\_langpack\_converter - shows now conversion progress in ReaScript-console
+  - DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -> fixed
+  - DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed
+  - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
+  - Docs: Reaper Internals - updated to Reaper 6.59 and ReaImGui 0.6.2
+  - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
+  - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
+  - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
+  - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
+
+---
+
+### 4.6 - "Can - Halleluwah" - 19th of May 2022
+
+Has now 1532 functions, with 32 new ones
+
+**new in this release:**  
+
+  - **FromPoint-functions**  
+  You can get now Razor-Edits, TrackEnvelopes and TakeEnvelopes by their coordinates.  
+  
+  - **Razor-Edit-specials**  
+  New Razor-Edit functions in general. Remove now by index and get, if at a specific position is a razor-edit or a gap between them.  
+  You can also check, whether a certain area overlaps with already existing razor-edit-areas.  
+  
+  - **JSFX-reload**  
+  If you develop JSFX in an external editor and would like to update them in a project to use the latest version, you get functions to do so.  
+  This should speed up developing and testing jsfx a little better.  
+  Allows track, take and inputfx!  
+  
+  - **Windows Media Foundation support, as added per Reaper 6.57**  
+  
+  - **Shownotes for podcasts**  
+  A new marker-type, that allows storing shownotes. Will be enhanced within the next few releases for additional metadata.   
+
+  - **User Interface functions for HWND**  
+  More comfortable functions for getting Transport, Arrange and TCP.  
+
+#### New features in 4.6  
+  - DeveloperTools: MonitorRenderString\_Diff - monitors the diffs of the render-string, when setting them in the RenderToFile-dialog and hit Save Settings
+  - Envelopes: GetAllActiveEnvelopes\_Take - returns all active take-envelopes
+  - Envelopes: GetAllActiveEnvelopes\_Track - returns all active track-envelopes
+  - Envelopes: GetTakeEnvelopeFromPoint - returns the take-envelope at a certain coordinate
+  - Envelopes: GetTrackEnvelopeFromPoint - returns the track-envelope at a certain coordinate
+  - Envelopes: IsEnvelopeTrackEnvelope - checks, whether an Envelope is a TrackEnvelope
+  - FXManagement: InputFX\_JSFX\_Reload - reloads a jsfx in inputfx, when you've changed the jsfx-source-file
+  - FXManagement: TakeFX\_JSFX\_Reload - reloads a jsfx in a take, when you've changed the jsfx-source-file
+  - FXManagement: TrackFX\_JSFX\_Reload - reloads a jsfx in a track, when you've changed the jsfx-source-file  
+  - Markers: AddShownoteMarker - adds a shownote-marker
+  - Markers: CountShownoteMarkers - counts shownote-markers in a project
+  - Markers: DeleteShownoteMarker - deletes a shownote-marker
+  - Markers: EnumerateShownoteMarkers - gets a shownote-marker    
+  - Markers: GetGuidFromShownoteMarkerID - gets the guid of a shownote marker by its index  
+  - Markers: GetShownoteMarkerIDFromGuid - gets the index of a shownote marker by its guid
+  - Markers: IsMarkerShownote - returns, if a marker is a shownote
+  - Markers: SetShownoteMarker - sets an already existing shownote-marker
+  - MidiEditor: MidiEditor\_GetFixOverlapState - gets the Automatically Correct Overlapping Notes-option, as set in the Midi-Editor -> Options-menu
+  - MidiEditor: MidiEditor\_SetFixOverlapState - sets the Automatically Correct Overlapping Notes-option, as set in the Midi-Editor -> Options-menu
   - PodcastMetadata: PrepareChapterMarkers4ReaperExport - prepares chaptermarkers for metadata-export during rendering
   - PodcastMetadata: RestoreChapterMarkersAfterReaperExport - restores chaptermarkers after metadata-export during rendering  
-  - PodcastMetadata: SetPodcastEpisodeMetadataPreset\_Name - sets the name of an episode-metadata-preset
-  - PodcastMetadata: SetPodcastMetadataPreset\_Name - sets the name of a podcast-metadata-preset
-  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes  
+  - RazorEdit: RazorEdit\_CheckForPossibleOverlap\_Envelope - checks, whether a certain area overlaps with already existing razor-edit-areas of an envelope
+  - RazorEdit: RazorEdit\_CheckForPossibleOverlap\_Track - checks, whether a certain area overlaps with already existing razor-edit-areas of a track
+  - RazorEdit: RazorEdit\_GetFromPoint - gets a razor-edit-area/gap by coordinate
+  - RazorEdit: RazorEdit\_IsAtPosition\_Envelope - checks, if track has a razor-edit-area or a gap at position; also returns the position of the razor-edit-area or gap at position
+  - RazorEdit: RazorEdit\_IsAtPosition\_Track - checks, if envelope has a razor-edit-area or a gap at position; also returns the position of the razor-edit-area or gap at position  
+  - RazorEdit: RazorEdit\_RemoveByIndex\_Envelope - removes a razor-edit-area by its index from an envelope
+  - RazorEdit: RazorEdit\_RemoveByIndex\_Track - removes a razor-edit-area by its index from a track(envelopes stay untouched)
+  - Rendering: CreateRenderCFG\_WMF\_Video - creates the format-settings of the windows media foundation-formats(MPEG-4, mp4, m4a)
+  - Rendering: GetRenderCFG\_Settings\_WMF - gets the format-settings of the windows media foundation-formats(MPEG-4, mp4, m4a)
+  - UserInterface: GetHWND\_ArrangeView - returns hwnd of the arrangeview, its visible area and right of arrange-state
+  - UserInterface: GetHWND\_TCP - returns hwnd of the track control panel, its visible area and right of arrange-state
+  - UserInterface: GetHWND\_Transport - returns hwnd, position, float, dock and hidden-state of transport  
+  
+#### Changes from 4.5 to 4.6  
+  - Clipboard: PutMediaItemsToClipboard\_MediaItemArray - could potentially create an undo-point -> fixed
+  - Docs: Reaper Internals - updated to Reaper 6.58, SWS 2.13.1.0
+  - MediaItems: ApplyActionToMediaItem - doesn't create an undo point anymore
+  - MediaItems: ApplyActionToMediaItemArray2 - doesn't create an undo point anymore
+  - MediaItems: GetAllMediaItemsInTimeSelection - doesn't create an undo point anymore
+  - MediaItems: SetMediaItemsSelected\_TimeSelection - doesn't create an undo point anymore; has now parameter for only items that are completely inside the time-selection  
+  - RazorEdit: RazorEdit\_Remove\_Envelope - accidentally removed items on first track -> fixed
+  - RazorEdit: RazorEdit\_Remove\_Track - accidentally removed items on first track -> fixed
+  - Rendering: AddSelectedItemsToRenderQueue - had inner variable exposed; could potentially create undo-points -> fixed
+  
+  
+---
+
+### 4.5 - "Frank Zappa - Help I'm a Rock" - 6th of May 2022
+
+Has now 1500 functions, with 23 new ones
+
+**new in this release:**  
+
+  - **Celebration Time**  
+  Because, I reached 1500 functions for Ultraschall-API. In the beginning, I was sure, that I would maybe have potential for 
+  300 functions.
+  I somehow overdid it, did I? XD
+  
+  - **Razor Edit**  
+  I gave Razor Edit some love, so you can nudge, add and remove razor-edit-areas much easier for tracks or individual TrackEnvelopes.  
+  
+  - **AutomationItems**  
+  As I needed to bugfix the split and delete-functions for Automation Items, I added some functions to mass-set the select states of automation-items.  
+  
+  - **Developer Actions for ReaScripts**  
+  Need to quickly reopen the last edited script? Or want to open up another and you're too lazy to open up the 
+  actionlist?
+  Behold, new developer-functions do this for you.  
+  And if you need to open up quickly a new temporary-script to write some small test-code-snippet, you can do it as well.
+  
+  - **EditReaScript**  
+  Always bothered, that the newly opened script doesn't immediately hold, what you need to start working right away?  
+  Well, EditReaScript can now automatically add some default-lines into a newly created script. So if you need to 
+  add your ReaPack-index-information time and again, use this new parameter to make stuff easier for you.  
+  
+  - **Bugfixes**  
+  You're used to it, aren't you?
+  
+  ...up to the next 1500 functions, as soon as my overtyped numb fingers can type again... XD
+  
+
+#### New features in 4.5  
+  - AutomationItems: AutomationItem\_DeselectAllInTrack - deselects all automation-items in a TrackEnvelope
+  - AutomationItems: AutomationItem\_DeselectAllSelectStates - deselects all automation-items in all TrackEnvelopes
+  - AutomationItems: AutomationItem\_GetAllSelectStates - get all automationitem-selection-states in all TrackEnvelopes
+  - AutomationItems: AutomationItem\_GetSelectStates - get all automationitem-selection-states in a TrackEnvelope
+  - AutomationItems: AutomationItem\_SelectMultiple - sets selection-state multiple automation-items in a TrackEnvelope
+  - DeveloperTools: Create New Temporary Unlisted Lua ReaScript - creates a new temporary script, that isn't listed in the actionlist
+  - DeveloperTools: Open Last ReaScript - opens the last edited ReaScript
+  - DeveloperTools: Open A ReaScript with Dialog - opens a ReaScript, with a file-chooser-dialog
+  - HelperFunctions: GetSetIDEAutocompleteSuggestions - gets/sets the number of suggestions in the IDE for autocomplete
+  - Markers: GetTemporaryMarker - retrieves temporarily stored markers/regions for later use
+  - Markers: StoreTemporaryMarker - temporarily stores markers/regions for later use
+  - RazorEdit: RazorEdit\_Add\_Envelope - adds a razor-edit-area to a TrackEnvelope
+  - RazorEdit: RazorEdit\_Add\_Track - adds a razor-edit-area to a Track
+  - RazorEdit: RazorEdit\_CountAreas\_Envelope - counts the number of razor-edit-areas in a specific envelope
+  - RazorEdit: RazorEdit\_CountAreas\_Track - counts the number of razor-edit-areas in a track(excluding envelopes)
+  - RazorEdit: RazorEdit\_GetRazorEdits\_Track - returns all razor-edit-areas of a track
+  - RazorEdit: RazorEdit\_Nudge\_Track - nudges the razor-edit-areas of a track
+  - RazorEdit: RazorEdit\_Nudge\_Envelope - nudges the razor-edit-areas of a specific envelope
+  - RazorEdit: RazorEdit\_Remove - removes all razor-edit-areas of a track including its envelopes
+  - RazorEdit: RazorEdit\_Remove\_Envelope - removes a razor-edit-area from a TrackEnvelope
+  - RazorEdit: RazorEdit\_RemoveFromEnvelope - removes all razor-edit-areas of a TrackEnvelope
+  - RazorEdit: RazorEdit\_RemoveFromTrack - removes all razor-edit-areas of a track, leaving envelopes untouched
+  - RazorEdit: RazorEdit\_Remove\_Track - removes a razor-edit-area from a Track
+  - Rendering: GetSetRenderBlocksize - gets/sets the render-blocksize
+  - TrackStates: GetTrackPlayOffsState - get the Media Playback Offset-entry of a track
+  - TrackStates: SetTrackPlayOffsState - sets the Media Playback Offset-entry of a track
+  
+  
+#### Changes from 4.4 to 4.5  
+  - AutomationItem\_Delete - did also delete selected automation-items in other TrackEnvelopes -> fixed(thanx to X-Raym)
+  - AutomationItem\_Split - did also split automation-items in other TrackEnvelopes under certain conditions -> fixed(thanx to X-Raym)
+  - Docs: general - anchors in the index of documents didn't scroll correctly -> fixed
+  - HelperFunctions: Create2DTable - did create a 3d-table instead, when using default-values -> fixed
+  - HelperFunctions: Create3DTable - did create a 4d-table instead, when using default-values -> fixed
+  - HelperFunctions: EditReaScript - has new parameter that allows setting default-lines into a newly created script; returns now, if script had been created or already existed; always uses the last edited script as set in reaper.ini when filename==nil
+  - HelperFunctions: MKVOL2DB - returned -44 instead of -144 as minimum dB-value -> fixed
+  - RazorEdit: RazorEdit\_GetAllRazorEdits - allows now excluding track and/or envelope-razoredit-areas from the list
+  - TrackStates: SetTrackAutoRecArmState - reimplemented with a cleaner codebase(hopefully future proof)
+  - UserInterface: GetItemButtonsVisible - added "hide when take is less than xx pixel"-option
+  - UserInterface: SetItemButtonsVisible - added "hide when take is less than xx pixel"-option; optional parameter weren't optional -> fixed
+  
+---
+
+### 4.4 - "Dispatch - Open Up" - 27 of April 2022
+
+Has now 1477 functions, with 20 new ones
+
+**new in this release:**  
+
+  - **SpectralPeak-View-functions**  
+  You can now set the options for the spectral-peak-view of MediaItems.  
+
+  - **AddProjectMarker**  
+  This is an alternative to Reaper's own AddProjectMarker-function. It returns the GUID, the index of the added marker  
+  and fixes some edge-case-issues with the original function.  
+
+  - **BatchConverter-FXStateChunk**  
+  You can get and set the FXChain of the BatchConverter programmatically, now using FXStateChunks.  
+  
+  - **Docs**  
+  Added functions of the new extensions ReaLim and ReaFab and updated the functions of all other extensions and Reaper itself.
+  SetProjExtState and SetExtState-descriptions also include now a list of sections, used by scripts/extensions. That way, you 
+  can prevent naming conflicts and therefore accidentally overwritten configs/data.
+  
+  - **Marker-Functions**  
+  Rewritten, so they are much faster now, especially adding markers.  
+  
+  - **DevTool: Marker Guid Displayer**  
+  This one displays the index, guid and name of all markers/regions in the current project.  
+  This way, you can monitor, if your marker-functions get the correct guids from a marker.
+  
+  - **Bugfixes**  
+  Per tradition...
+
+#### New features in 4.4  
+  - BatchConverter: GetBatchConverter\_NotifyWhenFinished - gets the state of the "notify when finished"-checkbox 
+  - BatchConverter: SetBatchConverter\_NotifyWhenFinished - sets the state of the "notify when finished"-checkbox 
+  - DeveloperTools: Display All Marker Region Guids - monitors all marker/region-guids in the ReaScript-console  
+  - DeveloperTools: Display_ExtStateSectionsOfScriptsInFolder - displays all set-extstate-sections used in scripts within a folder
+  - DeveloperTools: Display_ProjExtStateSectionsOfScriptsInFolder - displays all set-projextstate-sections used in scripts within a folder
+  - Docs: Reaper Internals - added ReaLim 0.3.0 and ReaFab 0.3.10
+  - FXManagement: GetBatchConverter\_FXStateChunk - gets the FXChain currently used by the BatchConverter
+  - FXManagement: SetBatchConverter\_FXStateChunk - sets the FXChain used by the BatchConverter  
+  - Markers: AddProjectMarker - an alternative to Reaper's own function, that covers some edgecases and returns guid and actual marker/region-index as well
+  - Markers: GetEditMarkerIDFromGuid - gets an edit-marker id by its guid
+  - Markers: GetEditRegionIDFromGuid - gets an edit-marker id by its guid
+  - Markers: GetGuidFromEditMarkerID - gets the guid of an edit-marker
+  - Markers: GetGuidFromEditRegionID - gets the guid of an edit-marker
+  - MetaData: MetaDataTable\_Create - returns an empty metadatatable, which holds all possible metadata-entries
+  - MetaData: MetaDataTable\_GetProject - returns a metadatatable, which holds all metadata-entries of the current project    
+  - Projects: Main\_SaveProject - saves a project and allows giving it a filename
+  - Render: GetRenderTable\_ProjectDefaults - returns a rendertable with all render settings of the project's defaults
+  - SpectralView: SpectralPeak\_GetColorAttributes - gets noise-threshold, opacity and variance of the spectral view
+  - SpectralView: SpectralPeak\_GetMaxColor - returns the maxmium color of the spectral view
+  - SpectralView: SpectralPeak\_GetMinColor - returns the minimum color of the spectral peak view
+  - SpectralView: SpectralPeak\_SetColorAttributes - sets noise-threshold, opacity and variance of the spectral view
+  - SpectralView: SpectralPeak\_SetMaxColor - sets the maximum color of the spectral peak view
+  - SpectralView: SpectralPeak\_SetMaxColor_Relative - sets the spectrum color of the spectral peak view, relative to the minimum spectral-view color
+  - SpectralView: SpectralPeak\_SetMinColor - sets the minimum color of the spectral peak view
   
 #### Changes from 4.3 to 4.4    
-
+  - DeveloperTools: Config Var Displayer - crashed, when double-value is NaN -> fixed
+  - Docs: Reaper API-docs - restructured the index into more useful categories; updated to Reaper 6.56, ReaImGui 0.6.1 and ReaPack 1.2.4
+  - FileManagement: CreateValidTempFile - raised number of potential temp-file-variants to 2147483648
+  - HelperFunctions: Main\_OnCommandByFilename - didn't remove temporary scripts sometimes due Reaper bug -> fixed
+  - HelperFunctions: MIDI\_OnCommandByFilename - didn't remove temporary scripts sometimes, partially due Reaper bug -> fixed  
+  - Markers: AddCustomMarker - reworked code so it's faster now; sometimes, the returned guid could be wrong -> fixed
+  - Markers: AddCustomRegion - reworked code so it's faster now; sometimes, the returned guid could be wrong -> fixed
+  - Markers: AddEditMarker - reworked code so it's faster now; sometimes, the returned guid could be wrong -> fixed
+  - Markers: AddEditRegion - reworked code so it's faster now; sometimes, the returned guid could be wrong -> fixed
+  - Markers: AddNormalMarker - reworked code so it's faster now; sometimes, the returned guid could be wrong -> fixed
+  - Markers: GetGuidFromNormalMarkerID - returned -1 in case of an error, though this makes no sense -> returns nil now
+  - Markers: GetNormalMarkerIDFromGuid - returned nil or guid when no normal marker was found instead of -1 -> fixed
+  - ProjectManagement: GetProjecStateChunk - didn't work under certain circumstances -> fixed
+  - ProjectManagement: IsValidReaProject - didn't return true when parameter was 0, though it being a valid project -> fixed
+  - Render: GetRender\_ResampleMode - didn't return correct resample-mode when Render to File-Dialog was open(Reaper 6.43+) -> fixed
+  - Render: GetRenderTable\_Project - didn't correctly return "CloseAfterRender" -> fixed
+  - Render: SetRender\_ResampleMode - didn't set correct resample-mode when Render to File-Dialog was open(Reaper 6.43+) -> fixed
+  - UserInterface: GetBatchFileItemConverterHWND - didn't return hwnd of batch-converter anymore -> fixed
+  
 ---
 
 ### 4.3 - "Eskobar - Someone New" - 22nd of February 2022
@@ -292,20 +617,30 @@ Has now 1457 functions, with 34 new ones
   
 #### Changes from 4.2.006 to 4.3    
   - DeveloperTools: findConfigVarsToggledByActions - fixed dozens of bugs; supports now all config-vars; improved the layout of the output file; has now "do you really want to run me?"-question, as this script could ruin your Reaper installation
+  - DeveloperTools: CheckForNewConfigVars - shows now the current values of the newly found config-vars
+  - DocEngine: Docs_ConvertPlainTextToHTML - new option for keeping tabs and whitespaces untouched and for omitting < br > between < pre > and < /pre >-tags in source-string
   - Docs: Reaper Internals - updated to Reaper 6.47, JS-extension 1.301, ReaImGui 0.5.10, ReaBlink 0.4.4, SWS 2.13.0.0
+  - HelperFunctions: RunBackgroundHelperFeatures - deprecated
   - MarkerManagement: AddCustomMarker - returns now the custom-marker-index, within all custom markers only, as well; allows now creating markers with the same name on the same position(workaround for Reaper-limitation)
   - MarkerManagement: AddCustomRegion - returns now the custom-region-index, within all custom regions only, as well; allows now creating regions with the same name on the same position(workaround for Reaper-limitation)
   - MarkerManagement: AddEditMarker - returns now the edit-marker-index, within all edit markers; allows now creating markers with the same name on the same position(workaround for Reaper-limitation)
   - MarkerManagement: AddEditRegion - returns now the edit-region-index, within all edit regions; allows now creating regions with the same name on the same position(workaround for Reaper-limitation)
   - MarkerManagement: AddNormalMarker - returns now the normal-marker-index, within all normal markers; improved automatic numbering; allows now creating markers with the same name on the same position(workaround for Reaper-limitation) -> fixed
+  - MarkerManagement: AddPodRangeRegion - deprecated
   - MarkerManagement: CountNormalMarkers - did count custom-markers as well -> fixed
   - MarkerManagement: CountNormalMarkers\_NumGap - didn't count normal markers only, but rather all -> fixed
+  - MarkerManagement: DeletePodRangeRegion - deprecated
   - MarkerManagement: EnumerateNormalMarkers - did include custom-markers as well -> fixed
+  - MarkerManagement: GetPodRangeRegion - deprecated
+  - MarkerManagement: IsRegionPodrange - deprecated
   - MarkerManagement: SetNormalMarker - did set custom-markers as well -> fixed
   - MediaItemManagement: GetAllMediaItemsFromTrack - had problems, when a track had no item -> fixed(thnx to Distressor)
   - MediaItemManagement: SetItemPosition - did return -1 in case of an error, whereas it should return nil instead -> fixed
   - MediaItemManagement: SetItemLength - did return -1 in case of an error, whereas it should return nil instead -> fixed
   - MediaItemManagement: SetItemImage - did return -1 in case of an error, whereas it should return nil instead -> fixed
+  - Navigation: GetLastCursorPosition - deprecated
+  - Navigation: GetLastPlayState - deprecated
+  - Navigation: GetLastLoopState - deprecated
   - ProjectManagement: GetProjectStateChunk - fixed edgecase, that prevented getting a ProjectStateChunk
   - ProjectManagement: GetProject\_Render\_Normalize - allows now normalize only files that are too loud-option
   - ProjectManagement: SetProject\_Render\_Normalize - allows now normalize only files that are too loud-option

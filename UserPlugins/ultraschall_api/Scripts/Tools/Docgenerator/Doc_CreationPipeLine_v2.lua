@@ -23,7 +23,11 @@
   # 
   ################################################################################
   --]]
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 ultraschall.BringReaScriptConsoleToFront()
 
@@ -42,11 +46,11 @@ FileA[#FileA+1]="Ultraschall_ConceptsDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_VideoProcessorDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_ReaScriptConverter_v2.lua"
 --FileA[#FileA+1]="Reaper_FileTypeDocConverter_v2.lua"
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")
+dofile(ultraschall.Api_Path.."/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")
 
 Starterkit=reaper.time_precise()
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/Ultraschall_ChangelogConverterDoc.lua")
+dofile(ultraschall.Api_Path.."/Scripts/Tools/Docgenerator/Ultraschall_ChangelogConverterDoc.lua")
 
 ReaperVersion=reaper.GetExtState("ultraschall_api", "ReaperVerNr")
 ReaperTagline=reaper.GetExtState("ultraschall_api", "Tagline")
@@ -65,14 +69,14 @@ ReaperTagline=reaper.GetExtState("ultraschall_api", "Tagline")
 
 for i=1, #FileA do
   CurrentDocs=FileA[i].."\n"
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/"..FileA[i])
+  dofile(ultraschall.Api_Path.."/Scripts/Tools/Docgenerator/"..FileA[i])
 end
 
 
 function main()
   COUNTERRRR=COUNTERRRR+1
   if COUNTERRRR==20 then
-    dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator/"..FileA[14])
+    dofile(ultraschall.Api_Path.."/Scripts/Tools/Docgenerator/"..FileA[14])
     COUNTERRRR=0
   end
   reaper.defer(main)

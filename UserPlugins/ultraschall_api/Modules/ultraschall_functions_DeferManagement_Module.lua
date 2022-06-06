@@ -30,28 +30,6 @@
 ---         Defer  Module         ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Defer-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.GetDeferIdentifier(deferinstance, scriptidentifier)
   if math.type(deferinstance)~="integer" then ultraschall.AddErrorMessage("GetDeferIdentifier", "deferinstance", "must be an integer", -1) return nil end
   if deferinstance<1 or deferinstance>20 then ultraschall.AddErrorMessage("GetDeferIdentifier", "deferinstance", "must be between 1 and 20", -2) return nil end
@@ -186,7 +164,7 @@ function ultraschall.StopDeferCycle(identifier)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.StopDeferCycle(string defer_identifier)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops a running ultraschall.Defer-instance of a script-instance.
             
       returns false in case of an error

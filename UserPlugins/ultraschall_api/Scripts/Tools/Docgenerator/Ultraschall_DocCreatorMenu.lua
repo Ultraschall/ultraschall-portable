@@ -24,11 +24,15 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 x,y=reaper.GetMousePosition()
 state=ultraschall.ShowMenu("Docs Chain", "1. Push To Git|2. All Docs|3. Changelog|4. US-API", x, y-55)
-path=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Scripts/Tools/Docgenerator"
+path=ultraschall.Api_Path.."/Scripts/Tools/Docgenerator"
 if state==1 then
   --ultraschall.Main_OnCommandByFilename(path:match("(.*)/Docgener").."/Reapack-API-xml-generator.lua")
   ultraschall.RunCommand("_RS05fed2445cd68755f220fbf9db90dc4db03f5da5")

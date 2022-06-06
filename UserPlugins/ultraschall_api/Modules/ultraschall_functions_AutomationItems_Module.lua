@@ -30,28 +30,6 @@
 ---    Automation Items Module    ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "AutomationItems-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.GetProject_AutomationItemStateChunk(projectfilename_with_path, idx, ProjectStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -233,7 +211,7 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AutomationItem_Delete</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.5
     Reaper=6.05
     Lua=5.3
   </requires>
@@ -272,8 +250,12 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
     ultraschall.SetEnvelopeState_Vis(TrackEnvelope, 1, lane, unknown)
   end
   
-  local AutomationItems_selectionstate={}
-  local AutomationItems_selectioncount=0
+  -- preserve automation-item-selection-state in all other envelopes
+  local A=ultraschall.AutomationItem_GetAllSelectStates(TrackEnvelope)
+  local B=ultraschall.AutomationItem_DeselectAllSelectStates(TrackEnvelope)
+
+  AutomationItems_selectionstate={}
+  AutomationItems_selectioncount=0
   
   for i=1, reaper.CountAutomationItems(TrackEnvelope) do
     AutomationItems_selectionstate[i]=reaper.GetSetAutomationItemInfo(TrackEnvelope, i-1, "D_UISEL", 1, false)
@@ -293,6 +275,11 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
     reaper.GetSetAutomationItemInfo(TrackEnvelope, i-1, "D_UISEL", AutomationItems_selectionstate[i], true)
   end
   
+  -- restore automation-item-selection-state of all other envelopes
+  for i=1, #A do
+    ultraschall.AutomationItem_SelectMultiple(A[i][1], A[i][2])  
+  end
+  
   if visible==0 then 
     visible = ultraschall.SetEnvelopeState_Vis(TrackEnvelope, 0, lane, unknown)
   end
@@ -300,6 +287,7 @@ function ultraschall.AutomationItem_Delete(TrackEnvelope, automationitem_idx, pr
 
   reaper.Undo_EndBlock("Deleted Automation Item", -1)
   return true
+  --]]
 end
 
 
@@ -356,7 +344,7 @@ function ultraschall.AutomationItem_Split(Env, position, index, selected)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AutomationItem_Split</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.5
     Reaper=6.10
     Lua=5.3
   </requires>
@@ -399,11 +387,17 @@ function ultraschall.AutomationItem_Split(Env, position, index, selected)
     return false
   end
 
+
+
   index=index+1
   local Selections={}
   for i=0, reaper.CountAutomationItems(Env)-1 do
     Selections[i]=reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", 0, false)
   end
+  -- preserve automation-item-selection-state in all other envelopes
+  local A=ultraschall.AutomationItem_GetAllSelectStates(TrackEnvelope)
+  local B=ultraschall.AutomationItem_DeselectAllSelectStates(TrackEnvelope)
+  
   if selected==2 then selected=Selections[index-1] end
   table.insert(Selections, index, selected)
   reaper.PreventUIRefresh(1)
@@ -414,14 +408,268 @@ function ultraschall.AutomationItem_Split(Env, position, index, selected)
       reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", 1, true)
     end
   end  
+  
   local oldpos=reaper.GetCursorPosition()
   reaper.SetEditCurPos(position, false, false)
   reaper.Main_OnCommand(42087, 0)
   reaper.SetEditCurPos(oldpos, false, false)
+  
+  -- restore automation-item-selection-state of all other envelopes
+  for i=1, #A do
+    ultraschall.AutomationItem_SelectMultiple(A[i][1], A[i][2])  
+  end
+  
   for i=0, reaper.CountAutomationItems(Env)-1 do
     reaper.GetSetAutomationItemInfo(Env, i, "D_UISEL", Selections[i], true)
   end 
-  reaper.PreventUIRefresh(0)
+  reaper.PreventUIRefresh(-1)
   return true
 end
+
+function ultraschall.AutomationItem_DeselectAllInTrack(envelope)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_DeselectAllInTrack</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_automationitems, table old_automationitem_selection = ultraschall.AutomationItem_DeselectAllInTrack(TrackEnvelope env)</functioncall>
+  <description>
+    Deselects alls automation-items in a TrackEnvelope. Returns the previous selection-states of all automation-items in TrackEnvelope.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_automationitems - the number of automation-items that were deselected
+    table old_automationitem_selection - a table with all previous selection-states
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the TrackEnvelope, in which the automation-items shall be deselected
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, deselect, trackenvelope</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_DeselectAllInTrack", "envelope", "must be a TrackEnvelope", -1) return -1 end
+  local automationitem_selected_table={}
+  for i=0, reaper.CountAutomationItems(envelope)-1 do
+    automationitem_selected_table[i+1]=reaper.GetSetAutomationItemInfo(envelope, i, "D_UISEL", 0, false)
+    reaper.GetSetAutomationItemInfo(envelope, i, "D_UISEL", 0, true)
+  end
+  return #automationitem_selected_table, automationitem_selected_table
+end
+
+function ultraschall.AutomationItem_GetSelectStates(envelope)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_GetSelectStates</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>integer number_of_automationitems, table automationitem_selection = ultraschall.AutomationItem_GetSelectStates(TrackEnvelope env)</functioncall>
+  <description>
+    Returns the current selection-states of all automation-items in TrackEnvelope.
+    
+    You can use the returned table with ultraschall.AutomationItem_SelectMultiple() as well, to change selection-states.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer number_of_automationitems - the number of automation-items in TrackEnvelope
+    table automationitem_selection - a table with all current selection-states of automation-items in TrackEnvelope
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the TrackEnvelope, of whose automation-items you want to get the selection state
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, get, selection, state, trackenvelope</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_GetSelectStates", "envelope", "must be a TrackEnvelope", -1) return -1 end
+  local automationitem_selected_table={}
+  for i=0, reaper.CountAutomationItems(envelope)-1 do
+    automationitem_selected_table[i+1]=reaper.GetSetAutomationItemInfo(envelope, i, "D_UISEL", 0, false)
+  end
+  return #automationitem_selected_table, automationitem_selected_table
+end
+
+function ultraschall.AutomationItem_SelectMultiple(envelope, automationitem_selected_table)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_SelectMultiple</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutomationItem_SelectMultiple(TrackEnvelope env, table automationitem_selected_table)</functioncall>
+  <description>
+    Sets the automation-item-selection state of AutomationItems in a TrackEnvelope.
+    
+    You provide a table with each index being either 0(deselected) or 1(selected) for the AutomationItem in question.
+    You can omit entries by setting them to nil to retain current selection state.
+    Format is: 
+        automationitem_selected_table[automation-item-index]=selection_state
+    
+    Example for automationitem_selected_table, that sets selection-state for automation-item 1,3 and 4
+        automationitem_selected_table[1]=0
+        automationitem_selected_table[3]=1
+        automationitem_selected_table[4]=0
+    
+    Keep in mind, that the index is 1-based, with index 1 for automation-item 1.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    TrackEnvelope env - the TrackEnvelope, of whose automation-items you want to get the selection state
+    table automationitem_selection - a table with all the selection-states to set
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, set, selection, state, trackenvelope</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_SelectMultiple", "envelope", "must be a TrackEnvelope", -1) return false end
+  if type(automationitem_selected_table)~="table" then ultraschall.AddErrorMessage("AutomationItem_SelectMultiple", "automationitem_selected_table", "must be a table", -2) return false end
+  for i=1, #automationitem_selected_table do 
+    if automationitem_selected_table[i]~=nil then
+      if type(automationitem_selected_table[i])~="number" then ultraschall.AddErrorMessage("AutomationItem_SelectMultiple", "automationitem_selected_table", "entry #"..i.." isn't a number", -3) return false end
+    end
+  end 
+  for i=0, reaper.CountAutomationItems(envelope)-1 do
+    if automationitem_selected_table[i+1]~=nil then
+      reaper.GetSetAutomationItemInfo(envelope, i, "D_UISEL", automationitem_selected_table[i+1], true)
+    end
+  end
+  return true
+end
+
+
+function ultraschall.AutomationItem_GetAllSelectStates(omit_envelope)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_GetAllSelectStates</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>table automationitem_selection = ultraschall.AutomationItem_GetAllSelectStates(optional TrackEnvelope omit_envelope)</functioncall>
+  <description>
+    Returns the current selection-states of all automation-items in all TrackEnvelope.
+    
+    The returned table is of the format:
+        automationitem_selection[envelope_index][1]=envelope
+        automationitem_selection[envelope_index][2]=automationitem_selection(like the one returned by AutomationItem_GetSelectStates)
+
+    You can omit a TrackEnvelope to not get its automation-item-selections.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table automationitem_selection - a table with all selection-states of all automation-items in all TrackEnvelopes
+  </retvals>
+  <parameters>
+    optional TrackEnvelope omit_envelope - the TrackEnvelope, whose automation-items you DON'T want to get; nil, to get all
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, get, selection, state, trackenvelope</tags>
+</US_DocBloc>
+--]]
+  if envelope~=nil and ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_GetAllSelectStates", "omit_envelope", "must be a TrackEnvelope", -1) return end
+  local TrackEnvelopes={}
+  local count=0
+  local _
+  
+  for i=0, reaper.CountTracks(0)-1 do
+    for a=0, reaper.CountTrackEnvelopes(reaper.GetTrack(0,i)) do
+      local env=reaper.GetTrackEnvelope(reaper.GetTrack(0,i), a)
+      if env~=nil then
+        count=count+1
+        TrackEnvelopes[count]={}
+        TrackEnvelopes[count][1]=env
+      end
+    end
+  end
+  
+  for i=#TrackEnvelopes, 1, -1 do
+    if omit_envelope~=TrackEnvelopes[i][1] then
+      _, TrackEnvelopes[i][2]=ultraschall.AutomationItem_GetSelectStates(TrackEnvelopes[i][1])
+    else
+      table.remove(TrackEnvelopes,i)
+    end
+  end
+  return TrackEnvelopes
+end
+
+function ultraschall.AutomationItem_DeselectAllSelectStates(omit_envelope)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutomationItem_DeselectAllSelectStates</slug>
+  <requires>
+    Ultraschall=4.5
+    Reaper=6.05
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.AutomationItem_DeselectAllSelectStates(optional TrackEnvelope omit_envelope)</functioncall>
+  <description>
+    Deselects all automation-items in all TrackEnvelopes.
+    
+    You can omit a TrackEnvelope, whose automation-items will not be deselected
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, deselecting was successful; false, deselection was unsuccessful
+  </retvals>
+  <parameters>
+    optional TrackEnvelope omit_envelope - the TrackEnvelope, whose automation-items you DON'T want to deselect; nil, to deselect all
+  </parameters>
+  <chapter_context>
+    Automation Items
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_AutomationItems_Module.lua</source_document>
+  <tags>automation items, deselect, selection, state, trackenvelope</tags>
+</US_DocBloc>
+--]]
+  if envelope~=nil and ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("AutomationItem_DeselectAllSelectStates", "omit_envelope", "must be a TrackEnvelope", -1) return false end
+  local TrackEnvelopes={}
+  local count=0
+  
+  for i=0, reaper.CountTracks(0)-1 do
+    for a=0, reaper.CountTrackEnvelopes(reaper.GetTrack(0,i)) do
+      local env=reaper.GetTrackEnvelope(reaper.GetTrack(0,i), a)
+      if env~=nil and env~=omit_envelope then
+        for i=0, reaper.CountAutomationItems(env)-1 do
+          reaper.GetSetAutomationItemInfo(env, i, "D_UISEL", 0, true)
+        end
+      end
+    end
+  end
+  return true
+end
+
 

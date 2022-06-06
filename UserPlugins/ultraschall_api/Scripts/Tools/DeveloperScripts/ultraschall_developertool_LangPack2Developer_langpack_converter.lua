@@ -24,7 +24,11 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 if reaper.GetExtState("ultraschall_api", "dontask_developertools")~="false" then 
   print2("Please put the content of the original language-pack into the clipboard")
@@ -34,21 +38,24 @@ clipboard_string = ultraschall.GetStringFromClipboard_SWS()
 
 count, split_string = ultraschall.SplitStringAtLineFeedToArray(clipboard_string)
 
-
+A=""
 for i=1, count do
   if split_string[i]:sub(1,1)~=";" and split_string[i]:match("%[")~=nil then
     sec=tostring(split_string[i]:match("%[.-%]"))
+    if i%100==0 then print_update("converting entry #"..i.."/"..count..":\n     "..split_string[i]) end
   end
   if sec~=nil and split_string[i]:sub(1,1)==";" then
     split_string[i]=tostring(split_string[i]:match(";(.-=)"))..sec..tostring(split_string[i]:match("=(.*)"))
   end
-end
-
-A=""
-for i=1, count do
   A=A..split_string[i].."\n"
 end
 
+--A=""
+--for i=1, count do
+--  A=A..split_string[i].."\n"
+--end
+
+print_update("converting entry #"..count.."/"..count..":\n     "..split_string[count]) 
 print3(A)
 if reaper.GetExtState("ultraschall_api", "dontask_developertools")~="false" then 
   print2("Converted Langpack has been put into the clipboard.")

@@ -1,9 +1,9 @@
-Render_Codes as of Reaper 6.43.
+Render_Codes as of Reaper 6.58.
 
 Render-strings are binary strings encoded in Base64-format or as HEX-string(reaper.ini only).
 On Windows: some settings need FFMPEG 4.1.3 installed or are unavailable otherwise
 
-documented by Meo Mespotine, 19th of December 2021 - mespotine.de
+documented by Meo Mespotine, 16th of May 2022 - mespotine.de
 licensed creative commons cc-by-nc.
 
 
@@ -447,7 +447,7 @@ Video(ffmpeg/libav encoder)
     05: Format:
                 0, AVI
                 1, MPEG1(Windows; only with FFMPEG 4.1.3 installed)
-                1, MPEG2(Windows; only with FFMPEG 4.1.3 installed)
+                2, MPEG2(Windows; only with FFMPEG 4.1.3 installed)
                 3, QT/MOV/MP4
                 4, MKV
                 5, FLV(Windows; only with FFMPEG 4.1.3 installed)
@@ -487,10 +487,10 @@ Video(ffmpeg/libav encoder)
     10: unused - value 0
     11: unused - value 0
     12: unused - value 0
-    13: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - lowest byte
-    14: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
-    15: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647)
-    16: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-2/XviD kbps(0 to 2147483647) - highest byte
+    13: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647) - lowest byte
+    14: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647)
+    15: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647)
+    16: WEBM/FLV/MKV: VP8/VP9/FLV1/MPEG-1/MPEG-2/XviD kbps(0 to 2147483647) - highest byte
     17: Audio Codec:
             with AVI:
                 0, MP3(Windows; only with FFMPEG 4.1.3 installed)
@@ -727,3 +727,60 @@ WAVPACK:
     18: unused - value 0
     19: unused - value 0
     20: unused - value 0
+
+WMF:
+    01: space - value 32 Header
+    02: F - value 70 Header
+    03: M - value 77 Header
+    04: W - value 87 Header
+    05: Format: 
+                0, MPEG-4 video
+                1, MPEG-4 audio
+                2, WMV video (only Reaper 6.57)
+                3, WMA audio (only Reaper 6.57)
+    06: unused - value 0
+    07: unused - value 0
+    08: unused - value 0
+    09: Video Codec
+    10: Video Codec
+    11: Video Codec
+    12: Video Codec:
+                255 255 255 255, no VideoCodec
+                  1   0   0   0,  no video (Reaper 6.59)
+                  0   0   0   0, H.264
+    13: Video Bitrate(0 to 2147483647) - lowest byte
+    14: Video Bitrate(0 to 2147483647)
+    15: Video Bitrate(0 to 2147483647)
+    16: Video Bitrate(0 to 2147483647) - highest byte
+    17: Audio Codec:
+                0, AAC
+                2, no audio
+    18: unused - value 0
+    19: unused - value 0
+    20: unused - value 0
+    21: Audio Bitrate(0 to 2147483647) - lowest byte
+    22: Audio Bitrate(0 to 2147483647) - 
+    23: Audio Bitrate(0 to 2147483647) - 
+    24: Audio Bitrate(0 to 2147483647) - highest byte
+    25: Resolution width(0 to 2147483647) - lowest byte
+    26: Resolution width(0 to 2147483647)
+    27: Resolution width(0 to 2147483647)
+    28: Resolution width(0 to 2147483647) - highest byte
+    29: Resolution height(0 to 2147483647) - lowest byte
+    30: Resolution height(0 to 2147483647)
+    31: Resolution height(0 to 2147483647)
+    32: Resolution height(0 to 2147483647) - highest byte
+    33: Framerate - encoded as float but unknown how(0.01 to 1000000000.00, encoded as 10 215 35 60 to 40 107 110 78)
+    34: Framerate - encoded as float but unknown how
+    35: Framerate - encoded as float but unknown how
+    36: Framerate - encoded as float but unknown how
+    37: Aspect Ratio-setting
+            0, Keep source aspect ratio - unchecked
+            1, Keep source aspect ratio - checked
+    38: unused - value 0
+    39: unused - value 0
+    40: unused - value 0
+    41: unused - value 0
+    42: unused - value 0
+    43: unused - value 0
+    44: unused - value 0

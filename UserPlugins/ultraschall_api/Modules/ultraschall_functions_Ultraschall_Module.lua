@@ -30,28 +30,6 @@
 ---      Ultraschall Module       ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Ultraschall-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.pause_follow_one_cycle()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -314,24 +292,24 @@ function ultraschall.GetAllAUXSendReceives2()
     like [GetAllAUXSendReceives](#GetAllAUXSendReceives), but returns the type of a track as well
     
     returned table is of structure:
-      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
-      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
-      table[tracknumber]["type"]                                    - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
-      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
-      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
-      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
-      
-      See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.
+      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!  
+      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n  
+      table[tracknumber]["type"]                                    - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1  
+      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0  
+      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber  
+        
+      See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.  
   </description>
   <retvals>
     table AllAUXSendReceives - a table with all SendReceive-entries of the current project.
@@ -372,18 +350,18 @@ function ultraschall.GetAllHWOuts2()
     like [GetAllHWOuts](#GetAllHWOuts) but includes the type of a track as well
     
     returned table is of structure:
-      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
-      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
-      table[tracknumber]["type"]                        - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
-      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan\law"]         - pan-law, default is -1
+      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!  
+      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n  
+      table[tracknumber]["type"]                        - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1  
+      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan\law"]         - pan-law, default is -1  
       table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
       
       See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
@@ -429,10 +407,10 @@ function ultraschall.GetAllMainSendStates2()
     The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track
     
     returned table is of structure:
-      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table[tracknumber]["type"]           - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)
-      Table[tracknumber]["ParentChannels"] - the parent channels of this track
+      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n  
+      Table[tracknumber]["type"]           - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)  
+      Table[tracknumber]["ParentChannels"] - the parent channels of this track  
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
   </description>
@@ -842,7 +820,7 @@ function ultraschall.Soundboard_StopAllSounds()
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_StopAllSounds()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops all sounds currently playing in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -873,7 +851,7 @@ function ultraschall.Soundboard_TogglePlayPause(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlayPause(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and Pause of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -914,7 +892,7 @@ function ultraschall.Soundboard_TogglePlayStop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlayStop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and Stop of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -955,7 +933,7 @@ function ultraschall.Soundboard_Play(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_Play(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Starts playing of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -996,7 +974,7 @@ function ultraschall.Soundboard_Stop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_Stop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops playing of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -1038,7 +1016,7 @@ function ultraschall.Soundboard_TogglePlay_FadeOutStop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlay_FadeOutStop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and FadeOut with Stop of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -1252,7 +1230,7 @@ function ultraschall.Soundboard_PlayFadeIn(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_PlayFadeIn(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Starts a sound with a fade-in of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!

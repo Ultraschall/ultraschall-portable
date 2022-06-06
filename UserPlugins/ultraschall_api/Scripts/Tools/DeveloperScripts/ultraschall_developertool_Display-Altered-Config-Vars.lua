@@ -1,7 +1,7 @@
   --[[
   ################################################################################
   # 
-  # Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
+  # Copyright (c) 2014-2022 Ultraschall (http://ultraschall.fm)
   # 
   # Permission is hereby granted, free of charge, to any person obtaining a copy
   # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- written by Meo-Ada Mespotine mespotine.de 20th of November 2021
+-- written by Meo-Ada Mespotine mespotine.de 28th of March 2022
 -- for the ultraschall.fm-project
 
 -- This script shows altered integer and double-float-settings for all config-variables available in Reaper, that can be used by
@@ -52,15 +52,12 @@ if B==nil then
   B=tonumber(A:match("(.-%.%d*)"))
 end
 
-if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==false 
-or reaper.CF_SetClipboard==nil 
-or reaper.JS_Window_Find==nil
-or B<5.981 then 
-  reaper.MB("Sorry, needs at least\n\n  Reaper 5.981\n  Ultraschall-API 4.00beta2.761\n  SWS2.10.0.1\n  JS-Extension 0.986\n\ninstalled to run.\n\nExiting now.","Can't run script...",0)
-  return
-end
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 A,B,C,D=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-config_var.USDocML")
 
@@ -77,9 +74,10 @@ ConfigVarsInt={}
 ConfigVarsDouble={}
 
 reaper.ClearConsole() 
-reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 20th of November 2021 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() \n     and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
+reaper.ShowConsoleMsg("Reaper-Config-Variable-Inspector by Meo Mespotine(mespotine.de) 28th of March 2022 for Ultraschall.fm\n\n  This shows all altered Config-Variables and their bitwise-representation as well as the value in the reaper.ini,\n  that can be accessed at runtime through LUA using the SWS-functions: \n     SNM_GetIntConfigVar(), SNM_SetIntConfigVar(), SNM_GetDoubleConfigVar(), SNM_SetDoubleConfigVar() \n     and Reaper's get_config_var_string(). \n\n  These variables cover the preferences window, project-settings, render-dialog, settings in the context-menu of \n  transportarea and numerous other things.\n\n  Just change some settings in the preferences and click apply to see, which variable is changed to which value, \n  shown in this Reascript-Console.\n\n  Keep in mind: certain variables use bit-wise-values, which means, that one variable may contain the settings for \n  numerous checkboxes; stored using a bitmask, which will be shown in here as well.\n\n") 
 reaper.ShowConsoleMsg("  Mismatch between int/double-values the currently set reaper.ini-value(as well as only int/double changing) is\n  a hint that the value is not stored into reaper.ini(e.g. only stored, when you set the current project's settings \n  as default settings).\n\n")
-reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they \n  don't appear after setting them through script, this isn't necessarily a bug!\n")
+reaper.ShowConsoleMsg("  Keep in mind, that some values can't be set, unless they were set in the dialogs first, lika afxcfg. So if they \n  don't appear after setting them through script, this isn't necessarily a bug!\n\n")
+reaper.ShowConsoleMsg("  Diffs to old double-values might be wrong, when the current or former value was NaN.")
 --gfx.init("Show Config Vars",900,187)
 gfx.setfont(1, "Arial", 15, 0)
 gfx.setfont(2, "Arial", 15, 16981)
@@ -128,7 +126,11 @@ function Update_ConfigVars()
       update=true
        if ConsoleToggle==true then
          A1=A-ConfigVarsInt[i]
-         B1=B-ConfigVarsDouble[i]
+         if tonumber(B)~=nil and tonumber(ConfigVarsDouble[i])~=nil then
+           B1=B-ConfigVarsDouble[i]
+         else
+           B1="-1.#QNAN"
+         end
          local INT="       int    \t: "..A..""
          -- layout dif-value correctly
          if INT:len()<20 then INT=INT.."\t\t\tDifference to old value: "..A1.."" 
@@ -144,12 +146,14 @@ function Update_ConfigVars()
          print(ConfigVars[i]["configvar"])
          print(INT)
          print(DOUBLE)
---         print("       int    \t: "..A.."\t\t(Difference to old value: "..A1..")")
---         print("       double\t: "..B.."\t\t(Difference to old value: "..B1..")")
          print("       strings\t: \""..C.."\"")
        end
        ConfigVarsInt[i]=A
-       ConfigVarsDouble[i]=B
+       if tonumber(B)==nil then
+         ConfigVarsDouble[i]=0
+       else
+         ConfigVarsDouble[i]=B
+       end
        Retval, String = reaper.BR_Win32_GetPrivateProfileString("REAPER", ConfigVars[i]["configvar"], "unset", reaper.get_ini_file())
        bitvals_csv, bitvalues = ultraschall.ConvertIntegerToBits(A,4)
        bitfield=""

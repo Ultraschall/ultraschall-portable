@@ -1,4 +1,9 @@
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 --[[
 
 Deprecated functions in scripts-checker by Meo-Ada Mespotine 20th of December 2021
@@ -45,7 +50,7 @@ for i=Found_files, 1, -1 do
 end
 
 -- get deprecated API-functions and put them into a table we use later on
-local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourceFiles/reaper-apidocs.USDocML")
+local A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/reaper-apidocs.USDocML")
 local B,C = ultraschall.Docs_GetAllUSDocBlocsFromString(A)
 
 UseMyContentsOnly={} -- all deprecated functions

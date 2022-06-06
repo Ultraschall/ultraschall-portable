@@ -30,27 +30,6 @@
 ---   MediaItem:  States Module   ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "MediaItem-MediaItemStates-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
 
 function ultraschall.GetItemPosition(MediaItem, statechunk)
 --[[
@@ -3256,7 +3235,7 @@ function ultraschall.GetItem_Video_IgnoreAudio(Item, take_index, StateChunk)
     Lua=5.3
   </requires>
   <functioncall>boolean checked_state = ultraschall.GetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, optional string StateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
     
     It's the AUDIO-entry in the <SOURCE-statechunk of the take
@@ -3336,7 +3315,7 @@ function ultraschall.SetItem_Video_IgnoreAudio(Item, take_index, checkbox_state,
     Lua=5.3
   </requires>
   <functioncall>string statechunk = ultraschall.SetItem_Video_IgnoreAudio(MediaItem Item, integer take_index, boolean checkbox_state, optional string StateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the "Ignore audio"-checkbox of a video-item-source in a specific MediaItem-take.
     
     Returns nil in case of an error(no video source in take)

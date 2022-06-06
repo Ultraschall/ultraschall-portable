@@ -30,29 +30,6 @@
 ---        Envelope Module        ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Envelope-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string3=="" then string3=10000 
-  else 
-    string3=tonumber(string3) 
-    string3=string3+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string3, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
-
 function ultraschall.IsValidEnvStateChunk(statechunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -1004,7 +981,7 @@ function ultraschall.GetLastEnvelopePoint_TrackEnvelope(Envelope)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, optional integer envpointidx, optional number time, optional number value, optional integer shape, optional number tension, optional boolean selected =  ultraschall.GetLastEnvelopePoint_TrackEnvelope(TrackEnvelope Envelope)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the values of the last envelope-point in TrackEnvelope/MediaItemEnvelope.
     
     Note: there's a "hidden" last envelopepoint in every Envelope, which will be ignored by this function. It will return the last visible envelope-point instead!
@@ -1155,7 +1132,7 @@ function ultraschall.GetTrackEnvelope_ClickState(mouse_button)
     Lua=5.3
   </requires>
   <functioncall>boolean clickstate, number position, MediaTrack track, TrackEnvelope envelope, integer EnvelopePointIDX = ultraschall.GetTrackEnvelope_ClickState(integer mouse_button)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the currently clicked Envelopepoint and TrackEnvelope, as well as the current timeposition.
     
     Works only, if the mouse is above the EnvelopePoint while having it clicked!
@@ -1880,7 +1857,7 @@ function ultraschall.SetEnvelopeState_Vis(TrackEnvelope, visibility, lane, unkno
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_Vis(TrackEnvelope env, integer visibility, integer lane, integer unknown, optional string EnvelopeStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
       sets the current visibility-state of a TrackEnvelope-object or EnvelopeStateChunk.
       
       It is the state entry VIS
@@ -1934,7 +1911,7 @@ function ultraschall.SetEnvelopeState_Act(TrackEnvelope, act, automation_setting
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.SetEnvelopeState_Act(TrackEnvelope env, integer act, integer automation_settings, optional string EnvelopeStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
       sets the current bypass and automation-items-settings-state of a TrackEnvelope-object or EnvelopeStateChunk.
       
       It is the state entry ACT
@@ -1994,7 +1971,7 @@ function ultraschall.SetEnvelopeState_DefShape(TrackEnvelope, shape, pitch_custo
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_DefShape(TrackEnvelope env, integer shape, integer pitch_custom_envelope_range, integer pitch_snap_values, optional string EnvelopeStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
       sets the current default-shape-states and pitch-snap-settings of a TrackEnvelope-object or EnvelopeStateChunk.
       
       It is the state entry DEFSHAPE
@@ -2064,7 +2041,7 @@ function ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope, height, compacte
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string EnvelopeStateChunk = ultraschall.SetEnvelopeState_LaneHeight(TrackEnvelope env, integer height, integer compacted, optional string EnvelopeStateChunk)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
       sets the current height-states and compacted-settings of a TrackEnvelope-object or EnvelopeStateChunk.
       
       It is the state entry LANEHEIGHT
@@ -2105,7 +2082,7 @@ function ultraschall.ActivateEnvelope(Envelope, visible, bypass)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ActivateEnvelope(TrackEnvelope env, optional boolean visible, optional boolean bypass)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Activates an envelope, so it can be displayed in the arrange-view.
     
     Will add an envelope-point at position 0 in the envelope, if no point is in the envelope yet
@@ -2163,7 +2140,7 @@ function ultraschall.ActivateTrackVolumeEnv(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a volume-envelope of a track
         
       returns false in case of error
@@ -2176,6 +2153,7 @@ function ultraschall.ActivateTrackVolumeEnv(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2208,7 +2186,7 @@ function ultraschall.ActivateTrackVolumeEnv_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackVolumeEnv_TrackObject(MediaTrack track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a volume-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -2221,6 +2199,7 @@ function ultraschall.ActivateTrackVolumeEnv_TrackObject(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2251,7 +2230,7 @@ function ultraschall.ActivateTrackPanEnv(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a pan-envelope of a track
         
       returns false in case of error
@@ -2264,6 +2243,7 @@ function ultraschall.ActivateTrackPanEnv(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2296,7 +2276,7 @@ function ultraschall.ActivateTrackPanEnv_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPanEnv_TrackObject(MediaTrack track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a pan-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -2309,6 +2289,7 @@ function ultraschall.ActivateTrackPanEnv_TrackObject(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2339,7 +2320,7 @@ function ultraschall.ActivateTrackPreFXPanEnv(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a preFX-pan-envelope of a track
         
       returns false in case of error
@@ -2352,6 +2333,7 @@ function ultraschall.ActivateTrackPreFXPanEnv(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2384,7 +2366,7 @@ function ultraschall.ActivateTrackPreFXPanEnv_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXPanEnv_TrackObject(MediaTrack track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a preFX-pan-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -2397,6 +2379,7 @@ function ultraschall.ActivateTrackPreFXPanEnv_TrackObject(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2427,7 +2410,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a preFX-volume-envelope of a track
         
       returns false in case of error
@@ -2440,6 +2423,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2472,7 +2456,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(MediaTrack track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a preFX-volume-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -2485,6 +2469,7 @@ function ultraschall.ActivateTrackPreFXVolumeEnv_TrackObject(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2515,7 +2500,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv(integer track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a trim-volume-envelope of a track
         
       returns false in case of error
@@ -2528,6 +2513,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2560,7 +2546,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(track)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(MediaTrack track)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       activates a trim-volume-envelope of a MediaTrack-object
         
       returns false in case of error
@@ -2573,6 +2559,7 @@ function ultraschall.ActivateTrackTrimVolumeEnv_TrackObject(track)
     </parameters>
     <chapter_context>
       Envelope Management
+      Helper functions
     </chapter_context>
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
@@ -2599,12 +2586,13 @@ function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GetTakeEnvelopeUnderMouseCursor</slug>
     <requires>
-      Ultraschall=4.1
+      Ultraschall=4.1 
       Reaper=6.10
+      SWS=2.8.8
       Lua=5.3
     </requires>
     <functioncall>TakeEnvelope env, MediaItem_Take take, number projectposition = ultraschall.GetTakeEnvelopeUnderMouseCursor()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the take-envelope underneath the mouse
     </description>
     <retvals>
@@ -2643,7 +2631,7 @@ function ultraschall.IsAnyNamedEnvelopeVisible(name)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.IsAnyMuteEnvelopeVisible(string name)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns, if any mute-envelopes are currently set to visible in the current project
       
       Visible=true does include mute-envelopes, who are scrolled outside of the arrangeview
@@ -2690,7 +2678,7 @@ function ultraschall.IsEnvelope_Track(TrackEnvelope)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.IsEnvelope_Track(TrackEnvelope env)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns, if the envelope is a track envelope(true) or a take-envelope(false)
       
       returns nil in case of an error
@@ -2724,7 +2712,7 @@ function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope env)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns, if the envelope is currently visible within arrange-view
       
       returns nil in case of an error
@@ -2759,3 +2747,235 @@ function ultraschall.IsTrackEnvelopeVisible_ArrangeView(TrackEnvelope)
 end
 
 
+function ultraschall.GetAllActiveEnvelopes_Track(track)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetAllActiveEnvelopes_Track</slug>
+    <requires>
+      Ultraschall=4.6
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>integer number_of_active_envelopes, table found_envelopes = ultraschall.GetAllActiveEnvelopes_Track(MediaTrack track)</functioncall>
+    <description>
+      returns all active track-envelopes and their state of visibility and if they are on their own lane.
+      
+      the returned table is of the following format:
+      
+        found_envelopes[envelope_idx][1] - the envelope
+        found_envelopes[envelope_idx][2] - the visibility of the envelope; 1, visible; 0, invisible
+        found_envelopes[envelope_idx][3] - is the envelope on its own lane; 1, on it's own lane; 0, on the media-lane
+        
+      returns -1 in case of an error
+    </description>
+    <retvals>
+      integer number_of_active_envelopes - the number of active envelopes; -1, in case of an error
+      table found_envelopes - the found envelopes(see description for more details)
+    </retvals>
+    <parameters>
+      MediaTrack track - the track, whose active envelopes you want to get
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, track envelope, active envelopes</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("GetAllActiveEnvelopes_Track", "track", "must be a valid MediaTrack", -1) return -1 end
+  local TrackEnvelopes={}
+  for i=0, reaper.CountTrackEnvelopes(track)-1 do
+    local act, automation_settings = ultraschall.GetEnvelopeState_Act(reaper.GetTrackEnvelope(track, i))
+    TrackEnvelopes[#TrackEnvelopes+1]={}
+    TrackEnvelopes[#TrackEnvelopes][1] = reaper.GetTrackEnvelope(track, i)
+    TrackEnvelopes[#TrackEnvelopes][2], TrackEnvelopes[#TrackEnvelopes][3] = ultraschall.GetEnvelopeState_Vis(reaper.GetTrackEnvelope(track, i))
+  end
+  return #TrackEnvelopes, TrackEnvelopes
+end
+
+
+--A,B=ultraschall.GetAllActiveEnvelopes(reaper.GetTrack(0,0))
+
+function ultraschall.GetAllActiveEnvelopes_Take(take)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetAllActiveEnvelopes_Take</slug>
+    <requires>
+      Ultraschall=4.6
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>integer number_of_active_envelopes, table found_envelopes = ultraschall.GetAllActiveEnvelopes_Take(MediaItem_Take take)</functioncall>
+    <description>
+      returns all active take-envelopes and their state of visibility and if they are on their own lane.
+      
+      the returned table is of the following format:
+      
+        found_envelopes[envelope_idx][1] - the envelope
+        found_envelopes[envelope_idx][2] - the visibility of the envelope; 1, visible; 0, invisible
+        found_envelopes[envelope_idx][3] - is the envelope on its own lane; 1, on it's own lane; 0, on the media-lane
+        
+      returns -1 in case of an error
+    </description>
+    <retvals>
+      integer number_of_active_envelopes - the number of active envelopes; -1, in case of an error
+      table found_envelopes - the found envelopes(see description for more details)
+    </retvals>
+    <parameters>
+      MediaItem_Take take - the take, whose active envelopes you want to get
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, take envelope, active envelopes</tags>
+  </US_DocBloc>
+  --]] 
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetAllActiveEnvelopes_Take", "take", "must be a valid MediaItem_Take", -1) return -1 end
+  local TakeEnvelopes={}
+  for i=0, reaper.CountTakeEnvelopes(take)-1 do
+    local act, automation_settings = ultraschall.GetEnvelopeState_Act(reaper.GetTakeEnvelope(take, i))
+    TakeEnvelopes[#TakeEnvelopes+1]={}
+    TakeEnvelopes[#TakeEnvelopes][1] = reaper.GetTakeEnvelope(take, i)
+    TakeEnvelopes[#TakeEnvelopes][2], TakeEnvelopes[#TakeEnvelopes][3] = ultraschall.GetEnvelopeState_Vis(reaper.GetTakeEnvelope(take, i))
+  end
+  return #TakeEnvelopes, TakeEnvelopes
+end
+
+function ultraschall.GetTrackEnvelopeFromPoint(x,y)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetTrackEnvelopeFromPoint</slug>
+    <requires>
+      Ultraschall=4.6
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>TrackEnvelope envelope = ultraschall.GetTrackEnvelopeFromPoint(integer x, integer y)</functioncall>
+    <description>
+      returns the TrackEnvelope at position x,y if existing
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      TrackEnvelope envelope - the envelope found at position x and y
+    </retvals>
+    <parameters>
+      integer x - the x-position in pixels, at which to look for envelopes
+      integer y - the y-position in pixels, at which to look for envelopes
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Helper functions
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, track envelope, from point</tags>
+  </US_DocBloc>
+  --]] 
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("GetTrackEnvelopeFromPoint", "x", "must be an integer", -1) return end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("GetTrackEnvelopeFromPoint", "y", "must be an integer", -2) return end
+  local track, envelope=reaper.GetThingFromPoint(x,y)
+  local envid=tonumber(envelope:match("envelope (%d*)"))
+  if envid==nil then
+    envid=tonumber(envelope:match("envcp.- (%d*)"))
+  end
+  if envid~=nil then
+    local found, envs = ultraschall.GetAllActiveEnvelopes_Track(track)
+    return envs[envid+1][1]
+  end
+  ultraschall.AddErrorMessage("GetTrackEnvelopeFromPoint", "", "no envelope found at position", -3)
+end
+
+function ultraschall.GetTakeEnvelopeFromPoint(x,y)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetTakeEnvelopeFromPoint</slug>
+    <requires>
+      Ultraschall=4.6
+      Reaper=6.10
+      SWS=2.8.8
+      Lua=5.3
+    </requires>
+    <functioncall>TakeEnvelope env, MediaItem_Take take, number projectposition = ultraschall.GetTakeEnvelopeFromPoint(integer x, integer y)</functioncall>
+    <description>
+      returns the take-envelope at positon x and y in pixels, if existing
+    </description>
+    <retvals>
+      TakeEnvelope env - the take-envelope found unterneath the mouse; nil, if none has been found
+      MediaItem_Take take - the take from which the take-envelope is
+      number projectposition - the project-position
+    </retvals>
+    <parameters>
+      integer x - the x-position in pixels, at which to look for envelopes
+      integer y - the y-position in pixels, at which to look for envelopes
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, get, take, envelope, from point, position</tags>
+  </US_DocBloc>
+  --]]
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("GetTakeEnvelopeFromPoint", "x", "must be an integer", -1) return end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("GetTakeEnvelopeFromPoint", "y", "must be an integer", -2) return end
+  local x2,y2=reaper.GetMousePosition()
+  reaper.JS_Mouse_SetPosition(x, y)
+  local Awindow, Asegment, Adetails = reaper.BR_GetMouseCursorContext()
+  local retval, takeEnvelope = reaper.BR_GetMouseCursorContext_Envelope()
+  reaper.JS_Mouse_SetPosition(x2, y2)  
+  if takeEnvelope==true then 
+    return retval, reaper.BR_GetMouseCursorContext_Position(), reaper.BR_GetMouseCursorContext_Item()
+  else
+    return nil, reaper.BR_GetMouseCursorContext_Position()
+  end
+end
+
+
+function ultraschall.IsEnvelopeTrackEnvelope(Envelope)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>IsEnvelopeTrackEnvelope</slug>
+    <requires>
+      Ultraschall=4.6
+      Reaper=6.10
+      Lua=5.3
+    </requires>
+    <functioncall>boolean is_track_envelope = ultraschall.IsEnvelopeTrackEnvelope(TrackEnvelope Envelope)</functioncall>
+    <description>
+      checks, whether the passed envelope is a TrackEnvelope
+      
+      returns nil in case of an error
+    </description>
+    <retvals>
+      boolean is_track_envelope - true, envelope is a TrackEnvelope; false, envelope is not TakeEnvelope
+    </retvals>
+    <parameters>
+      TrackEnvelope Envelope - the envelope to check, if it's a TrackEnvelope
+    </parameters>
+    <chapter_context>
+      Envelope Management
+      Envelopes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+    <tags>envelope management, check, track, envelope</tags>
+  </US_DocBloc>
+  --]]
+  if ultraschall.type(Envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("IsEnvelopeTrackEnvelope", "Envelope", "must be a valid TrackEnvelope", -1) return end
+  for i=0, reaper.CountTracks(0,0)-1 do
+    for a=0, reaper.CountTrackEnvelopes(reaper.GetTrack(0,i)) do
+      local env=reaper.GetTrackEnvelope(reaper.GetTrack(0,i),a)
+      if env==Envelope then
+        return true
+      end
+    end
+  end
+  return false
+end

@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2018 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,5 +22,24 @@
 # THE SOFTWARE.
 # 
 ################################################################################
-]] 
+]]  
 
+-- written by Meo Mespotine mespotine.de 1st of May 2021
+-- for the ultraschall.fm-project
+-- MIT-licensed
+
+-- puts the statechunk of the item under the mouse into the clipboard
+-- statechunk will be layouted, according to RPP-file-layouting-rules
+
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
+x,y=reaper.GetMousePosition()
+Item=reaper.GetItemFromPoint(x,y, true)
+if Item==nil then return end
+--retval, ItemStateChunk = reaper.GetItemStateChunk(Item, "", false)
+
+reaper.SetItemStateChunk(Item, FromClip(), false)

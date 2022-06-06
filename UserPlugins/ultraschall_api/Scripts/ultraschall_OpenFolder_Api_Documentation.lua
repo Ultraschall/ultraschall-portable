@@ -24,7 +24,11 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 reaper.CF_ShellExecute(ultraschall.Api_Path.."/Documentation")
 reaper.CF_ShellExecute(ultraschall.Api_Path.."/misc/misc_docs")

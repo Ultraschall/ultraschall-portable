@@ -28,28 +28,6 @@
 --- ULTRASCHALL - API - GFX-Engine ---
 --------------------------------------
 
-
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "GFX-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "GFX-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-  local Retval, HWND=ultraschall.GFX_Init()
-end
-
 if ultraschall.GFX_WindowHWND==nil then ultraschall.GFX_WindowHWND="Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window." end
 
 function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antialias)
@@ -619,8 +597,8 @@ function ultraschall.GFX_GetWindowHWND()
     Lua=5.3
   </requires>
   <functioncall>HWND hwnd = ultraschall.GFX_GetWindowHWND()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns the HWND of the currently opened gfx-window. You need to use [ultraschall.GFX_Init()](#GFX_Init), otherwise 
+  <description>
+    Returns the HWND of the currently opened gfx-window. You need to use ultraschall.GFX_Init(), otherwise 
     it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
   </description>
   <retvals>
@@ -960,7 +938,7 @@ function ultraschall.GFX_GetDropFile()
     Lua=5.3
   </requires>
   <functioncall>boolean changed, integer num_dropped_files, array dropped_files, integer drop_mouseposition_x, integer drop_mouseposition_y = ultraschall.GFX_GetDropFile()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.
     
     if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.
@@ -1156,7 +1134,7 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
     Lua=5.3
   </requires>
   <functioncall>integer first_typed_character, integer num_characters, table character_queue = ultraschall.GFX_GetChar(optional integer character, optional boolean manage_clipboard, optional string to_clipboard, optional boolean readable_characters)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     gets all characters from the keyboard-queue of gfx.getchar as a handy table.
     
     the returned table character_queue is of the following format:

@@ -24,18 +24,19 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 StartTime=reaper.time_precise()
 -- increment build-version-numbering
-local retval, string3 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Docs-ReaperApi", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
 string2=tonumber(string2)
 string2=string2+1
-string3=tonumber(string3)
-string3=string3+1
-  
-reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Docs-ReaperApi", string3, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")    
-reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+
+reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
 
 -- init variables
 Tempfile=ultraschall.Api_Path.."/temp/"
@@ -199,5 +200,6 @@ FunctionList=FunctionList..[[
 --]]
 FunctionList=FunctionList.."<div class=\"ch\"><p></p>\n"
 FunctionList=FunctionList.."<h2>Reaper Reascript-Api-Documentation "..versionnumbering.."<br>\""..tagline.."\"</h2><h3>The Functions Reference</h3></div>"
+--FunctionList=FunctionList.."<p>All functions are sorted by use-case in the document's index. If you're looking for functions of a specific extension, look in the index for:<br>(JS) - JS-extension<br>(SWS) - SWS-extension<br>(ReaImGui) - ReaImGui-extension<br>(Blink) - Blink extension<br>(Osara) - Osara Extension<br>(ReaPack) - ReaPack-extension<br></p>"
 
 dofile(ultraschall.Api_Path.."/Scripts/Tools/DocGenerator/DocGenerator_v2.lua")

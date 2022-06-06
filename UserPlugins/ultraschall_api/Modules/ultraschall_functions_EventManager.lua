@@ -30,29 +30,6 @@
 ---      EventManager Module      ---
 -------------------------------------
 
-
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "EventManager-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.EventManager_EnumerateStartupEvents(index)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -63,7 +40,7 @@ function ultraschall.EventManager_EnumerateStartupEvents(index)
     Lua=5.3
   </requires>
   <functioncall>string EventIdentifier, string Eventname, string CallerScriptIdentifier, number CheckAllXSeconds, number CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean Paused, function CheckFunction, number NumberOfActions, table Actions = ultraschall.EventManager_EnumerateStartupEvents(integer index)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Enumerates already existing startupevents, that shall be automatically run at startup of the Ultraschall Event Manager.
     
     That means, if you start the EventManager, it will be started automatically to the EventManager-checking-queue, without the need of registering it by hand.
@@ -149,7 +126,7 @@ function ultraschall.EventManager_EnumerateStartupEvents2(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>integer index, string EventIdentifier, string Eventname, string CallerScriptIdentifier, number CheckAllXSeconds, number CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean Paused, function CheckFunction, number NumberOfActions, table Actions = ultraschall.EventManager_EnumerateStartupEvents2(string EventIdentifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Enumerates already existing startupevents by an EventIdentifier. 
     
     StartupEvents are events, that shall be automatically run at startup of the Ultraschall Event Manager.
@@ -239,7 +216,7 @@ function ultraschall.EventManager_AddEvent(EventName, CheckAllXSeconds, CheckFor
     Lua=5.3
   </requires>
   <functioncall>string event_identifier = ultraschall.EventManager_AddEvent(string EventName, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, table Actions)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds a new event to the Ultraschall Event Manager-checking-queue.
     
     returns nil in case of an error
@@ -341,7 +318,7 @@ function ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean valid, boolean valid_inuse = ultraschall.EventManager_IsValidEventIdentifier(string event_identifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Checks, if a string is a valid EventIdentifier (valid) and currently registered with an event(valid_inuse) in the Ultraschall-EventManager-checking-queue.
     
     returns false in case of an error
@@ -385,7 +362,7 @@ function ultraschall.EventManager_RemoveEvent(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_RemoveEvent(string event_identifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Removes a new event to the Ultraschall Event Manager-checking-queue.
     
     returns false in case of an error
@@ -422,7 +399,7 @@ function ultraschall.EventManager_RemoveAllEvents_Script(ScriptIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_RemoveAllEvents_Script(string ScriptIdentifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Removes all registered events from a script with a certain ScriptIdentifier in the Ultraschall Event Manager-checking-queue.
     
     returns false in case of an error
@@ -460,7 +437,7 @@ function ultraschall.EventManager_SetEvent(EventIdentifier, EventName, CheckAllX
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_SetEvent(string EventIdentifier, optional string EventName, optional integer CheckAllXSeconds, optional integer CheckForXSeconds, optional boolean StartActionsOnceDuringTrue, optional boolean EventPaused, optional function CheckFunction, optional table Actions)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the attributes of an already added event in the Ultraschall Event Manager-checking-queue.
     
     returns nil in case of an error
@@ -576,7 +553,7 @@ function ultraschall.EventManager_EnumerateEvents(id)
     Lua=5.3
   </requires>
   <functioncall>string EventIdentifier, string EventName, string CallerScriptIdentifier, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, integer NumberOfActions, table Actions = ultraschall.EventManager_EnumerateEvents(integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the attributes of an already added event in the Ultraschall Event Manager-checking-queue.
     
     returns nil in case of an error
@@ -652,7 +629,7 @@ function ultraschall.EventManager_EnumerateEvents2(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>string EventIdentifier, string EventName, string CallerScriptIdentifier, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, integer NumberOfActions, table Actions = ultraschall.EventManager_EnumerateEvents2(string EventIdentifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the attributes of an already added event in the Ultraschall Event Manager-checking-queue.
     
     returns nil in case of an error
@@ -729,7 +706,7 @@ function ultraschall.EventManager_CountRegisteredEvents()
     Lua=5.3
   </requires>
   <functioncall>integer count_of_registered_events = ultraschall.EventManager_CountRegisteredEvents()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the number of currently registered events in the EventManager-checking-queue
   </description>
   <retvals>
@@ -761,7 +738,7 @@ function ultraschall.EventManager_GetLastUpdateTime()
     Lua=5.3
   </requires>
   <functioncall>string datetime, number precise_time = ultraschall.EventManager_GetLastUpdateTime()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the last time, the eventlist in the EventManager had been updated in any way.
   </description>
   <retvals>
@@ -791,7 +768,7 @@ function ultraschall.EventManager_PauseEvent(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_PauseEvent(string event_identifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Pauses a registered event in the Ultraschall Event Manager-checking-queue.
     
     returns false in case of an error
@@ -829,7 +806,7 @@ function ultraschall.EventManager_ResumeEvent(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_ResumeEvent(string event_identifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Resumes a registered and paused event in the Ultraschall Event Manager-checking-queue.
     
     returns false in case of an error
@@ -867,7 +844,7 @@ function ultraschall.EventManager_Start()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_Start()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Starts the Ultraschall-EventManager, if it has not been started yet.
   </description>
   <retvals>
@@ -910,7 +887,7 @@ function ultraschall.EventManager_Stop(force, ScriptIdentifier)
     Lua=5.3
   </requires>
   <functioncall>ultraschall.EventManager_Stop(optional boolean force, optional string ScriptIdentifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Unregisters the current script; will stop the EventManager if no scripts are registered anymore to the EventManager.
     
     You can use the parameter force to force stopping of the EventManager immediately.
@@ -946,7 +923,7 @@ function ultraschall.EventManager_AddStartupEvent(EventName, CheckAllXSeconds, C
     Lua=5.3
   </requires>
   <functioncall>string event_identifier = ultraschall.EventManager_AddStartupEvent(string EventName, integer CheckAllXSeconds, integer CheckForXSeconds, boolean StartActionsOnceDuringTrue, boolean EventPaused, function CheckFunction, table Actions)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Adds a new event, that shall be automatically registered at startup of the Ultraschall Event Manager.
     
     That means, if you start the EventManager, it will be added automatically to the EventManager-checking-queue, without the need of registering it by hand.
@@ -1052,7 +1029,7 @@ function ultraschall.EventManager_RemoveStartupEvent2(id)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_RemoveStartupEvent2(integer id)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Removes a startup-event from the config-file of the Ultraschall Event Manager.
     
     returns false in case of an error
@@ -1099,7 +1076,7 @@ function ultraschall.EventManager_RemoveStartupEvent(EventIdentifier)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.EventManager_RemoveStartupEvent(string event_identifier)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Removes a startup-event from the config-file of the Ultraschall Event Manager.
     
     returns false in case of an error
@@ -1148,7 +1125,7 @@ function ultraschall.EventManager_CountStartupEvents()
     Lua=5.3
   </requires>
   <functioncall>integer count_startup_events = ultraschall.EventManager_CountStartupEvents()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Counts the currently available startup-events
   </description>
   <retvals>
@@ -1182,7 +1159,7 @@ function ultraschall.EventManager_SetStartupEvent(EventIdentifier, EventName, Ch
     Lua=5.3
   </requires>
   <functioncall>string event_identifier = ultraschall.EventManager_SetStartupEvent(string EventIdentifier, optional string EventName, optional integer CheckAllXSeconds, optional integer CheckForXSeconds, optional boolean StartActionsOnceDuringTrue, optional boolean EventPaused, optional function CheckFunction, optional table Actions)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets an already existing startupevent, that shall be automatically run at startup of the Ultraschall Event Manager.
     
     That means, if you start the EventManager, it will be started automatically to the EventManager-checking-queue, without the need of registering it by hand.
@@ -1331,7 +1308,7 @@ function ultraschall.EventManager_GetPausedState2(EventIdentifier)
       Lua=5.3
     </requires>
     <functioncall>boolean paused_state = ultraschall.EventManager_GetPausedState2(string EventIdentifier)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns, if a certain event, currently registered in the EventManager, is paused(true) or not(false).
       State is requested by EventIdentifier.
       
@@ -1375,7 +1352,7 @@ function ultraschall.EventManager_GetPausedState(id)
       Lua=5.3
     </requires>
     <functioncall>boolean paused_state = ultraschall.EventManager_GetPausedState(integer id)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns, if a certain event, currently registered in the EventManager, is paused(true) or not(false)
       State is requested by number-id, with 1 for the first event, 2 for the second, etc.
       
@@ -1418,7 +1395,7 @@ function ultraschall.EventManager_GetEventIdentifier(id)
       Lua=5.3
     </requires>
     <functioncall>string event_identifier = ultraschall.EventManager_GetEventIdentifier(integer id)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the EventIdentifier of a registered event, by id
       event is requested by number-id, with 1 for the first event, 2 for the second, etc.
       
@@ -1457,7 +1434,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState(id)
       Lua=5.3
     </requires>
     <functioncall>boolean check_state, number last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState(integer id)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the last state the eventcheck-function returned the last time it was called; of a certain registered event in the EventManager.
       State is requested by number-id, with 1 for the first event, 2 for the second, etc.
       
@@ -1498,7 +1475,7 @@ function ultraschall.EventManager_GetRegisteredEventID(EventIdentifier)
       Lua=5.3
     </requires>
     <functioncall>integer id = ultraschall.EventManager_GetRegisteredEventID(string EventIdentifier)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the id of a registered event, meaning 1, if it's the first event, 2 if it's the second, etc
       
       It is the position within all events currently registered within the EventManager.
@@ -1539,7 +1516,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
       Lua=5.3
     </requires>
     <functioncall>boolean check_state, number last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(string EventIdentifier)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns the last state the eventcheck-function returned the last time it was called; of a certain registered event in the EventManager.
       State is requested by EventIdentifier
       

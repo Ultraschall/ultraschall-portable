@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2022 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,30 @@
 ################################################################################
 ]]  
 
--- written by Meo Mespotine mespotine.de 1st of May 2021
+-- written by Meo-Ada Mespotine mespotine.de 26th of March 2022
 -- for the ultraschall.fm-project
 -- MIT-licensed
 
--- puts the statechunk of the item under the mouse into the clipboard
--- statechunk will be layouted, according to RPP-file-layouting-rules
+-- monitors all marker/region guids in the ReaScript Console
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
-x,y=reaper.GetMousePosition()
-Item=reaper.GetItemFromPoint(x,y, true)
-if Item==nil then return end
-retval, ItemStateChunk = reaper.GetItemStateChunk(Item, "", false)
+function main()
+  marker_update_counter = ultraschall.GetMarkerUpdateCounter()
+  if marker_update_counter~=old_marker_update_counter then
+    print_update("index\tisrgn\tguid\t\t\t\t\tname")
+    for i=0, reaper.CountProjectMarkers()-1 do
+      A={reaper.EnumProjectMarkers(i)}
+      retval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..i, "", false)
+      print_alt(i.."\t"..tostring(A[2]).."\t"..guid.."\t"..A[5])
+    end
+  end
+  old_marker_update_counter = marker_update_counter
+  reaper.defer(main)
+end
 
-print3(ultraschall.StateChunkLayouter(ItemStateChunk))
+main()
