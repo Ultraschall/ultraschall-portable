@@ -3288,6 +3288,14 @@ function ultraschall.MarkerMenu_Start()
     
     Markertypes, who have no menuentry set yet, will get their default-menu, instead.
     
+    Scripts that shall influence the clicked marker, should use 
+    
+        marker_id, marker_guid=ultraschall.GetTemporaryMarker() 
+        
+    in them to retrieve the marker the user clicked on, as Reaper has no way of finding this out via API.
+    It also means, that marker-actions of Reaper might NOT be able to find out, which marker to influence, so writing 
+    your own scripts for that is probably unavoidable. Please keep this in mind and test this thoroughly.
+    
     Note: to ensure, that the script can not be accidentally stopped by the user, you can run this function in a defer-loop to restart it, if needed.
   </description>
   <retvals>
