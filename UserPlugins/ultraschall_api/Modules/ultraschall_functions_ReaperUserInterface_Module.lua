@@ -693,7 +693,7 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ShowMenu</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -760,10 +760,8 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
   if Entries=="" then ultraschall.AddErrorMessage("ShowMenu", "Entries", "must have at least one entry", -5) return -1 end
   if Title:len()<=5 then for i=5-Title:len(),1, -1 do Title=Title.." " end end
 
-  local ownwindow=false  
-  if gfx.h==0 and gfx.w==0 then 
-    local window_name="Ultraschall-Menu"..reaper.genGuid("")..reaper.genGuid("")
-    gfx.init(window_name,0,0,0,x,y)    
+  local ownwindow=false
+  if gfx.h==0 and gfx.w==0 then gfx.init("Ultraschall-Menu",0,0,0,x,y)
     gfx.x=-10
     gfx.y=-25
     ownwindow=true
@@ -774,7 +772,6 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
   end
   
   local selection=gfx.showmenu("#"..Title.."||"..Entries)
-  -- if ownwindow==true then reaper.JS_Window_Move(reaper.JS_Window_Find(window_name, true), 200, 200) end -- doesn't work, should have move the window to somewhere else...
   if ownwindow==true then gfx.quit() gfx.w=0 gfx.h=0 end
   return math.floor(selection)-1
 end

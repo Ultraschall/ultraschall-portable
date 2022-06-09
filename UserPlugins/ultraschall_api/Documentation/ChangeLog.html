@@ -44,6 +44,8 @@ Bla</li>
 </ul>
 <h4>New features in 4.7</h4>
 <ul>
+<li>DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates</li>
+<li>MarkerManagement: GetMarkerType - returns the type of a marker</li>
 <li>MediaItem_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc</li>
 <li>MediaItem_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc</li>
 <li>PodcastMetadata: GetAllChapters_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST_METADATA:"v1"-standard</li>
@@ -81,8 +83,17 @@ Bla</li>
 <li>Docs: Reaper Internals - updated to Reaper 6.59 and ReaImGui 0.6.2</li>
 <li>Docs: render-strings - updated to Reaper 6.59(includes wmf now)</li>
 <li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated</li>
+<li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
+<li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)</li>
+<li>MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)</li>
+<li>MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
+<li>MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
+<li>MarkerManagement: IsMarkerShownote - returns now the shownote-index as well<br />
+</li>
 <li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.</li>
 <li>Rendering: CreateRenderCFG_WMF_Video - renamed to CreateRenderCFG_WMF (old functionname is still available, though</li>
+<li>UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -&gt; fixed</li>
+<li>UserInterface: ShowMenu - did only open once in a script though it should open multiple times -&gt; fixed</li>
 </ul>
 <hr />
 <h3>4.6 - "Can - Halleluwah" - 19th of May 2022</h3>

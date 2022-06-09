@@ -1008,7 +1008,7 @@ function ultraschall.OpenURL(url)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>OpenURL</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.7
     Reaper=6.19
     Lua=5.3
   </requires>
@@ -1018,9 +1018,9 @@ function ultraschall.OpenURL(url)
     
     returns -1 in case of an error
   </description>
-<retval>
-    integer retval - -1 in case of error
-</retval>
+  <retval>
+      integer retval - -1 in case of error; 1, in case of success
+  </retval>
   <parameters>
     string url - the url to be opened in the browser; will check for :// in it for validity!
   </parameters>
@@ -1045,7 +1045,7 @@ function ultraschall.OpenURL(url)
     --ACHWAS,ACHWAS2 = reaper.ExecProcess("%WINDIR\\SysWow64\\cmd.exe \"Ultraschall-URL\" /B ".. url, 0)
     os.execute("start \"Ultraschall-URL\" /B ".. url)
   end
-  return true
+  return 1
 end
 
 function ultraschall.CountEntriesInTable_Main(the_table)

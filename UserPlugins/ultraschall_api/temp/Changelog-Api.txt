@@ -11,7 +11,9 @@ Has now 1532 functions, with XX new ones
   Bla
   
 
-#### New features in 4.7  
+#### New features in 4.7
+  - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
+  - MarkerManagement: GetMarkerType - returns the type of a marker
   - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
   - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
@@ -46,8 +48,14 @@ Has now 1532 functions, with XX new ones
   - Docs: Reaper Internals - updated to Reaper 6.59 and ReaImGui 0.6.2
   - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
+  - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
+  - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
+  - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
+  - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
+  - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
+  - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed
 
 ---
 

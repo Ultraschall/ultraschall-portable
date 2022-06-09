@@ -167,11 +167,11 @@ angeben.
 Zum Beispiel so:  
 
 [shownote]  
-Entry\_1\_description="Add Shownote"  
+Entry\_1\_Description=Add Shownote  
 Entry\_1\_ActionCommandID=\_Ultraschall\_AddShownote  
-Entry\_2\_description="Set Shownote"  
+Entry\_2\_Description=Set Shownote  
 Entry\_2\_ActionCommandID=\_Ultraschall\_SetShownote  
-Entry\_3\_description="Delete Shownote"  
+Entry\_3\_Description=Delete Shownote  
 Entry\_3\_ActionCommandID=\_Ultraschall\_DeleteShownote  
 
 Wenn Ihr also dort diese Einträge setzt, werden sie im Menü mit Rechtsklick angezeigt und wenn man auf den Eintrag klickt,

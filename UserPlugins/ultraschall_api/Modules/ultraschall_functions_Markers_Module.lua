@@ -1644,7 +1644,7 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetMarkerByScreenCoordinates</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -1661,7 +1661,8 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
   </description>
   <retvals>
     string marker - a string with all markernumbers, markerpositions and markertitles, separated by a newline. 
-    -Can contain numerous markers, if there are more markers in one position.
+                  - Can contain numerous markers, if there are more markers in one position.
+    string marker_index - a newline separated string with all marker-index-numbers found; 0-based
   </retvals>
   <parameters>
     integer xmouseposition - the absolute x-screen-position, like current mouse-position
@@ -1712,7 +1713,10 @@ function ultraschall.GetMarkerByScreenCoordinates(xmouseposition)
       end
       local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
       local ALABAMA=xmouseposition
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" retstring2=retstring2..retval.."\n" end
+      if pos>=Ax and pos<=AAx then 
+        retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" 
+        retstring2=retstring2..tonumber(retval-1).."\n" 
+       end
     end
   end
   return retstring, retstring2--:match("(.-)%c.-%c")), tonumber(retstring:match(".-%c(.-)%c")), retstring:match(".-%c.-%c(.*)")
@@ -1804,11 +1808,11 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRegionByScreenCoordinates</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>string markers = ultraschall.GetRegionByScreenCoordinates(integer xmouseposition)</functioncall>
+  <functioncall>string markers, string region_index = ultraschall.GetRegionByScreenCoordinates(integer xmouseposition)</functioncall>
   <description>
     returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".
     Returns only regions, no time markers or other markers!
@@ -1818,7 +1822,8 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
   </description>
   <retvals>
     string marker - a string with all regionnumbers, regionpositions and regionnames, separated by a newline. 
-    -Can contain numerous regions, if there are more regions in one position.
+                  - Can contain numerous regions, if there are more regions in one position.
+    string region_index - a newline separated string with all region-index-numbers found; 0-based
   </retvals>
   <parameters>
     integer xmouseposition - the absolute x-screen-position, like current mouse-position
@@ -1849,6 +1854,7 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
   one=12*scale
   
   local retstring=""
+  local retstring2=""
   local temp
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   for i=0, retval do
@@ -1867,12 +1873,16 @@ function ultraschall.GetRegionByScreenCoordinates(xmouseposition)
       elseif markrgnindexnumber>-1 and markrgnindexnumber<10 then temp=one
       end
       local Ax,AAx= reaper.GetSet_ArrangeView2(0, false, xmouseposition-temp,xmouseposition) 
-      if pos>=Ax and pos<=AAx then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" 
-      elseif Ax>=pos and Ax<=rgnend then retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
+      if pos>=Ax and pos<=AAx then 
+        retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name.."\n" 
+        retstring2=retstring2..tonumber(retval-1).."\n" 
+      elseif Ax>=pos and Ax<=rgnend then 
+        retstring=retstring..markrgnindexnumber.."\n"..pos.."\n"..name
+        retstring2=retstring2..tonumber(retval-1).."\n" 
       end
     end
   end
-  return retstring
+  return retstring, retstring2
 end
 
 function ultraschall.GetRegionByTime(position)
