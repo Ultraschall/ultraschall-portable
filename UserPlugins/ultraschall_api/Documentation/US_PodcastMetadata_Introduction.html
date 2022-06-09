@@ -9,10 +9,10 @@ Es geht darum, Podcast-Metadaten in Ultraschall eingeben zu können inklusive f�
 <ol>
 <li><p>Setzen der Marker sowohl Chapter-Marken und Shownote-Markern.</p></li>
 <li><p>Setzen/Ändern der zusätzlichen Attribute für Shownote/Chapter-Marker sowie für Episoden und den Podcast, in dem die Episode auftaucht.</p></li>
-<li><p>Export der Metadaten sowohl in eine Übergabedatei. Der Content der Datei wird auch in die Metadaten-storages der einzelnen Exportformate eingetragen, damit sie von dort aus ausgelesen werden können.</p></li>
+<li><p>Export der Metadaten sowohl in eine Übergabedatei. Der Content der Datei wird auch in die Metadaten-Storages der einzelnen Exportformate eingetragen, damit sie von dort aus ausgelesen werden können.</p></li>
 <li><p>Rendern der Dateien und damit auch das Setzen der Metadaten in die MP3/Opus/Ogg-files.</p></li>
 </ol>
-<p>Um das zu bewerkstelligen gibts einen ganzen Satz an neuen Funktionen in der Ultraschall-API, die das Setzen der Marker, das Setzen der Marker-Attribute, der Podcast/Episoden-Attribute ermöglicht. Diese können dann mit anderen Funktionen in Reapers Metadaten-storage eingetragen werden, die dann beim Rendern automagisch mit exportiert werden.<br />
+<p>Um das zu bewerkstelligen gibts einen ganzen Satz an neuen Funktionen in der Ultraschall-API, die das Setzen der Marker, das Setzen der Marker-Attribute, der Podcast/Episoden-Attribute ermöglicht. Diese können dann mit anderen Funktionen in Reapers Metadaten-Storage eingetragen werden, die dann beim Rendern automagisch mit exportiert werden.<br />
 Ultraschall-API besitzt auch full-featured Render-Management-Support, womit wir den überkomplexen Reaper-eigenen Render to File-Dialog durch einen eigenen ersetzen können, was den Exportworkflow fluffiger designbar macht.</p>
 <p>Die Übergabe der Metadaten findet in einem speziellen Format statt(noch undokumentiert), welches sowohl in den Mediendateien selbst gespeichert werden(um durch Podcastclients ausgelesen zu werden), als auch als Datei exportiert werden kann(um die Metadaten z.B. Auphonic oder Podlove zur weiteren Verwendung zugänglich zu machen.)<br />
 Das Format ist (noch) undokumentiert, da es noch einige Details zu polieren gilt, ist aber soweit fertig.<br />
@@ -34,10 +34,10 @@ Für Chapter-Marker nutzt Ihr <a href="US_Api_Functions.html#GetSetChapterMarker
 Auch hier ist wichtig, dass der NormalMarker-Index mit 1 beginnt, nicht mit 0!<br />
 Auch Wichtig: das Chapter-Attribute "url", welches mit Ultraschall 4 eingeführt wurde, ist mit chap_url erreichbar, ist also kompatibel mit alten Projekten.</p>
 <p><strong>ShowNotes</strong><br />
-Für Shownote-Marker ist das Prinzip sehr Ähnlich. Ihr nutzt dafür <a href="US_Api_Functions.html#GetSetShownoteMarker_Attributes">GetSetShownoteMarker_Attributes</a>.</p>
+Für Shownote-Marker ist das Prinzip sehr ähnlich. Ihr nutzt dafür <a href="US_Api_Functions.html#GetSetShownoteMarker_Attributes">GetSetShownoteMarker_Attributes</a>.</p>
 <p><strong>Podcast/Episode</strong><br />
 Darüberhinaus gibt es auch für Podcasts und Episoden-Metadaten eigene Funktionen, die Attribute nach nem ähnlichem Prinzip ermöglichen:</p>
-<p>Für den Podcast als "globale Instanz" <a href="US_Api_Functions.html#GetSetPodcast_Attributes">GetSetPodcast_Attributes</a>.</p>
+<p>Für den Podcast als "globale Instanz" nutzt Ihr <a href="US_Api_Functions.html#GetSetPodcast_Attributes">GetSetPodcast_Attributes</a>.</p>
 <p>Für die einzelne Episode nutzt Ihr <a href="US_Api_Functions.html#GetSetPodcast_Attributes">GetSetPodcast_Attributes</a>.</p>
 <p>Für die Podcast/Episoden-Attribute gibt es auch die Möglichkeit sie als Presets zu speichern. Dafür gibt es Preset-Slots, die in der Datei ultraschall_podcast_presets.ini im Ressourcenverzeichnis gespeichert werden.<br />
 Diese können also einmal erstellt werden und später im Export Assistant ausgewählt werden, um schnell die Podcast/Episoden-Standardattribute für den Export herauszuholen, ohne sie alle neu per Hand eintragen zu müssen.</p>
@@ -50,7 +50,7 @@ Diese können also einmal erstellt werden und später im Export Assistant ausgew
 <a href="US_Api_Functions.html#SetPodcastAttributesPreset_Name">SetPodcastAttributesPreset_Name</a></p>
 <p>Für die ganzen Attribute brauchen wir einen neuen Eingabedialog, der es fluffig ermöglich die Attribute einzutragen, ohne dass man den Überblick verliert. Da sollten wir Malik mal fragen.<br />
 Auch sollten wir für diese Eingabedialoge ernsthaft ReaImGui als Gui-Lib in Erwägung ziehen, weil es auch die Eingabe von Sonderzeichen ermöglicht. Reapers eigene Funktion gfx.getchar() hat, zumindest unter Windows, Probleme mit Alt-Gr was dazu führt, dass € oder @ nicht immer eingebbar sind, was es quasi für URLs unbenutzbar macht.<br />
-Alternativ können wir eine Anzeige der Attribute machen mit "Bearbeiten"-Buttons, die nen GetUserInputs-Dialog öffnet, der keine Probleme hat mit Sonderzeichen(hat aber eine 1023-Zeichen Begrenzung).</p>
+Alternativ können wir eine Anzeige der Attribute machen mit "Bearbeiten"-Buttons, die nen GetUserInputs-Dialog öffnet, der keine Probleme hat mit Sonderzeichen(aber eine 1023-Zeichen Begrenzung besitzt).</p>
 <p>Alle Attribute sind erstmal eine Liste an Vorschlägen und können erweitert oder nochmal geändert werden, da bin ich für Vorschläge offen.<br />
 Auch brauchen manche der Attribute noch ein System wie sie gespeichert und auf Validität überprüft werden (beispielsweise wie Google-Maps/GPS-Koordinaten gespeichert werden), was ich für einige der Attribute noch nicht abschließend designed habe.<br />
 Da wäre ich also auch für Vorschläge offen.</p>
@@ -64,7 +64,7 @@ Bei Bedarf wären auch IXML und APE als Unterstützung machbar(WavPak Support), 
 <p>Um alles sauber in die verschiedenen Exportformate zu exportieren gibt es 4 Schritte, die beachtet werden müssen:</p>
 <p><strong>1) Metadaten in den Metadaten-storage von Reaper eintragen</strong><br />
 Dazu gibt es diese Funktion: <a href="US_Api_Functions.html#WritePodcastMetaData">WritePodcastMetaData</a>.<br />
-Diese trägt die von den Benutzenden eingetragenen Metadaten in das USER-tag des Metadaten-Storages ein, inklusive Attributen von allen Podcast/Episoden/Chapter und Shownotes. Es erlaubt auch die Metadaten als Metadatenübergabe-Datei zu speichern.</p>
+Diese trägt die von den Benutzenden eingetragenen Metadaten in das USER-tag des Metadaten-Storages ein, inklusive Attributen von allen Podcast/Episoden/Chapter und Shownotes. Es erlaubt auch die Metadaten als Metadatenübergabe-Datei zu exportieren(bspw um sie Auphonic zu geben).</p>
 <p>Die Metadaten werden in einem bestimmten Standard-Format(noch undokumentiert) in Reapers Metadaten-Storage gespeichert, welcher vom Podcastclient ausgelesen und visualisiert werden kann.</p>
 <p>Bislang bespiele ich keine der anderen Tags (Title, Artist, etc), da bin ich für Vorschläge offen, was wir da noch standardmäßig befüllen können.</p>
 <p><strong>2) Kapitelmarken vorbereiten, damit sie von Reaper als "bitte exportieren" erkannt werden.</strong></p>
@@ -90,13 +90,13 @@ Das ist in diesem Repo auch schon so funktionsfähig.</p>
 <p>Es gibt dafür mehrere Sections für die verschiedenen Markertypen(Shownote, Chapter, Planned).<br />
 In jeder Section gibt es mehrere keys die zum Einen die angezeigte Beschreibung und zum Anderen die ausgelöste Action angeben.</p>
 <p>Zum Beispiel so:</p>
-<p>[Shownote]<br />
+<p>[shownote]<br />
 Entry_1_description="Add Shownote"<br />
-Entry_1_ActionCommandID="_Ultraschall_AddShownote"<br />
+Entry_1_ActionCommandID=_Ultraschall_AddShownote<br />
 Entry_2_description="Set Shownote"<br />
-Entry_2_ActionCommandID="_Ultraschall_SetShownote"<br />
+Entry_2_ActionCommandID=_Ultraschall_SetShownote<br />
 Entry_3_description="Delete Shownote"<br />
-Entry_3_ActionCommandID="_Ultraschall_DeleteShownote"</p>
+Entry_3_ActionCommandID=_Ultraschall_DeleteShownote</p>
 <p>Wenn Ihr also dort diese Einträge setzt, werden sie im Menü mit Rechtsklick angezeigt und wenn man auf den Eintrag klickt, wird die dazugehörige Action aufgerufen.</p>
 <p>Wenn jetzt die passende Action aufgerufen wird, so möchtet Ihr sicherlich auch wissen, welcher Marker denn gerechtsklicked wurde. Dazu nutzt Ihr in der aufgerufenen Action den folgenden Code, um z.B. an den ShownoteMarker-Index zu kommen:</p>
 <pre><code>marker_index, guid=ultraschall.GetTemporaryMarker() -- get the temporary marker, stored by the marker-context-menu  
@@ -104,7 +104,7 @@ ultraschall.StoreTemporaryMarker(-1)                -- remove temporary marker, 
 shownote_index = ultraschall.GetShownoteMarkerIDFromGuid(guid) -- get the shownote-index of the marker(-1 if it is not a shownote for some reason)  </code></pre>
 <p>Danach könnt Ihr alle Shownote-related Funktionen auf shownote_index anwenden.<br />
 Das gleiche Prinzip gilt auch für Kapitelmarken, nur dass Ihr dann GetNormalMarkerIDFromGuid anstelle von GetShownoteMarkerIDFromGuid verwendet.</p>
-<p>Ich hacke noch an dem Menühijacking herum und versuche noch DoppelKlick auf Marker umzusetzen, so dass nicht Reapers eigener Marker-Bearbeitungsdialog geöffnet wird, sondern der z.B. der "bearbeite Attribute dieser Shownote"-Dialog.</p>
+<p>Ich hacke noch an dem Menühijacking herum und versuche noch DoppelKlick auf Marker umzusetzen, so dass nicht Reapers eigener Marker-Bearbeitungsdialog geöffnet wird, sondern z.B. der "bearbeite Attribute dieser Shownote"-Dialog.</p>
 <h2>5. Export Assistant</h2>
 
 		</body>

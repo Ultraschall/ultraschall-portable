@@ -166,13 +166,13 @@ angeben.
 
 Zum Beispiel so:  
 
-[Shownote]  
+[shownote]  
 Entry\_1\_description="Add Shownote"  
-Entry\_1\_ActionCommandID="\_Ultraschall\_AddShownote"  
+Entry\_1\_ActionCommandID=\_Ultraschall\_AddShownote  
 Entry\_2\_description="Set Shownote"  
-Entry\_2\_ActionCommandID="\_Ultraschall\_SetShownote"  
+Entry\_2\_ActionCommandID=\_Ultraschall\_SetShownote  
 Entry\_3\_description="Delete Shownote"  
-Entry\_3\_ActionCommandID="\_Ultraschall\_DeleteShownote"  
+Entry\_3\_ActionCommandID=\_Ultraschall\_DeleteShownote  
 
 Wenn Ihr also dort diese Einträge setzt, werden sie im Menü mit Rechtsklick angezeigt und wenn man auf den Eintrag klickt,
 wird die dazugehörige Action aufgerufen.  
@@ -188,6 +188,6 @@ Danach könnt Ihr alle Shownote-related Funktionen auf shownote\_index anwenden.
 Das gleiche Prinzip gilt auch für Kapitelmarken, nur dass Ihr dann GetNormalMarkerIDFromGuid anstelle von GetShownoteMarkerIDFromGuid verwendet.  
 
 Ich hacke noch an dem Menühijacking herum und versuche noch DoppelKlick auf Marker umzusetzen, so dass nicht Reapers eigener 
-Marker-Bearbeitungsdialog geöffnet wird, sondern der z.B. der "bearbeite Attribute dieser Shownote"-Dialog.  
+Marker-Bearbeitungsdialog geöffnet wird, sondern z.B. der "bearbeite Attribute dieser Shownote"-Dialog.  
 
 ##5. Export Assistant  

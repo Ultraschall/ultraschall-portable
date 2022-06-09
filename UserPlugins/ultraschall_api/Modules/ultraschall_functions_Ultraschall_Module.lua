@@ -493,7 +493,7 @@ function ultraschall.GetUSExternalState(section, key, filename)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetUSExternalState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -530,6 +530,7 @@ function ultraschall.GetUSExternalState(section, key, filename)
   
   -- get value
   local A, B = ultraschall.GetIniFileValue(section, key, "", reaper.GetResourcePath().."/"..filename)
+  if A==-1 then B="" end
   return B
 end
 
