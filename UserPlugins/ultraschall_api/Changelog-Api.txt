@@ -253,7 +253,19 @@ Note: Doesn't fucking work...
 
 - IsEnvelopeTakeFXEnvelope, IsEnvelopeTrackFXEnvelope, IsEnvelopeInputFXEnvelope, IsEnvelopeTakeEnvelope
 
+- add ChapterPlaylists-functions, that allow setting a playlist-order of chapters to play one after another; a playlist name is possible
+  I had this added as chapter-attribute, but I think, that this should be an episode-attribute instead, with 
+    playlist_1_name="playlist name"
+    playlist_1_chapterindex="1, 2, 4, 7, 3"
+    playlist_2_name="another playlist's name"
+    playlist_2_chapterindex="1, 5, 9, 6, 10"
+    
+   the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
+- marker-menu-hijack-script: 
+    functions to add/remove menu-entries?
+
+    
 readd in next version:
   
 
@@ -275,6 +287,9 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
+  - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
+  - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
+  - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
   - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard

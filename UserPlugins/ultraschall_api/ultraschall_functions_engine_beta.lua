@@ -1726,7 +1726,8 @@ function ultraschall.GetPodcastShownote_MetaDataEntry(shownote_idx, shownote_ind
   return true, Shownote_String
 end
 
-ultraschall.ChapterAttributes={"chap_description",
+ultraschall.ChapterAttributes={
+              "chap_description",
               "chap_url",
               "chap_image",
               "chap_image_description",
@@ -1735,7 +1736,9 @@ ultraschall.ChapterAttributes={"chap_description",
               "chap_image_url",
               "chap_descriptive_tags",
               "chap_is_advertisement",
-              "chap_content_notification_tags"
+              "chap_content_notification_tags",
+              "chap_next_chapter_numbers",
+              "chap_previous_chapter_numbers",
               }
 
 
@@ -1769,6 +1772,16 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
                          - "chap_image_url" - the url that links to the chapter-image
                          - "chap_descriptive_tags" - some tags, that describe the chapter-content, must separated by newlines
                          - "chap_content_notification_tags" - some tags, that warn of specific content; must be separated by newlines!
+                         - "chap_next_chapter_numbers" - decide, which chapter could be the next after this one; 
+                                                       - format is: "chap_number:description\nchap_number:description\n"
+                                                       - chap_number is the number of the chapter in timeline-order
+                                                       - it's possible to set multiple chapters as the next chapters; chap_number is 0-based
+                                                       - this can be used for non-linear podcasts, like "choose your own adventure"
+                         - "chap_previous_chapter_numbers" - decide, which chapter could be the previous before this one
+                                                       - format is: "chap_number:description\nchap_number:description\n"
+                                                       - chap_number is the number of the chapter in timeline-order
+                                                       - it's possible to set multiple chapters as the previous chapters; chap_number is 0-based
+                                                       - this can be used for non-linear podcasts, like "choose your own adventure"
     string content - the new contents to set the attribute with
   </parameters>
   <retvals>
@@ -3252,4 +3265,139 @@ function ultraschall.GetMarkerType(markerid)
   if MarkerAttributes[2]==true then return "region", MarkerAttributes[1]-1 end
 
   return "no such marker or region"
+end
+
+function ultraschall.MarkerMenu_Start()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MarkerMenu_Start</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    SWS=2.9.7
+    JS=0.962
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_Start()</functioncall>
+  <description>
+    starts a background-script, that hijacks the marker/region-context-menu when right-clicking them.
+    
+    You can set the menu-entries in resourcefolder/ultraschall_marker_menu.ini
+    
+    Important: this has issues with marker-lanes, so you might be able to open the context-menu when right-clicking above/below the marker!
+    
+    Markertypes, who have no menuentry set yet, will get their default-menu, instead.
+    
+    Note: to ensure, that the script can not be accidentally stopped by the user, you can run this function in a defer-loop to restart it, if needed.
+  </description>
+  <retvals>
+    boolean retval - true, marker-menu has been started; false, markermenu is already running
+  </retvals>
+  <linked_to desc="see:">
+      Reaper:MarkerMenu_Stop
+             stops the marker-menu-script
+      Reaper:MarkerMenu_Debug
+             set marker-menu-script to output debug messages
+  </linked_to>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, start, markermenu</tags>
+</US_DocBloc>
+]]
+  if reaper.GetExtState("ultraschall_api", "markermenu_started")=="" then
+    ultraschall.Main_OnCommand_NoParameters=nil
+    ultraschall.Main_OnCommandByFilename(ultraschall.Api_Path.."/Scripts/ultraschall_Marker_Menu.lua")
+    ultraschall.Main_OnCommand_NoParameters=nil
+    return true
+  end
+  return false
+end
+
+function ultraschall.MarkerMenu_Stop()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MarkerMenu_Stop</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.MarkerMenu_Stop()</functioncall>
+  <description>
+    stops the marker-menu background-script.
+  </description>
+  <retvals>
+    boolean retval - true, marker-menu has been started; false, markermenu is already running
+  </retvals>
+  <linked_to desc="see:">
+      Reaper:MarkerMenu_Start
+             starts the marker-menu-script
+      Reaper:MarkerMenu_Debug
+             set marker-menu-script to output debug messages
+  </linked_to>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, start, markermenu</tags>
+</US_DocBloc>
+]]
+  reaper.DeleteExtState("ultraschall_api", "markermenu_started", false)
+end
+
+SLEM()
+
+
+function ultraschall.MarkerMenu_Debug(messages)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MarkerMenu_Debug</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_Debug(integer messages)</functioncall>
+  <description>
+    toggles debug-messages, that shall be output with the marker-menu-backgroundscript
+    
+    Messages available are
+      0 - no messages
+      1 - output the markertype of the clicked marker in the ReaScript-Console
+  </description>
+  <retvals>
+    boolean retval - true, setting debug-messages worked; false, setting debug-messages did not work
+  </retvals>
+  <parameters>
+    integer messages - 0, show no debug messages in marker-menu-background-script
+                     - 1, show the markertype of the last clicked-marker/region
+  </parameters>
+  <linked_to desc="see:">
+      Reaper:MarkerMenu_Start
+             starts the marker-menu-script
+      Reaper:MarkerMenu_Stop
+             stops the marker-menu-script
+  </linked_to>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, show, debugmessage, markermenu</tags>
+</US_DocBloc>
+]]
+  if math.type(messages)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_Debug", "messages", "must be an integer", -1) return false end
+  if messages==0 then
+    reaper.DeleteExtState("ultraschall_api", "markermenu_debug_messages_markertype", false)
+  elseif messages&1==1 then
+    reaper.SetExtState("ultraschall_api", "markermenu_debug_messages_markertype", "true", false)
+  end
+  return true
 end

@@ -3186,12 +3186,18 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
     filename=string.gsub(filename, "\\", "/")
   end
   
+  if ultraschall.Main_OnCommand_NoParameters==nil then
+      local commandid=reaper.AddRemoveReaScript(true, 0, filename, true)
+      reaper.Main_OnCommand(commandid, 0)
+      commandid=reaper.AddRemoveReaScript(false, 0, filename, true)
+      return true
+  end
+  
   -- create temporary copy of the scriptfile, with a guid in its name  
   local filename2
   if filename:sub(-4,-1)==".lua" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".lua"
   elseif filename:sub(-4,-1)==".eel" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".eel" 
   elseif filename2==nil and filename:sub(-3,-1)==".py" then filename2=filename:sub(1,-5).."-"..reaper.genGuid()..".py" end
-
   if filename2==filename then ultraschall.AddErrorMessage("Main_OnCommandByFilename", "filename", "No valid script, must be either Lua, Python or EEL-script and end with such an extension.", -4) return false end
 
 
@@ -3209,7 +3215,7 @@ function ultraschall.Main_OnCommandByFilename(filename, ...)
   reaper.Main_OnCommand(commandid, 0)
   local commandid2=reaper.AddRemoveReaScript(false, 0, filename2, true)
   
-  -- delete the temporary scriptfile
+  -- delete the temporary scriptfile  
   os.remove(filename2)
   
   -- return true and the script-identifier of the started script
