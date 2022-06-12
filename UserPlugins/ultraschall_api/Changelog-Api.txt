@@ -263,7 +263,8 @@ Note: Doesn't fucking work...
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
 - marker-menu-hijack-script: 
-    functions to add/remove menu-entries?
+    - functions to add/remove menu-entries?
+    - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
 
     
 readd in next version:
@@ -315,6 +316,7 @@ Has now 1532 functions, with XX new ones
 #### Changes from 4.6 to 4.7  
   - API: cleanup - a lot of cleanup in codebase and improvements in stability for future enhancements
   - API: Modulator3000 - readded api-load-speedup after I found out how to circumvent a bug in Reaper's Lua-implementation  
+  - DeveloperTools: Create new script with dialog - allows now opening/adding already existing scripts; default path for scripts without path is now scripts-folder; scripts can also be copied from a different source into the scriptsfolder and then added(will only copy the chosen file, not possibly other ones!)
   - DeveloperTools: GetPitchShiftModes - improved layout; crashed in my parser due addition of Rrreeeaaa -> fixed
   - DeveloperTools: ItemStateChunk from Clipboard to item under mouse - copied statechunk into clipboard instead of setting it oooppsss -> fixed
   - DeveloperTools: LangPack2Developer\_langpack\_converter - shows now conversion progress in ReaScript-console

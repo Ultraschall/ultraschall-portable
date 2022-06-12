@@ -91,7 +91,7 @@ REAPER Filetype-descriptions
                 </div>
             <div style="width: 95%;">
                                 <hr>
-                <a id="Reaper-kb.ini"></a><h2>Reaper-kb.ini (as of Reaper 6.18)</h2>
+                <a id="Reaper-kb.ini"></a><h2>Reaper-kb.ini (as of Reaper 6.59)</h2>
                 Stored in Reaper-ressources-folder or in the Reaper-Application-Folder(in portable installations)<p>
                     In the file Reaper-kb.ini, the custom shortcuts, scripts and acts, their descriptions, sections-association and Action-Command-IDs are defined.<p> 
                     The reaper-kb.ini does NOT store OSC-Keybindings or FX-shortcuts, they are stored in reaper-osc-actions.ini or reaper-fxoptions.ini respectively.<p>
@@ -119,7 +119,15 @@ REAPER Filetype-descriptions
                     <pre style="padding-left:3%;"><code><i> ACT a b "Action Command ID" "Description" ActionCommandID [ActionCommandID] [ActionCommandID] ... </i></code></pre>
                 
                 <div style="padding-left: 4%; width:85%;">
-                    <i>a</i> - 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; maybe 4 and higher?
+                    <i>a</i> - various settings for new actions:<br>
+                             - &1 consolidate undo points<br>
+                             - &2 show in Actions-Menu<br>
+                             - &amp;16 &amp;32 - Show as active if all component actions are - checkbox<br>
+                             - &nbsp;&nbsp;16   0 - unchecked<br>
+                             - &nbsp;&nbsp;0    0 - Active<br>
+                             - &nbsp;&nbsp;0    32 - Active or indeterminate<br>
+
+                                 
                 </div><br>
                 <div style="padding-left: 4%; width:85%;">
                     <i>b</i> - Section ID, in which this action can be used. Only the numbers below are allowed, any other number may lead to the entry be removed, if reaper-kb.ini is rewritten by Reaper.<br> <br>
