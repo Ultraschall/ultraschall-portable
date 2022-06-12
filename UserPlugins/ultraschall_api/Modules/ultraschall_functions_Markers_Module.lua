@@ -5704,9 +5704,11 @@ function ultraschall.GetShownoteMarkerIDFromGuid(guid)
 --]]
   if type(guid)~="string" then ultraschall.AddErrorMessage("GetShownoteMarkerIDFromGuid", "guid", "must be a string", -1) return -1 end  
   for i=0, ultraschall.CountShownoteMarkers() do
+    ultraschall.SuppressErrorMessages(true)
     local retval, marker_index, pos, name, shown_number, guid2 = ultraschall.EnumerateShownoteMarkers(i)
-    if guid2==guid then return i end
+    if guid2==guid then ultraschall.SuppressErrorMessages(false) return i end
   end
+  ultraschall.SuppressErrorMessages(false)
   return -1
 end
 

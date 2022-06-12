@@ -1306,7 +1306,7 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   else
     B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
     if attributename=="shwn_event_ics_data" then B=ultraschall.Base64_Decoder(B) end
-    if B==nil then Retval=false else Retval=true end
+    if B==nil then Retval=false B="" else Retval=true end
   end
   return Retval, B
 end
@@ -1820,7 +1820,9 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   idx=ultraschall.EnumerateNormalMarkers(idx)
   
   if is_set==false then
-    return true, ultraschall.GetMarkerExtState(idx, attributename)  
+    local B=ultraschall.GetMarkerExtState(idx, attributename)  
+    if B==nil then B="" end
+    return true, B
   elseif is_set==true then
     return ultraschall.SetMarkerExtState(idx, attributename, content)~=-1, content
   end
@@ -3359,7 +3361,7 @@ function ultraschall.MarkerMenu_Stop()
   reaper.DeleteExtState("ultraschall_api", "markermenu_started", false)
 end
 
-SLEM()
+--SLEM()
 
 
 function ultraschall.MarkerMenu_Debug(messages)
@@ -3378,6 +3380,7 @@ function ultraschall.MarkerMenu_Debug(messages)
     Messages available are
       0 - no messages
       1 - output the markertype of the clicked marker in the ReaScript-Console
+      2 - show marker-information as first entry in the marker-menu(type, overall marker-number, guid)
   </description>
   <retvals>
     boolean retval - true, setting debug-messages worked; false, setting debug-messages did not work
@@ -3385,6 +3388,7 @@ function ultraschall.MarkerMenu_Debug(messages)
   <parameters>
     integer messages - 0, show no debug messages in marker-menu-background-script
                      - 1, show the markertype of the last clicked-marker/region
+                     - 2 - show marker-information as first entry in the marker-menu(type, overall marker-number, guid)
   </parameters>
   <linked_to desc="see:">
       Reaper:MarkerMenu_Start
@@ -3402,10 +3406,18 @@ function ultraschall.MarkerMenu_Debug(messages)
 </US_DocBloc>
 ]]
   if math.type(messages)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_Debug", "messages", "must be an integer", -1) return false end
-  if messages==0 then
-    reaper.DeleteExtState("ultraschall_api", "markermenu_debug_messages_markertype", false)
-  elseif messages&1==1 then
+  
+  if messages&1==1 then
     reaper.SetExtState("ultraschall_api", "markermenu_debug_messages_markertype", "true", false)
+  elseif messages&1==0 then
+    reaper.DeleteExtState("ultraschall_api", "markermenu_debug_messages_markertype", false)
   end
+  
+  if messages&2==2 then
+    reaper.SetExtState("ultraschall_api", "markermenu_debug_messages_markerinfo_in_menu", "true", false)
+  elseif messages&2==0 then
+    reaper.DeleteExtState("ultraschall_api", "markermenu_debug_messages_markerinfo_in_menu", false)
+  end
+  
   return true
 end

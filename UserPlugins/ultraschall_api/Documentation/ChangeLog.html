@@ -87,8 +87,10 @@ Bla</li>
 <li>Docs: render-strings - updated to Reaper 6.59(includes wmf now)</li>
 <li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated</li>
 <li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
-<li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)</li>
+<li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)<br />
+</li>
 <li>MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)</li>
+<li>MarkerManagement: GetShownoteMarkerIDFromGuid - did add error-messages to the error-messaging system without needing this -&gt; fixed</li>
 <li>MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
 <li>MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
 <li>MarkerManagement: IsMarkerShownote - returns now the shownote-index as well<br />

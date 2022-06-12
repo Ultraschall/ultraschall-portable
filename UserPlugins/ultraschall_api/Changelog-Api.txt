@@ -325,8 +325,9 @@ Has now 1532 functions, with XX new ones
   - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
-  - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)
+  - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)  
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
+  - MarkerManagement: GetShownoteMarkerIDFromGuid - did add error-messages to the error-messaging system without needing this -> fixed
   - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  

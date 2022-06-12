@@ -5,7 +5,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 arrange_view, HWND_timeline, TrackControlPanel, TrackListWindow = ultraschall.GetHWND_ArrangeViewAndTimeLine()
 
-ShowMarkerType_In_Menu=true
+ShowMarkerType_In_Menu=false
 
 function GetMarkerMenu(MarkerType, clicktype, Markernr)
   -- read the menu from ultraschall_marker_menu.ini and generate this entry
@@ -17,6 +17,11 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
     return
   end
   local actions={}
+  if reaper.GetExtState("ultraschall_api", "markermenu_debug_messages_markerinfo_in_menu")~="" then
+    ShowMarkerType_In_Menu=true
+  else
+    ShowMarkerType_In_Menu=false
+  end
   if ShowMarkerType_In_Menu==true then actions[1]=0 end
   local menuentry=""
   for i=1, 1024 do
@@ -42,8 +47,7 @@ end
 
 
 function main()
-  if Retval~=-1 and Retval~=nil then 
-    ultraschall.StoreTemporaryMarker(Marker2)
+  if Retval~=-1 and Retval~=nil then     
     reaper.Main_OnCommand(MarkerActions[Retval], 0)
   end
   Retval=nil
@@ -61,13 +65,14 @@ function main()
       Marker2=tonumber(Marker2:match("(.-)\n"))
       MarkerType, MarkerTypeIndex=ultraschall.GetMarkerType(Marker2)
       MarkerMenu, MarkerActions=GetMarkerMenu(MarkerType, MouseState, Marker2)
-      if MarkerMenu~=nil then
+      if MarkerMenu~=nil then        
         if ShowMarkerType_In_Menu==false then
           Markername=""
         else
-          Markername="#\""..MarkerType.."\" - MarkerNr:"..Marker2.."|"
+          Markername="#\""..MarkerType.."\" - MarkerNr:"..Marker2.." Guid:"..ultraschall.GetGuidFromMarkerID(Marker2+1).."|"
         end
         Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)
+        if Retval~=-1 then ultraschall.StoreTemporaryMarker(Marker2) end
       end
     end
     A=reaper.time_precise()
