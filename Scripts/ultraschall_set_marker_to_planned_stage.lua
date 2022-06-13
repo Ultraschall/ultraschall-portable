@@ -108,7 +108,8 @@ function ultraschall.GetClosestNextNormalMarker(cursor_type, time_position)
 end
 
 
-retindexnumber, retposition, retmarkername = ultraschall.GetClosestNextNormalMarker(0)
+retindexnumber = ultraschall.GetTemporaryMarker()
+retval, isrgn, retposition, rgnend, retmarkername = reaper.EnumProjectMarkers3(0, retindexnumber)
 
 if retindexnumber~=-1 then
   A,B=ultraschall.GetAllPlannedMarkers()
@@ -117,6 +118,7 @@ if retindexnumber~=-1 then
   reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1)
   
   reaper.Undo_BeginBlock()
-    reaper.SetProjectMarkerByIndex2(0, retindexnumber-1, false, 0.1, 0, 0, "_Planned:"..retmarkername, ultraschall.ConvertColor(100,255,0), 0)
+    reaper.SetProjectMarkerByIndex2(0, retindexnumber, false, 0.1, 0, 0, "_Planned:"..retmarkername, ultraschall.ConvertColor(100,255,0), 0)
   reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1) -- has to be a second UNDO block!
 end
+

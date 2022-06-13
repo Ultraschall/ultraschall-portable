@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2022 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,10 @@ end
 -- geschrieben. Oder b) wenn keine Zeitstempel vorhanden sind, sich die Einträge zeilenweise
 -- nimmt und der Regel aus 1) nach an den Anfang schreibt mit dem Grünen Farbwert
 -- (da es auf jeden Fall noch zu positionierende Marker sein müssen).
+--
+-- Das Format mit Zeitstempel ist:
+--  hh:mm:ss.mss Name des Markers
+--Leerzeichen/Tabs am Anfang oder Ende eines Markernamens werden entfernt.
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
@@ -52,19 +56,9 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ----------------------------
 reaper.Undo_BeginBlock()
 
---os = reaper.GetOS()
---if string.match(os, "OS") then
---  color = 0x00FF88|0x1000000
---else
---  color = 0x88FF00|0x1000000
---end
-
 color=ultraschall.ConvertColor(100,255,0)
-
-
--- clipboard_string=ultraschall.GetStringFromClipboard_SWS()
-
 clipboard_string = reaper.CF_GetClipboard("")
+
 
 
 --clipboard_string="0:00:02.050 Test1\n   Katze1\nKatze2   \n00:04:00 Test2"
@@ -73,21 +67,22 @@ clipboard_string = reaper.CF_GetClipboard("")
 -- marker_table[2][markernummer] - die Zeit, konvertiert in Sekunden. -1, wenn es keine Zeitangabe gibt
 -- marker_table[3][markernummer] - der Name des Markers
 
-number_of_markerentries,marker_table=ultraschall.ParseMarkerString(clipboard_string, true)
-green_marker_num = 0 -- die 0:00 frei lassen für einen Marker der da vielleicht schon liegt
+number_of_markerentries, marker_table=ultraschall.ParseMarkerString(clipboard_string, true)
 
+green_marker_num = 0 -- die 0:00 frei lassen für einen Marker der da vielleicht schon liegt
 for i=1, number_of_markerentries do
   if marker_table[3][i]~="" and marker_table[2][i]~=-1 then
     -- normal entry with time and text -> put a grey marker at position
     marker_table[3][i]=marker_table[3][i]:match("\t*%s*(.*)")
-    reaper.AddProjectMarker2(0, false, marker_table[2][i],0, marker_table[3][i]:match("(.-)%s-$"), 1 , 0)
+    ultraschall.AddNormalMarker(marker_table[2][i], 1, marker_table[3][i]:match("(.-)%s-$"))
   elseif marker_table[3][i]~="" and marker_table[2][i]==-1 then
-    -- normal entry without time but text -> green marker
+    -- normal entry without time but text -> green "_Planned:" marker
     green_marker_num=green_marker_num+1
     marker_table[3][i]=marker_table[3][i]:match("\t*%s*(.*)")
-    reaper.AddProjectMarker2(0, false, green_marker_num*0.001,0, marker_table[3][i]:match("(.-)%s-$"), 0, color)
+    ultraschall.AddCustomMarker("Planned", green_marker_num*0.001, marker_table[3][i]:match("(.-)%s-$"), 0, color)
   end
 end
+
 
 -- renumber grey markers
 ultraschall.RenumerateMarkers(0, 1)

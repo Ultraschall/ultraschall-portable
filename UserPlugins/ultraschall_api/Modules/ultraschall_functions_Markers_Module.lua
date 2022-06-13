@@ -2736,15 +2736,15 @@ function ultraschall.ParseMarkerString(markerstring, strict)
   <parameters>
     string markerstring - a string with all markers. An entry is "timestring markertitle\n". Each marker-entry must be separated by a newline from each other.
     boolean strict - interpret the time in timestring more strict or more loosely?
-    -true, the time in markerstring must follow the format hh:mm:ss.mss , e.g. 11:22:33.444
-    -false, the time can be more flexible, leading to possible misinterpretation of indexnumbers as time/seconds
+                   - true, the time in markerstring must follow the format hh:mm:ss.mss , e.g. 11:22:33.444
+                   - false, the time can be more flexible, leading to possible misinterpretation of indexnumbers as time/seconds
   </parameters>
   <retvals>
     integer number_of_entries - the number of markers in markerstring
     array markerarray - a table with all the information of a marker
-    -markertable[1][markernumber] - the timestring of the marker, -1 if no time is available
-    -markertable[2][markernumber] - the time, converted into position in seconds, -1 if no time is available
-    -markertable[3][markernumber] - the name of the marker
+                      -markertable[1][markernumber] - the timestring of the marker, -1 if no time is available
+                      -markertable[2][markernumber] - the time, converted into position in seconds, -1 if no time is available
+                      -markertable[3][markernumber] - the name of the marker
   </retvals>
   <chapter_context>
     Markers
@@ -5374,16 +5374,16 @@ end
 
 
 
-function ultraschall.SetShownoteMarker(idx, pos, name)
+function ultraschall.SetShownoteMarker(idx, pos, name, shown_number)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetShownoteMarker</slug>
   <requires>
-    Ultraschall=4.6
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetShownoteMarker(integer idx, number pos, string name)</functioncall>
+  <functioncall>boolean retval = ultraschall.SetShownoteMarker(integer idx, number pos, string name, optional integer shown_number)</functioncall>
   <description>
     Will set an already existing shownote-marker.
     
@@ -5397,6 +5397,7 @@ function ultraschall.SetShownoteMarker(idx, pos, name)
     integer idx - the index of the shownote marker within all shownote-markers you want to set; 1-based
     number pos - the new position of the marker in seconds
     string name - the new name of the shownote-marker
+    optional integer shown_number - the shown-number of the marker; set to nil to use the current one
   </parameters>
   <retvals>
     boolean retval - true, if setting the shownote-marker was successful; false, if not or an error occurred
@@ -5413,8 +5414,10 @@ function ultraschall.SetShownoteMarker(idx, pos, name)
   if type(pos)~="number" then ultraschall.AddErrorMessage("SetShownoteMarker", "pos", "must be a number", -1) return false end
   if type(name)~="string" then ultraschall.AddErrorMessage("SetShownoteMarker", "name", "must be a string", -2) return false end
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("SetShownoteMarker", "idx", "must be an integer", -3) return false end
+  if shown_number~=nil and math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetShownoteMarker", "shown_number", "must be nil or an integer", -5) return false end
   idx=idx-1
-  local retval, markerindex, pos2, name2, shown_number = ultraschall.EnumerateCustomMarkers("Shownote", idx)
+  local retval, markerindex, pos2, name2, shown_number2 = ultraschall.EnumerateCustomMarkers("Shownote", idx)
+  if shown_number==nil then shown_number=shown_number2 end
   if retval==false then ultraschall.AddErrorMessage("SetShownoteMarker", "idx", "no such shownote-marker", -4) return false end
   
   local Count = ultraschall.CountAllCustomMarkers("Shownote")

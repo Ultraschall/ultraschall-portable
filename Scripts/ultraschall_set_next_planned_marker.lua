@@ -34,43 +34,36 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-reaper.Undo_BeginBlock()
-
--- A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
-
-commandid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
-buttonstate = reaper.GetToggleCommandStateEx(0, commandid)
-if buttonstate <= 0 then buttonstate = 0 end
-
 function get_position()
   if reaper.GetPlayState() & 2 == 2 then -- 2 = Pause
-		current_position = reaper.GetCursorPosition() -- Position of edit-cursor
+    current_position = reaper.GetCursorPosition() -- Position of edit-cursor
   else
     if buttonstate == 1 then -- follow mode is active
-		  current_position = reaper.GetPlayPosition() -- Position of play-cursor
+	 current_position = reaper.GetPlayPosition() -- Position of play-cursor
     else
-		  current_position = reaper.GetCursorPosition() -- Position of edit-cursor
+	 current_position = reaper.GetCursorPosition() -- Position of edit-cursor
     end
   end
   return current_position
 end
 
-play_pos = get_position()
-num_markers = reaper.CountProjectMarkers(0) -- number of markers + regions!
-PlannedColor = ultraschall.ConvertColor(100,255,0) -- color of all planned markers
 
-for i = 0, num_markers-1 do
-  retval, isrgnOut, posOut, rgnendOut, nameOut, markrgnindexnumberOut, colorOut = reaper.EnumProjectMarkers3(0, i)
-  if isrgnOut==false and colorOut==PlannedColor then -- green and not a region
-    -- move to play_pos and change color to grey
-    runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
-    reaper.DeleteProjectMarkerByIndex(0, markrgnindexnumberOut)
-    reaper.AddProjectMarker2(0, false, play_pos, 0, nameOut, markrgnindexnumberOut, 0)
-    --reaper.SetProjectMarker4(0, markrgnindexnumberOut, false, play_pos, 0, nameOut, 0, 0)
-    break
-  end
+
+FirstPlannedMarker={ultraschall.EnumerateCustomMarkers("Planned", 0)}
+if FirstPlannedMarker[1]~=false then
+  commandid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+  buttonstate = reaper.GetToggleCommandStateEx(0, commandid)
+  if buttonstate <= 0 then buttonstate = 0 end
+  play_pos = get_position()
+  reaper.Undo_BeginBlock()
+
+  runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
+
+  reaper.SetProjectMarkerByIndex(0, FirstPlannedMarker[2], false, play_pos, 0, 0, FirstPlannedMarker[4], reaper.ColorToNative(102,102,102)|0x1000000) 
+  ultraschall.RenumerateNormalMarkers()
+
+  reaper.Undo_EndBlock("Ultraschall: Set next planned marker.",0)
 end
 
-ultraschall.RenumerateMarkers(0, 1)
 
-reaper.Undo_EndBlock("Ultraschall: Set next planned marker.",0)
+

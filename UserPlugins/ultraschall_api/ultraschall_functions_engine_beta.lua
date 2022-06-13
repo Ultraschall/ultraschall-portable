@@ -1701,11 +1701,11 @@ function ultraschall.GetPodcastShownote_MetaDataEntry(shownote_idx, shownote_ind
 
   for i=1, #Tags do    
     retval, temp = ultraschall.GetSetShownoteMarker_Attributes(false, shownote_idx, Tags[i], "")
-    gap=""
+    local gap=""
     for a=0, Tags[i]:len() do
      gap=gap.." "
     end
-    if temp==nil or retval==false then 
+    if temp=="" or retval==false then 
       temp="" 
     else 
       temp=string.gsub(temp, "\r", "")
@@ -2139,11 +2139,11 @@ function ultraschall.GetPodcastChapter_MetaDataEntry(chapter_idx, chapter_index_
 
   for i=1, #Tags do
     local retval, temp = ultraschall.GetSetChapterMarker_Attributes(false, chapter_idx, Tags[i], "")
-    gap=""
+    local gap=""
     for a=0, Tags[i]:len() do
      gap=gap.." "
     end
-    if temp==nil then 
+    if temp=="" then 
       temp="" 
     else 
       temp=string.gsub(temp, "\r", "")
@@ -2439,11 +2439,11 @@ function ultraschall.GetPodcastEpisode_MetaDataEntry()
 
   for i=1, #Tags do
     local retval, temp = ultraschall.GetSetPodcastEpisode_Attributes(false, Tags[i], "", "")
-        gap=""
+    local gap=""
     for a=0, Tags[i]:len() do
      gap=gap.." "
     end
-    if temp==nil then 
+    if temp=="" then 
       temp="" 
     else 
       temp=string.gsub(temp, "\r", "")
@@ -2495,11 +2495,11 @@ function ultraschall.GetPodcast_MetaDataEntry()
 
   for i=1, #Tags do
     local retval, temp = ultraschall.GetSetPodcast_Attributes(false, Tags[i], "", "")
-    gap=""
+    local gap=""
     for a=0, Tags[i]:len() do
      gap=gap.." "
     end
-    if temp==nil then 
+    if temp=="" then 
       temp="" 
     else 
       temp=string.gsub(temp, "\r", "")
@@ -3420,4 +3420,61 @@ function ultraschall.MarkerMenu_Debug(messages)
   end
   
   return true
+end
+
+
+function ultraschall.RenumerateNormalMarkers()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RenumerateNormalMarkers</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.RenumerateNormalMarkers()</functioncall>
+  <description>
+    renumerates the shown number of normal markers
+  </description>
+  <chapter_context>
+    Markers
+    Normal Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, renumerate, normal markers</tags>
+</US_DocBloc>
+]]
+  for i=1, ultraschall.CountNormalMarkers() do
+    local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(i)
+    ultraschall.SetNormalMarker(i, position, i, markertitle)
+  end
+end
+
+function ultraschall.RenumerateShownoteMarkers()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RenumerateShownoteMarkers</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.RenumerateShownoteMarkers()</functioncall>
+  <description>
+    renumerates the shown number of normal markers
+  </description>
+  <chapter_context>
+    Markers
+    Normal Markers
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, renumerate, shownote markers</tags>
+</US_DocBloc>
+]]
+  for i=1, ultraschall.CountShownoteMarkers() do
+    local retval, marker_index, pos, name, shownnumber, guid = ultraschall.EnumerateShownoteMarkers(i)
+    ultraschall.SetShownoteMarker(i, pos, name, i)
+  end
 end
