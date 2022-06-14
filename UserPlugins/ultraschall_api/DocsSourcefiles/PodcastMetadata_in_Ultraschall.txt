@@ -180,9 +180,14 @@ wird die dazugehörige Action aufgerufen.
 Wenn jetzt die passende Action aufgerufen wird, so möchtet Ihr sicherlich auch wissen, welcher Marker denn gerechtsklicked wurde.
 Dazu nutzt Ihr in der aufgerufenen Action den folgenden Code, um z.B. an den ShownoteMarker-Index zu kommen:  
 
-    marker_index, guid=ultraschall.GetTemporaryMarker() -- get the temporary marker, stored by the marker-context-menu  
-    ultraschall.StoreTemporaryMarker(-1)                -- remove temporary marker, to prevent accidental messing around with it in the future  
-    shownote_index = ultraschall.GetShownoteMarkerIDFromGuid(guid) -- get the shownote-index of the marker(-1 if it is not a shownote for some reason)  
+    -- get the temporary marker, stored by the marker-context-menu  
+    marker_index, guid=ultraschall.GetTemporaryMarker()
+    
+    -- remove temporary marker, to prevent accidental messing around with it in the future  
+    ultraschall.StoreTemporaryMarker(-1)
+    
+    -- get the shownote-index of the marker(-1 if it is not a shownote for some reason)  
+    shownote_index = ultraschall.GetShownoteMarkerIDFromGuid(guid)
 
 Danach könnt Ihr alle Shownote-related Funktionen auf shownote\_index anwenden.  
 Das gleiche Prinzip gilt auch für Kapitelmarken, nur dass Ihr dann GetNormalMarkerIDFromGuid anstelle von GetShownoteMarkerIDFromGuid verwendet.  

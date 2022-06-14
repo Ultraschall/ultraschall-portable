@@ -1,5 +1,10 @@
--- Meo Mespotine - 20. February 2020
+-- Meo-Ada Mespotine - 20. February 2020
 -- Add time-markers, and display the offset but not as project-time, but as time in 24-hour format
+
+-- changelog:
+-- 15th of June 2022 - sets now toggle-state to on, when started and off when stopped
+--                   - remembers window position and size
+--                   - remembers dockstate
 A,B,C,D=reaper.get_action_context()
 
 retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
@@ -12,7 +17,18 @@ else
   scale=1
 end
 
-gfx.init("Duration since last timemarker", 286*scale, 95*scale, 0, 900, 0)
+x_pos=tonumber(reaper.GetExtState("ultraschall_ShowTimeCode", "win_x-pos"))
+y_pos=tonumber(reaper.GetExtState("ultraschall_ShowTimeCode", "win_y-pos"))
+width=tonumber(reaper.GetExtState("ultraschall_ShowTimeCode", "win_width"))
+height=tonumber(reaper.GetExtState("ultraschall_ShowTimeCode", "win_height"))
+win_dockstate=tonumber(reaper.GetExtState("ultraschall_ShowTimeCode", "win_dockstate"))
+if x_pos==nil then x_pos=900 end
+if y_pos==nil then y_pos=0 end
+if width==nil then width=286 end
+if height==nil then height=95 end
+if win_dockstate==nil then win_dockstate=0 end
+
+gfx.init("Duration since last timemarker", width*scale, height*scale, win_dockstate, x_pos, y_pos)
 
 if reaper.GetOS():match("Other")~=nil then 
   gfx.setfont(1,"Arial",100,0)
@@ -154,6 +170,20 @@ end
 
 Klumpel=0
 
+function atexit()
+  _,_,sec,cid=reaper.get_action_context()
+  reaper.SetToggleCommandState(sec, cid, 0)
+  Window_state={gfx.dock(-1, 0, 0, 0, 0)}
+  reaper.SetExtState("ultraschall_ShowTimeCode", "win_x-pos", Window_state[2], true)
+  reaper.SetExtState("ultraschall_ShowTimeCode", "win_y-pos", Window_state[3], true)
+  reaper.SetExtState("ultraschall_ShowTimeCode", "win_width", Window_state[4], true)
+  reaper.SetExtState("ultraschall_ShowTimeCode", "win_height", Window_state[5], true)
+  reaper.SetExtState("ultraschall_ShowTimeCode", "win_dockstate", Window_state[1], true)
+end
+
+  _,_,sec,cid=reaper.get_action_context()
+  reaper.SetToggleCommandState(sec, cid, 1)
+reaper.atexit(atexit)
 main()
 
  

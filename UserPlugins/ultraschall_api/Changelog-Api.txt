@@ -263,7 +263,7 @@ Note: Doesn't fucking work...
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
 - marker-menu-hijack-script: 
-    - functions to add/remove menu-entries?
+    - functions to remove menu-entries?
     - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
 
     
@@ -289,8 +289,17 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
+  - MarkerManagement: MarkerMenu\_GetAvailableTypes - gets the marker- and region-types, that are currently added to the marker-menu
+  - MarkerManagement: MarkerMenu\_GetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_SetEntry\_DefaultMarkers - sets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
+  - MarkerManagement: RenumerateNormalMarkers - renumerates the shown-number of all normal-markers
+  - MarkerManagement: RenumerateShownoteMarkers - renumerates the shown-number of all shownote-markers
   - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
   - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
@@ -331,8 +340,9 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
   - MarkerManagement: GetShownoteMarkerIDFromGuid - did add error-messages to the error-messaging system without needing this -> fixed
   - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
-  - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
+  - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
+  - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
