@@ -17861,6 +17861,8 @@
         <description prog_lang="*">
             Sets/alters an existing project-marker in a given project. Differs from SetProjectMarker2 and SetProjectMarker, that you can set color as well.
             Color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000
+            
+            set color=1&~0x10000000 to reset to default color for markers/regions
         </description>
         <retvals>
             boolean retval - true, setting the marker worked; false, setting the marker didn't work
@@ -17898,6 +17900,8 @@
         <description prog_lang="*">
             Sets/alters an existing project-marker in a given project.
             color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000, flags&1 to clear name
+            
+            set color=1&~0x10000000 to reset to default color for markers/regions
         </description>
         <retvals>
             boolean retval - true, setting the marker worked; false, setting the marker didn't work
@@ -17935,6 +17939,8 @@
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             See [SetProjectMarkerByIndex2](#SetProjectMarkerByIndex2).
+            
+            set color=1&~0x10000000 to reset to default color for markers/regions
         </description>
         <retvals>
             boolean retval - true, setting marker/region was successful; false, setting marker/region was unsuccessful
@@ -17972,6 +17978,8 @@
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc (see [EnumProjectMarkers3](#EnumProjectMarkers3)), rather than representing the displayed marker/region ID number (see [SetProjectMarker3](#SetProjectMarker3)). Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK). , flags&1 to clear name.
+            
+            set color=1&~0x10000000 to reset to default color for markers/regions
         </description>
         <retvals>
             boolean retval - true, setting was successful; false, setting was unsuccessful

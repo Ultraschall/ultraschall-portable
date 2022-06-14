@@ -30311,6 +30311,8 @@ Sets/alters an existing project-marker in a given project.<br>
 <div class="ch">
 Sets/alters an existing project-marker in a given project. Differs from SetProjectMarker2 and SetProjectMarker, that you can set color as well.<br>
 Color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000<br>
+<br>
+set color=1&~0x10000000 to reset to default color for markers/regions<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -30363,6 +30365,8 @@ Color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000<br>
 <div class="ch">
 Sets/alters an existing project-marker in a given project.<br>
 color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000, flags&1 to clear name<br>
+<br>
+set color=1&~0x10000000 to reset to default color for markers/regions<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -30418,6 +30422,7 @@ color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000, flags&1 to c
 </div><p>
 <div class="ch">
 <p>See <a href="#SetProjectMarkerByIndex2">SetProjectMarkerByIndex2</a>.</p>
+<p>set color=1&amp;~0x10000000 to reset to default color for markers/regions</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -30473,6 +30478,7 @@ color should be 0 to not change, or ColorToNative(r,g,b)|0x1000000, flags&1 to c
 </div><p>
 <div class="ch">
 <p>Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc (see <a href="#EnumProjectMarkers3">EnumProjectMarkers3</a>), rather than representing the displayed marker/region ID number (see <a href="#SetProjectMarker3">SetProjectMarker3</a>). Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK). , flags&amp;1 to clear name.</p>
+<p>set color=1&amp;~0x10000000 to reset to default color for markers/regions</p>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
