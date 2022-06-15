@@ -3539,7 +3539,7 @@ function ultraschall.MarkerMenu_GetEntry(marker_name, is_marker_region, clicktyp
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>string description, string action_command_id = ultraschall.MarkerMenu_GetEntry(string marker_name, boolean is_marker_region, integer clicktype, integer entry_nr)</functioncall>
+  <functioncall>string description, string action_command_id, string additional_data = ultraschall.MarkerMenu_GetEntry(string marker_name, boolean is_marker_region, integer clicktype, integer entry_nr)</functioncall>
   <description>
     gets the description and action-command-id for a menu-entry in the marker-menu, associated with a certain custom marker/region
     
@@ -3548,6 +3548,7 @@ function ultraschall.MarkerMenu_GetEntry(marker_name, is_marker_region, clicktyp
   <retvals>
     string description - the currently set description for this marker-entry
     string action_command_id - the currently set action-command-id for this marker-entry
+    string additional_data - potential additional data, stored with this menu-entry
   </retvals>
   <parameters>
     string marker_name - the name of the custom marker/region, whose menu-entry you want to retrieve
@@ -3604,13 +3605,15 @@ function ultraschall.MarkerMenu_GetEntry(marker_name, is_marker_region, clicktyp
   
   local aid = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_ActionCommandID", "ultraschall_marker_menu.ini")
   local description = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_Description", "ultraschall_marker_menu.ini")  
-  return description, aid
+  local additional_data = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_AdditionalData", "ultraschall_marker_menu.ini")
+  additional_data=string.gsub(additional_data, "\\n", "\n")
+  return description, aid, additional_data
 end
 
 --A,B=ultraschall.MarkerMenu_GetEntry("HuchTuch", true, 0, 1)
 --SLEM()
 
-function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktype, entry_nr, action, description)
+function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktype, entry_nr, action, description, additional_data)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MarkerMenu_SetEntry</slug>
@@ -3620,7 +3623,7 @@ function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktyp
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.MarkerMenu_SetEntry(string marker_name, boolean is_marker_region, integer clicktype, integer entry_nr, string action, string description)</functioncall>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_SetEntry(string marker_name, boolean is_marker_region, integer clicktype, integer entry_nr, string action, string description, string additional_data)</functioncall>
   <description>
     sets the description and action-command-id for a menu-entry in the marker-menu, associated with a certain custom marker/region
     
@@ -3636,6 +3639,7 @@ function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktyp
     integer entry_nr - the entry-number, that you want to set
     string description - the new description for this marker-entry
     string action_command_id - the new action-command-id for this marker-entry
+    string additional_data - additional data, that will be sent by the marker-menu, when clicking this menuentry
   </parameters>
   <linked_to desc="see:">
       Ultraschall:MarkerMenu_Start
@@ -3672,6 +3676,7 @@ function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktyp
   if math.type(entry_nr)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry", "entry_nr", "must be an integer", -4) return false end
   if type(action)~="string" and math.type(action)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry", "action", "must be an integer or a string beginning with _", -5) return false end
   if type(description)~="string" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry", "description", "must be a string", -6) return false end
+  if type(additional_data)~="string" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "description", "must be a string", -7) return false end
   
   local name_of_marker=""
   if is_marker_region==true then
@@ -3682,11 +3687,13 @@ function ultraschall.MarkerMenu_SetEntry(marker_name, is_marker_region, clicktyp
   if clicktype==0 then
     name_of_marker=name_of_marker.."_RightClck"
   else
-    ultraschall.AddErrorMessage("MarkerMenu_SetEntry", "clicktype", "no such clicktype", -7)
+    ultraschall.AddErrorMessage("MarkerMenu_SetEntry", "clicktype", "no such clicktype", -8)
     return false
   end
+  additional_data=string.gsub(additional_data, "\n", "\\n")
   local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_ActionCommandID", action, "ultraschall_marker_menu.ini")
   local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_Description", description, "ultraschall_marker_menu.ini")
+  local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_AdditionalData", additional_data, "ultraschall_marker_menu.ini")
   return retval
 end
 
@@ -3774,7 +3781,7 @@ function ultraschall.MarkerMenu_GetEntry_DefaultMarkers(marker_type, clicktype, 
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.MarkerMenu_GetEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr)</functioncall>
+  <functioncall>string description, string action_command_id, string additional_data = ultraschall.MarkerMenu_GetEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr)</functioncall>
   <description>
     gets the description and action-command-id for a menu-entry in the marker-menu, associated with a certain default marker/region from Ultraschall
     
@@ -3783,6 +3790,7 @@ function ultraschall.MarkerMenu_GetEntry_DefaultMarkers(marker_type, clicktype, 
   <retvals>
     string description - the new description for this marker-entry
     string action_command_id - the new action-command-id for this marker-entry
+    string additional_data - potentially stored additional data with this menuentry
   </retvals>
   <parameters>
     integer marker_type - the marker_type, whose menu-entry you want to get
@@ -3847,12 +3855,14 @@ function ultraschall.MarkerMenu_GetEntry_DefaultMarkers(marker_type, clicktype, 
 
   local aid = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_ActionCommandID", "ultraschall_marker_menu.ini")
   local description = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_Description", "ultraschall_marker_menu.ini")  
-  return description, aid
+  local additional_data = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_AdditionalData", "ultraschall_marker_menu.ini")
+  additional_data=string.gsub(additional_data, "\\n", "\n")
+  return description, aid, additional_data
 end
 
 --A,B=ultraschall.MarkerMenu_GetEntry_DefaultMarkers(0, 0, 1)
 
-function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, entry_nr, action, description)
+function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, entry_nr, action, description, additional_data)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MarkerMenu_SetEntry_DefaultMarkers</slug>
@@ -3862,7 +3872,7 @@ function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, 
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.MarkerMenu_SetEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr, string action, string description)</functioncall>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_SetEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr, string action, string description, string additional_data)</functioncall>
   <description>
     sets the description and action-command-id for a menu-entry in the marker-menu, associated with a certain default marker/region from Ultraschall
     
@@ -3882,6 +3892,7 @@ function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, 
     integer entry_nr - the entry-number, that you want to set
     string description - the new description for this marker-entry
     string action_command_id - the new action-command-id for this marker-entry
+    string additional_data - optional additional data, that will be passed over by the marker-menu, when this menu-entry has been clicked; "", if not needed
   </parameters>
   <linked_to desc="see:">
       Ultraschall:MarkerMenu_Start
@@ -3917,7 +3928,7 @@ function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, 
   if math.type(entry_nr)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "entry_nr", "must be an integer", -3) return false end
   if type(action)~="string" and math.type(action)~="integer" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "action", "must be an integer or a string beginning with _", -4) return false end
   if type(description)~="string" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "description", "must be a string", -5) return false end
-  
+  if type(additional_data)~="string" then ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "description", "must be a string", -6) return false end
   local name_of_marker
   if marker_type==0 then name_of_marker="normal"
   elseif marker_type==1 then name_of_marker="planned"
@@ -3925,18 +3936,20 @@ function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(marker_type, clicktype, 
   elseif marker_type==3 then name_of_marker="shownote"
   elseif marker_type==4 then name_of_marker="region"
   else
-    ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "marker_type", "no such markertype", -6)
+    ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "marker_type", "no such markertype", -7)
     return false
   end
   
   if clicktype==0 then
     name_of_marker=name_of_marker.."_RightClck"
   else
-    ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "clicktype", "no such clicktype", -7)
+    ultraschall.AddErrorMessage("MarkerMenu_SetEntry_DefaultMarkers", "clicktype", "no such clicktype", -8)
     return false
   end
+  additional_data=string.gsub(additional_data, "\n", "\\n")
   local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_ActionCommandID", action, "ultraschall_marker_menu.ini")
   local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_Description", description, "ultraschall_marker_menu.ini")
+  local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..entry_nr.."_AdditionalData", additional_data, "ultraschall_marker_menu.ini")
   return retval
 end
 
@@ -4017,11 +4030,14 @@ function ultraschall.MarkerMenu_RemoveEntry(marker_name, is_marker_region, click
     if aid=="" then 
       local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_ActionCommandID", "", "ultraschall_marker_menu.ini")
       local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_Description", "", "ultraschall_marker_menu.ini")
+      local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_AdditionalData", "", "ultraschall_marker_menu.ini")
       break 
     end
     local description = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..(i+1).."_Description", "ultraschall_marker_menu.ini")  
+    local additional_data= ultraschall.GetUSExternalState(name_of_marker, "Entry_"..(i+1).."_AdditionalData", "ultraschall_marker_menu.ini")
     local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_ActionCommandID", aid, "ultraschall_marker_menu.ini")
     local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_Description", description, "ultraschall_marker_menu.ini")
+    local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_AdditionalData", additional_data, "ultraschall_marker_menu.ini")
   end
   return true
 end
@@ -4111,11 +4127,130 @@ function ultraschall.MarkerMenu_RemoveEntry_DefaultMarkers(marker_type, clicktyp
     if aid=="" then 
       local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_ActionCommandID", "", "ultraschall_marker_menu.ini")
       local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_Description", "", "ultraschall_marker_menu.ini")
+      local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_AdditionalData", "", "ultraschall_marker_menu.ini")
       break 
     end
     local description = ultraschall.GetUSExternalState(name_of_marker, "Entry_"..(i+1).."_Description", "ultraschall_marker_menu.ini")  
+    local additional_data= ultraschall.GetUSExternalState(name_of_marker, "Entry_"..(i+1).."_AdditionalData", "ultraschall_marker_menu.ini")
     local retval = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_ActionCommandID", aid, "ultraschall_marker_menu.ini")
     local retval2 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_Description", description, "ultraschall_marker_menu.ini")
+    local retval3 = ultraschall.SetUSExternalState(name_of_marker, "Entry_"..i.."_AdditionalData", additional_data, "ultraschall_marker_menu.ini")
   end
   return true
+end
+
+function ultraschall.MarkerMenu_GetLastClickedMenuEntry()
+   --[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MarkerMenu_GetLastClickedMenuEntry</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string markermenu_entry, string markermenu_entry_additionaldata, string markermenu_entry_markertype, string markermenu_entry_number = ultraschall.MarkerMenu_GetLastClickedMenuEntry()</functioncall>
+  <description>
+    gets the last clicked entry of the marker-menu
+    
+    the stored data will be deleted after one use!
+  </description>
+  <retvals>
+    string markermenu_entry - the text of the clicked menu-entry
+    string markermenu_entry_additionaldata - additional data, that is associated with this menu-entry
+    string markermenu_entry_markertype - the type of the marker
+    string markermenu_entry_number - the number of the marker-entry
+  </retvals>
+  <linked_to desc="see:">
+      Ultraschall:MarkerMenu_Start
+                  starts the marker-menu-script
+      Ultraschall:MarkerMenu_Stop
+                  stops the marker-menu-script
+      Ultraschall:MarkerMenu_Debug
+                  set marker-menu-script to output debug messages
+      Ultraschall:MarkerMenu_GetEntry
+                  gets a menu-entry for a custom-marker/region
+      Ultraschall:MarkerMenu_GetEntry_DefaultMarkers
+                  gets a menu-entry for a default-marker in Ultraschall
+      Ultraschall:MarkerMenu_RemoveEntry
+                  removes a menu-entry for a custom-marker/region
+      Ultraschall:MarkerMenu_RemoveEntry_DefaultMarkers
+                  removes a menu-entry for a default-marker in Ultraschall
+      Ultraschall:MarkerMenu_SetEntry
+                  sets a menu-entry for a custom-marker/region
+      Ultraschall:MarkerMenu_SetEntry_DefaultMarkers
+                  sets a menu-entry for a default-marker in Ultraschall
+  </linked_to>
+  <chapter_context>
+    Markers
+    Marker Menu
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>markermanagement, get, menu entry, last clicked</tags>
+</US_DocBloc>
+]]
+  MarkerMenu_Entry=reaper.GetExtState("ultraschall_api", "MarkerMenu_Entry")
+  MarkerMenu_Entry_MarkerType=reaper.GetExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType")
+  MarkerMenu_EntryNumber=reaper.GetExtState("ultraschall_api", "MarkerMenu_EntryNumber")
+  MarkerMenu_Entry_AdditionalData=reaper.GetExtState("ultraschall_api", "MarkerMenu_Entry_AdditionalData")
+  
+  reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry", "", false)
+  reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType", "", false)
+  reaper.SetExtState("ultraschall_api", "MarkerMenu_EntryNumber", "", false)
+  reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_AdditionalData", "", false)
+  return MarkerMenu_Entry, MarkerMenu_Entry_AdditionalData, MarkerMenu_Entry_MarkerType, MarkerMenu_EntryNumber
+end
+
+function ultraschall.ResolvePresetName(bounds_name, options_and_formats_name)
+ --[[
+ <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>ResolvePresetName</slug>
+   <requires>
+     Ultraschall=4.7
+     Reaper=6.48
+     Lua=5.3
+   </requires>
+   <functioncall>string Bounds_Name, string Options_and_Format_Name = ultraschall.ResolvePresetName(string Bounds_Name, string Options_and_Format_Name)</functioncall>
+   <description>
+     returns the correct case-sensitive-spelling of a bound/options-renderpreset name.
+     
+     Just pass the name in any kind of case-style and it will find the correct case-sensitive-names.
+    
+     Returns nil in case of an error or if no such name was found
+   </description>
+   <parameters>
+     string Bounds_Name - the name of the Bounds-render-preset you want to query
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to query
+   </parameters>
+   <retvals>
+     string Bounds_Name - the name of the Bounds-render-preset in correct case-sensitivity as stored
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset in correct case-sensitivity as stored
+   </retvals>
+   <chapter_context>
+      Rendering Projects
+      Render Presets
+   </chapter_context>
+   <target_document>US_Api_Functions</target_document>
+   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+   <tags>render management, resolve, render preset, names, format options, bounds, case sensitivity</tags>
+ </US_DocBloc>
+ ]]
+  if bounds_name~=nil and type(bounds_name)~="string" then ultraschall.AddErrorMessage("ResolvePresetName", "bounds_name", "must be a string", -1) return end
+  if options_and_formats_name~=nil and type(options_and_formats_name)~="string" then ultraschall.AddErrorMessage("ResolvePresetName", "options_and_formats_name", "must be a string", -2) return end
+  local bounds_presets, bounds_names, options_format_presets, options_format_names, both_presets, both_names = ultraschall.GetRenderPreset_Names()
+  local foundbounds=nil
+  local found_options=nil
+  
+  if bounds_name~=nil then
+    for i=1, #bounds_names do
+      if bounds_name:lower()==bounds_names[i]:lower() then foundbounds=bounds_names[i] break end
+    end
+  end
+  if options_and_formats_name~=nil then
+    for i=1, #options_format_names do
+      if options_and_formats_name:lower()==options_format_names[i]:lower() then found_options=options_format_names[i] break end
+    end
+  end
+  return foundbounds, found_options
 end

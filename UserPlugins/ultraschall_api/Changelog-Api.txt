@@ -263,9 +263,32 @@ Note: Doesn't fucking work...
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
 - marker-menu-hijack-script: 
-    - functions to remove menu-entries?
-    - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
+    - each marker-type an have its own startup-action, that is able to populate the menu-entries before opening the menu itself
+        stored like this:
+        [edit_RightClck]
+        StartupAction=_ActionCommandID of the startup-action
+        Entry_1_Description=Edit Marker Menuentries
+        Entry_1_ActionCommandID=_Ultraschall_Toggle_Follow
+        Entry_1_AdditionalData=additional data to be stored for this entry (?) 
 
+      
+      That means, that I should add functions, that pass over the entryname to a key-value-store.
+      In the target script, you use 
+      
+        ultraschall.GetTemporaryMarker() 
+      
+      for the marker-number and 
+        
+        string entryname, optional string entry_additonal data = ultraschall.GetTemporaryEntry()
+        
+      for the entry, that was selected. So if the entry is a filename, this will allow you to do things with this filename.
+    
+    - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
+    
+    
+RenderPreset-Names:
+    mach mal case-insensitive. Beim Schreiben ists egal, aber bei Get-Funktionen und bei Delete sollte das keine Rolle spielen.
+    Reaper macht das auch so, dass wenn man TuT1 hat und tUt1 erstellt, wird TuT1 überschrieben.
     
 readd in next version:
   
@@ -292,6 +315,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: MarkerMenu\_GetAvailableTypes - gets the marker- and region-types, that are currently added to the marker-menu
   - MarkerManagement: MarkerMenu\_GetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
   - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
@@ -320,6 +344,7 @@ Has now 1532 functions, with XX new ones
   - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
   - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
   - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes      
+  - Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini
   - UserInterface: GetReaperWindow\_Position - returns the Reaper-window-position and various of its elements  
   
 #### Changes from 4.6 to 4.7  
@@ -345,6 +370,10 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
+  - Rendering: GetRenderPreset\_RenderTable - bounds and options-name are now case-insensitive -> thanx to Malik
+  - Rendering: DeleteRenderPreset\_Bounds - bounds is now case-insensitive -> thnx to Malik
+  - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> thnx to Malik
+  - Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -> thnx to Malik
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
   - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed
 

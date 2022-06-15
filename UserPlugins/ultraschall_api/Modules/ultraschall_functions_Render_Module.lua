@@ -4606,7 +4606,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
-     Ultraschall=4.3
+     Ultraschall=4.7
      Reaper=6.48
      Lua=5.3
    </requires>
@@ -4724,8 +4724,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      Returns nil in case of an error
    </description>
    <parameters>
-     string Bounds_Name - the name of the Bounds-render-preset you want to get
-     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to get
+     string Bounds_Name - the name of the Bounds-render-preset you want to get; case-insensitive
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to get; case-insensitive
    </parameters>
    <retvals>
      table RenderTable - a render-table, which contains all settings from a render-preset
@@ -4783,7 +4783,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     Tail_checkbox2= 
     B:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.*)")
     path=B:match("%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s(.*)")
-    if Presetname2==Bounds_Name then found=true break end
+    if Presetname2:lower()==Bounds_Name:lower() then found=true break end
   end
   
   if found~=true then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Bounds_Name", "no such preset", -3) return end
@@ -4816,7 +4816,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Source_dropdownlist_and_checkboxes2=Source_dropdownlist_and_checkboxes2&4-Various_checkboxes2
     end
     
-    if Presetname==Options_and_Format_Name then found=true break end
+    if Presetname:lower()==Options_and_Format_Name:lower() then found=true break end
   end
   
   --normalization-presets
@@ -4927,7 +4927,7 @@ function ultraschall.DeleteRenderPreset_Bounds(Bounds_Name)
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>DeleteRenderPreset_Bounds</slug>
    <requires>
-     Ultraschall=4.00
+     Ultraschall=4.7
      Reaper=6.02
      Lua=5.3
    </requires>
@@ -4943,7 +4943,7 @@ function ultraschall.DeleteRenderPreset_Bounds(Bounds_Name)
      Returns false in case of an error
    </description>
    <parameters>
-     string Bounds_Name - the name of the Bounds-render-preset you want to get
+     string Bounds_Name - the name of the Bounds-render-preset you want to get; case-insensitive
    </parameters>
    <retvals>
      boolean retval - true, deleting was successful; false, deleting was unsuccessful
@@ -4958,6 +4958,8 @@ function ultraschall.DeleteRenderPreset_Bounds(Bounds_Name)
  </US_DocBloc>
  ]]
   if type(Bounds_Name)~="string" then ultraschall.AddErrorMessage("DeleteRenderPreset_Bounds", "Bounds_Name", "must be a string", -1) return false end
+  local Options_and_Format_Name
+  Bounds_Name, Options_and_Format_Name=ultraschall.ResolvePresetName(Bounds_Name, Options_and_Format_Name)
   local A,B
   local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-render.ini")
   if A==nil then A="" end
@@ -4976,7 +4978,7 @@ function ultraschall.DeleteRenderPreset_FormatOptions(Options_and_Format_Name)
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>DeleteRenderPreset_FormatOptions</slug>
    <requires>
-     Ultraschall=4.2
+     Ultraschall=4.7
      Reaper=6.32
      Lua=5.3
    </requires>
@@ -4992,7 +4994,7 @@ function ultraschall.DeleteRenderPreset_FormatOptions(Options_and_Format_Name)
      Returns false in case of an error
    </description>
    <parameters>
-     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to get
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to get; case-insensitive
    </parameters>
    <retvals>
      boolean retval - true, deleting was successful; false, deleting was unsuccessful
@@ -5007,6 +5009,8 @@ function ultraschall.DeleteRenderPreset_FormatOptions(Options_and_Format_Name)
  </US_DocBloc>
  ]]
   if type(Options_and_Format_Name)~="string" then ultraschall.AddErrorMessage("DeleteRenderPreset_FormatOptions", "Options_and_Format_Name", "must be a string", -1) return false end
+  local Bounds_Name
+  Bounds_Name, Options_and_Format_Name=ultraschall.ResolvePresetName(Bounds_Name, Options_and_Format_Name)
   local A,B
   local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-render.ini")
   if A==nil then A="" end
@@ -5239,7 +5243,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>SetRenderPreset</slug>
    <requires>
-     Ultraschall=4.3
+     Ultraschall=4.7
      Reaper=6.48
      Lua=5.3
    </requires>
@@ -5341,8 +5345,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
      Returns false in case of an error
    </description>
    <parameters>
-     string Bounds_Name - the name of the Bounds-render-preset you want to add; nil, to not add a new Bounds-render-preset
-     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to add; to not add a new Render-Format-Options-render-preset
+     string Bounds_Name - the name of the Bounds-render-preset you want to add; nil, to not add a new Bounds-render-preset; case-insensitive
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to add; to not add a new Render-Format-Options-render-preset; case-insensitive
      table RenderTable - the RenderTable, which holds all information for inclusion into the Render-Preset
    </parameters>
    <retvals>
@@ -5367,6 +5371,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   local A,B, Source, RenderPattern, ProjectSampleRateFXProcessing, String, Bounds, RenderFormatOptions
   local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-render.ini")
   if A==nil then A="" end
+  
+  Bounds_Name, Options_and_Format_Name=ultraschall.ResolvePresetName(Bounds_Name, Options_and_Format_Name)
   
   Source=RenderTable["Source"]
   local MonoMultichannelEmbed=0
