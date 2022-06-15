@@ -7555,7 +7555,7 @@
         <functioncall prog_lang="lua">number retval = reaper.GetMediaTrackInfo_Value(MediaTrack tr, string parmname)</functioncall>
         <functioncall prog_lang="python">Float retval = RPR_GetMediaTrackInfo_Value(MediaTrack tr, String parmname)</functioncall>
         <requires>
-            Reaper=6.54
+            Reaper=6.60
         </requires>
         <description prog_lang="*">
             Get track numerical-value attributes.
@@ -7569,6 +7569,7 @@
             I_RECARM : int * : record armed, 0=not record armed, 1=record armed
             I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.
             I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
+            I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)
             I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
             I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on
             B_AUTO_RECARM : bool * : automatically set record arm when selected (does not immediately affect recarm state, script should set directly if desired)
@@ -7635,6 +7636,7 @@
         </linked_to>
         <tags></tags>
         <changelog>
+            Reaper 6.60 - attribute "I_RECMODE_FLAGS" added
             Reaper 6.54 - attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled
         </changelog>
     </US_DocBloc>
@@ -17534,7 +17536,7 @@
         <functioncall prog_lang="lua">boolean retval = reaper.SetMediaTrackInfo_Value(MediaTrack tr, string parmname, number newvalue)</functioncall>
         <functioncall prog_lang="python">Boolean retval = RPR_SetMediaTrackInfo_Value(MediaTrack tr, String parmname, Float newvalue)</functioncall>
         <requires>
-            Reaper=6.54
+            Reaper=6.60
         </requires>
         <description>
             Set track numerical-value attributes.
@@ -17548,6 +17550,7 @@
             I_RECARM : int * : record armed, 0=not record armed, 1=record armed
             I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.
             I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
+            I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)
             I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
             I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on
             B_AUTO_RECARM : bool * : automatically set record arm when selected (does not immediately affect recarm state, script should set directly if desired)
@@ -17606,6 +17609,7 @@
                    returns a numerical value of a MediaTrack-attribute
         </linked_to>
         <changelog>
+            Reaper 6.60 - attribute "I_RECMODE_FLAGS" added
             Reaper 6.54 - attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled
         </changelog>
         <target_document>Reaper_Api_Documentation</target_document>
@@ -45876,7 +45880,7 @@ mespotine
         <title>GetSetMediaTrackInfo</title>
         <functioncall prog_lang="cpp">void* (*GetSetMediaTrackInfo)(MediaTrack* tr, const char* parmname, void* setNewValue)</functioncall>
         <requires>
-            Reaper=6.54
+            Reaper=6.60
         </requires>
         <description indent="default">
             Gets/Sets MediaTrack-parameters. Works like GetMediaTrackInfo_Value and SetMediaTrackInfo_Value but has more parameters.
@@ -45903,6 +45907,7 @@ mespotine
                  -I_RECARM : int * : record armed, 0=not record armed, 1=record armed
                  -I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.
                  -I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace
+                 -I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)
                  -I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)
                  -I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on
                  -I_AUTOMODE : int * : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch
@@ -45961,6 +45966,7 @@ mespotine
         </chapter_context>
         <tags>cpp, get, set, track, parameters, info</tags>
         <changelog>
+          Reaper 6.60 - attribute I_RECMODE_FLAGS added
         </changelog>
     </US_DocBloc>
 

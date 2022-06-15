@@ -275,8 +275,6 @@ Note: Doesn't fucking work...
         Add a RemoveSubMenuEntries-function, that clears submenus from Entry_X+1_SubMenu=start until the first Entry_X_SubMenu=end.
         
         This makes it a little easier to remove submenus at once to repopulate them with new entries(filelists, etc)
-        
-        Add Startup-Action-functions should be added to.
     
 readd in next version:
   
@@ -436,7 +434,7 @@ Has now 1532 functions, with 32 new ones
   
 #### Changes from 4.5 to 4.6  
   - Clipboard: PutMediaItemsToClipboard\_MediaItemArray - could potentially create an undo-point -> fixed
-  - Docs: Reaper Internals - updated to Reaper 6.58, SWS 2.13.1.0
+  - Docs: Reaper Internals - updated to Reaper 6.61, SWS 2.13.1.0
   - MediaItems: ApplyActionToMediaItem - doesn't create an undo point anymore
   - MediaItems: ApplyActionToMediaItemArray2 - doesn't create an undo point anymore
   - MediaItems: GetAllMediaItemsInTimeSelection - doesn't create an undo point anymore

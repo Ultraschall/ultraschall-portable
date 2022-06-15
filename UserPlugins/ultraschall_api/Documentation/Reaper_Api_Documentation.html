@@ -114,7 +114,7 @@ View: [<span class='aclick'>all</span>]
 End of Header
 --->
 <div class="ch"><p></p>
-<h2>Reaper Reascript-Api-Documentation 6.59<br>"There Will Be REAPER Cushions"</h2><h3>The Functions Reference</h3></div><div class="ch"><p></p>
+<h2>Reaper Reascript-Api-Documentation 6.61<br>""</h2><h3>The Functions Reference</h3></div><div class="ch"><p></p>
 <!-- Clipboard Button -->
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
@@ -9057,7 +9057,7 @@ Stored in reaper_plugin_functions.h<br>
 <hr>
 <a class="anch" id="GetSetMediaTrackInfo"></a>
 <a href="#GetSetMediaTrackInfo"> ^</a> 
-<img width="3%" src="gfx/reaper6.54.png" alt="Reaper version 6.54"><u><b>GetSetMediaTrackInfo</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.60.png" alt="Reaper version 6.60"><u><b>GetSetMediaTrackInfo</b></u><br>			<p>
 <div class="cc">
 <div class="c">C: <code> <i>void*</i> <em>(*GetSetMediaTrackInfo)</em>(<i>MediaTrack*</i>  tr, <i>const</i> <i>char*</i> parmname, <i>void*</i> setNewValue)</code></div>
 </div><p>
@@ -9086,6 +9086,7 @@ Gets/Sets MediaTrack-parameters. Works like GetMediaTrackInfo_Value and SetMedia
 &nbsp;&nbsp;&nbsp;&nbsp; -I_RECARM : int * : record armed, 0=not record armed, 1=record armed<br>
 &nbsp;&nbsp;&nbsp;&nbsp; -I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.<br>
 &nbsp;&nbsp;&nbsp;&nbsp; -I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace<br>
+&nbsp;&nbsp;&nbsp;&nbsp; -I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)<br>
 &nbsp;&nbsp;&nbsp;&nbsp; -I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)<br>
 &nbsp;&nbsp;&nbsp;&nbsp; -I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on<br>
 &nbsp;&nbsp;&nbsp;&nbsp; -I_AUTOMODE : int * : track automation mode, 0=trim/off, 1=read, 2=touch, 3=write, 4=latch<br>
@@ -64365,7 +64366,7 @@ Get the visibility of the master-track in mixer and track-control-panel.<br>
 <hr>
 <a class="anch" id="GetMediaTrackInfo_Value"></a>
 <a href="#GetMediaTrackInfo_Value"> ^</a> 
-<img width="3%" src="gfx/reaper6.54.png" alt="Reaper version 6.54"><u><b>GetMediaTrackInfo_Value</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.60.png" alt="Reaper version 6.60"><u><b>GetMediaTrackInfo_Value</b></u><br>			<p>
 <div class="cc">
 <div class="c">C: <code> <i>double</i> <em>GetMediaTrackInfo_Value</em>(<i>MediaTrack*</i>  tr, <i>const</i> <i>char*</i> parmname)</code></div>
 <div class="e">EEL2: <code> <i>double</i> <em>GetMediaTrackInfo_Value</em>(<i>MediaTrack</i> tr, "parmname")</code></div>
@@ -64384,6 +64385,7 @@ I_FXEN : int * : fx enabled, 0=bypassed, !0=fx active<br>
 I_RECARM : int * : record armed, 0=not record armed, 1=record armed<br>
 I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.<br>
 I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace<br>
+I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)<br>
 I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)<br>
 I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on<br>
 B_AUTO_RECARM : bool * : automatically set record arm when selected (does not immediately affect recarm state, script should set directly if desired)<br>
@@ -65148,7 +65150,7 @@ MCP: &2=0, invisible; &2=1, visible</td></tr>
 <hr>
 <a class="anch" id="SetMediaTrackInfo_Value"></a>
 <a href="#SetMediaTrackInfo_Value"> ^</a> 
-<img width="3%" src="gfx/reaper6.54.png" alt="Reaper version 6.54"><u><b>SetMediaTrackInfo_Value</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.60.png" alt="Reaper version 6.60"><u><b>SetMediaTrackInfo_Value</b></u><br>			<p>
 <div class="cc">
 <div class="c">C: <code> <i>bool</i> <em>SetMediaTrackInfo_Value</em>(<i>MediaTrack*</i>  tr, <i>const</i> <i>char*</i> parmname, <i>double</i> newvalue)</code></div>
 <div class="e">EEL2: <code> <i>bool</i> <em>SetMediaTrackInfo_Value</em>(<i>MediaTrack</i> tr, "parmname", newvalue)</code></div>
@@ -65167,6 +65169,7 @@ I_FXEN : int * : fx enabled, 0=bypassed, !0=fx active<br>
 I_RECARM : int * : record armed, 0=not record armed, 1=record armed<br>
 I_RECINPUT : int * : record input, <0=no input. if 4096 set, input is MIDI and low 5 bits represent channel (0=all, 1-16=only chan), next 6 bits represent physical input (63=all, 62=VKB). If 4096 is not set, low 10 bits (0..1023) are input start channel (ReaRoute/Loopback start at 512). If 2048 is set, input is multichannel input (using track channel count), or if 1024 is set, input is stereo input, otherwise input is mono.<br>
 I_RECMODE : int * : record mode, 0=input, 1=stereo out, 2=none, 3=stereo out w/latency compensation, 4=midi output, 5=mono out, 6=mono out w/ latency compensation, 7=midi overdub, 8=midi replace<br>
+I_RECMODE_FLAGS : int * : record mode flags, &3=output recording mode (0=post fader, 1=pre-fx, 2=post-fx/pre-fader)<br>
 I_RECMON : int * : record monitoring, 0=off, 1=normal, 2=not when playing (tape style)<br>
 I_RECMONITEMS : int * : monitor items while recording, 0=off, 1=on<br>
 B_AUTO_RECARM : bool * : automatically set record arm when selected (does not immediately affect recarm state, script should set directly if desired)<br>
