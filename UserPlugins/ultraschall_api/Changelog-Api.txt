@@ -275,6 +275,8 @@ Note: Doesn't fucking work...
         Add a RemoveSubMenuEntries-function, that clears submenus from Entry_X+1_SubMenu=start until the first Entry_X_SubMenu=end.
         
         This makes it a little easier to remove submenus at once to repopulate them with new entries(filelists, etc)
+        
+        Add Startup-Action-functions should be added to.
     
 readd in next version:
   
@@ -297,6 +299,8 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
+  - MarkerManagement: MarkerMenu\_AddStartupAction - adds a startup-action in the markermenu for a specific custom marker/region
+  - MarkerManagement: MarkerMenu\_AddStartupAction\_DefaultMarkers - adds a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
   - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
