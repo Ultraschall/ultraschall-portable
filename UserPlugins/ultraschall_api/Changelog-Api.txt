@@ -263,32 +263,18 @@ Note: Doesn't fucking work...
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
 - marker-menu-hijack-script: 
-    - each marker-type an have its own startup-action, that is able to populate the menu-entries before opening the menu itself
-        stored like this:
-        [edit_RightClck]
-        StartupAction=_ActionCommandID of the startup-action
-        Entry_1_Description=Edit Marker Menuentries
-        Entry_1_ActionCommandID=_Ultraschall_Toggle_Follow
-        Entry_1_AdditionalData=additional data to be stored for this entry (?) 
-
-      
-      That means, that I should add functions, that pass over the entryname to a key-value-store.
-      In the target script, you use 
-      
-        ultraschall.GetTemporaryMarker() 
-      
-      for the marker-number and 
-        
-        string entryname, optional string entry_additonal data = ultraschall.GetTemporaryEntry()
-        
-      for the entry, that was selected. So if the entry is a filename, this will allow you to do things with this filename.
-    
     - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
-    
-    
-RenderPreset-Names:
-    mach mal case-insensitive. Beim Schreiben ists egal, aber bei Get-Funktionen und bei Delete sollte das keine Rolle spielen.
-    Reaper macht das auch so, dass wenn man TuT1 hat und tUt1 erstellt, wird TuT1 überschrieben.
+        submenus get a new entry called 
+          Entry_X_SubMenu=start
+        that indicates, that this entry shall become the top-menuentry for the submenu
+          Entry_X_SubMenu=end
+        ends a submenu, means, the last entry in the submenu shall get this.
+        
+        Also add checked and greyed out as options.
+        
+        Add a RemoveSubMenuEntries-function, that clears submenus from Entry_X+1_SubMenu=start until the first Entry_X_SubMenu=end.
+        
+        This makes it a little easier to remove submenus at once to repopulate them with new entries(filelists, etc)
     
 readd in next version:
   
@@ -311,11 +297,15 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
+  - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
+  - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
   - MarkerManagement: MarkerMenu\_GetAvailableTypes - gets the marker- and region-types, that are currently added to the marker-menu
   - MarkerManagement: MarkerMenu\_GetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
+  - MarkerManagement: MarkerMenu\_InsertEntry - inserts a new marker-entry into the marker menu for a custom marker/region
+  - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
