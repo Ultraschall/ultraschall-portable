@@ -22,6 +22,8 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
   else
     ShowMarkerType_In_Menu=false
   end
+  local aid = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "StartUpAction", "ultraschall_marker_menu.ini")
+  ultraschall.RunCommand(aid)
   if ShowMarkerType_In_Menu==true then actions[1]=0 end
   local menuentry=""
   local menu2={}
