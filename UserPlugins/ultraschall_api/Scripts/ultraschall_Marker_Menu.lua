@@ -34,19 +34,28 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
     local temp_additional_data = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_AdditionalData", "ultraschall_marker_menu.ini")
     local temp_action = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_ActionCommandID", "ultraschall_marker_menu.ini")    
     local submenu = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_SubMenu", "ultraschall_marker_menu.ini")    
+    local greyed = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_Greyed", "ultraschall_marker_menu.ini")    
+    local checked = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_Checked", "ultraschall_marker_menu.ini")    
     
     if submenu=="start" then submenu=">" skip=true
     elseif submenu=="end" then submenu="<" skip=false
+    elseif temp_description=="" then submenu="" skip=true
     else submenu="" skip=false
     end
+    
+    if greyed=="yes" then greyed="#" else greyed="" end
     --print(submenu)
     
-    if temp_description~="" and temp_action~="" then
-      local checked=""
-      local cmd=reaper.NamedCommandLookup(temp_action)
-      local toggle=reaper.GetToggleCommandState(cmd)
-      if toggle==1 then checked="!" end
-      menuentry=menuentry..submenu..checked..temp_description.."|"
+    if temp_action~="" then
+      local cmd=reaper.NamedCommandLookup(temp_action)      
+      if checked=="" then
+        local toggle=reaper.GetToggleCommandState(cmd)
+        if toggle==1 then checked="!" end
+      else
+        if checked=="yes" then checked="!" else checked="" end
+      end
+
+      menuentry=menuentry..submenu..greyed..checked..temp_description.."|"
       --print(menuentry)
       --print("A"..submenu.."A")
       if skip==false then        
@@ -58,7 +67,7 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
         menu3[#menu3+1]=temp_additional_data
         menu4[#menu4+1]=i
       end
-    else 
+    else
       break
     end
   end
