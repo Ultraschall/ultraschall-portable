@@ -188,11 +188,11 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Settings",0.0, true)
 
 
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
-os = reaper.GetOS()
+Os = reaper.GetOS()
 
 --get the slot of the StudioLink effect.
 
-if string.match(os, "OS") then
+if string.match(Os, "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
@@ -293,6 +293,14 @@ if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value
 end
 
 ultraschall.MarkerMenu_Start()
+
+ultraschall.EventManager_Start()
+
+function CheckMarkerMenu()
+  if reaper.GetExtState("ultraschall_api", "markermenu_started")=="" then return true else return false end
+end
+event_identifier = ultraschall.EventManager_AddEvent("Check If Marker Menu Is Still Running", 0, 0, true, false, CheckMarkerMenu, {"_Ultraschall_Start_MarkerMenu,0"})
+SLEM()
 
 --------------------------
 -- Starte die Ulraclock
