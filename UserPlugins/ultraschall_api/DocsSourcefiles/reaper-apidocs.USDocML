@@ -41160,7 +41160,7 @@ Mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_gfx_showmenu</slug>
         <title>gfx_showmenu</title>
-        <functioncall prog_lang="eel">gfx_showmenu(str)</functioncall>
+        <functioncall prog_lang="eel">gfx_showmenu(menu_string)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -41178,9 +41178,10 @@ Mespotine
             Example:
 
             gfx_showmenu("first item, followed by separator||!second item, checked|>third item which spawns a submenu|#first item in submenu, grayed out|<second and last item in submenu|fourth item in top menu")
+            Note: It skips submenus and separators in the selection-number, so a if menu_string="Entry1||<Entry two|Entry three" will only return 1 for entry1 and 2 for Entry three but nothing for <Entry and ||.
         </description>
         <parameters>
-            str - 
+            menu_string - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>
@@ -44165,26 +44166,34 @@ mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>lua_gfx.showmenu</slug>
         <title>gfx.showmenu</title>
-        <functioncall prog_lang="lua">integer selection = gfx.showmenu(string str)</functioncall>
+        <functioncall prog_lang="lua">integer selection = gfx.showmenu(string menu_string)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
         <description indent="default">
-            Shows a popup menu at gfx.x,gfx.y. str is a list of fields separated by | characters. 
-            Each field represents a menu item. Fields can start with special characters:#, grayed out; !, checked; >, this menu item shows a submenu;>, last item in the current submenu. 
-            An empty field will appear as a separator in the menu. 
+            Shows a popup menu at gfx_x,gfx_y. 
+            str is a list of fields separated by | characters. Each field represents a menu item.
+            Fields can start with special characters:
+
+            # : grayed out
+            ! : checked
+            > : this menu item shows a submenu
+            < : last item in the current submenu
+            
+            An empty field || will appear as a separator in the menu. 
 
             Example: selection = gfx.showmenu("first item, followed by separator||!second item, checked|>third item which spawns a submenu|#first item in submenu, grayed out|>second and last item in submenu|fourth item in top menu")
 
             gfx.showmenu returns 0 if the user selected nothing from the menu, 1 if the first field is selected, etc.
+            Note: It skips submenus and separators in the selection-number, so a if menu_string="Entry1||<Entry two|Entry three" will only return 1 for entry1 and 2 for Entry three but nothing for <Entry and ||.
         </description>
         <retvals>
             integer selection - the menu-entry the user selected, with 1 for the first, 2 for the second, etc; 0, nothing was selected
         </retvals>
         <parameters>
-            string str - a string with the menu-entries; separate the entrynames with a |
-                       -   Each menu-entry can start with special characters that influence the appearance of that entry: 
-                       -   #, item is grayed out; !, item is checked; >, this menu item shows a submenu;<, last item in the current submenu. 
+            string menu_string - a string with the menu-entries; separate the entrynames with a |
+                               -   Each menu-entry can start with special characters that influence the appearance of that entry: 
+                               -   #, item is grayed out; !, item is checked; >, this menu item shows a submenu;<, last item in the current submenu. 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper-apidocs.USDocML</source_document>

@@ -13103,7 +13103,7 @@ Writes a pixel of r,g,b to gfx_x,gfx_y.<br>
 <a href="#eel_gfx_showmenu"> ^</a> 
 <img width="3%" src="gfx/reaper5.62.png" alt="Reaper version 5.62"><u><b>gfx_showmenu</b></u><br>			<p>
 <div class="cc">
-<div class="e">EEL2: <code> <em>gfx_showmenu</em>(str)</code></div>
+<div class="e">EEL2: <code> <em>gfx_showmenu</em>(menu_string)</code></div>
 </div><p>
 <div class="ch">
 Shows a popup menu at gfx_x,gfx_y. <br>
@@ -13119,9 +13119,10 @@ An empty field will appear as a separator in the menu. gfx_showmenu returns 0 if
 Example:<br>
 <br>
 gfx_showmenu("first item, followed by separator||!second item, checked|>third item which spawns a submenu|#first item in submenu, grayed out|<second and last item in submenu|fourth item in top menu")<br>
+Note: It skips submenus and separators in the selection-number, so a if menu_string="Entry1||<Entry two|Entry three" will only return 1 for entry1 and 2 for Entry three but nothing for <Entry and ||.<br>
 </div><br>          <u>Parameters:</u>
 <table class="ch">
-<tr><td class="pr">str</td></tr>
+<tr><td class="pr">menu_string</td></tr>
 <tr><td class="ch2"></td></tr>
 </table>
 <br>
@@ -26061,16 +26062,24 @@ Writes a pixel of r,g,b to gfx.x,gfx.y.<br>
 <a href="#lua_gfx.showmenu"> ^</a> 
 <img width="3%" src="gfx/reaper5.62.png" alt="Reaper version 5.62"><u><b>gfx.showmenu</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>integer</i> selection = <em>gfx.showmenu</em>(<i>string</i> str)</code></div>
+<div class="l">Lua: <code> <i>integer</i> selection = <em>gfx.showmenu</em>(<i>string</i> menu_string)</code></div>
 </div><p>
 <div class="ch">
-Shows a popup menu at gfx.x,gfx.y. str is a list of fields separated by | characters. <br>
-Each field represents a menu item. Fields can start with special characters:#, grayed out; !, checked; >, this menu item shows a submenu;>, last item in the current submenu. <br>
-An empty field will appear as a separator in the menu. <br>
+Shows a popup menu at gfx_x,gfx_y. <br>
+str is a list of fields separated by | characters. Each field represents a menu item.<br>
+Fields can start with special characters:<br>
+<br>
+# : grayed out<br>
+! : checked<br>
+> : this menu item shows a submenu<br>
+< : last item in the current submenu<br>
+<br>
+An empty field || will appear as a separator in the menu. <br>
 <br>
 Example: selection = gfx.showmenu("first item, followed by separator||!second item, checked|>third item which spawns a submenu|#first item in submenu, grayed out|>second and last item in submenu|fourth item in top menu")<br>
 <br>
 gfx.showmenu returns 0 if the user selected nothing from the menu, 1 if the first field is selected, etc.<br>
+Note: It skips submenus and separators in the selection-number, so a if menu_string="Entry1||<Entry two|Entry three" will only return 1 for entry1 and 2 for Entry three but nothing for <Entry and ||.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -26080,7 +26089,7 @@ gfx.showmenu returns 0 if the user selected nothing from the menu, 1 if the firs
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr><td class="pr"><i>string</i> str</td></tr>
+<tr><td class="pr"><i>string</i> menu_string</td></tr>
 <tr><td class="ch2">a string with the menu-entries; separate the entrynames with a |<br/>
 &nbsp;&nbsp;Each menu-entry can start with special characters that influence the appearance of that entry: <br/>
 &nbsp;&nbsp;#, item is grayed out; !, item is checked; >, this menu item shows a submenu;<, last item in the current submenu. </td></tr>
