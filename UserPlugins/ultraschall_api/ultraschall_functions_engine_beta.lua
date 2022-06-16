@@ -4093,6 +4093,8 @@ function ultraschall.MarkerMenu_GetLastClickedMenuEntry()
   <description>
     gets the last clicked entry of the marker-menu
     
+    the markermenu_entry_number is according to the entry-number in the ultraschall_marker_menu.ini
+    
     the stored data will be deleted after one use!
   </description>
   <retvals>
@@ -4749,3 +4751,69 @@ function ultraschall.MarkerMenu_AddStartupAction_DefaultMarkers(marker_type, cli
   local retval = ultraschall.SetUSExternalState(name_of_marker, "StartUpAction", action, "ultraschall_marker_menu.ini")
   return true
 end
+
+
+function ultraschall.GetNextClosestItemStart(trackstring, time_position)
+  if time_position>reaper.GetProjectLength(0) then return -1 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(time_position, reaper.GetProjectLength(), trackstring, true)
+  if count==0 then return -1 end
+  local pos=reaper.GetProjectLength(0)
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")
+    if pos2<pos then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  if pos==reaper.GetProjectLength(0)+1 then pos=-1 end
+  return pos, found_item
+end
+
+--A, B=ultraschall.GetNextClosestItemStart("1,2,3,4,5,6", 0)
+
+function ultraschall.GetPreviousClosestItemStart(trackstring, time_position)
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, time_position, trackstring, false)
+  if count==0 then return -1 end
+  local pos=-1
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")
+    if pos2>pos and pos2<=time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+
+  return pos, found_item
+end
+
+--A, B=ultraschall.GetPreviousClosestItemStart("1,2,3,4,5,6", 1)
+
+-- not working, when item is before position
+
+function ultraschall.GetPreviousClosestItemEnd(trackstring, time_position)
+  if time_position>reaper.GetProjectLength(0) then return -1 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, true)
+  if count==0 then return -1 end
+  local pos=-1
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")+reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_LENGTH")
+    if pos2>pos and pos2<=time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  return pos, found_item
+end
+
+--A=ultraschall.GetPreviousClosestItemEnd("1,2,3,4,5,6,7,8", 274)
+
+function ultraschall.GetNextClosestItemEnd(trackstring, time_position)
+  if time_position>reaper.GetProjectLength(0) then return -1 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, true)
+  if count==0 then return -1 end
+  local pos=reaper.GetProjectLength(0)+1
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")+reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_LENGTH")
+    if pos2<pos and pos2>=time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  if pos==reaper.GetProjectLength(0)+1 then pos=-1 end
+  return pos, found_item
+end
+
+
+--A,B = ultraschall.GetNextClosestItemEnd("1,2,3,4,5", 260)

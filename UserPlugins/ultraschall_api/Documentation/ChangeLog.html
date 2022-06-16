@@ -101,7 +101,7 @@ Bla</li>
 <li>DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -&gt; fixed</li>
 <li>DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed</li>
 <li>DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -&gt; fixed</li>
-<li>Docs: Reaper Internals - updated to Reaper 6.59 and ReaImGui 0.6.2</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.61 and ReaImGui 0.6.2</li>
 <li>Docs: render-strings - updated to Reaper 6.59(includes wmf now)</li>
 <li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated</li>
 <li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
@@ -187,14 +187,14 @@ More comfortable functions for getting Transport, Arrange and TCP.</p></li>
 <h4>Changes from 4.5 to 4.6</h4>
 <ul>
 <li>Clipboard: PutMediaItemsToClipboard_MediaItemArray - could potentially create an undo-point -&gt; fixed</li>
-<li>Docs: Reaper Internals - updated to Reaper 6.61, SWS 2.13.1.0</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.58, SWS 2.13.1.0</li>
 <li>MediaItems: ApplyActionToMediaItem - doesn't create an undo point anymore</li>
 <li>MediaItems: ApplyActionToMediaItemArray2 - doesn't create an undo point anymore</li>
 <li>MediaItems: GetAllMediaItemsInTimeSelection - doesn't create an undo point anymore</li>
 <li>MediaItems: SetMediaItemsSelected_TimeSelection - doesn't create an undo point anymore; has now parameter for only items that are completely inside the time-selection<br />
 </li>
-<li>RazorEdit: RazorEdit_Remove_Envelope - accidentally removed items on first track -&gt; fixed</li>
-<li>RazorEdit: RazorEdit_Remove_Track - accidentally removed items on first track -&gt; fixed</li>
+<li>RazorEdit: RazorEdit_Remove_Envelope - accidentally removed razoredit-areas on first track, even if not wanted -&gt; fixed</li>
+<li>RazorEdit: RazorEdit_Remove_Track - accidentally removed razoredit-areas on first track, even if not wanted -&gt; fixed</li>
 <li>Rendering: AddSelectedItemsToRenderQueue - had inner variable exposed; could potentially create undo-points -&gt; fixed</li>
 </ul>
 <hr />

@@ -28,19 +28,36 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
   local menuentry=""
   local menu2={}
   local menu3={}
+  local menu4={}
   for i=1, 1024 do
     local temp_description = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_Description", "ultraschall_marker_menu.ini")
     local temp_additional_data = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_AdditionalData", "ultraschall_marker_menu.ini")
     local temp_action = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_ActionCommandID", "ultraschall_marker_menu.ini")    
-    menu2[i]=temp_description
-    menu3[i]=temp_additional_data
+    local submenu = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "Entry_"..i.."_SubMenu", "ultraschall_marker_menu.ini")    
+    
+    if submenu=="start" then submenu=">" skip=true
+    elseif submenu=="end" then submenu="<" skip=false
+    else submenu="" skip=false
+    end
+    --print(submenu)
+    
     if temp_description~="" and temp_action~="" then
       local checked=""
       local cmd=reaper.NamedCommandLookup(temp_action)
       local toggle=reaper.GetToggleCommandState(cmd)
       if toggle==1 then checked="!" end
-      menuentry=menuentry..checked..temp_description.."|"
-      actions[#actions+1]=cmd
+      menuentry=menuentry..submenu..checked..temp_description.."|"
+      --print(menuentry)
+      --print("A"..submenu.."A")
+      if skip==false then        
+        actions[#actions+1]=cmd
+        menu2[#menu2+1]=temp_description
+        if menu2[#menu2]:sub(1,1)=="<" then 
+          menu2[#menu2]=menu2[#menu2]:sub(2,-1) 
+        end
+        menu3[#menu3+1]=temp_additional_data
+        menu4[#menu4+1]=i
+      end
     else 
       break
     end
@@ -49,7 +66,9 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
     print(Markernr..":\""..MarkerType.."_"..clicktype.."\"")
   end
   if menuentry=="" then return nil end
-  return menuentry:sub(1,-2), actions, menu2, menu3
+--  table.remove(menu2, 1)
+--  table.remove(menu3, 1)
+  return menuentry:sub(1,-2), actions, menu2, menu3, menu4
 end
 
 
@@ -82,18 +101,21 @@ function main()
       Marker2=tonumber(Marker2:match("(.-)\n"))
       globalMarker2=Marker2
       MarkerType, MarkerTypeIndex=ultraschall.GetMarkerType(Marker2)
-      MarkerMenu, MarkerActions, MenuEntries, MenuEntries_Data=GetMarkerMenu(MarkerType, MouseState, Marker2)
+      MarkerMenu, MarkerActions, MenuEntries, MenuEntries_Data, MenuEntry_Nr=GetMarkerMenu(MarkerType, MouseState, Marker2)
       if MarkerMenu~=nil then        
         if ShowMarkerType_In_Menu==false then
           Markername=""
         else
           Markername="#\""..MarkerType.."\" - MarkerNr:"..Marker2.." Guid:"..ultraschall.GetGuidFromMarkerID(Marker2+1).."|"
         end
-        Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)
+        --for i=1, #MenuEntries do
+          --print("A"..tostring(MenuEntries[i]).."A")
+        --end
+        Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)        
         if Retval~=-1 then 
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry", MenuEntries[Retval], false)
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType", MarkerType, false)
-          reaper.SetExtState("ultraschall_api", "MarkerMenu_EntryNumber", Retval, false)
+          reaper.SetExtState("ultraschall_api", "MarkerMenu_EntryNumber", MenuEntry_Nr[Retval], false)
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_AdditionalData", MenuEntries_Data[Retval], false)
           ultraschall.StoreTemporaryMarker(Marker2) 
         end

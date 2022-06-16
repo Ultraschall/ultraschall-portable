@@ -275,7 +275,11 @@ Note: Doesn't fucking work...
         Add a RemoveSubMenuEntries-function, that clears submenus from Entry_X+1_SubMenu=start until the first Entry_X_SubMenu=end.
         
         This makes it a little easier to remove submenus at once to repopulate them with new entries(filelists, etc)
-    
+   
+     - prevent # and < > in the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
+       including the Entry_X_SubMenu=start|end thing.
+
+  
 readd in next version:
   
 
@@ -349,7 +353,7 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -> fixed
   - DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed
   - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
-  - Docs: Reaper Internals - updated to Reaper 6.59 and ReaImGui 0.6.2
+  - Docs: Reaper Internals - updated to Reaper 6.61 and ReaImGui 0.6.2
   - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
@@ -434,13 +438,13 @@ Has now 1532 functions, with 32 new ones
   
 #### Changes from 4.5 to 4.6  
   - Clipboard: PutMediaItemsToClipboard\_MediaItemArray - could potentially create an undo-point -> fixed
-  - Docs: Reaper Internals - updated to Reaper 6.61, SWS 2.13.1.0
+  - Docs: Reaper Internals - updated to Reaper 6.58, SWS 2.13.1.0
   - MediaItems: ApplyActionToMediaItem - doesn't create an undo point anymore
   - MediaItems: ApplyActionToMediaItemArray2 - doesn't create an undo point anymore
   - MediaItems: GetAllMediaItemsInTimeSelection - doesn't create an undo point anymore
   - MediaItems: SetMediaItemsSelected\_TimeSelection - doesn't create an undo point anymore; has now parameter for only items that are completely inside the time-selection  
-  - RazorEdit: RazorEdit\_Remove\_Envelope - accidentally removed items on first track -> fixed
-  - RazorEdit: RazorEdit\_Remove\_Track - accidentally removed items on first track -> fixed
+  - RazorEdit: RazorEdit\_Remove\_Envelope - accidentally removed razoredit-areas on first track, even if not wanted -> fixed
+  - RazorEdit: RazorEdit\_Remove\_Track - accidentally removed razoredit-areas on first track, even if not wanted -> fixed
   - Rendering: AddSelectedItemsToRenderQueue - had inner variable exposed; could potentially create undo-points -> fixed
   
   
