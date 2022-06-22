@@ -1,6 +1,6 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-ultraschall.StoreTemporaryMarker(1)
+--ultraschall.StoreTemporaryMarker(1)
 --SLEM()
 -- get chapter-marker-id and remove the temporary marker
 
@@ -10,32 +10,24 @@ if marker_id==-1 then return end
 
 index = ultraschall.GetNormalMarkerIDFromGuid(guid)
 if index==-1 then
-  index = ultraschall.GetCustomMarkerIDFromGuid("Planned", guid)
+  index, markertype = ultraschall.GetCustomMarkerIDFromGuid(guid)
+  if markertype~="Planned" then return else planned=true end
+  index=index+1
 end
---index=1
---[[
-AAA=ultraschall.CountNormalMarkers()
-retnumber, shown_number, pos, name, guid = ultraschall.EnumerateNormalMarkers(0)
-retnumber2, shown_number2, pos, name2, guid2 = ultraschall.EnumerateNormalMarkers(1)
-retnumber3, shown_number3, pos, name3, guid3 = ultraschall.EnumerateNormalMarkers(2)
-retnumber4, shown_number4, pos, name4, guid4 = ultraschall.EnumerateNormalMarkers(3)
-retnumber5, shown_number5, pos, name5, guid5 = ultraschall.EnumerateNormalMarkers(4)
-if lol==nil then return end
---]]
---[[           ]]
---[[ Dialog 1: ]]
---[[           ]]
 
---print2(1)
-retnumber, shown_number, pos, name, guid = ultraschall.EnumerateNormalMarkers(index)
---retval, marker_index, pos, name, shown_number, guid = 
-retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "")
-retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_descriptive_tags", "")
-retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_is_advertisement", "")
-retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_content_notification_tags", "")
-retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_spoiler_alert", "")
-retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url", "")
-retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url_description", "")
+if planned==nil then 
+  retnumber, shown_number, pos, name, guid = ultraschall.EnumerateNormalMarkers(index) 
+else
+  retval, marker_index, pos, name, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index-1)
+end
+
+retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "", planned)
+retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_descriptive_tags", "", planned)
+retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_is_advertisement", "", planned)
+retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_content_notification_tags", "", planned)
+retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_spoiler_alert", "", planned)
+retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url", "", planned)
+retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url_description", "", planned)
 
 --print2(2)
 retval, retvals_csv = reaper.GetUserInputs("Chapter-Attributes", 8, "Name,Description,Description Tags,Is Advertisement(empty if not),Content Notification Tags,Spoiler Alert(yes or leave empty),URL,URL-Description,separator=\b,extrawidth=240", 
@@ -44,14 +36,18 @@ if retval==false then return end
 count, entries = ultraschall.CSV2IndividualLinesAsArray(retvals_csv, "\b")
 
 --print2(3)
-ultraschall.SetNormalMarker(index, pos, shown_number, entries[1])
-retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_description", entries[2])
-retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_descriptive_tags", entries[3])
-retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_is_advertisement", entries[4])
-retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_content_notification_tags", entries[5])
-retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_spoiler_alert", entries[6])
-retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_url", entries[7])
-retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_url_description", entries[8])
+if planned==nil then 
+  ultraschall.SetNormalMarker(index, pos, shown_number, entries[1])
+else
+  ultraschall.SetCustomMarker("Planned", index-1, pos, entries[1], shown_number, color)
+end
+retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_description", entries[2], planned)
+retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_descriptive_tags", entries[3], planned)
+retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_is_advertisement", entries[4], planned)
+retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_content_notification_tags", entries[5], planned)
+retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_spoiler_alert", entries[6], planned)
+retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_url", entries[7], planned)
+retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_url_description", entries[8], planned)
 --print2(4)
 
 --[[
