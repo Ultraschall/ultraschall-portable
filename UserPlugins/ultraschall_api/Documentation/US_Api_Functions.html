@@ -25553,13 +25553,14 @@ returns false in case of an error<br>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> idx</td></tr>
-<tr><td class="ch2">the index of the chapter-marker, whose attribute you want to get</td></tr>
+<tr><td class="ch2">the index of the chapter-marker, whose attribute you want to get; 1-based</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>string</i> attributename</td></tr>
 <tr><td class="ch2">the attributename you want to get/set<br/>
 supported attributes are:<br/>
-"chap_url",<br/>
+"chap_url" - the url for this chapter(check first, if a shownote is not suited better for the task!)<br/>
+"chap_url_description" - a description for this url<br/>
 "chap_description" - a description of the content of this chapter<br/>
 "chap_is_advertisement" - yes, if this chapter is an ad; "", to unset it<br/>
 "chap_image" - the content of the chapter-image, either png or jpg<br/>
@@ -25569,6 +25570,7 @@ supported attributes are:<br/>
 "chap_image_url" - the url that links to the chapter-image<br/>
 "chap_descriptive_tags" - some tags, that describe the chapter-content, must separated by newlines<br/>
 "chap_content_notification_tags" - some tags, that warn of specific content; must be separated by newlines!<br/>
+"chap_spoiler_alert" - "yes", if spoiler; "", if no spoiler<br/>
 "chap_next_chapter_numbers" - decide, which chapter could be the next after this one; <br/>
 format is: "chap_number:description\nchap_number:description\n"<br/>
 chap_number is the number of the chapter in timeline-order<br/>

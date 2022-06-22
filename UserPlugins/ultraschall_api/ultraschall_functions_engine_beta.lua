@@ -1291,16 +1291,17 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
     end
   end
   
-  if found==false then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "attributename", "attributename not supported", -7) return false end
+  if found==false then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "attributename", "attributename "..tostring(attributename).." not supported", -7) return false end
   
   local A,B,Retval
   A={ultraschall.EnumerateShownoteMarkers(idx)}
   if A[1]==false then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "idx", "no such shownote-marker", -5) return false end
-
+  
   if is_set==true then
+    local content2
     if attributename=="image_content" and content:sub(1,6)~="ÿØÿ" and content:sub(2,4)~="PNG" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "image_content: only png and jpg are supported", -6) return false end    
-    if attributename=="shwn_event_ics_data" then content=ultraschall.Base64_Encoder(content) end
-    Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content)
+    if attributename=="shwn_event_ics_data" then content2=ultraschall.Base64_Encoder(content) end
+    Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
     if Retval==-1 then Retval=false else Retval=true end
     B=content    
   else
@@ -1725,20 +1726,22 @@ function ultraschall.GetPodcastShownote_MetaDataEntry(shownote_idx, shownote_ind
   
   return true, Shownote_String
 end
-
+ 
 ultraschall.ChapterAttributes={
               "chap_description",
               "chap_url",
+              "chap_url_description",              
+              "chap_descriptive_tags",
+              "chap_is_advertisement",
+              "chap_content_notification_tags",
+              "chap_spoiler_alert",
+              "chap_next_chapter_numbers",
+              "chap_previous_chapter_numbers",
               "chap_image",
               "chap_image_description",
               "chap_image_license",
               "chap_image_origin",
-              "chap_image_url",
-              "chap_descriptive_tags",
-              "chap_is_advertisement",
-              "chap_content_notification_tags",
-              "chap_next_chapter_numbers",
-              "chap_previous_chapter_numbers",
+              "chap_image_url"
               }
 
 
@@ -1759,10 +1762,11 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   </description>
   <parameters>
     boolean is_set - true, set the attribute; false, retrieve the current content
-    integer idx - the index of the chapter-marker, whose attribute you want to get
+    integer idx - the index of the chapter-marker, whose attribute you want to get; 1-based
     string attributename - the attributename you want to get/set
                          - supported attributes are:
-                         - "chap_url",
+                         - "chap_url" - the url for this chapter(check first, if a shownote is not suited better for the task!)
+                         - "chap_url_description" - a description for this url
                          - "chap_description" - a description of the content of this chapter
                          - "chap_is_advertisement" - yes, if this chapter is an ad; "", to unset it
                          - "chap_image" - the content of the chapter-image, either png or jpg
@@ -1772,6 +1776,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
                          - "chap_image_url" - the url that links to the chapter-image
                          - "chap_descriptive_tags" - some tags, that describe the chapter-content, must separated by newlines
                          - "chap_content_notification_tags" - some tags, that warn of specific content; must be separated by newlines!
+                         - "chap_spoiler_alert" - "yes", if spoiler; "", if no spoiler
                          - "chap_next_chapter_numbers" - decide, which chapter could be the next after this one; 
                                                        - format is: "chap_number:description\nchap_number:description\n"
                                                        - chap_number is the number of the chapter in timeline-order
@@ -1826,6 +1831,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     idx=idx+1
   end
     
+  if idx<1 then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such chapter-marker", -8) return false end
   
   if is_set==false then
     local B=ultraschall.GetMarkerExtState(idx, attributename)  
