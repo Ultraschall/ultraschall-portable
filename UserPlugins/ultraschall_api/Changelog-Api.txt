@@ -300,8 +300,6 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
-  - MarkerManagement: MarkerMenu\_AddStartupAction - adds a startup-action in the markermenu for a specific custom marker/region
-  - MarkerManagement: MarkerMenu\_AddStartupAction\_DefaultMarkers - adds a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
   - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
@@ -313,8 +311,12 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_RemoveSubMenu - removes a submenu from the marker-menu of a specific custom-marker/region
+  - MarkerManagement: MarkerMenu\_RemoveSubMenu\_DefaultMarkers - removes a submenu from the marker-menu of a specific default marker/region
   - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_SetEntry\_DefaultMarkers - sets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_SetStartupAction - sets a startup-action in the markermenu for a specific custom marker/region
+  - MarkerManagement: MarkerMenu\_SetStartupAction\_DefaultMarkers - sets a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MarkerManagement: RenumerateNormalMarkers - renumerates the shown-number of all normal-markers

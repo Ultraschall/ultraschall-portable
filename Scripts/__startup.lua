@@ -300,7 +300,7 @@ function CheckMarkerMenu()
   if reaper.GetExtState("ultraschall_api", "markermenu_started")=="" then return true else return false end
 end
 event_identifier = ultraschall.EventManager_AddEvent("Check If Marker Menu Is Still Running", 0, 0, true, false, CheckMarkerMenu, {"_Ultraschall_Start_MarkerMenu,0"})
-SLEM()
+
 
 --------------------------
 -- Starte die Ulraclock
