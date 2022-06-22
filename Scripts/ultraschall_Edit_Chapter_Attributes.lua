@@ -1,6 +1,6 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
---ultraschall.StoreTemporaryMarker(3)
+ultraschall.StoreTemporaryMarker(1)
 --SLEM()
 -- get chapter-marker-id and remove the temporary marker
 
@@ -9,7 +9,9 @@ ultraschall.StoreTemporaryMarker(-1)
 if marker_id==-1 then return end
 
 index = ultraschall.GetNormalMarkerIDFromGuid(guid)
-
+if index==-1 then
+  index = ultraschall.GetCustomMarkerIDFromGuid("Planned", guid)
+end
 --index=1
 --[[
 AAA=ultraschall.CountNormalMarkers()

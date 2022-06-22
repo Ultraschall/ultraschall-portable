@@ -5238,3 +5238,191 @@ function ultraschall.MarkerMenu_RemoveSubMenu_DefaultMarkers(marker_type, clickt
   end
   return true
 end
+
+function ultraschall.GetGuidFromCustomMarkerID(markername, idx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetGuidFromCustomMarkerID</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string guid = ultraschall.GetGuidFromCustomMarkerID(string markername, integer index)</functioncall>
+  <description>
+    Gets the corresponding guid of a custom marker with a specific index 
+    
+    The index is for _custom:-markers only
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the custom marker with a specific index
+  </retvals>
+  <parameters>
+    string markername - the name of the custom-marker
+    integer index - the index of the custom marker, whose guid you want to retrieve; 0-based
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom marker, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetGuidFromCustomMarkerID", "idx", "must be an integer", -1) return end
+  if type(markername)~="string" then ultraschall.AddErrorMessage("GetGuidFromCustomMarkerID", "markername", "must be a string", -2) return end
+
+  local retval, marker_index, pos, name, shown_number, color, guid2 = ultraschall.EnumerateCustomMarkers(markername, idx)
+  return guid2
+end
+
+--A={ultraschall.GetGuidFromCustomMarkerID("Planned", 0)}
+
+--A=ultraschall.GetGuidFromShownoteMarkerID(1)
+--B={ultraschall.EnumerateShownoteMarkers(1)}
+--SLEM()
+
+function ultraschall.GetGuidFromCustomRegionID(regionname, idx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetGuidFromCustomRegionID</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string guid = ultraschall.GetGuidFromCustomRegionID(string regionname, integer index)</functioncall>
+  <description>
+    Gets the corresponding guid of a custom region with a specific index 
+    
+    The index is for _custom:-regions only
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the custom region with a specific index
+  </retvals>
+  <parameters>
+    string regionname - the name of the custom-region
+    integer index - the index of the custom region, whose guid you want to retrieve; 0-based
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom region, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetGuidFromCustomRegionID", "idx", "must be an integer", -1) return end
+  if type(markername)~="string" then ultraschall.AddErrorMessage("GetGuidFromCustomRegionID", "regionname", "must be a string", -2) return end
+
+  local retval, marker_index, pos, length, name, shown_number, color, guid2 = ultraschall.EnumerateCustomRegions(regionname, idx)
+  return guid2
+end
+
+--A=ultraschall.GetGuidFromCustomRegionID("Time", 0)
+
+function ultraschall.GetCustomMarkerIDFromGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetCustomMarkerIDFromGuid</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer index, string custom_marker_name = ultraschall.GetCustomMarkerIDFromGuid(string guid)</functioncall>
+  <description>
+    Gets the corresponding indexnumber of a custom-marker-guid
+    
+    The index is for all _custom:-markers only.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer index - the index of the custom-marker, whose guid you have passed to this function; 0-based
+    string custom_marker_name - the name of the custom-marker
+  </retvals>
+  <parameters>
+    string guid - the guid of the custom-marker, whose index-number you want to retrieve
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom marker, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if type(guid)~="string" then ultraschall.AddErrorMessage("GetCustomMarkerIDFromGuid", "guid", "must be a string", -1) return -1 end  
+  local marker_id = ultraschall.GetMarkerIDFromGuid(guid)
+  local A,A,A,rgn_end,name=reaper.EnumProjectMarkers(marker_id-1)
+  name=name:match("_(.-):")
+  if name==nil or rgn_end>0 then ultraschall.AddErrorMessage("GetCustomMarkerIDFromGuid", "guid", "not a custom-marker", -2) return -1 end  
+
+  for idx=0, ultraschall.CountAllCustomMarkers(name) do
+    ultraschall.SuppressErrorMessages(true)
+    local retval, marker_index, pos, name2, shown_number, color, guid2 = ultraschall.EnumerateCustomMarkers(name, idx)
+    if guid2==guid then ultraschall.SuppressErrorMessages(false) return idx, name end
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return -1
+end
+
+--B,C=ultraschall.GetCustomMarkerIDFromGuid("{E4C95832-0E52-4164-A879-9AED86D5A66C}")
+
+function ultraschall.GetCustomRegionIDFromGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetCustomRegionIDFromGuid</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer index, string custom_region_name = ultraschall.GetCustomRegionIDFromGuid(string guid)</functioncall>
+  <description>
+    Gets the corresponding indexnumber of a custom-region-guid
+    
+    The index is for all _custom:-regions only.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer index - the index of the custom-region, whose guid you have passed to this function; 0-based
+    string custom_region_name - the name of the region-marker
+  </retvals>
+  <parameters>
+    string guid - the guid of the custom-region, whose index-number you want to retrieve
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom region, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if type(guid)~="string" then ultraschall.AddErrorMessage("GetCustomRegionIDFromGuid", "guid", "must be a string", -1) return -1 end  
+  local marker_id = ultraschall.GetMarkerIDFromGuid(guid)
+  local A,A,A,rgn_end,name=reaper.EnumProjectMarkers(marker_id-1)
+  name=name:match("_(.-):")
+  if name==nil or rgn_end==0 then ultraschall.AddErrorMessage("GetCustomRegionIDFromGuid", "guid", "not a custom-region", -2) return -1 end  
+
+  for idx=0, ultraschall.CountAllCustomRegions(name) do
+    ultraschall.SuppressErrorMessages(true)
+    local retval, marker_index, pos, length, name2, shown_number, color, guid2 = ultraschall.EnumerateCustomRegions(name, idx)
+    if guid2==guid then ultraschall.SuppressErrorMessages(false) return idx, name end
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return -1
+end
+
+--B,C=ultraschall.GetCustomRegionIDFromGuid("{84144A00-96EA-4AC6-ACB2-D2B0EEEB3CEB}")

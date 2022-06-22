@@ -300,6 +300,10 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - MarkerManagement: GetMarkerType - returns the type of a marker
+  - MarkerManagement: GetGuidFromCustomMarkerID - returns the guid from a custom-marker-index
+  - MarkerManagement: GetGuidFromCustomRegionID - returns the guid from a custom-region-index
+  - MarkerManagement: GetCustomMarkerIDFromGuid - returns the custom-marker-index and name from a guid
+  - MarkerManagement: GetCustomRegionIDFromGuid - returns the custom-region-index and name from a guid
   - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
   - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)

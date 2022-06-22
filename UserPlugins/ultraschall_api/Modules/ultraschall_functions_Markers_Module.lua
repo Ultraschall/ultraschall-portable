@@ -4710,7 +4710,7 @@ function ultraschall.GetMarkerIDFromGuid(guid)
     returns -1 in case of an error
   </description>
   <retvals>
-    integer index - the index of the marker/region, whose guid you have passed to this function
+    integer index - the index of the marker/region, whose guid you have passed to this function; 1 for the first marker/region
   </retvals>
   <parameters>
     string guid - the guid of the marker/region, whose index-number you want to retrieve
