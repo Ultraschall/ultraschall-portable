@@ -1693,10 +1693,6 @@ else
     ultraschall.LM(14)
     return ultraschall.IsValidGuid(table.unpack({...}))
   end
-  function ultraschall.SetGuidExtState(...)
-    ultraschall.LM(14)
-    return ultraschall.SetGuidExtState(table.unpack({...}))
-  end
   function ultraschall.SetBitfield(...)
     ultraschall.LM(14)
     return ultraschall.SetBitfield(table.unpack({...}))
@@ -3164,6 +3160,10 @@ else
   function ultraschall.GetGuidExtState(...)
     ultraschall.LM(21)
     return ultraschall.GetGuidExtState(table.unpack({...}))
+  end
+  function ultraschall.SetGuidExtState(...)
+    ultraschall.LM(21)
+    return ultraschall.SetGuidExtState(table.unpack({...}))
   end
   function ultraschall.SetMarkerExtState(...)
     ultraschall.LM(21)

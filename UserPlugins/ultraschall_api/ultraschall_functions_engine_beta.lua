@@ -1832,12 +1832,21 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   end
     
   if idx<1 then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such chapter-marker", -8) return false end
-  
-  if is_set==false then
-    local B=ultraschall.GetMarkerExtState(idx, attributename)  
+  local content2
+  if is_set==false then    
+    local B=ultraschall.GetMarkerExtState(idx, attributename)
     if B==nil then B="" end
+    --if attributename=="chap_image" then
+--      B=ultraschall.Base64_Decoder(B)
+    --end
     return true, B
   elseif is_set==true then
+    if attributename=="chap_image" then
+      --content2=ultraschall.Base64_Encoder(content)
+    else
+      --content2=content
+    end
+    print2(content:sub(1,1000))
     return ultraschall.SetMarkerExtState(idx, attributename, content)~=-1, content
   end
 end

@@ -263,22 +263,12 @@ Note: Doesn't fucking work...
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
 - marker-menu-hijack-script: 
-    - add submenus, whose entries can be generated with "generate entries"-functions(e.g. current files in a preset-files-folder (project Templates))
-        submenus get a new entry called 
-          Entry_X_SubMenu=start
-        that indicates, that this entry shall become the top-menuentry for the submenu
-          Entry_X_SubMenu=end
-        ends a submenu, means, the last entry in the submenu shall get this.
-        
-        Also add checked and greyed out as options.
-        
-        Add a RemoveSubMenuEntries-function, that clears submenus from Entry_X+1_SubMenu=start until the first Entry_X_SubMenu=end.
-        
-        This makes it a little easier to remove submenus at once to repopulate them with new entries(filelists, etc)
    
      - prevent # and < > in the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
        including the Entry_X_SubMenu=start|end thing.
-       
+  
+ConvertHex2Ascii, Base64\_Encoder, Base64\_Decoder - use speedup-trick of ConvertAscii2Hex
+  
 readd in next version:
   
 
@@ -365,6 +355,7 @@ Has now 1532 functions, with XX new ones
   - Docs: Reaper Internals - updated to Reaper 6.61 and ReaImGui 0.6.2
   - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
+  - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
   - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)  
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
@@ -373,6 +364,8 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
+  - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
+  - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
   - Rendering: GetRenderPreset\_RenderTable - bounds and options-name are now case-insensitive -> thanx to Malik

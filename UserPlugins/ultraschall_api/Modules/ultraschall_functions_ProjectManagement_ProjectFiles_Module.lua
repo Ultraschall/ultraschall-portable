@@ -9665,7 +9665,7 @@ function ultraschall.GetProject_MasterGroupFlagsState(projectfilename_with_path,
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetProject_MasterGroupFlagsState(string projectfilename_with_path, optional stirng ProjectStateChunk)</functioncall>
+  <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetProject_MasterGroupFlagsState(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     returns the state of the group-flags for the Master-Track, as set in the menu Track Grouping Parameters; from an rpp-projectfile or a ProjectStateChunk. 
     
@@ -9807,7 +9807,7 @@ function ultraschall.GetProject_MasterGroupFlagsHighState(projectfilename_with_p
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetProject_MasterGroupFlagsHighState(string projectfilename_with_path, optional stirng ProjectStateChunk)</functioncall>
+  <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetProject_MasterGroupFlagsHighState(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     returns the state of the group-high-flags for the Master-Track, as set in the menu Track Grouping Parameters; from an rpp-projectfile or a ProjectStateChunk. 
     

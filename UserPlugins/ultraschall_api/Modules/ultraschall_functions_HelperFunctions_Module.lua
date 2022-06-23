@@ -1635,65 +1635,6 @@ function ultraschall.IsValidGuid(guid, strict)
 end
 
 
-function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, persist)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>SetGuidExtState</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.40
-    Lua=5.3
-  </requires>
-  <functioncall>integer retval = ultraschall.SetGuidExtState(string guid, string key, string value, integer savelocation, boolean overwrite, boolean persists)</functioncall>
-  <description>
-    Sets an extension-state using a given guid. Good for storing additional metadata of objects like MediaTracks, MediaItems, MediaItem_Takes, etc(everything, that has a guid).
-    The state can be saved as either global extension state or "local" extension-project-state(in the currently opened project)
-    The guid can have additional text, but must contain a valid guid somewhere in it!
-    A valid guid is a string that follows the following pattern:
-    {........-....-....-....-............}
-    where . is a hexadecimal value(0-F)
-    
-    Returns -1 in case of error
-  </description>
-  <parameters>
-    string guid - the guid of the object, for whom you want to store a key/value-pair; can have additional characters before and after the guid, but must contain a valid guid!
-    string key - the key for this guid; "", deletes all keys+values stored with this marker
-    string value - the value to store into the key/value-store; "", deletes the value for this key
-    integer savelocation - 0, store as project extension state(into the currently opened project); 1, store as global extension state(when persist=true, into reaper-extstate.ini in the resourcesfolder)
-    boolean overwrite - true, overwrite a previous given value; false, don't overwrite, if a value exists already
-    boolean persists - true, make extension state persistent(available after Reaper-restart); false, don't make it persistent; Only with global extension states
-  </parameters>
-  <retvals>
-    integer retval - the idx of the extstate(if a project extension state); >=1 number of stored extension states(means successful), -1, unsuccessful
-  </retvals>
-  <chapter_context>
-    Metadata Management
-    Extension States Guid
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
-  <tags>metadatamanagement, project, extension, state, set, guid, key, values</tags>
-</US_DocBloc>
---]]
-  if ultraschall.IsValidGuid(guid, false)==false then ultraschall.AddErrorMessage("SetGuidExtState","guid", "must be a valid guid", -1) return -1 end
-  if ultraschall.IsValidGuid(guid, false)==false then ultraschall.AddErrorMessage("SetGuidExtState","key", "must be a string", -2) return -1 end
-  if ultraschall.IsValidGuid(guid, false)==false then ultraschall.AddErrorMessage("SetGuidExtState","value", "must be a string", -3) return -1 end
-  if type(overwrite)~="boolean" then ultraschall.AddErrorMessage("SetGuidExtState","overwrite", "must be a boolean", -4) return -1 end
-  if math.type(savelocation)~="integer" then ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "must be an integer", -5) return -1 end
-  if tonumber(savelocation)~=0 and tonumber(savelocation)~=1 then ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "only allowed 0 for project-extstate, 1 for global extension state", -6) return -1 end
-  if savelocation==1 and type(persist)~="boolean" then ultraschall.AddErrorMessage("SetGuidExtState","persist", "must be a boolean", -7) return -1 end
-  
-  if savelocation==0 then 
-    if overwrite==false and reaper.GetProjExtState(0, guid, key)>0 then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -8) return -1 end
-    return reaper.SetProjExtState(0, guid, key, value) 
-  elseif savelocation==1 then 
-    if overwrite==false and reaper.HasExtState(guid, key)==true then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -9) return -1 end
-    return 1, reaper.SetExtState(guid, key, value, persist)
-  else ultraschall.AddErrorMessage("SetGuidExtState","savelocation", "no such location", -9) return -1
-  end
-end
-
-
 function ultraschall.SetBitfield(integer_bitfield, set_to, ...)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -4972,7 +4913,7 @@ function ultraschall.ConvertAscii2Hex(orgstring)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ConvertAscii2Hex</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.977
     Lua=5.3
   </requires>
@@ -5002,15 +4943,50 @@ function ultraschall.ConvertAscii2Hex(orgstring)
   if type(orgstring)~="string" then ultraschall.AddErrorMessage("ConvertAscii2Hex", "orgstring", "must be a string", -1) return end
   local String=""
   local temp
-  for i=1, orgstring:len() do
-    temp=string.format('%X', string.byte(orgstring:sub(i,i)))
-    if temp:len()==1 then temp="0"..temp end    
-    String=String..temp
+  
+  local Entries={}
+  local Entries_Count=1
+  Entries[Entries_Count]=""
+  local Count=0
+  for i=1, math.floor(orgstring:len()/2) do
+    Count=Count+1
+    if Count==1000 then 
+      Count=1 
+      Entries_Count=Entries_Count+1
+      Entries[Entries_Count]="" 
+    end
+    temp=--orgstring:sub(i,i)
+         string.format('%X', string.byte(orgstring:sub(i,i))) if temp:len()==1 then temp="0"..temp end    
+    Entries[Entries_Count]=Entries[Entries_Count]..temp
   end
-  return String
-end
 
---A1=ultraschall.ConvertAscii2Hex(B)
+  local Entries2={}
+  local Entries_Count2=1
+  Entries2[Entries_Count2]=""
+  local Count=0
+  for i=math.floor(orgstring:len()/2)+1, orgstring:len() do
+    Count=Count+1
+    if Count==1000 then 
+      Count=1 
+      Entries_Count2=Entries_Count2+1
+      Entries2[Entries_Count2]="" 
+    end
+    temp=--orgstring:sub(i,i)
+         string.format('%X', string.byte(orgstring:sub(i,i))) if temp:len()==1 then temp="0"..temp end    
+    Entries2[Entries_Count2]=Entries2[Entries_Count2]..temp
+  end
+
+  for i=1, Entries_Count do
+    String=String..Entries[i]
+  end
+
+  local String2=""
+  for i=1, Entries_Count2 do
+    String2=String2..Entries2[i]
+  end
+
+  return String..String2
+end
 
 
 function ultraschall.get_action_context_MediaItemDiff(exlude_mousecursorsize, x, y)
