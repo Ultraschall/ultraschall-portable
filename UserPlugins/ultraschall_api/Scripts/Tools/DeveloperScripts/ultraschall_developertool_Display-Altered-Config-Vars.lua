@@ -59,7 +59,7 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
-A,B,C,D=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-config_var.USDocML")
+A,B,C,D=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_Config_Variables.USDocML")
 
 ConfigVars={}
 ConfigVars_Counter=0

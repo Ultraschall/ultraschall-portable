@@ -10,7 +10,7 @@ end
 
 mode=1
 
-A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-videoprocessor-docs.USDocML")
+A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_API_Video_Documentation.USDocML")
 
 if mode==1 then 
   -- check all linknames for _ and escape them

@@ -1028,7 +1028,7 @@ end
 function ultraschall.Docs_GetReaperApiFunction_Description(functionname)
   if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "must be a string", -1) return nil end
   if ultraschall.Docs_ReaperApiDocBlocs==nil then
-    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/reaper-apidocs.USDocML")
+    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
     ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
     ultraschall.Docs_ReaperApiDocBlocs_Titles={}
     for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
@@ -1062,7 +1062,7 @@ function ultraschall.Docs_GetReaperApiFunction_Call(functionname, proglang)
   if math.type(proglang)~="integer" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "must be an integer", -2) return nil end
   if proglang<1 or proglang>4 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "no such programming language available", -3) return nil end
   if ultraschall.Docs_ReaperApiDocBlocs==nil then
-    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/reaper-apidocs.USDocML")
+    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
     ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
     ultraschall.Docs_ReaperApiDocBlocs_Titles={}
     for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
@@ -1088,7 +1088,7 @@ function ultraschall.Docs_GetReaperApiFunction_Call(functionname, proglang)
 end
 
 function ultraschall.Docs_LoadReaperApiDocBlocs()
-  ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/reaper-apidocs.USDocML")
+  ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
   ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
   ultraschall.Docs_ReaperApiDocBlocs_Titles={}
   for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 

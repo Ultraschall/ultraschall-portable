@@ -50,7 +50,7 @@ for i=Found_files, 1, -1 do
 end
 
 -- get deprecated API-functions and put them into a table we use later on
-local A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/reaper-apidocs.USDocML")
+local A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/Reaper_Api_Documentation.USDocML")
 local B,C = ultraschall.Docs_GetAllUSDocBlocsFromString(A)
 
 UseMyContentsOnly={} -- all deprecated functions

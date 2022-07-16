@@ -4495,8 +4495,8 @@ function ultraschall.GetRender_AutoIncrementFilename()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRender_AutoIncrementFilename</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.975
+    Ultraschall=4.7
+    Reaper=6.20
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -4521,7 +4521,7 @@ function ultraschall.GetRender_AutoIncrementFilename()
   hwnd = ultraschall.GetRenderToFileHWND()
   if hwnd==nil then
     state=reaper.SNM_GetIntConfigVar("renderclosewhendone", 0)
-    if state&16==16 then state=1 end
+    if state&16==0 then state=0 end
   else
     state = reaper.JS_WindowMessage_Send(reaper.JS_Window_FindChildByID(hwnd,1042), "BM_GETCHECK", 1,0,0,0)
   end
@@ -5617,7 +5617,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
   if AddToProj~=nil and type(AddToProj)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "AddToProj", "must be nil(for false) or boolean", -10) return -1 end
   if CloseAfterRender~=nil and type(CloseAfterRender)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "CloseAfterRender", "must be nil(for true) or boolean", -11) return -1 end
   if SilentlyIncrementFilename~=nil and type(SilentlyIncrementFilename)~="boolean" then ultraschall.AddErrorMessage("RenderProject_RenderTable", "SilentlyIncrementFilename", "must be nil(for true) or boolean", -12) return -1 end
-
+  if SilentlyIncrementFilename==nil then SilentlyIncrementFilename=true end
   if RenderTable==nil then norendertable=true end
 
   local tempfilename, retval, oldcloseafterrender, oldCopyOfProject, aborted, oldSaveOpts, Count, MediaItemArray, MediaItemStateChunkArray, trackstring
@@ -5636,8 +5636,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- if parameters got set to nil:
     local oldcloseafterrender=RenderTable["CloseAfterRender"]
     local oldsilentlyincreasefilename=RenderTable["SilentlyIncrementFilename"]
-    if CloseAfterRender~=nil then RenderTable["CloseAfterRender"]=CloseAfterRender end
-    if SilentlyIncrementFilename==nil then SilentlyIncrementFilename=true end
+    if CloseAfterRender~=nil then RenderTable["CloseAfterRender"]=CloseAfterRender end    
     if SilentlyIncrementFilename~=nil then RenderTable["SilentlyIncrementFilename"]=SilentlyIncrementFilename end    
     if CloseAfterRender==nil and norendertable==true then RenderTable["CloseAfterRender"]=true end
     
@@ -5665,6 +5664,7 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     
     -- get the current settings as rendertable and apply the RenderTable the user passed to us
     local OldRenderTable=ultraschall.GetRenderTable_Project()
+    
     ultraschall.ApplyRenderTable_Project(RenderTable, true) -- here the bug happens(Which bug, Meo? Which Bug? Forgot about me, Meo? - Yours sincerely Meo)
     --ultraschall.ShowLastErrorMessage()
     

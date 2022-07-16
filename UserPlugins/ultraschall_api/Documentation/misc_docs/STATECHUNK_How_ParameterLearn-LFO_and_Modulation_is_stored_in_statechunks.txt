@@ -1,5 +1,5 @@
 Parameter-Learn/Modulation/Alias-Chunk - documentation
-compiled by Meo Mespotine 20.08.2020
+compiled by Meo-Ada Mespotine 20.08.2020
 
 Thanks to Anton9 for helping me with that :)
 
@@ -11,12 +11,12 @@ PARMLEARN  integer parmidx:optional string parametername   integer midi_note  in
 
     For TrackFX:
         Stored in TrackStateChunks in the   <FXCHAIN-chunk, usually before the WAK-entry
-        The WAK-entry itself marks the end of the settings of one fx-plugin, so PARMLEARN-entries following 
+        The WAK-entry itself usually marks the end of the settings of one fx-plugin, so PARMLEARN-entries following 
         after a WAK, are associated to the next plugin in the fx-chain of this track
         
     For Item/TakeFX:
         Stored in MediaItemStateChunks in the   <TAKEFX-chunk, usually before the WAK-entry
-        The WAK-entry itself marks the end of the settings of one fx-plugin, so PARMLEARN-entries 
+        The WAK-entry itself usually marks the end of the settings of one fx-plugin, so PARMLEARN-entries 
         following after a WAK, are associated to the next plugin in the fx-chain of this MediaItemTake
         
     For MonitoringFX: 

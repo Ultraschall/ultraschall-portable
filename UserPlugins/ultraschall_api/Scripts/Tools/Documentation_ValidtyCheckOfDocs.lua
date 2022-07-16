@@ -36,7 +36,7 @@ end
 Found=""
 
 Filelist={
-"DocsSourcefiles/reaper-apidocs.USDocML",
+"DocsSourcefiles/Reaper_Api_Documentation.USDocML",
 "Modules/ultraschall_functions_AudioManagement_Module.lua",
 "Modules/ultraschall_functions_AutomationItems_Module.lua",
 "Modules/ultraschall_functions_Clipboard_Module.lua",
@@ -78,7 +78,7 @@ Filelist={
 "ultraschall_ModulatorLoad3000.lua", 
 "ultraschall_tag_engine.lua", 
 "ultraschall_video_engine.lua", 
-"DocsSourcefiles/reaper-videoprocessor-docs.USDocML"
+"DocsSourcefiles/Reaper_API_Video_Documentation.USDocML"
 }
 
 for i=1, 1 do

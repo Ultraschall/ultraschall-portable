@@ -3536,7 +3536,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Base64_Encoder</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -3624,6 +3624,11 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   -- take six bits and make a single integer-value off of it
   -- after that, use this integer to know, which place in the base64_string must
   -- be read and included into the final string "encoded_string"
+  local Entries={}
+  local Entries_Count=1
+  Entries[Entries_Count]=""
+  local Count=0
+    
   for i=0, a-2, 6 do
     temp2=0
     if tempstring[i+1]==1 then temp2=temp2+32 end
@@ -3632,12 +3637,23 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     if tempstring[i+4]==1 then temp2=temp2+4 end
     if tempstring[i+5]==1 then temp2=temp2+2 end
     if tempstring[i+6]==1 then temp2=temp2+1 end
-    encoded_string=encoded_string..base64_string:sub(temp2+1,temp2+1)
+    --encoded_string=encoded_string..base64_string:sub(temp2+1,temp2+1)
+    if Count>810 then
+      Entries_Count=Entries_Count+1
+      Entries[Entries_Count]=""
+      Count=0
+    end
+    Count=Count+1
+    Entries[Entries_Count]=Entries[Entries_Count]..base64_string:sub(temp2+1,temp2+1)
+  end
+
+  for i=1, Entries_Count do
+    encoded_string=encoded_string..Entries[i]
   end
 
   -- if the number of characters in the encoded_string isn't exactly divideable 
   -- by 3, add = to fill up missing bytes
---  OOO=encoded_string:len()%4
+  --  OOO=encoded_string:len()%4
   if encoded_string:len()%4==2 then encoded_string=encoded_string.."=="
   elseif encoded_string:len()%2==1 then encoded_string=encoded_string.."="
   end
@@ -3652,7 +3668,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Base64_Decoder</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -3709,7 +3725,13 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
   end
   
   -- combine the bits into the original bytes and put them into decoded_string
+  local Entries={}
+  local Entries_Count=1
+  Entries[Entries_Count]=""
+  local Count=0
+
   local decoded_string=""
+  
   local temp2=0
   for i=0, count-1, 8 do
     temp2=0
@@ -3721,12 +3743,23 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     if bitarray[i+6]==1 then temp2=temp2+4 end
     if bitarray[i+7]==1 then temp2=temp2+2 end
     if bitarray[i+8]==1 then temp2=temp2+1 end
-    decoded_string=decoded_string..string.char(temp2)
+    --decoded_string=decoded_string..string.char(temp2)
+    if Count>780 then
+      Entries_Count=Entries_Count+1
+      Entries[Entries_Count]=""
+      Count=0
+    end
+    Count=Count+1
+    Entries[Entries_Count]=Entries[Entries_Count]..string.char(temp2)
   end
+  
+  for i=1, Entries_Count do
+    decoded_string=decoded_string..Entries[i]
+  end
+  
   if decoded_string:sub(-1,-1)=="\0" then decoded_string=decoded_string:sub(1,-2) end
   return decoded_string
 end
-
 
 --reaper.CF_SetClipboard(ultraschall.Base64_Encoder("Debugger"))
 
@@ -4865,7 +4898,7 @@ function ultraschall.ConvertHex2Ascii(hexstring)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ConvertHex2Ascii</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.977
     Lua=5.3
   </requires>
@@ -4897,11 +4930,29 @@ function ultraschall.ConvertHex2Ascii(hexstring)
   if type(hexstring)~="string" then ultraschall.AddErrorMessage("ConvertHex2Ascii", "hexstring", "must be a string", -1) return end
   if string.gsub(hexstring, "%x", ""):len()>0 then ultraschall.AddErrorMessage("ConvertHex2Ascii", "hexstring", "contains non-hex-characters", -2) return end
   if hexstring:len()%2==1 then ultraschall.AddErrorMessage("ConvertHex2Ascii", "hexstring", "length must be divideable by 2", -3) return end
-
+  
+  local Entries={}
+  local Entries_Count=1
+  Entries[Entries_Count]=""
+  local Count=0
   local String=""
+  local temp
+  
   for i=1, hexstring:len(), 2 do
-    String=String..string.char(tonumber("0x"..hexstring:sub(i,i+1)))
+    Count=Count+1
+    if Count==1000 then 
+      Count=1 
+      Entries_Count=Entries_Count+1
+      Entries[Entries_Count]="" 
+    end
+    temp=string.char(tonumber("0x"..hexstring:sub(i,i+1)))
+    Entries[Entries_Count]=Entries[Entries_Count]..temp
   end
+  
+  for i=1, Entries_Count do
+    String=String..Entries[i]
+  end
+    
   return String
 end
 

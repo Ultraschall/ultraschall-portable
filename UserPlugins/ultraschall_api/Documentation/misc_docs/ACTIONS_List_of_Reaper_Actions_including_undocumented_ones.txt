@@ -1,4 +1,4 @@
-Compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
+Compiled by Meo-Ada Mespotine(mespotine.de) for the ultraschall.fm-project
 
 This list contains all actions for Reaper and SWS, available in Reaper 5.941 and SWS 2.9.7 
 At the end of the list, you can also find actions, that are only available for use in menus, like project-lists or template-lists.

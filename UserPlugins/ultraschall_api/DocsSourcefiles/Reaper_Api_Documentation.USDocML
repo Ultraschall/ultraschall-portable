@@ -932,6 +932,37 @@
         </changelog>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CalcMediaSrcLoudness</slug>
+        <title>CalcMediaSrcLoudness</title>
+        <functioncall prog_lang="cpp">int retval = CalcMediaSrcLoudness(PCM_source* mediasource)</functioncall>
+        <functioncall prog_lang="eel">int retval = CalcMediaSrcLoudness(PCM_source mediasource)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.CalcMediaSrcLoudness(PCM_source mediasource)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_CalcMediaSrcLoudness(PCM_source mediasource)</functioncall>
+        <requires>
+            Reaper=6.64
+        </requires>
+        <description prog_lang="*">
+            Calculates loudness statistics of media via dry run render. Statistics will be displayed to the user; call GetSetProjectInfo_String("RENDER_STATS") to retrieve via API. Returns 1 if loudness was calculated successfully, -1 if user canceled the dry run render.
+        </description>
+        <retvals>
+            integer retval - 1, calculation was successful; -1, calculation was unsuccessful/canceled by the user
+        </retvals>
+        <parameters>
+            PCM_source source - the source to calculate the loudness from
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper-apidocs.USDocML</source_document>
+        <chapter_context>
+            Audio Management
+            Source Management
+        </chapter_context>
+        <tags>audio management, calculated, loudness, source, lufs, rms, peak, true peak</tags>
+        <changelog>
+          Reaper 6.64  - added to the API
+        </changelog>
+    </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CalculateNormalization</slug>
@@ -9444,25 +9475,29 @@
         <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
         <functioncall prog_lang="python">Float retval = RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
         <requires>
-            Reaper=6.47
+            Reaper=6.64
         </requires>
         <description>
             Get or set project information.
  
             RENDER_SETTINGS : &(1|2)=0:master mix, &1=stems+master mix, &2=stems only, &4=multichannel tracks to multichannel files, &8=use render matrix, &16=tracks with only mono media to mono files, &32=selected media items, &64=selected media items via master, & 128=Selected tracks via master, &256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &512=Embed Metadata, if format supports is, &1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master); &2048=2nd pass render  
             OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using GetSetProjectInfo_String.  
-            RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions  
+            RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions, 6=all project markers, 7=selected project markers
             RENDER_CHANNELS : number of channels in rendered file  
             RENDER_SRATE : sample rate of rendered file (or 0 for project sample rate)  
             RENDER_STARTPOS : render start time when RENDER_BOUNDSFLAG=0  
             RENDER_ENDPOS : render end time when RENDER_BOUNDSFLAG=0  
-            RENDER_TAILFLAG : apply render tail setting when rendering: &1=custom time bounds, &2=entire project, &4=time selection, &8=all project regions, &16=selected media items, &32=selected project regions  
+            RENDER_TAILFLAG : apply render tail setting when rendering: &1=custom time bounds, &2=entire project, &4=time selection, &8=all project markers/regions, &16=selected media items, &32=selected project markers/regions
             RENDER_TAILMS : tail length in ms to render (only used if RENDER_BOUNDSFLAG and RENDER_TAILFLAG are set)  
             RENDER_ADDTOPROJ : &1=add rendered files to project, &2=Do not render files that are likely silent  
             RENDER_DITHER : &1=dither, &2=noise shaping, &4=dither stems, &8=noise shaping on stems  
-            RENDER_NORMALIZE: &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max, &32=normalize stems to common gain based on master, &64=enable brickwall limit, &128=brickwall limit true peak, &256=only normalize files that are too loud
+            RENDER_NORMALIZE: &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max, &32=normalize stems to common gain based on master, &64=enable brickwall limit, &128=brickwall limit true peak, &256=only normalize files that are too loud, &512=apply fade-in, &1024=apply fade-out
             RENDER_NORMALIZE_TARGET: render normalization target as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc  
             RENDER_BRICKWALL: render brickwall limit as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc
+            RENDER_FADEIN: render fade-in (0.001 means 1 ms, requires RENDER_NORMALIZE&512)
+            RENDER_FADEOUT: render fade-out (0.001 means 1 ms, requires RENDER_NORMALIZE&1024)
+            RENDER_FADEINSHAPE: render fade-in shape
+            RENDER_FADEOUTSHAPE: render fade-out shape
             PROJECT_SRATE : samplerate (ignored unless PROJECT_SRATE_USE set)  
             PROJECT_SRATE_USE : set to 1 if project samplerate is used  
         </description>
@@ -9487,6 +9522,8 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+            Reaper 6.64 - FadeIn/FadeOut now supported in RENDER_NORMALIZE, RENDER_FADEIN, RENDER_FADEINSHAPE, RENDER_FADEOUT, RENDER_FADEOUTSHAPE
+            Reaper 6.62 - RENDER_BOUNDSFLAG and RENDER_TAILFLAG support now markers as well
             Reaper 6.47 - added new normalization-modes &128=brickwall limit true peak, &256=only normalize files that are too loud
         </changelog>
     </US_DocBloc>
@@ -9518,7 +9555,7 @@
             RENDER_STATS: (read-only) semicolon separated list of statistics for the most recently rendered files. call with valuestr="XXX" to run an action (for example, "42437"=dry run render selected items) before returning statistics.  
             RENDER_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.  
             RENDER_FORMAT2: base64-encoded secondary sink configuration. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type, or "" to disable secondary render.  
-            see <a href="render-codes-decoded-base64-strings.txt">render-codes-decoded-base64-strings.txt</a> for how the unencoded RENDER_FORMAT-string is structured.  
+            see <a href="misc_docs/RENDER_How_RenderCFG-Base64-strings_are_encoded.txt">RENDER_How_RenderCFG-Base64-strings_are_encoded.txt</a> for how the unencoded RENDER_FORMAT-string is structured.  
 
             To just use the 4-byte-string, you can use: 
             "wave" for wave, "aiff" for aiff, "caff" for caf, "iso " for audio-cd, "ddp " for ddp, "flac" for flac, "mp3l" for mp3, "oggv" for ogg, "OggS" for Opus, "FFMP" for FFMpeg-video, "FVAX" for MP4Video/Audio on Mac, "GIF " for Gif, "LCF " for LCF, "WMF" for Windows Media Foundation(mp4, m4a), "wvpk" for wavepack
@@ -19440,7 +19477,7 @@
             if mode is set to 1, you can send messages as control-message for Parameter Learn/Modulation and as shortcut for scripts.
             The parameter msg3 can be retrieved with the returnvalue val of the function reaper.get\_action\_context, so sending values to a script is possible that way.
 
-            For more detailed information about the possible midi-messages you can send via StuffMIDIMessage, see: [StuffMIDIMessage-docs](../misc/misc_docs/Reaper-StuffMidiMessage-docs.txt)
+            For more detailed information about the possible midi-messages you can send via StuffMIDIMessage, see: [StuffMIDIMessage-docs](misc_docs/API_How_StuffMidiMessage_works.txt)
         </description>
         <parameters>
             integer mode - the mode for sending the midi-message

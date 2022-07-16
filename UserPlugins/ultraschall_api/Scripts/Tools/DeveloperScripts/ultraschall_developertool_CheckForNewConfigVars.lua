@@ -47,7 +47,7 @@ end
 
 print_update("Checking for new config-var-names.\n\n")
 print("Read known config-var-names")
-A2=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-config_var.USDocML")
+A2=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_Config_Variables.USDocML")
 if A2==nil then A2="" end
 
 

@@ -55,7 +55,7 @@ if reaper.file_exists(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.i
   os.rename(Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.inidef", Path.."/Ultraschall_StateInspector/Ultraschall-Inspector.ini")
 end
 
-A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/reaper-config_var.USDocML")
+A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourceFiles/Reaper_Config_Variables.USDocML")
 found_usdocblocs, all_found_usdocblocs = ultraschall.Docs_GetAllUSDocBlocsFromString(A)
 table.remove(all_found_usdocblocs, 1)
 

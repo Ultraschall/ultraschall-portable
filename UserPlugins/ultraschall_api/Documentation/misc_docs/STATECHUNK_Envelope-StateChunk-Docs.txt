@@ -1,4 +1,4 @@
-EnvelopeStateChunk Docs(work in progress) by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
+EnvelopeStateChunk Docs(work in progress) by Meo-Ada Mespotine(mespotine.de) for the ultraschall.fm-project
         Note: Includes also Pooled/Automation-Items themselves, even though they are only available in .rpp-projectfiles and .ReaperAutoItem-files
               
               number is equal to float

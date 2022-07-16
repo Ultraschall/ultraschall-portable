@@ -267,7 +267,14 @@ Note: Doesn't fucking work...
      - prevent # and < > in the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
        including the Entry_X_SubMenu=start|end thing.
   
-ConvertHex2Ascii, Base64\_Encoder, Base64\_Decoder - use speedup-trick of ConvertAscii2Hex
+- FXStateChunk: GetSet NEXT_FX_OVERSAMPLE 
+    toggle to enable/disable all FX instance oversampling settings
+  
+- Render To Do:
+ - Markers can be used for rendering now
+ - FFMPEG-Renderstring - allows now for command-line-options
+ - Presets: Tail-Length supported now
+ - Fade In/Fade Out added now
   
 readd in next version:
   
@@ -277,7 +284,7 @@ readd in next version:
 
 ## Ultraschall Framework - Changelog
 
-### 4.7 - " - " - XX of XXXX 2022
+### 4.7 - "Pearl Jam - Alive" - XX of XXXX 2022
 
 Has now 1532 functions, with XX new ones
 
@@ -352,10 +359,13 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -> fixed
   - DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed
   - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
-  - Docs: Reaper Internals - updated to Reaper 6.61 and ReaImGui 0.6.2
-  - Docs: render-strings - updated to Reaper 6.59(includes wmf now)
+  - Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals
+  - Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
+  - HelperFunctions: Base64\_Decoder - sped up massively for longer strings(up to 98% faster)
+  - HelperFunctions: Base64\_Encoder - sped up massively for longer strings(up to 98% faster)
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
+  - HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
   - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)  
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
@@ -366,11 +376,13 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
-  - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.
+  - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.  
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
+  - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
   - Rendering: GetRenderPreset\_RenderTable - bounds and options-name are now case-insensitive -> thanx to Malik
   - Rendering: DeleteRenderPreset\_Bounds - bounds is now case-insensitive -> thnx to Malik
   - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> thnx to Malik
+  - Rendering: RenderProject\_RenderTable - didn't increment filename when rendering filename under certain circumstances -> fixed (thnx to aurelien)
   - Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -> thnx to Malik
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
   - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed

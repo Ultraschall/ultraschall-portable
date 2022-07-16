@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.57 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.64 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -8843,6 +8843,94 @@
       <source_document>reaper-config_var.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderfadein</slug>  
+      <title>projrenderfadein</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The fade-in-time in seconds, as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
+          Decimals are allowed for milliseconds.
+          It's an double-float
+          
+           >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000(limitation by the dialog, can be set higher)
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderfadeinshape</slug>  
+      <title>projrenderfadeinshape</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The fade-in-shape as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
+          It's an integer
+          
+           >0 to 6 for the various shapes available
+           >0, linear fade-in
+           >1, inverted quadratic fade-in
+           >2, quadratic fade-in
+           >3, inverted quartic fade-in
+           >4, quartic fade-in
+           >5, Cosine S-curve fade-in
+           >6, Quartic S-curve fade-in
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderfadeout</slug>  
+      <title>projrenderfadeout</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The fade-out-time in seconds, as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
+          Decimals are allowed for milliseconds.
+          It's an double-float
+          
+           >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000(limitation by the dialog, can be set higher)
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderfadeoutshape</slug>  
+      <title>projrenderfadeoutshape</title>  
+      <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+          The fade-out-shape as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
+          It's an integer
+          
+           >0 to 6 for the various shapes available
+           >0, linear fade-out
+           >1, inverted quadratic fade-out
+           >2, quadratic fade-out
+           >3, inverted quartic fade-out
+           >4, quartic fade-out
+           >5, Cosine S-curve fade-out
+           >6, Quartic S-curve fade-out
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Config Variables  
+      </chapter_context>
+      <source_document>reaper-config_var.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>projrenderlimit</slug>  
@@ -8919,6 +9007,12 @@
            
            >&256=0, Only normalize that are too loud - unchecked 
            >&256=1, Only normalize that are too loud - checked
+           
+           >512=0, Fade In-checkbox - unchecked
+           >512=1, Fade In-checkbox - checked
+           
+           >1024=0, Fade Out-checkbox - unchecked
+           >1024=1, Fade Out-checkbox - checked
            
           See also [projrenderbrickwall](#projrenderbrickwall)
            
@@ -10531,7 +10625,10 @@
            >&1024=1, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - unchecked
 
            >&2048=0, Calculate and embed peak/loudness value-checkbox - unchecked  
-           >&2048=0, Calculate and embed peak/loudness value-checkbox - checked
+           >&2048=1, Calculate and embed peak/loudness value-checkbox - checked
+           
+           >&16384=0, Return to render setup-checkbox as set in the rendering window -> unchecked
+           >&16384=1, Return to render setup-checkbox as set in the rendering window -> checked
            
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  
@@ -10642,23 +10739,29 @@
       <slug>rendertails</slug>  
       <title>rendertails</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The Tail-checkbox, as set in the Render to File-dialog.  
+          The Tail-checkbox, as set in the Render to File-dialog. Every Bounds-mode can have its own render-tail-checkbox set! 
           It is an integer-bitfield.  
           
-           >&1=0, unknown  
-           >&1=1, unknown  
+           >&1=0, Custom time range Tail-checkbox - unchecked
+           >&1=1, Custom time range Tail-checkbox - checked
             
-           >&2=0, Tail-checkbox is unchecked  
-           >&2=1, Tail-checkbox is checked  
+           >&2=0, Entire project Tail-checkbox - unchecked
+           >&2=1, Entire project Tail-checkbox - checked
            
-           >&4=0, unknown  
-           >&4=1, unknown  
+           >&4=0, Time selection Tail-checkbox - unchecked
+           >&4=1, Time selection Tail-checkbox - checked
            
-           >&8=0, unknown  
-           >&8=1, unknown  
+           >&8=0, All project regions Tail-checkbox - unchecked
+           >&8=1, All project regions Tail-checkbox - checked         
            
-           >&16=0, unknown  
-           >&16=1, unknown  
+           >&32=0, Selected project regions Tail-checkbox - unchecked
+           >&32=1, Selected project regions Tail-checkbox - checked
+           
+           >&128=0, All project markers Tail-checkbox - unchecked
+           >&128=1, All project markers Tail-checkbox - checked
+           
+           >&256=0, Selected markers Tail-checkbox - unchecked
+           >&256=1, Selected markers Tail-checkbox - checked
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  

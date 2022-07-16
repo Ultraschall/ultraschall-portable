@@ -32,7 +32,7 @@ end
 
 reaper.ClearConsole()
 
-A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-apidocs.USDocML")
+A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_Api_Documentation.USDocML")
 --B=FromClip()
 Filename="d:/Users/Meo-Ada Mespotine/AppData/Local/Temp/reascripthelp.html"
 if reaper.file_exists("d:/Users/Meo-Ada Mespotine/AppData/Local/Temp/reascripthelp.html")==false then

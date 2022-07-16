@@ -1,4 +1,4 @@
-Documented by Meo Mespotine (mespotine.de) for the ultraschall.fm-project
+Documented by Meo-Ada Mespotine (mespotine.de) for the ultraschall.fm-project
 
 For some time now, it is possible to use Cocko's own screen-recording tool "LiceCap" directly from Reaper(https://www.cockos.com/licecap/).
 Run the action: 41298 - "Run LICEcap (animated screen capture utility)", which will open a dialog window, where you can select the LiceCap-app from.
@@ -9,7 +9,7 @@ The path to the licecap-app is stored in the reaper.ini: [REAPER] -> licecap_pat
 This path can be relative, so you can copy the LiceCap-folder into your Reaper-App-Folder, when using a portable installation. 
 That way, you can take LiceCap anywhere, where you take your Reaper with you.
 
-LiceCap stores it's preferences-values into LiceCap.ini, that can be located in the same folder as the app itself.
+LiceCap stores its preferences-values into LiceCap.ini, that can be located in the same folder as the app itself.
 The following settings are stored into the LiceCap.ini.
 
 [licecap]

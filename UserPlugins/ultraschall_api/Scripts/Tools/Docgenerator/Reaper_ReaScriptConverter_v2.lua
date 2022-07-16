@@ -42,7 +42,7 @@ reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", 
 Tempfile=ultraschall.Api_Path.."/temp/"
 
 --Infilename=ultraschall.Api_Path.."/DocsSourcefiles/reaper-apidocs-test.USDocML"
-Infilename=ultraschall.Api_Path.."/DocsSourcefiles/reaper-apidocs.USDocML"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/Reaper_Api_Documentation.USDocML"
 --Infilename=ultraschall.Api_Path.."/DocsSourcefiles/reaper-webRC-docs.USDocML"
 Outfile=ultraschall.Api_Path.."/Documentation/Reaper_Api_Documentation.html"
 
@@ -154,6 +154,7 @@ FunctionList=[[
                             <td></td>
                             <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
                             <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Misc_Docs.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misc Docs&nbsp;</a></td>
                         </tr>
                         <tr>
                             <td></td>

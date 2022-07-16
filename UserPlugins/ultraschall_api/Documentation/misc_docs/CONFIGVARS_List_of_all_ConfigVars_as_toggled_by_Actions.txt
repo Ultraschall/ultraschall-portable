@@ -7,6 +7,8 @@
 #Some actions do not have a name but still trigger config-vars. It is unknown, why.
 #
 #This list is probably not comprehensive, keep this in mind.
+#
+#docs licensed under MIT-license - done by Meo-Ada Mespotine
 
 Track: Toggle mute for master track
 Sec:0_AID:14=mastermutesolo 		 - INT: 35(DIF: 1)	  - DOUBLE: -2.0(DIF: )

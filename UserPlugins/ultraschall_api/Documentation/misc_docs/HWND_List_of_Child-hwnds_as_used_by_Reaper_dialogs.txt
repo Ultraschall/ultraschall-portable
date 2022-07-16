@@ -1,5 +1,5 @@
 ChildWindowIDs and Window-ClassNames in Reaper
-compiled by Meo Mespotine
+compiled by Meo-Ada Mespotine
 
 
 This is a list of all Classnames as well as the IDs of ChildHWNDs in Reaper. A ChildHWND can be a dialog-element, like

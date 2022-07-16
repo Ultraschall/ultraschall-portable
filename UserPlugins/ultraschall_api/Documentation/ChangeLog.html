@@ -35,7 +35,7 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.7 - " - " - XX of XXXX 2022</h3>
+<h3>4.7 - "Pearl Jam - Alive" - XX of XXXX 2022</h3>
 <p>Has now 1532 functions, with XX new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
@@ -111,10 +111,13 @@ Bla</li>
 <li>DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -&gt; fixed</li>
 <li>DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed</li>
 <li>DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -&gt; fixed</li>
-<li>Docs: Reaper Internals - updated to Reaper 6.61 and ReaImGui 0.6.2</li>
-<li>Docs: render-strings - updated to Reaper 6.59(includes wmf now)</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals</li>
+<li>Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)</li>
 <li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated</li>
+<li>HelperFunctions: Base64_Decoder - sped up massively for longer strings(up to 98% faster)</li>
+<li>HelperFunctions: Base64_Encoder - sped up massively for longer strings(up to 98% faster)</li>
 <li>HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings</li>
+<li>HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings</li>
 <li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
 <li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)<br />
 </li>
@@ -127,11 +130,14 @@ Bla</li>
 <li>MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
 <li>MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -&gt; fixed</li>
 <li>MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -&gt; fixed</li>
-<li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.</li>
+<li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.<br />
+</li>
 <li>Rendering: CreateRenderCFG_WMF_Video - renamed to CreateRenderCFG_WMF (old functionname is still available, though</li>
+<li>Rendering: GetRender_AutoIncrementFilename - always returned true, when Render to File was closed -&gt; fixed(thnx to aurelien)</li>
 <li>Rendering: GetRenderPreset_RenderTable - bounds and options-name are now case-insensitive -&gt; thanx to Malik</li>
 <li>Rendering: DeleteRenderPreset_Bounds - bounds is now case-insensitive -&gt; thnx to Malik</li>
 <li>Rendering: DeleteRenderPreset_FormatOptions - options-name is now case-insensitive -&gt; thnx to Malik</li>
+<li>Rendering: RenderProject_RenderTable - didn't increment filename when rendering filename under certain circumstances -&gt; fixed (thnx to aurelien)</li>
 <li>Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -&gt; thnx to Malik</li>
 <li>UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -&gt; fixed</li>
 <li>UserInterface: ShowMenu - did only open once in a script though it should open multiple times -&gt; fixed</li>

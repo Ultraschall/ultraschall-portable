@@ -1,6 +1,6 @@
 Documentation on how to use the StuffMIDIMessage-function in Reaper's ReaScript.
 
-Documented by Meo Mespotine 11th of November 2020 - licensed under creative-commons-license CC-BY-NC
+Documented by Meo-Ada Mespotine 11th of November 2020 - licensed under creative-commons-license CC-BY-NC
 
 A user had a request for Ultraschall, which involved sending MIDI-messages.
 And one of the things I looked at to solve the request, was the function StuffMIDIMessage.
