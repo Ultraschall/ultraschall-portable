@@ -561,7 +561,7 @@ for i=1, #Devtools do
   XML_file=XML_file.."\t<source main=\"true\" file=\"/"..Devtools[i]:match(".*/(.*)").."\" type=\"script\">"..Url.."/ultraschall_api/Scripts/"..Devtools[i].."</source>\n"
 end
 
-print3(XML_file:sub(1,2000))
+--print3(XML_file:sub(1,2000))
 --print(XML_end)
 
 B=ultraschall.WriteValueToFile(Target_Dir.."/ultraschall_api_index-beta_rename_when_installing_it_works.xml", XML_start..XML_file..XML_end)

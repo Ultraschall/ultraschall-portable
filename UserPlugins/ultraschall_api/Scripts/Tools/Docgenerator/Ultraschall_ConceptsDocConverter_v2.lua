@@ -42,7 +42,7 @@ reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", 
 Tempfile=ultraschall.Api_Path.."/temp/"
 
 --Infilename=ultraschall.Api_Path.."/DocsSourcefiles/US_Api-Concepts.USDocML"
-Infilename=ultraschall.Api_Path.."/DocsSourcefiles/US_Api-Concepts.USDocML"
+Infilename=ultraschall.Api_Path.."/DocsSourcefiles/US_Api_Introduction_and_Concepts.USDocML"
 
 
 Outfile=ultraschall.Api_Path.."/Documentation/US_Api_Introduction_and_Concepts.html"

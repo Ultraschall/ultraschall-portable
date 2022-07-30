@@ -272,10 +272,10 @@ Note: Doesn't fucking work...
   
 - Render To Do:
  - Markers can be used for rendering now
- - FFMPEG-Renderstring - allows now for command-line-options
- - Presets: Tail-Length supported now
  - Fade In/Fade Out added now
-  
+ - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
+    Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
+    The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
 readd in next version:
   
 
@@ -296,6 +296,9 @@ Has now 1532 functions, with XX new ones
 
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
+  - FXManagement: GetFXByGuid - gets a fx by its guid
+  - FXManagement: TrackFX\_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project
+  - FXManagement: TakeFX\_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project  
   - MarkerManagement: GetMarkerType - returns the type of a marker
   - MarkerManagement: GetGuidFromCustomMarkerID - returns the guid from a custom-marker-index
   - MarkerManagement: GetGuidFromCustomRegionID - returns the guid from a custom-region-index
@@ -348,6 +351,8 @@ Has now 1532 functions, with XX new ones
   - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes      
   - Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini
   - UserInterface: GetReaperWindow\_Position - returns the Reaper-window-position and various of its elements  
+  - UserInterface: GetScaleRangeFromDpi - returns the scale-range a certain dpi-value has
+  - UserInterface: GetDpiFromScale - returns the dpi for a specific scale
   
 #### Changes from 4.6 to 4.7  
   - API: cleanup - a lot of cleanup in codebase and improvements in stability for future enhancements
@@ -357,34 +362,53 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: ItemStateChunk from Clipboard to item under mouse - copied statechunk into clipboard instead of setting it oooppsss -> fixed
   - DeveloperTools: LangPack2Developer\_langpack\_converter - shows now conversion progress in ReaScript-console
   - DeveloperTools: MonitorParmModulation - did crash, when a parameter-modulation was added after monitoring started -> fixed
+  - DeveloperTools: SortLinesInClipboardText - lost the last line before sorting -> fixed
   - DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed
   - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
   - Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals
   - Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
-  - HelperFunctions: Base64\_Decoder - sped up massively for longer strings(up to 98% faster)
-  - HelperFunctions: Base64\_Encoder - sped up massively for longer strings(up to 98% faster)
+  - HelperFunctions: Base64\_Decoder - sped up massively for longer strings(up to 94% faster)
+  - HelperFunctions: Base64\_Encoder - sped up massively for longer strings(up to 90% faster)
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
   - HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
-  - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the region-number(s)  
+  - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account  
+  - MarkerManagement: GetMarkerByTime - returns now an additional retval with the marker-number(s); takes now scale-factor into account
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
+  - MarkerManagement: GetRegionByTime - returns now an additional retval with the region-number(s); takes now scale-factor into account
   - MarkerManagement: GetShownoteMarkerIDFromGuid - did add error-messages to the error-messaging system without needing this -> fixed
   - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
+  - MediaItemManagement: RippleCut - supports now optional parameter to make add crossfade to the edit(requested by NiklasM)
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
-  - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac.  
-  - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though
+  - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
+  - Rendering: CreateRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_Settings\_MKV\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though)
   - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
-  - Rendering: GetRenderPreset\_RenderTable - bounds and options-name are now case-insensitive -> thanx to Malik
-  - Rendering: DeleteRenderPreset\_Bounds - bounds is now case-insensitive -> thnx to Malik
-  - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> thnx to Malik
+  - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_MKV\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options
+  - Rendering: AddRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+
+  - Rendering: GetRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
+  - Rendering: SetRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+
+  - Rendering: DeleteRenderPreset\_Bounds - bounds is now case-insensitive -> (thnx to Malik)
+  - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> (thnx to Malik)
   - Rendering: RenderProject\_RenderTable - didn't increment filename when rendering filename under certain circumstances -> fixed (thnx to aurelien)
-  - Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -> thnx to Malik
+  - Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -> (thnx to Malik)
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
+  - UserInterface: SetUIScale - allows now for scaling higher than 2000
   - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed
 
 ---

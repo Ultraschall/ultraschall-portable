@@ -4359,7 +4359,7 @@ function ultraschall.SetUIScale(scaling)
     boolean retval - true, setting was successful; false, setting was unsuccessful
   </retvals>
   <parameters>
-    number scaling - the scaling-factor; safe range is between 0.30 and 3.00, though 0 to 2000 is supported
+    number scaling - the scaling-factor; safe range is between 0.30 and 3.00, though higher is supported
   </parameters>
   <chapter_context>
     User Interface
@@ -4371,11 +4371,10 @@ function ultraschall.SetUIScale(scaling)
 </US_DocBloc>
 --]]
   if type(scaling)~="number" then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be a number", -1) return false end
-  if scaling<0 or scaling>2000 then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be between 0 and 2000", -2) return false end
+  if scaling<0 then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be 0 or higher", -2) return false end
   local B,BB=reaper.BR_Win32_GetPrivateProfileString("REAPER", "uiscale", "", reaper.get_ini_file())
   if BB=="1.00000000" then ultraschall.AddErrorMessage("SetUIScale", "", "Works only, if the \n\n   \"Scale UI elements of track/mixer panels, tansport, etc, by:\"-checkbox \n\nis enabled in \n\n    Preferences -> General -> Advanced UI/system tweaks-dialog,\n\n by setting the value in the dialog to anything else than 1.0.", -3) return false end
-  local A=ultraschall.DoubleToInt(scaling)
-  return reaper.SNM_SetIntConfigVar("uiscale", A)
+  return reaper.SNM_SetDoubleConfigVar("uiscale", scaling)
 end
 
 --B=ultraschall.SetUIScale(1)

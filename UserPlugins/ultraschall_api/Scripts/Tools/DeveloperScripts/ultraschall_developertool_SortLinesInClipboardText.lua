@@ -35,7 +35,7 @@ if reaper.GetExtState("ultraschall_api", "dontask_developertools")~="false" then
   if retval==2 then return end
 end
 
-A=FromClip()
+A=FromClip().."\n"
 
 B={}
 

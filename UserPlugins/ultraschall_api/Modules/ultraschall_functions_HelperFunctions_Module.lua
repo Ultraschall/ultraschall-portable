@@ -3600,12 +3600,12 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     source_string=string.gsub(source_string, "\t", " ")
   end
   
-  
+  --print2(0)
   -- tear apart the source-string into bits
   -- bitorder of bytes will be reversed for the later parts of the conversion!
   for i=1, source_string:len() do
     temp=string.byte(source_string:sub(i,i))
-    temp=temp
+    --temp=temp
     if temp&1==0 then tempstring[a+7]=0 else tempstring[a+7]=1 end
     if temp&2==0 then tempstring[a+6]=0 else tempstring[a+6]=1 end
     if temp&4==0 then tempstring[a+5]=0 else tempstring[a+5]=1 end
@@ -3629,6 +3629,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
   Entries[Entries_Count]=""
   local Count=0
     
+  --print2("1")
   for i=0, a-2, 6 do
     temp2=0
     if tempstring[i+1]==1 then temp2=temp2+32 end
@@ -3637,7 +3638,7 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     if tempstring[i+4]==1 then temp2=temp2+4 end
     if tempstring[i+5]==1 then temp2=temp2+2 end
     if tempstring[i+6]==1 then temp2=temp2+1 end
-    --encoded_string=encoded_string..base64_string:sub(temp2+1,temp2+1)
+    
     if Count>810 then
       Entries_Count=Entries_Count+1
       Entries[Entries_Count]=""
@@ -3646,11 +3647,23 @@ function ultraschall.Base64_Encoder(source_string, base64_type, remove_newlines,
     Count=Count+1
     Entries[Entries_Count]=Entries[Entries_Count]..base64_string:sub(temp2+1,temp2+1)
   end
-
+  --print2("2")
+  
+  local Count=0
+  local encoded_string2=""
+  local encoded_string=""
   for i=1, Entries_Count do
-    encoded_string=encoded_string..Entries[i]
+    Count=Count+1
+    encoded_string2=encoded_string2..Entries[i]
+    if Count==6 then
+      encoded_string=encoded_string..encoded_string2
+      encoded_string2=""
+      Count=0
+    end
   end
-
+  encoded_string=encoded_string..encoded_string2
+  --]]
+  --print2("3")
   -- if the number of characters in the encoded_string isn't exactly divideable 
   -- by 3, add = to fill up missing bytes
   --  OOO=encoded_string:len()%4
@@ -3702,19 +3715,27 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
   -- this is probably the place for other types of base64-decoding-stuff  
   local base64_string="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
   
+  local Table={}
+  local count=0
+  for i=65, 90 do  count=count+1 Table[string.char(i)]=count end
+  for i=97, 122 do count=count+1 Table[string.char(i)]=count end
+  for i=48, 57 do  count=count+1 Table[string.char(i)]=count end
+  count=count+1 Table[string.char(43)]=count
+  count=count+1 Table[string.char(47)]=count
   
   -- remove =
   source_string=string.gsub(source_string,"=","")
-
-  local L=source_string:match("[^"..base64_string.."]")
-  if L~=nil then ultraschall.AddErrorMessage("Base64_Decoder", "source_string", "no valid Base64-string: invalid characters", -3) return nil end
   
   -- split the string into bits
   local bitarray={}
   local count=1
   local temp
+
   for i=1, source_string:len() do
-    temp=base64_string:match(source_string:sub(i,i).."()")-2
+    local temp=Table[source_string:sub(i,i)]
+    --temp=base64_string:match(source_string:sub(i,i).."()")    
+    if temp==nil then ultraschall.AddErrorMessage("Base64_Decoder", "source_string", "no valid Base64-string: invalid character found - "..source_string:sub(i,i).." at position "..i, -3) return nil end
+    temp=temp-1
     if temp&32~=0 then bitarray[count]=1 else bitarray[count]=0 end
     if temp&16~=0 then bitarray[count+1]=1 else bitarray[count+1]=0 end
     if temp&8~=0 then bitarray[count+2]=1 else bitarray[count+2]=0 end
@@ -3723,7 +3744,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     if temp&1~=0 then bitarray[count+5]=1 else bitarray[count+5]=0 end
     count=count+6
   end
-  
+
   -- combine the bits into the original bytes and put them into decoded_string
   local Entries={}
   local Entries_Count=1
@@ -3743,7 +3764,7 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     if bitarray[i+6]==1 then temp2=temp2+4 end
     if bitarray[i+7]==1 then temp2=temp2+2 end
     if bitarray[i+8]==1 then temp2=temp2+1 end
-    --decoded_string=decoded_string..string.char(temp2)
+    
     if Count>780 then
       Entries_Count=Entries_Count+1
       Entries[Entries_Count]=""
@@ -3752,11 +3773,21 @@ function ultraschall.Base64_Decoder(source_string, base64_type)
     Count=Count+1
     Entries[Entries_Count]=Entries[Entries_Count]..string.char(temp2)
   end
-  
+
+  local Count=0
+  local decoded_string2=""
+  local decoded_string=""
   for i=1, Entries_Count do
-    decoded_string=decoded_string..Entries[i]
+    Count=Count+1
+    decoded_string2=decoded_string2..Entries[i]
+    if Count==6 then
+      decoded_string=decoded_string..decoded_string2
+      decoded_string2=""
+      Count=0
+    end
   end
-  
+  decoded_string=decoded_string..decoded_string2
+
   if decoded_string:sub(-1,-1)=="\0" then decoded_string=decoded_string:sub(1,-2) end
   return decoded_string
 end

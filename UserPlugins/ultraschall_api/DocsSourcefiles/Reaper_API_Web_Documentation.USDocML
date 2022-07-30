@@ -18,7 +18,7 @@
             You can place the files into the application-folder Plugins/reaper\_www\_root as well, but if you want to export them with the export-function within Reaper, they will simply be ignored.
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -63,7 +63,7 @@
 
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -227,7 +227,7 @@
             
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -258,7 +258,7 @@
             Note: If you create your own functions and variables, avoid names with a wwr or mk in it, as the Webinterface-functions and variables are named with them. That way, you can avoid name-conflicts with future versions of the Reaper-Webinterface.
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Introduction
         </chapter_context>
@@ -276,7 +276,7 @@
             A global variable, that stores the timer-frequency for requests. Default is 100 for 100ms, but can be changed to any other value in milliseconds, before calling wwr_start(). Don't choose a too low value, as this could cause Reaper becoming stuck and unresponsive!
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Special Variables
         </chapter_context>
@@ -294,7 +294,7 @@
             Starts the server. After that, requests can be send to Reaper.
         </description>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -317,7 +317,7 @@
             string request - The request to be sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.
         </parameters>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -339,7 +339,7 @@
             float timer_frequency - the timer frequency in milliseconds, that decides, how often this request shall be repeated. Don't choose to low, or Reaper might get stuck and unresponsive!
         </parameters>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -360,7 +360,7 @@
             string request - The request to be stopped from being sent to Reaper. Can be a commandID-number, an "_ActionID" or one of the requests listed in the "Readme"-chapter.
         </parameters>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -384,7 +384,7 @@
             string db_value - the converted value as dB
         </retvals>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -408,7 +408,7 @@
             string pan_percentage_value - the converted pan-value as percentage
         </retvals>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>
@@ -432,7 +432,7 @@
             string unescaped_values - the string where all newlines, tabs and backslashes are unescaped
         </retvals>
         <target_document>Reaper_API_Web_Documentation</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Web_Documentation.USDocML</source_document>
         <chapter_context>
             Functions
         </chapter_context>

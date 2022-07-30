@@ -89,7 +89,7 @@
       <chapter_context>
          An Introduction
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -107,7 +107,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -129,7 +129,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -167,7 +167,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -192,7 +192,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -216,7 +216,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -240,7 +240,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -272,7 +272,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -295,7 +295,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -326,7 +326,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -345,7 +345,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -365,7 +365,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -386,7 +386,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -406,7 +406,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -430,7 +430,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -453,7 +453,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -477,7 +477,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc> 
   
@@ -521,7 +521,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -553,7 +553,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -576,7 +576,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -598,7 +598,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -623,7 +623,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -644,7 +644,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -668,7 +668,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -691,7 +691,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -713,7 +713,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -736,7 +736,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -758,7 +758,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -781,7 +781,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -804,7 +804,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -828,7 +828,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -864,7 +864,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -885,7 +885,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -901,7 +901,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -926,7 +926,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -959,7 +959,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -992,7 +992,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1013,7 +1013,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1031,7 +1031,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1052,7 +1052,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1099,7 +1099,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1131,7 +1131,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1208,7 +1208,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1230,7 +1230,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1252,7 +1252,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -1274,7 +1274,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -2929,7 +2929,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -2948,7 +2948,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -2967,7 +2967,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3018,7 +3018,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3040,7 +3040,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3063,7 +3063,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3084,7 +3084,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3149,7 +3149,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3224,7 +3224,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3246,7 +3246,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3269,7 +3269,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3292,7 +3292,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3315,7 +3315,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3338,7 +3338,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3359,7 +3359,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3380,7 +3380,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -3398,7 +3398,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3421,7 +3421,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -3436,7 +3436,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3453,7 +3453,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3476,7 +3476,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3499,7 +3499,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3523,7 +3523,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3545,7 +3545,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3590,7 +3590,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3613,7 +3613,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -3633,7 +3633,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3652,7 +3652,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -3673,7 +3673,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3703,7 +3703,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3726,7 +3726,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3749,7 +3749,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3771,7 +3771,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3825,7 +3825,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3851,7 +3851,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3896,7 +3896,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3941,7 +3941,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3962,7 +3962,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -3987,7 +3987,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4012,7 +4012,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4055,7 +4055,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4099,7 +4099,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4165,7 +4165,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4184,7 +4184,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4203,7 +4203,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4225,7 +4225,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4243,7 +4243,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4261,7 +4261,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4278,7 +4278,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4296,7 +4296,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4322,7 +4322,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4395,7 +4395,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4421,7 +4421,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4437,7 +4437,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4458,7 +4458,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4481,7 +4481,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4506,7 +4506,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4531,7 +4531,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4555,7 +4555,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4579,7 +4579,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4601,7 +4601,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4634,7 +4634,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4659,7 +4659,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4679,7 +4679,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4697,7 +4697,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4717,7 +4717,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4744,7 +4744,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4767,7 +4767,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4816,7 +4816,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4834,7 +4834,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4855,7 +4855,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4878,7 +4878,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4901,7 +4901,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4922,7 +4922,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -4946,7 +4946,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5029,7 +5029,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5051,7 +5051,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5072,7 +5072,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -5094,7 +5094,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -5112,7 +5112,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5135,7 +5135,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5156,7 +5156,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
  
@@ -5179,7 +5179,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>    
   
@@ -5198,7 +5198,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc> 
   
@@ -5213,7 +5213,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5227,7 +5227,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5249,7 +5249,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5270,7 +5270,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5293,7 +5293,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5318,7 +5318,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5341,7 +5341,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5386,7 +5386,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5405,7 +5405,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5429,7 +5429,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5450,7 +5450,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5469,7 +5469,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5501,7 +5501,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5523,7 +5523,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5557,7 +5557,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5595,7 +5595,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5616,7 +5616,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5638,7 +5638,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -5666,7 +5666,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5690,7 +5690,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5713,7 +5713,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5747,7 +5747,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5770,7 +5770,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -5792,7 +5792,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5812,7 +5812,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5834,7 +5834,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5859,7 +5859,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5887,7 +5887,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5909,7 +5909,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5927,7 +5927,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5952,7 +5952,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5970,7 +5970,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -5996,7 +5996,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6019,7 +6019,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6036,7 +6036,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6059,7 +6059,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6082,7 +6082,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6100,7 +6100,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6119,7 +6119,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6180,7 +6180,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6199,7 +6199,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6218,7 +6218,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6240,7 +6240,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6264,7 +6264,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6285,7 +6285,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6308,7 +6308,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6331,7 +6331,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6352,7 +6352,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>    
     
@@ -6376,7 +6376,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -6398,7 +6398,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6445,7 +6445,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6467,7 +6467,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6518,7 +6518,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6563,7 +6563,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6601,7 +6601,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6646,7 +6646,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6662,7 +6662,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6711,7 +6711,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6771,7 +6771,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6824,7 +6824,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6844,7 +6844,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6863,7 +6863,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6885,7 +6885,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6907,7 +6907,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6929,7 +6929,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6952,7 +6952,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -6976,7 +6976,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7005,7 +7005,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7029,7 +7029,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7053,7 +7053,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7075,7 +7075,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7099,7 +7099,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
  
@@ -7114,7 +7114,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
  
@@ -7138,7 +7138,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7164,7 +7164,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7193,7 +7193,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7246,7 +7246,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7271,7 +7271,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7301,7 +7301,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7354,7 +7354,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7377,7 +7377,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7400,7 +7400,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7415,7 +7415,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7438,7 +7438,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7465,7 +7465,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -7486,7 +7486,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7510,7 +7510,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7537,7 +7537,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7560,7 +7560,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7585,7 +7585,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7644,7 +7644,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -7667,7 +7667,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7695,7 +7695,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7718,7 +7718,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7740,7 +7740,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7770,7 +7770,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7792,7 +7792,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7820,7 +7820,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7869,7 +7869,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -7893,7 +7893,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -7915,7 +7915,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7947,7 +7947,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7967,7 +7967,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -7991,7 +7991,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8010,7 +8010,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8031,7 +8031,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8057,7 +8057,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8091,7 +8091,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8125,7 +8125,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8168,7 +8168,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8189,7 +8189,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8210,7 +8210,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8231,7 +8231,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8250,7 +8250,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8269,7 +8269,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8296,7 +8296,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8315,7 +8315,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8341,7 +8341,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>    
  
@@ -8360,7 +8360,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -8382,7 +8382,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
  
@@ -8404,7 +8404,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8426,7 +8426,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8449,7 +8449,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8471,7 +8471,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8491,7 +8491,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8510,7 +8510,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8528,7 +8528,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -8546,7 +8546,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8564,7 +8564,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8597,7 +8597,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8615,7 +8615,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8633,7 +8633,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8652,7 +8652,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8672,7 +8672,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8688,7 +8688,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8708,7 +8708,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8733,7 +8733,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8754,7 +8754,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8777,7 +8777,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8799,7 +8799,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8817,7 +8817,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>    
   
@@ -8840,7 +8840,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -8852,14 +8852,15 @@
           Decimals are allowed for milliseconds.
           It's an double-float
           
-           >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000(limitation by the dialog, can be set higher)
+           >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+           >(limitation by the dialog, can be set higher)
 
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -8884,7 +8885,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -8903,7 +8904,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -8928,7 +8929,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8951,7 +8952,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -8972,7 +8973,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -9021,7 +9022,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9042,7 +9043,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9061,7 +9062,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9080,7 +9081,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9110,7 +9111,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9135,7 +9136,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9165,7 +9166,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9185,7 +9186,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9240,7 +9241,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9313,7 +9314,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9336,7 +9337,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9359,7 +9360,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9386,7 +9387,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9409,7 +9410,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9432,7 +9433,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9457,7 +9458,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9482,7 +9483,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9505,7 +9506,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9528,7 +9529,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9551,7 +9552,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9602,7 +9603,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9621,7 +9622,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9641,7 +9642,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9665,7 +9666,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9690,7 +9691,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9715,7 +9716,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9735,7 +9736,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9754,7 +9755,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9776,7 +9777,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9821,7 +9822,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9839,7 +9840,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9858,7 +9859,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9885,7 +9886,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9905,7 +9906,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9925,7 +9926,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9957,7 +9958,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -9979,7 +9980,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10001,7 +10002,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10037,7 +10038,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10081,7 +10082,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10102,7 +10103,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10122,7 +10123,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10143,7 +10144,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10164,7 +10165,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10193,7 +10194,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10212,7 +10213,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10231,7 +10232,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10288,7 +10289,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10322,7 +10323,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10344,7 +10345,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10371,7 +10372,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10396,7 +10397,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10461,7 +10462,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10482,7 +10483,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10505,7 +10506,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10528,7 +10529,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10550,7 +10551,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10580,7 +10581,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10638,7 +10639,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10656,7 +10657,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10674,7 +10675,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10692,7 +10693,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10713,7 +10714,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10731,7 +10732,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10768,7 +10769,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10791,7 +10792,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10815,7 +10816,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10842,7 +10843,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10864,7 +10865,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10892,7 +10893,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10915,7 +10916,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10930,7 +10931,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -10955,7 +10956,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -10977,7 +10978,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11020,7 +11021,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11042,7 +11043,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11075,7 +11076,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11103,7 +11104,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11143,7 +11144,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11195,7 +11196,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11219,7 +11220,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11265,7 +11266,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11283,7 +11284,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11299,7 +11300,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11333,7 +11334,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11369,7 +11370,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11390,7 +11391,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11412,7 +11413,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11434,7 +11435,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11484,7 +11485,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11506,7 +11507,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11573,7 +11574,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11594,7 +11595,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11609,7 +11610,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11630,7 +11631,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11654,7 +11655,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11673,7 +11674,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11732,7 +11733,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11756,7 +11757,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11781,7 +11782,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11803,7 +11804,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11824,7 +11825,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11850,7 +11851,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11876,7 +11877,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11898,7 +11899,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11920,7 +11921,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11943,7 +11944,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11966,7 +11967,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -11987,7 +11988,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12013,7 +12014,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12036,7 +12037,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12057,7 +12058,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12080,7 +12081,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12104,7 +12105,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12128,7 +12129,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12151,7 +12152,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12174,7 +12175,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12215,7 +12216,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12238,7 +12239,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12261,7 +12262,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12283,7 +12284,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12306,7 +12307,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12343,7 +12344,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12378,7 +12379,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12401,7 +12402,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12422,7 +12423,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12445,7 +12446,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12467,7 +12468,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12489,7 +12490,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12513,7 +12514,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12540,7 +12541,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12567,7 +12568,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12622,7 +12623,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12637,7 +12638,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12661,7 +12662,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12691,7 +12692,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12714,7 +12715,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12743,7 +12744,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12787,7 +12788,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12808,7 +12809,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12829,7 +12830,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12860,7 +12861,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12877,7 +12878,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12885,8 +12886,8 @@
       <slug>uiscale</slug>  
       <title>uiscale</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-          The ui-scaling of Reaper's UI, as set in Preferences->General->Advanced UI/system tweaks-dialog.
-          Setting this variable has only an effect, when the "Scale UI elements of track/mixer panels, transport, etc, by-checkbox is checked(usually, when the scaling-value in the inputfield is something else than 1.00).
+          The ui-scaling of Reaper's UI, as set in Preferences->General->Advanced UI/system tweaks-dialog.  
+          Setting this variable has only an effect, when the "Scale UI elements of track/mixer panels, transport, etc, by-checkbox is checked(usually, when the scaling-value in the inputfield is something else than 1.00).  
           It is a double  
            
            >0.3-3, the scaling value; other values are also supported(0, turns off tabs)
@@ -12896,7 +12897,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12933,7 +12934,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12953,7 +12954,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12975,7 +12976,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -12996,7 +12997,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13022,7 +13023,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13048,7 +13049,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13083,7 +13084,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13104,7 +13105,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13131,7 +13132,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13184,7 +13185,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13205,7 +13206,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13227,7 +13228,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13252,7 +13253,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13291,7 +13292,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13325,7 +13326,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13339,7 +13340,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13365,7 +13366,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13384,7 +13385,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13463,7 +13464,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13478,7 +13479,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13501,7 +13502,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13522,7 +13523,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13543,7 +13544,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13565,7 +13566,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13587,7 +13588,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13610,7 +13611,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13635,7 +13636,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13655,7 +13656,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -13676,7 +13677,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13700,7 +13701,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13738,7 +13739,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13760,7 +13761,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13782,7 +13783,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13850,7 +13851,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13872,7 +13873,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13894,7 +13895,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13915,7 +13916,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13938,7 +13939,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13958,7 +13959,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -13983,7 +13984,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
   
@@ -14007,7 +14008,7 @@
       <chapter_context>
          Config Variables  
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14029,7 +14030,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
     
@@ -14053,7 +14054,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14077,7 +14078,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14105,7 +14106,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14129,7 +14130,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14154,7 +14155,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14176,7 +14177,7 @@
          Reaper Ini-Only
          reaper_video
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14200,7 +14201,7 @@
          Reaper Ini-Only
          REAPER
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 
@@ -14222,7 +14223,7 @@
          Reaper Ini-Only
          REAPER
       </chapter_context>
-      <source_document>reaper-config_var.USDocML</source_document>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
 </USDocML>  

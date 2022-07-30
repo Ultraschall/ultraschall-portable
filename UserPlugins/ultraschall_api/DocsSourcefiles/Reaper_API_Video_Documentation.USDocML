@@ -19,7 +19,7 @@
             This effect can be circumvented by putting the video-processor-plugin as item-FX, NOT as track-FX.
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             1. Introduction
         </chapter_context>
@@ -88,7 +88,7 @@
             </code></pre>
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             1. Introduction
         </chapter_context>
@@ -106,7 +106,7 @@
             project time in seconds
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -124,7 +124,7 @@
             project setting time offset in seconds
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -142,7 +142,7 @@
             current tempo in BPM
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -160,7 +160,7 @@
             current time signature numerator
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -179,7 +179,7 @@
             current time signature denominator
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -197,7 +197,7 @@
             current project position in QN
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -215,7 +215,7 @@
             item time in seconds (if in item)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -233,7 +233,7 @@
             project FPS (30.0, 29.97, etc)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -251,7 +251,7 @@
             project preferred video width (code can override this before drawing)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -269,7 +269,7 @@
             project preferred video height (code can override this before drawing)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -287,7 +287,7 @@
             set nonzero if project_w/project_h reflect actual project setting (otherwise could be media-defined)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -309,7 +309,7 @@
             It will be automatically changed if 0 and a drawing operation occurs or an input is successfully queried via input_info().
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -328,7 +328,7 @@
             if in FX form, wet/dry mix of effect. 
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -361,7 +361,7 @@
             number step_size - the size of each step, when turning around the knob; can be float; negative values are interpreted as between 0 and 1; 0.005, if not given
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -380,7 +380,7 @@
             current drawing color (red 0..1)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -398,7 +398,7 @@
             current drawing color (green 0..1)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -416,7 +416,7 @@
             current drawing color (blue 0..1)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -434,7 +434,7 @@
             current drawing color (alpha 0..1)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -453,7 +453,7 @@
             current drawing color alpha channel value (RGB-only, 0..1, defaults to 1)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -482,7 +482,7 @@
                 0x80000 (flag ORed to above mode) to interpret gfx_r/gfx_g/gfx_b as YUV values (in YUV colorspaces)
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -501,7 +501,7 @@
             destination image handle, or -1 for main framebuffer
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             2. Special Variables
         </chapter_context>
@@ -523,7 +523,7 @@
             integer count_inputs - the number of inputs available
         </retvals>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -544,7 +544,7 @@
             integer count_tracks - the number of tracks available
         </retvals>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -568,7 +568,7 @@
             integer track - the track, whose bottommost item or FX you want
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -588,7 +588,7 @@
             integer num_tracks - the number of tracks above the current track, that could contain videoitems
         </retvals>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -614,7 +614,7 @@
             integer track - the tracknumber, whose bottommost input you want
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -638,7 +638,7 @@
             integer input - the input whose next_input you want
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -662,7 +662,7 @@
             integer input - the input, whose next input on a different track you want
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -683,7 +683,7 @@
             float fx_position - 1.0, FX is on master chain; 2.0, FX is on monitoring FX chain
         </retvals>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -716,7 +716,7 @@
             optional double parm1 - 
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -741,7 +741,7 @@
             string #str - the pointer to a string-variable, into which the input-name shall be stored
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -767,7 +767,7 @@
             optional integer clear - clear the image, before using it
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -801,7 +801,7 @@
             optional integer clear - set to clear the image; -1, clears only, if resize has occurred.
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -828,7 +828,7 @@
                    releases an image after it was used
         </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -860,7 +860,7 @@
                    holds an image for further analysis
         </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -881,7 +881,7 @@
             integer handle - the image handle, that you want to delete from further use
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -907,7 +907,7 @@
             integer #h - the pointer of a variable, into which the height in pixels shall be stored
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -934,7 +934,7 @@
             optional float a2 - the alpha2-value, see gfx_a2; if unset, defaults to 1
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -967,7 +967,7 @@
             optional integer srch - the height-offset in the source pixels, from which the input shall be blit from
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -998,7 +998,7 @@
                    sets color, alpha and mode for drawing
         </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1029,7 +1029,7 @@
             integer mode - 1, to use Y-value for U/V-source-channels
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1082,7 +1082,7 @@
             optional string src2 - a second source-image
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1121,7 +1121,7 @@
             optional float dady - the amount of delta-value, how the alpha-color shall be changed each pixel in y-direction
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1161,7 +1161,7 @@
                    alternative blitting method with source pixel transformation control
         </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1206,7 +1206,7 @@
             optional float dadxdy - affects x and y-direction at the same time; can be used for noise-effects; use 0 for original picture position
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1241,7 +1241,7 @@
             optional integer wantalpha - 0, transform the image only; 1, transform on an alpha-level
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1285,7 +1285,7 @@
             optional float kv4 - gain(YV12/YUV2) / spill removal(RGBA)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1335,7 +1335,7 @@
                    alternative chroma-key blitting method, using sourcecolor as key
         </linked_to>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1376,7 +1376,7 @@
                                    -    example: 'BI'
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1402,7 +1402,7 @@
             optional integer #h - a reference to a variable, that shall be set with the height in pixels by the function gfx_str_measure
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1431,7 +1431,7 @@
             optional float fxc_b - blue-color-value for outline/shadow, if set in the current font(0-1)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1463,7 +1463,7 @@
             optional integer #v4 - a pointer to a variable, into which gfx_getpixel writes the alpha-value
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1489,7 +1489,7 @@
             float #b - a pointer-variable; put the b-value into it, pass it to the function and it will replace the b-value with the v value
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1515,7 +1515,7 @@
             float #v - a pointer-variable; put the v-value into it, pass it to the function and it will replace the v-value with the b value
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             3. Specific Functions
         </chapter_context>
@@ -1546,7 +1546,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1571,7 +1571,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1597,7 +1597,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1623,7 +1623,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1648,7 +1648,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1673,7 +1673,7 @@
             integer size - the size of the FFT, as a power of two between  2^4(16) to 2^15(32768)
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1699,7 +1699,7 @@
             integer size - the size of the tables
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1732,7 +1732,7 @@
             Note: you can have only one gmem-buffername attached per video-processor-script.
         </description>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1771,7 +1771,7 @@
             optional integer #mouse_hwheel_state - ui_get_state puts into this variable the current horizontal-mouse-wheel-state
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1797,7 +1797,7 @@
             optional float - a pointer to a variable, into which time_precise can write the current time
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>
@@ -1821,7 +1821,7 @@
             optional integer isdone - 1, when done modifying parameter
         </parameters>
         <target_document>ReaperVideoProcessorApiReference</target_document>
-        <source_document></source_document>
+        <source_document>Reaper_API_Video_Documentation.USDocML</source_document>
         <chapter_context>
             4. Advanced Functions
         </chapter_context>

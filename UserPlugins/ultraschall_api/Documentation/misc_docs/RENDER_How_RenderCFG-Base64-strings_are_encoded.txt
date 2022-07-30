@@ -553,9 +553,9 @@ Video(ffmpeg/libav encoder)
     42: MJPEG/H.264 quality(0 to 2147483647)
     43: MJPEG/H.264 quality(0 to 2147483647)
     44: MJPEG/H.264 quality(0 to 2147483647) - highest byte
-    45+length: Command Line Options(the lower inputfield); length can be up to 255 bytes
+    45+length: Audio-Command Line Options(the lower inputfield); length can be up to 255 bytes
     45+length+1: indicator of ending of command-line-options(lower inputfield) - value 0
-    45+length+2+length2: Command Line Options(the upper inputfield); length can be up to 255 bytes
+    45+length+2+length2: Video-Command Line Options(the upper inputfield); length can be up to 255 bytes
     45+length+2+length2+1: indicator of ending of command-line-options(upper inputfield) - value 0
     
 

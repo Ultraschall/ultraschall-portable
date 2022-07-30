@@ -1269,16 +1269,16 @@ function ultraschall.SectionCut_Inverse(startposition, endposition, trackstring,
 end
 
 
-function ultraschall.RippleCut(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard, movemarkers)
+function ultraschall.RippleCut(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard, movemarkers, obey_crossfade)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.7
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, boolean movemarkers)</functioncall>
+  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, boolean movemarkers, optional boolean obey_crossfade)</functioncall>
   <description>
     Cuts out all items between startposition and endposition in the tracks given by trackstring. After cut, it moves the remaining items after(!) endposition toward projectstart, by the difference between start and endposition.
     
@@ -1293,6 +1293,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     boolean moveenvelopepoints - moves envelopepoints, if existing, as well
     boolean add_to_clipboard - true, puts the cut items into the clipboard; false, don't put into the clipboard
     boolean movemarkers - true or nil, move markers; false, don't move markers
+    optional boolean obey_crossfade - true, apply crossfade with the default length set in preferences; nil or false, apply no crossfade
   </parameters>
   <retvals>
     integer number_items - the number of cut items
@@ -1317,17 +1318,33 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   if type(moveenvelopepoints)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "moveenvelopepoints", "must be a boolean", -5) return -1 end
   if movemarkers~=nil and type(movemarkers)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "movemarkers", "must be a boolean", -7) return -1 end
   if movemarkers==nil then movemarkers=true end
+  if obey_crossfade~=nil and type(obey_crossfade)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "obey_crossfade", "must be either nil or boolean", -8) return -1 end
   local L,trackstring,A2,A3=ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
   if trackstring==-1 or trackstring=="" then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -6) return -1 end
-  local delta=endposition-startposition
+  if obey_crossfade==nil or obey_crossfade==false then 
+    obey_crossfade=0 
+  else
+    obey_crossfade=reaper.SNM_GetDoubleConfigVar("defsplitxfadelen", -19999999)    
+  end
+  startposition=startposition+obey_crossfade
+  local delta=endposition-startposition+obey_crossfade
+  --crossfade_value=reaper.SNM_GetIntConfigVar("splitautoxfade", -99)
+  
+  --if crossfade_value&1==1 then
+    --print2(crossfade_value&1)
+    --print2(reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1))
+  --end
+  
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
   local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)
-  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition,endposition,trackstring,true)
-    
+  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition+0.0000000000000001, endposition,trackstring,true)
+  
+--if lol==nil then return end
+  
   -- put the items into the clipboard  
   if add_to_clipboard==true then ultraschall.PutMediaItemsToClipboard_MediaItemArray(CC) end
   
-  local D=ultraschall.DeleteMediaItemsFromArray(CC) 
+  local D=ultraschall.DeleteMediaItemsFromArray(CC)   
   if moveenvelopepoints==true then
     local CountTracks=reaper.CountTracks()
     for i=0, CountTracks-1 do
@@ -1344,6 +1361,10 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     ultraschall.MoveMarkersBy(endposition, reaper.GetProjectLength(), -delta, true)
   end
   ultraschall.MoveMediaItemsAfter_By(endposition, -delta, trackstring)
+  
+  --if crossfade_value&1==1 then
+    --reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value)
+  --end
   return C,CCC
 end
 
