@@ -1719,6 +1719,7 @@ function ultraschall.GetIniFileValue(section, key, errval, inifile)
   if type(inifile)~="string" then ultraschall.AddErrorMessage("GetIniFileValue", "inifile", "must be a string", -1) return -1 end
   if section==nil then ultraschall.AddErrorMessage("GetIniFileValue", "section", "must be a string", -2) return -1 end
   if key==nil then ultraschall.AddErrorMessage("GetIniFileValue", "key", "must be a string", -3) return -1 end  
+  
   if reaper.file_exists(inifile)==false then ultraschall.AddErrorMessage("GetIniFileValue","inifile", "file does not exist", -4) return -1 end
   if errval==nil then errval="" end
   section=tostring(section)

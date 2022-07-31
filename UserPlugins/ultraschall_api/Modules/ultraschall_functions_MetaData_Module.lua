@@ -262,7 +262,7 @@ function ultraschall.SetGuidExtState(guid, key, value, savelocation, overwrite, 
   
   if savelocation==0 then 
     if overwrite==false and reaper.GetProjExtState(0, guid, key)>0 then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -8) return -1 end
-    print(guid, key, value:len())
+    --print(guid, key, value:len())
     return reaper.SetProjExtState(0, guid, key, value) 
   elseif savelocation==1 then 
     if overwrite==false and reaper.HasExtState(guid, key)==true then ultraschall.AddErrorMessage("SetGuidExtState","extension-state", "already exist", -9) return -1 end    

@@ -1770,6 +1770,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
                          - "chap_description" - a description of the content of this chapter
                          - "chap_is_advertisement" - yes, if this chapter is an ad; "", to unset it
                          - "chap_image" - the content of the chapter-image, either png or jpg
+                         - "chap_image_path" - the path to the filename of the chapter-image(Ultraschall will see it as placed in the project-folder!)
                          - "chap_image_description" - a description for the chapter-image
                          - "chap_image_license" - the license of the chapter-image
                          - "chap_image_origin" - the origin of the chapterimage, like an institution or similar 
@@ -1814,10 +1815,14 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   local retval
   
   local found=false
-  for i=1, #tags do
-    if attributename==tags[i] then
-      found=true
-      break
+  if attributename=="chap_image_path" then 
+    found=true
+  else
+    for i=1, #tags do
+      if attributename==tags[i] then
+        found=true
+        break
+      end
     end
   end
   
@@ -1834,6 +1839,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   if idx<1 then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such chapter-marker", -8) return false end
   local content2
   if is_set==false then    
+    --print2("")
     local B=ultraschall.GetMarkerExtState(idx, attributename)
     if B==nil then B="" end
     --if attributename=="chap_image" then
@@ -1846,7 +1852,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     else
       --content2=content
     end
-    print2(content:sub(1,1000))
+    --print2(content:sub(1,1000))
     return ultraschall.SetMarkerExtState(idx, attributename, content)~=-1, content
   end
 end
@@ -5633,7 +5639,7 @@ function ultraschall.GetScaleRangeFromDpi(dpi)
   if ultraschall.LastUsedDPI~=dpi then
     _, val = ultraschall.GetIniFileValue("DPI", tostring(dpi), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
     _, val2=ultraschall.GetIniFileValue("DPI", tostring(dpi+1), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
-    if tonumber(val2)==nil then print2(dpi, dpi+1) end
+    --if tonumber(val2)==nil then print2(dpi, dpi+1) end
     val2=tonumber(val2)-0.001
     
     ultraschall.LastUsedDPI=dpi
