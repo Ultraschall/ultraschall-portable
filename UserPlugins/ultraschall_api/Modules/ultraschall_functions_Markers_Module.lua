@@ -1157,11 +1157,11 @@ function ultraschall.DeleteNormalMarker(number)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>DeleteNormalMarker</slug>
   <requires>
-    Ultraschall=4.3
+    Ultraschall=4.7
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall> boolean retval = ultraschall.DeleteNormalMarker(integer number)</functioncall>
+  <functioncall>boolean retval = ultraschall.DeleteNormalMarker(integer number)</functioncall>
   <description>
     Deletes a Normal-Marker. Returns true if successful and false if not(i.e. marker doesn't exist) Use <a href="#EnumerateNormalMarkers">ultraschall.EnumerateNormalMarkers</a> to get the correct number.
     
@@ -1170,7 +1170,7 @@ function ultraschall.DeleteNormalMarker(number)
     returns -1 in case of an error
   </description>
   <parameters>
-    integer number - number of a normal marker
+    integer number - number of a normal marker; 0-based
   </parameters>
   <retvals>
      boolean retval  - true, if successful, false if not
@@ -1195,7 +1195,7 @@ function ultraschall.DeleteNormalMarker(number)
   local retnumber=0
   
   -- look for the right normal marker
-  for i=1, c-1 do
+  for i=0, c-1 do
     local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
       if name:match("^(_.-:).*")==nil and name:sub(1,5)~="_Edit" and color ~= ultraschall.planned_marker_color then 

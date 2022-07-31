@@ -1,3 +1,135 @@
+v6.64 - July 13 2022
+  + Batch converter: allow window to be resized to a smaller minimum height
+  + GIF: fix memory leak when decoding files that have per-frame color maps
+  + GIF: reduce memory use when decoding gif files with many frames
+  + Help menu: sort documentation menu by filename [t=268485]
+  + JSFX: set undo point after calling set_pinmapper_flags()
+  + JSFX: sstillwell/randomizer supports 0x90 velocity=0 note-offs [p=2575240]
+  + JSFX: support automating and undo for user mix volume sliders in channel mapper plugin [t=266268]
+  + Master track: fix loudness meter readout tooltip
+  + Media explorer: add loudness column, loudness calculation
+  + Media explorer: add option to normalize preview volume to -12LU (adjusted for mono media if needed) if loudness has been calculated
+  + Media explorer: add separate actions to calculate peak volume, loudness, or dry run statistics
+  + Normalization: respect take channel mode when normalizing media items to target loudness [t=268290]
+  + ReaScript: add CalcMediaSrcLoudness function
+  + Region manager: sort take markers in project time order
+  + Region manager: support selecting marker/region by name by typing in list view on Windows [t=268219]
+  + Render: add menu item/action to display HTML render statistics with file paths hidden [t=268031]
+  + Render: display project title and author in HTML render statistics, if they are set
+  + Render: display RMS-RA (RMS-based dynamic range) measurement when LRA (LUFS-based dynamic range) is not calculated
+  + Render: if no render file name is saved with the project, command line and queued renders use the project name as the output filename [t=258746]
+  + Render: re-enable bounds dropdown if needed after loading render preset [t=268430]
+  + Render: simplify loudness statistic preferences
+  + Render: improve render statistics calculation CPU usage
+  + Render: support fade-in/fade-out length, shapes
+  + Resampling: fix r8brain-free hang when used with invalid samplerates [t=268643]
+  + Theme: improve rounding for knob stacks [p=2575187]
+  + Wave64: fix writing of floating point Wave64 files that lack channel ordering information (6.62 regression)
+  + Windows: restore 6.61 alt-key behavior (to be revisited) [p=2577622]
+
+v6.63 - July 3 2022
+  + Batch converter: fix issues with Audio Units that use PDC [p=2574402]
+  + Render: document $markernumber wildcard (it has been supported for a long time, but not documented)
+  + Windows: fix project parsing regression from 6.62 [t=268406]
+
+v6.62 - July 1 2022
+  + Actions window: update shortcut list when editing an existing shortcut
+  + Automation: improve behavior when using write mode auto-reset at loop/end of project [t=268217]
+  + Batch converter: when preserving existing metadata, also attempt to convert to metadata schemes the target file format can accept [t=267540]
+  + FX: clearer description in FX I/O context menu of whether plug-in delay is compensated or not [t=267823]
+  + FX: improve parameter link behavior (midi CC and loading project, or linking with invalid parameters) [t=250096]
+  + FX: ensure FX parameter modulation/linking are preserved after undo after loading FX chains via external drag/drop [t=267697]
+  + Linux: auto-apply values entered into JSFX text fields
+  + Linux: fix support for Shift+Space
+  + Linux: improve submenu activation usability [t=267864]
+  + macOS/Linux: cleanup internal thread management, avoid potentially incorrect pthread_join calls
+  + Media explorer: add support for column width/order presets (in column header right-click menu)
+  + Media explorer: add actions to load column presets
+  + Normalization: prevent media from going offline during normalization even if user switches focus away from REAPER [t=268059]
+  + Notation editor: fix occasional missing naturals [t=267973]
+  + Pan: fix UI glitches when changing pan mode [p=2572042]
+  + Project markers: add menu item to select marker in Region/Marker Manager; display selected markers slightly differently in ruler
+  + Razor edits: fix trim action when multiple razor edits exist on the same media item or automation item [t=267402]
+  + Razor edits: fix editing when partial measures exist in project [p=2572470]
+  + ReaControlMIDI: fix incorrect parsing of leading 0s as octal [t=266904]
+  + ReaEQ: avoid tiny and unmeasureable changes to configuration state on load/save [t=268198]
+  + ReaEQ: improve realtime performance immediately following configuration load
+  + ReaVerb: add text to indicate which file to browse for when deconvolving on macOS [t=267881]
+  + Render: add support for rendering between project markers
+  + Render: improve speed of offline render with muted/unsoloed tracks [t=267271]
+  + Render: save/restore tail length with render presets [t=264018]
+  + Spectral edits: add mouse modifier to create new edits
+  + VST: fix sample accurate parameter changes with bridged VST3 plug-ins
+  + VST: round VST2 VstTimeInfo::samplePos to nearest sample [t=268181]
+  + WAV: allow writing FP with extensible multichannel speaker configuration
+  + WAV: when writing non-PCM files, include extension size to conform to spec and prevent SOX from warning
+  + Windows: avoid creating filenames that start with a space character [t=267882]
+  + Windows: improve behavior of space bar in edit controls (including plugin-created controls)
+  + Windows: improve alt-key behavior relating to menu activation
+
+v6.61 - June 17 2022
+  + Actions: fix potential crash when running action to normalize selected items with no items selected
+  + Drawing: various drawing integer overflow fixes with non-sensical values [t=267310]
+  + Envelopes: fix pencil-drawing take envelopes on stretched media items in certain situations [t=267716]
+  + FX: ensure FX parameter modulation/linking are preserved after undo after loading FX chains [t=267697]
+  + FX browser: include LV2i in Instruments list [t=267835]
+  + Master track: fix loudness meter readout tooltip label in mixer
+  + Media explorer: add a hidden accessible text field for pitch detection output
+  + MIDI: fix exporting type 1 MIDI that has both embedded cues and key signature changes [p=2569390]
+  + MIDI: fix key signature export [t=267626]
+  + ReaSamploMatic5000: add Media Explorer options to set a MIDI note or channel to assign when inserting media into sampler, incrementing if inserting on new track
+  + ReaSamploMatic5000: add Media Explorer option to assign MIDI note based on detected pitch when inserting media into sampler
+  + ReaSamploMatic5000: when inserting into sampler and detecting pitch, assign sampler pitch start rather than note start (so the sample can be played at different pitches, correctly tuned)
+  + ReaSamplomatic5000: add pitch detection
+  + ReaSamplomatic5000: display note names for pitch offset
+  + ReaSamplomatic5000: if sample detected pitch is out of range of pitch start parameter, add octaves to note start parameter as needed [p=2549739]
+  + ReaSamplomatic5000: support sorting sample list by detected pitch
+  + ReaSamplomatic5000: support typing in sample pitch
+  + ReaSamploMatic5000: when inserting media from media explorer into an existing sampler instance, obey preferences to apply volume/pitch adjustment
+  + ReaScript: fix Track/TakeFX_AddByName() matching existing instances when using FX-type prefix [t=267548]
+  + Recording: fix pre-fx/pre-fader output recording when live FX multiprocessing is disabled
+  + Render: always display one momentary, one short-term, and one integrated render statistic in render dialog
+  + Render: fully cancel render queue when user clicks "cancel all" [t=267732]
+  + Render: make clearer in preferences that either LUFS or RMS, both not both, will be calculated/displayed for a given period (momentary, short-term, or integrated)
+  + Spectral edits: fix incomplete loading of certain complex shapes
+  + Spectral edits: prevent resizing regions into entirely negative space
+  + Spectral edits: when inserting a new edit, select the edit by default
+  + Theme: hit test vol/pan/width labels last even when they are above other controls [t=267524]
+  + Undo: do not process deferred undo points if in the middle of a mouse edit
+  + Video: fix some WMF decoding issues that were un-fixed by a different WMF decoding fix in v6.60
+  + Video: hopefully improve WMF compatibility further
+  + Video: fix performance/stability issues when using AVFoundation decoding on a track that does not use media buffering [t=267563]
+  + VST: improve initial size behavior with plug-ins that adjust size when UI opens (Kee Bass)
+  + Windows: improve appearance of checked bitmap menu items (fades, note head shapes, etc)
+
+v6.60 - June 8 2022
+  + API: extend hwnd_info hook API to allow disabling global hotkeys for a particular context
+  + Crossfade editor: fix grouped item editing behavior when editor is open [t=266599]
+  + Envelopes: fix incorrect envelope edit when moving media items across tracks with ripple-all enabled and moving envelope points with media items [t=267039]
+  + FX: allow resizing FX windows beyond screen size on Windows
+  + FX: improve automation-recording behavior with PDC when set to stop at end of time selection [p=2562770]
+  + Grouping: when splitting grouped items, group all items that start at effectively the same time as the split point, rather than items that start after the split point [t=264639]
+  + macOS: disable automatic key equivalent localization on macOS 12.0+
+  + Media explorer: new user-added columns default to "custom" rather than "read-only" [t=267357]
+  + MIDI: fix looped playback issues with partial blocks and multiple simultaneous note-ons
+  + MIDI: if notation option "key signature changes affect all tracks" is enabled, embed key signature changes when exporting type 1 MIDI files [t=264803]
+  + Mouse modifiers: fix enabling/disabling snap modifier during drag while creating marquee or razor edit area [p=2567049]
+  + ReaFIR: clamp manually-edited point gain to graph range [t=267449]
+  + ReaPlugs: improve end-of-touch automation support when tweaking sliders with keyboard/mousewheel
+  + Recording: add per-track setting to record track output pre-FX or post-FX/pre-fader
+  + Render: fix HTML render charts when files/markers/regions contain some special characters [t=267349]
+  + Render: slight memory use improvement when resampling during render
+  + Splash: improve status messages when loading FX [t=155245]
+  + Splash: add option to skip splash screen animations on startup
+  + Video: optimize opening of extra pooled audio decoders (do not try decode modes that previously failed)
+  + Video: improve video preview display when using various edit modes [t=264785] [p=2566992]
+  + Video: improve WMF decoding compatibility [t=267260]
+  + Video: work around WMF bug when decoding certain files, by falling back to other decoders [t=266959]
+  + VST: automatically end touch automation recording if configuration window is closed
+  + VST: improve plug-in scanning process (especially macOS NI plug-ins)
+  + WALTER: using front for mcp.extmixer now brings extmixer background higher in the Z-order
+  + Windows: fix issue when rapidly clicking new project tab toolbar button [t=267507]
+
 v6.59 - May 30 2022
   + Actions: add actions to move/copy contents of time selection to edit cursor [t=211511]
   + Batch converter: add menu item to display converted file properties

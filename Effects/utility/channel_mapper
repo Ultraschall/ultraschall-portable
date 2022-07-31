@@ -81,6 +81,23 @@ act=0; // activity monitor
 ext_noinit=1;
 links=0;
 
+chmenu=1024;
+i=0; ch=2; dch=2;
+while (ch <= 64) (
+  chmenu[i]=ch;
+  ch == 16 ? dch=4 : ch == 24 ? dch=8 : ch == 32 ? dch=16;
+  ch += dch;
+  i += 1;
+);
+ ch=16;
+while (ch <= 64) (
+  chmenu[i]=ch;
+  ch == 32 || ch == 48 ? ( i += 1; chmenu[i]=ch; );
+  ch += 2;
+  i += 1;
+);
+chmenu_len=i;
+
 // using _var for audio thread state
 // unrolling for efficiency
 _v0=slider1; _v1=slider2; _v2=slider3; _v3=slider4;
@@ -194,7 +211,7 @@ num_ch > 60 ? ( abs(spl60) > 0.001 ? act[60]=1; abs(spl61) > 0.001 ? act[61]=1; 
 file_var(0, links);
 
 
-@gfx 240 240
+@gfx 240 280
 
 ui_open=1;
 
@@ -231,7 +248,7 @@ sz=16*sc;
 ox=2*sz;
 oy = umix ? 11.5*sz : (flags&6) ? 5*sz : 4.5*sz;
 
-ni=max(floor((gfx_w-ox)/sz-13),2);
+ni=max(floor((gfx_w-ox)/sz-14),2);
 nj=max(floor((gfx_h-oy)/sz-2),2);
 xscr = ni < nch || (ni == nch && nj < nch) ? 1 : 0;
 yscr = nj < nch || (nj == nch && ni < nch) ? 1 : 0;
@@ -352,8 +369,8 @@ yscr ? (
 
 gfx_set(fg,fg,fg);
 
-sy=2.5*sz;
-sh=4.5*sz;
+fy=2.5*sz;
+fh=4.5*sz;
 
 function draw_radio(tx ty te ts)
 (
@@ -368,36 +385,36 @@ function draw_slider(ti)
   x=ox+(ti+0.5)*sz;
   v=slider(tti+1);
   v < 0 ? v=0 : v > 1 ? v=1;
-  vy=sh*(exp(v)-1)/(exp(1)-1);
+  vy=fh*(exp(v)-1)/(exp(1)-1);
 
-  gfx_rect(x-sc,sy,2*sc,sh);
-  gfx_rect(x-0.3125*sz,sy+sh-vy-0.25*sz,0.625*sz,0.25*sz);
+  gfx_rect(x-sc,fy,2*sc,fh);
+  gfx_rect(x-0.3125*sz,fy+fh-vy-0.25*sz,0.625*sz,0.25*sz);
 
   has_link=(links&(1<<(tti/2)));
   has_link ? (
     (tti&1) && ti == 0 ? (
-      gfx_rect(x-0.625*sz,sy+sh-vy-0.25*sz,0.375*sz,0.25*sz);
+      gfx_rect(x-0.625*sz,fy+fh-vy-0.25*sz,0.375*sz,0.25*sz);
     ) :
     !(tti&1) ? (
-      gfx_rect(x+0.3125*sz,sy+sh-vy-0.25*sz,0.375*sz,0.25*sz);
+      gfx_rect(x+0.3125*sz,fy+fh-vy-0.25*sz,0.375*sz,0.25*sz);
     );
   );
 
   ti > 0 && (tti&1) ? (
-    draw_radio(x-0.5*sz-sc,sy+sh+0.5*sz,has_link,0);
+    draw_radio(x-0.5*sz-sc,fy+fh+0.5*sz,has_link,0);
   );
 
   v <= 0.0 ? #str="-inf" : (
     db=20.0*log(v)/log(10);
     sprintf(#str,"%s%.1f",v >= 1.0 ? "+" : "",db);
   );
-  draw_str(x,sy-2*sz,#str,6,257);
+  draw_str(x,fy-2*sz,#str,6,257);
 );
 
 umix ?
 (
-  draw_str(ox+(ni+1.75)*sz,sy+sh+0.5*sz,"Link",1,260);
-  draw_str(ox+(ni+0.5)*sz,sy+sh+0.5*sz,#arr,4,260);
+  draw_str(ox+(ni+1.75)*sz,fy+fh+0.5*sz,"Link",1,260);
+  draw_str(ox+(ni+0.5)*sz,fy+fh+0.5*sz,#arr,4,260);
   i=0;
   loop(ni,
     draw_slider(i);
@@ -405,45 +422,7 @@ umix ?
   );
 );
 
-function draw_box(tx ty ti)
-(
-  gfx_x=tx-0.5*bsz;
-  gfx_y=ty-0.5*bsz;
-  gfx_lineto(gfx_x+bsz, gfx_y);
-  gfx_lineto(gfx_x, gfx_y+bsz);
-  gfx_lineto(gfx_x-bsz, gfx_y);
-  gfx_lineto(gfx_x, gfx_y-bsz);
-  gfx_x += 0.25*bsz;
-  gfx_y += 0.5*bsz;
-  gfx_lineto(gfx_x+0.5*bsz,gfx_y);
-  ti ? (
-    gfx_x -= 0.25*bsz;
-    gfx_y -= 0.25*bsz;
-    gfx_lineto(gfx_x,gfx_y+0.5*bsz);
-  );
-);
-
-bsz=0.5*sz;
-bx=2*bsz;
-b1y=oy-1.5*bsz;
-b2y=oy+nj*sz+1.5*bsz;
-nch > 2 ? draw_box(bx,b1y,0);
-nch < 64 ? draw_box(bx,b2y,1);
-
-iox=ox+(ni+6)*sz;
-ioy=1.5*sz;
-draw_str(iox-bsz,ioy,"Unmapped outs:",1,260);
-draw_radio(iox,ioy+sz,(flags&1)==0,"Pass through");
-draw_radio(iox,ioy+2*sz,(flags&1)==1,"Zero out");
-draw_str(iox-bsz,ioy+4*sz,"Downmix:",1,260);
-draw_radio(iox,ioy+5*sz,(flags&14)==0,"None");
-draw_radio(iox,ioy+6*sz,(flags&14)==2,"Shared ins -3dB ");
-draw_radio(iox,ioy+7*sz,(flags&14)==4,"Shared ins -6dB");
-draw_radio(iox,ioy+8*sz,(flags&14)==8,"User mix");
-
-gfx_measurestr("XXXXX",btw,bth);
-btw += 4*sc;
-bth += 4*sc;
+btw=3*sz+4*sc; bth=sz+4*sc;
 function draw_button(tx,ty,ts)
 (
   draw_str(tx,ty,ts,1,261);
@@ -454,6 +433,30 @@ function draw_button(tx,ty,ts)
   gfx_lineto(gfx_x-btw,gfx_y);
   gfx_lineto(gfx_x,gfx_y-bth);
 );
+
+nx=ox+(ni+5.5)*sz;
+ny=1.5*sz;
+draw_str(nx,ny,"Channels:",1,260);
+gfx_measurestr("Channels:",txtw,txth);
+nx += txtw+2*sz;
+draw_button(nx,ny,"");
+gfx_line(nx+0.25*sz,ny-0.5*sz,nx+0.25*sz,ny+0.5*sz);
+gfx_line(nx+0.625*sz,ny-0.125*sz,nx+0.9375*sz,ny+0.125*sz);
+gfx_line(nx+1.25*sz,ny-0.125*sz,nx+0.9375*sz,ny+0.125*sz);
+sprintf(#str,"%d",nch);
+draw_str(nx-0.75*sz,ny,#str,1,261);
+
+iox=ox+(ni+6)*sz;
+ioy=ny+2.5*sz;
+bsz=0.5*sz;
+draw_str(iox-bsz,ioy,"Unmapped outs:",1,260);
+draw_radio(iox,ioy+sz,(flags&1)==0,"Pass through");
+draw_radio(iox,ioy+2*sz,(flags&1)==1,"Zero out");
+draw_str(iox-bsz,ioy+4*sz,"Downmix:",1,260);
+draw_radio(iox,ioy+5*sz,(flags&14)==0,"None");
+draw_radio(iox,ioy+6*sz,(flags&14)==2,"Shared ins -3dB ");
+draw_radio(iox,ioy+7*sz,(flags&14)==4,"Shared ins -6dB");
+draw_radio(iox,ioy+8*sz,(flags&14)==8,"User mix");
 
 rx=iox-bsz+btw/2;
 ry=ioy+10.5*sz;
@@ -489,13 +492,13 @@ function hit_box(tx ty)
         ci=si;
         cx=mouse_x;
       ) :
-      umix && mouse_y >= sy-0.25*sz && mouse_y < sy+sh+0.25*sz ? (
+      umix && mouse_y >= fy-0.25*sz && mouse_y < fy+fh+0.25*sz ? (
         i=floor((mouse_x-ox)/sz);
         cap |= (i+1)<<8;
         cv=slider(si+i+1);
         cy=mouse_y;
       ) :
-      umix && abs(mouse_y-(sy+sh+0.5*sz)) < bsz ? (
+      umix && abs(mouse_y-(fy+fh+0.5*sz)) < bsz ? (
         i=si+(mouse_x-ox)/sz-0.75;
         i < floor(i)+0.5 ? (
           i |= 0;
@@ -504,19 +507,13 @@ function hit_box(tx ty)
             links=links~(1<<i);
             (links&(1<<i)) ? (
               slider(2*i+2)=slider(2*i+1);
-              sliderchange(2^(2*i+1));
+              slider_automate(2^(2*i+1));
             );
           );
         );
       );
     ) :
     mouse_x < ox-0.25*sz ? (
-      nch > 2 && hit_box(bx,b1y) ? (
-        set_host_numchan(get_host_numchan()-2);
-      ) :
-      nch < 64 && hit_box(bx,b2y) ? (
-        set_host_numchan(get_host_numchan()+2);
-      ) :
       yscr && mouse_y >= oy && mouse_y < oy+nj*sz ? (
         cap |= 4;
         cj=sj;
@@ -545,6 +542,29 @@ function hit_box(tx ty)
         i += 1;
       );
     ) :
+    hit_button(nx,ny,btw,bth) ? (
+      gfx_x=nx-0.5*btw;
+      gfx_y=ny+0.5*bth;
+      #menu="";
+      i=0;
+      while (i < chmenu_len) (
+        i > 0 ? strcat(#menu,"|");
+        i == 13 || i == 22 || i == 31 ? (
+          i == 13 ? strcat(#menu,"|");
+          sprintf(#str,">%d-%d|",chmenu[i],chmenu[i]+16);
+          strcat(#menu,#str);
+        ) :
+        i == 21 || i == 30 ? (
+          strcat(#menu,"<");
+        );
+        chmenu[i] == nch ? strcat(#menu,"!");
+        sprintf(#str,"%d",chmenu[i]);
+        strcat(#menu,#str);
+        i += 1;
+      );
+      menusel=gfx_showmenu(#menu)-1;
+      menusel >= 0 ?  set_host_numchan(chmenu[menusel]);
+    ) :
     abs(mouse_x-iox) < 0.75*bsz ? (
       f=flags;
       hit_box(iox,ioy+sz) ? f&=(-1~1) :
@@ -566,16 +586,16 @@ function hit_box(tx ty)
 ) :
 (cap&0xff00) ? (
   i=si+(cap>>8)-1;
-  v=(exp(cv)-1)/(exp(1)-1)-(mouse_y-cy)/sh;
+  v=(exp(cv)-1)/(exp(1)-1)-(mouse_y-cy)/fh;
   v < 0 ? v=0 : v > 1 ? v=1 : v=log((exp(1)-1)*v+1);
-  abs(v-1/sqrt(2)) < 1.5/sh ? v=1/sqrt(2) :
-  abs(v-0.5) < 1.5/sh ? v=0.5;
+  abs(v-1/sqrt(2)) < 1.5/fh ? v=1/sqrt(2) :
+  abs(v-0.5) < 1.5/fh ? v=0.5;
   slider(i+1)=v;
-  sliderchange(2^i);
+  slider_automate(2^i);
   (links&(1<<(i/2))) ? (
     j = !(i&1) ? i+1 : i-1;
     slider(j+1)=v;
-    sliderchange(2^j);
+    slider_automate(2^j);
   );
 ) :
 mouse_wheel ? (
@@ -585,18 +605,18 @@ mouse_wheel ? (
   xscr && mouse_y > scyx-0.25*sz ? (
     si += floor(mouse_wheel/120);
   ) :
-  umix && mouse_y >= sy && mouse_y < sy+sh ? (
+  umix && mouse_y >= fy && mouse_y < fy+fh ? (
     i=floor((mouse_x-ox)/sz);
     i >= 0 && i < ni ? (
       i += si;
-      v=slider(i+1)+floor(mouse_wheel)/120*2/sh;
+      v=slider(i+1)+floor(mouse_wheel)/120*2/fh;
       v < 0 ? v=0 : v > 1 ? v=1;
       slider(i+1)=v;
-      sliderchange(2^i);
+      slider_automate(2^i);
       (links&(1<<(i/2))) ? (
         j = !(i&1) ? i+1 : i-1;
         slider(j+1)=v;
-        sliderchange(2^j);
+        slider_automate(2^j);
       );
     );
   );

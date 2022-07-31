@@ -184,6 +184,13 @@ def RPR_BypassFxAllTracks(p0):
   t=(c_int(p0),)
   f(t[0])
 
+def RPR_CalcMediaSrcLoudness(p0):
+  a=_ft['CalcMediaSrcLoudness']
+  f=CFUNCTYPE(c_int,c_uint64)(a)
+  t=(rpr_packp('PCM_source*',p0),)
+  r=f(t[0])
+  return r
+
 def RPR_CalculateNormalization(p0,p1,p2,p3,p4):
   a=_ft['CalculateNormalization']
   f=CFUNCTYPE(c_double,c_uint64,c_int,c_double,c_double,c_double)(a)

@@ -25595,9 +25595,9 @@ Normal markers are all markers, that don't include "_Shownote:" or "_Edit" in th
 <a class="anch" id="DeleteNormalMarker"></a>
 <a href="#DeleteNormalMarker"> ^</a> 
 <img width="3%" src="gfx/reaper5.40.png" alt="Reaper version 5.40">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>DeleteNormalMarker</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>DeleteNormalMarker</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code>  <i>boolean</i> retval = <em>ultraschall.DeleteNormalMarker</em>(<i>integer</i> number)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.DeleteNormalMarker</em>(<i>integer</i> number)</code></div>
 </div><p>
 <div class="ch">
 Deletes a Normal-Marker. Returns true if successful and false if not(i.e. marker doesn't exist) Use <a href="#EnumerateNormalMarkers">ultraschall.EnumerateNormalMarkers</a> to get the correct number.<br>
@@ -25615,7 +25615,7 @@ returns -1 in case of an error<br>
 <u>Parameters:</u>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> <i>number</i></td></tr>
-<tr><td class="ch2">number of a normal marker</td></tr>
+<tr><td class="ch2">number of a normal marker; 0-based</td></tr>
 </table>
 <br>
 </div>

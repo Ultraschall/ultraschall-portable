@@ -373,6 +373,7 @@ Has now 1532 functions, with XX new ones
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
   - HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
+  - MarkerManagement: DeleteNormalMarker - did not correctly delete the first normal marker, when it was the first one in the project -> fixed
   - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account  
   - MarkerManagement: GetMarkerByTime - returns now an additional retval with the marker-number(s); takes now scale-factor into account
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)

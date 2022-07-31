@@ -127,6 +127,7 @@ Bla</li>
 <li>HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings</li>
 <li>HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings</li>
 <li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
+<li>MarkerManagement: DeleteNormalMarker - did not correctly delete the first normal marker, when it was the first one in the project -&gt; fixed</li>
 <li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account<br />
 </li>
 <li>MarkerManagement: GetMarkerByTime - returns now an additional retval with the marker-number(s); takes now scale-factor into account</li>
