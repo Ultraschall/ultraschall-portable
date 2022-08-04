@@ -384,6 +384,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
   - MediaItemManagement: RippleCut - supports now optional parameter to make add crossfade to the edit(requested by NiklasM)
+  - MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed

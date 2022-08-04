@@ -26,6 +26,7 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+ultraschall.MarkerMenu_Start()
 
 --------------------------
 -- Start Ultraschall Messaging
@@ -292,14 +293,13 @@ if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value
 
 end
 
-ultraschall.MarkerMenu_Start()
 
 ultraschall.EventManager_Start()
 
 function CheckMarkerMenu()
   if reaper.GetExtState("ultraschall_api", "markermenu_started")=="" then return true else return false end
 end
---event_identifier = ultraschall.EventManager_AddEvent("Check If Marker Menu Is Still Running", 0, 0, true, false, CheckMarkerMenu, {"_Ultraschall_Start_MarkerMenu,0"})
+event_identifier = ultraschall.EventManager_AddEvent("Check If Marker Menu Is Still Running", 0, 0, true, false, CheckMarkerMenu, {"_Ultraschall_Start_MarkerMenu,0"})
 
 
 --------------------------
