@@ -13,7 +13,7 @@ WindowX     = 30 -- x-position
 WindowY     = 30 -- y-position
 WindowWidth = 400 -- width of the window
 WindowHeight= 360 -- height of the window
-WindowTitle = "Edit Shownote Attributes"
+WindowTitle = "Edit Chapter Attributes"
 
 ToolTipWaitTime=30 -- the waittime-until tooltips are shown when hovering above them; 30~1 second
 
@@ -39,58 +39,61 @@ function main()
   -- Address - text and inputbox
   --  the length is linked to gfx.w, so it always uses the whole window for display
   Y=Y+11
-  DrawText (Indentation1,  Y, "General Attributes", 85, "Set attributes for this shownote")
+  DrawText (Indentation1,  Y, "General Attributes", 85, "Edit the attributes of a chapter")
 
   Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Title", 0, "The title of this Shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "title", "Enter title of this shownote", "Shownote Title")
+  DrawText (Indentation1+Indentation2,  Y, "Title", 0, "The title of this Chapter")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "title", "Enter title of this shownote", "Chapter Title")
 
   Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Description", 0, "A description for this shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_description", "Describe this shownote", "Shownote Description")
+  DrawText (Indentation1+Indentation2,  Y, "Description", 0, "A description for this chapter.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_description", "Describe this chapter", "Chapter Description")
 
   Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Tags", 0, "Descriptive Tags for this shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_descriptive_tags", "Descriptive Tags for this shownote", "Shownote Description-Tags")
+  DrawText (Indentation1+Indentation2,  Y, "Tags", 0, "Descriptive Tags for this chapter.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_descriptive_tags", "Descriptive Tags for this chapter", "ChapterDescription-Tags")
 
   Y=Y+23 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Url Attributes", 85, "The url of this shownote")
+  DrawText (Indentation1,  Y, "Url attributes", 85, "The url of this chapter")
   Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The url of this shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url", "The url of this shownote", "Shownote url")
+  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The url of this chapter")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url", "The url of this chapter", "Chapter url")
   
   Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Description", 0, "Description of the url of this shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url_description", "Description of the url", "Shownote URL-Description")
+  DrawText (Indentation1+Indentation2,  Y, "Content notification tags", 0, "Tags for content notification for this chapter")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_content_notification_tags", "A list of comma separated tags that warn of specific content", "Chapter content notification tags")
 
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Retrieval date yyyy-mm-dd", 0, "Retrieval Date of the url yyyy-mm-dd")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url_retrieval_date", "Retrieval Date of the url", "Shownote url-retrieval date")
-
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Retrieval time hh:mm:ss", 0, "Retrieval Time of the url hh:mm:ss")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url_retrieval_time", "Retrieval Time of the url", "Shownote url-retrieval time")
-
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Retrieval timezone UTC", 0, "Timezone of the retrieval time of the url in UTC")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url_retrieval_timezone_utc", "Timezone of the retrieval time of the url", "Shownote url-retrieval timezone")
-
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Archived copy of url", 0, "The url of an archived version of the original url")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_url_archived_copy_of_original_url", "Archived url-copy of the url", "Shownote url-copy of original url")
-
-  Y=Y+25 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Additionals", 85, "Misc Attributes for this Shownote")
-  
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "WikiData-Uri", 0, "The WikiData-uri for the subject of this shownote")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "shwn_wikidata_uri", "WikiData-uri for the subject of this shownote", "WikiData-uri for the subject of this shownote")
-  
-  -- Is Shownote Advertisement
+  -- Is Chapter Spoiler Alert
   --Y=Y+30 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   --ManageCheckBox(100+XOffset-1, Y,   "LeaFac_OBS",              "ALWAYS_CREATE_NEW_TRACK", false)
   --DrawText      (125+XOffset,   Y+2, "Always create new track", 0, "When checked, this will always create a new track when starting recording, so multiple files are always placed into new tracks. When unchecked, all files will be added to the same track.\n\nDefault is unchecked.")
-    
+  
+  -- Is Chapter Advertisement
+  --Y=Y+30 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  --ManageCheckBox(100+XOffset-1, Y,   "LeaFac_OBS",              "ALWAYS_CREATE_NEW_TRACK", false)
+  --DrawText      (125+XOffset,   Y+2, "Always create new track", 0, "When checked, this will always create a new track when starting recording, so multiple files are always placed into new tracks. When unchecked, all files will be added to the same track.\n\nDefault is unchecked.")
+
+  Y=Y+23 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1,  Y, "Chapter images", 85, "The image of this chapter")
+  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Path plus filename", 0, "The Filename of this chapter image")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_path", "The path+filename of this chapterimage", "Chapter image path+filename")
+  
+  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Image description", 0, "A description for this image")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_description", "A description of this chapterimage", "Chapter image description")
+
+  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Image license", 0, "The license for this image")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_license", "The license of this chapterimage", "Chapter image license")
+
+  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Image origin", 0, "The origin for this image")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_origin", "The origin of this chapterimage", "Chapter image origin")
+  
+  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Image origin url", 0, "The url of the origin of this image")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_url", "The url of the origin of this chapterimage", "Chapter image origin url")
   
   -- Check Settings and Done-buttons
   --  these are linked to gfx.w(right side of the window) so they are always aligned to the right-side of the window
@@ -111,7 +114,7 @@ end
 -- here are some custom-functions used by the buttons.
 -- If you want to add additional buttons, add their accompanying functions in this section
 
-function GetShownoteAttributes()
+function GetChapterAttributes()
   marker_id, guid = ultraschall.GetTemporaryMarker()
   ultraschall.StoreTemporaryMarker(-1)
   if marker_id==-1 then 
@@ -119,24 +122,28 @@ function GetShownoteAttributes()
     retval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..marker_id, "", false)
   end
   
-  index = ultraschall.GetShownoteMarkerIDFromGuid(guid)
+  index = ultraschall.GetNormalMarkerIDFromGuid(guid)
+  if index==-1 then
+    index, markertype = ultraschall.GetCustomMarkerIDFromGuid(guid)
+    if markertype~="Planned" then return else planned=true end
+    index=index+1 -- needs to be added, so I don't need to add 1 to all GetSetChapterMarker_Attributes-functions when dealing with planned markers
+  end
+  
+  if planned==nil then 
+    retnumber, shown_number, pos, name, guid = ultraschall.EnumerateNormalMarkers(index) 
+  else
+    retval, marker_index, pos, name, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index-1)
+  end
+  
   if index==-1 then return end
   
-  retval, marker_index, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(index)
-  retval, shwn_description = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_description", "")
-  retval, shwn_descriptive_tags = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_descriptive_tags", "")
-  retval, shwn_url = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url", "")
-  retval, shwn_url_description = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_description", "")
-  retval, shwn_url_retrieval_date = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_retrieval_date", "")
-  retval, shwn_url_retrieval_time = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_retrieval_time", "")
-  retval, shwn_url_retrieval_timezone_utc = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_retrieval_timezone_utc", "")
-  retval, shwn_url_archived_copy_of_original_url = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_archived_copy_of_original_url", "")
-  retval, shwn_is_advertisement = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_is_advertisement", "")
-  retval, shwn_language = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_language", "")
-  retval, shwn_location_gps = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_location_gps", "")
-  retval, shwn_location_google_maps = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_location_google_maps", "")
-  retval, shwn_location_open_street_map = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_location_open_street_map", "")
-  retval, shwn_location_apple_maps = ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_location_apple_maps", "")
+  retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "", planned)
+  retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_descriptive_tags", "", planned)
+  retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_is_advertisement", "", planned)
+  retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_content_notification_tags", "", planned)
+  retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_spoiler_alert", "", planned)
+  retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url", "", planned)
+  retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url_description", "", planned)
   
   InitWindow()
   RefreshWindow() -- start the magic
@@ -147,8 +154,8 @@ function QuitMe()
   -- this function quits the script
   local dockstate, x,y,w,h=gfx.dock(-1,0,0,0,0)
   --reaper.MB(x.." "..y.."\n"..x2.." "..y2, "",0)
-  reaper.SetExtState("Ultraschall_Shownotes", "Edit_Shownotes_x", x, true)
-  reaper.SetExtState("Ultraschall_Shownotes", "Edit_Shownotes_y", y, true)
+  reaper.SetExtState("Ultraschall_Chapters", "Edit_Chapters_x", x, true)
+  reaper.SetExtState("Ultraschall_Chapters", "Edit_Chapters_y", y, true)
   
   gfx.quit()
 end
@@ -259,9 +266,13 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
   --local value=--reaper.GetExtState(section, key)
   local retval, value
   if attributename=="title" then
-    retval, marker_index, pos, value, shown_number, guid = ultraschall.EnumerateShownoteMarkers(index)
+    if planned==nil then 
+      retnumber, shown_number, pos, value, guid = ultraschall.EnumerateNormalMarkers(index) 
+    else
+      retval, marker_index, pos, value, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index-1)
+    end
   else
-    retval, value = ultraschall.GetSetShownoteMarker_Attributes(false, index, attributename, "")
+    retval, value = ultraschall.GetSetChapterMarker_Attributes(false, index, attributename, "", planned)
   end
 --  SLEM()
 --  print2(value)
@@ -277,9 +288,9 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
           enteredtext=value
         else
           if attributename=="title" then
-            local retval = ultraschall.SetShownoteMarker(index, pos, enteredtext)
+            local retval = ultraschall.SetNormalMarker(index, pos, shown_number, enteredtext)
           else
-            local retval, value = ultraschall.GetSetShownoteMarker_Attributes(true, index, attributename, enteredtext)
+            local retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, enteredtext, planned)
           end
         end
         value=enteredtext
@@ -382,8 +393,8 @@ end
 
 -- Initialize window and some global variables; leave them untouched
 function InitWindow()
-  Valx=tonumber(reaper.GetExtState("Ultraschall_Shownotes", "Edit_Shownotes_x")) if Valx~=nil then WindowX=Valx end
-  Valy=tonumber(reaper.GetExtState("Ultraschall_Shownotes", "Edit_Shownotes_y")) if Valy~=nil then WindowY=Valy end
+  Valx=tonumber(reaper.GetExtState("Ultraschall_Chapters", "Edit_Chapters_x")) if Valx~=nil then WindowX=Valx end
+  Valy=tonumber(reaper.GetExtState("Ultraschall_Chapters", "Edit_Chapters_y")) if Valy~=nil then WindowY=Valy end
   
   
   gfx.init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
@@ -446,10 +457,10 @@ function RefreshWindow()
 end
 
 --ultraschall.StoreTemporaryMarker(1)--debug line!!
-gfx.loadimg(1, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/edit_shownotes.png")
-gfx.loadimg(2, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/headertxt_edit_shownotes.png")
+gfx.loadimg(1, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/edit_chapters.png")
+gfx.loadimg(2, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/headertxt_edit_chapters.png")
 
 
-GetShownoteAttributes()
+GetChapterAttributes()
 
 

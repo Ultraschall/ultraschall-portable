@@ -955,6 +955,7 @@ function ultraschall.SetNormalMarker(number, position, shown_number, markertitle
   if type(position)~="number" and position~=nil then ultraschall.AddErrorMessage("SetNormalMarker", "position", "must be a number", -1) return false end
   if position==nil or position<0 then position=-1 end
   if tonumber(shown_number)==nil then shown_number=-1 end
+  if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("SetNormalMarker", "shown_number", "must be an integer", -4) return false end
   if math.type(number)~="integer" then ultraschall.AddErrorMessage("SetNormalMarker", "number", "must be an integer", -2) return false end
   
   -- prepare variable
