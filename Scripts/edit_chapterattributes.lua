@@ -1,6 +1,9 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
+--if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
+reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
+
 -- TODO:
 --  Retina-Support missing
 
@@ -11,8 +14,8 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 --    when closing the prefs, the prefs remember the position of the window for next time
 WindowX     = 30 -- x-position
 WindowY     = 30 -- y-position
-WindowWidth = 400 -- width of the window
-WindowHeight= 360 -- height of the window
+WindowWidth = 440 -- width of the window
+WindowHeight= 415 -- height of the window
 WindowTitle = "Edit Chapter Attributes"
 
 ToolTipWaitTime=30 -- the waittime-until tooltips are shown when hovering above them; 30~1 second
@@ -36,64 +39,74 @@ function main()
 --  Y=Y+10 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
 --  DrawText(10, Y, "Edit Shownote Attributes", 85, "", 20) 
   
-  -- Address - text and inputbox
-  --  the length is linked to gfx.w, so it always uses the whole window for display
-  Y=Y+11
+  refresh=NewMarkerInTown()
+  
+  Y=Y+11 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (Indentation1,  Y, "General Attributes", 85, "Edit the attributes of a chapter")
 
-  Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (Indentation1+Indentation2,  Y, "Title", 0, "The title of this Chapter")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "title", "Enter title of this shownote", "Chapter Title")
 
-  Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (Indentation1+Indentation2,  Y, "Description", 0, "A description for this chapter.")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_description", "Describe this chapter", "Chapter Description")
 
-  Y=Y+18 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (Indentation1+Indentation2,  Y, "Tags", 0, "Descriptive Tags for this chapter.")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_descriptive_tags", "Descriptive Tags for this chapter", "ChapterDescription-Tags")
 
-  Y=Y+23 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Url attributes", 85, "The url of this chapter")
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The url of this chapter")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url", "The url of this chapter", "Chapter url")
+  -- Is Chapter Spoiler Alert
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  ManageCheckBox(100+XOffset-1, Y+1,   "chap_spoiler_alert", "Check to signal a spoiler warning for this chapter.")
+  DrawText      (Indentation1+Indentation2,   Y, "Spoiler warning", 0, "Check, if this chapter contains spoilers.")
+
+  -- Is Chapter Spoiler Alert
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  ManageCheckBox(100+XOffset-1, Y+1,   "chap_is_advertisement", "Check to signal that this chapter is an ad.")
+  DrawText      (Indentation1+Indentation2,   Y, "Chapter is advertisement", 0, "Check, if this chapter is an advertisement.")
   
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (Indentation1+Indentation2,  Y, "Content notification tags", 0, "Tags for content notification for this chapter")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_content_notification_tags", "A list of comma separated tags that warn of specific content", "Chapter content notification tags")
 
-  -- Is Chapter Spoiler Alert
-  --Y=Y+30 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  --ManageCheckBox(100+XOffset-1, Y,   "LeaFac_OBS",              "ALWAYS_CREATE_NEW_TRACK", false)
-  --DrawText      (125+XOffset,   Y+2, "Always create new track", 0, "When checked, this will always create a new track when starting recording, so multiple files are always placed into new tracks. When unchecked, all files will be added to the same track.\n\nDefault is unchecked.")
+  Y=Y+25 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1,  Y, "Url attributes", 85, "The url of this chapter")
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The url of this chapter")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url", "The url of this chapter", "Chapter url")
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Url description", 0, "A description of the url of this chapter")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url_description", "A description of the url of this chapter", "Chapter url")
   
-  -- Is Chapter Advertisement
-  --Y=Y+30 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  --ManageCheckBox(100+XOffset-1, Y,   "LeaFac_OBS",              "ALWAYS_CREATE_NEW_TRACK", false)
-  --DrawText      (125+XOffset,   Y+2, "Always create new track", 0, "When checked, this will always create a new track when starting recording, so multiple files are always placed into new tracks. When unchecked, all files will be added to the same track.\n\nDefault is unchecked.")
 
-  Y=Y+23 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Chapter images", 85, "The image of this chapter")
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Path plus filename", 0, "The Filename of this chapter image")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_path", "The path+filename of this chapterimage", "Chapter image path+filename")
+  Y=Y+25 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1,  Y, "Chapter image", 85, "The image of this chapter")
+  --Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  --DrawText (Indentation1+Indentation2,  Y, "Path plus filename", 0, "The Filename of this chapter image")
+  --InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_path", "The path+filename of this chapterimage", "Chapter image path+filename")
   
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Image description", 0, "A description for this image")
+  Y=Y+23
+  DisplayImage(Indentation1+Indentation2,Y,80,80,4,UpdateChapterImage,{},ChapterImageContextMenu,{})
+  UpdateChapterImage(4, true)
+  
+  --Y=Y+119 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (95+Indentation1+Indentation2,  Y, "Description", 0, "A description for this image")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_description", "A description of this chapterimage", "Chapter image description")
 
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Image license", 0, "The license for this image")
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (95+Indentation1+Indentation2,  Y, "License", 0, "The license for this image")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_license", "The license of this chapterimage", "Chapter image license")
 
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Image origin", 0, "The origin for this image")
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (95+Indentation1+Indentation2,  Y, "Origin", 0, "The origin for this image")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_origin", "The origin of this chapterimage", "Chapter image origin")
   
-  Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Image origin url", 0, "The url of the origin of this image")
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (95+Indentation1+Indentation2,  Y, "Origin url", 0, "The url of the origin of this image")
   InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_url", "The url of the origin of this chapterimage", "Chapter image origin url")
+  
+  
   
   -- Check Settings and Done-buttons
   --  these are linked to gfx.w(right side of the window) so they are always aligned to the right-side of the window
@@ -113,6 +126,106 @@ end
 --
 -- here are some custom-functions used by the buttons.
 -- If you want to add additional buttons, add their accompanying functions in this section
+
+function NewMarkerInTown()
+  -- shall be used to have:
+  --    1 Dialog open, that refreshes, if the dialog shall open for another marker.
+  --    that way, you can use the edit-chapter-action without having thousands of edit-chapter-attributes-windows open
+  --    easier that way
+  --    can I add left-clicking to the menu for this too?
+  -- deactivated for now
+  if lol==nil then return end
+  marker_id, guid = ultraschall.GetTemporaryMarker()
+  if marker_id==-1 then 
+    marker_id = reaper.GetLastMarkerAndCurRegion(0, reaper.GetCursorPosition())
+    retval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..marker_id, "", false)
+  end
+  
+  index2 = ultraschall.GetNormalMarkerIDFromGuid(guid)
+  if index2==-1 then
+    index2, markertype = ultraschall.GetCustomMarkerIDFromGuid(guid)
+    if markertype~="Planned" then return else planned=true end
+    index2=index2+1 -- needs to be added, so I don't need to add 1 to all GetSetChapterMarker_Attributes-functions when dealing with planned markers
+  end
+  
+  if planned==nil then 
+    retnumber, shown_number, pos, name, guid = ultraschall.EnumerateNormalMarkers(index2)
+  else
+    retval, marker_index, pos, name, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index2-1)
+  end
+  --print_update(index2)
+  if index2==-1 then return else index=index2 ultraschall.StoreTemporaryMarker(-1) return true end
+end
+
+function UpdateChapterImage(image, dropfile)
+  focusstate=gfx.getchar(65536)
+  if focusstate&2==2 and OldWindowFocusState~=2 then reload = true end
+  OldWindowFocusState=focusstate&2
+  retval, project_path_name = reaper.EnumProjects(-1, "")
+  dir = ultraschall.GetPath(project_path_name, separator)
+  if reload==true then
+    retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", new_filename, planned)
+    gfx.loadimg(image, dir.."/"..filename)
+    x1,y1=gfx.getimgdim(4)
+    reload=false
+  end
+  
+  lastselectedimage=reaper.GetExtState("ultraschall", "Chapter_LastSelectedImage")
+  
+  if dropfile==true then
+    retval, filename = gfx.getdropfile(0)
+    gfx.getdropfile(-1)
+    retval=retval==1
+  else
+    retval, filename = reaper.GetUserFileNameForRead(lastselectedimage, "Select new file", "*.jpg;*.png;*.jpeg")
+  end
+  if retval==true then
+    gfx.loadimg(image, filename)
+    x1,y1=gfx.getimgdim(4)
+    if x1~=y1 then
+      reaper.MB("The Image is not in rectangular format.\nYou can continue, but this might lead to warped images in podcast clients!", "Image Format Warning!", 0)
+    end
+    retval, project_path_name = reaper.EnumProjects(-1, "")
+    dir = ultraschall.GetPath(project_path_name, separator)
+    filename=string.gsub(filename, "\\", "/")
+    if ultraschall.CheckForValidFileFormats(filename)=="JPG" or ultraschall.CheckForValidFileFormats(filename)=="PNG" then
+      -- load image and create chapter-images-folder, if not yet existing
+      file=ultraschall.ReadFullFile(filename, true)
+      if file==nil then print2("Can't read file") return end
+      retval=reaper.RecursiveCreateDirectory(dir.."/chapter_images/", 0)
+      if retval==1 then reaper.MB("Can't create chapter-image-folder in projectfolder to store image. Is the folder write protected?", "Error", 0) return end
+    
+      -- copy image-file and store path to it within the project-folder
+      new_filename="/chapter_images/"..filename:match(".*/(.*)%....").."-"..reaper.genGuid("")..filename:match(".*(%....)")
+      new_filename=string.gsub(new_filename, "\\", "/")
+      ultraschall.WriteValueToFile(dir..new_filename, file, true, false)
+      A2,A3=ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_image_path", new_filename, planned)
+      --print2(A3)
+      reaper.SetExtState("ultraschall", "Chapter_LastSelectedImage", filename, true)
+    end
+  end
+end
+
+function RemoveChapterImage()
+  ultraschall.GetSetChapterMarker_Attributes(true, index, "chap_image_path", "", planned)
+  gfx.setimgdim(4,0,0)
+end
+
+function OpenImageInStandardApp()
+  local retval, project_path_name = reaper.EnumProjects(-1, "")
+  local dir = ultraschall.GetPath(project_path_name, separator)
+  local retval, image = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", "", planned)
+  if image~="" then
+    local retval = reaper.CF_ShellExecute(dir.."/"..image)
+  end
+end
+
+function ChapterImageContextMenu()
+  gfx.x, gfx.y=gfx.mouse_x, gfx.mouse_y
+  selection=gfx.showmenu("Remove Chapter Image|Open in default application")
+  if     selection==1 then RemoveChapterImage() 
+  elseif selection==2 then OpenImageInStandardApp() end
+end
 
 function GetChapterAttributes()
   marker_id, guid = ultraschall.GetTemporaryMarker()
@@ -136,14 +249,12 @@ function GetChapterAttributes()
   end
   
   if index==-1 then return end
-  
-  retval, chap_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "", planned)
-  retval, chap_descriptive_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_descriptive_tags", "", planned)
-  retval, chap_is_advertisement = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_is_advertisement", "", planned)
-  retval, chap_content_notification_tags = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_content_notification_tags", "", planned)
-  retval, chap_spoiler_alert = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_spoiler_alert", "", planned)
-  retval, chap_url = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url", "", planned)
-  retval, chap_url_description = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_url_description", "", planned)
+ 
+  retval, chap_image_path = ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", "", planned)
+  retval, project_path_name = reaper.EnumProjects(-1, "")
+  dir = ultraschall.GetPath(project_path_name, separator)
+    
+  LoadImage(dir.."/"..chap_image_path, 4)
   
   InitWindow()
   RefreshWindow() -- start the magic
@@ -156,7 +267,7 @@ function QuitMe()
   --reaper.MB(x.." "..y.."\n"..x2.." "..y2, "",0)
   reaper.SetExtState("Ultraschall_Chapters", "Edit_Chapters_x", x, true)
   reaper.SetExtState("Ultraschall_Chapters", "Edit_Chapters_y", y, true)
-  
+  reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
   gfx.quit()
 end
 
@@ -179,7 +290,7 @@ end
 -- Now, all functions and an explanation, what they do, how and where they store the settings.
 -- Also an explanation of the parameters.
 
-function ManageCheckBox(x, y, section, key, default)
+function ManageCheckBox(x, y, attributename, tooltip)
   -- This adds a checkbox. If that checkbox is clicked it will store a 1 into the extstate.
   -- Parameters:
   --            integer x - the x-position in pixels
@@ -188,26 +299,35 @@ function ManageCheckBox(x, y, section, key, default)
   --            string key - an explanatory name for the key, in which the value will be stored.
   --            boolean default - if no value is set until now, you can set this to a default in the checkbox to true(checked) or false(unchecked)
   
-  local value=tonumber(reaper.GetExtState(section, key))
+  --local value=tonumber(reaper.GetExtState(section, key))
+  local retval, value = ultraschall.GetSetChapterMarker_Attributes(false, index, attributename, "", planned)
+  AAA=value
   if clickstate==true and 
     gfx.mouse_x>=x and gfx.mouse_x<=x+20 and 
     gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
-    if value==1 then
-      reaper.SetExtState(section, key, 0, true)
-      value=0
+    if value:lower()=="yes" then
+      retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, "", planned)
     else
-      reaper.SetExtState(section, key, 1, true)
-      value=1
+      retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, "yes", planned)
     end
   end
-  if default==false then default=0 else default=1 end
+  --if default==false then default=0 else default=1 end
   if value==nil then value=tonumber(default)  end
+  AAA1=value
   
   gfx.set(0.8)
-  gfx.rect(x,y,20,20,0)
+  gfx.rect(x,y,18,18,0)
   gfx.set(1,1,0)
-  if value==1 then gfx.rect(x+5, y+5, 10, 10, 1) end
+  if value=="yes" then gfx.rect(x+4, y+4, 10, 10, 1) end
+  
+  if tooltip~=nil and ShowToolTip==true and ToolTipShown==false and 
+    gfx.mouse_x>=x and gfx.mouse_x<=x+gfx.measurestr(text) and
+    gfx.mouse_y>=y and gfx.mouse_y<=y+gfx.texth then
+    local X,Y=reaper.GetMousePosition()
+    reaper.TrackCtl_SetToolTip(tooltip, X+15, Y, true) 
+    ToolTipShown=true
+  end
 end
 
 
@@ -247,6 +367,73 @@ function DrawText(x, y, text, mode, tooltip, size)
   end
   mode=oldmode
 end
+
+function IsProjectSaved()
+  -- code in this function by XRaym - license GPL v3
+  -- check, if project is saved and prompt save-dialog, if not
+  
+  -- OS BASED SEPARATOR
+  if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then separator = "\\" else separator = "/" end
+
+  retval, project_path_name = reaper.EnumProjects(-1, "")
+  if project_path_name ~= "" then
+  
+    dir = ultraschall.GetPath(project_path_name, separator)
+    name = string.sub(project_path_name, string.len(dir) + 1)
+    name = string.sub(name, 1, -5)
+    name = name:gsub(dir, "")
+
+    project_saved = true
+    return project_saved, dir
+  else
+    display = reaper.ShowMessageBox("You need to save the project to add chapter images.", "Add Chapter Image", 1)
+    if display == 1 then
+      reaper.Main_OnCommand(40022, 0) -- SAVE AS PROJECT
+      return IsProjectSaved()
+    else
+      return false
+    end
+  end
+end
+
+
+function DisplayImage(x,y,imgwidth,imgheight,image,left_functioncall,left_functionparams,right_functioncall,right_functionparams)
+  -- display newly selected image, scaled and centered
+
+  gfx.dest=-1
+  local width, height=gfx.getimgdim(image)
+  local size=width
+  if width>imgwidth then size=width end
+  if height>imgheight and height>size then size=height end
+  local scale=imgheight/size
+  gfx.rect(x-1,y-1,imgwidth+2,imgheight+2,0)
+  gfx.set(0)
+  x1, y1=gfx.getimgdim(image)
+  if x1~=0 and y1~=0 then
+    gfx.rect(x,y,imgwidth,imgheight,1)
+  else
+    gfx.set(1)
+    gfx.x=x+14
+    gfx.y=y+10
+    gfx.drawstr("no image\nselected")
+  end
+
+  local retval = ultraschall.GFX_BlitImageCentered(image, x+math.floor(imgwidth/2), y+math.floor(imgheight/2), scale, 0)
+  if gfx.mouse_cap&1==1 and gfx.mouse_x>=x and gfx.mouse_x<=x+imgwidth and 
+     gfx.mouse_y>=y and gfx.mouse_y<=y+imgheight
+    then
+    left_functioncall(image)
+  elseif gfx.mouse_cap&2==2 and gfx.mouse_x>=x and gfx.mouse_x<=x+imgwidth and 
+     gfx.mouse_y>=y and gfx.mouse_y<=y+imgheight
+    then
+    right_functioncall(image)
+  end
+end
+
+function LoadImage(filename, image)
+  gfx.loadimg(image, filename)
+end
+
 
 function InputText(x, y, width, attributename, InputTitle, InputText, onlynumbers)
   -- This adds a textbox, which, when clicked, opens an input-dialog, into which one can enter the new value.
@@ -456,11 +643,19 @@ function RefreshWindow()
   main()
 end
 
+OldGetUserInputs=reaper.GetUserInputs
+
+function reaper.GetUserInputs(...)
+  old = ultraschall.GetUSExternalState("modal_pos", "DLG436", "reaper-wndpos.ini")
+  windowposx, windowposy=reaper.GetMousePosition()
+  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", windowposx.." "..windowposy, "reaper-wndpos.ini")
+  OldGetUserInputs(table.unpack({...}))
+  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", old, "reaper-wndpos.ini")
+end
+
 --ultraschall.StoreTemporaryMarker(1)--debug line!!
 gfx.loadimg(1, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/edit_chapters.png")
 gfx.loadimg(2, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/headertxt_edit_chapters.png")
 
 
 GetChapterAttributes()
-
-

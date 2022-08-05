@@ -11,8 +11,9 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
   -- read the menu from ultraschall_marker_menu.ini and generate this entry
   if clicktype&2==2 then 
     clicktype="RightClck"
-  --elseif clicktype&1==1 then 
---    clicktype="LeftClck"     
+  elseif clicktype&1==1 then 
+    clicktype="LeftClck"
+    ultraschall.StoreTemporaryMarker(Marker2)
   else
     return
   end
