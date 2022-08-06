@@ -1921,9 +1921,138 @@ function Btn:ondoubleclick() end
 function Btn:ondrag() end
 function Btn:ontype() end
 
-
 GUI.Btn = Btn
 
+
+
+
+GUI.FlatBtn = FlatBtn
+
+local FlatBtn = {}
+function FlatBtn:new(x, y, w, h, caption, func, ...)
+
+  local Flatbtn = {}
+
+  if w == 1 then
+    str_w, str_h = gfx.measurestr(caption)
+    w = str_w / dpi_scale + 20
+    Flatbtn.blank = false
+  end
+  if w == 0 then
+    w = string.len(caption)*7
+    Flatbtn.blank = true
+  else
+    Flatbtn.blank = false
+  end
+
+
+  Flatbtn.type = "FlatBtn"
+
+  Flatbtn.x, Flatbtn.y, Flatbtn.w, Flatbtn.h = x * dpi_scale
+  , y * dpi_scale
+  , w * dpi_scale
+  , h * dpi_scale
+
+
+  Flatbtn.caption = caption
+
+  Flatbtn.func = func or ""
+  Flatbtn.params = {...}
+
+  Flatbtn.state = 0
+
+  setmetatable(Flatbtn, self)
+  self.__index = self
+  return Flatbtn
+
+end
+
+
+-- Btn - Draw.
+function FlatBtn:draw()
+
+
+  local x, y, w, h = self.x, self.y, self.w, self.h
+  local r, g, b = self.r, self.g, self.b
+  local state = self.state
+
+
+  -- Draw the button
+
+  if self.blank ~= true then
+    GUI.color("button")
+    GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 20 * dpi_scale
+    , 1 * dpi_scale
+    , 1 * dpi_scale
+  )
+  end
+
+
+  -- Draw the caption
+
+  if self.func == "" then
+    GUI.color("txt_button_disabled")
+  else
+    GUI.color("txt_button")
+  end
+
+
+  GUI.font(4)
+
+  operationSystem = reaper.GetOS()
+  if string.match(operationSystem, "OS") then
+    Flatbtn_offset = 3 * dpi_scale
+
+  else
+    Flatbtn_offset = 1 * dpi_scale
+
+  end
+
+  local str_w, str_h = gfx.measurestr(self.caption)
+  if self.blank ~= true then
+    gfx.x = x + 1 * state + ((w - str_w) / 2) - 2 * dpi_scale
+  else
+    gfx.x = x
+  end
+
+  gfx.y = y + 1 * state + ((h - str_h) / 2) - 2 * dpi_scale
+
+  gfx.y = gfx.y + Flatbtn_offset
+  gfx.drawstr(self.caption)
+
+end
+
+
+-- Btn - Mouse down.
+function FlatBtn:onmousedown()
+
+  self.state = 1
+
+end
+
+
+-- Bton - Mouse up.
+function FlatBtn:onmouseup()
+
+  self.state = 0
+
+  -- If the button was released on the button, run func
+  if IsInside(self, GUI.mouse.x, GUI.mouse.y) and self.func~= "" then
+
+    self.func(table.unpack(self.params))
+
+  end
+
+end
+
+
+-- Btn - Unused methods.
+function FlatBtn:ondoubleclick() end
+function FlatBtn:ondrag() end
+function FlatBtn:ontype() end
+
+
+GUI.FlatBtn = FlatBtn
 
 
 
