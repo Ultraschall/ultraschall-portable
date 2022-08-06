@@ -5247,8 +5247,6 @@ end
 
 --A=ultraschall.GetGuidFromEditRegionID(1)
 
-
-
 function ultraschall.StoreTemporaryMarker(marker_id, index)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -5272,7 +5270,11 @@ function ultraschall.StoreTemporaryMarker(marker_id, index)
     boolean retval - true, storing temporary marker was successful; false, storing temporary marker was unsuccessful
   </retvals>
   <parameters>
-    integer marker_id - the index of the marker/region within all markers and regions, that you want to temporarily store; 0-based; -1, to remove this temporary marker
+    integer marker_id - the index of the marker/region within all markers and regions, that you want to temporarily store; 0-based; 
+                      - -1, to remove this temporary marker; 
+                      - -2, to store the last marker before edit-cursor position
+                      - -3, to store the last marker before play-cursor position
+                      - -4, to store the last marker before position underneath mouse-cursor
     optional integer index - a numerical index, if you want to temporarily store multiple markers/regions; default is 1
   </parameters>
   <chapter_context>
@@ -5285,12 +5287,19 @@ function ultraschall.StoreTemporaryMarker(marker_id, index)
 </US_DocBloc>
 --]]  
   if math.type(marker_id)~="integer" then ultraschall.AddErrorMessage("StoreTemporaryMarker", "marker_id", "must be an integer", -1) return false end
-  if marker_id~=-1 then marker_id=marker_id+1 end
+  if marker_id>=0 then marker_id=marker_id+1 end
   if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("StoreTemporaryMarker", "index", "must be an integer", -2) return false end
   if index==nil then index=1 end
   if marker_id==-1 then 
     reaper.DeleteExtState("ultraschall_api", "Temporary_Marker_"..index, false)
     return true
+  elseif marker_id==-2 then 
+    marker_id=reaper.GetLastMarkerAndCurRegion(0, reaper.GetCursorPosition())+1
+  elseif marker_id==-3 then 
+    marker_id=reaper.GetLastMarkerAndCurRegion(0, reaper.GetPlayPosition())+1
+  elseif marker_id==-4 then
+    reaper.BR_GetMouseCursorContext()
+    marker_id=reaper.GetLastMarkerAndCurRegion(0, reaper.BR_GetMouseCursorContext_Position())+1
   end
   local Guid = ultraschall.GetGuidFromMarkerID(marker_id)
   if Guid==-1 then ultraschall.AddErrorMessage("StoreTemporaryMarker", "marker_id", "no such marker", -3) return false end

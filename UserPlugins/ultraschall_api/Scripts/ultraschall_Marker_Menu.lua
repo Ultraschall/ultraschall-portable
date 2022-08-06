@@ -13,10 +13,10 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
     clicktype="RightClck"
   elseif clicktype&1==1 then 
     clicktype="LeftClck"
-    ultraschall.StoreTemporaryMarker(Marker2)
   else
     return
   end
+  
   local actions={}
   if reaper.GetExtState("ultraschall_api", "markermenu_debug_messages_markerinfo_in_menu")~="" then
     ShowMarkerType_In_Menu=true
@@ -26,6 +26,7 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
   local aid = ultraschall.GetUSExternalState(MarkerType.."_"..clicktype, "StartUpAction", "ultraschall_marker_menu.ini")
   reaper.DeleteExtState("ultraschall_api", "markermenu_started", false)
   ultraschall.StoreTemporaryMarker(Marker2) 
+  
   pcall(ultraschall.RunCommand, aid)
   reaper.SetExtState("ultraschall_api", "markermenu_started", "started", false)    
   if ShowMarkerType_In_Menu==true then actions[1]=0 end
@@ -105,7 +106,7 @@ function main()
   local X,Y=reaper.GetMousePosition()
   local HWND_Focus=reaper.JS_Window_FromPoint(X,Y)
   local MouseState=reaper.JS_Mouse_GetState(-1)
-  if HWND_Focus==HWND_timeline and MouseState~=0 and MouseState&16~=16 then
+  if HWND_Focus==HWND_timeline and MouseState~=0 and MouseState&16~=16 then    
     local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, X, X)
     reaper.BR_GetMouseCursorContext()
     local Marker, Marker2 = ultraschall.GetMarkerByScreenCoordinates(X)    
@@ -117,6 +118,9 @@ function main()
       globalMarker2=Marker2
       MarkerType, MarkerTypeIndex=ultraschall.GetMarkerType(Marker2)
       MarkerMenu, MarkerActions, MenuEntries, MenuEntries_Data, MenuEntry_Nr=GetMarkerMenu(MarkerType, MouseState, Marker2)
+      if MouseState&1==1 then 
+        ultraschall.StoreTemporaryMarker(Marker2) 
+      end
       if MarkerMenu~=nil then        
         if ShowMarkerType_In_Menu==false then
           Markername=""
@@ -126,7 +130,7 @@ function main()
         --for i=1, #MenuEntries do
           --print("A"..tostring(MenuEntries[i]).."A")
         --end
-        Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)        
+        Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)
         if Retval~=-1 then 
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry", MenuEntries[Retval], false)
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType", MarkerType, false)

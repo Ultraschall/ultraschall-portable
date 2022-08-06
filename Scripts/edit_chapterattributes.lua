@@ -1,7 +1,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-
---if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
+--reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
+if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
 reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
 
 -- TODO:
@@ -117,6 +117,7 @@ function main()
   
   -- make some mouse-management, run refresh the window again, until the window is closed, otherwise end script
   -- leave it untouched
+  --if gfx.w~=WindowWidth and gfx.h~=WindowHeight then gfx.init("", WindowWidth, WindowHeight) end
   if Key~=-1 then OldCap2=gfx.mouse_cap&1 reaper.defer(RefreshWindow) end
 end
 
@@ -134,12 +135,10 @@ function NewMarkerInTown()
   --    easier that way
   --    can I add left-clicking to the menu for this too?
   -- deactivated for now
-  if lol==nil then return end
+--  if lol==nil then return end
   marker_id, guid = ultraschall.GetTemporaryMarker()
-  if marker_id==-1 then 
-    marker_id = reaper.GetLastMarkerAndCurRegion(0, reaper.GetCursorPosition())
-    retval, guid=reaper.GetSetProjectInfo_String(0, "MARKER_GUID:"..marker_id, "", false)
-  end
+  --print_update(marker_id)
+  if marker_id==-1 then return end
   
   index2 = ultraschall.GetNormalMarkerIDFromGuid(guid)
   if index2==-1 then
@@ -154,16 +153,21 @@ function NewMarkerInTown()
     retval, marker_index, pos, name, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index2-1)
   end
   --print_update(index2)
-  if index2==-1 then return else index=index2 ultraschall.StoreTemporaryMarker(-1) return true end
+  --print(retval, index2)
+  index=index2 
+  updatereload=true 
+  ultraschall.StoreTemporaryMarker(-1) 
+  return true 
 end
 
 function UpdateChapterImage(image, dropfile)
   focusstate=gfx.getchar(65536)
-  if focusstate&2==2 and OldWindowFocusState~=2 then reload = true end
+  if (focusstate&2==2 and OldWindowFocusState~=2) or updatereload==true then reload = true updatereload=reaper.time_precise() end
   OldWindowFocusState=focusstate&2
   retval, project_path_name = reaper.EnumProjects(-1, "")
   dir = ultraschall.GetPath(project_path_name, separator)
   if reload==true then
+    --print_update(reaper.time_precise())
     retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", new_filename, planned)
     gfx.loadimg(image, dir.."/"..filename)
     x1,y1=gfx.getimgdim(4)
@@ -461,19 +465,18 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
   else
     retval, value = ultraschall.GetSetChapterMarker_Attributes(false, index, attributename, "", planned)
   end
---  SLEM()
---  print2(value)
-  --if value=="" then value=default end
+
   if gfx.mouse_x>=x and gfx.mouse_x<=gfx.w-10 and 
      gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
     if clickstate==true then
-      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",extrawidth=150", value)
+      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",separator=\b,extrawidth=1150", value)
       if retval==true then
         if onlynumbers==true and tonumber(enteredtext)==nil then
           reaper.MB("Only numbers can be entered in this field!", "Only numbers", 0)
           enteredtext=value
         else
+          
           if attributename=="title" then
             local retval = ultraschall.SetNormalMarker(index, pos, shown_number, enteredtext)
           else
@@ -584,7 +587,9 @@ function InitWindow()
   Valy=tonumber(reaper.GetExtState("Ultraschall_Chapters", "Edit_Chapters_y")) if Valy~=nil then WindowY=Valy end
   
   
-  gfx.init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  --gfx.init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  retval, hwnd = ultraschall.GFX_Init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  --AA,AA2=reaper.JS_Window_SetStyle(hwnd, "CAPTION")
   OldCap=0
   OldCap2=0
   size=16
@@ -646,11 +651,12 @@ end
 OldGetUserInputs=reaper.GetUserInputs
 
 function reaper.GetUserInputs(...)
-  old = ultraschall.GetUSExternalState("modal_pos", "DLG436", "reaper-wndpos.ini")
-  windowposx, windowposy=reaper.GetMousePosition()
-  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", windowposx.." "..windowposy, "reaper-wndpos.ini")
-  OldGetUserInputs(table.unpack({...}))
-  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", old, "reaper-wndpos.ini")
+  local old = ultraschall.GetUSExternalState("modal_pos", "DLG436", "reaper-wndpos.ini")
+  local windowposx, windowposy=reaper.GetMousePosition()
+  local retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", windowposx.." "..windowposy, "reaper-wndpos.ini")
+  local A,B=OldGetUserInputs(table.unpack({...}))
+  local retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", old, "reaper-wndpos.ini")
+  return A,B
 end
 
 --ultraschall.StoreTemporaryMarker(1)--debug line!!

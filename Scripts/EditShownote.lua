@@ -1,7 +1,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-
--- if reaper.GetExtState("Ultraschall_Shownotes", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
+--reaper.SetExtState("Ultraschall_Shownotes", "running", "", false)
+if reaper.GetExtState("Ultraschall_Shownotes", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
 reaper.SetExtState("Ultraschall_Shownotes", "running", "true", false)
 
 -- TODO:
@@ -117,7 +117,7 @@ function NewMarkerInTown()
   --    easier that way
   --    can I add left-clicking to the menu for this too?
   -- deactivated for now...
-  if lol==nil then return end
+  --if lol==nil then return end
   marker_id, guid = ultraschall.GetTemporaryMarker()
   ultraschall.StoreTemporaryMarker(-1)
   if marker_id==-1 then 
@@ -280,7 +280,7 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
      gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
     if clickstate==true then
-      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",extrawidth=150", value)
+      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",separator=\b,extrawidth=150", value)
       if retval==true then
         if onlynumbers==true and tonumber(enteredtext)==nil then
           reaper.MB("Only numbers can be entered in this field!", "Only numbers", 0)
@@ -396,7 +396,9 @@ function InitWindow()
   Valy=tonumber(reaper.GetExtState("Ultraschall_Shownotes", "Edit_Shownotes_y")) if Valy~=nil then WindowY=Valy end
   
   
-  gfx.init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  --gfx.init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  retval, hwnd = ultraschall.GFX_Init(WindowTitle, WindowWidth, WindowHeight, 0, WindowX, WindowY)
+  --AA,AA2=reaper.JS_Window_SetStyle(hwnd, "CAPTION")
   OldCap=0
   OldCap2=0
   size=16
@@ -458,11 +460,12 @@ end
 OldGetUserInputs=reaper.GetUserInputs
 
 function reaper.GetUserInputs(...)
-  old = ultraschall.GetUSExternalState("modal_pos", "DLG436", "reaper-wndpos.ini")
-  windowposx, windowposy=reaper.GetMousePosition()
-  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", windowposx.." "..windowposy, "reaper-wndpos.ini")
-  OldGetUserInputs(table.unpack({...}))
-  retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", old, "reaper-wndpos.ini")
+  local old = ultraschall.GetUSExternalState("modal_pos", "DLG436", "reaper-wndpos.ini")
+  local windowposx, windowposy=reaper.GetMousePosition()
+  local retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", windowposx.." "..windowposy, "reaper-wndpos.ini")
+  local A,B=OldGetUserInputs(table.unpack({...}))
+  local retval = ultraschall.SetUSExternalState("modal_pos", "DLG436", old, "reaper-wndpos.ini")
+  return A,B
 end
 
 --ultraschall.StoreTemporaryMarker(1)--debug line!!
