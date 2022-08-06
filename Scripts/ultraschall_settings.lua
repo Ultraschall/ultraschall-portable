@@ -458,6 +458,10 @@ function buildGUI()
   headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_settings.png")
   table.insert(GUI.elms, headertxt)
 
+  button_settings = GUI.FlatBtn:new(705, 12, 75, 20,         " Help", run_action, "_Ultraschall_Settings_Soundcheck")
+  table.insert(GUI.elms, button_settings)
+
+
 
   -----------------------------
   ------- Tabs

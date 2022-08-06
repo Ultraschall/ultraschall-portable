@@ -109,6 +109,7 @@ GUI.colors = {
   sld_bg = {70, 70, 70, 1},    -- Slider Background
   elm_frame = {90, 90, 90, 1},    -- Element Frame
   button = {80, 80, 80, 1},    -- Element Frame
+  flat_button = {50, 50, 50, 1},    -- Element Frame
   elm_highlight = {100, 100, 100, 1},    -- Element Highlight
   elm_fill = {251, 208, 0, 1},    -- Element Fill FBD000
   elm_outline = {32, 32, 32, 1},
@@ -1980,7 +1981,7 @@ function FlatBtn:draw()
   -- Draw the button
 
   if self.blank ~= true then
-    GUI.color("button")
+    GUI.color("flat_button")
     GUI.roundrect(x + 1 * state, y + 1 * state, w, h, 20 * dpi_scale
     , 1 * dpi_scale
     , 1 * dpi_scale
