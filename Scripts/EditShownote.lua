@@ -450,7 +450,7 @@ function RefreshWindow()
   gfx.blit(1,1,0)
   gfx.x=74
   gfx.y=12
-  gfx.blit(2,0.8,0)
+  gfx.blit(2,0.7,0)
   clickstate=GetMouseState() -- get the clickstate, as needed by several functions
   Key=gfx.getchar()
   if Key==-1 or Key==13 or Key==27 then QuitMe() end

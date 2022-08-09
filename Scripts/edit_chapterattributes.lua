@@ -1,6 +1,6 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
---reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
+reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
 if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
 reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
 
@@ -641,7 +641,7 @@ function RefreshWindow()
   gfx.blit(1,1,0)
   gfx.x=74
   gfx.y=12
-  gfx.blit(2,0.8,0)
+  gfx.blit(2,0.7,0)
   clickstate=GetMouseState() -- get the clickstate, as needed by several functions
   Key=gfx.getchar()
   if Key==-1 or Key==13 or Key==27 then QuitMe() end
