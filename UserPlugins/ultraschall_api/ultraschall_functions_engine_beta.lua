@@ -1514,21 +1514,21 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
     boolean is_set - true, set the attribute; false, retrieve the current content
     string attributename - the attributename you want to get/set
                          - supported attributes are:
-                         - "epsd_title" - the title of the episode
-                         - "epsd_number" - the number of the episode
-                         - "epsd_season" - the season of the episode
-                         - "epsd_release_date" - releasedate of the episode; yyyy-mm-dd
-                         - "epsd_release_time" - releasedate of the episode; hh:mm:ss
-                         - "epsd_release_timezone" - the time's timezone in UTC of the release-time
-                         - "epsd_tagline" - the tagline of the episode
-                         - "epsd_description" - the descriptionof the episode
-                         - "epsd_cover" - the cover-image of the episode(path+filename)
-                         - "epsd_language" - the language of the episode; Languagecode according to ISO639
-                         - "epsd_explicit" - yes, if explicit; no, if not explicit
-                         - "epsd_descriptive_tags" - some tags, that describe the content of the episode, must separated by newlines
-                         - "epsd_sponsor" - the name of the sponsor of this episode
-                         - "epsd_sponsor_url" - a link to the sponsor's website
-                         - "epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by newlines!
+                          - "epsd_title" - the title of the episode
+                          - "epsd_number" - the number of the episode
+                          - "epsd_season" - the season of the episode
+                          - "epsd_release_date" - releasedate of the episode; yyyy-mm-dd
+                          - "epsd_release_time" - releasedate of the episode; hh:mm:ss
+                          - "epsd_release_timezone" - the time's timezone in UTC of the release-time
+                          - "epsd_tagline" - the tagline of the episode
+                          - "epsd_description" - the descriptionof the episode
+                          - "epsd_cover" - the cover-image of the episode(path+filename)
+                          - "epsd_language" - the language of the episode; Languagecode according to ISO639
+                          - "epsd_explicit" - yes, if explicit; "", if not explicit
+                          - "epsd_descriptive_tags" - some tags, that describe the content of the episode, must separated by newlines
+                          - "epsd_sponsor" - the name of the sponsor of this episode
+                          - "epsd_sponsor_url" - a link to the sponsor's website
+                          - "epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by newlines!
     string additional_attribute - some attributes allow additional attributes to be set; in all other cases set to ""
     string content - the new contents to set the attribute
     optional integer preset_slot - the slot in the podcast-presets to get/set the value from/to; nil, no preset used

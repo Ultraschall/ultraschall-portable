@@ -1,8 +1,8 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
-if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
-reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
+--reaper.SetExtState("Ultraschall_Chapters", "running", "", false)
+--if reaper.GetExtState("Ultraschall_Chapters", "running")~="" then return end -- deactivated for now, til NewMarkerInTown works
+--reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
 
 -- TODO:
 --  Retina-Support missing
@@ -14,9 +14,9 @@ reaper.SetExtState("Ultraschall_Chapters", "running", "true", false)
 --    when closing the prefs, the prefs remember the position of the window for next time
 WindowX     = 30 -- x-position
 WindowY     = 30 -- y-position
-WindowWidth = 440 -- width of the window
-WindowHeight= 415 -- height of the window
-WindowTitle = "Edit Chapter Attributes"
+WindowWidth = 477 -- width of the window
+WindowHeight= 495 -- height of the window
+WindowTitle = "Edit Episode Attributes"
 
 ToolTipWaitTime=30 -- the waittime-until tooltips are shown when hovering above them; 30~1 second
 
@@ -37,7 +37,7 @@ function main()
   -- Now, let's add the individual UI-elements
   -- Header
 --  Y=Y+10 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
---  DrawText(10, Y, "Edit Chapter Attributes", 85, "", 20) 
+--  DrawText(10, Y, "Edit Shownote Attributes", 85, "", 20) 
   
   refresh=NewMarkerInTown()
   
@@ -45,68 +45,74 @@ function main()
   DrawText (Indentation1,  Y, "General Attributes", 85, "Edit the attributes of a chapter")
 
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Title", 0, "The title of this Chapter")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "title", "Enter title of this chapter", "Chapter Title")
+  DrawText (Indentation1+Indentation2,  Y, "Title", 0, "The title of this episode")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "epsd_title", "Enter title of this episode", "Episode Title")
 
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Description", 0, "A description for this chapter.")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_description", "Describe this chapter", "Chapter Description")
-
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Tags", 0, "Descriptive Tags for this chapter.")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_descriptive_tags", "Descriptive Tags for this chapter", "ChapterDescription-Tags")
-
-  -- Is Chapter Spoiler Alert
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  ManageCheckBox(100+XOffset-1, Y+1,   "chap_spoiler_alert", "Check to signal a spoiler warning for this chapter.")
-  DrawText      (Indentation1+Indentation2,   Y, "Spoiler warning", 0, "Check, if this chapter contains spoilers.")
-
-  -- Is Chapter Spoiler Alert
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  ManageCheckBox(100+XOffset-1, Y+1,   "chap_is_advertisement", "Check to signal that this chapter is an ad.")
-  DrawText      (Indentation1+Indentation2,   Y, "Chapter is advertisement", 0, "Check, if this chapter is an advertisement.")
+  DrawText (Indentation1+Indentation2,  Y, "Description", 0, "A description for this episode.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "epsd_description", "Description for this episode", "Episode description")
   
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Content notification tags", 0, "Tags for content notification for this chapter")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_content_notification_tags", "A list of comma separated tags that warn of specific content", "Chapter content notification tags")
+  DrawText (Indentation1+Indentation2,  Y, "Tagline", 0, "A tagline for this episode.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "epsd_tagline", "A short tagline this episode", "Episode tagline")
 
-  Y=Y+25 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Url attributes", 85, "The url of this chapter")
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The url of this chapter")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url", "The url of this chapter", "Chapter url")
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1+Indentation2,  Y, "Url description", 0, "A description of the url of this chapter")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_url_description", "A description of the url of this chapter", "Chapter url")
-  
+  DrawText (Indentation1+Indentation2,  Y, "Descriptive Tags", 0, "Some tags that describe this episode.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "epsd_descriptive_tags", "Descriptive tags for this episode", "Episode descriptive tags")
 
-  Y=Y+25 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (Indentation1,  Y, "Chapter image", 85, "The image of this chapter")
-  --Y=Y+19 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  --DrawText (Indentation1+Indentation2,  Y, "Path plus filename", 0, "The Filename of this chapter image")
-  --InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_path", "The path+filename of this chapterimage", "Chapter image path+filename")
-  
-  Y=Y+23
-  DisplayImage(Indentation1+Indentation2,Y,80,80,4,UpdateChapterImage,{},ChapterImageContextMenu,{})
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Content Notification Tags", 0, "Some tags that warn of certain content in this episode.")
+  InputText(100+XOffset , Y, gfx.w-110-XOffset, "epsd_content_notification_tags", "Tags that warn of certain content for this episode", "Episode descriptive tags")
+
+  Y=Y+25
+  DrawText (Indentation1,  Y, "Release Time/Date", 85, "The release time/date for this episode")
+  DrawText (180+XOffset,  Y, "Episode cover", 85, "The cover of this episode")  
+  Y=Y+22
+  DisplayImage(190+XOffset+Indentation2,Y,152,152,4,UpdateChapterImage,{},ChapterImageContextMenu,{})
   UpdateChapterImage(4, true)
   
-  --Y=Y+119 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (95+Indentation1+Indentation2,  Y, "Description", 0, "A description for this image")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_description", "A description of this chapterimage", "Chapter image description")
+  Y=Y-2
+  DrawText (Indentation1+Indentation2,  Y, "Date(yyyy-mm-dd)", 0, "The episode's relase date")
+  InputText(100+XOffset, Y, 70, "epsd_release_date", "The releasedate of this episode", "Episode release date", false)
+
+  Y=Y+20
+  DrawText (Indentation1+Indentation2,  Y, "Time(hh:mm:ss)", 0, "The episode's release-time")
+  InputText(100+XOffset, Y, 70, "epsd_release_time", "The time of release for this episode", "Episode release time", false)
+
+  Y=Y+20
+  DrawText (Indentation1+Indentation2,  Y, "Timezone(UTC)", 0, "The timezone of the release")
+  InputText(100+XOffset, Y, 30, "epsd_release_timezone", "The timezone of the release of this episode", "Episode release timezone", false)
+
+
+  Y=Y+35 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1,  Y, "Additional Attributes", 85, "Some additional attributes for this episode")
+
+  Y=Y+23
+  DrawText (Indentation1+Indentation2,  Y, "Episode number", 0, "The episode number")
+  InputText(100+XOffset , Y, 40, "epsd_number", "The number of this episode", "Episode number", true)
+  
+  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (Indentation1+Indentation2,  Y, "Podcast season", 0, "The season of the podcast the episode is in")
+  InputText(100+XOffset, Y, 40, "epsd_season", "The number of the season this episode appears in", "Episode season", true)
+
+  Y=Y+20
+  DrawText (Indentation1+Indentation2,  Y, "Episode language", 0, "The episode's language")
+  InputText(100+XOffset, Y, 40, "epsd_language", "The language of this episode", "Episode language", false)
 
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (95+Indentation1+Indentation2,  Y, "License", 0, "The license for this image")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_license", "The license of this chapterimage", "Chapter image license")
+  DrawText      (Indentation1+Indentation2,   Y, "Explicit language", 0, "Check, if this chapter contains explicit language.")
+  ManageCheckBox(100+XOffset, Y+1,   "epsd_explicit", "Check to signal this episode is explicit.")
 
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (95+Indentation1+Indentation2,  Y, "Origin", 0, "The origin for this image")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_origin", "The origin of this chapterimage", "Chapter image origin")
+  Y=Y+25
+  DrawText (Indentation1,  Y, "Sponsor", 85, "The sponsor for this episode")
   
-  Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (95+Indentation1+Indentation2,  Y, "Origin url", 0, "The url of the origin of this image")
-  InputText(100+XOffset , Y, gfx.w-110-XOffset, "chap_image_url", "The url of the origin of this chapterimage", "Chapter image origin url")
-  
-  
+  Y=Y+20
+  DrawText (Indentation1+Indentation2,  Y, "Name", 0, "The sponsor's name")
+  InputText(100+XOffset, Y, gfx.w-110-XOffset, "epsd_sponsor", "The name of the sponsor", "Spnsor's name", false)
+
+  Y=Y+20
+  DrawText (Indentation1+Indentation2,  Y, "Url", 0, "The sponsor's url")
+  InputText(100+XOffset, Y, gfx.w-110-XOffset, "epsd_sponsor_url", "The url of the sponsor", "Spnsor's url", false)
   
   -- Check Settings and Done-buttons
   --  these are linked to gfx.w(right side of the window) so they are always aligned to the right-side of the window
@@ -168,8 +174,10 @@ function UpdateChapterImage(image, dropfile)
   dir = ultraschall.GetPath(project_path_name, separator)
   if reload==true then
     --print_update(reaper.time_precise())
-    retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", new_filename, planned)
-    gfx.loadimg(image, dir.."/"..filename)
+    retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, "epsd_cover", "", new_filename)
+    if filename~=nil then
+      gfx.loadimg(image, dir.."/"..filename)
+    end
     x1,y1=gfx.getimgdim(4)
     reload=false
   end
@@ -304,18 +312,20 @@ function ManageCheckBox(x, y, attributename, tooltip)
   --            boolean default - if no value is set until now, you can set this to a default in the checkbox to true(checked) or false(unchecked)
   
   --local value=tonumber(reaper.GetExtState(section, key))
-  local retval, value = ultraschall.GetSetChapterMarker_Attributes(false, index, attributename, "", planned)
-  AAA=value
+  local retval, value = ultraschall.GetSetPodcastEpisode_Attributes(false, attributename, "", "")
+  AAA=attributename
   if clickstate==true and 
     gfx.mouse_x>=x and gfx.mouse_x<=x+20 and 
     gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
     if value:lower()=="yes" then
-      retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, "", planned)
+      retval, value = ultraschall.GetSetPodcastEpisode_Attributes(true, attributename, "", "")
     else
-      retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, "yes", planned)
+      retval, value = ultraschall.GetSetPodcastEpisode_Attributes(true, attributename, "", "yes")
     end
   end
+  AAAA=value
+ -- SLEM()
   --if default==false then default=0 else default=1 end
   if value==nil then value=tonumber(default)  end
   AAA1=value
@@ -449,28 +459,19 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
   --            integer x - the x-position in pixels
   --            integer y - the x-position in pixels
   --            integer width - the shown width of the text-box; shown text might be t
-  --            string attributename - the attributename to set for this chapter-attribute
+  --            string attributename - the attributename to set for this shownote-attribute
   --            string InputTitle - this will influence the title of the input-dialog
   --            string InputText - this will influence the text, next to the input-box in the input-dialog
   --            boolean onlynumbers - true, allows only entering numbers; false or nil, any text can be entered
 
   --local value=--reaper.GetExtState(section, key)
-  local retval, value
-  if attributename=="title" then
-    if planned==nil then 
-      retnumber, shown_number, pos, value, guid = ultraschall.EnumerateNormalMarkers(index) 
-    else
-      retval, marker_index, pos, value, shown_number, color, guid = ultraschall.EnumerateCustomMarkers("Planned", index-1)
-    end
-  else
-    retval, value = ultraschall.GetSetChapterMarker_Attributes(false, index, attributename, "", planned)
-  end
-
+  local retval, value = ultraschall.GetSetPodcastEpisode_Attributes(false, attributename, "", enteredtext)
   if gfx.mouse_x>=x and gfx.mouse_x<=x+width and 
      gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
     if clickstate==true then
-      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",separator=\b,extrawidth=1150", value)
+      
+      retval, enteredtext = reaper.GetUserInputs(InputTitle, 1, InputText..",separator=\b,extrawidth=450", value)
       if retval==true then
         if onlynumbers==true and tonumber(enteredtext)==nil then
           reaper.MB("Only numbers can be entered in this field!", "Only numbers", 0)
@@ -480,7 +481,7 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
           if attributename=="title" then
             local retval = ultraschall.SetNormalMarker(index, pos, shown_number, enteredtext)
           else
-            local retval, value = ultraschall.GetSetChapterMarker_Attributes(true, index, attributename, enteredtext, planned)
+            local retval, value = ultraschall.GetSetPodcastEpisode_Attributes(true, attributename, "", enteredtext)
           end
         end
         value=enteredtext
@@ -501,7 +502,10 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
   gfx.rect(x,y+2,width,gfx.texth+1,0)
   gfx.set(0.8)
   gfx.rect(x-1,y+1,width,gfx.texth+1,0)
-  gfx.drawstr(value, 0, width+x, y+gfx.texth+1)
+  gfx.drawstr(value, 0, width+x-3, y+gfx.texth+1)
+
+  -- debug line to check, if the boundary box is right...
+  -- if attributename=="epsd_number" then gfx.rect(x,y, width, y+20-y, 1) end
 end
 
 function ManageButton(x, y, buttontext, functioncall)
@@ -660,8 +664,8 @@ function reaper.GetUserInputs(...)
 end
 
 --ultraschall.StoreTemporaryMarker(1)--debug line!!
-gfx.loadimg(1, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/edit_chapters.png")
-gfx.loadimg(2, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/headertxt_edit_chapters.png")
+gfx.loadimg(1, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/edit_episodes.png")
+gfx.loadimg(2, reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/headertxt_edit_episode.png")
 
 
 GetChapterAttributes()

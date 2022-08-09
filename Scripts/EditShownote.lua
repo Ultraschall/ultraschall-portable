@@ -113,7 +113,7 @@ end
 function NewMarkerInTown()
   -- shall be used to have:
   --    1 Dialog open, that refreshes, if the dialog shall open for another marker.
-  --    that way, you can use the edit-chapter-action without having thousands of edit-chapter-attributes-windows open
+  --    that way, you can use the edit-shownote-action without having thousands of edit-shownote-attributes-windows open
   --    easier that way
   --    can I add left-clicking to the menu for this too?
   -- deactivated for now...
@@ -276,7 +276,7 @@ function InputText(x, y, width, attributename, InputTitle, InputText, onlynumber
 --  SLEM()
 --  print2(value)
   --if value=="" then value=default end
-  if gfx.mouse_x>=x and gfx.mouse_x<=gfx.w-10 and 
+  if gfx.mouse_x>=x and gfx.mouse_x<=x+width and 
      gfx.mouse_y>=y and gfx.mouse_y<=y+20
     then
     if clickstate==true then
