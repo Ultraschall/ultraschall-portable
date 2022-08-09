@@ -1207,6 +1207,7 @@ function ultraschall.GetRenderCFG_Settings_AVI_Video(rendercfg)
                           - 4, MPEG-2 (only with FFMPEG 4.1.3 installed)
                           - 5, XVid (only with FFMPEG 4.1.3 installed)
                           - 6, H.264 (only with FFMPEG 4.1.3 installed)
+                          - 7, NONE
       integer MJPEG_quality - the MJPEG-quality of the AVI-video, if VIDEO_CODEC=1 or VIDEO_CODEC=6
       integer AUDIO_CODEC - the audio-codec of the avi-video
                           - 0, 16 bit PCM
@@ -1215,6 +1216,7 @@ function ultraschall.GetRenderCFG_Settings_AVI_Video(rendercfg)
                           - 3, MP3 (only with FFMPEG 4.1.3 installed)
                           - 4, AAC (only with FFMPEG 4.1.3 installed)
                           - 5, AC3 (only with FFMPEG 4.1.3 installed)
+                          - 6, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -1250,10 +1252,12 @@ function ultraschall.GetRenderCFG_Settings_AVI_Video(rendercfg)
   end
   
   VideoCodec=string.byte(Decoded_string:sub(9,9))-2
+  if VideoCodec==5 then VideoCodec=7 end
   if VideoCodec==-2 then VideoCodec=5 end
   if VideoCodec==-1 then VideoCodec=6 end
   num_integers, MJPEG_quality= ultraschall.ConvertStringToIntegers(Decoded_string:sub(41,44), 4)
   AudioCodec=string.byte(Decoded_string:sub(17,17))-3
+  if AudioCodec==4 then AudioCodec=6 end
   if AudioCodec==-3 then AudioCodec=3 end
   if AudioCodec==-2 then AudioCodec=4 end
   if AudioCodec==-1 then AudioCodec=5 end

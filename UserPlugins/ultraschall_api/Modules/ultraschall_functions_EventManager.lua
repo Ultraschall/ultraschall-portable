@@ -1511,7 +1511,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>EventManager_GetLastCheckfunctionState2</slug>
     <requires>
-      Ultraschall=4.00
+      Ultraschall=4.7
       Reaper=5.965
       Lua=5.3
     </requires>
@@ -1538,15 +1538,23 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
   </US_DocBloc>
   ]]  
   if type(EventIdentifier)~="string" then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "must be a string", -1) return end
-  local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
+  --local isvalid, inuse = ultraschall.EventManager_IsValidEventIdentifier(EventIdentifier)
   if isvalid==false then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "not a valid EventIdentifier", -2) return end
   if inuse==false then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "EventIdentifier", "not a registered EventIdentifier", -3) return end
-  EventIdentifier=string.gsub(EventIdentifier, "%-", "%%-")
-  local id=tonumber(reaper.GetExtState("ultraschall_eventmanager", "state"):match(".*Event #:(.-)\n.-EventIdentifier: "..EventIdentifier.."\n.-EndEvent"))
+  --EventIdentifier=string.gsub(EventIdentifier, "%-", "%%-")
+  --local id=tonumber(reaper.GetExtState("ultraschall_eventmanager", "state")
+          --:match(".*Event #:(.-)\n.-EventIdentifier: "..EventIdentifier.."\n.-EndEvent"))
+  --id=1
+  
+  local count=0
+  for k in string.gmatch(reaper.GetExtState("ultraschall_eventmanager", "EventIdentifier"), "(.-)\n") do
+    count=count+1  
+    if k==EventIdentifier then id=count break end
+  end
 
-  local A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
+  A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
   local A1=toboolean(A:match("(.-)\n"))
-  local A2=tonumber(A:match(".-\n(.-)\n"))
+  local A2=tonumber(A:match(".-\n(.-)\n"))  
   if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end
   
   return A1, A2
@@ -1567,7 +1575,7 @@ function ultraschall.EventManager_DebugMode(toggle)
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Starts Debugmode of the EventManager, which returns additional internal states.
     
-    Allows you to get the contents of the UserSpace of a certain checkfunction of a registered event, see [EventManager_DebugMode_UserSpace](#EventManager_DebugMode_UserSpace).
+    Allows you to get the contents of the UserSpace of a certain checkfunction of a registered event, see [EventManager\_DebugMode\_UserSpace](#EventManager_DebugMode_UserSpace).
     
     Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
   </description>

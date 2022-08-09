@@ -65818,6 +65818,19 @@ I'm enlightened,I am too
 </code></pre><br>
 <br>
 These can't be escaped due Reaper's API-limitation. Keep this in mind!<br>
+<br>
+Another note when only having one entry:<br>
+You may run into the situation of wanting to have a caption, that has a , in it.<br>
+This could be interpreted as separator, so an caption entry like:<br>
+"this, is, my, entry"<br>
+will be shown like<br>
+"this"<br>
+<br>
+To avoid this, use separator=\b in the caption_csv, so<br>
+"this, is, my, entry, separator=\b"<br>
+will be shown as<br>
+"this, is, my, entry".<br>
+<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">

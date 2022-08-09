@@ -264,7 +264,7 @@ Note: Doesn't fucking work...
 
 - marker-menu-hijack-script: 
    
-     - prevent # and < > in the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
+     - prevent # and < > in the beginnings of the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
        including the Entry_X_SubMenu=start|end thing.
   
 - FXStateChunk: GetSet NEXT_FX_OVERSAMPLE 
@@ -273,6 +273,7 @@ Note: Doesn't fucking work...
 - Render To Do:
  - Markers can be used for rendering now
  - Fade In/Fade Out added now
+ - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
  - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
     Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
     The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
@@ -296,6 +297,11 @@ Has now 1532 functions, with XX new ones
 
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
+  - DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)
+  - EventManager: EventManager\_Debug\_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not
+  - EventManager: EventManager\_Debug\_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm  
+  - EventManager: EventManager\_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events
+  - EventManager: EventManager\_GetAllEventNames - returns a table with all event-names of all currently registered events
   - FXManagement: GetFXByGuid - gets a fx by its guid
   - FXManagement: TrackFX\_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project
   - FXManagement: TakeFX\_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project  
@@ -367,7 +373,8 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
   - Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals
   - Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)
-  - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated
+  - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated  
+  - EventManager: EventManager\_GetLastCheckfunctionState2 - improved speed
   - HelperFunctions: Base64\_Decoder - sped up massively for longer strings(up to 94% faster)
   - HelperFunctions: Base64\_Encoder - sped up massively for longer strings(up to 90% faster)
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
@@ -382,7 +389,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
-  - MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -> fixed
+  - MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -> fixed
   - MediaItemManagement: RippleCut - supports now optional parameter to make add crossfade to the edit(requested by NiklasM)
   - MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed

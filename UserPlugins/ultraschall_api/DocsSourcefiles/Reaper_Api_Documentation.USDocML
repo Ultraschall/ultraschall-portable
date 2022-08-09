@@ -11663,6 +11663,19 @@
             </code></pre>
             
             These can't be escaped due Reaper's API-limitation. Keep this in mind!
+            
+            Another note when only having one entry:
+            You may run into the situation of wanting to have a caption, that has a , in it.
+            This could be interpreted as separator, so an caption entry like:
+            "this, is, my, entry"
+            will be shown like
+            "this"
+            
+            To avoid this, use separator=\b in the caption_csv, so
+            "this, is, my, entry, separator=\b"
+            will be shown as
+            "this, is, my, entry".
+            
         </description>
         <retvals>
             boolean retval - did the user click OK in the dialog(true) or close/cancel the dialog(false)

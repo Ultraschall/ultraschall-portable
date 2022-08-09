@@ -45,6 +45,12 @@ Bla</li>
 <h4>New features in 4.7</h4>
 <ul>
 <li>DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates</li>
+<li>DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)</li>
+<li>EventManager: EventManager_Debug_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not</li>
+<li>EventManager: EventManager_Debug_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm<br />
+</li>
+<li>EventManager: EventManager_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events</li>
+<li>EventManager: EventManager_GetAllEventNames - returns a table with all event-names of all currently registered events</li>
 <li>FXManagement: GetFXByGuid - gets a fx by its guid</li>
 <li>FXManagement: TrackFX_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project</li>
 <li>FXManagement: TakeFX_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project<br />
@@ -121,7 +127,9 @@ Bla</li>
 <li>DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -&gt; fixed</li>
 <li>Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals</li>
 <li>Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)</li>
-<li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated</li>
+<li>Docs: misc_docs-folder/Reaper-Render-Strings-docs_Jul2018.txt - removed, due being outdated<br />
+</li>
+<li>EventManager: EventManager_GetLastCheckfunctionState2 - improved speed</li>
 <li>HelperFunctions: Base64_Decoder - sped up massively for longer strings(up to 94% faster)</li>
 <li>HelperFunctions: Base64_Encoder - sped up massively for longer strings(up to 90% faster)</li>
 <li>HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings</li>
@@ -138,7 +146,7 @@ Bla</li>
 <li>MarkerManagement: IsMarkerShownote - returns now the shownote-index as well<br />
 </li>
 <li>MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well</li>
-<li>MarkerManagement: StoreTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
+<li>MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -&gt; fixed</li>
 <li>MediaItemManagement: RippleCut - supports now optional parameter to make add crossfade to the edit(requested by NiklasM)</li>
 <li>MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems</li>
 <li>MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -&gt; fixed</li>

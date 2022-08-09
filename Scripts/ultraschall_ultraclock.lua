@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall 4.0 - Changelog - Meo Mespotine
+-- Ultraschall 4.0 - Changelog - Meo-Ada Mespotine
 -- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
 --    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
 --   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
@@ -104,17 +104,25 @@ end
 
 
 function count_all_warnings() -- zähle die Arten von Soundchecks aus
-
+  
   event_count = ultraschall.EventManager_CountRegisteredEvents()
+  EventIdentifier=ultraschall.EventManager_GetAllEventIdentifier()
   local active_warning_count = 0
   local paused_warning_count = 0
   local passed_warning_count = 0
 
+  --print_update("")
   for i = 1, event_count do
 
-    local EventIdentifier = ""
-    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
-    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+-- old code,can be removed, if soundcheck works fine...
+--    local EventIdentifier = ""
+--    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+--    A=reaper.GetExtState("ultraschall_eventmanager", "EventIdentifier")
+--    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+-- new code, that shall replace the old code, as this here is much faster
+    local EventPaused = ultraschall.EventManager_GetEventPausedState(i)
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier[i])
 
     if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
       active_warning_count = active_warning_count +1
@@ -124,7 +132,8 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
 
   end
   passed_warning_count = event_count - active_warning_count - paused_warning_count
-
+  --]]
+  
   return active_warning_count, paused_warning_count, passed_warning_count
 end
 

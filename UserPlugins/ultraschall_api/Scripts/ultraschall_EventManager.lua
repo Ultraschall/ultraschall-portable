@@ -29,7 +29,7 @@
 --
 -- Issues: Api functions don't recognize registered EventIdentifiers who weren't processed yet by the EventManager.
 --         Must be fixed
---         Lua functions, who are stored as binary-chunks, are ot crossplatform-compatible. Important for StartUp-Events!
+--         Lua functions, who are stored as binary-chunks, are not crossplatform-compatible(really ?). Important for StartUp-Events!
 --
 -- ToDo: 1) Allow getting event-states and attributes within EventManager using internal functions, instead of "official" functions
 --          That way, checkfunctions can be "meta-functions" who react to multiple event-check-state-combinations with better performance
@@ -91,18 +91,21 @@ else
 end
 
 EventTable={}
+Event_RunState_ForDebug={}
 CountOfEvents=0
 
 function DebugDummy()
 end
 
-function DebugRun(eventnumber)
+function DebugRun(eventnumber, run)
   UserSpaces=EventTable[eventnumber]["UserSpace"]
   local UserSpace=""
   for k,v in pairs(UserSpaces) do
     UserSpace=UserSpace.."index:"..tostring(k).."\ndatatype:"..ultraschall.type(v).."\nvalue:"..string.gsub(string.gsub(tostring(v),"\\n","\\\\n"),"\n","\\n").."\n\n"
   end
-  if UserSpace~=nil then reaper.SetExtState("ultraschall_eventmanager", "UserSpaces_"..eventnumber, UserSpace, false) end
+  if UserSpace~=nil then 
+    reaper.SetExtState("ultraschall_eventmanager", "UserSpaces_"..eventnumber, UserSpace, false) 
+  end  
 end
 
 Debug=DebugDummy
@@ -117,8 +120,12 @@ function atexit()
   reaper.DeleteExtState("ultraschall_eventmanager", "eventresume", false)
   reaper.DeleteExtState("ultraschall_eventmanager", "state", false)
   reaper.DeleteExtState("ultraschall_eventmanager", "registered_scripts", false)
+  reaper.DeleteExtState("ultraschall_eventmanager", "Execution Time", false)
+  reaper.DeleteExtState("ultraschall_eventmanager", "EventNames", EventNames, false)
+  reaper.DeleteExtState("ultraschall_eventmanager", "EventIdentifier", EventNames, false)
   for i=1, CountOfEvents do
     reaper.DeleteExtState("ultraschall_eventmanager", "checkfunction_returnstate"..i, false)
+    reaper.DeleteExtState("ultraschall_eventmanager", "Event_Pause"..i, false)
   end
 end
 
@@ -139,12 +146,14 @@ end
 function PauseEvent(id)
   -- pauses an event by ID of a EventTable
   EventTable[id]["Paused"]=true
+  reaper.SetExtState("ultraschall_eventmanager", "Event_Pause"..id, "true", false)
   UpdateEventList_ExtState()
 end
 
 function ResumeEvent(id)
   -- resumes an event by ID of a EventTable
   EventTable[id]["Paused"]=false
+  reaper.SetExtState("ultraschall_eventmanager", "Event_Pause"..id, "false", false)
   UpdateEventList_ExtState()
 end
 
@@ -288,6 +297,8 @@ function AddEvent(EventStateChunk)
   EventTable[CountOfEvents]["CountOfActions"]=CountOfActions                        -- number of actions that shall be run by this event
   EventTable[CountOfEvents]["Paused"]=Paused                                        -- paused-state; true, event is not checked currently; false, event is checked currently
   EventTable[CountOfEvents]["UserSpace"]={}                                         -- the userspace for the checking-function, into which the checking-function can add temporary information
+  
+  reaper.SetExtState("ultraschall_eventmanager", "Event_Pause"..CountOfEvents, tostring(Paused), false)
   
   -- add the actions and sections
   for i=1, CountOfActions do
@@ -484,22 +495,29 @@ function CheckCommandsForEventManager()
   if reaper.GetExtState("ultraschall_eventmanager", "debugmode")=="doit" then
     StateRegister=reaper.GetExtState("ultraschall_eventmanager", "debugmode")
     Debug=DebugRun
-    reaper.SetExtState("ultraschall_eventmanager", "debugmode", "", false)
+    --reaper.SetExtState("ultraschall_eventmanager", "debugmode", "", false)
   elseif reaper.GetExtState("ultraschall_eventmanager", "debugmode")=="stopit" then
     reaper.SetExtState("ultraschall_eventmanager", "checkstates", "", false)
     Debug=DebugDummy
     reaper.SetExtState("ultraschall_eventmanager", "debugmode", "", false)
+    reaper.SetExtState("ultraschall_eventmanager", "Execution Time", "", false)
   end  
 end
 
 
+exectime=0
+
 function main()
   -- main event-checking-loop
   -- this is, were all the magix happens
-  current_state=nil  
+  current_state=nil    
+  if reaper.GetExtState("ultraschall_eventmanager", "debugmode")=="doit" then    
+    reaper.SetExtState("ultraschall_eventmanager", "Execution Time Between EventCheckCycles", (reaper.time_precise()-exectime), false)
+    exectime=reaper.time_precise()
+  end
   
   CheckCommandsForEventManager()
-  
+ 
   for i=1, CountOfEvents do
     if EventTable[i]["Paused"]==false then
     --print2(i, EventTable[i]["Paused"])
@@ -522,6 +540,7 @@ function main()
       if doit==true then
         state_retval, current_state=pcall(EventTable[i]["Function"], EventTable[i]["UserSpace"])
         Debug(i)
+        Event_RunState_ForDebug[i]=false
         CheckAndSetRetvalOfCheckFunction(i, current_state)
         if state_retval==false then 
           PauseEvent(i)
@@ -535,8 +554,10 @@ function main()
                   --A=reaper.time_precise()
                   if EventTable[i]["sec"..a]==0 then
                     reaper.Main_OnCommand(EventTable[i][a],0)
+                    Event_RunState_ForDebug[i]=true
                   elseif EventTable[i]["sec"..a]==32063 then
                     retval = ultraschall.MediaExplorer_OnCommand(EventTable[i][a])
+                    Event_RunState_ForDebug[i]=true
                   end
                 end
               elseif EventTable[i]["StartActionsOnceDuringTrue"]==true and EventTable[i]["StartActionsOnceDuringTrue_laststate"]==false then
@@ -545,8 +566,10 @@ function main()
                   A=reaper.time_precise()
                   if EventTable[i]["sec"..a]==0 then
                     reaper.Main_OnCommand(EventTable[i][a],0)
+                    Event_RunState_ForDebug[i]=true
                   elseif EventTable[i]["sec"..a]==32063 then
                     retval = ultraschall.MediaExplorer_OnCommand(EventTable[i][a])
+                    Event_RunState_ForDebug[i]=true
                   end
                 end
               end
@@ -574,7 +597,20 @@ function main()
 
   if enditall~=true then 
     -- if StopEvent hasn't been called yet, keep the eventmanager going
-    if reaper.HasExtState("ultraschall_eventmanager", "running")==true then reaper.defer(main) end
+    
+    if reaper.GetExtState("ultraschall_eventmanager", "debugmode")=="doit" then
+      reaper.SetExtState("ultraschall_eventmanager", "Execution Time", (reaper.time_precise()-exectime), false)
+      exectime=reaper.time_precise()
+      local Event_RunState_ForDebug_String=""
+      for i=1, #Event_RunState_ForDebug do
+        Event_RunState_ForDebug_String=Event_RunState_ForDebug_String..i..": "..tostring(Event_RunState_ForDebug[i]).."\n"
+        Event_RunState_ForDebug[i]=false
+      end
+      reaper.SetExtState("ultraschall_eventmanager", "actions_run", Event_RunState_ForDebug_String, false)
+    end
+    if reaper.HasExtState("ultraschall_eventmanager", "running")==true then      
+      reaper.defer(main) 
+    end
     --UpdateEventList_ExtState() 
   end
 end
@@ -582,8 +618,11 @@ end
 function UpdateEventList_ExtState()
   -- puts all current events and their attributes into an extstate, which can be read from other scripts
   local String="EventManager State\nLast update: "..os.date().." - "..reaper.time_precise().."\nNumber of Events: "..CountOfEvents.."\n\n"
+  local EventIdentifier=""
+  local EventNames=""
   for i=1, CountOfEvents do
---    print2(String)
+    EventIdentifier=EventIdentifier..EventTable[i]["EventIdentifier"].."\n"
+    EventNames=EventNames..EventTable[i]["EventName"].."\n"
     String=String.."Event #:"..i..
         "\nEventName: "..EventTable[i]["EventName"]..
         "\nEventIdentifier: "..EventTable[i]["EventIdentifier"]..
@@ -607,6 +646,8 @@ function UpdateEventList_ExtState()
         String=String.."EndEvent".."\n"
   end
   reaper.SetExtState("ultraschall_eventmanager", "state", String, false)
+  reaper.SetExtState("ultraschall_eventmanager", "EventIdentifier", EventIdentifier, false)  
+  reaper.SetExtState("ultraschall_eventmanager", "EventNames", EventNames, false)
 end
 
 function StopAction()

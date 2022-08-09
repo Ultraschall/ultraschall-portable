@@ -5781,3 +5781,184 @@ function ultraschall.ToggleCrossfadeStateForSplits(toggle)
   end
   return true, retval2
 end
+
+function ultraschall.EventManager_Debug_GetExecutionTime()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_Debug_GetExecutionTime</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>number seconds_eventcheck_functions, number seconds_between_eventcheck_cycles = ultraschall.EventManager_Debug_GetExecutionTime()</functioncall>
+  <description>
+    Returns the numer of seconds it cost the last time all events were checked in the eventmanager.
+    That way, you can benchmark, how much execution time the events need and optimise when needed.
+    
+    Needs DebugMode to be turned on.
+    
+    Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.
+    
+    return -1, if debugmode is off/eventmanager is not running
+  </description>  
+  <retvals>
+    number seconds_eventcheck_functions - the number of seconds it took, for all event-check functions to check in the last event-check-cycle
+    number seconds_between_eventcheck_cycles - the time between two event-check-cycles, usually when other actions are run
+  </retvals>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
+  <tags>event manager, get, execution time, debug</tags>
+</US_DocBloc>
+--]]
+  local exectime=tonumber(reaper.GetExtState("ultraschall_eventmanager", "Execution Time"))
+  local exectime2=tonumber(reaper.GetExtState("ultraschall_eventmanager", "Execution Time Between EventCheckCycles"))  
+  if exectime==nil then return -1 else return exectime, exectime2 end
+end
+
+function ultraschall.EventManager_GetAllEventIdentifier()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_GetAllEventIdentifier</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>table eventidentifier = ultraschall.EventManager_GetAllEventIdentifier()</functioncall>
+  <description>
+    Returns a list of all event-identifiers of all currently registered events.
+  </description>
+  <retvals>
+    table eventidentifier - a table with all existing event-identifiers in order of registration
+  </retvals>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
+  <tags>event manager, get, list, event identifier</tags>
+</US_DocBloc>
+--]]
+  local EventIdent=reaper.GetExtState("ultraschall_eventmanager", "EventIdentifier")
+  local EventIdentifier_Table={}
+  for k in string.gmatch(EventIdent, "(.-)\n") do  
+    EventIdentifier_Table[#EventIdentifier_Table+1]=k
+  end
+ 
+  return EventIdentifier_Table
+end
+
+function ultraschall.EventManager_GetAllEventNames()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_GetAllEventNames</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>table eventnames = ultraschall.EventManager_GetAllEventNames()</functioncall>
+  <description>
+    Returns a list of all event-names of all currently registered events.
+    
+    The order is the same as the event-identifier returned by EventManager_GetAllEventIdentifier
+  </description>
+  <retvals>
+    table eventidentifier - a table with all existing event-names
+  </retvals>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
+  <tags>event manager, get, list, event names</tags>
+</US_DocBloc>
+--]]
+  local EventNames=reaper.GetExtState("ultraschall_eventmanager", "EventNames")
+  local EventEvents_Table={}
+  for k in string.gmatch(EventNames, "(.-)\n") do  
+    EventEvents_Table[#EventEvents_Table+1]=k
+  end
+ 
+  return EventEvents_Table
+end
+
+function ultraschall.EventManager_Debug_GetAllActionRunStates()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_Debug_GetAllActionRunStates</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>table runstates = ultraschall.EventManager_Debug_GetAllActionRunStates()</functioncall>
+  <description>
+    Returns a list of all events and if their actions have been run the last time the event was checked(true) or not(false).
+    
+    This way you can check, if the actions are properly executed.
+    
+    The order is the same as the event-identifier returned by EventManager_GetAllEventIdentifier
+    
+    Needs DebugMode to be turned on.
+    
+    Note: Debugmode is not for productive usecases, as it costs resources. Please turn it off again, after you've finished debugging.    
+    
+    return nil, if debug-mode is off
+  </description>
+  <retvals>
+    table runstates - a table with all runstates of the actions of events, if they were run the last time(true) or not(false)
+  </retvals>
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
+  <tags>event manager, get, debug, list, event, runstates</tags>
+</US_DocBloc>
+--]]
+  RunStates=reaper.GetExtState("ultraschall_eventmanager", "actions_run")
+  if RunState=="" then return end
+  local RunStates_Table={}
+  for i, k in string.gmatch(RunStates, "(.-:) (.-)\n") do  
+    RunStates_Table[#RunStates_Table+1]=toboolean(k)
+  end
+ 
+  return RunStates_Table
+end
+
+
+
+function ultraschall.EventManager_GetEventPausedState(id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>EventManager_GetAllEventIdentifier</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.982
+    Lua=5.3
+  </requires>
+  <functioncall>boolean paused_state = ultraschall.EventManager_GetAllEventIdentifier()</functioncall>
+  <description>
+    Returns the paused-state of an registered event.
+    
+    Returns nil if no such event is registered.
+  </description> 
+  <retvals>
+    boolean paused_state - true, event is paused; false, event is not paused; nil, no such event
+  </retvals>  
+  <chapter_context>
+    Event Manager
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_EventManager.lua</source_document>
+  <tags>event manager, get, paused state</tags>
+</US_DocBloc>
+--]]
+  
+  return toboolean(reaper.GetExtState("ultraschall_eventmanager", "Event_Pause"..id))
+end
