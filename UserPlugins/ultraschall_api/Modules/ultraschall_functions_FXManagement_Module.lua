@@ -9261,3 +9261,347 @@ end
 
 
 --A,B=ultraschall.InputFX_JSFX_Reload(reaper.GetTrack(0,0), 1)
+
+
+function ultraschall.GetGuidFromCustomMarkerID(markername, idx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetGuidFromCustomMarkerID</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string guid = ultraschall.GetGuidFromCustomMarkerID(string markername, integer index)</functioncall>
+  <description>
+    Gets the corresponding guid of a custom marker with a specific index 
+    
+    The index is for _custom:-markers only
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the custom marker with a specific index
+  </retvals>
+  <parameters>
+    string markername - the name of the custom-marker
+    integer index - the index of the custom marker, whose guid you want to retrieve; 0-based
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom marker, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetGuidFromCustomMarkerID", "idx", "must be an integer", -1) return end
+  if type(markername)~="string" then ultraschall.AddErrorMessage("GetGuidFromCustomMarkerID", "markername", "must be a string", -2) return end
+
+  local retval, marker_index, pos, name, shown_number, color, guid2 = ultraschall.EnumerateCustomMarkers(markername, idx)
+  return guid2
+end
+
+--A={ultraschall.GetGuidFromCustomMarkerID("Planned", 0)}
+
+--A=ultraschall.GetGuidFromShownoteMarkerID(1)
+--B={ultraschall.EnumerateShownoteMarkers(1)}
+--SLEM()
+
+function ultraschall.GetGuidFromCustomRegionID(regionname, idx)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetGuidFromCustomRegionID</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>string guid = ultraschall.GetGuidFromCustomRegionID(string regionname, integer index)</functioncall>
+  <description>
+    Gets the corresponding guid of a custom region with a specific index 
+    
+    The index is for _custom:-regions only
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string guid - the guid of the custom region with a specific index
+  </retvals>
+  <parameters>
+    string regionname - the name of the custom-region
+    integer index - the index of the custom region, whose guid you want to retrieve; 0-based
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom region, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetGuidFromCustomRegionID", "idx", "must be an integer", -1) return end
+  if type(markername)~="string" then ultraschall.AddErrorMessage("GetGuidFromCustomRegionID", "regionname", "must be a string", -2) return end
+
+  local retval, marker_index, pos, length, name, shown_number, color, guid2 = ultraschall.EnumerateCustomRegions(regionname, idx)
+  return guid2
+end
+
+--A=ultraschall.GetGuidFromCustomRegionID("Time", 0)
+
+function ultraschall.GetCustomMarkerIDFromGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetCustomMarkerIDFromGuid</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer index, string custom_marker_name = ultraschall.GetCustomMarkerIDFromGuid(string guid)</functioncall>
+  <description>
+    Gets the corresponding indexnumber of a custom-marker-guid
+    
+    The index is for all _custom:-markers only.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer index - the index of the custom-marker, whose guid you have passed to this function; 0-based
+    string custom_marker_name - the name of the custom-marker
+  </retvals>
+  <parameters>
+    string guid - the guid of the custom-marker, whose index-number you want to retrieve
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom marker, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if type(guid)~="string" then ultraschall.AddErrorMessage("GetCustomMarkerIDFromGuid", "guid", "must be a string", -1) return -1 end  
+  local marker_id = ultraschall.GetMarkerIDFromGuid(guid)
+  local A,A,A,rgn_end,name=reaper.EnumProjectMarkers(marker_id-1)
+  name=name:match("_(.-):")
+  if name==nil or rgn_end>0 then ultraschall.AddErrorMessage("GetCustomMarkerIDFromGuid", "guid", "not a custom-marker", -2) return -1 end  
+
+  for idx=0, ultraschall.CountAllCustomMarkers(name) do
+    ultraschall.SuppressErrorMessages(true)
+    local retval, marker_index, pos, name2, shown_number, color, guid2 = ultraschall.EnumerateCustomMarkers(name, idx)
+    if guid2==guid then ultraschall.SuppressErrorMessages(false) return idx, name end
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return -1
+end
+
+--B,C=ultraschall.GetCustomMarkerIDFromGuid("{E4C95832-0E52-4164-A879-9AED86D5A66C}")
+
+function ultraschall.GetCustomRegionIDFromGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetCustomRegionIDFromGuid</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer index, string custom_region_name = ultraschall.GetCustomRegionIDFromGuid(string guid)</functioncall>
+  <description>
+    Gets the corresponding indexnumber of a custom-region-guid
+    
+    The index is for all _custom:-regions only.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer index - the index of the custom-region, whose guid you have passed to this function; 0-based
+    string custom_region_name - the name of the region-marker
+  </retvals>
+  <parameters>
+    string guid - the guid of the custom-region, whose index-number you want to retrieve
+  </parameters>
+  <chapter_context>
+    Markers
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, get, custom region, markerid, guid</tags>
+</US_DocBloc>
+--]]
+  if type(guid)~="string" then ultraschall.AddErrorMessage("GetCustomRegionIDFromGuid", "guid", "must be a string", -1) return -1 end  
+  local marker_id = ultraschall.GetMarkerIDFromGuid(guid)
+  local A,A,A,rgn_end,name=reaper.EnumProjectMarkers(marker_id-1)
+  name=name:match("_(.-):")
+  if name==nil or rgn_end==0 then ultraschall.AddErrorMessage("GetCustomRegionIDFromGuid", "guid", "not a custom-region", -2) return -1 end  
+
+  for idx=0, ultraschall.CountAllCustomRegions(name) do
+    ultraschall.SuppressErrorMessages(true)
+    local retval, marker_index, pos, length, name2, shown_number, color, guid2 = ultraschall.EnumerateCustomRegions(name, idx)
+    if guid2==guid then ultraschall.SuppressErrorMessages(false) return idx, name end
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return -1
+end
+
+--B,C=ultraschall.GetCustomRegionIDFromGuid("{84144A00-96EA-4AC6-ACB2-D2B0EEEB3CEB}")
+
+function ultraschall.TakeFX_GetAllGuidsFromAllTakes()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TakeFX_GetAllGuidsFromAllTakes</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>table found_guids = ultraschall.TakeFX_GetAllGuidsFromAllTakes()</functioncall>
+  <description>
+    Returns all Guids from all Take-FX of all takes in a project
+    
+    Returned table is of the following format:
+      Guids[guid_index]["take"] - the take, that contains the fx with the guid
+      Guids[guid_index]["fx_index"] - the index of the fx in the take-fx-chain
+      Guids[guid_index]["guid"] - the guid of the found take-fx
+  </description>
+  <retvals>
+    table found_guids - the found guids of all take-fx in the project
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, all guids, guid, takefx</tags>
+</US_DocBloc>
+]]
+  local Guids={}
+  for i=0, reaper.CountMediaItems(0)-1 do
+    for a=0, reaper.GetMediaItemNumTakes(reaper.GetMediaItem(0,i))-1 do
+      local take=reaper.GetMediaItemTake(reaper.GetMediaItem(0,i), a)
+      for b=0, reaper.TakeFX_GetCount(take)-1 do
+        Guids[#Guids+1]={}
+        Guids[#Guids]["guid"]=reaper.TakeFX_GetFXGUID(take, b)
+        Guids[#Guids]["take"]=take
+        Guids[#Guids]["fx_index"]=b
+      end
+    end
+  end
+  return Guids
+end
+
+--A=ultraschall.TakeFX_GetAllGuidsFromAllTakes()
+
+function ultraschall.TrackFX_GetAllGuidsFromAllTracks()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TrackFX_GetAllGuidsFromAllTracks</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>table found_guids = ultraschall.TrackFX_GetAllGuidsFromAllTracks()</functioncall>
+  <description>
+    Returns all Guids from all Track-FX of all tracks in a project
+    
+    Returned table is of the following format:
+      Guids[guid_index]["track"] - the track, that contains the fx with the guid
+      Guids[guid_index]["fx_index"] - the index of the fx in the track-fx-chain
+      Guids[guid_index]["guid"] - the guid of the found track-fx
+  </description>
+  <retvals>
+    table found_guids - the found guids of all track-fx in the project
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, all guids, guid, trackfx</tags>
+</US_DocBloc>
+]]
+  local Guids={}
+  track=reaper.GetMasterTrack(0)
+  for a=0, reaper.TrackFX_GetCount(track)-1 do
+    Guids[#Guids+1]={}
+    Guids[#Guids]["guid"]=reaper.TrackFX_GetFXGUID(track, a)
+    Guids[#Guids]["track"]=track
+    Guids[#Guids]["fx_index"]=a
+  end
+  
+  for i=0, reaper.CountTracks(0)-1 do
+    track=reaper.GetTrack(0,i)
+    for a=0, reaper.TrackFX_GetCount(track)-1 do
+      Guids[#Guids+1]={}
+      Guids[#Guids]["guid"]=reaper.TrackFX_GetFXGUID(track, a)
+      Guids[#Guids]["track"]=track
+      Guids[#Guids]["fx_index"]=a
+    end
+  end
+  return Guids
+end
+
+--A=ultraschall.TrackFX_GetAllGuidsFromAllTracks()
+
+function ultraschall.GetFXByGuid(guid)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXByGuid</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.975
+    Lua=5.3
+  </requires>
+  <functioncall>table found_fx = ultraschall.GetFXByGuid()</functioncall>
+  <description>
+    Returns the fx-index and track/take object of an FX by guid.
+    
+    Returned table is of the following format:
+      Guids[guid_index]["track"] - the track, that contains the fx with the guid, if the fx in question is trackfx, else nil
+      Guids[guid_index]["take"] - the take, that contains the fx with the guid, if the fx in question is takefx, else nil
+      Guids[guid_index]["fx_index"] - the index of the fx in the fx-chain of either the take or track-fx-chain
+  </description>
+  <retvals>
+    table found_fx - the found fx with guid
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Helper functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fxmanagement, get, fx, guid, trackfx</tags>
+</US_DocBloc>
+]]
+  if type(guid)~="string" then ultraschall.AddErrorMessage("GetFXByGuid", "guid", "must be a string", -1) return nil end
+  if ultraschall.IsValidGuid(guid, true)==false then ultraschall.AddErrorMessage("GetFXByGuid", "guid", "must be a valid guid", -2) return nil end
+  local retval
+  local FoundGuids={}
+  local Guids=ultraschall.TrackFX_GetAllGuidsFromAllTracks()
+  for i=1, #Guids do
+    if guid==Guids[i]["guid"] then
+      FoundGuids[#FoundGuids+1]={}
+      FoundGuids[#FoundGuids]["fx_index"]=Guids[i]["fx_index"]
+      FoundGuids[#FoundGuids]["track"]=Guids[i]["track"]
+    end
+  end
+  local Guids2=ultraschall.TakeFX_GetAllGuidsFromAllTakes()
+  for i=1, #Guids2 do
+    if guid==Guids2[i]["guid"] then
+      FoundGuids[#FoundGuids+1]={}
+      FoundGuids[#FoundGuids]["fx_index"]=Guids2[i]["fx_index"]
+      FoundGuids[#FoundGuids]["take"]=Guids2[i]["take"]
+      retval, FoundGuids[#FoundGuids]["name"]=reaper.TakeFX_GetFXName(Guids2[i]["take"], Guids2[i]["fx_index"])
+    end
+  end
+  return FoundGuids
+end
+

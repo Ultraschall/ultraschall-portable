@@ -805,6 +805,26 @@ else
     ultraschall.LM(11)
     return ultraschall.EventManager_DebugMode_UserSpace(table.unpack({...}))
   end
+  function ultraschall.EventManager_Debug_GetExecutionTime(...)
+    ultraschall.LM(11)
+    return ultraschall.EventManager_Debug_GetExecutionTime(table.unpack({...}))
+  end
+  function ultraschall.EventManager_GetAllEventIdentifier(...)
+    ultraschall.LM(11)
+    return ultraschall.EventManager_GetAllEventIdentifier(table.unpack({...}))
+  end
+  function ultraschall.EventManager_GetAllEventNames(...)
+    ultraschall.LM(11)
+    return ultraschall.EventManager_GetAllEventNames(table.unpack({...}))
+  end
+  function ultraschall.EventManager_Debug_GetAllActionRunStates(...)
+    ultraschall.LM(11)
+    return ultraschall.EventManager_Debug_GetAllActionRunStates(table.unpack({...}))
+  end
+  function ultraschall.EventManager_GetAllEventIdentifier(...)
+    ultraschall.LM(11)
+    return ultraschall.EventManager_GetAllEventIdentifier(table.unpack({...}))
+  end
   function ultraschall.IsValidFXStateChunk(...)
     ultraschall.LM(12)
     return ultraschall.IsValidFXStateChunk(table.unpack({...}))
@@ -1388,6 +1408,34 @@ else
   function ultraschall.InputFX_JSFX_Reload(...)
     ultraschall.LM(12)
     return ultraschall.InputFX_JSFX_Reload(table.unpack({...}))
+  end
+  function ultraschall.GetGuidFromCustomMarkerID(...)
+    ultraschall.LM(12)
+    return ultraschall.GetGuidFromCustomMarkerID(table.unpack({...}))
+  end
+  function ultraschall.GetGuidFromCustomRegionID(...)
+    ultraschall.LM(12)
+    return ultraschall.GetGuidFromCustomRegionID(table.unpack({...}))
+  end
+  function ultraschall.GetCustomMarkerIDFromGuid(...)
+    ultraschall.LM(12)
+    return ultraschall.GetCustomMarkerIDFromGuid(table.unpack({...}))
+  end
+  function ultraschall.GetCustomRegionIDFromGuid(...)
+    ultraschall.LM(12)
+    return ultraschall.GetCustomRegionIDFromGuid(table.unpack({...}))
+  end
+  function ultraschall.TakeFX_GetAllGuidsFromAllTakes(...)
+    ultraschall.LM(12)
+    return ultraschall.TakeFX_GetAllGuidsFromAllTakes(table.unpack({...}))
+  end
+  function ultraschall.TrackFX_GetAllGuidsFromAllTracks(...)
+    ultraschall.LM(12)
+    return ultraschall.TrackFX_GetAllGuidsFromAllTracks(table.unpack({...}))
+  end
+  function ultraschall.GetFXByGuid(...)
+    ultraschall.LM(12)
+    return ultraschall.GetFXByGuid(table.unpack({...}))
   end
   function ultraschall.ReadFullFile(...)
     ultraschall.LM(13)
@@ -2533,6 +2581,18 @@ else
     ultraschall.LM(18)
     return ultraschall.IsMarkerShownote(table.unpack({...}))
   end
+  function ultraschall.RenumerateNormalMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.RenumerateNormalMarkers(table.unpack({...}))
+  end
+  function ultraschall.RenumerateShownoteMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.RenumerateShownoteMarkers(table.unpack({...}))
+  end
+  function ultraschall.GetMarkerType(...)
+    ultraschall.LM(18)
+    return ultraschall.GetMarkerType(table.unpack({...}))
+  end
   function ultraschall.GetItemPosition(...)
     ultraschall.LM(19)
     return ultraschall.GetItemPosition(table.unpack({...}))
@@ -3145,6 +3205,18 @@ else
     ultraschall.LM(20)
     return ultraschall.SpectralPeak_GetColorAttributes(table.unpack({...}))
   end
+  function ultraschall.ToggleCrossfadeStateForSplits(...)
+    ultraschall.LM(20)
+    return ultraschall.ToggleCrossfadeStateForSplits(table.unpack({...}))
+  end
+  function ultraschall.GetTakeSourcePosByProjectPos(...)
+    ultraschall.LM(20)
+    return ultraschall.GetTakeSourcePosByProjectPos(table.unpack({...}))
+  end
+  function ultraschall.GetProjectPosByTakeSourcePos(...)
+    ultraschall.LM(20)
+    return ultraschall.GetProjectPosByTakeSourcePos(table.unpack({...}))
+  end
   function ultraschall.DeleteProjExtState_Section(...)
     ultraschall.LM(21)
     return ultraschall.DeleteProjExtState_Section(table.unpack({...}))
@@ -3404,6 +3476,22 @@ else
   function ultraschall.Scrubbing_MoveCursor_Toggle(...)
     ultraschall.LM(23)
     return ultraschall.Scrubbing_MoveCursor_Toggle(table.unpack({...}))
+  end
+  function ultraschall.GetNextClosestItemStart(...)
+    ultraschall.LM(23)
+    return ultraschall.GetNextClosestItemStart(table.unpack({...}))
+  end
+  function ultraschall.GetPreviousClosestItemStart(...)
+    ultraschall.LM(23)
+    return ultraschall.GetPreviousClosestItemStart(table.unpack({...}))
+  end
+  function ultraschall.GetPreviousClosestItemEnd(...)
+    ultraschall.LM(23)
+    return ultraschall.GetPreviousClosestItemEnd(table.unpack({...}))
+  end
+  function ultraschall.GetNextClosestItemEnd(...)
+    ultraschall.LM(23)
+    return ultraschall.GetNextClosestItemEnd(table.unpack({...}))
   end
   function ultraschall.GetProjectFilename(...)
     ultraschall.LM(24)
@@ -4533,6 +4621,14 @@ else
     ultraschall.LM(28)
     return ultraschall.GetHWND_ArrangeView(table.unpack({...}))
   end
+  function ultraschall.GetScaleRangeFromDpi(...)
+    ultraschall.LM(28)
+    return ultraschall.GetScaleRangeFromDpi(table.unpack({...}))
+  end
+  function ultraschall.GetDpiFromScale(...)
+    ultraschall.LM(28)
+    return ultraschall.GetDpiFromScale(table.unpack({...}))
+  end
   function ultraschall.GetRenderCFG_Settings_FLAC(...)
     ultraschall.LM(29)
     return ultraschall.GetRenderCFG_Settings_FLAC(table.unpack({...}))
@@ -4944,6 +5040,10 @@ else
   function ultraschall.CreateRenderCFG_WMF(...)
     ultraschall.LM(29)
     return ultraschall.CreateRenderCFG_WMF(table.unpack({...}))
+  end
+  function ultraschall.ResolvePresetName(...)
+    ultraschall.LM(29)
+    return ultraschall.ResolvePresetName(table.unpack({...}))
   end
   function ultraschall.GetAllThemeLayoutNames(...)
     ultraschall.LM(30)

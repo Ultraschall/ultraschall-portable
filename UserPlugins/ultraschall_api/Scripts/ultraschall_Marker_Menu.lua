@@ -12,7 +12,7 @@ function GetMarkerMenu(MarkerType, clicktype, Markernr)
   if clicktype&2==2 then 
     clicktype="RightClck"
   elseif clicktype&1==1 then 
-    clicktype="LeftClck"
+    -- clicktype="LeftClck"-- deactivated for now, until you've added a MarkerMenu_GetLastClickState-function
   else
     return
   end

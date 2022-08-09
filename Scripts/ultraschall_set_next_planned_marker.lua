@@ -35,7 +35,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function get_position()
-  if reaper.GetPlayState() & 2 == 2 then -- 2 = Pause
+  if reaper.GetPlayState() == 0 then -- 2 = Pause
     current_position = reaper.GetCursorPosition() -- Position of edit-cursor
   else
     if buttonstate == 1 then -- follow mode is active

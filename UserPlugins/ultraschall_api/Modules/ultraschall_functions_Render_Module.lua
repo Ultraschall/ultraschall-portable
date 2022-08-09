@@ -9125,3 +9125,57 @@ function ultraschall.CreateRenderCFG_WMF(OutputFormat, VideoCodec, VideoBitrate,
 end
 
 CreateRenderCFG_WMF_Video=CreateRenderCFG_WMF -- look above for the actual function!!
+
+function ultraschall.ResolvePresetName(bounds_name, options_and_formats_name)
+ --[[
+ <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>ResolvePresetName</slug>
+   <requires>
+     Ultraschall=4.7
+     Reaper=6.48
+     Lua=5.3
+   </requires>
+   <functioncall>string Bounds_Name, string Options_and_Format_Name = ultraschall.ResolvePresetName(string Bounds_Name, string Options_and_Format_Name)</functioncall>
+   <description>
+     returns the correct case-sensitive-spelling of a bound/options-renderpreset name.
+     
+     Just pass the name in any kind of case-style and it will find the correct case-sensitive-names.
+    
+     Returns nil in case of an error or if no such name was found
+   </description>
+   <parameters>
+     string Bounds_Name - the name of the Bounds-render-preset you want to query
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset you want to query
+   </parameters>
+   <retvals>
+     string Bounds_Name - the name of the Bounds-render-preset in correct case-sensitivity as stored
+     string Options_and_Format_Name - the name of the Renderformat-options-render-preset in correct case-sensitivity as stored
+   </retvals>
+   <chapter_context>
+      Rendering Projects
+      Render Presets
+   </chapter_context>
+   <target_document>US_Api_Functions</target_document>
+   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+   <tags>render management, resolve, render preset, names, format options, bounds, case sensitivity</tags>
+ </US_DocBloc>
+ ]]
+  if bounds_name~=nil and type(bounds_name)~="string" then ultraschall.AddErrorMessage("ResolvePresetName", "bounds_name", "must be a string", -1) return end
+  if options_and_formats_name~=nil and type(options_and_formats_name)~="string" then ultraschall.AddErrorMessage("ResolvePresetName", "options_and_formats_name", "must be a string", -2) return end
+  local bounds_presets, bounds_names, options_format_presets, options_format_names, both_presets, both_names = ultraschall.GetRenderPreset_Names()
+  local foundbounds=nil
+  local found_options=nil
+  
+  if bounds_name~=nil then
+    for i=1, #bounds_names do
+      if bounds_name:lower()==bounds_names[i]:lower() then foundbounds=bounds_names[i] break end
+    end
+  end
+  if options_and_formats_name~=nil then
+    for i=1, #options_format_names do
+      if options_and_formats_name:lower()==options_format_names[i]:lower() then found_options=options_format_names[i] break end
+    end
+  end
+  return foundbounds, found_options
+end
+

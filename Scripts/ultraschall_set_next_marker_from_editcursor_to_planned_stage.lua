@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2022 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -61,62 +61,27 @@ function ultraschall.MoveMarkers(markerarray, time, relative)
   return true
 end
 
-function ultraschall.GetClosestNextNormalMarker(cursor_type, time_position)
--- returns idx, position(in seconds) and name of the next closest marker
-  local cursortime=0
-  local retposition=reaper.GetProjectLength(0)+1--*200000000 --Working Hack, but isn't elegant....
-  local retindexnumber=-1
-  local retmarkername=""
-  
-  if tonumber(time_position)==nil and reaper.GetPlayState()==0 and tonumber(cursor_type)~=3 then
-    time_position=reaper.GetCursorPosition()
-  elseif tonumber(time_position)==nil and reaper.GetPlayState~=0 and tonumber(cursor_type)~=3 then
-    time_position=reaper.GetPlayPosition()
-  elseif tonumber(time_position)==nil and tonumber(cursor_type)~=3 then
-    time_position=tonumber(time_position)
-  end
-    
-  if tonumber(cursor_type)==nil then return -1 end
-  if tonumber(cursor_type)==0 then cursortime=reaper.GetCursorPosition() end
-  if tonumber(cursor_type)==1 then cursortime=reaper.GetPlayPosition() end
-  if tonumber(cursor_type)==2 then 
-      reaper.BR_GetMouseCursorContext() 
-      cursortime=reaper.BR_GetMouseCursorContext_Position() 
-      if cursortime==-1 then return -1 end
-  end
-  if tonumber(cursor_type)==3 then
-      if tonumber(time_position)==nil then return -1 end
-      cursortime=tonumber(time_position)
-  end
-  if tonumber(cursor_type)>3 or tonumber(cursor_type)<0 then return -1 end
-  
-  local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
-  
-  for i=0,retval do
-    retval,  isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0, i)
-    if isrgn==false then
-      if pos>cursortime and pos<retposition and (color==0 or color==0x1666666) then
-        retposition=pos
-        retindexnumber=retval
-        retmarkername=name
-        colore=color
-      end
-    end
-  end
-  if retindexnumber==-1 then retposition=-1 end
-  return retindexnumber, retposition, retmarkername
+retindexnumber, guid = ultraschall.GetTemporaryMarker()
+ultraschall.StoreTemporaryMarker(-1)
+
+if retindexnumber==-1 then
+  retindexnumber, retposition, retmarkername, retindex = ultraschall.GetClosestNextMarker(0)
+else
+  retval, isrgn, retposition, rgnend, retmarkername, retindex = reaper.EnumProjectMarkers(retindexnumber)
 end
 
-
-retindexnumber, retposition, retmarkername = ultraschall.GetClosestNextNormalMarker(0)
+markertype = ultraschall.GetMarkerType(retindexnumber)
+if markertype~="normal" then return end
 
 if retindexnumber~=-1 then
   A,B=ultraschall.GetAllPlannedMarkers()
   reaper.Undo_BeginBlock()
-    ultraschall.MoveMarkers(B, .1, true)
+    CCC=ultraschall.MoveMarkers(B, .1, true)
   reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1)
   
   reaper.Undo_BeginBlock()
-    reaper.SetProjectMarkerByIndex2(0, retindexnumber-1, false, 0.1, 0, 0, "_Planned:"..retmarkername, ultraschall.ConvertColor(100,255,0), 0)
-  reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1) -- has to be a second UNDO block!
+    reaper.SetProjectMarkerByIndex2(0, retindexnumber, false, 0.1, 0, 0, "_Planned:"..retmarkername, ultraschall.ConvertColor(100,255,0), 0)
+  reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1) -- has to be a second UNDO block! -- But why?
 end
+--]]
+

@@ -274,42 +274,21 @@ Note: Doesn't fucking work...
  - Markers can be used for rendering now
  - Fade In/Fade Out added now
  - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
+ 
+ (Later)
  - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
     Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
     The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
 readd in next version:
   
 
-  
-</TODO>
+To Do for next version:
+   Render To Do:
+   - Markers can be used for rendering now
+   - Fade In/Fade Out added now
+   - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
 
-## Ultraschall Framework - Changelog
-
-### 4.7 - "Pearl Jam - Alive" - XX of XXXX 2022
-
-Has now 1532 functions, with XX new ones
-
-**new in this release:**  
-
-  - **Bla**  
-  Bla
-  
-
-#### New features in 4.7
-  - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
-  - DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)
-  - EventManager: EventManager\_Debug\_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not
-  - EventManager: EventManager\_Debug\_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm  
-  - EventManager: EventManager\_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events
-  - EventManager: EventManager\_GetAllEventNames - returns a table with all event-names of all currently registered events
-  - FXManagement: GetFXByGuid - gets a fx by its guid
-  - FXManagement: TrackFX\_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project
-  - FXManagement: TakeFX\_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project  
-  - MarkerManagement: GetMarkerType - returns the type of a marker
-  - MarkerManagement: GetGuidFromCustomMarkerID - returns the guid from a custom-marker-index
-  - MarkerManagement: GetGuidFromCustomRegionID - returns the guid from a custom-region-index
-  - MarkerManagement: GetCustomMarkerIDFromGuid - returns the custom-marker-index and name from a guid
-  - MarkerManagement: GetCustomRegionIDFromGuid - returns the custom-region-index and name from a guid
+readd in next version
   - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
   - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
   - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
@@ -329,20 +308,12 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: MarkerMenu\_SetStartupAction\_DefaultMarkers - sets a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
-  - MarkerManagement: RenumerateNormalMarkers - renumerates the shown-number of all normal-markers
-  - MarkerManagement: RenumerateShownoteMarkers - renumerates the shown-number of all shownote-markers
-  - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
-  - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
-  - Navigation: GetNextClosestItemEnd - gets the next closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
-  - Navigation: GetNextClosestItemStart - gets the next closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
-  - Navigation: GetPreviousClosestItemEnd - gets the previous closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
-  - Navigation: GetPreviousClosestItemStart - gets the previous closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
   - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcastChapter\_MetaDataEntry - returns a podcast's chapter-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcastEpisode\_MetaDataEntry - returns the podcast's episode-related metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode -metadata-preset
+  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
   - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
   - PodcastMetadata: GetSetChapterMarker\_Attributes - gets/sets metadata-attributes of a chapter-marker(using Ultraschall 4+ methods)
@@ -354,7 +325,45 @@ Has now 1532 functions, with XX new ones
   - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
   - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
   - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
-  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes      
+  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
+</TODO>
+
+## Ultraschall Framework - Changelog
+
+### 4.7 - "Pearl Jam - Alive" - 18 of August 2022
+
+Has now 1532 functions, with XX new ones
+
+**new in this release:**  
+
+  - **Bla**  
+  Bla
+  
+
+#### New features in 4.7
+  - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
+  - DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)
+  - EventManager: EventManager\_Debug\_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not
+  - EventManager: EventManager\_Debug\_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm  
+  - EventManager: EventManager\_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events
+  - EventManager: EventManager\_GetAllEventNames - returns a table with all event-names of all currently registered events
+  - EventManager: EventManager\_GetEventPausedState - returns the paused states of a currently registered event
+  - FXManagement: GetFXByGuid - gets a fx by its guid
+  - FXManagement: TrackFX\_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project
+  - FXManagement: TakeFX\_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project  
+  - MarkerManagement: GetMarkerType - returns the type of a marker
+  - MarkerManagement: GetGuidFromCustomMarkerID - returns the guid from a custom-marker-index
+  - MarkerManagement: GetGuidFromCustomRegionID - returns the guid from a custom-region-index
+  - MarkerManagement: GetCustomMarkerIDFromGuid - returns the custom-marker-index and name from a guid
+  - MarkerManagement: GetCustomRegionIDFromGuid - returns the custom-region-index and name from a guid
+  - MarkerManagement: RenumerateNormalMarkers - renumerates the shown-number of all normal-markers
+  - MarkerManagement: RenumerateShownoteMarkers - renumerates the shown-number of all shownote-markers
+  - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
+  - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
+  - Navigation: GetNextClosestItemEnd - gets the next closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
+  - Navigation: GetNextClosestItemStart - gets the next closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
+  - Navigation: GetPreviousClosestItemEnd - gets the previous closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
+  - Navigation: GetPreviousClosestItemStart - gets the previous closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
   - Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini
   - UserInterface: GetReaperWindow\_Position - returns the Reaper-window-position and various of its elements  
   - UserInterface: GetScaleRangeFromDpi - returns the scale-range a certain dpi-value has
@@ -390,10 +399,14 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -> fixed
-  - MediaItemManagement: RippleCut - supports now optional parameter to make add crossfade to the edit(requested by NiklasM)
+  - MediaItemManagement: RippleCut - supports now optional parameter to add crossfade to the edit(requested by NiklasM)
   - MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
+  - Navigation: GetClosestNextMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
+  - Navigation: GetClosestNextRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
+  - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
+  - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
   - Rendering: CreateRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options
   - Rendering: CreateRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options
@@ -409,13 +422,12 @@ Has now 1532 functions, with XX new ones
   - Rendering: GetRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options
   - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options
   - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options
-  - Rendering: AddRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+
-  - Rendering: GetRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
-  - Rendering: SetRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+
-  - Rendering: DeleteRenderPreset\_Bounds - bounds is now case-insensitive -> (thnx to Malik)
+  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
+  - Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
+  - Rendering: DeleteRenderPreset\_Bounds - bounds-name is now case-insensitive -> (thnx to Malik)
   - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> (thnx to Malik)
   - Rendering: RenderProject\_RenderTable - didn't increment filename when rendering filename under certain circumstances -> fixed (thnx to aurelien)
-  - Rendering: SetRenderPreset - bounds and options-name are now case-insensitive -> (thnx to Malik)
+  - Rendering: SetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thnx to Malik)
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
   - UserInterface: SetUIScale - allows now for scaling higher than 2000
   - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed

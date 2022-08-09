@@ -4559,3 +4559,132 @@ function ultraschall.GetHWND_ArrangeView()
   local retval, x2, y2, w2, h2 = reaper.JS_Window_GetClientRect(arrange)
   return arrange, x2, y2, w2, h2
 end
+
+function ultraschall.GetScaleRangeFromDpi(dpi)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetScaleRangeFromDpi</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>number minimum_scale_for_dpi, number maximum_scale_for_dpi = ultraschall.GetScaleRangeFromDpi(integer dpi)</functioncall>
+  <description>
+    Returns the scale-range for a specific dpi between 0 and 1539 dpi.
+    
+    Can be used to find out, which scale a gui-script needs to use when a specific dpi-value is present in Reaper's UI.
+    
+    Note: each dpi represents a minimum/maximum range of a scaling factor. So every scaling-factor within that range is part of a specific dpi!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number minimum_scale_for_dpi - the minimum scale-value for this dpi-value
+    number maximum_scale_for_dpi - the maximum scale-value for this dpi-value
+  </retvals>
+  <parameters>
+    integer dpi - the dpi-value to convert into its scale-range-representation; 0-1539 dpi
+  </parameters>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>helper functions, get, convert, dpi, scale, scale range</tags>
+</US_DocBloc>
+]]
+  if math.type(dpi)~="integer" then ultraschall.AddErrorMessage("GetScaleRangeFromDpi", "dpi", "must be an integer", -1) return end
+  if dpi<0 or dpi>1539 then ultraschall.AddErrorMessage("GetScaleRangeFromDpi", "dpi", "must be between 0 and 1540", -2) return end
+  local val=0.001
+  local val2=0.001
+  local _
+  if ultraschall.LastUsedDPI~=dpi then
+    _, val = ultraschall.GetIniFileValue("DPI", tostring(dpi), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
+    _, val2=ultraschall.GetIniFileValue("DPI", tostring(dpi+1), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
+    --if tonumber(val2)==nil then print2(dpi, dpi+1) end
+    val2=tonumber(val2)-0.001
+    
+    ultraschall.LastUsedDPI=dpi
+    ultraschall.LastusedScaleRange1=val
+    ultraschall.LastusedScaleRange2=val2
+  else
+    val=ultraschall.LastusedScaleRange1
+    val2=ultraschall.LastusedScaleRange2
+  end
+  
+  return tonumber(val), tonumber(val2)
+end
+
+function ultraschall.GetDpiFromScale(scale)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetDpiFromScale</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer dpi = ultraschall.GetScaleRangeFromDpi(number scale)</functioncall>
+  <description>
+    Returns the dpi for a specific scale, between 0.001 and 6.000.
+    
+    Note: each dpi represents a minimum/maximum range of a scaling factor. So every scaling-factor within that range is part of a specific dpi!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer dpi - the dpi-value to convert into its scale-range-representation; 0-1539 dpi
+  </retvals>
+  <parameters>
+    number scale - the scale-value to convert into its dpi-representation; 0.001 to 6.000 is supported
+  </parameters>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>helper functions, get, convert, dpi, scale</tags>
+</US_DocBloc>
+]]
+  if type(scale)~="number" then ultraschall.AddErrorMessage("GetDpiFromScale", "scale", "must be a number", -1) return end
+  if scale<0.001 or scale>6 then ultraschall.AddErrorMessage("GetDpiFromScale", "scale", "must be between 0.001 and 6", -2) return end
+  local start=0
+  if scale<0.2 then start=0
+  elseif scale>=0.2 then start=51
+  elseif scale>=0.4 then start=102
+  elseif scale>=0.6 then start=153
+  elseif scale>=0.8 then start=204
+  elseif scale>=1 then start=256
+  elseif scale>=1.2 then start=307
+  elseif scale>=1.4 then start=358
+  elseif scale>=1.6 then start=409
+  elseif scale>=1.8 then start=461
+  elseif scale>=2 then start=512
+  elseif scale>=2.2 then start=506
+  elseif scale>=2.4 then start=614
+  elseif scale>=2.6 then start=666
+  elseif scale>=2.8 then start=717
+  elseif scale>=3 then start=768
+  elseif scale>=5 then start=1024
+  end
+  
+  local dpi, scale_in, scale_out
+  local oldval=0.001
+  if ultraschall.LastUsedScale~=scale then
+    for i=start, 1539 do
+      scale_in, scale_out = ultraschall.GetScaleRangeFromDpi(i)
+      if scale>=scale_in-0.001 and scale<=scale_out+.001 then
+        ultraschall.LastUsedScale=scale
+        ultraschall.LastUsedScaleDPI=i
+        return i
+      end
+    end
+  else
+    dpi=ultraschall.LastUsedScaleDPI
+    return tonumber(dpi), 2
+  end
+end
+
