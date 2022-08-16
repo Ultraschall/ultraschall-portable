@@ -31,6 +31,8 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+
+
 if ultraschall.AnyTrackMute(true) == true then
 
   Retval=reaper.MB("There are muted tracks. Do you want to continue rendering?", "Warning: muted tracks!", 4)
@@ -58,7 +60,9 @@ if A == false then
   RenderTable["OnlyMonoMedia"] = true
   RenderTable["RenderPattern"] = "$project"
 
+
   retval = ultraschall.ApplyRenderTable_Project(RenderTable, true)
+
 
   reaper.Main_OnCommand(40015, 0)
 

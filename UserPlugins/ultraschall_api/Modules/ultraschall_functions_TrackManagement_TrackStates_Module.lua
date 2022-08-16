@@ -4633,7 +4633,7 @@ function ultraschall.SetTrackSelection_TrackStateChunk(selection_state, TrackSta
   </parameters>
   <chapter_context>
     Track Management
-    Get Track States
+    Set Track States
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>

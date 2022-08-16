@@ -10,9 +10,13 @@ ShowMarkerType_In_Menu=false
 function GetMarkerMenu(MarkerType, clicktype, Markernr)
   -- read the menu from ultraschall_marker_menu.ini and generate this entry
   if clicktype&2==2 then 
-    clicktype="RightClck"
+    reaper.SetExtState("ultraschall_api", "markermenu_clickstate", clicktype, false)
+    reaper.SetExtState("ultraschall_api", "markermenu_last_touched_marker", Markernr, false)
+    clicktype="RightClck"    
   elseif clicktype&1==1 then 
-    -- clicktype="LeftClck"-- deactivated for now, until you've added a MarkerMenu_GetLastClickState-function
+    reaper.SetExtState("ultraschall_api", "markermenu_clickstate", clicktype, false)
+    reaper.SetExtState("ultraschall_api", "markermenu_last_touched_marker", Markernr, false)
+    clicktype="LeftClck"-- deactivated for now, until you've added a MarkerMenu_GetLastClickState-function
   else
     return
   end
@@ -151,7 +155,13 @@ function main()
 end
 
 function atexit()
+  reaper.DeleteExtState("ultraschall_api", "markermenu_clickstate", false)
+  reaper.DeleteExtState("ultraschall_api", "markermenu_last_touched_marker", false)
   reaper.DeleteExtState("ultraschall_api", "markermenu_started", false)
+  reaper.DeleteExtState("ultraschall_api", "MarkerMenu_Entry", false)
+  reaper.DeleteExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType", false)
+  reaper.DeleteExtState("ultraschall_api", "MarkerMenu_EntryNumber", false)
+  reaper.DeleteExtState("ultraschall_api", "MarkerMenu_Entry_AdditionalData", false)
 end
 
 reaper.atexit(atexit)

@@ -4810,7 +4810,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
  ]]
   if type(Bounds_Name)~="string" then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Bounds_Name", "must be a string", -1) return end
   if type(Options_and_Format_Name)~="string" then ultraschall.AddErrorMessage("GetRenderPreset_RenderTable", "Options_and_Format_Name", "must be a string", -2) return end
-  local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-render.ini")
+  local A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper-render.ini")  
   if A==nil then A="" end
   local RenderTable={}
 
@@ -4824,6 +4824,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
 
   -- bounds-presets
   for A in string.gmatch(A, "(RENDERPRESET_OUTPUT .-)\n") do
+    
     Quote=A:sub(21,21)
     if Quote=="\"" then
       Presetname2=A:match(" [\"](.-)[\"]")
@@ -4831,7 +4832,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Quote=""
       Presetname2=A:match("%s(.-)%s")
     end
-  
+    
     B=A:sub(0,20).."A"..A:sub(21+Quote:len()+Quote:len()+Presetname2:len(),-1)
     
     if B:match("%s.-%s.-%s.-%s.-%s.-%s.-%s(.)")=="\"" then
@@ -4843,16 +4844,19 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Outputfilename_renderpattern2=B:match("%s.-%s.-%s.-%s.-%s.-%s.-%s.-(.-)%s.*")
 
     end
-    B=string.gsub(B, Quote..Outputfilename_renderpattern2..Quote, "A").." "
-    
-    B=B.."0 "
-
+    B=B.." "
+    B=string.gsub(B, Quote..Outputfilename_renderpattern2..Quote, "A").." "    
+ 
     _temp, Bounds_dropdownlist2, Start_position2, Endposition2,
     Source_dropdownlist_and_checkboxes2, Unknown2, _temp2,
-    Tail_checkbox2, path, Tail_MS= 
-    B:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) \"(.*)\"%s(.-) ")
-    --path=B:match("%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s.-%s (.*)")
+    Tail_checkbox2, offset=
+    B:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ()")--\"(.*)\"")--%s(.-) ")
+    local B2=B:sub(offset, -1)
     
+    path, offset=B2:match("\"(.-)\"() ")    
+    if path==nil then path, offset=B2:match("(.-)() ") end
+    Tail_MS=tonumber(B2:sub(offset, -1))
+    --print2(path)
     
     if Presetname2:lower()==Bounds_Name:lower() then found=true break end
   end
@@ -4938,7 +4942,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["Endposition"]=tonumber(Endposition2)
   RenderTable["OfflineOnlineRendering"]=tonumber(Offline_online_dropdownlist)
   RenderTable["ProjectSampleRateFXProcessing"]=useprojectsamplerate_checkbox~=1
-  RenderTable["RenderFile"]=string.gsub(path, "\"", ""):sub(1,-2)
+  RenderTable["RenderFile"]=string.gsub(path, "\"", "")
   RenderTable["RenderPattern"]=Outputfilename_renderpattern2
   RenderTable["RenderQueueDelay"]=false
   RenderTable["RenderQueueDelaySeconds"]=0

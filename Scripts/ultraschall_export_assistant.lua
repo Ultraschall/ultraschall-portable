@@ -504,8 +504,14 @@ function buildGUI()
 
   StepDescription = "Use the ID3 editor to add metadata to your podcast.\n\n\nBLABLABLA"
   warnings_position = position+30
-  button_txt = "Edit MP3 Metadata"
-  button_action = "_Ultraschall_Edit_ID3_Tags"
+  button_txt = "Edit Podcast Metadata"
+  button_action = "_Ultraschall_Edit_Podcast_Episode_Attributes"
+  
+  --three_buttons=false
+  --button_txt1="Edit MP3 Metadata"
+  --button_txt2="Edit Episode Metadata"
+  --button_action1 = "_Ultraschall_Edit_ID3_Tags"
+  --button_action2 = "_RS4b7d6c776c307bee0ccbafd12a5b053b36d58063"
 
   buildExportStep()
 
@@ -655,10 +661,10 @@ function buildGUI()
   three_buttons=true
   button_txt1="Finalize MP3"
   button_txt2="Export Shownotes(HTML)"
-  button_txt3="Export Chapters"
+--  button_txt3="Export Chapters"
   button_action1 = "_Ultraschall_ConvertOldMetadata_To_Ultraschall4_1_format"
-  button_action2 = "_Ultraschall_Export_Shownotes_As_HTML_Code"
-  button_action3 = "_Ultraschall_Export_Shownotes_As_HTML_Code"
+  button_action2 = "_Ultraschall_Export_Shownotes_As_HTML"
+--  button_action3 = "_Ultraschall_Export_Shownotes_As_HTML_Code"
 
   buildExportStep()
 

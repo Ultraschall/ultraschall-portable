@@ -5045,7 +5045,7 @@ function ultraschall.AddProjectMarker(proj, isrgn, pos, rgnend, name, wantidx, c
     <target_document>US_Api_Functions</target_document>
     <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
     <chapter_context>
-        Marker Management
+        Markers
         Project Markers
     </chapter_context>
     <tags>markermanagement, region, marker, name, shownnumber, pos, project, add, guid</tags>
@@ -5885,7 +5885,7 @@ function ultraschall.GetMarkerType(markerid)
 ]]
   if math.type(markerid)~="integer" then ultraschall.AddErrorMessage("GetMarkerType", "markerid", "must be an integer", -1) return end
   
-  MarkerAttributes={reaper.EnumProjectMarkers3(0, markerid)}
+  local MarkerAttributes={reaper.EnumProjectMarkers3(0, markerid)}
   
   if MarkerAttributes[2]==false then
     local Shownote, Shownote_idx=ultraschall.IsMarkerShownote(markerid)
@@ -5924,7 +5924,7 @@ function ultraschall.GetMarkerType(markerid)
 
     if ultraschall.IsMarkerNormal(markerid)==true then 
       for i=1, ultraschall.CountNormalMarkers() do
-        retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(i)
+        local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(i)
         if retnumber-1==markerid then return "normal", i-1 end
       end
     end

@@ -4742,7 +4742,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   <tags>markermanagement, insert, mediaitem, position, mediafile, track</tags>
 </US_DocBloc>
 --]]
-
+print("Rewrite Me, cause it doesn't work, when track 1 or 2 is selected. It tries to add the new track within the other tracks, not at the end, which I'm basing my assumptions on...")
   -- check parameters
   if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("InsertMediaItemFromFile", "filename", "file does not exist", -1) return -1 end
   if math.type(track)~="integer" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","track", "must be an integer", -2) return -1 end
@@ -4753,7 +4753,6 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   if track<-1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("InsertMediaItemFromFile","track", "no such track available", -7) return -1 end  
   if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("InsertMediaItemFromFile","offset", "must be either nil or a number", -8) return -1 end  
   if offset==nil then offset=0 end
-    
   -- where to insert and where to have the editcursor after insert
   local editcursor, mode
   if editcursorpos==0 then editcursor=reaper.GetCursorPosition()
@@ -4777,17 +4776,22 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
     reaper.InsertTrackAtIndex(0,false)
   end
 
-  reaper.PreventUIRefresh(1)
+  --reaper.PreventUIRefresh(1)
   reaper.SetEditCurPos(position+offset, false, false) -- change editcursorposition to where we want to insert the item
   
   -- insert media as new item and find out, what the item is
-  local integer=reaper.InsertMedia(filename, 1)  -- insert item with file
-  local Item=reaper.GetMediaItem(0, reaper.CountMediaItems(0)-1)
+  --print2("before")
+  --TrackIndex=3              -- set this to the track you want
+  --TrackIndex=TrackIndex<<16 -- move the index to high-word-destination for further use
+  --local integer=reaper.InsertMedia(filename, 0+512+reaper.CountTracks(0)) -- insert at track; it is important to add 512 in this to mode!
     
+  local integer=reaper.InsertMedia(filename, mode)  -- insert item with file
+  --print2(integer)
+  local Item=reaper.GetMediaItem(0, reaper.CountMediaItems(0)-1)    
   if track>0 then 
     -- move newly inserted item to target track and remove newly created track
     local Boolean = reaper.MoveMediaItemToTrack(Item, reaper.GetTrack(0, track-1))
-    reaper.DeleteTrack(reaper.GetTrack(0,reaper.CountTracks(0)-1))
+    --reaper.DeleteTrack(reaper.GetTrack(0,reaper.CountTracks(0)-1))
   elseif track==-1 then
     -- move newly created track to the top
     local SelectedTracks=ultraschall.CreateTrackString_SelectedTracks() -- get old track-selection   
@@ -4798,7 +4802,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
     
   -- alter length, if requested
   if length~=-1 then 
-    reaper.SetMediaItemInfo_Value(Item, "D_LENGTH", length)
+    retval=reaper.SetMediaItemInfo_Value(Item, "D_LENGTH", length)
   elseif length==-1 then
     length=reaper.GetMediaItemInfo_Value(Item, "D_LENGTH", length)     
   end
@@ -4812,7 +4816,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   end
   
   reaper.GetSet_ArrangeView2(0, true, 0, 0, startTime, endTime) -- reset to old arrange-view-range
-  reaper.PreventUIRefresh(-1)
+  --reaper.PreventUIRefresh(-1)
   return 0, item, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(Item)
 end
 
