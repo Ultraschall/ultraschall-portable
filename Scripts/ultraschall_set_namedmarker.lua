@@ -44,6 +44,8 @@ else
 	end
 end
 
+
+
 retval, retvals_csv = reaper.GetUserInputs("Insert chapter marker", 1, "Name of this chapter marker:,extrawidth=264", "") -- User input box
 
 -- retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata - Don't use ( ) ' or \" ", 6, "Episode Title:,Author:,Podcast:,Year:,Podcast Category:,Description:,extrawidth=300, separator=\n", oldnotes)
@@ -51,8 +53,11 @@ retval, retvals_csv = reaper.GetUserInputs("Insert chapter marker", 1, "Name of 
 
 if retval == true then -- User pressed ok
 	markername = retvals_csv
+--     markername=""
 	-- reaper.AddProjectMarker(0, false, current_position, 0 , markername, -1) -- Place named marker
 	markercount=ultraschall.CountNormalMarkers_NumGap()
-	reaper.AddProjectMarker2(0, false, current_position, 0, markername, markercount, 0)
+	shown_number, index, guid = ultraschall.AddProjectMarker(0, false, current_position, 0, markername, markercount, 0)
+	ultraschall.StoreTemporaryMarker(index)
+	runcommand("_Ultraschall_Edit_Chapter_Attributes")
 	runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 end -- Else = user pressed cancel, so nothing to do here.

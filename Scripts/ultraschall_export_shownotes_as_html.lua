@@ -17,7 +17,14 @@ for i=0, reaper.CountProjectMarkers(0)-1 do
     index = ultraschall.GetNormalMarkerIDFromGuid(guid)
     A={ultraschall.EnumerateNormalMarkers(index)}
     if A[4]=="" then print2("You have chapter, that have no name,yet!") return end
-    Export=Export.."\n\n<h4 class=\"ultraschall_chapter_header\">"..A[4].."</h4>\n  "
+    pos=reaper.format_timestr_pos(A[3], "", 5)
+    pos=pos:match("(.*):")    
+    pos_formatted=pos
+    if pos_formatted:sub(1,3)=="00:" then pos_formatted=pos_formatted:sub(4,-1) end
+    pos=pos_formatted
+    pos_formatted=string.gsub(pos_formatted, ":", "%%3A")
+    
+    Export=Export.."\n\n<h4 class=\"ultraschall_chapter_header\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..A[4].."  ("..pos..") </h4>\n  "
     _, retval=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "")
     if retval~="" then Export=Export.."<p class=\"ultraschall_chapter_description\">"..retval.."</p>\n  " end
   elseif markertype=="shownote" then
@@ -27,15 +34,22 @@ for i=0, reaper.CountProjectMarkers(0)-1 do
     if A[4]=="" then print2("You have shownotes, that have no name,yet!") return end
     pos=reaper.format_timestr_pos(A[3], "", 5)
     pos=pos:match("(.*):")
+    pos_formatted=pos
+    if pos_formatted:sub(1,3)=="00:" then pos_formatted=pos_formatted:sub(4,-1) end
+    pos=pos_formatted
+    pos_formatted=string.gsub(pos_formatted, ":", "%%3A")
+    
     _, retval=ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url", "")
+    _, shwn_description=ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_description", "")
     _, archived_url=ultraschall.GetSetShownoteMarker_Attributes(false, index, "shwn_url_archived_copy_of_original_url", "")
-    if archived_url~="" then archived_url="<a class=\"ultraschall_shownote_archived_url\" href=\""..archived_url.."\">[archived url]</a>" end
+    if archived_url~="" then archived_url="<a class=\"ultraschall_shownote_archived_url\" title=\""..shwn_description.."\" href=\""..archived_url.."\">[archived url]</a>" end
     if shownotes==0 then Export=Export.."<ul class=\"ultraschall_shownotelist\">\n\t" end
     shownotes=shownotes+1
+    
     if retval=="" then 
-      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\">"..pos.." - "..A[4].."</li>\n  " 
+      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..A[4].." ("..pos..")</li>\n  " 
     else
-      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\">"..pos.." - "..A[4].."<a  class=\"ultraschall_shownote_url\" href=\""..retval.."\">[url]</a>"..archived_url.."</li>\n  "
+      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..A[4].." ("..pos..") <a  class=\"ultraschall_shownote_url\" href=\""..retval.."\">[url]</a>"..archived_url.."</li>\n  "
     end
     
   end
