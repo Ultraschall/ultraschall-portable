@@ -1839,6 +1839,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     idx=ultraschall.EnumerateNormalMarkers(idx)
   else
     retval, idx=ultraschall.EnumerateCustomMarkers("Planned", idx-1)
+    if idx==nil then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such planned chapter-marker", -9) return false end
     idx=idx+1
   end
     

@@ -142,7 +142,7 @@ function NewMarkerInTown()
   
   index2 = ultraschall.GetNormalMarkerIDFromGuid(guid)
   if index2==-1 then
-    index2, markertype = ultraschall.GetCustomMarkerIDFromGuid(guid)
+    local index2, markertype = ultraschall.GetCustomMarkerIDFromGuid(guid)
     if markertype~="Planned" then return else planned=true end
     index2=index2+1 -- needs to be added, so I don't need to add 1 to all GetSetChapterMarker_Attributes-functions when dealing with planned markers
   end
@@ -156,6 +156,7 @@ function NewMarkerInTown()
   --print(retval, index2)
   index=index2 
   updatereload=true 
+  --UpdateChapterImage(4, true)
   ultraschall.StoreTemporaryMarker(-1) 
   return true 
 end
@@ -166,11 +167,17 @@ function UpdateChapterImage(image, dropfile)
   OldWindowFocusState=focusstate&2
   retval, project_path_name = reaper.EnumProjects(-1, "")
   dir = ultraschall.GetPath(project_path_name, separator)
+  dir=string.gsub(dir, "\\", "/")
   if reload==true then
+    A=reaper.time_precise()
     --print_update(reaper.time_precise())
-    retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", new_filename, planned)
-    gfx.loadimg(image, dir.."/"..filename)
-    x1,y1=gfx.getimgdim(4)
+    local retval, filename=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_image_path", new_filename, planned)
+    A2=filename
+    A3=gfx.loadimg(image, dir.."/"..filename)
+    if A3==-1 then gfx.setimgdim(image, 0,0) end
+    A4=dir.."/"..filename
+    A5=reaper.file_exists(A4)
+    x1,y1=gfx.getimgdim(image)
     reload=false
   end
   

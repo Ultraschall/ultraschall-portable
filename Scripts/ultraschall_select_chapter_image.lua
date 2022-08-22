@@ -106,7 +106,7 @@ function LoadImage()
   lastselectedimage=reaper.GetExtState("ultraschall", "Chapter_LastSelectedImage")
 
   retval, filename = reaper.GetUserFileNameForRead(lastselectedimage, "Select Image", "*.jpg;*.png;*.jpeg")
-  if retval==false then filename=lastselectedimage end  
+  if retval==false then return end 
   
   retval, project_path_name = reaper.EnumProjects(-1, "")
   filename=string.gsub(filename, "\\", "/")

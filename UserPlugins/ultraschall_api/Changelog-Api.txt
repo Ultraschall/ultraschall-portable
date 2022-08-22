@@ -289,6 +289,11 @@ To Do for next version:
    - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
 
 readd in next version
+ToDo Marker Menu: 
+  - only run action, when mouse-button has been released
+  - check, if someone dragged a marker, so a left-click does not run an action when dragging
+  - add doubleclick-state as well
+
   - MarkerManagement: MarkerMenu\_GetLastClickState - gets the last clickstate, when someone has clicked markers/regions with markermenu running
   - MarkerManagement: MarkerMenu\_GetLastTouchedMarkerRegion - gets the last clicked marker/region with markermenu running
   - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
