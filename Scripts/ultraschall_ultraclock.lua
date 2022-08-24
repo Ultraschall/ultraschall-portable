@@ -52,6 +52,7 @@
 -- * various bugfixes
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+isnewvalue, filename, section, cmdid = reaper.get_action_context()
 
 -- hole GUI Library
 
@@ -292,6 +293,7 @@ end
 
 function InitGFX()
   gfx.clear=0x333333 --background color
+  reaper.SetToggleCommandState(section, cmdid, 1)
   gfx.init("Dashboard",width,height,false) --create window
   if docked then d=1 else d=0 end
 
@@ -745,6 +747,7 @@ end
 
 function exit_clock()
   gfx.quit()
+  reaper.SetToggleCommandState(section, cmdid, 0)
 end
 
 reaper.atexit(exit_clock)

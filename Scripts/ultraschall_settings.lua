@@ -117,7 +117,7 @@ die States im Überblick:
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua")
 
-
+isnewvalue, filename, section, cmdid = reaper.get_action_context()
 ------------------------------------
 -- Blacklist für Devices, von denen wir wissen, dass sie kein lokales Monitoring bieten.
 -- Könnte perspektivich in eine separate .ini Datei ausgelagert werden.
@@ -636,14 +636,14 @@ function SettingsPageDevices()
   infoposition = position + 280
 
 
-	for k, warningtextline in pairs(infotable) do
+  for k, warningtextline in pairs(infotable) do
 
-		local infotext = GUI.Lbl:new(85, infoposition, warningtextline, 0, "txt_grey")
-		table.insert(GUI.elms, infotext)
-		infoposition = infoposition +20
+    local infotext = GUI.Lbl:new(85, infoposition, warningtextline, 0, "txt_grey")
+    table.insert(GUI.elms, infotext)
+    infoposition = infoposition +20
 
-		-- print(k, v)
-	end
+    -- print(k, v)
+  end
 
 
   -- info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)
@@ -671,10 +671,12 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
                         -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
   GUI.Init()
   GUI.Main()
+  reaper.SetToggleCommandState(section, cmdid, 1)
 end
 
 function atexit()
   reaper.SetExtState("Ultraschall_Windows", GUI.name, 0, false)
+  reaper.SetToggleCommandState(section, cmdid, 0)
 end
 
 reaper.atexit(atexit)
