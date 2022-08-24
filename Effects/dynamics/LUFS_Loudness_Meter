@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 // LUFS Loudness Metering (Ultraschall)
-// Copyright (c) 2021 Ultraschall (http://ultraschall.fm)
+// Copyright (c) 2022 Ultraschall (http://ultraschall.fm)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -206,6 +206,9 @@ no_meters = 0;
 gmem[1] = 0; // LUFS integral
 gmem[2] = -16; // LUFS Target
 gmem[3] = 0; // is FX active?
+gmem[4] = 0; // Reset button: set this via ReaScript to 1 to reset the indicator (reaper.gmem_attach and reaper.gmem_write)
+gmem[5] = 0; // Match Gain: set this via ReaScript to 1 to match gain (reaper.gmem_attach and reaper.gmem_write)
+
 
 lufs_store = MM.MemMgr_Alloc(999);
 
@@ -417,8 +420,19 @@ spl1 = spl_lufs1;
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
 //////////////////////////////////////////////////////////////////////////////////
 
+gmem[4]>0 ? (
+  EBUR128LM.LM_EBUR128_Reset_MultiCh();
+  clearHistory();
+  position = 100;
+  gmem[4]=0;
+);
 
-gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(0);
+gmem[5]>0 ? (
+  adjustGain();
+  gmem[5]=0;
+);
+
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(1, "Arial", 14, 'b');
 
 
   gr_meter = reduction;
