@@ -27,7 +27,7 @@ for i=0, reaper.CountProjectMarkers(0)-1 do
     if chap_is_advertisement=="yes" then chap_is_advertisement="(Advertisement)" end
     _, chap_spoiler_alert=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_spoiler_alert", "")
     if chap_spoiler_alert=="yes" then chap_spoiler_alert="\n\t\t<i>Contains spoilers!</i><br>" end
-    Export=Export.."\n\n<h4 class=\"ultraschall_chapter_header\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..A[4].."  ("..pos..") "..chap_is_advertisement.."</h4>\n  "..chap_spoiler_alert
+    Export=Export.."\n\n<h4 class=\"ultraschall_chapter_header\">"..A[4].."  ("..pos..") "..chap_is_advertisement.."</h4>\n  "..chap_spoiler_alert
     _, retval=ultraschall.GetSetChapterMarker_Attributes(false, index, "chap_description", "")
     if retval~="" then Export=Export.."<p class=\"ultraschall_chapter_description\">"..retval.."</p>\n  " end
   elseif markertype=="shownote" then
@@ -51,9 +51,9 @@ for i=0, reaper.CountProjectMarkers(0)-1 do
     shownotes=shownotes+1
     
     if retval=="" then 
-      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..pos.." - "..A[4].."</li>\n  " 
+      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\">"..pos.." - "..A[4].."</li>\n  " 
     else
-      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\"><a href=\"#t="..tostring(pos_formatted).."\">►</a> "..pos.." - "..A[4].." <a  class=\"ultraschall_shownote_url\" title=\""..shwn_url_description.."\" href=\""..retval.."\">[url]</a>"..archived_url.." - "..shwn_description.."</li>\n  "
+      Export=Export.."\t<li class=\"ultraschall_shownote_list_entry\">"..pos.." - "..A[4].." <a  class=\"ultraschall_shownote_url\" title=\""..shwn_url_description.."\" href=\""..retval.."\">[url]</a>"..archived_url.." - "..shwn_description.."</li>\n  "
     end
     
   end
@@ -68,3 +68,4 @@ local dir = ultraschall.GetPath(project_path_name, separator)
 ultraschall.WriteValueToFile(dir.."/Exported_Shownotes.html", Export)
 
 print2("Exported to the project-folder as Exported_Shownotes.html")
+SLEM()

@@ -4794,3 +4794,11 @@ function ultraschall.EscapeCharactersForXMLText(String)
 end
 
 --A=ultraschall.EscapeCharactersForXMLText("HULA&HO\"HooP\"Oh now that you 'mention' it OP&amp;")
+
+function ultraschall.LUFS_Metering_Reset()
+  reaper.gmem_write(4,1)
+end
+
+function ultraschall.LUFS_Metering_MatchGain()
+  reaper.gmem_write(5,1)
+end
