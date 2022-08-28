@@ -113,7 +113,7 @@ function main()
   DropDownList(100+XOffset , Y, 60, "epsd_language", "The language of this episode", "Episode language", {{"Spanish", "SPA"},{"German", "GER"},{"English", "ENG"},{"French", "FRA"}})
 
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText      (Indentation1+Indentation2,   Y, "Explicit language", 0, "Check, if this chapter contains explicit language.")
+  DrawText      (Indentation1+Indentation2,   Y, "Explicit content", 0, "Check, if this chapter contains explicit language.")
   ManageCheckBox(100+XOffset, Y+1,   "epsd_explicit", "Check to signal this episode is explicit.")
 
   Y=Y+20 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
