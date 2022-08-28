@@ -12,7 +12,7 @@ h5{
 	</head>
 	<body bgcolor="#9F9F9F">
     
-    <div style="position:absolute; width:19.9%; top:35%; height:7750; background: #FFFFFF; border: 1px solid #909090;">
+    <div style="position:absolute; width:19.9%; top:35%; height:8000; background: #FFFFFF; border: 1px solid #909090;">
     </div>
     <div style="position:absolute; width:19.9%; padding-top:18.9%; padding-left:0.1%;">
         <img style="width:100%;" src="gfx/MetadataDocs/US-MetadataExport-Milestones.png">
@@ -33,7 +33,18 @@ h5{
 	<head>
 	</head>
 	<body>
-<h2>Meilensteine für Metadaten in Ultraschall</h2>
+<h2>Index</h2>
+<a href="#Meilensteine">Meilensteine für Metadaten in Ultraschall</a><br>
+<a href="#Phase1_Derzeitiger_Stand">Derzeitiger Stand Phase 1</a><br>
+<a href="#Shownotes">Shownotes</a><br>
+<a href="#Kapitelmarken">Kapitelmarken</a><br>
+<a href="#Geplante_Kapitelmarken">Geplante Kapitelmarken</a><br>
+<a href="#Markerkontextmenü">Das Markerkontextmenü</a><br>
+<a href="#Episode_Metadata">Edit Episode/Podcast Metadata-Dialog</a><br>
+<a href="#Export HTML">Rudimentärer Export als HTML-Block für Episoden-Artikel</a><br>
+<a href="#Fazit">Fazit und was nun zu testen wäre</a><br>
+
+<a id="Meilensteine"></a><h2>Meilensteine für Metadaten in Ultraschall</h2>
 <p>Die Entwicklung von Podcast-Metadaten-Export in Ultraschall ist ein Großprojekt, daher hab ich mich dazu entschlossen es etwas zu entzerren und in einige Entiwcklungsschritte aufzuteilen, die da wären:</p>
 <p><strong>Phase 1:</strong></p>
 <ul>
@@ -55,11 +66,11 @@ h5{
 <li>Dokumentation(Anwendung Ultraschall, Doku für den Metadaten-Übergabeformat-Standard)</li>
 </ul>
 <p>In dieser ersten Version geht es erstmal um die Features von Phase 1 und diese gemeinsam mit Euch zu entwickeln.</p>
-<h2>Derzeitiger Stand Phase 1</h2>
+<a id="Phase1_Derzeitiger_Stand"></a><h2>Derzeitiger Stand Phase 1</h2>
 <p>Diese besteht aus diversen neuen Features. Zum Einen gibt es, zusätzlich zu Kapitelmarken, die Möglichkeit Shownotes zu erstellen. Beide, Kapitelmarken und Shownotes, haben einen eigenen Dialog, in dem Ihr die wichtigsten Attribute dafür eintragen könnt, also z.B. Bilder bei Kapitelmarken oder URLs bei Shownotes. Darüberhinaus gibt es noch einen Dialog für das Eingeben von Metadaten für den Podcast/die Episode. Dieser Dialog ist quasi eine Erweiterung des bisherigen Dialogs, wo Ihr Titel, Podcastnamen, Veröffentlichungsjahr, etc eingetragen habt. Erreichbar ist dieser über den Export Assistant. Als kleines Bonus, um Euch zu zeigen was hiermit alles möglich ist, hab ich noch einen Export gebaut, der es ermöglicht Kapitelmarken mit den dazu gehörigen Shownotes als HTML-Liste zu exportieren, die Ihr einfach Copy n Pasten könnt in den Episodenbeitrag.</p>
 <p>Auch gibt es nun ein Kontextmenü für Marker, mit passenden Einträgen für den jeweiligen Markertyp, also Kapitelmarke, geplante Kapitelmarke, Shownotes, Edit-Marker, Time-Marker und Action-Marker. Musstet Ihr also für diverse Bearbeitungen immer umständlich mit diversen Dialogen oder mit Shortcuts rumhantieren, so könnt Ihr einfach rechtsklick auf eine Kapitelmarke machen und dort auswählen "Edit Chapter". Dann öffnet sich ein Dialog für diese Kapitelmarke, wo Ihr alles eintragen könnt.</p>
 <p>Gehen wir also etwas in die Tiefe und fangen wir an mit Shownotes.</p>
-<h2>Shownotes</h2>
+<a id="Shownotes"></a><h2>Shownotes</h2>
 <p>Neue Shownotes könnt Ihr erstellen mit dem Shortcut T bzw Shift+T zusammen mit einem Eingabedialog. (Diese Shortcuts können sich eventuell später noch ändern.)</p>
 <p>Nehmt Ihr Shift+T, öffnet sich damit der folgende Shownote-Dialog:</p>
 <p><img src="gfx/MetadataDocs/5-0-1-Shownote-Dialog.jpg" alt="Der Dialog, der es ermöglicht, Shownote-Attribute zu setzen" /></p>
@@ -79,7 +90,7 @@ Als ein Beispiel mag dienen, dass man die WikiData-URI von Leipzig hier angeben 
 <p>Notiz: macht es Sinn, <a href="https://meta.wikimedia.org/wiki/WikiCite">WikiCite</a> mit dazu zu packen? Damit kann man Zitate und bibliographische Infos referenzieren. Ich wäre neugierig auf Eure Gedanken dazu.</p>
 <p>Zum Eingeben der Infos klickt Ihr auf die Textfelder. Bisher öffnet sich dafür noch ein gesonderter Dialog. Das ist noch meh aber (noch) nicht zu vermeiden. Ich versuche es zu umschiffen und es direkt eingebbar zu machen, aber speziell unter Windows hat Reaper einige Bugs, die es u.U. verhindern so etwas wie @ oder € einzugeben. Der derzeitige Ansatz ist da der Einzige um das 100% zu lösen.</p>
 <p>Wenn Ihr fertig seid, könnt Ihr auf Done klicken oder die ESC-Taste.</p>
-<h2>Kapitelmarken</h2>
+<a id="Kapitelmarken"></a><h2>Kapitelmarken</h2>
 <p>Hier ist vieles wie gehabt. Ihr setzt mit M eine Kapitelmarke, mit B eine geplante Kapitelmarke und mit Shift+M eine Kapitelmarke, deren Attribute Ihr verändern könnt.</p>
 <p>Wenn Ihr mit Shift+M eine Kapitelmarke setzt, so öffnet sich ein ähnlicher Dialog, wie Ihr ihn bereits von den Shownotes gesehen habt:</p>
 <p><img src="gfx/MetadataDocs/5-1-1-Kapitelmarken-Dialog.jpg" alt="Der Dialog zur Eingabe von Kapitelmarken-Metadaten" /></p>
@@ -108,18 +119,18 @@ Das Markerdashboard kann z.B. so schneller werden, was für langsame Systeme wic
 <p>Ich weiß, Paradigmenwechsel sind immer etwas meh und ungewohnt, aber die Features die dadurch möglich werden, werden Euch entschädigen, versprochen.</p>
 <p>Ich werde noch etwas bauen, dass die Kapitelmarkenbilder von bisherigen Projekten direkt beim Laden in die Kapitelmarken eingefügt werden. So müsst Ihr da nix per Hand machen, wenn Ihr mit einem Ultraschall 4 &amp; 5 Projekt in (voraussichtlich) Ultraschall 6 arbeiten wollt.</p>
 <p>Ihr seht, vieles ist identisch zu Shownotes und ein wenig ändert sich zu Kapitelmarkenbildern.</p>
-<h2>Geplante Kapitelmarken</h2>
+<a id="Geplante_Kapitelmarken"></a><h2>Geplante Kapitelmarken</h2>
 <p>Für diese gelten die gleichen Möglichkeiten, wie für Kapitelmarken. Das heißt, Ihr könnt die geplanten Kapitelmarken einfügen ins Projekt und dann (per rechtsklick) im Attribute-bearbeiten-Dialog deren Attribute bearbeiten, inklusive der Kapitelmarkenbilder.<br />
 Wenn Ihr also alle Infos bereits vor der Sendung zusammen habt, so könnt Ihr diese komplett angeben und müsst es nicht während der Sendung machen oder in der Nachbearbeitung.</p>
 <p>Sprich: wenn Ihr diese gesetzt und mit Attributen versehen habt, braucht Ihr nur noch B drücken, um die geplante Kapitelmarke zu setzen und alle Attribute werden mitgesetzt.</p>
-<h2>Das Markerkontextmenü</h2>
+<a id="Markerkontextmenü"></a><h2>Das Markerkontextmenü</h2>
 <p>Es gibt nun Kontextmenüs für die verschiedenen Markertypen. Das heißt, je nach Markertyp(Kapitelmarke, geplante Kapitelmarke, Shownote, Editmarke, Zeitmarke, Actionmarker) gibt es sinnvolle Einträge, die für diesen Markertypen Sinn ergeben.</p>
 <p>Im folgenden Gif seht Ihr die verschiedenen Einträge, die zu den jeweiligen Markern existieren.</p>
 <p><img src="gfx/MetadataDocs/5-3-Markerkontextmenue-0.gif" alt="Menüeinträge für die verschiedenen Markertypen" /></p>
 <p>In der Hauptsache sind dies Dinge wie Attribute bearbeiten(für (geplante) Kapitelmarken und Shownotes) oder den Titel(Edit-Marker), die Zeitanzeige starten(für _Time-Marker) sowie Actions aussuchen für Action-Marker.<br />
 Oder einfach nur das Entfernen dieses Markers.</p>
 <p>Die Einträge, die Ihr dort findet, sind nicht fix. Falls Ihr also Ideen habt, was dort noch rein sollte, oder was eher keinen Sinn ergibt, bin ich offen für Vorschläge und Ideen. Alles was das Arbeiten mit bestimmten Markertypen leichter machen könnte, sollten wir hier durchaus mal ausprobieren.</p>
-<h2>Edit Episode/Podcast Metadata-Dialog</h2>
+<a id="Episode_Metadata"></a><h2>Edit Episode/Podcast Metadata-Dialog</h2>
 <p>Natürlich haben nicht nur Kapitelmarken und Shownotes Metadaten, sondern die ganze Episode an sich auch.<br />
 Deswegen gibt es einen neuen Dialog, in dem Ihr Metadaten für die Episode angeben könnt.</p>
 <p><img src="gfx/MetadataDocs/5-4-EpisodenAttribute-Dialog.jpg" alt="Episoden und Podcast-Attribute angeben im neuen Dialog" /></p>
@@ -140,14 +151,14 @@ Das Episoden-Cover, welches Ihr auch hier drag n droppen könnt oder mit links-k
 <p>Noch ein paar generelle Anmerkungen: in Zukunft wird dieser Dialog Euch Presets ermöglichen. Sprich, Ihr werdet die Attribute, die Ihr eh für alle Episoden eines Podcasts braucht, in nem Preset speichern können um sie schnell abrufen zu können. Das wird mit dem neuen Exportassistant kommen und Euch nochmal lästige Sachen ersparen.</p>
 <p>Sämtliche Attribute dieses Dialogs könnt Ihr auch als Project-Template abspeichern.</p>
 <p>Es werden noch nicht alle Attribute des Dialogs für den Export genutzt, dies wird aber zukünftig der Fall sein(spätestens ab Phase 3). Es lohnt sich also das Erfassen schon jetzt.</p>
-<h2>Rudimentärer Export als HTML-Block für Episoden-Artikel</h2>
+<a id="Export HTML"></a><h2>Rudimentärer Export als HTML-Block für Episoden-Artikel</h2>
 <p>Nun haben wir ne Menge an Eingabe für Metadaten durchgemacht, aber wie sieht es denn jetzt damit aus, diese Daten irgendwie auch weiterverwenden zu können?</p>
 <p>Dafür hab ich einen rudimentären Export gebaut, der Euch die Kapitelmarken und die dazugehörigen Shownotes als HTML-Code exportiert. Das heißt, Ihr bekommt eine gelayoutete Liste, in der die Kapitel mit Zeitmarken und Beschreibung drin sind, die Shownotes mit Zeitmarken, Beschreibung und URLs(inklusive archived Urls, wenn Ihr diese angegeben habt!). Diese könnt Ihr dann einfach in Euren Episodenartikel einbinden und voila, habt Ihr die Shownotes zumindest schonmal anzeigbar.<br />
 Das ist, wie gesagt, eher noch rudimentär und noch ausbaufähig. Es soll Euch aber schon einmal vermitteln, was zum Beispiel möglich sein kann und wird, aber dem sind an sich kaum Grenzen gesetzt. Falls Ihr also da Wünsche und Ideen habt, immer her damit.<br />
 Speziell, wie man andere, von Euch eingebenene, Metadaten dort sinnvoll und übersichtlicht visualisieren kann(Spoiler Warnung, Kapitel ist eine Ad, WikiData-URI, Datum und Zeit des Abrufs der Shownote-Url usw).<br />
 Was ich auch eingebaut habe sind ein paar CSS-Klassen für die einzelnen Elemente. Wer von Euch also sich die Shownotes mit CSS etwas gesondert layouten will, kann sich damit mal austoben.</p>
 <p>Den Export findet Ihr auch im Export-Assistant unten, unter dem Finalize MP3-Button.</p>
-<h2>Fazit und was nun zu testen wäre</h2>
+<a id="Fazit"></a><h2>Fazit und was nun zu testen wäre</h2>
 <p>Nun habt Ihr einen groben Überblick darüber, was Phase 1 beinhaltet. Es umfasst so in etwa 30% dessen, was zum Ende geplant ist, ermöglicht Euch aber schon Einiges.</p>
 <p>Was gilt es also nun konkret zu testen?</p>
 <p><strong>Dialoge</strong></p>
