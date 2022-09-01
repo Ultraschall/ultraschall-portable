@@ -337,7 +337,7 @@ ToDo Marker Menu:
 
 ## Ultraschall Framework - Changelog
 
-### 4.7 - "Pearl Jam - Alive" - 18 of August 2022
+### 4.7 - "Pearl Jam - Alive" - 18th of September 2022
 
 Has now 1532 functions, with XX new ones
 
@@ -372,6 +372,12 @@ Has now 1532 functions, with XX new ones
   - Navigation: GetPreviousClosestItemEnd - gets the previous closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
   - Navigation: GetPreviousClosestItemStart - gets the previous closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
   - Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini
+  - Ultraschall: LUFS\_Metering\_AddEffect - adds the Ultraschall's LUFS Loudness Metering-JSFX
+  - Ultraschall: LUFS\_Metering\_GetValues - gets currently measured LUFS-values of Ultraschall's LUFS Loudness Metering-JSFX, when running
+  - Ultraschall: LUFS\_Metering\_MatchGain - hits programmaticaly the "Match Gain"-button of Ultraschall's LUFS Loudness Metering-JSFX, when running
+  - Ultraschall: LUFS\_Metering\_Reset - resets the measuring of Ultraschall's LUFS Loudness Metering-JSFX, when running
+  - Ultraschall: LUFS\_Metering\_SetValues - sets LUFS-target/Gain-values of Ultraschall's LUFS Loudness Metering-JSFX, when running
+  - Ultraschall: LUFS\_Metering\_ShowEffect - shows the Ultraschall's LUFS Loudness Metering-JSFX, when running
   - UserInterface: GetReaperWindow\_Position - returns the Reaper-window-position and various of its elements  
   - UserInterface: GetScaleRangeFromDpi - returns the scale-range a certain dpi-value has
   - UserInterface: GetDpiFromScale - returns the dpi for a specific scale

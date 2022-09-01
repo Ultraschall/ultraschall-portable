@@ -4795,10 +4795,61 @@ end
 
 --A=ultraschall.EscapeCharactersForXMLText("HULA&HO\"HooP\"Oh now that you 'mention' it OP&amp;")
 
-function ultraschall.LUFS_Metering_Reset()
-  reaper.gmem_write(4,1)
+function ultraschall.LUFS_Metering_MatchGain()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_MatchGain</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_MatchGain()</functioncall>
+  <description>
+    Hits programmatically the "Match Gain"-Button of Ultraschall's LUFS Loudness Meter(only available in Ultraschall-installations).
+  </description>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, lufs, loudness meter, hit, match gain, button</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("lufs")
+  reaper.gmem_write(5,1)
+  reaper.gmem_attach(old_attached_name)
 end
 
-function ultraschall.LUFS_Metering_MatchGain()
-  reaper.gmem_write(5,1)
+--ultraschall.LUFS_Metering_MatchGain()
+--]]
+
+function ultraschall.LUFS_Metering_Reset()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_Reset</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_Reset()</functioncall>
+  <description>
+    Hits programmatically the "Reset"-Button of Ultraschall's LUFS Loudness Meter(only available in Ultraschall-installations).
+  </description>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, lufs, loudness meter, hit, reset, button</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("lufs")
+  reaper.gmem_write(4,1)
+  reaper.gmem_attach(old_attached_name)
 end

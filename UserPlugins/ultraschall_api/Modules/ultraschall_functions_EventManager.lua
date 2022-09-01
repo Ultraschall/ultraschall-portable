@@ -1552,7 +1552,7 @@ function ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
     if k==EventIdentifier then id=count break end
   end
 
-  A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
+  local A=reaper.GetExtState("ultraschall_eventmanager", "checkfunction_returnstate"..id)
   local A1=toboolean(A:match("(.-)\n"))
   local A2=tonumber(A:match(".-\n(.-)\n"))  
   if A1==nil then ultraschall.AddErrorMessage("EventManager_GetLastCheckfunctionState2", "", "EventCheckFunction returned invalid returnvalue: "..A:match("(.-)\n").."\nMust be either true or false!", -4) end

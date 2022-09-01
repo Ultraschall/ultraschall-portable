@@ -2339,20 +2339,21 @@ end
 
 --GMEM-related-functions
 
-ultraschall.reaper_gmem_attach=reaper.gmem_attach
+--ultraschall.reaper_gmem_attach=reaper.gmem_attach
 
-function reaper.gmem_attach(GMem_Name)
-  ultraschall.reaper_gmem_attach_curname=GMem_Name
-  ultraschall.reaper_gmem_attach(GMem_Name)
-end
+--function reaper.gmem_attach(GMem_Name)
+--  ultraschall.reaper_gmem_attach_curname=GMem_Name
+--  local A=ultraschall.reaper_gmem_attach(GMem_Name)
+--  return A
+--end
 
 function ultraschall.Gmem_GetCurrentAttachedName()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Gmem_GetCurrentAttachedName</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.7
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>string current_gmem_attachname = ultraschall.Gmem_GetCurrentAttachedName()</functioncall>
@@ -2371,7 +2372,9 @@ function ultraschall.Gmem_GetCurrentAttachedName()
   <tags>helperfunctions, get, current, gmem, attached name</tags>
 </US_DocBloc>
 --]]
-  return ultraschall.reaper_gmem_attach_curname
+  local A=reaper.gmem_attach("")
+  reaper.gmem_attach(A)
+  return A
 end
 
 

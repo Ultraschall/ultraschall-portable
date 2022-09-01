@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall 4.0 - Changelog - Meo-Ada Mespotine
+-- Ultraschall 5.1 - Changelog - Meo-Ada Mespotine
 -- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
 --    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
 --   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
@@ -50,6 +50,7 @@
 --        improvement compared to earlier version, due new features in Reaper's API
 -- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
+
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 isnewvalue, filename, section, cmdid = reaper.get_action_context()
@@ -108,6 +109,7 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
   
   event_count = ultraschall.EventManager_CountRegisteredEvents()
   EventIdentifier=ultraschall.EventManager_GetAllEventIdentifier()
+  
   local active_warning_count = 0
   local paused_warning_count = 0
   local passed_warning_count = 0
@@ -123,6 +125,8 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
 
 -- new code, that shall replace the old code, as this here is much faster
     local EventPaused = ultraschall.EventManager_GetEventPausedState(i)
+    
+    
     last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier[i])
 
     if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
@@ -139,11 +143,18 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
 end
 
 function showLUFSEffect()
-    
-  tr = reaper.GetMasterTrack(0)
-  reaper.SetTrackSelected(tr, true)   
-  runcommand("_S&M_SHOWFXCHAIN1")     -- zeige FX des Masters
-    
+--  if lol==nil then return  end
+  local tr = reaper.GetMasterTrack(0)
+  local index=-1
+  for i=0, reaper.TrackFX_GetCount(tr)-1 do
+    retval, fx=reaper.TrackFX_GetFXName(tr, i)
+    if fx:match("LUFS Loudness Metering") then
+      index=i
+    end
+  end
+  if index~=-1 then
+    reaper.TrackFX_SetOpen(tr, index, true)
+  end
 end
 
 
@@ -437,7 +448,7 @@ function drawClock()
       elseif playstate == 0 then txt_color=0xeeeeee status="STOPPED" --record/pause
       else txt_color=0xb3b3b3 status=""
     end
-    A=uc_menu[5].checked
+    --A=uc_menu[5].checked
     if uc_menu[4].checked==true then pos=get_position(1)//1
     else
       pos=get_position()//1
@@ -465,7 +476,7 @@ function drawClock()
     end
   end
   if preset~=oldpreset then
-    AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
+    --AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
   end
 
   oldpreset=preset
@@ -740,7 +751,7 @@ function MainLoop()
       reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
     end
     gfx.update()
-    ALABAMASONG=GetProjectLength()
+    --ALABAMASONG=GetProjectLength()
     reaper.defer(MainLoop)
   end
 end
