@@ -4685,9 +4685,9 @@ else
     ultraschall.LM(29)
     return ultraschall.GetRenderCFG_Settings_WAVPACK(table.unpack({...}))
   end
-  function ultraschall.GetRenderCFG_Settings_WebMVideo(...)
+  function ultraschall.GetRenderCFG_Settings_WebM_Video(...)
     ultraschall.LM(29)
-    return ultraschall.GetRenderCFG_Settings_WebMVideo(table.unpack({...}))
+    return ultraschall.GetRenderCFG_Settings_WebM_Video(table.unpack({...}))
   end
   function ultraschall.GetRenderCFG_Settings_MKV_Video(...)
     ultraschall.LM(29)
@@ -4713,9 +4713,9 @@ else
     ultraschall.LM(29)
     return ultraschall.CreateRenderCFG_LCF(table.unpack({...}))
   end
-  function ultraschall.CreateRenderCFG_WebMVideo(...)
+  function ultraschall.CreateRenderCFG_WebM_Video(...)
     ultraschall.LM(29)
-    return ultraschall.CreateRenderCFG_WebMVideo(table.unpack({...}))
+    return ultraschall.CreateRenderCFG_WebM_Video(table.unpack({...}))
   end
   function ultraschall.CreateRenderCFG_MKV_Video(...)
     ultraschall.LM(29)
@@ -5984,6 +5984,30 @@ else
   function ultraschall.Soundboard_PlayFadeIn(...)
     ultraschall.LM(35)
     return ultraschall.Soundboard_PlayFadeIn(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_MatchGain(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_MatchGain(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_Reset(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_Reset(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_GetValues(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_GetValues(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_SetValues(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_SetValues(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_AddEffect(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_AddEffect(table.unpack({...}))
+  end
+  function ultraschall.LUFS_Metering_ShowEffect(...)
+    ultraschall.LM(35)
+    return ultraschall.LUFS_Metering_ShowEffect(table.unpack({...}))
   end
   function ultraschall.WebInterface_GetInstalledInterfaces(...)
     ultraschall.LM(36)

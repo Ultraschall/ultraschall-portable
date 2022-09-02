@@ -35,7 +35,7 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.7 - "Pearl Jam - Alive" - 18 of August 2022</h3>
+<h3>4.7 - "Pearl Jam - Alive" - 18th of September 2022</h3>
 <p>Has now 1532 functions, with XX new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
@@ -70,6 +70,12 @@ Bla</li>
 <li>Navigation: GetPreviousClosestItemEnd - gets the previous closest item-end within given tracks and from a specific position(requested by Moritz Klenk)</li>
 <li>Navigation: GetPreviousClosestItemStart - gets the previous closest item-start within given tracks and from a specific position(requested by Moritz Klenk)</li>
 <li>Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini</li>
+<li>Ultraschall: LUFS_Metering_AddEffect - adds the Ultraschall's LUFS Loudness Metering-JSFX</li>
+<li>Ultraschall: LUFS_Metering_GetValues - gets currently measured LUFS-values of Ultraschall's LUFS Loudness Metering-JSFX, when running</li>
+<li>Ultraschall: LUFS_Metering_MatchGain - hits programmaticaly the "Match Gain"-button of Ultraschall's LUFS Loudness Metering-JSFX, when running</li>
+<li>Ultraschall: LUFS_Metering_Reset - resets the measuring of Ultraschall's LUFS Loudness Metering-JSFX, when running</li>
+<li>Ultraschall: LUFS_Metering_SetValues - sets LUFS-target/Gain-values of Ultraschall's LUFS Loudness Metering-JSFX, when running</li>
+<li>Ultraschall: LUFS_Metering_ShowEffect - shows the Ultraschall's LUFS Loudness Metering-JSFX, when running</li>
 <li>UserInterface: GetReaperWindow_Position - returns the Reaper-window-position and various of its elements<br />
 </li>
 <li>UserInterface: GetScaleRangeFromDpi - returns the scale-range a certain dpi-value has</li>
@@ -119,20 +125,22 @@ Bla</li>
 <li>Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -&gt; fixed</li>
-<li>Rendering: CreateRenderCFG_Settings_AVI_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: CreateRenderCFG_Settings_FLV_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: CreateRenderCFG_Settings_MKV_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: CreateRenderCFG_Settings_MPEG1_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: CreateRenderCFG_Settings_MPEG2_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: CreateRenderCFG_Settings_QTMOVMP4_Video - supports now audio/video FMPEG-export options</li>
+<li>Rendering: CreateRenderCFG_AVI_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs</li>
+<li>Rendering: CreateRenderCFG_FLV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: CreateRenderCFG_MKV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: CreateRenderCFG_MPEG1_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: CreateRenderCFG_MPEG2_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs</li>
+<li>Rendering: CreateRenderCFG_QTMOVMP4_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: CreateRenderCFG_WebMVideo - renamed to CreateRenderCFG<em>WebM</em>Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: CreateRenderCFG_WMF_Video - renamed to CreateRenderCFG_WMF (old functionname is still available, though)</li>
 <li>Rendering: GetRender_AutoIncrementFilename - always returned true, when Render to File was closed -&gt; fixed(thnx to aurelien)</li>
-<li>Rendering: GetRenderCFG_Settings_AVI_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: GetRenderCFG_Settings_FLV_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: GetRenderCFG_Settings_MKV_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: GetRenderCFG_Settings_MPEG1_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: GetRenderCFG_Settings_MPEG2_Video - supports now audio/video FMPEG-export options</li>
-<li>Rendering: GetRenderCFG_Settings_QTMOVMP4_Video - supports now audio/video FMPEG-export options</li>
+<li>Rendering: GetRenderCFG_Settings_AVI_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_FLV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_MKV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_MPEG1_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_MPEG2_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_QTMOVMP4_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
+<li>Rendering: GetRenderCFG_Settings_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+</li>
 <li>Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -&gt; (thanx to Malik)</li>
 <li>Rendering: DeleteRenderPreset_Bounds - bounds-name is now case-insensitive -&gt; (thnx to Malik)</li>

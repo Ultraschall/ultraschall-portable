@@ -82,7 +82,7 @@ function main()
   DrawText (Indentation1,  Y, "Release Time/Date", 85, "The release time/date for this episode")
   DrawText (gfx.w-94,  Y, "Episode cover", 85, "The cover of this episode")  
   Y=Y+22
-  DisplayImage(math.tointeger(gfx.w-164), Y, 152, 152, 4, UpdateImage, {}, ImageContextMenu, {})
+  DisplayImage(math.tointeger(gfx.w-164), Y, 152, 152, 4, UpdateImage, {}, ImageContextMenu, {4})
   UpdateImage(4, true)
 
   Y=Y-2
@@ -204,7 +204,7 @@ function UpdateImage(image, dropfile)
     if filename~=nil then
       gfx.loadimg(image, dir.."/"..filename)
     end
-    x1,y1=gfx.getimgdim(4)
+    x1,y1=gfx.getimgdim(image)
     reload=false
   end
   
@@ -219,7 +219,7 @@ function UpdateImage(image, dropfile)
   end
   if retval==true then
     gfx.loadimg(image, filename)
-    x1,y1=gfx.getimgdim(4)
+    x1,y1=gfx.getimgdim(image)
     if x1~=y1 then
       reaper.MB("The Image is not in rectangular format.\nYou can continue, but this might lead to warped images in podcast clients!", "Image Format Warning!", 0)
     end
@@ -247,7 +247,7 @@ end
 
 function RemoveChapterImage()
   ultraschall.GetSetPodcastEpisode_Attributes(true, "epsd_cover", "", "")
-  gfx.setimgdim(4,0,0)
+  gfx.setimgdim(image,0,0)
 end
 
 function OpenImageInStandardApp()
@@ -259,11 +259,11 @@ function OpenImageInStandardApp()
   end
 end
 
-function ImageContextMenu()
+function ImageContextMenu(image)
   gfx.x, gfx.y=gfx.mouse_x, gfx.mouse_y
   selection=gfx.showmenu("Remove Episode Image|Open in default application")
   if     selection==1 then RemoveChapterImage() 
-  elseif selection==2 then OpenImageInStandardApp() end
+  elseif selection==2 then OpenImageInStandardApp(image) end
 end
 
 
@@ -480,9 +480,7 @@ function DisplayImage(x,y,imgwidth,imgheight,image,left_functioncall,left_functi
   end
 end
 
-function LoadImage(filename, image)
-  gfx.loadimg(image, filename)
-end
+
 
 
 function InputText(x, y, width, attributename, InputTitle, InputText, onlynumbers)

@@ -1,124 +1,102 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
---[[
-reaper.gmem_attach("lufs")
-A={}
-for i=0, 100 do
-  A[i]=reaper.gmem_read(i)
-end
 
-function ultraschall.LUFS_Metering_Reset()
-  reaper.gmem_write(4,1)
-end
---]]
-function ultraschall.LUFS_Metering_MatchGain()
-  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
-  reaper.gmem_attach("lufs")
-  reaper.gmem_write(5,1)
-  reaper.gmem_attach(old_attached_name)
-end
+A,rendercfg=reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT", "", false)
 
---ultraschall.LUFS_Metering_MatchGain()
---]]
-
-function ultraschall.LUFS_Metering_Reset()
-  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
-  reaper.gmem_attach("lufs")
-  reaper.gmem_write(4,1)
-  reaper.gmem_attach(old_attached_name)
-end
-
---ultraschall.LUFS_Metering_Reset()
-
---A1=reaper.gmem_attach("sdjosd")
---A=reaper.gmem_attach("lufs")
---A3=ultraschall.Gmem_GetCurrentAttachedName()
-
-function main()
-  A1=reaper.gmem_read(1)
-  A2=reaper.gmem_read(2)
-  A3=reaper.gmem_read(3)
-  A6=reaper.gmem_read(6)
-  A={ultraschall.LUFS_Metering_GetValues()}
-  reaper.defer(main)
-end
-
---main()
-
-function ultraschall.LUFS_Metering_SetValues(LUFS_target, Gain)
+function ultraschall.CreateRenderC11FG_WebMVideo(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoCodec, AudioCodec, VideoOptions, AudioOptions)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>LUFS_Metering_GetValues</slug>
+  <slug>CreateRenderCFG_WebMVideo</slug>
   <requires>
-    Ultraschall=4.7
-    Reaper=6.20
+    Ultraschall=4.3
+    Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>ultraschall.LUFS_Metering_GetValues(optional integer LUFS_target, optional number dB_Gain)</functioncall>
+  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebMVideo(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
-    Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
+    Returns the render-cfg-string for the WebM-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: some settings need FFMPEG 4.1.3 to be installed
+    
+    Returns nil in case of an error
   </description>
   <retvals>
-    optional integer LUFS_target - the LUFS-target
-                                 - 0, -14 LUFS (Spotify)
-                                 - 1, -16 LUFS (Podcast)
-                                 - 2, -18 LUFS
-                                 - 3, -20 LUFS
-                                 - 4, -23 LUFS (EBU R128)
-    optional number dB_Gain - the gain of the effect in dB
+    string render_cfg_string - the render-cfg-string for the selected WebM-Video-settings
   </retvals>
+  <parameters>
+    integer VIDKBPS - the video-bitrate of the video in kbps; 1 to 2147483647
+    integer AUDKBPS - the audio-bitrate of the video in kbps; 1 to 2147483647
+    integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
+    integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
+    number FPS - the fps of the video; must be a double-precision-float value (e.g. 9.09 or 25.00); 0.01 to 2000.00
+    boolean AspectRatio - the aspect-ratio; true, keep source aspect ratio; false, don't keep source aspect ratio
+    optional integer VideoCodec - the videocodec used for the video;
+                       - nil, VP8
+                       - 1, VP8
+                       - 2, VP9(needs FFMPEG 4.1.3 to be installed)
+                       - 3, NONE
+    optional integer AudioCodec - the audiocodec to use for the video
+                       - nil, VORBIS
+                       - 1, VORBIS
+                       - 2, OPUS(needs FFMPEG 4.1.3 to be installed)
+                       - 3, NONE
+    optional string VideoOptions - additional FFMPEG-options for rendering the video; examples:
+                                 - g=1 ; all keyframes
+                                 - crf=1  ; h264 high quality
+                                 - crf=51 ; h264 small size
+    optional string AudioOptions - additional FFMPEG-options for rendering the video; examples:
+                                 - q=0 ; mp3 VBR highest
+                                 - q=9 ; mp3 VBR lowest    
+  </parameters>
   <chapter_context>
-    Ultraschall Specific
-    LUFS Loudness Meter
+    Rendering Projects
+    Creating Renderstrings
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
-  <tags>ultraschall, set, lufs, loudness meter, get, values, target, gain</tags>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, create, render, outputformat, webm</tags>
 </US_DocBloc>
---]]
-  local old_attached_name=reaper.gmem_attach("lufs")
-  if LUFS_target~=nil then reaper.gmem_write(8, LUFS_target) end
-  if Gain~=nil then reaper.gmem_write(7, Gain) end
-  reaper.gmem_attach(old_attached_name)
+]]
+  if math.type(VIDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VIDKBPS", "Must be an integer!", -2) return nil end
+  if math.type(AUDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AUDKBPS", "Must be an integer!", -3) return nil end
+  if math.type(WIDTH)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "WIDTH", "Must be an integer!", -4) return nil end
+  if math.type(HEIGHT)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "HEIGHT", "Must be an integer!", -5) return nil end
+  if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -6) return nil end
+  if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AspectRatio", "Must be a boolean!", -7) return nil end
+  if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VIDKBPS", "Must be between 1 and 2147483647.", -8) return nil end
+  if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AUDKBPS", "Must be between 1 and 2147483647.", -9) return nil end
+  if WIDTH<1 or WIDTH>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "WIDTH", "Must be between 1 and 2147483647.", -10) return nil end
+  if HEIGHT<1 or HEIGHT>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "HEIGHT", "Must be between 1 and 2147483647.", -11) return nil end
+  if FPS<0.01 or FPS>2000.00 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "FPS", "Ultraschall-API supports only fps-values between 0.01 and 2000.00, sorry.", -12) return nil end
+  
+  if VideoOptions~=nil and type(VideoOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VideoOptions", "Must be a string with maximum length of 255 characters!", -14) return nil end
+  if AudioOptions~=nil and type(AudioOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AudioOptions", "Must be a string with maximum length of 255 characters!", -15) return nil end
+  if VideoOptions==nil then VideoOptions="" end
+  if AudioOptions==nil then AudioOptions="" end
+  
+  if VideoCodec~=nil and math.type(VideoCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VideoCodec", "Must be an integer!", -13) return nil end  
+  if VideoCodec==nil then VideoCodec=0 end
+  if AudioCodec~=nil and math.type(AudioCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AudioCodec", "Must be an integer!", -14) return nil end
+  if AudioCodec==nil then AudioCodec=0 end
+  if VideoCodec<1 or VideoCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VideoCodec", "Must be between 1 and 2", -15) return nil end  
+  if AudioCodec<1 or AudioCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AudioCodec", "Must be between 1 and 2", -16) return nil end
 
+  WIDTH=ultraschall.ConvertIntegerIntoString2(4, WIDTH)
+  HEIGHT=ultraschall.ConvertIntegerIntoString2(4, HEIGHT)
+  FPS = ultraschall.ConvertIntegerIntoString2(4,ultraschall.DoubleToInt(FPS))  
+
+  VIDKBPS=ultraschall.ConvertIntegerIntoString2(4, VIDKBPS)
+  AUDKBPS=ultraschall.ConvertIntegerIntoString2(4, AUDKBPS)
+  local VideoCodec=string.char(VideoCodec-1)
+  local VideoFormat=string.char(6)
+  local AudioCodec=string.char(AudioCodec-1)
+  local MJPEGQuality=ultraschall.ConvertIntegerIntoString2(4, 1)
+  
+  if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
+  
+  return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
 end
 
---ultraschall.LUFS_Metering_SetValues(4, 2)
+A={ultraschall.GetRenderCFG_Settings_WebM_Video(rendercfg)}
 
-
-function ultraschall.LUFS_Metering_AddEffect(enabled)
-  if enabled==nil then enabled=false end
-  local tr = reaper.GetMasterTrack(0)
-  local index=-1
-  for i=0, reaper.TrackFX_GetCount(tr)-1 do
-    local retval, fx=reaper.TrackFX_GetFXName(tr, i)
-    if fx:match("LUFS Loudness Metering") then
-      index=i
-    end
-  end
-  if index==-1 then
-    local A=reaper.TrackFX_AddByName(tr, "dynamics/LUFS_Loudness_Meter", false, -1)
-    local A=reaper.TrackFX_SetEnabled(tr, reaper.TrackFX_GetCount(tr)-1, enabled)
-    return true
-  else
-    local A=reaper.TrackFX_SetEnabled(tr, index, enabled)
-    return false
-  end
-end
-
---A=ultraschall.LUFS_Metering_AddEffect(true)
-
-function ultraschall.LUFS_Metering_ShowEffect()
-  local tr = reaper.GetMasterTrack(0)
-  local index=-1
-  for i=0, reaper.TrackFX_GetCount(tr)-1 do
-    local retval, fx=reaper.TrackFX_GetFXName(tr, i)
-    if fx:match("LUFS Loudness Metering") then
-      index=i
-    end
-  end
-  if index~=-1 then
-    reaper.TrackFX_SetOpen(tr, index, true)
-  end
-end
-
---ultraschall.LUFS_Metering_ShowEffect()
+--reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT", A, true)

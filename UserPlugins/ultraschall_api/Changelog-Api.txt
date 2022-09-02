@@ -273,20 +273,11 @@ Note: Doesn't fucking work...
 - Render To Do:
  - Markers can be used for rendering now
  - Fade In/Fade Out added now
- - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
  
  (Later)
  - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
     Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
     The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
-readd in next version:
-  
-
-To Do for next version:
-   Render To Do:
-   - Markers can be used for rendering now
-   - Fade In/Fade Out added now
-   - FFMPEG-formats have now NONE as option for Audio/Video format; please add to get/create-rendercfg-functions
 
 readd in next version
 ToDo Marker Menu: 
@@ -421,20 +412,22 @@ Has now 1532 functions, with XX new ones
   - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
-  - Rendering: CreateRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options
-  - Rendering: CreateRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options
-  - Rendering: CreateRenderCFG\_Settings\_MKV\_Video - supports now audio/video FMPEG-export options
-  - Rendering: CreateRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options
-  - Rendering: CreateRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options
-  - Rendering: CreateRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options
+  - Rendering: CreateRenderCFG\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
+  - Rendering: CreateRenderCFG\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: CreateRenderCFG\_MKV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: CreateRenderCFG\_MPEG1\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: CreateRenderCFG\_MPEG2\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
+  - Rendering: CreateRenderCFG\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: CreateRenderCFG\_WebMVideo - renamed to CreateRenderCFG_WebM_Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though)
   - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
-  - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options
-  - Rendering: GetRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options
-  - Rendering: GetRenderCFG\_Settings\_MKV\_Video - supports now audio/video FMPEG-export options
-  - Rendering: GetRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options
-  - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options
-  - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options
+  - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_MKV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_MPEG1\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: GetRenderCFG\_Settings\_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
   - Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
   - Rendering: DeleteRenderPreset\_Bounds - bounds-name is now case-insensitive -> (thnx to Malik)
