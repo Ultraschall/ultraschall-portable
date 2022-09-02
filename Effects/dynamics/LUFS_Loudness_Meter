@@ -208,8 +208,9 @@ gmem[2] = -16; // LUFS Target
 gmem[3] = 0; // is FX active?
 gmem[4] = 0; // Reset button: set this via ReaScript to 1 to reset the indicator (reaper.gmem_attach and reaper.gmem_write)
 gmem[5] = 0; // Match Gain: set this via ReaScript to 1 to match gain (reaper.gmem_attach and reaper.gmem_write)
-
-
+gmem[6] = slider5; // The gain currently set in the JSFX-UI
+gmem[7] = -10000; // Set the gain in this gmem from ReaScript
+gmem[8] = -10000; // Set the target in this gmem from ReaScript; the number order is the same as in the dropdownlist
 lufs_store = MM.MemMgr_Alloc(999);
 
 loopcount = 1;
@@ -252,6 +253,7 @@ function adjustGain()
 
 lufs_target = -14 - 2*slider7;
 gmem[2] = lufs_target;
+gmem[6] = slider5;
 slider7 == 4? (
   lufs_target = -23;
 );
@@ -432,6 +434,15 @@ gmem[5]>0 ? (
   gmem[5]=0;
 );
 
+gmem[7]>-10000 ? (
+  slider5=gmem[7];
+  gmem[7]=-10000;
+);
+
+gmem[8]>-10000 ? (
+  slider7=gmem[8];
+  gmem[8]=-10000;
+);
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(1, "Arial", 14, 'b');
 
 
