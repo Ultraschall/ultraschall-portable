@@ -109,7 +109,7 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
   
   event_count = ultraschall.EventManager_CountRegisteredEvents()
   EventIdentifier=ultraschall.EventManager_GetAllEventIdentifier()
-  
+  --event_count=1
   local active_warning_count = 0
   local paused_warning_count = 0
   local passed_warning_count = 0
@@ -140,21 +140,6 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
   --]]
   
   return active_warning_count, paused_warning_count, passed_warning_count
-end
-
-function showLUFSEffect()
---  if lol==nil then return  end
-  local tr = reaper.GetMasterTrack(0)
-  local index=-1
-  for i=0, reaper.TrackFX_GetCount(tr)-1 do
-    retval, fx=reaper.TrackFX_GetFXName(tr, i)
-    if fx:match("LUFS Loudness Metering") then
-      index=i
-    end
-  end
-  if index~=-1 then
-    reaper.TrackFX_SetOpen(tr, index, true)
-  end
 end
 
 
@@ -420,12 +405,12 @@ function openWindowLUFS()
     end
   end
 
-  if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf em Master, also hinzufügen. 
-    fx_slot = reaper.TrackFX_AddByName(mastertrack, "LUFS_Loudness_Meter", false, 1) 
-    reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+  if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf dem Master, also hinzufügen. 
+    added = ultraschall.LUFS_Metering_AddEffect(false)
+
   end
 
-  showLUFSEffect() -- zeige den Effek
+  ultraschall.LUFS_Metering_ShowEffect() -- zeige den Effek
     
 end
 
@@ -488,22 +473,14 @@ function drawClock()
   --write text
   -- Date
   if uc_menu[1].checked then
-    -- date=os.date("%d.%m.%Y")
-    
-    reaper.gmem_attach ("lufs")  
-    -- reaper.gmem_attach ("limit")
-    
-    -- if reaper.gmem_read(1) < 15.9 or reaper.gmem_read(1) > 16.1 then
-      -- updateLUFS()
-    -- end
-    
-    target = reaper.gmem_read(2)
 
-    if reaper.gmem_read(1) > target-1 and reaper.gmem_read(1) <= target+1 then -- Grün
+    LUFS_integral, target, dB_Gain, FX_active = ultraschall.LUFS_Metering_GetValues()
+
+    if LUFS_integral > target-1 and LUFS_integral <= target+1 then -- Grün
       date_color = 0x15ee15
-    elseif reaper.gmem_read(1) > target+1 and reaper.gmem_read(1) <= target+2 then -- Gelb
+    elseif LUFS_integral > target+1 and LUFS_integral <= target+2 then -- Gelb
       date_color = 0xeeee15
-    elseif reaper.gmem_read(1) > target+2 then -- Rot
+    elseif LUFS_integral > target+2 then -- Rot
       date_color = 0xee5599
     else
       date_color = 0x2092c7 -- Blau
@@ -514,8 +491,8 @@ function drawClock()
     --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
     -- end
 
-    date = tostring(reaper.gmem_read(1)).." LUFS"
-    if reaper.gmem_read(3) == 0 then 
+    date = tostring(LUFS_integral).." LUFS"
+    if FX_active == 0 then 
       date = "? LUFS" 
       date_color = 0x777777
     end

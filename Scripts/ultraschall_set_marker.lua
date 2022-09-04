@@ -48,5 +48,6 @@ markercount=ultraschall.CountNormalMarkers_NumGap()
 
 runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 
-
+reaper.Undo_BeginBlock()
 reaper.AddProjectMarker2(0, false, current_position, 0, "", markercount, 0)
+reaper.Undo_EndBlock("Insert Chapter Marker", 0)

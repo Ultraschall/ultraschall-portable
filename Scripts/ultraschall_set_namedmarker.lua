@@ -51,6 +51,7 @@ end
 -- retval, result = reaper.GetUserInputs("Edit ID3 Podcast Metadata - Don't use ( ) ' or \" ", 6, "Episode Title:,Author:,Podcast:,Year:,Podcast Category:,Description:,extrawidth=300, separator=\n", oldnotes)
 
 
+reaper.Undo_BeginBlock()
 --if retval == true then -- User pressed ok
   --   markername = retvals_csv
 	markername=""
@@ -61,3 +62,4 @@ end
 	runcommand("_Ultraschall_Edit_Chapter_Attributes")
 	runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 --end -- Else = user pressed cancel, so nothing to do here.
+reaper.Undo_EndBlock("Insert Chapter-Marker with Name", 0)

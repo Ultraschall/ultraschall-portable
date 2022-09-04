@@ -2426,8 +2426,8 @@ function ultraschall.GetRenderTable_Project()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_Project</slug>
   <requires>
-    Ultraschall=4.4
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -2447,6 +2447,8 @@ function ultraschall.GetRenderTable_Project()
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 
@@ -2461,6 +2463,26 @@ function ultraschall.GetRenderTable_Project()
             RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
             RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
             RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
@@ -2608,6 +2630,15 @@ function ultraschall.GetRenderTable_Project()
   if RenderTable["SaveCopyOfProject"]==1 then RenderTable["SaveCopyOfProject"]=true else RenderTable["SaveCopyOfProject"]=false end
   
   RenderTable["Normalize_Method"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false))
+  RenderTable["FadeIn"]=reaper.GetSetProjectInfo(0, "RENDER_FADEIN", 0, false)
+  RenderTable["FadeOut"]=reaper.GetSetProjectInfo(0, "RENDER_FADEOUT", 0, false)
+  RenderTable["FadeIn_Shape"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_FADEINSHAPE", 0, false))
+  RenderTable["FadeOut_Shape"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_FADEOUTSHAPE", 0, false))
+  
+  RenderTable["FadeIn_Enabled"]=RenderTable["Normalize_Method"]&512==512
+  if RenderTable["FadeIn_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-512 end
+  RenderTable["FadeOut_Enabled"]=RenderTable["Normalize_Method"]&1024==1024 
+  if RenderTable["FadeOut_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1024 end
   
   RenderTable["Normalize_Enabled"]=reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false)&1==1
   if RenderTable["Normalize_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1 end
@@ -2655,8 +2686,8 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
   <functioncall>table RenderTable = ultraschall.GetRenderTable_ProjectFile(string projectfilename_with_path)</functioncall>
@@ -2674,6 +2705,8 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 
@@ -3406,8 +3439,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_Project</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -3433,6 +3466,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -3689,8 +3724,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(table RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
@@ -3712,6 +3747,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -3962,16 +3999,16 @@ RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers
 EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender, 
 Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
 Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
-Normalize_Only_Files_Too_Loud)
+Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
-  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Method)</functioncall>
+  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Method, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape)</functioncall>
   <description>
     Creates a new RenderTable.
     
@@ -3992,6 +4029,12 @@ Normalize_Only_Files_Too_Loud)
               RenderTable["EmbedTakeMarkers"]=false
               RenderTable["Enable2ndPassRender"]=false
               RenderTable["Endposition"]=0
+              RenderTable["FadeIn_Enabled"]=false
+              RenderTable["FadeIn"]=0
+              RenderTable["FadeIn_Shape"]=0
+              RenderTable["FadeOut_Enabled"]=false
+              RenderTable["FadeOut"]=0
+              RenderTable["FadeOut_Shape"]=false
               RenderTable["MultiChannelFiles"]=false
               RenderTable["Normalize_Enabled"]=false
               RenderTable["Normalize_Only_Files_Too_Loud"]=false
@@ -4038,6 +4081,9 @@ Normalize_Only_Files_Too_Loud)
                    - 3, Project regions
                    - 4, Selected Media Items(in combination with Source 32)
                    - 5, Selected regions
+                   - 6, Razor edit areas
+                   - 7, All project markers
+                   - 8, Selected markers
     optional number Startposition - the startposition of the render-section in seconds; only used when Bounds=0(Custom time range); default=0
     optional number Endposition - the endposition of the render-section in seconds; only used when Bounds=0(Custom time range); default=0
     optional integer TailFlag - in which bounds is the Tail-checkbox checked? (default=18)
@@ -4110,6 +4156,26 @@ Normalize_Only_Files_Too_Loud)
     optional integer Brickwall_Limiter_Method - the brickwall-limiter-method; 1, peak; 2, True Peak
     optional number Brickwall_Limiter_Target - the target of brickwall-limiter in dB
     optional boolean Normalize_Only_Files_Too_Loud - only normalize files that are too loud; true, enabled; false, disabled
+    optional boolean FadeIn_Enabled - true, fade in is enabled; false, fade-in is not enabled
+    optional number FadeIn - the fade-in in seconds
+    optional integer FadeIn_Shape - the fade-in-shape
+                                  - 0, Linear fade in
+                                  - 1, Inverted quadratic fade in
+                                  - 2, Quadratic fade in
+                                  - 3, Inverted quartic fade in
+                                  - 4, Quartic fade in
+                                  - 5, Cosine S-curve fade in
+                                  - 6, Quartic S-curve fade in
+    optional boolean FadeOut_Enabled - true, fade-out is enabled; false, fade-out is disabled
+    optional number FadeOut - the fade-out time in seconds
+    optional integer FadeOut_Shape - the fade-out-shape 
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -4166,6 +4232,13 @@ Normalize_Only_Files_Too_Loud)
   
   if Normalize_Only_Files_Too_Loud~=nil and type(Normalize_Only_Files_Too_Loud)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Only_Files_Too_Loud", "#37: must be nil or boolean", -38) return end
     
+  if FadeIn_Enabled~=nil and type(FadeIn_Enabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn_Enabled", "#38: must be nil or boolean", -39) return end
+  if FadeIn~=nil and type(FadeIn)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn", "#39: must be nil or a number", -40) return end
+  if FadeIn_Shape~=nil and math.type(FadeIn_Shape)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn_Shape", "#40: must be nil or an integer", -41) return end
+  if FadeOut_Enabled~=nil and type(FadeOut_Enabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut_Enabled", "#41: must be nil or boolean", -42) return end
+  if FadeOut~=nil and type(FadeOut)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut", "#42: must be nil or a number", -43) return end
+  if FadeOut_Shape~=nil and math.type(FadeOut_Shape)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut_Shape", "#43: must be nil or an integer", -44) return end
+    
     
 
   -- create Reaper-vanilla default RenderTable
@@ -4208,6 +4281,12 @@ Normalize_Only_Files_Too_Loud)
   RenderTable["Brickwall_Limiter_Method"]=1
   RenderTable["Brickwall_Limiter_Target"]=1
   RenderTable["Normalize_Only_Files_Too_Loud"]=false
+  RenderTable["FadeIn_Enabled"]=false
+  RenderTable["FadeIn"]=0
+  RenderTable["FadeIn_Shape"]=0
+  RenderTable["FadeOut_Enabled"]=false
+  RenderTable["FadeOut"]=0
+  RenderTable["FadeOut_Shape"]=false
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end
@@ -4248,6 +4327,12 @@ Normalize_Only_Files_Too_Loud)
   if Brickwall_Limiter_Target~=nil then RenderTable["Brickwall_Limiter_Target"]=Brickwall_Limiter_Target end
   
   if Normalize_Only_Files_Too_Loud~=nil then RenderTable["Normalize_Only_Files_Too_Loud"]=Normalize_Only_Files_Too_Loud end
+  if FadeIn_Enabled~=nil then RenderTable["FadeIn_Enabled"]=FadeIn_Enabled end
+  if FadeIn~=nil then RenderTable["FadeIn"]=FadeIn end
+  if FadeIn_Shape~=nil then RenderTable["FadeIn_Shape"]=FadeIn_Shape end
+  if FadeOut_Enabled~=nil then RenderTable["FadeOut_Enabled"]=FadeOut_Enabled end
+  if FadeOut~=nil then RenderTable["FadeOut"]=FadeOut end
+  if FadeOut_Shape~=nil then RenderTable["FadeOut_Shape"]=FadeOut_Shape end
  
   return RenderTable
 end
@@ -4262,14 +4347,17 @@ A=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0,                          -- 5
                                      true, 0, true, true, "",               -- 25
                                      true, true, true, true, true,          -- 30
                                      1, true, 1, false, 1,                  -- 35
-                                     3, true)                               -- 40 Brickwall_Limiter_Target plus
+                                     3, true, true, 1.1, 9,                 -- 40 Brickwall_Limiter_Target plus
+                                     true, 1, 9)                            -- 43
                                      SLEM()
 --]]
 --Source, Bounds, Startposition, Endposition, TailFlag, TailMS, RenderFile, RenderPattern,
 --SampleRate, Channels, OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
 --Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, RenderQueueDelay
 -- RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers, RenderString2, 
--- EmbedTakeMarkers, SilentRender, EmbedMetadata, Enable2ndPassRender)
+-- EmbedTakeMarkers, SilentRender, EmbedMetadata, Enable2ndPassRender, Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
+-- Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
+-- Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape)
 
 
 --O=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0, 190, "aRenderFile", "apattern", 99, 3, 3,    false,   2, false, false, 1, "l3pm", true, true, true, true)
@@ -4728,7 +4816,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
      Ultraschall=4.7
-     Reaper=6.62
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>table RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
@@ -4754,6 +4842,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -5160,8 +5250,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>AddRenderPreset</slug>
    <requires>
-     Ultraschall=4.3
-     Reaper=6.62
+     Ultraschall=4.7
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5186,6 +5276,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       4, Selected Media Items(in combination with Source 32)
                                       5, Selected regions 
                                       6, Razor edit areas
+                                      7, All project markers
+                                      8, Selected markers
               RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
               RenderTable["Source"] - the source dropdownlist, includes 
@@ -5374,7 +5466,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
    <slug>SetRenderPreset</slug>
    <requires>
      Ultraschall=4.7
-     Reaper=6.62
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5399,6 +5491,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       4, Selected Media Items(in combination with Source 32)
                                       5, Selected regions
                                       6, Razor edit areas
+                                      7, All project markers
+                                      8, Selected markers
               RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
               RenderTable["Source"]+RenderTable["MultiChannelFiles"]+RenderTable["OnlyMonoMedia"] - the source dropdownlist, includes 
@@ -5607,8 +5701,8 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RenderProject_RenderTable</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -5629,6 +5723,8 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -8736,6 +8832,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 

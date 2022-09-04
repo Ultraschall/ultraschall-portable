@@ -1329,7 +1329,7 @@ function ultraschall.LUFS_Metering_GetValues()
     Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>number LUFS_integral, number LUFS_target, number dB_Gain = ultraschall.LUFS_Metering_GetValues()</functioncall>
+  <functioncall>number LUFS_integral, number LUFS_target, number dB_Gain, integer FX_active = ultraschall.LUFS_Metering_GetValues()</functioncall>
   <description>
     Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
   </description>
@@ -1337,6 +1337,7 @@ function ultraschall.LUFS_Metering_GetValues()
     number LUFS_integral - the integral LUFS-value currently measured
     number LUFS_target - the LUFS-target currently set in the UI of the jsfx
     number dB_Gain - the gain currently set in the UI of the effect in dB
+    integer FX_active - 0, the fx isn't active(usually when playback stopped); 1, the fx is active(during playback for instance)
   </retvals>
   <chapter_context>
     Ultraschall Specific
@@ -1350,10 +1351,10 @@ function ultraschall.LUFS_Metering_GetValues()
   local old_attached_name=reaper.gmem_attach("lufs")
   local LUFS_integral=reaper.gmem_read(1)
   local LUFS_target=reaper.gmem_read(2)
-  local FX_active=reaper.gmem_read(3)
+  local FX_active=math.tointeger(reaper.gmem_read(3))
   local Gain=reaper.gmem_read(6)
   reaper.gmem_attach(old_attached_name)
-  return LUFS_integral, LUFS_target, Gain
+  return LUFS_integral, LUFS_target, Gain, FX_active
 end
 
 function ultraschall.LUFS_Metering_SetValues(LUFS_target, Gain)

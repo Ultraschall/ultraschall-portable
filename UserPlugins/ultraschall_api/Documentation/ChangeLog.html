@@ -46,12 +46,14 @@ Bla</li>
 <ul>
 <li>DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates</li>
 <li>DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)</li>
+<li>DeveloperTools: MonitorRenderTable - monitors the entries of a RenderTable for the currently opened project</li>
 <li>EventManager: EventManager_Debug_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not</li>
 <li>EventManager: EventManager_Debug_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm<br />
 </li>
 <li>EventManager: EventManager_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events</li>
 <li>EventManager: EventManager_GetAllEventNames - returns a table with all event-names of all currently registered events</li>
-<li>EventManager: EventManager_GetEventPausedState - returns the paused states of a currently registered event</li>
+<li>EventManager: EventManager_GetEventPausedState - returns the paused states of a currently registered event<br />
+</li>
 <li>FXManagement: GetFXByGuid - gets a fx by its guid</li>
 <li>FXManagement: TrackFX_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project</li>
 <li>FXManagement: TakeFX_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project<br />
@@ -104,7 +106,9 @@ Bla</li>
 <li>HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings</li>
 <li>HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings</li>
 <li>Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -&gt; fixed now, returns 1</li>
+<li>MarkerManagement: AddEditMarker - added guid to name due old code forgotten to remove; some improvements on edittitle -&gt; fixed now</li>
 <li>MarkerManagement: DeleteNormalMarker - did not correctly delete the first normal marker, when it was the first one in the project -&gt; fixed</li>
+<li>MarkerManagement: EnumerateEditMarker - some improvements on edittitle</li>
 <li>MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account<br />
 </li>
 <li>MarkerManagement: GetMarkerByTime - returns now an additional retval with the marker-number(s); takes now scale-factor into account</li>
@@ -114,6 +118,7 @@ Bla</li>
 <li>MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -&gt; fixed</li>
 <li>MarkerManagement: IsMarkerShownote - returns now the shownote-index as well<br />
 </li>
+<li>MarkerManagement: SetEditMarker - some improvements on edittitle</li>
 <li>MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well</li>
 <li>MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -&gt; fixed</li>
 <li>MediaItemManagement: RippleCut - supports now optional parameter to add crossfade to the edit(requested by NiklasM)</li>
@@ -125,6 +130,7 @@ Bla</li>
 <li>Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -&gt; fixed</li>
+<li>Rendering: CreateNewRenderTable - supports now marker-rendering as well as fade-in/fade-out</li>
 <li>Rendering: CreateRenderCFG_AVI_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs</li>
 <li>Rendering: CreateRenderCFG_FLV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: CreateRenderCFG_MKV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
@@ -133,6 +139,7 @@ Bla</li>
 <li>Rendering: CreateRenderCFG_QTMOVMP4_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: CreateRenderCFG_WebMVideo - renamed to CreateRenderCFG<em>WebM</em>Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: CreateRenderCFG_WMF_Video - renamed to CreateRenderCFG_WMF (old functionname is still available, though)</li>
+<li>Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+</li>
 <li>Rendering: GetRender_AutoIncrementFilename - always returned true, when Render to File was closed -&gt; fixed(thnx to aurelien)</li>
 <li>Rendering: GetRenderCFG_Settings_AVI_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: GetRenderCFG_Settings_FLV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
@@ -141,8 +148,8 @@ Bla</li>
 <li>Rendering: GetRenderCFG_Settings_MPEG2_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: GetRenderCFG_Settings_QTMOVMP4_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: GetRenderCFG_Settings_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
-<li>Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+</li>
 <li>Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -&gt; (thanx to Malik)</li>
+<li>Rendering: GetRenderTable_Project - supports now marker-rendering as well as fade-in/fade-out</li>
 <li>Rendering: DeleteRenderPreset_Bounds - bounds-name is now case-insensitive -&gt; (thnx to Malik)</li>
 <li>Rendering: DeleteRenderPreset_FormatOptions - options-name is now case-insensitive -&gt; (thnx to Malik)</li>
 <li>Rendering: RenderProject_RenderTable - didn't increment filename when rendering filename under certain circumstances -&gt; fixed (thnx to aurelien)</li>

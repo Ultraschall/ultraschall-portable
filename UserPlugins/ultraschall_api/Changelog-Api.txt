@@ -262,16 +262,10 @@ Note: Doesn't fucking work...
     
    the chapterindex are the numbers of chapters in timeline-order, that shall be played one after another
 
-- marker-menu-hijack-script: 
-   
-     - prevent # and < > in the beginnings of the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
-       including the Entry_X_SubMenu=start|end thing.
-  
 - FXStateChunk: GetSet NEXT_FX_OVERSAMPLE 
     toggle to enable/disable all FX instance oversampling settings
   
 - Render To Do:
- - Markers can be used for rendering now
  - Fade In/Fade Out added now
  
  (Later)
@@ -283,6 +277,8 @@ readd in next version
 ToDo Marker Menu: 
   - only run action, when mouse-button has been released
   - check, if someone dragged a marker, so a left-click does not run an action when dragging
+  - prevent # and < > in the beginnings of the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
+       including the Entry_X_SubMenu=start|end thing.
   - add doubleclick-state as well
 
   - MarkerManagement: MarkerMenu\_GetLastClickState - gets the last clickstate, when someone has clicked markers/regions with markermenu running
@@ -341,11 +337,12 @@ Has now 1532 functions, with XX new ones
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
   - DeveloperTools: Monitor Eventmanager - monitors the performance and some attributes of the Eventmanager, so you can optimize the registered events(requested by rstockm)
+  - DeveloperTools: MonitorRenderTable - monitors the entries of a RenderTable for the currently opened project
   - EventManager: EventManager\_Debug\_GetAllActionRunStates - returns a table of, if the actions of a registered event were run in the last event-check-cycle or not
   - EventManager: EventManager\_Debug\_GetExecutionTime - when debugmode is on, allows to get, how long the last run of checking for events did take in seconds(for benchmarking your eventcheck functions) - requested by rstockm  
   - EventManager: EventManager\_GetAllEventIdentifier - returns a table with all event-identifiers of all currently registered events
   - EventManager: EventManager\_GetAllEventNames - returns a table with all event-names of all currently registered events
-  - EventManager: EventManager\_GetEventPausedState - returns the paused states of a currently registered event
+  - EventManager: EventManager\_GetEventPausedState - returns the paused states of a currently registered event  
   - FXManagement: GetFXByGuid - gets a fx by its guid
   - FXManagement: TrackFX\_GetAllGuidsFromAllTracks - returns all guids from all tracks of the current project
   - FXManagement: TakeFX\_GetAllGuidsFromAllTakes - returns all guids from all takes of the current project  
@@ -393,7 +390,9 @@ Has now 1532 functions, with XX new ones
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
   - HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings
   - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
+  - MarkerManagement: AddEditMarker - added guid to name due old code forgotten to remove; some improvements on edittitle -> fixed now
   - MarkerManagement: DeleteNormalMarker - did not correctly delete the first normal marker, when it was the first one in the project -> fixed
+  - MarkerManagement: EnumerateEditMarker - some improvements on edittitle
   - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account  
   - MarkerManagement: GetMarkerByTime - returns now an additional retval with the marker-number(s); takes now scale-factor into account
   - MarkerManagement: GetRegionByScreenCoordinates - returns now an additional retval with the region-number(s)
@@ -401,6 +400,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: GetShownoteMarkerIDFromGuid - did add error-messages to the error-messaging system without needing this -> fixed
   - MarkerManagement: GetTemporaryMarker - marker_id should be 0-based -> fixed
   - MarkerManagement: IsMarkerShownote - returns now the shownote-index as well  
+  - MarkerManagement: SetEditMarker - some improvements on edittitle
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -> fixed
   - MediaItemManagement: RippleCut - supports now optional parameter to add crossfade to the edit(requested by NiklasM)
@@ -412,6 +412,7 @@ Has now 1532 functions, with XX new ones
   - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
+  - Rendering: CreateNewRenderTable - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: CreateRenderCFG\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
   - Rendering: CreateRenderCFG\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_MKV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
@@ -420,6 +421,7 @@ Has now 1532 functions, with XX new ones
   - Rendering: CreateRenderCFG\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WebMVideo - renamed to CreateRenderCFG_WebM_Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though)
+  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
   - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
   - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
@@ -428,8 +430,8 @@ Has now 1532 functions, with XX new ones
   - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
-  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
   - Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
+  - Rendering: GetRenderTable_Project - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: DeleteRenderPreset\_Bounds - bounds-name is now case-insensitive -> (thnx to Malik)
   - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> (thnx to Malik)
   - Rendering: RenderProject\_RenderTable - didn't increment filename when rendering filename under certain circumstances -> fixed (thnx to aurelien)

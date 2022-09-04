@@ -408,7 +408,7 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddEditMarker</slug>
   <requires>
-    Ultraschall=4.4
+    Ultraschall=4.7
     Reaper=6.19
     Lua=5.3
   </requires>
@@ -450,10 +450,9 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
   -- check parameters
   if type(position)~="number" then ultraschall.AddErrorMessage("AddEditMarker", "position", "must be a number", -1) return -1 end
   if math.type(shown_number)~="integer" then ultraschall.AddErrorMessage("AddEditMarker", "shown_number", "must be a integer", -2) return -1 end
-  if edittitle==nil then edittitle="" end
-  edittitle=":"..edittitle
+  if edittitle==nil then edittitle="" else edittitle=": "..edittitle end
   
-  local shown_number, marker_index, guid = ultraschall.AddProjectMarker(0, false, position, 0, "_Edit: "..reaper.genGuid("")..reaper.time_precise()..reaper.genGuid(""), shown_number, color)
+  local shown_number, marker_index, guid = ultraschall.AddProjectMarker(0, false, position, 0, "_Edit"..edittitle, shown_number, color)
   
   return marker_index, guid, ultraschall.GetEditMarkerIDFromGuid(guid)
 end
@@ -685,7 +684,7 @@ function ultraschall.EnumerateEditMarkers(number)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EnumerateEditMarkers</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -737,7 +736,8 @@ function ultraschall.EnumerateEditMarkers(number)
       if name:sub(1,5)=="_Edit" then count=count+1 end 
       if number>=0 and wentfine==0 and count==number then 
           retnumber=retval 
-          editname=name:sub(7,-1)
+          editname=name:match(".-:%s*(.*)")--sub(7,-1)
+          if editname==nil then editname="" end
           retidxnum=markrgnindexnumber
           position=pos
           wentfine=1
@@ -998,11 +998,11 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetEditMarker</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall> boolean retval = ultraschall.SetEditMarker(integer edit_index, number position, integer shown_number, string edittitle)</functioncall>
+  <functioncall>boolean retval = ultraschall.SetEditMarker(integer edit_index, number position, integer shown_number, string edittitle)</functioncall>
   <description>
     Sets values of an Edit Marker. Returns true if successful and false if not(i.e. marker doesn't exist)
     
@@ -1059,7 +1059,7 @@ function ultraschall.SetEditMarker(number, position, shown_number, edittitle)
   if edittitle==nil then edittitle="" end
   
   -- change edit-marker, if existing
-  if wentfine==1 then return reaper.SetProjectMarkerByIndex(0, retnumber, 0, position, 0, shown_number, "_Edit:" .. edittitle, color)
+  if wentfine==1 then return reaper.SetProjectMarkerByIndex(0, retnumber, 0, position, 0, shown_number, "_Edit: " .. edittitle, color)
   else ultraschall.AddErrorMessage("SetEditMarker", "edit_index", "no such edit-marker", -3) return false
   end
 end

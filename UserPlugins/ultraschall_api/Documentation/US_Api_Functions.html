@@ -23647,7 +23647,7 @@ false could be an indicator, that there's already a region using the number pass
 <a class="anch" id="AddEditMarker"></a>
 <a href="#AddEditMarker"> ^</a> 
 <img width="3%" src="gfx/reaper6.19.png" alt="Reaper version 6.19">
-<img width="3%" src="gfx/ultraschall4.4.png" alt="Ultraschall version 4.4"><u><b>AddEditMarker</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>AddEditMarker</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> marker_number, <i>string</i> guid, <i>integer</i> edit_marker_idx = <em>ultraschall.AddEditMarker</em>(<i>number</i> position, <i>integer</i> shown_number, <i>string</i> edittitle)</code></div>
 </div><p>
@@ -23863,7 +23863,7 @@ the end of the timeline, it will be the last one, NOT the first one in the retva
 <a class="anch" id="EnumerateEditMarkers"></a>
 <a href="#EnumerateEditMarkers"> ^</a> 
 <img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>EnumerateEditMarkers</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>EnumerateEditMarkers</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> retnumber, <i>integer</i> shown_number, <i>number</i> position, <i>string</i> edittitle, <i>string</i> guid = <em>ultraschall.EnumerateEditMarkers</em>(<i>integer</i> edit_index)</code></div>
 </div><p>
@@ -24125,9 +24125,9 @@ the end of the timeline, it will be the last one, NOT the first one in the retva
 <a class="anch" id="SetEditMarker"></a>
 <a href="#SetEditMarker"> ^</a> 
 <img width="3%" src="gfx/reaper5.40.png" alt="Reaper version 5.40">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>SetEditMarker</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>SetEditMarker</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code>  <i>boolean</i> retval = <em>ultraschall.SetEditMarker</em>(<i>integer</i> edit_index, <i>number</i> position, <i>integer</i> shown_number, <i>string</i> edittitle)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetEditMarker</em>(<i>integer</i> edit_index, <i>number</i> position, <i>integer</i> shown_number, <i>string</i> edittitle)</code></div>
 </div><p>
 <div class="ch">
 Sets values of an Edit Marker. Returns true if successful and false if not(i.e. marker doesn't exist)<br>
@@ -51263,10 +51263,10 @@ q=9 ; mp3 VBR lowest</td></tr>
 <hr>
 <a class="anch" id="ApplyRenderTable_Project"></a>
 <a href="#ApplyRenderTable_Project"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>ApplyRenderTable_Project</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>ApplyRenderTable_Project</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval, <i>boolean</i> dirty = <em>ultraschall.ApplyRenderTable_Project</em>(<i>table</i> RenderTable, <i>optional</i> <i>boolean</i> apply_rendercfg_string, <i>optional</i> <i>boolean</i> dirtyness)</code></div>
 </div><p>
@@ -51287,6 +51287,8 @@ q=9 ; mp3 VBR lowest</td></tr>
                                4, Selected Media Items(in combination with Source 32); 
                                5, Selected regions
                                6, Razor edit areas
+                               7, All project markers
+                               8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                                   1, mono; 
                                   2, stereo; 
@@ -51407,8 +51409,8 @@ q=9 ; mp3 VBR lowest</td></tr>
 <hr>
 <a class="anch" id="ApplyRenderTable_ProjectFile"></a>
 <a href="#ApplyRenderTable_ProjectFile"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>ApplyRenderTable_ProjectFile</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>ApplyRenderTable_ProjectFile</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval, <i>string</i> ProjectStateChunk = <em>ultraschall.ApplyRenderTable_ProjectFile</em>(<i>table</i> RenderTable, <i>string</i> projectfilename_with_path, <i>optional</i> <i>boolean</i> apply_rendercfg_string, <i>optional</i> <i>string</i> ProjectStateChunk)</code></div>
 </div><p>
@@ -51428,6 +51430,8 @@ q=9 ; mp3 VBR lowest</td></tr>
                                4, Selected Media Items(in combination with Source 32); 
                                5, Selected regions
                                6, Razor edit areas
+                               7, All project markers
+                               8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                                   1, mono; 
                                   2, stereo; 
@@ -51599,10 +51603,10 @@ Returns false in case of an error<br>
 <hr>
 <a class="anch" id="CreateNewRenderTable"></a>
 <a href="#CreateNewRenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>CreateNewRenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>CreateNewRenderTable</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.CreateNewRenderTable</em>(<i>optional</i> <i>integer</i> Source, <i>optional</i> <i>integer</i> Bounds, <i>optional</i> <i>number</i> Startposition, <i>optional</i> <i>number</i> Endposition, <i>optional</i> <i>integer</i> TailFlag, <i>optional</i> <i>integer</i> TailMS, <i>optional</i> <i>string</i> RenderFile, <i>optional</i> <i>string</i> RenderPattern, <i>optional</i> <i>integer</i> SampleRate, <i>optional</i> <i>integer</i> Channels, <i>optional</i> <i>integer</i> OfflineOnlineRendering, <i>optional</i> <i>boolean</i> ProjectSampleRateFXProcessing, <i>optional</i> <i>integer</i> RenderResample, <i>optional</i> <i>boolean</i> OnlyMonoMedia, <i>optional</i> <i>boolean</i> MultiChannelFiles, <i>optional</i> <i>integer</i> Dither, <i>optional</i> <i>string</i> RenderString, <i>optional</i> <i>boolean</i> SilentlyIncrementFilename, <i>optional</i> <i>boolean</i> AddToProj, <i>optional</i> <i>boolean</i> SaveCopyOfProject, <i>optional</i> <i>boolean</i> RenderQueueDelay, <i>optional</i> <i>integer</i> RenderQueueDelaySeconds, <i>optional</i> <i>boolean</i> CloseAfterRender, <i>optional</i> <i>boolean</i> EmbedStretchMarkers, <i>optional</i> <i>string</i> RenderString2, <i>optional</i> <i>boolean</i> EmbedTakeMarkers, <i>optional</i> <i>boolean</i> DoNotSilentRender, <i>optional</i> <i>boolean</i> EmbedMetadata, <i>optional</i> <i>boolean</i> Enable2ndPassRender, <i>optional</i> <i>boolean</i> Normalize_Enabled, <i>optional</i> <i>integer</i> Normalize_Method, <i>optional</i> <i>boolean</i> Normalize_Stems_to_Master_Target, <i>optional</i> <i>number</i> Normalize_Target, <i>optional</i> <i>boolean</i> Brickwall_Limiter_Enabled, <i>optional</i> <i>integer</i> Brickwall_Limiter_Method, <i>optional</i> <i>number</i> Brickwall_Limiter_Target, <i>optional</i> <i>boolean</i> Normalize_Method)</code></div>
+<div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.CreateNewRenderTable</em>(<i>optional</i> <i>integer</i> Source, <i>optional</i> <i>integer</i> Bounds, <i>optional</i> <i>number</i> Startposition, <i>optional</i> <i>number</i> Endposition, <i>optional</i> <i>integer</i> TailFlag, <i>optional</i> <i>integer</i> TailMS, <i>optional</i> <i>string</i> RenderFile, <i>optional</i> <i>string</i> RenderPattern, <i>optional</i> <i>integer</i> SampleRate, <i>optional</i> <i>integer</i> Channels, <i>optional</i> <i>integer</i> OfflineOnlineRendering, <i>optional</i> <i>boolean</i> ProjectSampleRateFXProcessing, <i>optional</i> <i>integer</i> RenderResample, <i>optional</i> <i>boolean</i> OnlyMonoMedia, <i>optional</i> <i>boolean</i> MultiChannelFiles, <i>optional</i> <i>integer</i> Dither, <i>optional</i> <i>string</i> RenderString, <i>optional</i> <i>boolean</i> SilentlyIncrementFilename, <i>optional</i> <i>boolean</i> AddToProj, <i>optional</i> <i>boolean</i> SaveCopyOfProject, <i>optional</i> <i>boolean</i> RenderQueueDelay, <i>optional</i> <i>integer</i> RenderQueueDelaySeconds, <i>optional</i> <i>boolean</i> CloseAfterRender, <i>optional</i> <i>boolean</i> EmbedStretchMarkers, <i>optional</i> <i>string</i> RenderString2, <i>optional</i> <i>boolean</i> EmbedTakeMarkers, <i>optional</i> <i>boolean</i> DoNotSilentRender, <i>optional</i> <i>boolean</i> EmbedMetadata, <i>optional</i> <i>boolean</i> Enable2ndPassRender, <i>optional</i> <i>boolean</i> Normalize_Enabled, <i>optional</i> <i>integer</i> Normalize_Method, <i>optional</i> <i>boolean</i> Normalize_Stems_to_Master_Target, <i>optional</i> <i>number</i> Normalize_Target, <i>optional</i> <i>boolean</i> Brickwall_Limiter_Enabled, <i>optional</i> <i>integer</i> Brickwall_Limiter_Method, <i>optional</i> <i>number</i> Brickwall_Limiter_Target, <i>optional</i> <i>boolean</i> Normalize_Method, <i>optional</i> <i>boolean</i> FadeIn_Enabled, <i>optional</i> <i>number</i> FadeIn, <i>optional</i> <i>integer</i> FadeIn_Shape, <i>optional</i> <i>boolean</i> FadeOut_Enabled, <i>optional</i> <i>number</i> FadeOut, <i>optional</i> <i>integer</i> FadeOut_Shape)</code></div>
 </div><p>
 <div class="ch">
 Creates a new RenderTable.<br>
@@ -51624,6 +51628,12 @@ Factory-Default will be set to these settings:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["EmbedTakeMarkers"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Enable2ndPassRender"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Endposition"]=0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeIn_Enabled"]=false<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeIn"]=0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeIn_Shape"]=0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeOut_Enabled"]=false<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeOut"]=0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["FadeOut_Shape"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["MultiChannelFiles"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Normalize_Enabled"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Normalize_Only_Files_Too_Loud"]=false<br>
@@ -51677,7 +51687,10 @@ Returns nil in case of an error<br>
 2, Time selection<br/>
 3, Project regions<br/>
 4, Selected Media Items(in combination with Source 32)<br/>
-5, Selected regions</td></tr>
+5, Selected regions<br/>
+6, Razor edit areas<br/>
+7, All project markers<br/>
+8, Selected markers</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>number</i> Startposition</td></tr>
@@ -51856,6 +51869,44 @@ Include project filename in BWF unchecked, Do not include markers or regions, Em
 <tr><td class="pr"><i>optional</i> <i>boolean</i> Normalize_Only_Files_Too_Loud</td></tr>
 <tr><td class="ch2">only normalize files that are too loud; true, enabled; false, disabled</td></tr>
 </table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> FadeIn_Enabled</td></tr>
+<tr><td class="ch2">true, fade in is enabled; false, fade-in is not enabled</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>number</i> FadeIn</td></tr>
+<tr><td class="ch2">the fade-in in seconds</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> FadeIn_Shape</td></tr>
+<tr><td class="ch2">the fade-in-shape<br/>
+0, Linear fade in<br/>
+1, Inverted quadratic fade in<br/>
+2, Quadratic fade in<br/>
+3, Inverted quartic fade in<br/>
+4, Quartic fade in<br/>
+5, Cosine S-curve fade in<br/>
+6, Quartic S-curve fade in</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> FadeOut_Enabled</td></tr>
+<tr><td class="ch2">true, fade-out is enabled; false, fade-out is disabled</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>number</i> FadeOut</td></tr>
+<tr><td class="ch2">the fade-out time in seconds</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> FadeOut_Shape</td></tr>
+<tr><td class="ch2">the fade-out-shape <br/>
+0, Linear fade in<br/>
+1, Inverted quadratic fade in<br/>
+2, Quadratic fade in<br/>
+3, Inverted quartic fade in<br/>
+4, Quartic fade in<br/>
+5, Cosine S-curve fade in<br/>
+6, Quartic S-curve fade in</td></tr>
+</table>
 <br>
 </div>
 <div class="ch">
@@ -51902,10 +51953,10 @@ returns the last 12 used render-patterns, that have been used for rendering by a
 <hr>
 <a class="anch" id="GetRenderTable_Project"></a>
 <a href="#GetRenderTable_Project"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.4.png" alt="Ultraschall version 4.4"><u><b>GetRenderTable_Project</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>GetRenderTable_Project</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderTable_Project</em>()</code></div>
 </div><p>
@@ -51922,6 +51973,8 @@ returns the last 12 used render-patterns, that have been used for rendering by a
                             4, Selected Media Items(in combination with Source 32); 
                             5, Selected regions
                             6, Razor edit areas
+                            7, All project markers
+                            8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                               1, mono; 
                               2, stereo; 
@@ -51936,6 +51989,26 @@ returns the last 12 used render-patterns, that have been used for rendering by a
     RenderTable[&quot;EmbedTakeMarkers&quot;] - Embed Take markers; true, checked; false, unchecked                        
     RenderTable[&quot;Enable2ndPassRender&quot;] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
     RenderTable[&quot;Endposition&quot;] - the endposition of the rendering selection in seconds            
+    RenderTable[&quot;FadeIn_Enabled&quot;] - true, fade-in is enabled; false, fade-in is disabled
+    RenderTable[&quot;FadeIn&quot;] - the fade-in-time in seconds
+    RenderTable[&quot;FadeIn_Shape&quot;] - the fade-in-shape
+                           - 0, Linear fade in
+                           - 1, Inverted quadratic fade in
+                           - 2, Quadratic fade in
+                           - 3, Inverted quartic fade in
+                           - 4, Quartic fade in
+                           - 5, Cosine S-curve fade in
+                           - 6, Quartic S-curve fade in
+    RenderTable[&quot;FadeOut_Enabled&quot;] - true, fade-out is enabled; false, fade-out is disabled
+    RenderTable[&quot;FadeOut&quot;] - the fade-out time in seconds
+    RenderTable[&quot;FadeOut_Shape&quot;] - the fade-out-shape
+                           - 0, Linear fade in
+                           - 1, Inverted quadratic fade in
+                           - 2, Quadratic fade in
+                           - 3, Inverted quartic fade in
+                           - 4, Quartic fade in
+                           - 5, Cosine S-curve fade in
+                           - 6, Quartic S-curve fade in
     RenderTable[&quot;MultiChannelFiles&quot;] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
     RenderTable[&quot;Normalize_Enabled&quot;] - true, normalization enabled; false, normalization not enabled
     RenderTable[&quot;Normalize_Method&quot;] - the normalize-method-dropdownlist
@@ -52036,6 +52109,8 @@ returns the last 12 used render-patterns, that have been used for rendering by a
                             4, Selected Media Items(in combination with Source 32); 
                             5, Selected regions
                             6, Razor edit areas
+                            7, All project markers
+                            8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                               1, mono; 
                               2, stereo; 
@@ -52133,8 +52208,8 @@ returns the last 12 used render-patterns, that have been used for rendering by a
 <hr>
 <a class="anch" id="GetRenderTable_ProjectFile"></a>
 <a href="#GetRenderTable_ProjectFile"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>GetRenderTable_ProjectFile</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>GetRenderTable_ProjectFile</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderTable_ProjectFile</em>(<i>string</i> projectfilename_with_path)</code></div>
 </div><p>
@@ -52151,6 +52226,8 @@ returns the last 12 used render-patterns, that have been used for rendering by a
                             4, Selected Media Items(in combination with Source 32); 
                             5, Selected regions
                             6, Razor edit areas
+                            7, All project markers
+                            8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                               1, mono; 
                               2, stereo; 
@@ -53893,8 +53970,8 @@ true, calculate loudness-stats within time-selection</td></tr>
 <hr>
 <a class="anch" id="AddRenderPreset"></a>
 <a href="#AddRenderPreset"> ^</a> 
-<img width="3%" src="gfx/reaper6.62.png" alt="Reaper version 6.62">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>AddRenderPreset</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>AddRenderPreset</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.AddRenderPreset</em>(<i>string</i> Bounds_Name, <i>string</i> Options_and_Format_Name, <i>table</i> RenderTable)</code></div>
 </div><p>
@@ -53919,6 +53996,8 @@ Bounds_Name stores only:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4, Selected Media Items(in combination with Source 32)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5, Selected regions <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6, Razor edit areas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7, All project markers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8, Selected markers<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Startposition"] - the startposition of the render<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Endposition"] - the endposition of the render<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Source"] - the source dropdownlist, includes <br>
@@ -54117,7 +54196,7 @@ Returns all render-preset-names for a) Bounds and output pattern/filename b) Opt
 <hr>
 <a class="anch" id="GetRenderPreset_RenderTable"></a>
 <a href="#GetRenderPreset_RenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper6.62.png" alt="Reaper version 6.62">
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
 <img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>GetRenderPreset_RenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderPreset_RenderTable</em>(<i>string</i> Bounds_Name, <i>string</i> Options_and_Format_Name)</code></div>
@@ -54139,6 +54218,8 @@ Returns all render-preset-names for a) Bounds and output pattern/filename b) Opt
                               4, Selected Media Items(in combination with Source 32); 
                               5, Selected regions
                               6, Razor edit areas
+                              7, All project markers
+                              8, Selected markers
    RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                                  1, mono; 
                                  2, stereo; 
@@ -54287,7 +54368,7 @@ Returns nil in case of an error or if no such name was found<br>
 <hr>
 <a class="anch" id="SetRenderPreset"></a>
 <a href="#SetRenderPreset"> ^</a> 
-<img width="3%" src="gfx/reaper6.62.png" alt="Reaper version 6.62">
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
 <img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>SetRenderPreset</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetRenderPreset</em>(<i>string</i> Bounds_Name, <i>string</i> Options_and_Format_Name, <i>table</i> RenderTable)</code></div>
@@ -54313,6 +54394,8 @@ Bounds_Name stores only:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4, Selected Media Items(in combination with Source 32)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5, Selected regions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6, Razor edit areas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7, All project markers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8, Selected markers<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Startposition"] - the startposition of the render<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Endposition"] - the endposition of the render<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Source"]+RenderTable["MultiChannelFiles"]+RenderTable["OnlyMonoMedia"] - the source dropdownlist, includes <br>
@@ -55282,10 +55365,10 @@ Default is an empty string.</td></tr>
 <hr>
 <a class="anch" id="RenderProject_RenderTable"></a>
 <a href="#RenderProject_RenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper6.48.png" alt="Reaper version 6.48">
+<img width="3%" src="gfx/reaper6.64.png" alt="Reaper version 6.64">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>RenderProject_RenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>RenderProject_RenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> MediaItemStateChunkArray, <i>array</i> Filearray = <em>ultraschall.RenderProject_RenderTable</em>(<i>optional</i> <i>string</i> projectfilename_with_path, <i>optional</i> <i>table</i> RenderTable, <i>optional</i> <i>boolean</i> AddToProj, <i>optional</i> <i>boolean</i> CloseAfterRender, <i>optional</i> <i>boolean</i> SilentlyIncrementFilename)</code></div>
 </div><p>
@@ -55302,6 +55385,8 @@ Default is an empty string.</td></tr>
                                4, Selected Media Items(in combination with Source 32); 
                                5, Selected regions
                                6, Razor edit areas
+                               7, All project markers
+                               8, Selected markers
     RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
                                   1, mono; 
                                   2, stereo; 
@@ -64259,7 +64344,7 @@ Parameter enabled is always working, even if the fx has already been added.<br>
 <img width="3%" src="gfx/reaper6.20.png" alt="Reaper version 6.20">
 <img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>LUFS_Metering_GetValues</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>number</i> LUFS_integral, <i>number</i> LUFS_target, <i>number</i> dB_Gain = <em>ultraschall.LUFS_Metering_GetValues</em>()</code></div>
+<div class="l">Lua: <code> <i>number</i> LUFS_integral, <i>number</i> LUFS_target, <i>number</i> dB_Gain, <i>integer</i> FX_active = <em>ultraschall.LUFS_Metering_GetValues</em>()</code></div>
 </div><p>
 <div class="ch">
 Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).<br>
@@ -64276,6 +64361,10 @@ Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(o
 <table class="ch">
 <tr><td class="pr"><i>number</i> dB_Gain</td></tr>
 <tr><td class="ch2">the gain currently set in the UI of the effect in dB</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> FX_active</td></tr>
+<tr><td class="ch2">0, the fx isn't active(usually when playback stopped); 1, the fx is active(during playback for instance)</td></tr>
 </table>
 <br>
 </div>
