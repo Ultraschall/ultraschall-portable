@@ -32,11 +32,19 @@ defer_identifier = "hallo"
 
 function triggermagicrouting()
 
+
 	-- prüft, ob eine Aktualisierung der Matrix notwendig ist. Dies ist der Fall wenn entweder
 	-- A) Der MagicRouting Button gerade frisch gedrückt wurde (einmaliger Check) oder sich
 	-- B) die Anzahl an Tracks im Projekt geändert hat
 
 	local needsTrigger = false
+
+	local retval, magicactive = reaper.GetProjExtState(0, "GUI_STATEMANAGER", "_ULTRASCHALL_TOGGLE_MAGICROUTING")
+
+	if magicactive ~= "1" then
+		-- print ("nope")
+		return needsTrigger
+	end
 
 	local currentCountTracks = reaper.CountTracks(0)
 	local retval, lastCountTracks = reaper.GetProjExtState(0, "ultraschall_magicrouting", "lastCountTracks")
@@ -53,6 +61,7 @@ function triggermagicrouting()
 		needsTrigger = true
 		reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "off") -- einmal Neuaufbau der Matrix reicht
 		return needsTrigger
+		
 
 	elseif currentCountTracks ~= tonumber(lastCountTracks) and ultraschall.GetItem_ClickState(-1) == false then -- es gibt mindestens eine neue Spur oder Spuren 	wurden gelöscht
 		needsTrigger = true
@@ -143,6 +152,7 @@ state = reaper.GetToggleCommandStateEx(sec, cmd)
 
 if state ~= 1 then
 	-- Magicrouting on
+
 	reaper.SetToggleCommandState(sec, cmd, 1)
 	ultraschall.SetUSExternalState("ultraschall_magicrouting", "state", 1)
 	reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting", 1)

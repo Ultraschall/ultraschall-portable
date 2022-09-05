@@ -335,14 +335,53 @@ function checkGuiStates()
     gui_state = reaper.GetToggleCommandStateEx(0, commandid) -- aktueller Status des jeweiligen Buttons
     retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", GUIServices[i]) -- lade den gespeicherten State aus der Projektdatei
 
-    -- print(GUIServices[i].." "..gui_state.."-gui:file-"..project_state)
-
-    -- print(GUIServices[i].." "..gui_state.."-gui:file-"..project_state)
+    
     
     if project_state == "" then -- es wurde noch kein GUI-Status für dieses Elelemnt in die Projektdatei gespeichert
       reaper.SetProjExtState(0, "gui_statemanager", GUIServices[i], tostring(gui_state)) -- speichere den aktuellen GUI-Status in die Projektdatei
       
     elseif project_state ~= tostring(gui_state) then -- die states unterscheiden sich
+
+      -- print(GUIServices[i].." "..gui_state.."-gui:file-"..project_state)
+
+
+      if project_state == "0" then
+      
+        reaper.SetToggleCommandState(0, commandid, 0)
+        reaper.RefreshToolbar2(0, commandid)
+      
+      elseif project_state == "1" then
+        if (string.find(GUIServices[i], "Matrix")) then 
+          retval, magic_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting")
+          if magic_state == "1" then
+            reaper.Main_OnCommand(commandid,0)
+          else
+            reaper.SetToggleCommandState(0, commandid, 1)
+            reaper.RefreshToolbar2(0, commandid)
+          end
+        else
+          reaper.Main_OnCommand(commandid,0) -- stelle den GUI-State um so dass die Werte wieder stimmen
+        end
+      end
+    end
+  end
+
+
+--[[
+
+  for i = 1, #GUIServices do
+
+    commandid = reaper.NamedCommandLookup(GUIServices[i])
+    gui_state = reaper.GetToggleCommandStateEx(0, commandid) -- aktueller Status des jeweiligen Buttons
+    retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", GUIServices[i]) -- lade den gespeicherten State aus der Projektdatei
+
+    print(GUIServices[i].." "..gui_state.."-gui:file-"..project_state)
+    
+    if project_state == "" then -- es wurde noch kein GUI-Status für dieses Elelemnt in die Projektdatei gespeichert
+      reaper.SetProjExtState(0, "gui_statemanager", GUIServices[i], tostring(gui_state)) -- speichere den aktuellen GUI-Status in die Projektdatei
+      
+    elseif project_state ~= tostring(gui_state) then -- die states unterscheiden sich
+
       
       -- print(GUIServices[i].."-"..project_state.."-"..gui_state)
       if  (string.find(GUIServices[i], "View") and project_state == "0") then -- bei den Routingmatrix- und View-Einträgen wird nur der aktiv gespeicherte ausgewertet
@@ -359,11 +398,19 @@ function checkGuiStates()
         if project_state == "1" then
           reaper.Main_OnCommand(commandid,0) -- stelle den GUI-State um so dass die Werte wieder stimmen
         end
+      elseif (string.find(GUIServices[i], "TOGGLE_MAGICROUTING")) then
+        print("hallo")
+
+        reaper.Main_OnCommand(commandid,0) -- stelle den GUI-State um so dass die Werte wieder stimmen
+        
       end
 
     end -- alles ok, states sind gleich also nichts zu tun
 
   end
+
+
+  ]]
 
   -- Start Helper Scripts
 
