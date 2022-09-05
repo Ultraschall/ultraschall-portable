@@ -429,10 +429,10 @@ function buildGuiWarnings()
   -- Settings-Buttons
   -----------------------------------------------------------------
 
-  button_settings = GUI.Btn:new(780, 12, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings_Soundcheck")
+  button_settings = GUI.Btn:new(880, 12, 85, 20,         " Settings...", run_action, "_Ultraschall_Settings_Soundcheck")
   table.insert(GUI.elms, button_settings)
 
-  button_settings = GUI.FlatBtn:new(880, 12, 75, 20,         " Help", run_action, "_Ultraschall_Settings_Soundcheck")
+  button_settings = GUI.FlatBtn:new(790, 12, 75, 20,         " Help", run_action, "_Ultraschall_Settings_Soundcheck")
   table.insert(GUI.elms, button_settings)
 
   -- button_all = GUI.Btn:new(770, 50, 85, 20,         " All Checks", run_action, "_Ultraschall_Settings")
