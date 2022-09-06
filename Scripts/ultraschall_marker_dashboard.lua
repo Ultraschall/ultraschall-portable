@@ -647,6 +647,8 @@ function buildGui()
   headertxt = GUI.Pic:new(74,  10,   0,  0,    0.8,   header_path.."headertxt_marker.png")
   table.insert(GUI.elms, headertxt)
 
+  button_help = GUI.FlatBtn:new(724, 12, 75, 20,         " Help", ultraschall.OpenURL, "https://ultraschall.github.io/ultraschall-manual/en/docs/export#1-marker-dashboard")
+  table.insert(GUI.elms, button_help)
 
 
 
