@@ -410,7 +410,8 @@ function buildGUI()
   headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_export.png")
   table.insert(GUI.elms, headertxt)
 
-
+  button_help = GUI.FlatBtn:new(849, 12, 75, 20,         " Help", ultraschall.OpenURL, "https://ultraschall.github.io/ultraschall-manual/en/docs/export/#3-export-wizard")
+  table.insert(GUI.elms, button_help)
 
 
 	-- Heading
