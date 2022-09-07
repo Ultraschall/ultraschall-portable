@@ -458,7 +458,7 @@ function buildGUI()
   headertxt = GUI.Pic:new(          74,  10,   0,  0,    0.8,   header_path.."headertxt_settings.png")
   table.insert(GUI.elms, headertxt)
 
-  button_settings = GUI.FlatBtn:new(705, 12, 75, 20,         " Help", ultraschall.OpenURL, "https://ultraschall.github.io/ultraschall-manual/docs/adaption/#ultraschall-settings")
+  button_settings = GUI.FlatBtn:new(705, 12, 75, 20,         " Help", ultraschall.OpenURL, "https://ultraschall.github.io/ultraschall-manual/en/docs/adaption#ultraschall-settings")
   table.insert(GUI.elms, button_settings)
 
 
