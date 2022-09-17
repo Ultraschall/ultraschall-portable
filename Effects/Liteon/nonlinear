@@ -28,6 +28,7 @@ slider1:30<0,100,0.01>Saturation Amount (%)
 slider2:50<0,100,0.01>Fluctuation Amount (%)
 slider3:16<0,32,1>Noise Floor At (Bits)
 slider4:0<-24,24,0.01>Output (dB)
+slider5:0<0,1,1{Reversed (deprecated legacy),Normal}>Output Polarity
 
 in_pin:left input
 in_pin:right input
@@ -114,6 +115,7 @@ r2 = 1/2^slider3;
 
 //outgain
 outgain = 10^(slider4/20);
+slider5 == 1 ? outgain = -outgain;
 
 //==============================================================================
 @block

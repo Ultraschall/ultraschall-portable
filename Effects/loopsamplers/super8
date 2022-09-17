@@ -904,7 +904,7 @@ function draw_value_tweaker(xpos,ypos,midimem,draw, lbl)
     lbl == "RDC" ? (
       t ? (
         cap_last_y = mouse_y;
-        midimem[0] = min(max(midimem[0]-t*(.1*4),0),100);
+        midimem[0] = min(max(midimem[0]-t*(.1*4),0),500);
         rec2 = get_linked_rec(((midimem-mem_stlist)/st_num)|0);
         rec2 >= 0 ? (
           rec2[st_rdc]=midimem[0];
@@ -1324,7 +1324,7 @@ function draw_position(ypos) local(last_pos,last_len)
     gfx_set(0.25,0.125,0.0);
     gfx_rect(0,ypos,gfx_w,20);
     gfx_set(0.125,0.25,0.5);
-    gfx_rect(0,ypos,g_pos/g_length * gfx_w,20);
+    g_length > 0 ? gfx_rect(0,ypos,g_pos/g_length * gfx_w,20);
     gfx_x=2;
     gfx_y=ypos+2;
     gfx_set(1,1,1);

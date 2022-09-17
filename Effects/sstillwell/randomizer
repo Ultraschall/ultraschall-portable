@@ -52,10 +52,9 @@ out_pin:right output
 @block
   while(
     midirecv(mpos, msg1, msg2) ? (
-      (msg1 & 240) == note_on ? (
+      (msg1 & 240) == note_on && (velocity = (msg2 & 65280)) ? (
         ((msg1 & 15) == chan) || chan==-1 ? (
           (msg2 & 255) == note ? (
-            velocity = msg2 & 65280;
             newnote = floor(rand(end-start)) + start;
             newnote == prevnote ? newnote == end ? newnote = start : newnote += 1;
             midisend(mpos, msg1, velocity | newnote);
@@ -64,8 +63,8 @@ out_pin:right output
         ) : (
           midisend(mpos, msg1, msg2);
         );
-      );
-      (msg1 & 240) == note_off ? (
+      ) :
+      (msg1 & 240) == note_off || (msg1 & 240) == note_on ? (
         ((msg1 & 15) == chan) || chan==-1 ? (
           (msg2 & 255) == note ? (
             midisend(mpos, msg1, newnote);

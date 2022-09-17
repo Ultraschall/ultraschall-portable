@@ -8,7 +8,7 @@ desc: Convolution Dual Amp Modeler (mono->stereo)
 slider1:/amp_models:none:Model (Left)
 slider2:/amp_models:none:Model (Right)
 slider3:0<-120,30,1>Preamp (dB)
-slider4:1<0,1,1{No,Yes}>Upsample Impulse If Required
+slider4:2<0,2,1{No,Yes (no gain adjust), Yes (correct gain)}>Upsample Impulse If Required
 slider5:0,Filter Size
 slider6:0,FFT Size
 
@@ -73,19 +73,34 @@ rimpbuf=512*1024;
 
 @block
 
+
+function sumbuf(buf,adv, l) local(ret) (
+  ret=0;
+  loop(l,  ret += buf[];  buf += adv; );
+  ret;
+);
+function scalebuf(buf, adv, l, sc) (
+  loop(l,
+    buf[] *= sc;
+    buf += adv;
+  );
+);
+
 need_refft ? ( // prepare convolution source, here...
-  fs_l=impbuf_l;
-  fs_r=rimpbuf_l;
+  fs_li = fs_l=min(impbuf_l,16384);
+  fs_ri = fs_r=min(rimpbuf_l,16384);
   isc=1.0;
   risc=1.0;
 
   useresample ? (
     srate > impbuf_srate && impbuf_srate > 1 ? (
-      fs_l=((srate*impbuf_l)/impbuf_srate)|0;
+      fs_l=min(((srate*impbuf_l)/impbuf_srate)|0,16384);
+      fs_li = (fs_l * impbuf_srate / srate)|0;
       isc=impbuf_srate/srate;
     );
     srate > rimpbuf_srate && rimpbuf_srate > 1 ? (
-      fs_r=((srate*rimpbuf_l)/rimpbuf_srate)|0;
+      fs_r=min(((srate*rimpbuf_l)/rimpbuf_srate)|0,16384);
+      fs_ri = (fs_r * rimpbuf_srate / srate)|0;
       risc=rimpbuf_srate/srate;
     );
   );
@@ -108,6 +123,9 @@ need_refft ? ( // prepare convolution source, here...
   lastblock=64*1024;
   invfsize=1/fftsize;
 
+  presuml = sumbuf(impbuf,impbuf_nch,fs_li);
+  presumr = sumbuf(rimpbuf + rimpbuf_nch-1,rimpbuf_nch,fs_ri);
+  postsuml = postsumr = 0;
   i=0;
   i2=0;
   loop(min(fftsize,fs_l),
@@ -115,6 +133,7 @@ need_refft ? ( // prepare convolution source, here...
      ipart=(i-ipos);
      convsrc[i2]=impbuf[ipos*impbuf_nch]*(1-ipart) + 
                  impbuf[(ipos+1)*impbuf_nch]*ipart;
+     postsuml += convsrc[i2];
      i += isc;
      i2+=2;
   );
@@ -130,6 +149,7 @@ need_refft ? ( // prepare convolution source, here...
      ipart=(i-ipos);
      convsrc[i2]=rimpbuf[(ipos+1)*rimpbuf_nch-1]*(1-ipart) +
                    rimpbuf[(ipos+2)*rimpbuf_nch-1]*(ipart);
+     postsumr += convsrc[i2];
      i += risc;
      i2+=2;
   );
@@ -137,6 +157,9 @@ need_refft ? ( // prepare convolution source, here...
      convsrc[i2]=i2==1?1:0;
      i2+=2;
   );
+
+  isc != 1 && useresample>=2 && abs(postsuml)>=0.0001*fftsize && abs(presuml)>=0.0001*fs_li ? scalebuf(convsrc,2,fftsize,abs(presuml/postsuml));
+  risc != 1 && useresample>=2 && abs(postsumr)>=0.0001*fftsize && abs(presumr)>=0.0001*fs_ri ? scalebuf(convsrc+1,2,fftsize,abs(presumr/postsumr));
 
   fft(convsrc,fftsize);
 

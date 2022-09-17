@@ -507,7 +507,7 @@ function hit_box(tx ty)
             links=links~(1<<i);
             (links&(1<<i)) ? (
               slider(2*i+2)=slider(2*i+1);
-              sliderchange(2^(2*i+1));
+              slider_automate(2^(2*i+1));
             );
           );
         );
@@ -591,11 +591,11 @@ function hit_box(tx ty)
   abs(v-1/sqrt(2)) < 1.5/fh ? v=1/sqrt(2) :
   abs(v-0.5) < 1.5/fh ? v=0.5;
   slider(i+1)=v;
-  sliderchange(2^i);
+  slider_automate(2^i);
   (links&(1<<(i/2))) ? (
     j = !(i&1) ? i+1 : i-1;
     slider(j+1)=v;
-    sliderchange(2^j);
+    slider_automate(2^j);
   );
 ) :
 mouse_wheel ? (
@@ -612,11 +612,11 @@ mouse_wheel ? (
       v=slider(i+1)+floor(mouse_wheel)/120*2/fh;
       v < 0 ? v=0 : v > 1 ? v=1;
       slider(i+1)=v;
-      sliderchange(2^i);
+      slider_automate(2^i);
       (links&(1<<(i/2))) ? (
         j = !(i&1) ? i+1 : i-1;
         slider(j+1)=v;
-        sliderchange(2^j);
+        slider_automate(2^j);
       );
     );
   );

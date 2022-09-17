@@ -153,6 +153,6 @@ notecnt > 0 &&   pbincpos >= 1.0 ?
   );
 );
 
-//spos+=1;
+spos+=1;
 
 
