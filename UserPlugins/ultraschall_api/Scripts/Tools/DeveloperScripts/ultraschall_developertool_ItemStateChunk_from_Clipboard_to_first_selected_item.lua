@@ -31,8 +31,12 @@
 -- puts the statechunk of the first selected item into the clipboard
 -- statechunk will be layouted, according to RPP-file-layouting-rules
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 Item=reaper.GetSelectedMediaItem(0,0)
 if Item==nil then return end
-retval, TrackStateChunk = reaper.SetItemStateChunk(Item, FromClip(), false)
+reaper.SetItemStateChunk(Item, FromClip(), false)

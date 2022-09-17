@@ -1,7 +1,14 @@
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 -- Open a new script
 -- Version 1.0 written by Meo-Ada Mespotine 6th of December 2021 - licensed under MIT-license
+--         1.1 allows now opening/adding already existing scripts; 
+--             default path for scripts without path is now scripts-folder
+--             scripts can also be copied from a different source into the scriptsfolder and then added(will only copy the chosen file, not possibly other ones!)
 
 
 -- [[ Some Custom Settings ]]
@@ -12,7 +19,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 WindowX     = 30 -- x-position
 WindowY     = 30 -- y-position
 WindowWidth = 550 -- width of the window
-WindowHeight= 250 -- height of the window
+WindowHeight= 285 -- height of the window
 
 ToolTipWaitTime=30 -- the waittime-until tooltips are shown when hovering above them; 30~1 second
 
@@ -34,10 +41,13 @@ function main()
   --  the length is linked to gfx.w, so it always uses the whole window for display
   Y=Y+10 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   DrawText (10,  Y, "Scriptname:", 0, "The scriptname you want to create.")
-  InputText(100+XOffset, Y, gfx.w-150-XOffset, "Ultraschall_API_ScriptCreator", "Last_Used_Name", "", "Scriptname", "New Scriptname")
-  ManageButton(gfx.w-42, Y-2, "?", Wildcards)
-  Y=Y+22 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  DrawText (110+XOffset,   Y, ResolveScriptname(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")), 2, "The resolved filename of the script. Currently: "..ResolveScriptname(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")), 14)
+  InputText(100+XOffset, Y, gfx.w-215-XOffset, "Ultraschall_API_ScriptCreator", "Last_Used_Name", "", "Scriptname", "New Scriptname")
+  ManageButton(gfx.w-112, Y-2, "Choose File", ChooseFile)
+  Y=Y+24
+  ManageButton(gfx.w-100, Y-2, "Wildcards", Wildcards)
+--  Y=Y+22 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
+  DrawText (67-XOffset,   Y, "Resolved As: ", 2, "The resolved filename of the script. Currently: "..ResolveScriptname(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")), 14)
+  DrawText (100+XOffset,   Y, ResolveScriptname(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")), 2, "The resolved filename of the script. Currently: "..ResolveScriptname(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")), 14)
   
   Y=Y+27 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
   ManageCheckBox(100+XOffset-1, Y,   "Ultraschall_API_ScriptCreator",              "Add_Ultraschall_API", true)
@@ -87,7 +97,9 @@ function main()
   -- Done-button
   --  these are linked to gfx.w(right side of the window) so they are always aligned to the right-side of the window
   Y=Y+30 -- This holds the position of the next ui-element. I simply add a value, so it stays relative to the one above it.
-  ManageButton(gfx.w-112, Y, "Open Script", AddMe)
+  ManageButton(gfx.w-148, Y, "Add/Create Script", AddMe)
+  Y=Y+30
+  ManageButton(gfx.w-272, Y, "Copy to Scriptsfolder, then add script", AddMe2)
 
   -- make some mouse-management, run refresh the window again, until the window is closed, otherwise end script
   -- leave it untouched
@@ -126,8 +138,27 @@ function ResolveScriptname(stringme)
   if stringme:sub(-4,-1)~=".lua" and stringme:sub(-4,-1)~=".eel" and stringme:sub(-3,-1)~=".py" then
     stringme=stringme..".lua"
   end
+  if stringme:match("/")==nil then
+    stringme="scripts/"..stringme
+  end
   
   return stringme
+end
+
+function ChooseFile()
+  local retval, filename=reaper.GetUserFileNameForRead(reaper.GetResourcePath().."/Scripts/", "Choose script to open", "")
+  if retval==true then
+    local temp
+    if reaper.GetOS():match("Win")~=nil then
+      temp=reaper.GetResourcePath().."\\Scripts\\"
+    else
+      temp=reaper.GetResourcePath().."/Scripts/"
+    end
+    if filename:sub(1,temp:len())==temp then
+      filename=filename:sub(temp:len()+1, -1)
+    end
+    reaper.SetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name", filename, true)
+  end
 end
 
 function AddMe() 
@@ -156,7 +187,44 @@ function AddMe()
   if midi_editor==1 then reaper.AddRemoveReaScript(true, 32060, reaper.GetResourcePath().."/"..scriptname, true) end
   if midi_evtl_editor==1 then reaper.AddRemoveReaScript(true, 32061, reaper.GetResourcePath().."/"..scriptname, true) end
   if midi_inline_editor==1 then reaper.AddRemoveReaScript(true, 32062, reaper.GetResourcePath().."/"..scriptname, true) end
+end
+
+function AddMe2() 
+  -- this function quits the script and opens script in ide(optionally adding it to the actionlist)
+  add_us_api = reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_Ultraschall_API")
+  scriptname = reaper.GetExtState("Ultraschall_API_ScriptCreator", "Last_Used_Name")
+  idex = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "IDEX"))
+  idey = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "IDEY"))
+  idew = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "IDEW"))
+  ideh = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "IDEH"))
   
+  main_sec = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_To_Main"))
+  media_explorer= tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_To_MediaExplorer"))
+  midi_editor = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_To_Midi-Editor"))
+  midi_evtl_editor = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_To_Midi-Eventlist-Editor"))
+  midi_inline_editor = tonumber(reaper.GetExtState("Ultraschall_API_ScriptCreator", "Add_To_Midi-Inline-Editor"))
+  
+  if add_us_api=="0" then add_us_api=false else add_us_api=true end
+
+  scriptname=ResolveScriptname(scriptname)
+  scriptname=string.gsub(scriptname, "\\", "/")
+  
+  if reaper.file_exists(scriptname)==false then 
+    if reaper.file_exists(reaper.GetResourcePath().."/"..scriptname)==false then 
+      print2("File "..scriptname.." does not exist, it must be created first!") 
+      return 
+    end
+  end
+
+  retval = ultraschall.MakeCopyOfFile(scriptname, reaper.GetResourcePath().."/Scripts/"..scriptname:match(".*/(.*)"))
+  scriptname=reaper.GetResourcePath().."/Scripts/"..scriptname:match(".*/(.*)")
+  retval, command_id = ultraschall.EditReaScript(scriptname, add_us_api, nil, idex, idey, idew, ideh)
+
+  if main_sec==1 then A=reaper.AddRemoveReaScript(true, 0, scriptname, true) end
+  if media_explorer==1 then A1=reaper.AddRemoveReaScript(true, 32063, scriptname, true) end
+  if midi_editor==1 then A2=reaper.AddRemoveReaScript(true, 32060, scriptname, true) end
+  if midi_evtl_editor==1 then A3=reaper.AddRemoveReaScript(true, 32061, scriptname, true) end
+  if midi_inline_editor==1 then A4=reaper.AddRemoveReaScript(true, 32062, scriptname, true) end
 end
 
 

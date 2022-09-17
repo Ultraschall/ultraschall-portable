@@ -30,28 +30,6 @@
 ---       Navigation Module       ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Navigation-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.ToggleScrollingDuringPlayback(scrolling_switch, move_editcursor, goto_playcursor)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -610,21 +588,22 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetClosestNextMarker</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     SWS=2.8.8
     Lua=5.3
   </requires>
-  <functioncall>number markerindex, number position, string markertitle = ultraschall.GetClosestNextMarker(integer cursor_type, optional number time_position)</functioncall>
+  <functioncall>integer markerindex, number position, string markertitle, integer markerindex_shownnumber = ultraschall.GetClosestNextMarker(integer cursor_type, optional number time_position)</functioncall>
   <description>
-    returns the markerindex(counted from all markers), the position and the name of the next closest marker in seconds.
+    returns the shown markerindex, the position in seconds, the name and the index within all markers of the next closest marker.
     
     returns -1 in case of an error
   </description>
   <retvals>
-    number markerindex - the next closest markerindex (of all(!) markers)
+    integer markerindex - the next closest marker-index within all(!) markers and regions
     number position - the position of the next closest marker
     string markertitle - the name of the next closest marker
+    integer markerindex_shownnumber - the next closest shown markerindex     
   </retvals>
   <parameters>
     integer cursor_type - previous closest marker related to the current position of 0 - Edit Cursor, 1 - Play Cursor, 2 - Mouse Cursor, 3 - Timeposition
@@ -639,7 +618,6 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
 </US_DocBloc>
 --]]
   local cursortime=0
-
   if math.type(cursor_type)~="integer" then ultraschall.AddErrorMessage("GetClosestNextMarker", "cursor_type", "must be an integer", -1) return -1 end
   if time_position~=nil and type(time_position)~="number" then ultraschall.AddErrorMessage("GetClosestNextMarker", "time_position", "must be either nil or a number", -5) return -1 end
   if time_position==nil and cursor_type>2 then ultraschall.AddErrorMessage("GetClosestNextMarker", "time_position", "must be a number when cursortype=3", -6) return -1 end
@@ -665,8 +643,7 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
       cursortime=time_position
   end
   if cursor_type>3 or cursor_type<0 then ultraschall.AddErrorMessage("GetClosestNextMarker","cursor_type", "no such cursor_type existing", -4) return -1 end
-  
-  
+
   -- prepare variables
   local retval, num_markers, num_regions = reaper.CountProjectMarkers(0)
   local retposition=reaper.GetProjectLength(0)+1--*200000000 --Working Hack, but isn't elegant....
@@ -674,19 +651,22 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
   local retmarkername=""
   
   -- find next closest marker
-  for i=0,retval do
-    local  retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
+  for i=0, retval do
+    local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
       if pos>cursortime and pos<retposition then
         retposition=pos
         retindexnumber=markrgnindexnumber
         retmarkername=name
+        retindex=i
+        --print2(i, name)
+        break
       end
     end
   end
   -- return found marker
   if retindexnumber==-1 then retposition=-1 end
-  return retindexnumber, retposition, retmarkername
+  return retindex, retposition, retmarkername, retindexnumber
 end
 
 function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)
@@ -694,19 +674,20 @@ function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetClosestPreviousMarker</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     SWS=2.8.8
     Lua=5.3
   </requires>
-  <functioncall>number markerindex, number position, string markertitle = ultraschall.GetClosestPreviousMarker(integer cursor_type, optional number time_position)</functioncall>
+  <functioncall>integer markerindex, number position, string markertitle, integer markerindex_shownnumber = ultraschall.GetClosestPreviousMarker(integer cursor_type, optional number time_position)</functioncall>
   <description>
-    returns the markerindex(counted from all markers), the position and the name of the previous closest marker in seconds.
+    returns the markerindex, the position in seconds, the name and the index(counted from all markers) of the previous closest marker.
   </description>
   <retvals>
-    number markerindex - the previous closest markerindex (of all(!) markers)
+    integer markerindex - the previous closest marker-index within all(!) markers and regions
     number position - the position of the previous closest marker
     string markertitle - the name of the previous closest marker
+    integer markerindex_shownnumber - the previous closest shown number of the found marker
   </retvals>
   <parameters>
     integer cursor_type - previous closest marker related to the current position of 0 - Edit Cursor, 1 - Play Cursor, 2 - Mouse Cursor, 3 - Timeposition
@@ -762,36 +743,40 @@ function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)
         retposition=pos
         retindexnumber=markrgnindexnumber
         retmarkername=name
+        retindex=i
         found=true
+        --print2(i, name)
       end
     end
   end
   -- return found marker
   if found==false then retposition=-1 retindexnumber=-1 end
-  return retindexnumber,retposition, retmarkername
+  return retindex, retposition, retmarkername, retindexnumber
 end
+
 
 function ultraschall.GetClosestNextRegionEdge(cursor_type, time_position)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetClosestNextRegionEdge</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     SWS=2.8.8
     Lua=5.3
   </requires>
-  <functioncall>number markerindex, number position, string markertitle, string edge_type = ultraschall.GetClosestNextRegionEdge(integer cursor_type, optional number time_position)</functioncall>
+  <functioncall>integer markerindex, number position, string markertitle, string edge_type, integer markerindex_shownnumber = ultraschall.GetClosestNextRegionEdge(integer cursor_type, optional number time_position)</functioncall>
   <description>
     returns the regionindex(counted from all markers and regions), the position and the name of the next closest regionstart/end(depending on which is closer to time_position) in seconds.
     
     returns -1 in case of an error
   </description>
   <retvals>
-    number markerindex - the next closest markerindex (of all(!) markers)
+    integer markerindex - the next closest markerindex (of all(!) markers)
     number position - the position of the next closest region
     string markertitle - the name of the next closest region
     string edge_type - the type of the edge of the region, either "beg" or "end"
+    integer markerindex_shownnumber - the next closest shown number of the found region
   </retvals>
   <parameters>
     integer cursor_type - previous closest regionstart/end related to the current position of 
@@ -847,14 +832,16 @@ function ultraschall.GetClosestNextRegionEdge(cursor_type, time_position)
     if isrgn==true then
       if pos>cursortime and pos<retposition then -- beginning of the region
         retposition=pos
-        retindexnumber=markrgnindexnumber
+        retindexnumber=i
+        retshownnumber=markrgnindexnumber
         retmarkername=name
         retbegin="beg"
       end
 
       if rgnend>cursortime and rgnend<retposition then -- ending of the region
         retposition=rgnend
-        retindexnumber=markrgnindexnumber
+        retindexnumber=i
+        retshownnumber=markrgnindexnumber
         retmarkername=name
         retbegin="end"
       end
@@ -862,7 +849,7 @@ function ultraschall.GetClosestNextRegionEdge(cursor_type, time_position)
   end
   -- return found region
   if retindexnumber==-1 then retposition=-1 end
-  return retindexnumber,retposition, retmarkername, retbegin
+  return retindexnumber,retposition, retmarkername, retbegin, retshownnumber
 end
 
 function ultraschall.GetClosestPreviousRegionEdge(cursor_type, time_position)
@@ -870,22 +857,23 @@ function ultraschall.GetClosestPreviousRegionEdge(cursor_type, time_position)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetClosestPreviousRegionEdge</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     SWS=2.8.8
     Lua=5.3
   </requires>
-  <functioncall>number markerindex, number position, string markertitle, string edge_type = ultraschall.GetClosestPreviousRegionEdge(integer cursor_type, optional number time_position)</functioncall>
+  <functioncall>integer markerindex, number position, string markertitle, string edge_type, integer markerindex_shownnumber = ultraschall.GetClosestPreviousRegionEdge(integer cursor_type, optional number time_position)</functioncall>
   <description>
     returns the regionindex(counted from all markers and regions), the position and the name of the previous closest regionstart/end(depending on which is closer to time_position) in seconds.
     
     returns -1 in case of an error
   </description>
   <retvals>
-    number markerindex - the previous closest markerindex (of all(!) markers)
+    integer markerindex - the previous closest markerindex (of all(!) markers)
     number position - the position of the previous closest marker
     string markertitle - the name of the previous closest marker
     string edge_type - the type of the edge of the region, either "beg" or "end"
+    integer markerindex_shownnumber - the previous closest shown number of the found region
   </retvals>
   <parameters>
     integer cursor_type - previous closest regionstart/end related to the current position of 0 - Edit Cursor, 1 - Play Cursor, 2 - Mouse Cursor, 3 - Timeposition
@@ -934,10 +922,11 @@ function ultraschall.GetClosestPreviousRegionEdge(cursor_type, time_position)
   -- find closest previous region and it's closest edge
   for i=0,retval do
     local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-    if isrgn==true then -- beginning of the item
+    if isrgn==true then -- beginning of the region
       if pos<cursortime and pos>retposition then
         retposition=pos
-        retindexnumber=markrgnindexnumber
+        retindexnumber=i
+        retshownnumber=markrgnindexnumber
         retmarkername=name
         retbeg="beg"
       end
@@ -947,7 +936,7 @@ function ultraschall.GetClosestPreviousRegionEdge(cursor_type, time_position)
       end
     end
   end
-  return retindexnumber, retposition, retmarkername, retbeg
+  return retindexnumber, retposition, retmarkername, retbeg, retshownnumber
 end
 
 function ultraschall.GetClosestGoToPoints(trackstring, time_position, check_itemedge, check_marker, check_region)
@@ -1116,6 +1105,8 @@ function ultraschall.GetLastCursorPosition()
   </requires>
   <functioncall>number last_editcursor_position, number new_editcursor_position, number statechangetime = ultraschall.GetLastCursorPosition()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated.
+  
     Returns the last and current editcursor-position. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     Has an issue, when editcursor-position was changed using a modifier, like alt+click or shift+click! Because of that, you should use this only in defer-scripts.
@@ -1135,6 +1126,7 @@ function ultraschall.GetLastCursorPosition()
   <tags>navigation, last position, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastCursorPosition")
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_cursorposition.lua")~="true" then return -1 end
   return tonumber(reaper.GetExtState("ultraschall", "editcursor_position_old")), tonumber(reaper.GetExtState("ultraschall", "editcursor_position_new")), tonumber(reaper.GetExtState("ultraschall", "editcursor_position_changetime"))
 end
@@ -1150,6 +1142,8 @@ function ultraschall.GetLastPlayState()
   </requires>
   <functioncall>string last_play_state, string new_play_state, number statechangetime = ultraschall.GetLastPlayState()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated
+    
     Returns the last and current playstate. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     possible states are STOP, PLAY, PLAYPAUSE, REC, RECPAUSE
@@ -1169,6 +1163,7 @@ function ultraschall.GetLastPlayState()
   <tags>navigation, last playstate, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastPlayState")
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_playstate.lua")~="true" then return -1 end
   return reaper.GetExtState("ultraschall", "playstate_old"), reaper.GetExtState("ultraschall", "playstate_new"), tonumber(reaper.GetExtState("ultraschall", "playstate_changetime"))
 end
@@ -1186,6 +1181,8 @@ function ultraschall.GetLastLoopState()
   </requires>
   <functioncall>string last_loop_state, string new_loop_state, number statechangetime = ultraschall.GetLastLoopState()</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    Deprecated
+    
     Returns the last and current loopstate. Needs Ultraschall-API-background-scripts started first, see [RunBackgroundHelperFeatures()](#RunBackgroundHelperFeatures).
     
     Possible states are LOOPED, UNLOOPED
@@ -1205,6 +1202,8 @@ function ultraschall.GetLastLoopState()
   <tags>navigation, last loopstate, editcursor</tags>
 </US_DocBloc>
 ]]
+  ultraschall.deprecated("GetLastLoopState")
+  
   if reaper.GetExtState("Ultraschall", "defer_scripts_ultraschall_track_old_loopstate.lua")~="true" then return -1 end
   return reaper.GetExtState("ultraschall", "loopstate_old"), reaper.GetExtState("ultraschall", "loopstate_new"), tonumber(reaper.GetExtState("ultraschall", "loopstate_changetime"))
 end
@@ -1345,3 +1344,192 @@ function ultraschall.Scrubbing_MoveCursor_Toggle(toggle)
   return ultraschall.GetSetIntConfigVar("scrubmode", true, toggle)
 end
 
+function ultraschall.GetNextClosestItemStart(trackstring, time_position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetNextClosestItemStart</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number position, MediaItem item = ultraschall.GetNextClosestItemStart(string trackstring, number time_position)</functioncall>
+  <description>
+    returns the next closest item-start in seconds and the corresponding item
+    
+    returns -1 and item==nil in case of error
+  </description>
+  <retvals>
+    number position - the position of the item-start
+    MediaItem item - the MediaItem found
+  </retvals>
+  <parameters>
+    string trackstring - tracknumbers, separated by a comma.
+    number time_position - a time position in seconds, from where to check for the next closest item-start
+  </parameters>
+  <chapter_context>
+    Navigation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
+  <tags>navigation, get, next, closest, itemstart, item</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetNextClosestItemStart", "trackstring", "must be a valid trackstring", -1) return -1 end
+  if type(time_position)~="number" then ultraschall.AddErrorMessage("GetNextClosestItemStart", "time_position", "must be a number", -1) return -1 end
+
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(time_position, reaper.GetProjectLength(), trackstring, true)
+  if count==0 then return -1 end
+  local pos=reaper.GetProjectLength(0)
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")
+    if pos2<pos and pos2>time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  if pos==reaper.GetProjectLength(0)+1 then pos=-1 end
+  return pos, found_item
+end
+
+--A, B=ultraschall.GetNextClosestItemStart("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16", reaper.GetCursorPosition())
+--reaper.MoveEditCursor(-reaper.GetCursorPosition()+A, false)
+
+function ultraschall.GetPreviousClosestItemStart(trackstring, time_position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPreviousClosestItemStart</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number position, MediaItem item = ultraschall.GetPreviousClosestItemStart(string trackstring, number time_position)</functioncall>
+  <description>
+    returns the previous closest item-start in seconds and the corresponding item
+    
+    returns -1 and item==nil in case of error
+  </description>
+  <retvals>
+    number position - the position of the item-start
+    MediaItem item - the MediaItem found
+  </retvals>
+  <parameters>
+    string trackstring - tracknumbers, separated by a comma.
+    number time_position - a time position in seconds, from where to check for the previous closest item-start
+  </parameters>
+  <chapter_context>
+    Navigation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
+  <tags>navigation, get, previous, closest, itemstart, item</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetPreviousClosestItemStart", "trackstring", "must be a valid trackstring", -1) return -2 end
+  if type(time_position)~="number" then ultraschall.AddErrorMessage("GetPreviousClosestItemStart", "time_position", "must be a number", -1) return -2 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, time_position, trackstring, false)
+  if count==0 then return -1 end
+  local pos=-1
+  local found_item=nil
+  for i=#MediaItemArray, 1, -1 do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")
+    if pos2>pos and pos2<time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+
+  return pos, found_item
+end
+
+--A, B=ultraschall.GetPreviousClosestItemStart("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16", reaper.GetCursorPosition())
+--reaper.MoveEditCursor(-reaper.GetCursorPosition()+A, false)
+
+function ultraschall.GetPreviousClosestItemEnd(trackstring, time_position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPreviousClosestItemEnd</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number position, MediaItem item = ultraschall.GetPreviousClosestItemEnd(string trackstring, number time_position)</functioncall>
+  <description>
+    returns the previous closest item-end in seconds and the corresponding item
+    
+    returns -1 and item==nil in case of error
+  </description>
+  <retvals>
+    number position - the position of the item-start
+    MediaItem item - the MediaItem found
+  </retvals>
+  <parameters>
+    string trackstring - tracknumbers, separated by a comma.
+    number time_position - a time position in seconds, from where to check for the previous closest item-end
+  </parameters>
+  <chapter_context>
+    Navigation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
+  <tags>navigation, get, previous, closest, itemend, item</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetPreviousClosestItemEnd", "trackstring", "must be a valid trackstring", -1) return -2 end
+  if type(time_position)~="number" then ultraschall.AddErrorMessage("GetPreviousClosestItemEnd", "time_position", "must be a number", -1) return -2 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, true)
+  if count==0 then return -1 end
+  local pos=-1
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")+reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_LENGTH")
+    if pos2>pos and pos2<time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  return pos, found_item
+end
+
+--A=ultraschall.GetPreviousClosestItemEnd("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16", reaper.GetCursorPosition())
+--reaper.MoveEditCursor(-reaper.GetCursorPosition()+A, false)
+
+function ultraschall.GetNextClosestItemEnd(trackstring, time_position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetNextClosestItemEnd</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>number position, MediaItem item = ultraschall.GetNextClosestItemEnd(string trackstring, number time_position)</functioncall>
+  <description>
+    returns the next closest item-end in seconds and the corresponding item
+    
+    returns -1 and item==nil in case of error
+  </description>
+  <retvals>
+    number position - the position of the item-start
+    MediaItem item - the MediaItem found
+  </retvals>
+  <parameters>
+    string trackstring - tracknumbers, separated by a comma.
+    number time_position - a time position in seconds, from where to check for the next closest item-end
+  </parameters>
+  <chapter_context>
+    Navigation
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Navigation_Module.lua</source_document>
+  <tags>navigation, get, next, closest, itemend, item</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetNextClosestItemEnd", "trackstring", "must be a valid trackstring", -1) return -2 end
+  if type(time_position)~="number" then ultraschall.AddErrorMessage("GetNextClosestItemEnd", "time_position", "must be a number", -1) return -2 end
+  if time_position>reaper.GetProjectLength(0) then return -1 end
+  local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, false)
+  if count==0 then return -1 end
+  local pos=reaper.GetProjectLength(0)+1
+  local found_item=nil
+  for i=1, #MediaItemArray do
+    local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")+reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_LENGTH")
+    if pos2<pos and pos2>time_position then pos=pos2 found_item=MediaItemArray[i] end
+  end
+  if pos==reaper.GetProjectLength(0)+1 then pos=-1 end
+  return pos, found_item
+end

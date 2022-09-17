@@ -1,4 +1,8 @@
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 -- select mode:
 --  mode 1: check all linknames for _ and escape them
@@ -6,7 +10,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 mode=1
 
-A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/reaper-videoprocessor-docs.USDocML")
+A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_API_Video_Documentation.USDocML")
 
 if mode==1 then 
   -- check all linknames for _ and escape them

@@ -30,28 +30,6 @@
 ---  Reaper User Interface Module ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "ReaperUserInterface-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 
 function ultraschall.GetVerticalZoom()
 --[[
@@ -105,10 +83,10 @@ function ultraschall.SetVerticalZoom(vertical_zoom_factor)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetVerticalZoom(integer vertical_zoom_factor)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the vertical zoom factor.
 
-    To set it relative to the current vertical-zoom-value, use Reaper's own API-function [CSurf_OnZoom](Reaper_Api_Documentation.html#CSurf_OnZoom)
+    To set it relative to the current vertical-zoom-value, use Reaper's own API-function CSurf_OnZoom
     
     Returns -1 in case of error.
   </description>
@@ -715,7 +693,7 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ShowMenu</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -788,12 +766,13 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
     gfx.y=-25
     ownwindow=true
   else
-    convx, convy = gfx.screentoclient(x, y)
+    local convx, convy = gfx.screentoclient(x, y)
     gfx.x=convx
     gfx.y=convy
   end
+  
   local selection=gfx.showmenu("#"..Title.."||"..Entries)
-  if ownwindow==true then gfx.quit() end
+  if ownwindow==true then gfx.quit() gfx.w=0 gfx.h=0 end
   return math.floor(selection)-1
 end
 
@@ -813,7 +792,7 @@ function ultraschall.IsValidHWND(HWND)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsValidHWND(HWND hwnd)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Checks, if a HWND-handler is a valid one.
     
     Returns false in case of an error
@@ -853,7 +832,7 @@ function ultraschall.BrowseForOpenFiles(windowTitle, initialFolder, initialFile,
     Lua=5.3
   </requires>
   <functioncall>string path, integer number_of_files, array filearray = ultraschall.BrowseForOpenFiles(string windowTitle, string initialFolder, string initialFile, string extensionList, boolean allowMultiple)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a filechooser-dialog which optionally allows selection of multiple files.
     Unlike Reaper's own GetUserFileNameForRead, this dialog allows giving non-existant files as well(for saving operations).
     
@@ -1423,6 +1402,8 @@ function ultraschall.GetHWND_ArrangeViewAndTimeLine()
   <functioncall>HWND arrange_view, HWND timeline, HWND TrackControlPanel, HWND TrackListWindow = ultraschall.GetHWND_ArrangeViewAndTimeLine()</functioncall>
   <description>
     Returns the HWND-Reaper-Windowhandler for the tracklist- and timeline-area in the arrange-view 
+    
+    Note: in later versions of Reaper, TracklistWindow and arrange_view became the same.
     
     returns nil in case of an error. Please report such an error, which means, that you should use ultraschall.ShowLastErrorMessage() to show that error and report the information requested(fruitful bugreports lead to a handwritten postcard as reward :) )
   </description>
@@ -2372,7 +2353,7 @@ function ultraschall.GetBatchFileItemConverterHWND()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetBatchFileItemConverterHWND</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.4
     Reaper=5.965
     JS=0.963
     Lua=5.3
@@ -2396,20 +2377,19 @@ function ultraschall.GetBatchFileItemConverterHWND()
 </US_DocBloc>
 --]]
   local translation=reaper.JS_Localize("Batch File/Item Converter", "DLG_444")
-  local find_shortcut=reaper.JS_Localize("Use source file directory", "DLG_444")
+  local SourceFileDir=reaper.JS_Localize("Use source file directory", "DLG_444")
   local add=reaper.JS_Localize("Open...", "DLG_444")
-  local new=reaper.JS_Localize("Convert all", "DLG_444")
-  local run_close=reaper.JS_Localize("Output format:", "DLG_444")
+  local convert_all=reaper.JS_Localize("Convert all", "DLG_444")
+  --run_close=reaper.JS_Localize("Output format:", "DLG_444")
   
   local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
   if count_hwnds==0 then return nil
   else
     for i=count_hwnds, 1, -1 do
       if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
-                                            find_shortcut.."\0"
-                                            ..add.."\0"
-                                            ..new.."\0"
-                                            ..run_close
+                                            SourceFileDir.."\0"..
+                                            add.."\0"..
+                                            convert_all
                                             )==true then return hwnd_array[i] end
     end
   end
@@ -2430,7 +2410,7 @@ function ultraschall.SetReaScriptConsole_FontStyle(style)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.SetReaScriptConsole_FontStyle(integer style)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       If the ReaScript-console is opened, you can change the font-style of it.
       You can choose between 19 different styles, with 3 being of fixed character length. It will change the next time you output text to the ReaScriptConsole.
       
@@ -2503,7 +2483,7 @@ function ultraschall.MoveChildWithinParentHWND(parenthwnd, childhwnd, relative, 
       Lua=5.3
     </requires>
     <functioncall>integer newxpos, integer newypos, integer newrightpos, integer newbottompos, integer newrelativeleft, integer newrelativetop, integer newwidth, integer newheight = ultraschall.MoveChildWithinParentHWND(hwnd parenthwnd, hwnd childhwnd, boolean relative, integer left, integer top, integer width, integer height)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Moves a childhwnd within the coordinates of its parenthwnd.
       Good for moving gui-elements around without having to deal with screen-coordinates.
       
@@ -2587,7 +2567,7 @@ function ultraschall.GetChildSizeWithinParentHWND(parenthwnd, childhwnd)
       Lua=5.3
     </requires>
     <functioncall>integer xpos, integer ypos, integer width, integer height = ultraschall.GetChildSizeWithinParentHWND(hwnd parenthwnd, hwnd childhwnd)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Returns the position, height and width of a childhwnd, relative to the position of parenthwnd
       
       Returns nil in case of an error
@@ -2633,7 +2613,7 @@ function ultraschall.GetCheckboxState(hwnd)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.GetCheckboxState(HWND hwnd)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the checked-state of a checkbox-hwnd.
     This function will not check, whether the hwnd is an actual checkbox!
     
@@ -2670,7 +2650,7 @@ function ultraschall.SetCheckboxState(hwnd, state)
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetCheckboxState(HWND hwnd, boolean state)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the checked-state of a checkbox-hwnd.
     This function will not check, whether the hwnd is an actual checkbox!
     
@@ -2712,7 +2692,7 @@ function ultraschall.GetRenderingToFileHWND()
     Lua=5.3
   </requires>
   <functioncall>HWND rendertofile_dialog = ultraschall.GetRenderingToFileHWND()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the HWND of the Rendering to File-dialog, which is displayed while Reaper is rendering.
     
     returns nil in case of an error
@@ -2753,8 +2733,8 @@ end
 function ultraschall.GetReaperWindowPosition_Left()
 -- Due to Api-limitations: when the reaper-window is too small, it returns a wrong value, up to 72 pixels too high!
 
-  local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
-  local temp,ElectricCafe=ultraschall.GetIniFileValue("REAPER", "dockheight_l", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
+  local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.get_ini_file())
+  local temp,ElectricCafe=ultraschall.GetIniFileValue("REAPER", "dockheight_l", "", reaper.get_ini_file())
 
   local C,D,E,F,G,H,I,J,K,L=reaper.my_getViewport(1,2,3,4,5,6,7,8, true)
   local A1x,A2x= reaper.GetSet_ArrangeView2(0, false, 0,0)
@@ -2773,7 +2753,7 @@ end
 function ultraschall.GetReaperWindowPosition_Right()
 -- Due to Api-limitations: when the reaper-window is too small, it returns a wrong value, up to 72 pixels too high!
 
-  local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.GetResourcePath()..ultraschall.Separator.."reaper.ini")
+  local temp,Technopop=ultraschall.GetIniFileValue("REAPER", "leftpanewid", "", reaper.get_ini_file())
 
   local C,D,E,F,G,H,I,J,K,L=reaper.my_getViewport(1,2,3,4,5,6,7,8, true)
   local A1x,A2x= reaper.GetSet_ArrangeView2(0, false, 0,0)
@@ -2977,25 +2957,8 @@ function ultraschall.GetMediaExplorerHWND()
   <tags>user interface, window, media explorer, hwnd, get</tags>
 </US_DocBloc>
 --]]
-
-  local translation=reaper.JS_Localize("Media Explorer", "common")
-  local auto_play=reaper.JS_Localize("Auto play", "explorer_DLG_101")
-  local vol=reaper.JS_Localize("vol", "explorer_DLG_101")
-  local navigate_backwards=reaper.JS_Localize("Navigate backwards", "access")
-
-  
-  --count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find("Render to File", false)
-  local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
-  if count_hwnds==0 then return nil
-  else
-    for i=count_hwnds, 1, -1 do
-      if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
-                                            auto_play.."\0"..
-                                            vol.."\0"..
-                                            navigate_backwards)==true then return hwnd_array[i] end
-    end
-  end
-  return nil
+  local A=reaper.GetToggleCommandState(50124)
+  if A~=0 then return reaper.OpenMediaExplorer("", false) else return end
 end 
 
 --A=ultraschall.GetMediaExplorerHWND()
@@ -3012,7 +2975,7 @@ function ultraschall.GetTimeByMouseXPosition(xmouseposition)
     Lua=5.3
   </requires>
   <functioncall>number position = ultraschall.GetTimeByMouseXPosition(integer xposition)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the projectposition at x-mouseposition.
     
     Returns nil in case of an error
@@ -3050,7 +3013,7 @@ function ultraschall.ShowTrackInputMenu(x, y, MediaTrack, HWNDParent)
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.ShowTrackInputMenu(integer x, integer y, optional MediaTrack MediaTrack, optional HWND HWNDParent)</functioncall>
-   <description markup_type="markdown" markup_version="1.0.1" indent="default">
+   <description>
      Opens a TrackInput-context menu
      
      Returns false in case of error.
@@ -3094,7 +3057,7 @@ function ultraschall.ShowTrackPanelMenu(x, y, MediaTrack, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowTrackPanelMenu(integer x, integer y, optional MediaTrack MediaTrack, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a TrackPanel-context menu
     
     Returns false in case of error.
@@ -3139,7 +3102,7 @@ function ultraschall.ShowTrackAreaMenu(x, y, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowTrackAreaMenu(integer x, integer y, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a TrackArea-context menu
     
     Returns false in case of error.
@@ -3182,7 +3145,7 @@ function ultraschall.ShowTrackRoutingMenu(x, y, MediaTrack, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowTrackRoutingMenu(integer x, integer y, optional MediaTrack MediaTrack, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a TrackRouting-context menu
     
     Returns false in case of error.
@@ -3228,7 +3191,7 @@ function ultraschall.ShowRulerMenu(x, y, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowRulerMenu(integer x, integer y, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a Ruler-context menu
     
     Returns false in case of error.
@@ -3272,7 +3235,7 @@ function ultraschall.ShowMediaItemMenu(x, y, MediaItem, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowMediaItemMenu(integer x, integer y, optional MediaItem MediaItem, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a MediaItem-context menu
     
     Returns false in case of error.
@@ -3317,7 +3280,7 @@ function ultraschall.ShowEnvelopeMenu(x, y, TrackEnvelope, HWNDParent)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowEnvelopeMenu(integer x, integer y, optional TrackEnvelope TrackEnvelope, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a Track/TakeEnvelope-context menu
     
     Returns false in case of error.
@@ -3363,7 +3326,7 @@ function ultraschall.ShowEnvelopePointMenu(x, y, Pointidx, Trackenvelope, HWNDPa
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowEnvelopePointMenu(integer x, integer y, integer Pointidx, optional TrackEnvelope TrackEnvelope, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a Track/TakeEnvelope-Point-context menu
     
     Returns false in case of error.
@@ -3411,7 +3374,7 @@ function ultraschall.ShowEnvelopePointMenu_AutomationItem(x, y, Pointidx, Automa
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowEnvelopePointMenu_AutomationItem(integer x, integer y, integer Pointidx, integer AutomationIDX, optional TrackEnvelope TrackEnvelope, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens a Track/TakeEnvelope-Point-context menu for AutomationItems
     
     Returns false in case of error.
@@ -3463,7 +3426,7 @@ function ultraschall.ShowAutomationItemMenu(x, y, AutomationIDX, Trackenvelope, 
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.ShowAutomationItemMenu(integer x, integer y, integer AutomationIDX, optional TrackEnvelope TrackEnvelope, optional HWND HWNDParent)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Opens an AutomationItem-context menu
     
     Returns false in case of error.
@@ -3744,8 +3707,8 @@ function ultraschall.VideoWindow_FullScreenToggle(toggle)
       Lua=5.3
     </requires>
     <functioncall>boolean fullscreenstate = ultraschall.VideoWindow_FullScreenToggle(optional boolean toggle)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
-      toggles fullscree-state of Reaper's video-processor-window 
+    <description>
+      toggles fullscreen-state of Reaper's video-processor-window 
         
       returns nil in case of error
     </description>
@@ -3892,7 +3855,7 @@ function ultraschall.GetPreventUIRefreshCount()
 end
 
 
-function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes)
+function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes, hide_when_take_less_than_px)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetItemButtonsVisible</slug>
@@ -3902,8 +3865,8 @@ function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMi
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.SetItemButtonsVisible(optional boolean Volume, optional integer Locked, optional integer Mute, optional integer Notes, optional boolean PooledMidi, optional boolean GroupedItems, optional integer PerTakeFX, optional integer Properties, optional integer AutomationEnvelopes)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <functioncall>boolean retval = ultraschall.SetItemButtonsVisible(optional boolean Volume, optional integer Locked, optional integer Mute, optional integer Notes, optional boolean PooledMidi, optional boolean GroupedItems, optional integer PerTakeFX, optional integer Properties, optional integer AutomationEnvelopes, optional integer hide_when_take_less_than_px)</functioncall>
+  <description>
     allows setting, which item-buttons shall be shown
   
     returns false in case of an error
@@ -3950,6 +3913,7 @@ function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMi
                                         - 1, show active envelope-button only
                                         - 2, show non active envelope-button only
                                         - 3, show active and nonactive envelope-button
+    optional integer hide_when_take_less_than_px - the value to hide when take is less than x pixels; 0 to 2147483647
   </parameters>
   <chapter_context>
     User Interface
@@ -3960,16 +3924,17 @@ function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMi
   <tags>user interface, set, media items, show, buttons</tags>
 </US_DocBloc>
 --]]
-  if type(Volume)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Volume", "must be a boolean" , -1) return false end
-  if math.type(Locked)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Locked", "must be an integer" , -2) return false end
-  if math.type(Mute)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Mute", "must be an integer" , -3) return false end
-  if math.type(Notes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Notes", "must be an integer" , -4) return false end
+  if Volume~=nil and type(Volume)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Volume", "must be nil or a boolean" , -1) return false end
+  if Locked~=nil and math.type(Locked)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Locked", "must be nil or an integer" , -2) return false end
+  if Mute~=nil and math.type(Mute)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Mute", "must be nil or an integer" , -3) return false end
+  if Notes~=nil and math.type(Notes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Notes", "must be nil or an integer" , -4) return false end
   
-  if type(PooledMidi)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PooledMidi", "must be a boolean" , -5) return false end
-  if type(GroupedItems)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "GroupedItems", "must be a boolean" , -6) return false end
-  if math.type(PerTakeFX)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PerTakeFX", "must be an integer" , -7) return false end
-  if math.type(Properties)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Properties", "must be an integer" , -8) return false end
-  if math.type(AutomationEnvelopes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "AutomationEnvelopes", "must be an integer" , -9) return false end
+  if PooledMidi~=nil and type(PooledMidi)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PooledMidi", "must be nil or a boolean" , -5) return false end
+  if GroupedItems~=nil and type(GroupedItems)~="boolean" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "GroupedItems", "must be nil or a boolean" , -6) return false end
+  if PerTakeFX~=nil and math.type(PerTakeFX)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "PerTakeFX", "must be nil or an integer" , -7) return false end
+  if Properties~=nil and math.type(Properties)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "Properties", "must be nil or an integer" , -8) return false end
+  if AutomationEnvelopes~=nil and math.type(AutomationEnvelopes)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "AutomationEnvelopes", "must be nil or an integer" , -9) return false end
+  if hide_when_take_less_than_px~=nil and math.type(hide_when_take_less_than_px)~="integer" then ultraschall.AddErrorMessage("SetItemButtonsVisible", "hide_when_take_less_than_px", "must be nil or an integer" , -10) return false end
 
   local State = reaper.SNM_GetIntConfigVar("itemicons", -99)
   if Locked~=nil then
@@ -4017,6 +3982,9 @@ function ultraschall.SetItemButtonsVisible(Volume, Locked, Mute, Notes, PooledMi
     if AutomationEnvelopes&2==0 and State&524288~=0 then State=State+524288 elseif AutomationEnvelopes&2~=0 and State&524288==0 then State=State-524288 end
   end  
   
+  if hide_when_take_less_than_px~=nil then
+    reaper.SNM_SetIntConfigVar("itemicons_minheight", hide_when_take_less_than_px)
+  end
   reaper.SNM_SetIntConfigVar("itemicons", State)
   reaper.UpdateArrange()
   return true
@@ -4027,13 +3995,13 @@ function ultraschall.GetItemButtonsVisible()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetItemButtonsVisible</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.5
     Reaper=6.10
     SWS=2.9.7
     Lua=5.3
   </requires>
-  <functioncall>boolean Volume, integer Locked, integer Mute, integer Notes, boolean PooledMidi, boolean GroupedItems, integer PerTakeFX, integer Properties, integer AutomationEnvelopes = ultraschall.GetItemButtonsVisible()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <functioncall>boolean Volume, integer Locked, integer Mute, integer Notes, boolean PooledMidi, boolean GroupedItems, integer PerTakeFX, integer Properties, integer AutomationEnvelopes, integer hide_when_take_less_than_px = ultraschall.GetItemButtonsVisible()</functioncall>
+  <description>
     gets, which item-buttons are be shown
   </description>
   <retvals>
@@ -4069,6 +4037,7 @@ function ultraschall.GetItemButtonsVisible()
                                         - 1, shows active envelope-button only
                                         - 2, shows non active envelope-button only
                                         - 3, shows active and nonactive envelope-button
+    integer hide_when_take_less_than_px - the value to hide when take is less than x pixels; 0 to 2147483647
   </retvals>
   <chapter_context>
     User Interface
@@ -4080,6 +4049,8 @@ function ultraschall.GetItemButtonsVisible()
 </US_DocBloc>
 --]]
   local State = reaper.SNM_GetIntConfigVar("itemicons", -99)
+  local State2 = reaper.SNM_GetIntConfigVar("itemicons_minheight", -99)
+  
   local Volume, Locked, Mute, Notes, PooledMidi, GroupedItems, PerTakeFX, Properties, AutomationEnvelopes=false,0,0,0,false,false,0,0,0
   if State&1~=0 then Locked=Locked+1 end
   if State&2~=0 then Locked=Locked+2 end
@@ -4334,7 +4305,7 @@ function ultraschall.ReturnAllChildHWND(hwnd)
     Lua=5.3
   </requires>
   <functioncall>integer count_of_hwnds, table hwnds = ultraschall.ReturnAllChildHWND(HWND hwnd)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns all child-window-handler of hwnd.
     
     Returns -1 in case of an error
@@ -4388,7 +4359,7 @@ function ultraschall.SetUIScale(scaling)
     boolean retval - true, setting was successful; false, setting was unsuccessful
   </retvals>
   <parameters>
-    number scaling - the scaling-factor; safe range is between 0.30 and 3.00, though 0 to 2000 is supported
+    number scaling - the scaling-factor; safe range is between 0.30 and 3.00, though higher is supported
   </parameters>
   <chapter_context>
     User Interface
@@ -4400,11 +4371,10 @@ function ultraschall.SetUIScale(scaling)
 </US_DocBloc>
 --]]
   if type(scaling)~="number" then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be a number", -1) return false end
-  if scaling<0 or scaling>2000 then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be between 0 and 2000", -2) return false end
+  if scaling<0 then ultraschall.AddErrorMessage("SetUIScale", "scaling", "must be 0 or higher", -2) return false end
   local B,BB=reaper.BR_Win32_GetPrivateProfileString("REAPER", "uiscale", "", reaper.get_ini_file())
   if BB=="1.00000000" then ultraschall.AddErrorMessage("SetUIScale", "", "Works only, if the \n\n   \"Scale UI elements of track/mixer panels, tansport, etc, by:\"-checkbox \n\nis enabled in \n\n    Preferences -> General -> Advanced UI/system tweaks-dialog,\n\n by setting the value in the dialog to anything else than 1.0.", -3) return false end
-  local A=ultraschall.DoubleToInt(scaling)
-  return reaper.SNM_SetIntConfigVar("uiscale", A)
+  return reaper.SNM_SetDoubleConfigVar("uiscale", scaling)
 end
 
 --B=ultraschall.SetUIScale(1)
@@ -4438,3 +4408,283 @@ function ultraschall.GetUIScale()
 --]]
   return reaper.SNM_GetDoubleConfigVar("uiscale", -1)
 end
+
+function ultraschall.GetHWND_Transport()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetHWND_Transport</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=5.965
+    SWS=2.10.0.1
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>integer transport_position, boolean floating, boolean hidden, HWND transport_hwnd, integer x, integer y, integer right, integer bottom = ultraschall.GetHWND_Transport()</functioncall>
+  <description>
+    returns the HWND of the Transport-area and its visible position/docking-state
+  </description>
+  <retvals>
+    integer transport_position - the position of the transport-area
+                               - -1, transport is docked in docker
+                               - 1, transport is top of main
+                               - 2, transport is at the bottom
+                               - 3, transport is above the ruler
+                               - 4, transport is below arrange
+    boolean floating - true, transport is floating; false, transport is docked in main-window or docker
+    boolean hidden - true, transport is hidden(its hwnd might still be available); false, transport is visible
+    HWND transport_hwnd - the window-handler of transport
+    integer x - x-position of transport in pixels
+    integer y - y-position of transport in pixels
+    integer right - right position of transport in pixels
+    integer bottom - bottom position of transport in pixels
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, window, transport, position, docking-state, hwnd, get</tags>
+</US_DocBloc>
+--]]
+  local transport=reaper.JS_Localize("Transport", "DLG_188")
+  local status=reaper.JS_Localize("status", "DLG_188")
+  local HWND=reaper.GetMainHwnd()
+  local transport_position
+  if reaper.GetToggleCommandState(41608)==1 then
+    transport_position=-1 -- docker
+  elseif reaper.GetToggleCommandState(41606)==1 then
+    transport_position=1 -- top of main
+  elseif reaper.GetToggleCommandState(41605)==1 then
+    transport_position=2 -- bottom of main
+  elseif reaper.GetToggleCommandState(41604)==1 then
+    transport_position=3 -- above ruler of main
+  elseif reaper.GetToggleCommandState(41603)==1 then
+    transport_position=4 -- below arrange of main
+  end
+  local floating=false
+  local Transport=reaper.JS_Window_FindChild(HWND, transport, true)
+  if Transport==nil then
+    Transport=reaper.JS_Window_Find(transport, true)
+    transport_position=-1
+    floating=true
+  end
+  local retval,x,y,w,h
+  if ultraschall.HasHWNDChildWindowNames(Transport, status)==true then
+    retval,x,y,w,h = reaper.JS_Window_GetRect(Transport)
+  end
+  
+  local retval, hidden = reaper.BR_Win32_GetPrivateProfileString("REAPER", "transport_vis", "", reaper.get_ini_file())
+  
+  if tonumber(hidden)==0 then 
+    hidden=true 
+  else 
+    hidden=false
+  end
+  
+  return transport_position, floating, hidden, Transport, x, y, w, h
+end
+
+
+function ultraschall.GetHWND_TCP()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetHWND_TCP</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>HWND tcp_hwnd, boolean tcp_right, integer x, integer y, integer right, integer bottom = ultraschall.GetHWND_TCP()</functioncall>
+  <description>
+    returns the HWND of the TrackControlPanel and its visible area including right or left of arrange-view
+  </description>
+  <retvals>
+    HWND tcp_hwnd - the window-handler of tcp
+    boolean tcp_right - true, tcp is on right side of arrange view; false, tcp is on left side of the arrange view
+    integer x - x-position of tcp in pixels
+    integer y - y-position of tcp in pixels
+    integer right - right position of tcp in pixels
+    integer bottom - bottom position of tcp in pixels
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, window, tcp, track control panel, is right, position, hwnd, get</tags>
+</US_DocBloc>
+--]]
+  local arrange_view, timeline, TrackControlPanel, TrackListWindow = ultraschall.GetHWND_ArrangeViewAndTimeLine()
+  local tcp_right=reaper.GetToggleCommandState(42373)==1
+  local retval, x2, y2, w2, h2 = reaper.JS_Window_GetClientRect(TrackControlPanel)
+  return TrackControlPanel, tcp_right, x2, y2, w2, h2
+end
+
+function ultraschall.GetHWND_ArrangeView()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetHWND_ArrangeView</slug>
+  <requires>
+    Ultraschall=4.6
+    Reaper=5.965
+    JS=0.963
+    Lua=5.3
+  </requires>
+  <functioncall>HWND arrange_view_hwnd, integer x, integer y, integer right, integer bottom = ultraschall.GetHWND_ArrangeView()</functioncall>
+  <description>
+    returns the HWND of the ArrangeView and its visible area
+  </description>
+  <retvals>
+    HWND arrange_view_hwnd - the window-handler of arrange-view
+    integer x - x-position of arrange-view in pixels
+    integer y - y-position of arrange-view in pixels
+    integer right - right position of arrange-view in pixels
+    integer bottom - bottom position of arrange-view in pixels
+  </retvals>
+  <chapter_context>
+    User Interface
+    Reaper-Windowhandler
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, window, arrange-view, position, hwnd, get</tags>
+</US_DocBloc>
+--]]
+  local Hwnd=reaper.GetMainHwnd()
+  local arrange=reaper.JS_Window_FindChildByID(Hwnd, 1000)
+  local retval, x2, y2, w2, h2 = reaper.JS_Window_GetClientRect(arrange)
+  return arrange, x2, y2, w2, h2
+end
+
+function ultraschall.GetScaleRangeFromDpi(dpi)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetScaleRangeFromDpi</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>number minimum_scale_for_dpi, number maximum_scale_for_dpi = ultraschall.GetScaleRangeFromDpi(integer dpi)</functioncall>
+  <description>
+    Returns the scale-range for a specific dpi between 0 and 1539 dpi.
+    
+    Can be used to find out, which scale a gui-script needs to use when a specific dpi-value is present in Reaper's UI.
+    
+    Note: each dpi represents a minimum/maximum range of a scaling factor. So every scaling-factor within that range is part of a specific dpi!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number minimum_scale_for_dpi - the minimum scale-value for this dpi-value
+    number maximum_scale_for_dpi - the maximum scale-value for this dpi-value
+  </retvals>
+  <parameters>
+    integer dpi - the dpi-value to convert into its scale-range-representation; 0-1539 dpi
+  </parameters>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>helper functions, get, convert, dpi, scale, scale range</tags>
+</US_DocBloc>
+]]
+  if math.type(dpi)~="integer" then ultraschall.AddErrorMessage("GetScaleRangeFromDpi", "dpi", "must be an integer", -1) return end
+  if dpi<0 or dpi>1539 then ultraschall.AddErrorMessage("GetScaleRangeFromDpi", "dpi", "must be between 0 and 1540", -2) return end
+  local val=0.001
+  local val2=0.001
+  local _
+  if ultraschall.LastUsedDPI~=dpi then
+    _, val = ultraschall.GetIniFileValue("DPI", tostring(dpi), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
+    _, val2=ultraschall.GetIniFileValue("DPI", tostring(dpi+1), "", ultraschall.Api_Path.."/IniFiles/dpi2scale.ini")
+    --if tonumber(val2)==nil then print2(dpi, dpi+1) end
+    val2=tonumber(val2)-0.001
+    
+    ultraschall.LastUsedDPI=dpi
+    ultraschall.LastusedScaleRange1=val
+    ultraschall.LastusedScaleRange2=val2
+  else
+    val=ultraschall.LastusedScaleRange1
+    val2=ultraschall.LastusedScaleRange2
+  end
+  
+  return tonumber(val), tonumber(val2)
+end
+
+function ultraschall.GetDpiFromScale(scale)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetDpiFromScale</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer dpi = ultraschall.GetScaleRangeFromDpi(number scale)</functioncall>
+  <description>
+    Returns the dpi for a specific scale, between 0.001 and 6.000.
+    
+    Note: each dpi represents a minimum/maximum range of a scaling factor. So every scaling-factor within that range is part of a specific dpi!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    integer dpi - the dpi-value to convert into its scale-range-representation; 0-1539 dpi
+  </retvals>
+  <parameters>
+    number scale - the scale-value to convert into its dpi-representation; 0.001 to 6.000 is supported
+  </parameters>
+  <chapter_context>
+    User Interface
+    Miscellaneous
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>helper functions, get, convert, dpi, scale</tags>
+</US_DocBloc>
+]]
+  if type(scale)~="number" then ultraschall.AddErrorMessage("GetDpiFromScale", "scale", "must be a number", -1) return end
+  if scale<0.001 or scale>6 then ultraschall.AddErrorMessage("GetDpiFromScale", "scale", "must be between 0.001 and 6", -2) return end
+  local start=0
+  if scale<0.2 then start=0
+  elseif scale>=0.2 then start=51
+  elseif scale>=0.4 then start=102
+  elseif scale>=0.6 then start=153
+  elseif scale>=0.8 then start=204
+  elseif scale>=1 then start=256
+  elseif scale>=1.2 then start=307
+  elseif scale>=1.4 then start=358
+  elseif scale>=1.6 then start=409
+  elseif scale>=1.8 then start=461
+  elseif scale>=2 then start=512
+  elseif scale>=2.2 then start=506
+  elseif scale>=2.4 then start=614
+  elseif scale>=2.6 then start=666
+  elseif scale>=2.8 then start=717
+  elseif scale>=3 then start=768
+  elseif scale>=5 then start=1024
+  end
+  
+  local dpi, scale_in, scale_out
+  local oldval=0.001
+  if ultraschall.LastUsedScale~=scale then
+    for i=start, 1539 do
+      scale_in, scale_out = ultraschall.GetScaleRangeFromDpi(i)
+      if scale>=scale_in-0.001 and scale<=scale_out+.001 then
+        ultraschall.LastUsedScale=scale
+        ultraschall.LastUsedScaleDPI=i
+        return i
+      end
+    end
+  else
+    dpi=ultraschall.LastUsedScaleDPI
+    return tonumber(dpi), 2
+  end
+end
+

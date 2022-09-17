@@ -1,4 +1,9 @@
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 -- checks for possibly unusual italic-tags in docs-files
 
 A=ultraschall.ReadFullFile(ultraschall.Api_Path.."/Documentation/US_Api_Introduction_and_Concepts.html")

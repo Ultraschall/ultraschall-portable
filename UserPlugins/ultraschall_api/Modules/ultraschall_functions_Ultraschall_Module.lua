@@ -30,28 +30,6 @@
 ---      Ultraschall Module       ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Ultraschall-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.pause_follow_one_cycle()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -314,24 +292,24 @@ function ultraschall.GetAllAUXSendReceives2()
     like [GetAllAUXSendReceives](#GetAllAUXSendReceives), but returns the type of a track as well
     
     returned table is of structure:
-      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!
-      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n
-      table[tracknumber]["type"]                                    - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1
-      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber
-      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1
-      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0
-      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber
-      
-      See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.
+      table["AllAUXSendReceive"]=true                               - signals, this is an AllAUXSendReceive-table. Don't alter!  
+      table["number\_of_tracks"]                                     - the number of tracks in this table, from track 1 to track n  
+      table[tracknumber]["type"]                                    - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      table[tracknumber]["AUXSendReceives_count"]                   - the number of AUXSendReceives of tracknumber, beginning with 1  
+      table[tracknumber][AUXSendReceivesIndex]["recv\_tracknumber"] - the track, from which to receive audio in this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["post\_pre_fader"]   - the setting of post-pre-fader of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["volume"]            - the volume of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan"]               - the panning of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mute"]              - the mute-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["mono\_stereo"]      - the mono/stereo-button-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["phase"]             - the phase-setting of this AUXSendReceivesIndex  of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["chan\_src"]         - the audiochannel-source of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["snd\_src"]          - the send-to-channel-target of this AUXSendReceivesIndex of tracknumber  
+      table[tracknumber][AUXSendReceivesIndex]["pan\_law"]           - pan-law, default is -1  
+      table[tracknumber][AUXSendReceivesIndex]["midichanflag"]      - the Midi-channel of this AUXSendReceivesIndex of tracknumber, leave it 0  
+      table[tracknumber][AUXSendReceivesIndex]["automation"]        - the automation-mode of this AUXSendReceivesIndex  of tracknumber  
+        
+      See [GetTrackAUXSendReceives](#GetTrackAUXSendReceives) for more details on the individual settings, stored in the entries.  
   </description>
   <retvals>
     table AllAUXSendReceives - a table with all SendReceive-entries of the current project.
@@ -372,18 +350,18 @@ function ultraschall.GetAllHWOuts2()
     like [GetAllHWOuts](#GetAllHWOuts) but includes the type of a track as well
     
     returned table is of structure:
-      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!
-      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n
-      table[tracknumber]["type"]                        - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1
-      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber
-      table[tracknumber][HWOutIndex]["pan\law"]         - pan-law, default is -1
+      table["HWOuts"]=true                              - signals, this is a HWOuts-table; don't change that!  
+      table["number\_of_tracks"]                         - the number of tracks in this table, from track 0(master) to track n  
+      table[tracknumber]["type"]                        - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      table[tracknumber]["HWOut_count"]                 - the number of HWOuts of tracknumber, beginning with 1  
+      table[tracknumber][HWOutIndex]["outputchannel"]   - the number of outputchannels of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["post\_pre_fader"] - the setting of post-pre-fader of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["volume"]          - the volume of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan"]             - the panning of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["mute"]            - the mute-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["phase"]           - the phase-setting of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["source"]          - the source/input of this HWOutIndex of tracknumber  
+      table[tracknumber][HWOutIndex]["pan\law"]         - pan-law, default is -1  
       table[tracknumber][HWOutIndex]["automationmode"]  - the automation-mode of this HWOutIndex of tracknumber    
       
       See [GetTrackHWOut](#GetTrackHWOut) for more details on the individual settings, stored in the entries.
@@ -429,10 +407,10 @@ function ultraschall.GetAllMainSendStates2()
     The MainSend-settings are the settings, if a certain track sends it's signal to the Master Track
     
     returned table is of structure:
-      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n
-      Table[tracknumber]["type"]           - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other
-      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)
-      Table[tracknumber]["ParentChannels"] - the parent channels of this track
+      Table["number\_of_tracks"]            - The number of tracks in this table, from track 1 to track n  
+      Table[tracknumber]["type"]           - type of the track, SoundBoard, StudioLink, StudioLinkOnAir or Other  
+      Table[tracknumber]["MainSend"]       - Send to Master on(1) or off(1)  
+      Table[tracknumber]["ParentChannels"] - the parent channels of this track  
       
       See [GetTrackMainSendState](#GetTrackMainSendState) for more details on the individual settings, stored in the entries.
   </description>
@@ -515,7 +493,7 @@ function ultraschall.GetUSExternalState(section, key, filename)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetUSExternalState</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.7
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -552,6 +530,7 @@ function ultraschall.GetUSExternalState(section, key, filename)
   
   -- get value
   local A, B = ultraschall.GetIniFileValue(section, key, "", reaper.GetResourcePath().."/"..filename)
+  if A==-1 then B="" end
   return B
 end
 
@@ -842,7 +821,7 @@ function ultraschall.Soundboard_StopAllSounds()
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_StopAllSounds()</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops all sounds currently playing in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -873,7 +852,7 @@ function ultraschall.Soundboard_TogglePlayPause(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlayPause(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and Pause of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -914,7 +893,7 @@ function ultraschall.Soundboard_TogglePlayStop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlayStop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and Stop of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -955,7 +934,7 @@ function ultraschall.Soundboard_Play(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_Play(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Starts playing of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -996,7 +975,7 @@ function ultraschall.Soundboard_Stop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_Stop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Stops playing of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -1038,7 +1017,7 @@ function ultraschall.Soundboard_TogglePlay_FadeOutStop(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_TogglePlay_FadeOutStop(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Toggles between Play and FadeOut with Stop of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -1252,7 +1231,7 @@ function ultraschall.Soundboard_PlayFadeIn(playerindex)
       Lua=5.3
     </requires>
     <functioncall>ultraschall.Soundboard_PlayFadeIn(integer playerindex)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       Starts a sound with a fade-in of a certain player in the Ultraschall-SoundBoard
       
       Needs ultraschall-Soundboard installed to be useable!
@@ -1282,3 +1261,225 @@ function ultraschall.Soundboard_PlayFadeIn(playerindex)
   reaper.StuffMIDIMessage(mode, MIDIModifier, Note, Velocity)
 end 
 
+function ultraschall.LUFS_Metering_MatchGain()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_MatchGain</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_MatchGain()</functioncall>
+  <description>
+    Hits programmatically the "Match Gain"-Button of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
+  </description>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, lufs, loudness meter, hit, match gain, button</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("lufs")
+  reaper.gmem_write(5,1)
+  reaper.gmem_attach(old_attached_name)
+end
+
+--ultraschall.LUFS_Metering_MatchGain()
+--]]
+
+function ultraschall.LUFS_Metering_Reset()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_Reset</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_Reset()</functioncall>
+  <description>
+    Hits programmatically the "Reset"-Button of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
+  </description>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, lufs, loudness meter, hit, reset, button</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=ultraschall.Gmem_GetCurrentAttachedName()
+  reaper.gmem_attach("lufs")
+  reaper.gmem_write(4,1)
+  reaper.gmem_attach(old_attached_name)
+end
+
+function ultraschall.LUFS_Metering_GetValues()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_GetValues</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>number LUFS_integral, number LUFS_target, number dB_Gain = ultraschall.LUFS_Metering_GetValues()</functioncall>
+  <description>
+    Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
+  </description>
+  <retvals>
+    number LUFS_integral - the integral LUFS-value currently measured
+    number LUFS_target - the LUFS-target currently set in the UI of the jsfx
+    number dB_Gain - the gain currently set in the UI of the effect in dB
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, lufs, loudness meter, get, values, integral, target, gain</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=reaper.gmem_attach("lufs")
+  local LUFS_integral=reaper.gmem_read(1)
+  local LUFS_target=reaper.gmem_read(2)
+  local FX_active=reaper.gmem_read(3)
+  local Gain=reaper.gmem_read(6)
+  reaper.gmem_attach(old_attached_name)
+  return LUFS_integral, LUFS_target, Gain
+end
+
+function ultraschall.LUFS_Metering_SetValues(LUFS_target, Gain)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_SetValues</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_SetValues(optional integer LUFS_target, optional number dB_Gain)</functioncall>
+  <description>
+    Returns current LUFS-values of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).
+  </description>
+  <retvals>
+    optional integer LUFS_target - the LUFS-target
+                                 - 0, -14 LUFS (Spotify)
+                                 - 1, -16 LUFS (Podcast)
+                                 - 2, -18 LUFS
+                                 - 3, -20 LUFS
+                                 - 4, -23 LUFS (EBU R128)
+    optional number dB_Gain - the gain of the effect in dB
+  </retvals>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, set, lufs, loudness meter, values, target, gain</tags>
+</US_DocBloc>
+--]]
+  local old_attached_name=reaper.gmem_attach("lufs")
+  if LUFS_target~=nil then reaper.gmem_write(8, LUFS_target) end
+  if Gain~=nil then reaper.gmem_write(7, Gain) end
+  reaper.gmem_attach(old_attached_name)
+
+end
+
+--ultraschall.LUFS_Metering_SetValues(4, 2)
+
+function ultraschall.LUFS_Metering_AddEffect(enabled)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_AddEffect</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>boolean added = ultraschall.LUFS_Metering_AddEffect(boolean enabled)</functioncall>
+  <description>
+    Adds Ultraschall's LUFS Loudness Meter into the Master Track(only available in Ultraschall-installations).
+    
+    Parameter enabled is always working, even if the fx has already been added.
+  </description>
+  <retvals>
+    boolean added - true, fx has been added; false, fx hasn't been added as it was already present.
+  </retvals>
+  <parameters>
+    boolean enabled - true, enable the fx; false, disable the fx
+  </parameters>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, add, lufs, loudness meter, enabled</tags>
+</US_DocBloc>
+--]]
+  if enabled==nil then enabled=false end
+  local tr = reaper.GetMasterTrack(0)
+  local index=-1
+  for i=0, reaper.TrackFX_GetCount(tr)-1 do
+    local retval, fx=reaper.TrackFX_GetFXName(tr, i)
+    if fx:match("LUFS Loudness Metering") then
+      index=i
+    end
+  end
+  if index==-1 then
+    local A=reaper.TrackFX_AddByName(tr, "dynamics/LUFS_Loudness_Meter", false, -1)
+    local A=reaper.TrackFX_SetEnabled(tr, reaper.TrackFX_GetCount(tr)-1, enabled)
+    return true
+  else
+    local A=reaper.TrackFX_SetEnabled(tr, index, enabled)
+    return false
+  end
+end
+
+--A=ultraschall.LUFS_Metering_AddEffect(true)
+
+function ultraschall.LUFS_Metering_ShowEffect()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>LUFS_Metering_ShowEffect</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.LUFS_Metering_ShowEffect()</functioncall>
+  <description>
+    Shows Ultraschall's LUFS Loudness Meter in the Master Track(only available in Ultraschall-installations).
+  </description>
+  <chapter_context>
+    Ultraschall Specific
+    LUFS Loudness Meter
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, show, lufs, loudness meter, enabled</tags>
+</US_DocBloc>
+--]]
+  local tr = reaper.GetMasterTrack(0)
+  local index=-1
+  for i=0, reaper.TrackFX_GetCount(tr)-1 do
+    local retval, fx=reaper.TrackFX_GetFXName(tr, i)
+    if fx:match("LUFS Loudness Metering") then
+      index=i
+    end
+  end
+  if index~=-1 then
+    reaper.TrackFX_SetOpen(tr, index, true)
+  end
+end
+
+--ultraschall.LUFS_Metering_ShowEffect()

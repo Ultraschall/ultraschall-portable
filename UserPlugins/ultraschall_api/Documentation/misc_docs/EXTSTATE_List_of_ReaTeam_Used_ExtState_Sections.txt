@@ -1,0 +1,823 @@
+
+/Cursor/az_Go To Timecode/TimecodeInput_Module_AZ.lua
+	 "GoToTimecode_AZ"
+	 "GoToTimecode_AZ"
+	 "GoToTimecode_AZ"
+
+/Development/Lokasenna_GUI v2/Library/Core.lua
+	name
+
+/Development/Lokasenna_GUI v2/Library/Set Lokasenna_GUI v2 library path.lua
+	"Lokasenna_GUI"
+
+/Development/Lokasenna_Run Lua script in debug mode.lua
+	"Lokasenna_Debug mode"
+
+/Development/Lokasenna_Script Compiler.lua
+	GUI.name
+	GUI.name
+	GUI.name
+	GUI.name
+
+/Development/cfillion_Interactive ReaScript.lua
+	ireascript.EXT_SECTION
+	ireascript.EXT_SECTION
+
+/Development/mpl_API help.lua
+	conf.ES_key
+	string section
+
+/Envelopes/BuyOne_(Un)Collapse envelope lanes.lua
+	ext_state_sect
+	ext_state_sect
+
+/Envelopes/Takes/amagalma_Change Take Volume (insert 4 points) for selected items (or selected take vol env) in time selection by set amount (Settings).lua
+	 "amagalma_Take_Vol_in_TS"
+	 "amagalma_Take_Vol_in_TS"
+
+/Envelopes/Takes/spk77_Store take envelope source.eel
+	"take_envelope_source"
+
+/Envelopes/cfillion_Linear ramp selected envelope points.lua
+	EXT_SECTION
+
+/Envelopes/cool_MK ShaperStutter.lua
+	'_Slicer_'
+	ext_sec
+	'_Slicer_'
+	'_Slicer_'
+	"cool_MK_Shaper/Stutter.lua"
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	"cool_MK_Shaper/Stutter.lua"
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'cool_MK_Shaper/Stutter.lua'
+	'_Slicer_'
+
+/Envelopes/js_Envelope LFO generator and shaper.lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/FX/BuyOne_FX presets navigation/BuyOne_Cycle through focused FX presets backwards (guide inside).lua
+	scr_name
+
+/FX/BuyOne_FX presets navigation/BuyOne_Cycle through focused FX presets forward (guide inside).lua
+	scr_name
+
+/FX/BuyOne_Link two FX parameters via parameter modulation (guide inside).lua
+	sect_ID..cmd_ID
+
+/FX/Fabian_MFXlist.lua
+	MFXlist.SCRIPT_NAME
+	MFXlist.SCRIPT_NAME
+	MFXlist.SCRIPT_NAME
+
+/FX/amagalma_Toggle wet 0-100% (or current value) for focused FX.lua
+	 "ToggleWet"
+	 "ToggleWet"
+
+/FX/edgemeal_Save selected tracks floating fx windows (4 slots).lua
+	"Edgemeal_fx_float"
+
+/Items Editing/Breeder_spk77_GlueTools.lua
+	conf.ES_key
+
+/Items Editing/BuyOne_Exclusively solo or mute only selected grouped items (settings inside).lua
+	cmd_ID
+
+/Items Editing/Lokasenna_Smart fill gaps by stretching item tails.lua
+	"Lokasenna"
+
+/Items Editing/MK Slicer (80icio MOD).lua
+	'_Slicer_'
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	ext_sec
+	'_Slicer_'
+	'_Slicer_'
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	scriptname
+	'_Slicer_'
+
+/Items Editing/az_Smart split items by mouse cursor.lua
+	"SmartSplit_AZ"
+
+/Items Editing/cfillion_Show all saved nudge settings.lua
+	EXT_SECTION
+
+/Items Editing/cool_MK Slicer.lua
+	'_Slicer_'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	ext_sec
+	'_Slicer_'
+	'_Slicer_'
+	"cool_MK Slicer.lua"
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	"cool_MK Slicer.lua"
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'cool_MK Slicer.lua'
+	'_Slicer_'
+
+/Items Editing/rodilab_Match criteria (match with BWF and iXML metadata).lua
+	extstate_id
+
+/Items Editing/spk77_Copy items and store positions.eel
+	"copy_paste"
+
+/Items Properties/rodilab_Rename takes and item notes with BWF and iXML metadata.lua
+	extstate_id
+	extstate_id
+
+/Items Properties/spk77_Breeder_PL9_Copy paste item properties (incl BWF).eel
+	"babag_copy_paste_item_params"
+
+/MIDI Editor/BuyOne_Insert note at constant velocity set via a dialogue (guide inside).lua
+	cmd_ID..scr_name
+
+/MIDI Editor/Lokasenna_Copy values from selected midi notes.lua
+	 section
+	script_name
+	script_name
+	script_name
+
+/MIDI Editor/Lokasenna_Theory Helper.lua
+	name
+	name
+	name
+	name
+	name
+	name
+	name
+	name
+	name
+	name
+	GUI.name
+	GUI.name
+	GUI.name
+	GUI.name
+	GUI.name
+
+/MIDI Editor/cfillion_Step sequencing (replace mode).lua
+	EXT_SECTION
+	EXT_SECTION
+
+/MIDI Editor/js_Insert CC or pitch at mouse position, leaving other selected.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, apply to existing CCs or velocities in lane under mouse).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, apply to existing CCs or velocities in last clicked lane).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, insert CCs in time selection in lane under mouse).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, insert CCs in time selection in last clicked lane).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, insert CCs under selected notes in lane under mouse).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_LFO Tool (MIDI editor version, insert CCs under selected notes in last clicked lane).lua
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+	"LFO generator"
+
+/MIDI Editor/js_MIDI Inspector.lua
+	"MIDI Inspector"
+	"MIDI Inspector"
+	"MIDI Inspector"
+	"MIDI Inspector"
+	"MIDI Inspector"
+
+/MIDI Editor/js_Mouse editing - Connect nodes.lua
+	"js_Insert ramps"
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Draw LFO.lua
+	"js_Draw LFO"
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Draw ramp.lua
+	"js_Draw ramp"
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Extract nodes.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Multi tool.lua
+	"js_Multi Tool"
+	"js_Multi Tool"
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Run script that is armed in toolbar.lua
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Slice notes.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Mouse editing - Swipe select.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Option - Toggle skip redundant events when inserting CCs.lua
+	"js_Mouse actions"
+	"LFO generator"
+
+/MIDI Editor/js_Remove redundant CCs (from selected events in lane under mouse).lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Remove redundant CCs (from selected events in last clicked lane).lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Remove redundant CCs.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/js_Select and deselect MIDI notes by step pattern.lua
+	"js_Step pattern"
+	"js_Step pattern"
+	"js_Step pattern"
+
+/MIDI Editor/js_Tilt selected events in lane under mouse to fit both sides.lua
+	"js_Mouse actions"
+	"js_Mouse actions"
+	"js_Mouse actions"
+
+/MIDI Editor/kl_Preset velocity.lua
+	"Preset Velocity"
+	"Preset Velocity"
+
+/MIDI Editor/spk77_MIDI velocity tool.eel
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+	"spk77_velocity_tool"
+
+/MIDI Editor/talagan_Distribute MIDI notes evenly lib.lua
+	"talagan_Distribute MIDI notes evenly"
+
+/MIDI Editor/timtam_AccessiChords/timtam_AccessiChords.lua
+	sectionName
+
+/MIDI Inline Editor/js_Select CC lanes to show in MIDI item under mouse.lua
+	"Select CC lanes to show"
+	"Select CC lanes to show"
+
+/MIDI Inline Editor/js_Select CC lanes to show in selected MIDI items.lua
+	"Select CC lanes to show"
+	"Select CC lanes to show"
+
+/Markers/cfillion_Copy and paste project markers and regions.lua
+	EXT_SECTION
+
+/Project Properties/BuyOne_Save-Load window set #1-10 with Mixer scroll position.lua
+	scr_name
+
+/Project Properties/solger_ReaLauncher.lua
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+	appname
+
+/Tracks Properties/BuyOne_Mute empty tracks with FX and optionally set their FX offline (guide inside).lua
+	cmd_ID
+
+/Tracks Properties/amagalma_Normalize selected tracks - calculate only for the time selection, if present (peakRMSLUFS)....lua
+	 "amagalma_NormalizeTracks"
+
+/Tracks Properties/rodilab_Track name groups.lua
+	extstate_id
+
+/Various/Airon_Colour Swatch.lua
+	string section
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+	r_ini_strsection
+
+/Various/BuyOne_Check length of custom action(s).lua
+	script_name
+	script_name
+	script_name
+
+/Various/BuyOne_Cursor toggleable docked toolbars/BuyOne_Cursor toggleable sidebars (settings inside).lua
+	'+'
+
+/Various/BuyOne_Dynamic ReaperMenu (guide inside).lua
+	scr_name..'_'..sect_ID_t[sect_ID][1]
+
+/Various/BuyOne_Exclusive dummy toggles.lua
+	section_name
+
+/Various/BuyOne_REAPER Profile terminal/BuyOne_REAPER Profile terminal (autosave all) (guide inside).lua
+	) stores one only after the script has been launched
+	scr_name
+	) stores one only after the script has been launched
+	scr_name
+
+/Various/BuyOne_REAPER Profile terminal/BuyOne_REAPER Profile terminal (guide inside).lua
+	scr_name
+	scr_name
+	scr_name
+
+/Various/Dfk_Project map navigator.lua
+	 "Dfk Project Map"
+	 "Dfk Project Map"
+	 "Dfk Project Map"
+	 "Dfk Project Map"
+	 "Dfk Project Map"
+
+/Various/JamesHE_Comps Display.eel
+	extname
+	extname
+	extname
+
+/Various/Lokasenna_Insert most recent exported file....lua
+	"Lokasenna"
+
+/Various/PL9-amagalma_Source Time Position Tool v2.lua
+	Section
+	Section
+	Section
+	Section
+
+/Various/amagalma_Backup Limit Settings - Keep x number of most recent timestamped backups of current project file.lua
+	 "amagalma_backup_limit"
+	 "amagalma_backup_limit"
+
+/Various/amagalma_Chunk ViewerEditor find.lua
+	"amagalma_Chunk Viewer-Editor"
+	"amagalma_Chunk Viewer-Editor"
+	"amagalma_Chunk Viewer-Editor"
+
+/Various/amagalma_Chunk ViewerEditor.lua
+	"amagalma_Chunk Viewer-Editor"
+	"amagalma_Chunk Viewer-Editor"
+
+/Various/amagalma_Edit Group Management Utility.lua
+	 "Edit Groups"
+
+/Various/amagalma_Grid Settings button.lua
+	"amagalma_Grid Settings"
+	"amagalma_Grid Settings"
+	"amagalma_Grid Settings"
+	"amagalma_Grid Settings"
+
+/Various/amagalma_ReaNamer Replace Help.lua
+	"Track-Item Name Manipulation"
+	"Track-Item Name Manipulation"
+	"Track-Item Name Manipulation"
+	"Track-Item Name Manipulation"
+
+/Various/amagalma_ReaNoir track-item-take coloring utility.lua
+	"ReaNoir"
+	"ReaNoir"
+	"ReaNoir"
+	"ReaNoir"
+	"ReaNoir"
+
+/Various/amagalma_Save current Horizontal Zoom as preset bundle.lua
+	 "amagalma_Horizontal zoom presets"
+
+/Various/amagalma_Save current Vertical Zoom as preset bundle.lua
+	 "amagalma_Vertical zoom presets"
+
+/Various/amagalma_Set size of Vertical Zoom presets.lua
+	 "amagalma_Vertical zoom presets"
+
+/Various/amagalma_Toggle Edit Group (Edit Group Management Utility).lua
+	 "Edit Groups"
+
+/Various/amagalma_Transport Play (with memory - no undo).lua
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+
+/Various/amagalma_Transport Play-Stop (with memory - no undo).lua
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+
+/Various/amagalma_Transport Stop - Toggle position (with memory - no undo).lua
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+	"Play-Stop with memory"
+
+/Various/amagalma_gianfini_ReaNamer (track-item-region renaming utility).lua
+	"Track-Item Name Manipulation"
+	"Track-Item Name Manipulation"
+
+/Various/buyone_Convert custom actions to Lua ReaScript/BuyOne_Convert custom action to Lua ReaScript.lua
+	script_name
+	script_name
+	script_name
+
+/Various/buyone_Convert custom actions to Lua ReaScript/BuyOne_Convert custom actions in batch to Lua ReaScripts or dump as Lua code.lua
+	script_name
+
+/Various/buyone_Convert custom actions to Lua ReaScript/BuyOne_Convert filtered custom actions to Lua ReaScripts or dump as Lua code.lua
+	select(2
+	script_name
+	script_name
+	script_name
+	script_name
+	script_name
+
+/Various/cfillion_Project underrun monitor (xrun).lua
+	EXT_SECTION
+	EXT_SECTION
+
+/Various/cfillion_Song switcher.lua
+	EXT_SECTION
+	EXT_SECTION
+	EXT_SECTION
+	EXT_SECTION
+
+/Various/cfillion_Song switcher/cfillion_Song switcher - Reset data.lua
+	'cfillion_song_switcher'
+
+/Various/cfillion_Song switcher/cfillion_Song switcher - Switch song by MIDI CC.lua
+	'cfillion_song_switcher'
+
+/Various/cfillion_Song switcher/cfillion_Song switcher - Switch to next song.lua
+	'cfillion_song_switcher'
+
+/Various/cfillion_Song switcher/cfillion_Song switcher - Switch to previous song.lua
+	'cfillion_song_switcher'
+
+/Various/cfillion_Song switcher/cfillion_Song switcher - Switch to queued song.lua
+	'cfillion_song_switcher'
+
+/Various/rodilab_Color palette.lua
+	extstate_id
+
+/Various/vo_Pomodoro.lua
+	vo
+	vo
+	vo
+	vo
+	vo
+	vo
+	vo
+	vo
+	vo
+
+/Video/js_Video - Create thumbnail items in selected track for selected video items.lua
+	"js_Thumbnails"
+
+/Video/js_Video - Extract thumbnails of video items to empty, MIDI or video processor items.lua
+	"js_Thumbnails"

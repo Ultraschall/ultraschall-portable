@@ -25,10 +25,14 @@
 ]]
 
 -- Some Basic Unit Tests
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 -- are all functions still available, when with the modules-approach
-found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
+found_dirs, dirs_array, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(ultraschall.Api_Path.."/Modules/")
 
 A=""
 
@@ -36,15 +40,15 @@ for i=1, found_files do
   A=A.."\n"..ultraschall.ReadFullFile(files_array[i])
 end
 
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_datastructures_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_doc_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_functions_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_gfx_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_gui_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_network_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_sound_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_tag_engine.lua")
-A=A.."\n"..ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/ultraschall_video_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_datastructures_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_doc_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gui_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_network_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_sound_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_tag_engine.lua")
+A=A.."\n"..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
 
 B=""
 

@@ -30,28 +30,6 @@
 ---        Themeing Module        ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Ultraschall-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.GetAllThemeLayoutNames()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -62,7 +40,7 @@ function ultraschall.GetAllThemeLayoutNames()
     Lua=5.3
   </requires>
   <functioncall>integer index, table ThemeLayoutNames= ultraschall.GetAllThemeLayoutNames()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns all layout-names and values of the current theme
     
     the table ThemeLayoutNames is of the following format:
@@ -114,7 +92,7 @@ function ultraschall.GetAllThemeLayoutParameters()
     Lua=5.3
   </requires>
   <functioncall>integer index, table ThemeLayoutParameters = ultraschall.GetAllThemeLayoutParameters()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns all theme-layout-parameter attributes of the current theme
     
     the table ThemeLayoutParameters is of the following format:
@@ -430,7 +408,7 @@ function ultraschall.Theme_Defaultv6_SetHideTCPElement(Layout, Element, if_mixer
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetHideTCPElement(string Layout, integer Element, boolean if_mixer_visible, boolean if_track_not_selected, boolean if_track_not_armed, boolean always_hide, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Hides/unhides elements from TCP when using the default Reaper 6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -519,7 +497,7 @@ function ultraschall.Theme_Defaultv6_GetHideTCPElement(Layout, Element)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, boolean if_mixer_visible, boolean if_track_not_selected, boolean if_track_not_armed, boolean always_hide = ultraschall.Theme_Defaultv6_GetHideTCPElement(string Layout, integer Element)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Get the current hides/unhide-state of elements from TCP when using the default Reaper 6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -595,7 +573,7 @@ function ultraschall.Theme_Defaultv6_SetTCPNameSize(Layout, size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPNameSize(string Layout, integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the trackname-label in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -649,7 +627,7 @@ function ultraschall.Theme_Defaultv6_GetTCPNameSize(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTCPNameSize(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the trackname-label in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -697,7 +675,7 @@ function ultraschall.Theme_Defaultv6_SetTCPVolumeSize(Layout, size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPVolumeSize(string Layout, integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the volume in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -751,7 +729,7 @@ function ultraschall.Theme_Defaultv6_GetTCPVolumeSize(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTCPVolumeSize(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the volume in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -799,7 +777,7 @@ function ultraschall.Theme_Defaultv6_SetTCPInputSize(Layout, size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPInputSize(string Layout, integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the input in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -853,7 +831,7 @@ function ultraschall.Theme_Defaultv6_GetTCPInputSize(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTCPInputSize(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the input in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -901,7 +879,7 @@ function ultraschall.Theme_Defaultv6_SetTCPMeterSize(Layout, size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPMeterSize(string Layout, integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the meter in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -955,7 +933,7 @@ function ultraschall.Theme_Defaultv6_GetTCPMeterSize(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTCPMeterSize(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the meter in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1003,7 +981,7 @@ function ultraschall.Theme_Defaultv6_SetTCPMeterLocation(Layout, location, persi
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPMeterLocation(string Layout, integer location, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the location of the meter in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1053,7 +1031,7 @@ function ultraschall.Theme_Defaultv6_GetTCPMeterLocation(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer location = ultraschall.Theme_Defaultv6_GetTCPMeterLocation(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the location of the meter in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1097,7 +1075,7 @@ function ultraschall.Theme_Defaultv6_SetTCPFolderIndent(indent, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPFolderIndent(integer indent, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the indentation of folders in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1150,7 +1128,7 @@ function ultraschall.Theme_Defaultv6_GetTCPFolderIndent()
     Lua=5.3
   </requires>
   <functioncall>integer indent = ultraschall.Theme_Defaultv6_GetTCPFolderIndent()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the indentation of folders in the tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1195,7 +1173,7 @@ function ultraschall.Theme_Defaultv6_SetTCPAlignControls(alignement, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPAlignControls(integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the alignment of controls in tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1244,7 +1222,7 @@ function ultraschall.Theme_Defaultv6_GetTCPAlignControls()
     Lua=5.3
   </requires>
   <functioncall>integer alignement = ultraschall.Theme_Defaultv6_GetTCPAlignControls()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the alignment of controls in the tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1285,7 +1263,7 @@ function ultraschall.Theme_Defaultv6_SetMCPAlignControls(alignement, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetMCPAlignControls(integer alignement, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the alignment of controls in mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1333,7 +1311,7 @@ function ultraschall.Theme_Defaultv6_GetMCPAlignControls()
     Lua=5.3
   </requires>
   <functioncall>integer alignement = ultraschall.Theme_Defaultv6_GetMCPAlignControls()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the alignment of controls in the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1373,7 +1351,7 @@ function ultraschall.Theme_Defaultv6_SetTransSize(size)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTransSize(integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the transport-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1419,7 +1397,7 @@ function ultraschall.Theme_Defaultv6_GetTransSize()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTransSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the transport-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1461,7 +1439,7 @@ function ultraschall.Theme_Defaultv6_SetTransPlayRateSize(size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTransPlayRateSize(integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the playrate-slider in transport-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1515,7 +1493,7 @@ function ultraschall.Theme_Defaultv6_GetTransPlayRateSize()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetTransPlayRateSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the playrate-slider in transport-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1558,7 +1536,7 @@ function ultraschall.Theme_Defaultv6_SetEnvNameSize(size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetEnvNameSize(integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the name in envelopes when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1612,7 +1590,7 @@ function ultraschall.Theme_Defaultv6_GetEnvNameSize()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetEnvNameSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the name in envelopes when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1655,7 +1633,7 @@ function ultraschall.Theme_Defaultv6_SetEnvFaderSize(size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetEnvFaderSize(integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the faders in envelopes when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1708,7 +1686,7 @@ function ultraschall.Theme_Defaultv6_GetEnvFaderSize()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetEnvFaderSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the faders in envelopes when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1753,7 +1731,7 @@ function ultraschall.Theme_Defaultv6_SetEnvFolderIndent(indentation, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetEnvFolderIndent(integer indentation, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the indentation of the envelope in relation to the track-folder when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1801,7 +1779,7 @@ function ultraschall.Theme_Defaultv6_GetEnvFolderIndent()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetEnvFolderIndent()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the indentation of the envelope in relation to the track-folder when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1841,7 +1819,7 @@ function ultraschall.Theme_Defaultv6_SetEnvSize(size)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetEnvSize(integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the envelope-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1888,7 +1866,7 @@ function ultraschall.Theme_Defaultv6_GetEnvSize()
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetEnvSize()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size of the envelope-controls when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1930,7 +1908,7 @@ function ultraschall.Theme_Defaultv6_SetMCPFolderIndent(indentation, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetMCPFolderIndent(integer indentation, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the folder-indentation in mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -1983,7 +1961,7 @@ function ultraschall.Theme_Defaultv6_GetMCPFolderIndent()
     Lua=5.3
   </requires>
   <functioncall>integer alignement = ultraschall.Theme_Defaultv6_GetMCPFolderIndent()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the folder-indentaion in the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2028,7 +2006,7 @@ function ultraschall.Theme_Defaultv6_SetStyleMCPElement(Layout, Element, if_trac
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetStyleMCPElement(string Layout, integer Element, boolean if_track_selected, boolean if_track_not_selected, boolean if_track_armed, boolean if_track_not_armed, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets style of elements from MCP when using the default Reaper 6-theme when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2102,7 +2080,7 @@ function ultraschall.Theme_Defaultv6_GetStyleMCPElement(Layout, Element)
     Lua=5.3
   </requires>
   <functioncall>boolean retval, boolean is_track_is_selected, boolean if_track_not_selected, boolean is_track_is_armed, boolean if_track_not_armed = ultraschall.Theme_Defaultv6_GetStyleMCPElement(string Layout, integer Element)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets style of elements from MCP when using the default Reaper 6-theme when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2161,7 +2139,7 @@ function ultraschall.Theme_Defaultv6_SetMCPBorderStyle(Layout, style, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetMCPBorderStyle(string Layout, integer style, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the style of the border of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2213,7 +2191,7 @@ function ultraschall.Theme_Defaultv6_GetMCPBorderStyle(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetMCPBorderStyle(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the style of the border of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2259,7 +2237,7 @@ function ultraschall.Theme_Defaultv6_SetMCPMeterExpansion(Layout, size, persist)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetMCPMeterExpansion(string Layout, integer size, boolean persist)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size of the meter-expansion of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2310,7 +2288,7 @@ function ultraschall.Theme_Defaultv6_GetMCPMeterExpansion(Layout)
     Lua=5.3
   </requires>
   <functioncall>integer size = ultraschall.Theme_Defaultv6_GetMCPMeterExpansion(string Layout)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the meter-expansion of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2355,7 +2333,7 @@ function ultraschall.Theme_Defaultv6_SetMCPSizeAndLayout(tracknumber, Layout, si
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetMCPSizeAndLayout(integer tracknumber, string Layout, integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size and layout of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2412,7 +2390,7 @@ function ultraschall.Theme_Defaultv6_SetTCPSizeAndLayout(tracknumber, Layout, si
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_SetTCPSizeAndLayout(integer tracknumber, string Layout, integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Sets the size and layout of the tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2466,7 +2444,7 @@ function ultraschall.Theme_Defaultv6_GetTCPSizeAndLayout(tracknumber)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_GetTCPSizeAndLayout(integer tracknumber, string Layout, integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size and layout of the tcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2519,7 +2497,7 @@ function ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(tracknumber)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(integer tracknumber, string Layout, integer size)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Gets the size and layout of the mcp when using default v6-theme
     
     This reflects the settings from the Theme-Adjuster.
@@ -2559,3 +2537,93 @@ function ultraschall.Theme_Defaultv6_GetMCPSizeAndLayout(tracknumber)
   
   return TCPLayout:sub(-1,-1), size
 end
+
+function ultraschall.GetTrack_ThemeElementPositions(track)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrack_ThemeElementPositions</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>table ThemeElements = ultraschall.GetTrack_ThemeElementPositions(MediaTrack track)</functioncall>
+  <description>
+    returns a list of all theme-elements for a track
+    
+    the table ThemeElements is of the following format:
+    
+      ThemeLayoutNames[index]["element"] - the name of the theme-element 
+      ThemeLayoutNames[index]["x"] - the x-position of the theme-element
+      ThemeLayoutNames[index]["y"] - the y-position of the theme-element
+      ThemeLayoutNames[index]["w"] - the width of the theme-element
+      ThemeLayoutNames[index]["h"] - the height of the theme-element
+      ThemeLayoutNames[index]["visible"] - true, the theme element is visible; false, the theme-element is invisible(width and heigh=0)
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table ThemeElements - a table with all walter-theme elements, their positions and their visibility-state
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose Walter-theme-element-positions you want to query
+  </parameters>
+  <chapter_context>
+    Themeing
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Themeing_Module.lua</source_document>
+  <tags>theme management, get, all, track element positions, visibility</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("GetTrack_ThemeElementPositions", "track", "must be a MediaTrack", -1) return end
+  local WalterElements={}
+  for i=1, #ultraschall.WalterElements do
+    local Aretval, AstringNeedBig = reaper.GetSetMediaTrackInfo_String(track, "P_UI_RECT:"..ultraschall.WalterElements[i], "", false)
+    if Aretval==true then
+      WalterElements[#WalterElements+1]={}
+      WalterElements[#WalterElements]["element"]=ultraschall.WalterElements[i]
+      WalterElements[#WalterElements]["x"], WalterElements[#WalterElements]["y"], WalterElements[#WalterElements]["w"], WalterElements[#WalterElements]["h"]=AstringNeedBig:match("(.-) (.-) (.-) (.*)")
+      WalterElements[#WalterElements]["x"]=tonumber(WalterElements[#WalterElements]["x"])
+      WalterElements[#WalterElements]["y"]=tonumber(WalterElements[#WalterElements]["y"])
+      WalterElements[#WalterElements]["w"]=tonumber(WalterElements[#WalterElements]["w"])
+      WalterElements[#WalterElements]["h"]=tonumber(WalterElements[#WalterElements]["h"])
+      WalterElements[#WalterElements]["visible"]=(WalterElements[#WalterElements]["h"]~=0 or WalterElements[#WalterElements]["w"]~=0)
+    end
+  end
+  return WalterElements
+end
+
+function ultraschall.GetAllThemeElements()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetAllThemeElements</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=6.43
+    Lua=5.3
+  </requires>
+  <functioncall>table ThemeElements = ultraschall.GetAllThemeElements()</functioncall>
+  <description>
+    returns a list of all theme-element-names available
+
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table ThemeElements - a table with all walter-theme elements-names available
+  </retvals>
+  <chapter_context>
+    Themeing
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Themeing_Module.lua</source_document>
+  <tags>theme management, get, all, theme element, names</tags>
+</US_DocBloc>
+]]
+  local WalterElements={}
+  for i=1, #ultraschall.WalterElements do
+    WalterElements[i]=ultraschall.WalterElements[i]
+  end
+  return WalterElements
+end
+

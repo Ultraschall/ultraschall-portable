@@ -30,28 +30,6 @@
 ---        Clipboard Module       ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Clipboard-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.GetMediaItemsFromClipboard()  
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -128,7 +106,7 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>PutMediaItemsToClipboard_MediaItemArray</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.6
     Reaper=5.95
     Lua=5.3
   </requires>
@@ -155,10 +133,15 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
   if ultraschall.IsValidMediaItemArray(MediaItemArray)==false then ultraschall.AddErrorMessage("PutMediaItemsToClipboard_MediaItemArray", "MediaItemArray", "must be a valid MediaItemArray", -1) return false end
   reaper.PreventUIRefresh(1)
   local count, MediaItemArray_selected = ultraschall.GetAllSelectedMediaItems() -- get old selection
-  reaper.SelectAllMediaItems(0, false) -- deselect all MediaItems
+  for i=1, reaper.CountMediaItems(0)-1 do
+    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)
+  end
   local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray) -- select to-be-cut-MediaItems
   reaper.Main_OnCommand(40057,0) -- copy them into clipboard
-  reaper.SelectAllMediaItems(0, false) -- deselect all MediaItems
+
+  for i=1, reaper.CountMediaItems(0)-1 do
+    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)
+  end
   local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray_selected) -- select formerly selected MediaItems
   reaper.PreventUIRefresh(-1)
   reaper.UpdateArrange()

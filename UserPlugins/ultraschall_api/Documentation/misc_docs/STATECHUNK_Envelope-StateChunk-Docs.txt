@@ -1,0 +1,164 @@
+EnvelopeStateChunk Docs(work in progress) by Meo-Ada Mespotine(mespotine.de) for the ultraschall.fm-project
+        Note: Includes also Pooled/Automation-Items themselves, even though they are only available in .rpp-projectfiles and .ReaperAutoItem-files
+              
+              number is equal to float
+              
+              
+Normal Envelopes:
+<xxx - the envelope-name, which can be:
+    VOLENV2 - for Volume-envelope
+    PANENV2 - for Pan-envelope
+    WIDTHENV2 - for Width-envelope
+    VOLEN - for Pre-FX-Volume-envelope
+    PANENV - for Pre-FX-Pan-envelope
+    WIDTHENV - for Pre-FX-Width-envelope
+    MUTEENV - for Mute-envelope
+    VOLENV3 - for Trim-Volume-envelope
+    PARMENV integer fx_env_id:wet_byp number minimum_range number maximum_range number unknown
+      for envelopes of fx-plugins/jsfx/instruments
+        integer fx_env_is:wet_byp - fx_env is the id of the envelope, as provided by this fx; beginning with 1 for the first
+                                    :wet_byp is either not existing(even the : missing), wet or bypass
+        number minimum_range - the minimum value, accepted by this envelope; 6 digits-precision
+        number maximum_range - the maximum-value, accepted by this envelope; 6 digits-precision
+        number unknown - unknown
+            
+            ACT integer act integer automation_settings
+                integer act - 0, bypass on
+                              1, no bypass
+                integer automation_settings - automation item-options for this envelope
+                                             -1, project default behavior, outside of automation items
+                                              0, automation items do not attach underlying envelope
+                                              1, automation items attach to the underlying envelope on the right side
+                                              2, automation items attach to the underlying envelope on both sides
+                                              3, no automation item-options for this envelope
+                                              4, bypass underlying envelope outside of automation items
+                                      
+            VIS integer visible  integer lane  integer unknown
+                integer visible - 1, envelope is visible
+                                  0, envelope is invisible
+                integer lane - 1, envelope is in it's own lane 
+                               0, envelope is in media-lane
+                integer unknown - 1, seems to be standard-setting
+                
+            LANEHEIGHT integer height integer compacted
+                integer height - 24 - 263 pixels
+                integer compacted - 1, envelope-lane is compacted("normal" height is not shown but still stored in height); 
+                                    0, envelope-lane is "normal" height
+
+            ARM integer armedstate
+                integer armedstate - 0, unarmed
+                                     1, armed
+                
+            DEFSHAPE integer shape integer b integer c
+                integer shape - 0, linear
+                                1, square
+                                2, slow start/end
+                                3, fast start
+                                4, fast end
+                                5, bezier
+                integer b - unknown; default value is -1; probably pitch/snap
+                            -1, unknown
+                            2, unknown                        
+                integer c - unknown; default value is -1; probably pitch/snap
+                            -1, unknown
+                            2, unknown                
+
+            VOLTYPE integer voltype
+                voltype - 1, default volume-type is fader-scaling; if VOLTYPE-entry is not existing, default volume-type is amplitude-scaling
+
+            PT number position  integer volume  integer point_shape_1 integer point_shape_2 integer selected  number bezier_tens1  number bezier_tens2
+              Every envelope-point has it's own PT-entry. Might appear more than once!
+                number position - position of the point in seconds
+                integer volume - volume as fader-value
+                integer point_shape - may disappear with certain shapes, when point is unselected
+                                      the values for point_shape_1 and point_shape_2 are:
+                                      0 0, linear
+                                      1 0, square
+                                      2 0, slow start/end
+                                      3 0, fast start
+                                      4 0, fast end
+                                      5 1, bezier
+
+                integer selected - 1, selected; 
+                                   disappearing, unselected
+
+                number unknown - disappears, if no bezier is set
+
+                number bezier_tens2 - disappears, if no bezier is set; -1 to 1 
+                                      0, for no bezier tension
+                                      -0.5, for fast-start-beziertension
+                                      0.5, for fast-end-beziertension
+                                      1, for square-tension
+
+            POOLEDENVINST a number position  number length  number start_offset  number playrate  integer selected  number baseline  integer loopsource  i  j  integer pool_id  integer mute
+              The automation-item to include. Does NOT allow access to the envpoints within the automation-item!
+                integer id - counter of automation-items; 1-based
+                number position - position in seconds
+                number length - length in seconds
+                number start_offset - offset in seconds
+                number playrate - playrate; minimum value is 0.001; default is 1.000
+                integer selected - 1, automation item is selected; 0, automation item isn't selected
+                number baseline - 0(-100) to 1(+100); default 0.5(0)
+                number amplitude - -2(-200) to 2(+200); default 1 (100)
+                loopsource - Loop Source; 0 and 1 are allowed settings; 1 is default
+                i - unknown; 0 is default
+                j - unknown; 0 is default
+                integer pool_id - counts the automation-item-instances in this project, including deleted ones; 1-based
+                integer mute - 1, mute automation-item; 0, unmute automation-item
+
+Parameter Learn:
+    PARMLEARN  integer parameterid[:name]  integer MIDI_note  integer checkbox_flags
+    
+    
+Parameter Alias:
+    PARMALIAS  integer parameterid  string aliasname
+        integer parameterid - the id-number of the parameter, to which this alias shall be applied to
+        string aliasname    - the new aliasname, in " ", when there are spaces in the alias
+    
+
+Automation Items(pooled items):
+  <POOLEDENV
+    ID integer id
+      the ID of the automation pool; will not be in .ReaperAutoItem-files, only in project-files
+        integer id - the id of the automation-pool, beginning with 1 for the first, 2 for the second, etc
+        
+    NAME string "name"
+        string "name" - the name for the automation-pool. Will not be in .ReaperAutoItem-files, but rather in the filename "name.ReaperAutoItem"
+        
+    SRCLEN number seconds
+      unknown, but seems to be twice the size of the initial(!) creation-length in seconds
+        number seconds - twice the size of the initial creation-length in seconds of the automation-item
+        
+    LFO integer lfo_shape integer amp_skew integer pulse_width integer cycles integer freq_skew integer phase
+        integer lfo_shape - the shape of the LFO, that forms the envelope-shape
+                            0, None (default)
+                            1, Parametric
+                            2, Triangle
+                            3, Saw
+                            4, Square
+        integer amp_skew - the amp-skew of the LFO-shape; range -100 to 100; default is 0
+                           0, maximum volume; negative, lower parts of the waveform are lesser loud; positive, upper parts of the waveform is lesser loud.
+        integer pulse_width - the pulse-width of the LFO; has only effect on square-wave-LFOs; range 1 to 99; default is 50
+        integer cycles - the number of cycles per second; range 1 to 100; default is 1
+        integer freq_skew - the skew of the frequency of the LFO; range -100 to 100; the lower the skew, the shorter the waves become, without being higher frequencied; default is 1
+        integer phase - the phase of the LFO; 0 to 100; default is 0
+        
+    PPT number position  integer volume  integer point_shape number bezier_tens
+        Every envelope-point has it's own PPT-entry(not PT-entry, as usual envelope-points are named). Might appear more than once!
+        There will be two envelope-points in a newly created automation-item, one at the beginning, one at the end. They can be safely deleted, though.
+                number position - position of the point in seconds
+                integer volume - volume as fader-value
+                integer point_shape - may disappear with certain shapes, when point is unselected
+                                      0, linear
+                                      1, square
+                                      2, slow start/end
+                                      3, fast start
+                                      4, fast end
+                                      5, bezier
+
+                number bezier_tens - bezier-tension; value range -1 to 1 
+                                    0, for no bezier tension
+                                    -0.5, for fast-start-beziertension
+                                    0.5, for fast-end-beziertension
+                                    1, for square-tension    
+  >

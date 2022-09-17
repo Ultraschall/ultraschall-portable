@@ -1,0 +1,56 @@
+Documented by Meo-Ada Mespotine (mespotine.de) for the ultraschall.fm-project
+
+For some time now, it is possible to use Cocko's own screen-recording tool "LiceCap" directly from Reaper(https://www.cockos.com/licecap/).
+Run the action: 41298 - "Run LICEcap (animated screen capture utility)", which will open a dialog window, where you can select the LiceCap-app from.
+                The next time you run this action, LiceCap will be started right away.
+
+The path to the licecap-app is stored in the reaper.ini: [REAPER] -> licecap_path, like
+    licecap_path=LICEcap\licecap.exe
+This path can be relative, so you can copy the LiceCap-folder into your Reaper-App-Folder, when using a portable installation. 
+That way, you can take LiceCap anywhere, where you take your Reaper with you.
+
+LiceCap stores its preferences-values into LiceCap.ini, that can be located in the same folder as the app itself.
+The following settings are stored into the LiceCap.ini.
+
+[licecap]
+lastfn=C:\Program Files (x86)\LICEcap\z.gif
+            last used filename
+            
+wnd_r=0 1 1133 703 
+            position of the capture-frame: x_left y_top x_right y_bottom in pixels
+            negative values are allowed, so positioning of the LiceCap-window outside the top and left border of the viewport is possible
+            default is: 0 0 835 571
+            x_right and y_bottom must be bigger than x_left and y_top, or LiceCap uses it's default values
+            x_right and y_bottom can't be bigger more than a few pixels behind the border
+            
+maxfps=99 
+            max frames per second, minimum value is 1
+            maximum value is 2147483647
+            negative values produce weird fps-values within the LiceCap-App
+            
+prefs=x - bitmask
+            &1 - display in animation: title frame - checkbox
+            &2 - Big font - checkbox
+            &4 - display in animation: mouse button press - checkbox
+            &8 - display in animation: elapsed time - checkbox
+            &16 - Ctrl+Alt+P pauses recording - checkbox
+            &32 - Use .GIF transparency for smaller files - checkbox
+            &64 - Automatically stop after xx seconds - checkbox
+            
+titlems=1200
+            show titlecard-length in milliseconds
+            negative values are allowed, though useless
+            maximum is 1410065400, though 2147483600 seems to be settable
+            
+gifloopcnt=98
+            .GIF repeat count (0=infinite)
+            negative values are allowed, though useless
+            0 is minimum value, 2147483647 is maximum value, higher than that makes it negative
+            
+stopafter=1200      
+            automatically stop after xx seconds, in milliseconds
+            negative values are allowed, though useless
+            2147483600 is maximum value
+            
+title=Titlesequence  
+            text for the title-card, newlines will be ignored, after reload!

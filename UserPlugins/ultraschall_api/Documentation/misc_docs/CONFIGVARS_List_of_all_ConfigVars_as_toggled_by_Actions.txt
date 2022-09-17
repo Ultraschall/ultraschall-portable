@@ -1,0 +1,936 @@
+#ConfigVars triggered by Reaper's actions in the Main-Section.
+#
+#Groups of three are toggle actions and therefore you can see, which is the dif between three toggles.
+#The dif between second and third should be usually the dif-value you are looking for.
+#
+#Groups of only one are actions, who only set a config-var once, but do not toggle it.
+#Some actions do not have a name but still trigger config-vars. It is unknown, why.
+#
+#This list is probably not comprehensive, keep this in mind.
+#
+#docs licensed under MIT-license - done by Meo-Ada Mespotine
+
+Track: Toggle mute for master track
+Sec:0_AID:14=mastermutesolo 		 - INT: 35(DIF: 1)	  - DOUBLE: -2.0(DIF: )
+Sec:0_AID:14=mastermutesolo 		 - INT: 34(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:14=mastermutesolo 		 - INT: 35(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Track: Toggle solo for master track
+Sec:0_AID:15=mastermutesolo 		 - INT: 37(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:15=mastermutesolo 		 - INT: 35(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:15=mastermutesolo 		 - INT: 37(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Toggle repeat
+Sec:0_AID:1068=loop 		 - INT: -2(DIF: 5)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1068=loop 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1068=loop 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle locking
+Sec:0_AID:1135=projsellock 		 - INT: 32758(DIF: 16384)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1135=projsellock 		 - INT: 16374(DIF: 16384)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1135=projsellock 		 - INT: 32758(DIF: 16384)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Cycle ripple editing mode
+Sec:0_AID:1155=projripedit 		 - INT: -2(DIF: 6)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1155=projripedit 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1155=projripedit 		 - INT: 0(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle item grouping override
+Sec:0_AID:1156=projgroupover 		 - INT: -2(DIF: 5)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1156=projgroupover 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1156=projgroupover 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle snapping
+Sec:0_AID:1157=projshowgrid 		 - INT: 3115(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1157=projshowgrid 		 - INT: 3371(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:1157=projshowgrid 		 - INT: 3115(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle auto-view-scroll during playback
+Sec:0_AID:40036=viewadvance 		 - INT: 64(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40036=viewadvance 		 - INT: 65(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40036=viewadvance 		 - INT: 64(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle auto-crossfade on/off
+Sec:0_AID:40041=autoxfade 		 - INT: 20(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40041=autoxfade 		 - INT: 21(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40041=autoxfade 		 - INT: 20(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Move envelope points with media items
+Sec:0_AID:40070=envattach 		 - INT: 87(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40070=envattach 		 - INT: 86(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40070=envattach 		 - INT: 87(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle master track visible
+Sec:0_AID:40075=showmaintrack 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40075=showmaintrack 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40075=showmaintrack 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Record: Set record mode to time selection auto-punch
+Sec:0_AID:40076=projrecmode 		 - INT: 0(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show folder tracks in mixer
+Sec:0_AID:40080=mixeruiflag 		 - INT: 21(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40080=mixeruiflag 		 - INT: 19(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40080=mixeruiflag 		 - INT: 21(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle folder tracks grouping to left
+Sec:0_AID:40081=mixeruiflag 		 - INT: 17(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40081=mixeruiflag 		 - INT: 21(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40081=mixeruiflag 		 - INT: 17(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show normal top level tracks in mixer
+Sec:0_AID:40082=mixeruiflag 		 - INT: 16(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40082=mixeruiflag 		 - INT: 17(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40082=mixeruiflag 		 - INT: 16(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle track zoom to minimum height
+Sec:0_AID:40110=vzoom2 		 - INT: -2(DIF: 44)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40110=vzoom2 		 - INT: 38(DIF: 40)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40110=vzoom2 		 - INT: -2(DIF: 40)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle track zoom to maximum height
+Sec:0_AID:40113=vzoom2 		 - INT: 38(DIF: 40)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40113=vzoom2 		 - INT: -2(DIF: 40)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40113=vzoom2 		 - INT: 38(DIF: 40)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Loop recording always adds takes to newly recorded items (except in track free item positioning mode)
+Sec:0_AID:40114=autoxfade 		 - INT: 4(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40114=autoxfade 		 - INT: 20(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40114=autoxfade 		 - INT: 4(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle grid lines
+Sec:0_AID:40145=projshowgrid 		 - INT: 3114(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40145=projshowgrid 		 - INT: 3115(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40145=projshowgrid 		 - INT: 3114(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle tracks with receives in mixer
+Sec:0_AID:40197=mixeruiflag 		 - INT: 24(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40197=mixeruiflag 		 - INT: 16(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40197=mixeruiflag 		 - INT: 24(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle tracks with receives grouping to left
+Sec:0_AID:40198=mixeruiflag 		 - INT: 8(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40198=mixeruiflag 		 - INT: 24(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40198=mixeruiflag 		 - INT: 8(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show tracks in folders in mixer
+Sec:0_AID:40199=mixeruiflag 		 - INT: 40(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40199=mixeruiflag 		 - INT: 8(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40199=mixeruiflag 		 - INT: 40(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle scroll view when tracks activated
+Sec:0_AID:40221=showctinmix 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40221=showctinmix 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40221=showctinmix 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle always on top
+Sec:0_AID:40239=aot 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40239=aot 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40239=aot 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Select takes for all selected items when clicking take lane
+Sec:0_AID:40249=takelanes 		 - INT: 140(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40249=takelanes 		 - INT: 156(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40249=takelanes 		 - INT: 140(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Record: Set record mode to normal
+Sec:0_AID:40252=projrecmode 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Record: Set record mode to selected item auto-punch
+Sec:0_AID:40253=projrecmode 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle displaying labels above/within media items
+Sec:0_AID:40258=labelitems2 		 - INT: 67(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40258=labelitems2 		 - INT: 75(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40258=labelitems2 		 - INT: 67(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle auto-view-scroll while recording
+Sec:0_AID:40262=viewadvance 		 - INT: 62(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40262=viewadvance 		 - INT: 64(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40262=viewadvance 		 - INT: 62(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: When importing, copy imported media to project media directory
+Sec:0_AID:40263=copyimpmedia 		 - INT: 81(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40263=copyimpmedia 		 - INT: 80(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40263=copyimpmedia 		 - INT: 81(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Group sends with (before/after) FX inserts
+Sec:0_AID:40267=tcpalign 		 - INT: 105(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40267=tcpalign 		 - INT: 73(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40267=tcpalign 		 - INT: 105(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Move edit cursor to start of time selection, when time selection changes
+Sec:0_AID:40276=itemclickmovecurs 		 - INT: 75(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40276=itemclickmovecurs 		 - INT: 71(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40276=itemclickmovecurs 		 - INT: 75(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Move edit cursor to end of recording, when recording ends
+Sec:0_AID:40300=itemclickmovecurs 		 - INT: 91(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40300=itemclickmovecurs 		 - INT: 75(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40300=itemclickmovecurs 		 - INT: 91(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show FX inserts in TCP (when size permits)
+Sec:0_AID:40302=tcpalign 		 - INT: 103(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40302=tcpalign 		 - INT: 105(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40302=tcpalign 		 - INT: 103(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Set ripple editing per-track
+Sec:0_AID:40310=projripedit 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Set ripple editing all tracks
+Sec:0_AID:40311=projripedit 		 - INT: 0(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle fullscreen
+Sec:0_AID:40346=isfullscreen 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40346=isfullscreen 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40346=isfullscreen 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle metronome
+Sec:0_AID:40364=projmetroen 		 - INT: 51(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40364=projmetroen 		 - INT: 50(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40364=projmetroen 		 - INT: 51(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Minutes:Seconds
+Sec:0_AID:40365=projtimemode 		 - INT: -2(DIF: 2316)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Measures.Beats / minutes:Seconds
+Sec:0_AID:40366=projtimemode 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Measures.Beats
+Sec:0_AID:40367=projtimemode 		 - INT: 0(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Seconds
+Sec:0_AID:40368=projtimemode 		 - INT: 1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Samples
+Sec:0_AID:40369=projtimemode 		 - INT: 2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Hours:Minutes:Seconds:Frames
+Sec:0_AID:40370=projtimemode 		 - INT: 3(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show multiple rows when space
+Sec:0_AID:40371=mixrowflags 		 - INT: 329(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40371=mixrowflags 		 - INT: 328(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40371=mixrowflags 		 - INT: 329(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show multiple rows even when space to fit tracks in less rows
+Sec:0_AID:40372=mixrowflags 		 - INT: 327(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40372=mixrowflags 		 - INT: 329(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40372=mixrowflags 		 - INT: 327(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit to ruler
+Sec:0_AID:40379=projtimemode2 		 - INT: -3(DIF: 2317)	  - DOUBLE: -1.#QNAN(DIF: -1.#QNAN)
+
+Mixer: Toggle show master track on right side
+Sec:0_AID:40389=mixerflag 		 - INT: 173(DIF: 16)	  - DOUBLE: -2.0(DIF: -1.#QNAN)
+Sec:0_AID:40389=mixrowflags 		 - INT: 75(DIF: 252)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40389=mixrowflags 		 - INT: 71(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40389=mixrowflags 		 - INT: 75(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle smooth seek (see preferences/Audio/Seeking)
+Sec:0_AID:40390=smoothseek 		 - INT: 83(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40390=smoothseek 		 - INT: 82(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40390=smoothseek 		 - INT: 83(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Minutes:Seconds
+Sec:0_AID:40410=projtimemode2 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Measures.Beats
+Sec:0_AID:40411=projtimemode2 		 - INT: 0(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Seconds
+Sec:0_AID:40412=projtimemode2 		 - INT: 1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Samples
+Sec:0_AID:40413=projtimemode2 		 - INT: 2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Hours:Minutes:Seconds:Frames
+Sec:0_AID:40414=projtimemode2 		 - INT: 3(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show all takes in lanes (when room)
+Sec:0_AID:40435=projtakelane 		 - INT: 48(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40435=projtakelane 		 - INT: 49(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40435=projtakelane 		 - INT: 48(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show overlapping media items in lanes (when room)
+Sec:0_AID:40507=projtakelane 		 - INT: 46(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40507=projtakelane 		 - INT: 48(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40507=projtakelane 		 - INT: 46(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Show playrate control
+Sec:0_AID:40531=transflags 		 - INT: 225(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40531=transflags 		 - INT: 224(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40531=transflags 		 - INT: 225(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Show play state as text
+Sec:0_AID:40532=transflags 		 - INT: 223(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40532=transflags 		 - INT: 225(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40532=transflags 		 - INT: 223(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Center transport controls
+Sec:0_AID:40533=transflags 		 - INT: 231(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40533=transflags 		 - INT: 223(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40533=transflags 		 - INT: 231(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Measures.Beats / minutes:Seconds
+Sec:0_AID:40534=projtimemode2 		 - INT: -1(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show FX inserts (when size permits)
+Sec:0_AID:40549=mixrowflags 		 - INT: 91(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40549=mixrowflags 		 - INT: 75(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40549=mixrowflags 		 - INT: 91(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show sends (when size permits)
+Sec:0_AID:40557=mixrowflags 		 - INT: 123(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40557=mixrowflags 		 - INT: 91(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40557=mixrowflags 		 - INT: 123(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle time selection locking mode
+Sec:0_AID:40573=projsellock 		 - INT: 32759(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40573=projsellock 		 - INT: 32758(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40573=projsellock 		 - INT: 32759(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle full item locking mode
+Sec:0_AID:40576=projsellock 		 - INT: 32761(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40576=projsellock 		 - INT: 32759(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40576=projsellock 		 - INT: 32761(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle left/right item locking mode
+Sec:0_AID:40579=projsellock 		 - INT: 32697(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40579=projsellock 		 - INT: 32761(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40579=projsellock 		 - INT: 32697(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle up/down item locking mode
+Sec:0_AID:40582=projsellock 		 - INT: 32569(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40582=projsellock 		 - INT: 32697(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40582=projsellock 		 - INT: 32569(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle track envelope locking mode
+Sec:0_AID:40585=projsellock 		 - INT: 32573(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40585=projsellock 		 - INT: 32569(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40585=projsellock 		 - INT: 32573(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle region locking mode
+Sec:0_AID:40588=projsellock 		 - INT: 32557(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40588=projsellock 		 - INT: 32573(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40588=projsellock 		 - INT: 32557(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle marker locking mode
+Sec:0_AID:40591=projsellock 		 - INT: 32549(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40591=projsellock 		 - INT: 32557(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40591=projsellock 		 - INT: 32549(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle time signature marker locking mode
+Sec:0_AID:40594=projsellock 		 - INT: 32517(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40594=projsellock 		 - INT: 32549(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40594=projsellock 		 - INT: 32517(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle item edges locking mode
+Sec:0_AID:40597=projsellock 		 - INT: 32261(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40597=projsellock 		 - INT: 32517(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40597=projsellock 		 - INT: 32261(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle item fade/volume handles locking mode
+Sec:0_AID:40600=projsellock 		 - INT: 31749(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40600=projsellock 		 - INT: 32261(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40600=projsellock 		 - INT: 31749(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle external timecode synchronization
+Sec:0_AID:40620=projsmptesync 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40620=projsmptesync 		 - INT: 44(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40620=projsmptesync 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle loop points linked to time selection
+Sec:0_AID:40621=locklooptotime 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40621=locklooptotime 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40621=locklooptotime 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle loop points locking mode
+Sec:0_AID:40629=projsellock 		 - INT: 30725(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40629=projsellock 		 - INT: 31749(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40629=projsellock 		 - INT: 30725(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Add edge points when moving envelope points with items
+Sec:0_AID:40648=env_reduce 		 - INT: 1789(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40648=env_reduce 		 - INT: 1787(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40648=env_reduce 		 - INT: 1789(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Add edge points when ripple editing or inserting time
+Sec:0_AID:40649=env_reduce 		 - INT: 1785(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40649=env_reduce 		 - INT: 1789(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40649=env_reduce 		 - INT: 1785(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Reduce envelope data when recording or drawing automation
+Sec:0_AID:40650=env_reduce 		 - INT: 1784(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40650=env_reduce 		 - INT: 1785(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40650=env_reduce 		 - INT: 1784(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle show/hide item labels
+Sec:0_AID:40651=itemtexthide 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40651=itemtexthide 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40651=itemtexthide 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Toggle preserve pitch in audio items when changing master playrate
+Sec:0_AID:40671=audioprshift 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40671=audioprshift 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40671=audioprshift 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show sends in TCP (when size permits)
+Sec:0_AID:40677=tcpalign 		 - INT: 119(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40677=tcpalign 		 - INT: 103(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40677=tcpalign 		 - INT: 119(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Show play position tempo and time signature
+Sec:0_AID:40680=transflags 		 - INT: 235(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40680=transflags 		 - INT: 231(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40680=transflags 		 - INT: 235(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle show media cues in items
+Sec:0_AID:40691=cueitems 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40691=cueitems 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40691=cueitems 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Toggle measure grid
+Sec:0_AID:40725=projgridframe 		 - INT: 108(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40725=projgridframe 		 - INT: 44(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40725=projgridframe 		 - INT: 108(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Solo in front
+Sec:0_AID:40745=solodimen 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40745=solodimen 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40745=solodimen 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Track: Toggle all track grouping enabled
+Sec:0_AID:40771=projtrackgroupdisabled 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40771=projtrackgroupdisabled 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40771=projtrackgroupdisabled 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Set to 1/64
+Sec:0_AID:40774=projgridframe 		 - INT: 44(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Toggle transport home/end marker navigation
+Sec:0_AID:40868=transflags 		 - INT: 251(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40868=transflags 		 - INT: 235(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40868=transflags 		 - INT: 251(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Run background projects
+Sec:0_AID:40871=multiprojopt 		 - INT: 11944(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40871=multiprojopt 		 - INT: 11945(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40871=multiprojopt 		 - INT: 11944(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Auto-offline background project media
+Sec:0_AID:40872=multiprojopt 		 - INT: 11948(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40872=multiprojopt 		 - INT: 11944(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40872=multiprojopt 		 - INT: 11948(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Run stopped background projects
+Sec:0_AID:40873=multiprojopt 		 - INT: 11946(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40873=multiprojopt 		 - INT: 11948(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40873=multiprojopt 		 - INT: 11946(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Always show project tabs
+Sec:0_AID:40874=multiprojopt 		 - INT: 11938(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40874=multiprojopt 		 - INT: 11946(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40874=multiprojopt 		 - INT: 11938(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show track icons in mixer
+Sec:0_AID:40903=mixrowflags 		 - INT: 59(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40903=mixrowflags 		 - INT: 123(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40903=mixrowflags 		 - INT: 59(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Set framerate grid
+Sec:0_AID:40904=projgridframe 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Hide all background project windows
+Sec:0_AID:40909=multiprojopt 		 - INT: 11954(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40909=multiprojopt 		 - INT: 11938(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40909=multiprojopt 		 - INT: 11954(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show FX parameters (when size permits)
+Sec:0_AID:40910=mixrowflags 		 - INT: 187(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40910=mixrowflags 		 - INT: 59(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40910=mixrowflags 		 - INT: 187(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle auto-crossfade on split
+Sec:0_AID:40912=splitautoxfade 		 - INT: 89(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40912=splitautoxfade 		 - INT: 88(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40912=splitautoxfade 		 - INT: 89(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Master track: Toggle stereo/mono (L+R)
+Sec:0_AID:40917=mastermutesolo 		 - INT: 33(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40917=mastermutesolo 		 - INT: 37(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:40917=mastermutesolo 		 - INT: 33(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Set measure grid
+Sec:0_AID:40923=projgridframe 		 - INT: 108(DIF: 63)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Pre-roll: Toggle pre-roll on record [deprecated duplicate]
+Sec:0_AID:41038=preroll 		 - INT: 85(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41038=preroll 		 - INT: 83(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41038=preroll 		 - INT: 85(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle show master tempo envelope
+Sec:0_AID:41046=showmaintrack 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Set to 1/128
+Sec:0_AID:41047=projgridframe 		 - INT: 44(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle show master track and tempo envelope
+Sec:0_AID:41050=showmaintrack 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41050=showmaintrack 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41050=showmaintrack 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Item edit: Toggle relative grid snap
+Sec:0_AID:41054=relsnap 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41054=relsnap 		 - INT: 44(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41054=relsnap 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Play stopped background projects with active project
+Sec:0_AID:41062=multiprojopt 		 - INT: 11922(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41062=multiprojopt 		 - INT: 11954(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41062=multiprojopt 		 - INT: 11922(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Synchronize play start times w/ play background projects
+Sec:0_AID:41063=multiprojopt 		 - INT: 11986(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41063=multiprojopt 		 - INT: 11922(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41063=multiprojopt 		 - INT: 11986(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle pooled (ghost) MIDI source data when copying media items
+Sec:0_AID:41071=trimmidionsplit 		 - INT: 71(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41071=trimmidionsplit 		 - INT: 73(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41071=trimmidionsplit 		 - INT: 71(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+FX: Auto-float new FX windows
+Sec:0_AID:41078=fxfloat_focus 		 - INT: 262212(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41078=fxfloat_focus 		 - INT: 262208(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41078=fxfloat_focus 		 - INT: 262212(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle trim content behind media items when editing
+Sec:0_AID:41117=autoxfade 		 - INT: 2(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41117=autoxfade 		 - INT: 4(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41117=autoxfade 		 - INT: 2(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle autoarrange
+Sec:0_AID:41146=mixeruiflag 		 - INT: 104(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41146=mixeruiflag 		 - INT: 40(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41146=mixeruiflag 		 - INT: 104(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle show icons for the last track in a folder
+Sec:0_AID:41153=mixerflag 		 - INT: 172(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41153=mixerflag 		 - INT: 173(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41153=mixerflag 		 - INT: 172(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Clickable icon for folder tracks to show/hide children
+Sec:0_AID:41154=mixerflag 		 - INT: 170(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41154=mixerflag 		 - INT: 172(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41154=mixerflag 		 - INT: 170(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Selecting one grouped item selects group
+Sec:0_AID:41156=projgroupsel 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41156=projgroupsel 		 - INT: 44(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41156=projgroupsel 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Item: Toggle enable/disable default fadein/fadeout
+Sec:0_AID:41194=splitautoxfade 		 - INT: 81(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41194=splitautoxfade 		 - INT: 89(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41194=splitautoxfade 		 - INT: 81(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Master track visible
+Sec:0_AID:41209=mixrowflags 		 - INT: 443(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41209=mixrowflags 		 - INT: 187(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41209=mixrowflags 		 - INT: 443(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toolbar: Show/hide toolbar at top of main window
+Sec:0_AID:41297=custommenu 		 - INT: 325(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41297=custommenu 		 - INT: 333(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41297=custommenu 		 - INT: 325(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: New recording creates new media items in separate lanes (layers)
+Sec:0_AID:41329=autoxfade 		 - INT: 6(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: New recording splits existing items and creates new takes (default)
+Sec:0_AID:41330=autoxfade 		 - INT: -2(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle editing active take source start offset (slip editing) adjusts all takes
+Sec:0_AID:41338=relativeedges 		 - INT: 77(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41338=relativeedges 		 - INT: 205(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41338=relativeedges 		 - INT: 77(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show tooltips on media items and envelopes
+Sec:0_AID:41344=tooltips 		 - INT: 80(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41344=tooltips 		 - INT: 81(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41344=tooltips 		 - INT: 80(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Help: Show mouse editing help in the area beneath the track control panels
+Sec:0_AID:41345=help 		 - INT: 92(DIF: 65536)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41345=help 		 - INT: 65628(DIF: 65536)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41345=help 		 - INT: 92(DIF: 65536)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Show empty take lanes (align takes by recording pass)
+Sec:0_AID:41346=takelanes 		 - INT: 136(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41346=takelanes 		 - INT: 140(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41346=takelanes 		 - INT: 136(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Allow selecting empty take lanes
+Sec:0_AID:41355=takelanes 		 - INT: 128(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41355=takelanes 		 - INT: 136(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41355=takelanes 		 - INT: 128(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Envelope point selection follows time selection
+Sec:0_AID:41576=envclicksegmode 		 - INT: 217(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41576=envclicksegmode 		 - INT: 153(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41576=envclicksegmode 		 - INT: 217(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Toggle running FX when playback is stopped
+Sec:0_AID:41583=runallonstop 		 - INT: 81(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41583=runallonstop 		 - INT: 80(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41583=runallonstop 		 - INT: 81(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Toggle master track in separate/docked window
+Sec:0_AID:41609=mixerflag 		 - INT: 186(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41609=mixerflag 		 - INT: 170(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41609=mixerflag 		 - INT: 186(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle master track in docked window
+Sec:0_AID:41610=mixerflag 		 - INT: 170(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41610=mixerflag 		 - INT: 186(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Toggle master track in separate window
+Sec:0_AID:41636=mixerflag 		 - INT: 170(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41636=mixerflag 		 - INT: 186(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Offset track template items by edit cursor
+Sec:0_AID:41722=templateditcursor 		 - INT: -2(DIF: 4)	  - DOUBLE: -10.0(DIF: 8.0)
+Sec:0_AID:41722=templateditcursor 		 - INT: -1(DIF: 1)	  - DOUBLE: -10.0(DIF: 0.0)
+Sec:0_AID:41722=templateditcursor 		 - INT: -2(DIF: 1)	  - DOUBLE: -10.0(DIF: 0.0)
+
+View: Continuous scrolling during playback
+Sec:0_AID:41817=viewadvance 		 - INT: 78(DIF: 16)	  - DOUBLE: -2.0(DIF: 8.0)
+Sec:0_AID:41817=viewadvance 		 - INT: 62(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41817=viewadvance 		 - INT: 78(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Pre-roll: Toggle pre-roll on play
+Sec:0_AID:41818=preroll 		 - INT: 84(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41818=preroll 		 - INT: 85(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41818=preroll 		 - INT: 84(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Pre-roll: Toggle pre-roll on record
+Sec:0_AID:41819=preroll 		 - INT: 82(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41819=preroll 		 - INT: 84(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41819=preroll 		 - INT: 82(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+I/O dialog: Close window on enter key
+Sec:0_AID:41828=kbd_usealt 		 - INT: 88(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41828=kbd_usealt 		 - INT: 92(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41828=kbd_usealt 		 - INT: 88(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Mixer: Group FX parameters with their inserts
+Sec:0_AID:41829=tcpalign 		 - INT: 55(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41829=tcpalign 		 - INT: 119(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41829=tcpalign 		 - INT: 55(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Toggle stop playback at end of loop if repeat is disabled
+Sec:0_AID:41834=stopendofloop 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41834=stopendofloop 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41834=stopendofloop 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle take envelope locking mode
+Sec:0_AID:41851=projsellock 		 - INT: 28677(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41851=projsellock 		 - INT: 30725(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41851=projsellock 		 - INT: 28677(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Locking: Toggle item stretch marker locking mode
+Sec:0_AID:41854=projsellock 		 - INT: 24581(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41854=projsellock 		 - INT: 28677(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41854=projsellock 		 - INT: 24581(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Show project tabs on left side of window
+Sec:0_AID:41883=multiprojopt 		 - INT: 11858(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41883=multiprojopt 		 - INT: 11986(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41883=multiprojopt 		 - INT: 11858(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Monitoring FX: Toggle bypass
+Sec:0_AID:41884=hwoutfx_bypass 		 - INT: -2(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41884=hwoutfx_bypass 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41884=hwoutfx_bypass 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Toggle framerate grid
+Sec:0_AID:41885=projgridframe 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41885=projgridframe 		 - INT: 44(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41885=projgridframe 		 - INT: 45(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Measures.Beats (minimal)
+Sec:0_AID:41916=projtimemode 		 - INT: 4(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Measures.Beats (minimal) / minutes:Seconds
+Sec:0_AID:41918=projtimemode 		 - INT: 5(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Time unit: Absolute frames
+Sec:0_AID:41972=projtimemode2 		 - INT: 6(DIF: 7)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Time unit for ruler: Absolute frames
+Sec:0_AID:41973=projtimemode 		 - INT: 6(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle ripple editing per-track
+Sec:0_AID:41990=projripedit 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41990=projripedit 		 - INT: -2(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41990=projripedit 		 - INT: -1(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Toggle ripple editing all tracks
+Sec:0_AID:41991=projripedit 		 - INT: 0(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41991=projripedit 		 - INT: -2(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41991=projripedit 		 - INT: 0(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Chase MIDI note-ons in project playback
+Sec:0_AID:41992=rbn 		 - INT: 80(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41992=rbn 		 - INT: 208(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41992=rbn 		 - INT: 80(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Synchronize any parent projects when playing back subproject
+Sec:0_AID:41994=multiprojopt 		 - INT: 12114(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41994=multiprojopt 		 - INT: 11858(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41994=multiprojopt 		 - INT: 12114(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Defer rendering of subprojects (render on tab switch rather than save)
+Sec:0_AID:41998=multiprojopt 		 - INT: 11602(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41998=multiprojopt 		 - INT: 12114(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:41998=multiprojopt 		 - INT: 11602(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Set to 1/3 (1/2 triplet)
+Sec:0_AID:42000=projgridframe 		 - INT: 44(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Use the same grid division in arrange view and MIDI editor
+Sec:0_AID:42010=projshowgrid 		 - INT: 3626(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42010=projshowgrid 		 - INT: 3114(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42010=projshowgrid 		 - INT: 3626(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Ripple edit all affects tempo map
+Sec:0_AID:42011=env_reduce 		 - INT: 1656(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42011=env_reduce 		 - INT: 1784(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42011=env_reduce 		 - INT: 1656(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Leave subproject open in tab after automatic open and render
+Sec:0_AID:42012=multiprojopt 		 - INT: 10578(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42012=multiprojopt 		 - INT: 11602(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42012=multiprojopt 		 - INT: 10578(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Add edge points when moving multiple envelope points
+Sec:0_AID:42030=env_reduce 		 - INT: 1144(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42030=env_reduce 		 - INT: 1656(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42030=env_reduce 		 - INT: 1144(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Force project tabs visible when monitoring FX in use
+Sec:0_AID:42072=multiprojopt 		 - INT: 8530(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42072=multiprojopt 		 - INT: 10578(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42072=multiprojopt 		 - INT: 8530(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Toggle spectral peaks
+Sec:0_AID:42073=showpeaks 		 - INT: 7859(DIF: 1056)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42073=showpeaks 		 - INT: 6803(DIF: 1056)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42073=showpeaks 		 - INT: 7859(DIF: 1056)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Pre-fader track metering
+Sec:0_AID:42076=nometers 		 - INT: 80(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42076=nometers 		 - INT: 1104(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42076=nometers 		 - INT: 80(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Automation item baseline/amplitude edits affect pooled copies
+Sec:0_AID:42194=pooledenvs 		 - INT: 378(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42194=pooledenvs 		 - INT: 379(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42194=pooledenvs 		 - INT: 378(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Loop new automation items by default
+Sec:0_AID:42195=pooledenvs 		 - INT: 380(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42195=pooledenvs 		 - INT: 378(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42195=pooledenvs 		 - INT: 380(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Prevent mouse edits of single envelope points from moving past other envelope points
+Sec:0_AID:42202=env_reduce 		 - INT: 120(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42202=env_reduce 		 - INT: 1144(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42202=env_reduce 		 - INT: 120(DIF: 1024)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Automation items do not connect to the underlying envelope
+Sec:0_AID:42203=pooledenvattach 		 - INT: 126(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Automation items connect to the underlying envelope on the right side
+Sec:0_AID:42204=pooledenvattach 		 - INT: 127(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42204=pooledenvattach 		 - INT: 126(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42204=pooledenvattach 		 - INT: 127(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Automation items connect to the underlying envelope on both sides
+Sec:0_AID:42205=pooledenvattach 		 - INT: 128(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42205=pooledenvattach 		 - INT: 126(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42205=pooledenvattach 		 - INT: 128(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Trim content behind automation items when editing or writing automation
+Sec:0_AID:42206=pooledenvs 		 - INT: 124(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42206=pooledenvs 		 - INT: 380(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42206=pooledenvs 		 - INT: 124(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Always create new automation items when writing automation
+Sec:0_AID:42212=pooledenvs 		 - INT: 120(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42212=pooledenvs 		 - INT: 124(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42212=pooledenvs 		 - INT: 120(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Bypass underlying envelopes outside of automation items
+Sec:0_AID:42213=pooledenvattach 		 - INT: 132(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42213=pooledenvattach 		 - INT: 128(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42213=pooledenvattach 		 - INT: 132(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Automatically insert automation item when activating envelope that is bypassed outside of automation items and not displayed in envelope lane
+Sec:0_AID:42220=pooledenvs 		 - INT: 112(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42220=pooledenvs 		 - INT: 120(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42220=pooledenvs 		 - INT: 112(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Toggle spectrogram
+Sec:0_AID:42294=showpeaks 		 - INT: 7571(DIF: 288)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42294=showpeaks 		 - INT: 7347(DIF: 224)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42294=showpeaks 		 - INT: 7571(DIF: 224)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Toggle spectrogram and peaks
+Sec:0_AID:42295=showpeaks 		 - INT: 8083(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42295=showpeaks 		 - INT: 7859(DIF: 224)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42295=showpeaks 		 - INT: 8083(DIF: 224)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Show normal (non-spectral/non-spectrogram) peaks
+Sec:0_AID:42301=showpeaks 		 - INT: 6803(DIF: 1280)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Toggle swing grid
+Sec:0_AID:42304=projgridframe 		 - INT: 36(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42304=projgridframe 		 - INT: 44(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42304=projgridframe 		 - INT: 36(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Flash transport yellow on possible audio device underrun
+Sec:0_AID:42305=transflags 		 - INT: 123(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42305=transflags 		 - INT: 251(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42305=transflags 		 - INT: 123(DIF: 128)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Scale peaks by square root (half of range is 12dB rather than 6dB)
+Sec:0_AID:42306=showpeaks 		 - INT: 4755(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42306=showpeaks 		 - INT: 6803(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42306=showpeaks 		 - INT: 4755(DIF: 2048)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Peaks: Rectify peaks
+Sec:0_AID:42307=showpeaks 		 - INT: 659(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42307=showpeaks 		 - INT: 4755(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42307=showpeaks 		 - INT: 659(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display project regions in lanes
+Sec:0_AID:42323=rulerlayout 		 - INT: 954(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42323=rulerlayout 		 - INT: 955(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42323=rulerlayout 		 - INT: 954(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display project markers in lanes
+Sec:0_AID:42324=rulerlayout 		 - INT: 956(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42324=rulerlayout 		 - INT: 954(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42324=rulerlayout 		 - INT: 956(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display tempo and time signature changes in separate lanes (when size permits)
+Sec:0_AID:42325=rulerlayout 		 - INT: 928(DIF: 28)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42325=rulerlayout 		 - INT: 932(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42325=rulerlayout 		 - INT: 928(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display tempo changes
+Sec:0_AID:42326=rulerlayout 		 - INT: 936(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42326=rulerlayout 		 - INT: 928(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42326=rulerlayout 		 - INT: 936(DIF: 8)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display time signature changes
+Sec:0_AID:42327=rulerlayout 		 - INT: 952(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42327=rulerlayout 		 - INT: 936(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42327=rulerlayout 		 - INT: 952(DIF: 16)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display project regions/markers as gridlines in arrange view
+Sec:0_AID:42328=rulerlayout 		 - INT: 920(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42328=rulerlayout 		 - INT: 952(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42328=rulerlayout 		 - INT: 920(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display time signature changes as gridlines in arrange view
+Sec:0_AID:42329=rulerlayout 		 - INT: 984(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42329=rulerlayout 		 - INT: 920(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42329=rulerlayout 		 - INT: 984(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Grid: Divide arrange view vertically by measures
+Sec:0_AID:42331=vgrid 		 - INT: 80(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42331=vgrid 		 - INT: 4176(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42331=vgrid 		 - INT: 80(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Do not automatically render subprojects (require manual render)
+Sec:0_AID:42333=multiprojopt 		 - INT: 12626(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42333=multiprojopt 		 - INT: 8530(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42333=multiprojopt 		 - INT: 12626(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Project tabs: Prompt before automatic rerender of background subprojects
+Sec:0_AID:42334=multiprojopt 		 - INT: 8530(DIF: 4096)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42334=multiprojopt 		 - INT: 338(DIF: 8192)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42334=multiprojopt 		 - INT: 8530(DIF: 8192)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Chase non-FX envelopes to automation items when underlying envelope is bypassed
+Sec:0_AID:42344=pooledenvattach 		 - INT: 164(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42344=pooledenvattach 		 - INT: 132(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42344=pooledenvattach 		 - INT: 164(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Secondary time unit for ruler: Minutes:Seconds
+Sec:0_AID:42361=projtimemode 		 - INT: 262(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Secondary time unit for ruler: Seconds
+Sec:0_AID:42362=projtimemode 		 - INT: 1030(DIF: 768)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Secondary time unit for ruler: Samples
+Sec:0_AID:42363=projtimemode 		 - INT: 1286(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Secondary time unit for ruler: Hours:Minutes:Seconds:Frames
+Sec:0_AID:42364=projtimemode 		 - INT: 1542(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Secondary time unit for ruler: Absolute frames
+Sec:0_AID:42365=projtimemode 		 - INT: 2310(DIF: 768)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Secondary time unit: Minutes:Seconds
+Sec:0_AID:42367=projtimemode2 		 - INT: 262(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Secondary time unit: Seconds
+Sec:0_AID:42368=projtimemode2 		 - INT: 1030(DIF: 768)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Secondary time unit: Samples
+Sec:0_AID:42369=projtimemode2 		 - INT: 1286(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Secondary time unit: Hours:Minutes:Seconds:Frames
+Sec:0_AID:42370=projtimemode2 		 - INT: 1542(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Transport: Secondary time unit: Absolute frames
+Sec:0_AID:42371=projtimemode2 		 - INT: 2310(DIF: 768)	  - DOUBLE: -2.0(DIF: 0.0)
+
+View: Show TCP on right side of arrange
+Sec:0_AID:42373=mixerflag 		 - INT: 154(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42373=mixerflag 		 - INT: 186(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42373=mixerflag 		 - INT: 154(DIF: 32)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Always trim content behind razor edits (otherwise, follow media item editing preferences)
+Sec:0_AID:42421=autoxfade 		 - INT: 62(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42421=autoxfade 		 - INT: -2(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42421=autoxfade 		 - INT: 62(DIF: 64)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display region number even if region is named
+Sec:0_AID:42435=rulerlayout 		 - INT: 728(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42435=rulerlayout 		 - INT: 984(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42435=rulerlayout 		 - INT: 728(DIF: 256)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Ruler: Display region number/name when region edge is not visible
+Sec:0_AID:42436=rulerlayout 		 - INT: 216(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42436=rulerlayout 		 - INT: 728(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42436=rulerlayout 		 - INT: 216(DIF: 512)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Options: Razor edits affect all track envelopes
+Sec:0_AID:42459=envattach 		 - INT: 91(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42459=envattach 		 - INT: 87(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:0_AID:42459=envattach 		 - INT: 91(DIF: 4)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Track: Toggle mute for master track
+Sec:100_AID:14=mastermutesolo 		 - INT: 32(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:100_AID:14=mastermutesolo 		 - INT: 33(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:100_AID:14=mastermutesolo 		 - INT: 32(DIF: 1)	  - DOUBLE: -2.0(DIF: 0.0)
+
+Track: Toggle solo for master track
+Sec:100_AID:15=mastermutesolo 		 - INT: 30(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:100_AID:15=mastermutesolo 		 - INT: 32(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)
+Sec:100_AID:15=mastermutesolo 		 - INT: 30(DIF: 2)	  - DOUBLE: -2.0(DIF: 0.0)

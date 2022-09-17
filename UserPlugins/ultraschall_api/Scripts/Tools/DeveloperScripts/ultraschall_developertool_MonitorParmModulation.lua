@@ -1,6 +1,11 @@
 -- Meo-Ada Mespotine - GetParmModulation - demomonitoringsccript
 -- licensed under MIT-license
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 ParmTable={
 "AUDIOCONTROL",
 "AUDIOCONTROL_ATTACK",
@@ -73,7 +78,7 @@ function main()
     for i=1, #ParmTable do
       gfx.x=0
       gfx.y=gfx.y+gfx.texth+3
-      if ParmModulationTable~=nil and ParmModulationTable[ParmTable[i]]~=OldParmModulationTable[ParmTable[i]] then
+      if ParmModulationTable~=nil and OldParmModulationTable~=nil and ParmModulationTable[ParmTable[i]]~=OldParmModulationTable[ParmTable[i]] then
         gfx.set(1,0,1)
       else
         gfx.set(1)

@@ -1,0 +1,143 @@
+Documentation on how to use the StuffMIDIMessage-function in Reaper's ReaScript.
+
+Documented by Meo-Ada Mespotine 11th of November 2020 - licensed under creative-commons-license CC-BY-NC
+
+A user had a request for Ultraschall, which involved sending MIDI-messages.
+And one of the things I looked at to solve the request, was the function StuffMIDIMessage.
+
+So, long story short: I documented, how StuffMIDIMessages works, so you can actually use it to its fullest.
+
+Lets' begin.
+
+## Background
+    One of the interesting things is, that Reaper doesn't differentiate between MIDI and keyboad-shortcuts, means, 
+    you can adress them both, as long as you choose the right message.
+    That means, you can send MIDI-messages, like notes, cc, pc, pitchbend, including velocity to different areas.
+    And even more, you can send MIDI-messages to be treated as "Actions started by MIDI-shortcut" to Reaper, too.
+    Another funfact: 
+        you can send midi AND computer-keyboard-shortcuts to the Add Shortcuts/Find Shortcuts-dialogs of the Actionslist.
+    
+    This mirrors, in parts, the way, KEY-shortcut-entries are stored in the reaper-kb.ini-file
+    
+    The parameters of StuffMIDIMessage work as follows:
+    
+        integer mode_destination    integer byte1    integer byte2    integer byte3
+
+#mode_destination:
+    The mode_destination is for the Key/MIDI-message destination, means, where it's sent to.
+    This is also the parameter to set, if you want to send MIDI-Messages/Keyboard-Shortcuts(latter only in Add Shortcut-dialog) to Reaper itself(mode==1)!
+
+        0 for Virtual Keyboard          - use this to send MIDI-messages to tracks, who have VKB or MIDI as input-device, the key_midi_modifier decides, which channel
+        1 for control (actions map etc) - use this to send Keyboard Shortcuts/MIDI-Messages to the Add/Find Shortcuts-dialog in the actions-list, as well as MIDI-Shortcuts to Reaper itself.
+        2 for VKB-on-current-channel    - use this to send MIDI-messages to the MIDI-channel, currently selected in the VirtualKeyBoard, key_midi_modifier will be ignored
+        3-15                            - seem to be unused...
+        
+    to address other MIDI-hardware:
+        16 for external MIDI device 0   
+        17 for external MIDI device 1, etc; see GetNumMIDIOutputs, GetMIDIOutputName.
+    
+    If mode_destination is set to VKB or MIDI-devices, byte 1 is the channel, byte 2 is the note/CC or PC-value and byte 3 the velocity
+
+    If mode_destination is set to 1 (for control-messages), you can send keyboard-commands to the add-shortcuts dialog.    
+    The following rules apply in this case:
+        
+      Modifiers:
+        0   - 159 Keyboard Modifier - second byte the key, third byte mostly unused
+                                      byte3: &1=0, normal character-codes(byte2); &1=1, adds 128 to byte2
+                bitfield: &1=0, ASCII-character set with control-keys(Tab, Esc, Enter, etc)
+                          &1=1, ASCII-character set without control-keys
+                          &4, Shift
+                          &8, Ctrl/Cmd(on Mac)
+                          &16, Alt/Opt(on Mac)
+                          &32, Win/Ctrl(on Mac)
+        160 - 175 MIDI-messages as three byte hex
+        176 - 191 MIDI CC - first byte channel, second byte CC-number, third byte unused
+        192 - 207 MIDI PC - first byte channel, second byte PC-number, third byte unused
+        208 - 223 MIDI-messages as three byte hex
+        224 - 239 MIDI Pitch - first byte channel, second byte unused, third byte unused
+        240 - 254 MIDI-messages as three byte hex
+        255, Special Modifier
+            regular modifiers are moved to byte 2 and keys to byte 3
+                modifiers are encoded as this:
+                         &1, Ctrl/Cmd(on Mac)
+                         &2, Alt/Opt(on Mac)
+                         &4, Shift
+                         &8=0, Win/Ctrl(on Mac)
+                         &8=1, No Win/No Ctrl(on Mac)
+                         
+                      The following need byte_three&1 set to 1!                      
+                         24=MultiRotate, when MultiRotatate is enabled in Preferences->Keyboard/Multitouch-page
+                         40=MultiHorz, when MultiSwipe is enabled in Preferences->Keyboard/Multitouch-page
+                         56=MultiVert, when MultiSwipe is enabled in Preferences->Keyboard/Multitouch-page
+                         72=MultiZoom, when MultiZoom is enabled in Preferences->Keyboard/Multitouch-page
+                         88=HorizMouseWheel
+                         120=MouseWheel 
+                         152=MultiRotate, when MultiRotatate is enabled in Preferences->Keyboard/Multitouch-page
+                         168=MultiHorz, when MultiSwipe is enabled in Preferences->Keyboard/Multitouch-page
+                         184=MultiVert, when MultiSwipe is enabled in Preferences->Keyboard/Multitouch-page
+                         200=MultiZoom, when MultiZoom is enabled in Preferences->Keyboard/Multitouch-page
+                         216=HorizMouseWheel
+                         248=MouseWheel 
+                         
+                      The following accept byte_three&1 set to either.
+                         104 or 232, will make byte three signalling numerous variants of MediaKbd-keys(no WIN as modifier supported)
+                                0 MediaKbd??
+                                2 MediaKbdBrowse-
+                                4 MediaKbdBrowse+
+                                6 MediaKbdBrowseRefr
+                                8 MediaKbdBrowseStop
+                                10 MediaKbdBrowseSrch
+                                12 MediaKbdBrowseFav
+                                14 MediaKbdBrowseHome
+                                16 MediaKbdMute
+                                18 MediaKbdVol-
+                                20 MediaKbdVol+
+                                22 MediaKbdTrack+
+                                24 MediaKbdTrack-
+                                26 MediaKbdStop
+                                28 MediaKbdPlayPause
+                                30 MediaKbdMail
+                                32 MediaKbdMedia
+                                34 MediaKbdApp1
+                                36 MediaKbdApp2
+                                38 MediaKbdBass-
+                                40 MediaKbdBass++
+                                42 MediaKbdBass+
+                                44 MediaKbdTreble-
+                                46 MediaKbdTreble+
+                                48 MediaKbdMicMute
+                                50 MediaKbdMic-
+                                52 MediaKbdMic+
+                                54 MediaKbdHelp
+                                56 MediaKbdFind
+                                58 MediaKbdNew
+                                60 MediaKbdOpen
+                                62 MediaKbdClose
+                                64 MediaKbdSave
+                                66 MediaKbdPrint
+                                68 MediaKbdUndo
+                                70 MediaKbdRedo
+                                72 MediaKbdCopy
+                                74 MediaKbdCut
+                                76 MediaKbdPaste
+                                78 MediaKbdReply
+                                80 MediaKbdForward
+                                82 MediaKbdSend
+                                84 MediaKbdSpellChk
+                                86 MediaKbdCmdCtl
+                                88 MediaKbdMicOnOff
+                                90 MediaKbdCorrect
+                                92 MediaKbdPlay
+                                94 MediaKbdPause
+                                96 MediaKbdRecord
+                                98 MediaKbdFF
+                                100 MediaKbdRew
+                                102 MediaKbdChan+
+                                104 MediaKbdChan-
+
+    Note, how you cannot send MIDI-notes with mode_destination=1. If you want to send MIDI-notes to the add-shortcuts-dialog,
+    you need to use another mode_destination-mode.
+    BTW: if have set mode_destination=1 and you you use MIDI-messages as shortcut, you can even start actions by them, as long 
+    as the action isn't started yet. This seems to be not that stable from ReaScript though,
+    
+        

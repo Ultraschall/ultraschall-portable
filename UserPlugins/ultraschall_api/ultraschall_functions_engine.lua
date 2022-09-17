@@ -28,30 +28,15 @@
 --- ULTRASCHALL - API - FUNCTIONS ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, String = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if String=="" then string=10000 
-  else 
-    String=tonumber(String) 
-    String=String+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
 
 -- deprecated stuff
-  runcommand = ultraschall.RunCommand
-  Msg=ultraschall.Msg
+  if runcommand==nil then
+    runcommand = ultraschall.RunCommand
+  end
+  
+  if Msg==nil then
+    Msg=ultraschall.Msg
+  end
 
 -- initialize some used variables
 ultraschall.ErrorCounter=0
@@ -60,9 +45,6 @@ ultraschall.temp,ultraschall.tempfilename=reaper.get_action_context()
 ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\n","")
 ultraschall.tempfilename=string.gsub(ultraschall.tempfilename,"\r","")  
 ultraschall.Dump, ultraschall.ScriptFileName=reaper.get_action_context()
-
--- create the right separator for the current system
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then ultraschall.Separator = "\\" else ultraschall.Separator = "/" end
 
 -- Let's create a unique script-identifier for childscripts
 ultraschall.dump=ultraschall.tempfilename:match("%-%{%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x%}")
@@ -88,11 +70,7 @@ ultraschall.snowoldgfx=gfx.update
 
 -- lets initialize some API-Variables
 ultraschall.StartTime=os.clock()
---ultraschall.Script_Path = reaper.GetResourcePath().."/Scripts/"
-local script_path = reaper.GetResourcePath().."/UserPlugins/ultraschall_api"..ultraschall.Separator
---ultraschall.Api_Path="HH"..script_path
---ultraschall.Api_Path=string.gsub(ultraschall.Api_Path,"\\","/")
---ultraschall.Api_InstallPath=reaper.GetResourcePath().."/UserPlugins/"
+
 
 function ultraschall.CountProjectTabs()
 --[[
@@ -211,8 +189,8 @@ function ultraschall.GetApiVersion()
   <tags>version,versionmanagement</tags>
 </US_DocBloc>
 --]]
-  local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  return 420.006, "4.2","24th of December 2021", "006",  "\"The Beatles - The continuing story of Bungalow Bill\"", "xx of xxxx xxxx", BuildNumber..".00"
+  local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
+  return 470, "4.7","18 of August 2022", "",  "\"Pearl Jam - Alive\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -251,7 +229,7 @@ function ultraschall.IntToDouble(integer, selector)
     -- convert integer-value to 14f-float, by reading it from the double_to_int_24bit-inifile
     integer=integer-4000000 -- subtract the value I haven't stored in double_to_int_24bit-inifile as it was redundant
     -- read through the whole file to get the correct entry and return the entry
-    for c in io.lines(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini") do
+    for c in io.lines(ultraschall.Api_Path.."IniFiles/double_to_int_24bit.ini") do
       if c:match(integer)~=nil then return tonumber(c:match("(.-)=")) end
     end  
   end
@@ -296,12 +274,14 @@ function ultraschall.DoubleToInt(float, selector)
     return found --return the integer-value.
   else
     -- for 14f-floats, use this file and read it like any regular ini-file
-    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", math.tointeger(float), "-1", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/double_to_int_24bit.ini")
+    retval, String = reaper.BR_Win32_GetPrivateProfileString("OpusFloatsInt", math.tointeger(float), "-1", ultraschall.Api_Path.."IniFiles/double_to_int_24bit.ini")
     -- add an offset(I removed it from the ini-file, as it was redundant. So I need to readd that value again in here)
     String=tonumber(String)+4000000
   end
   return String
 end
+
+
 
 function ultraschall.SuppressErrorMessages(flag)
 --[[
@@ -772,13 +752,43 @@ function ultraschall.DeleteAllErrorMessages()
   <tags>developer, error, delete, message</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.ErrorCounter==0 then ultraschall.AddErrorMessage("DeleteAllErrorMessages","","No Error Message available!",-1) return false
+  if ultraschall.ErrorCounter==0 then return false
   else
     ultraschall.ErrorCounter=0
     ultraschall.ErrorMessage={}
     return true
   end
 end
+
+DAEM=ultraschall.DeleteAllErrorMessages
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>DAEM</slug>
+  <requires>
+    Ultraschall=4.4
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = DAEM()</functioncall>
+  <description>
+    Deletes all error-messages and returns a boolean value.
+    
+    this is like ultraschall.DeleteAllErrorMessages(), just shorter
+    
+    returns false in case of failure
+  </description>
+  <retvals>
+    boolean retval - true, if it worked; false if it didn't
+  </retvals>
+  <chapter_context>
+    Developer
+    Error Handling
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>developer, error, delete, message</tags>
+</US_DocBloc>
+]]
 
 function ultraschall.GetLastErrorMessage2(count,setread)
 --[[
@@ -1120,15 +1130,13 @@ function progresscounter(state)
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
   
-  local filecount, files = ultraschall.GetAllFilenamesInPath(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/Modules/")
+  local filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Modules/")
   for i=1, filecount do
     A=A..ultraschall.ReadFullFile(files[i]).."\n"
   end
 
 if ultraschall.US_BetaFunctions==true then
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_functions_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine_beta.lua")
-  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine_beta.lua")
 end
   A=A.."function ultraschall."
   A=A:match("function ultraschall%..*")
@@ -1726,7 +1734,7 @@ function print(...)
   end
   if stringer:sub(-1,-1)=="\n" then stringer=stringer:sub(1,-2) end
   stringer=string.gsub(stringer, "\0", ".")
-  reaper.ShowConsoleMsg(stringer:sub(2,-1).."\n","Print",0)
+  reaper.ShowConsoleMsg(stringer:sub(2,-1).."\n")
 end
 
 
@@ -2331,20 +2339,21 @@ end
 
 --GMEM-related-functions
 
-ultraschall.reaper_gmem_attach=reaper.gmem_attach
+--ultraschall.reaper_gmem_attach=reaper.gmem_attach
 
-function reaper.gmem_attach(GMem_Name)
-  ultraschall.reaper_gmem_attach_curname=GMem_Name
-  ultraschall.reaper_gmem_attach(GMem_Name)
-end
+--function reaper.gmem_attach(GMem_Name)
+--  ultraschall.reaper_gmem_attach_curname=GMem_Name
+--  local A=ultraschall.reaper_gmem_attach(GMem_Name)
+--  return A
+--end
 
 function ultraschall.Gmem_GetCurrentAttachedName()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Gmem_GetCurrentAttachedName</slug>
   <requires>
-    Ultraschall=4.1
-    Reaper=6.02
+    Ultraschall=4.7
+    Reaper=6.20
     Lua=5.3
   </requires>
   <functioncall>string current_gmem_attachname = ultraschall.Gmem_GetCurrentAttachedName()</functioncall>
@@ -2363,7 +2372,9 @@ function ultraschall.Gmem_GetCurrentAttachedName()
   <tags>helperfunctions, get, current, gmem, attached name</tags>
 </US_DocBloc>
 --]]
-  return ultraschall.reaper_gmem_attach_curname
+  local A=reaper.gmem_attach("")
+  reaper.gmem_attach(A)
+  return A
 end
 
 
@@ -2486,16 +2497,16 @@ function ultraschall.BringReaScriptConsoleToFront()
   end
 end
 
-function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2)
+function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionlist_section, x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2, default_script_content)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.5
     Reaper=6.10
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional command_id = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2)</functioncall>
+  <functioncall>boolean retval, optional command_id, boolean created_new_script = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2, optional string default_script_content)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
@@ -2527,10 +2538,12 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     optional integer watchlist_size - sets the size of the watchlist, from 80 to screenwidth-80
     optional integer watchlist_size_row1 - sets the size of the Name-row in the watchlist
     optional integer watchlist_size_row2 - sets the size of the Value-row in the watchlist
+    optional string default_script_content - a string that shall be added to the beginning of the new script, when a script is newly created
   </parameters>
   <retvals>
     boolean retval - true, opening was successful; false, opening was unsuccessful
-    optional integer command_id - the command-id of the script, when it gets newly created
+    optional integer command_id - the command-id of the script, when it gets newly created; nil, if script wasn't added
+    boolean created_new_script - true, a new script had been created; false, the script already existed
   </retvals>
   <chapter_context>
     Developer
@@ -2550,17 +2563,20 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   if watchlist_size~=nil and math.type(watchlist_size)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size", "must be nil or an integer", -7) return false end
   if watchlist_size_row1~=nil and math.type(watchlist_size_row1)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row1", "must be nil or an integer", -8) return false end  
   if watchlist_size_row2~=nil and math.type(watchlist_size_row2)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row2", "must be nil or an integer", -9) return false end
+  if default_script_content~=nil and type(default_script_content)~="string" then ultraschall.AddErrorMessage("EditReaScript", "watchlist_size_row2", "must be nil or an integer", -10) return false end
+  if default_script_content==nil then default_script_content="" end
   
   if filename==nil then 
     -- when user has not set a filename, use the last edited on(with this function) or 
     -- the last created one(using the action-list-dialog), checked in that order
-    filename=reaper.GetExtState("ultraschall_api", "last_edited_script") 
-    if filename=="" then 
-        filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
-    end
+    --filename=reaper.GetExtState("ultraschall_api", "last_edited_script") 
+    --if filename=="" then 
+      filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
+    --end
   end
   
   local command_id
+  local created_new_script=false
   
   if reaper.file_exists(filename)==false and ultraschall.DirectoryExists2(ultraschall.GetPath(filename))==false then
     -- if path does not exist, create filename in the scripts-folder
@@ -2569,13 +2585,14 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   end
   if reaper.file_exists(filename)==false then
     -- create new file if not yet existing
-    local content  
+    local content=default_script_content
+    if content~="" then content=content.."\n" end
     if add_ultraschall_api==true then 
-      content="dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
+      content=content.."dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
     else
-      content=""
+      content=content
     end
-  
+    created_new_script=reaper.file_exists(filename)
     ultraschall.WriteValueToFile(filename, content)
   end
   
@@ -2657,7 +2674,7 @@ end
   reaper.Main_OnCommand(41931,0)
 
   -- reset old edited script in reaper.ini
-  C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
+  --C=ultraschall.SetUSExternalState("REAPER", "lastscript", A, "reaper.ini")
   
   -- reset old IDE-window-position in reaper.ini
   if x_pos~=nil then
@@ -2695,7 +2712,7 @@ end
   -- store last created/edited file using this function, so it can be opened with filename=nil
   reaper.SetExtState("ultraschall_api", "last_edited_script", filename, true)
 
-  return true, command_id
+  return true, command_id, created_new_script
 end
 
 function SFEM(dunk, target, message_type)
@@ -2823,8 +2840,7 @@ function RFR(length, ...)
       
       You can put the return-values of another function and just get the first x ones. So if the function returns 10 returnvalues, 
       but you only need the first two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
-      
-      
+        
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
@@ -2832,8 +2848,6 @@ function RFR(length, ...)
       returns three colorvalues. If you only want the first one(r), use it this way:
       
       r=RFR(1, reaper.ColorFromNative(12739))
-      
-      
       
       returns nil in case of an error
     </description>
@@ -2882,7 +2896,6 @@ function RLR(length, ...)
       You can put the return-values of another function and just get the last x ones. So if the function returns 10 returnvalues, 
       but you only need the last two, set length=2 and add the function(with the 10 returnvalues) after it as second parameter.
       
-      
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
@@ -2890,8 +2903,6 @@ function RLR(length, ...)
       returns three colorvalues. If you only want the last one(b), use it this way:
       
       b=RLR(1, reaper.ColorFromNative(12739))
-      
-      
       
       returns nil in case of an error
     </description>
@@ -2942,17 +2953,14 @@ function RRR(position, length, ...)
       You can put the return-values of another function and just get the ones between position and position+length. So if the function returns 10 returnvalues, 
       but you only need the third through the fifth, set position=3 and length=3 and add the function(with the 10 returnvalues) after it as third parameter.
       
-      
       For example:
       
       integer r, integer g, integer b = reaper.ColorFromNative(integer col)
       
       returns three colorvalues. If you only want the middle one(g), use it this way:
       
-      g=RLR(2, 1, reaper.ColorFromNative(12739))
-      
-      
-      
+      g=RRR(2, 1, reaper.ColorFromNative(12739))
+         
       returns nil in case of an error
     </description>
     <retvals>
@@ -2989,18 +2997,380 @@ function RRR(position, length, ...)
   return table.unpack(Table2)
 end
 
+function ultraschall.Statechunk_ReplaceEntry(StateChunk, Entry, EntryPositionAbove, EntryPositionBelow, values, nil_defaults)
+  --[[
+    Helperfunction for replacement of statechunk-entries
+    
+    Note: this is still experimental, so test all functions, who use this, intensively.
+          Might have trouble with nested statechunks and with statechunks who have multiple same-named-entries.
+          Tries to replace the very first entry found, which should be fairly stable...
+          
+          If not, add StateChunk-Layouter into this code, so you can use spaces as pattern to check, which entry
+          to replace...
+          
+          Unchecked: what happens, with layouted statechunks?
+  
+    StateChunk    - TrackStateChunk
+    Entry         - the entry to add/replace
+    EntryPositionAbove - this entry must be above the inserted statechunk-entry; will be ignored, if Entry already exists and can be replaced
+    EntryPositionBelow - this entry must be below the inserted statechunk-entry; will be ignored, if Entry already exists and can be replaced or if EntryPositionAbove is already set
+    values        - the parameter-values to set the statechunk entry with; string is allowed and will be converted to "" if needed
+    nil_defaults  - the values, that must be met, to remove the entry from the statechunk; keep nil to always add/replace
+  --]]
+  local default, Start, End, statechunk_entry
+  -- check for default-values to eliminate the entry
+  default=true
+  if nil_defaults~=nil then
+    for i=1, #values do
+      if values[i]~=nil_defaults[i] then
+        default=false
+        break
+      end
+    end
+  else
+    default=false
+  end
+
+  -- if no defaults, create the statechunk_entry
+  if default==false then
+    statechunk_entry=Entry
+    for i=1, #values do
+      if type(values[i])=="string" then
+        if values[i]:match(" ")~=nil then
+          values[i]="\""..values[i].."\""
+        end
+      end
+      statechunk_entry=statechunk_entry.." "..values[i]
+    end
+  else
+    statechunk_entry=""
+  end
+  
+  if statechunk_entry~="" then statechunk_entry=statechunk_entry.."\n" end
+  
+  -- if statechunk-entry already exists, simply replace it and return the statechunk
+  if StateChunk:match(Entry)~=nil then
+    StateChunk=string.gsub(StateChunk, Entry.." .-\n", statechunk_entry)
+    return StateChunk
+  end
+  
+  -- if the entry didn't exist, add it either underneath another statechunk-entry
+  if EntryPositionAbove~=nil then 
+    Start=StateChunk:match("(.-"..EntryPositionAbove..".-\n)")
+    End=StateChunk:match(EntryPositionAbove..".-\n".."(.*)") 
+    
+    return Start..statechunk_entry..End
+  -- or add it above another statechunk-entry
+  elseif EntryPositionBelow~=nil then
+    Start=StateChunk:match("(.-)"..EntryPositionBelow)
+    End=StateChunk:match("("..EntryPositionBelow..".-%c.*)") 
+    
+    return Start..statechunk_entry..End    
+  end
+end
+
+ultraschall.WalterElements={"tcp.dragdropinfo",
+"tcp.env",
+"tcp.folder",
+"tcp.foldercomp",
+"tcp.fx",
+"tcp.fxbyp",
+"tcp.fxembed",
+"tcp.fxembedheader.color",
+"tcp.fxin",
+"tcp.fxparm",
+"tcp.fxparm.font",
+"tcp.fxparm.margin",
+"tcp.io",
+"tcp.label",
+"tcp.label.color",
+"tcp.label.font",
+"tcp.label.margin",
+"tcp.margin",
+"tcp.meter",
+"tcp.meter.inputlabel.color",
+"tcp.meter.inputlabelbox.color",
+"tcp.meter.readout.color",
+"tcp.meter.rmsreadout.color",
+"tcp.meter.scale.color.lit.bottom",
+"tcp.meter.scale.color.lit.top",
+"tcp.meter.scale.color.unlit.bottom",
+"tcp.meter.scale.color.unlit.top",
+"tcp.meter.vu.div",
+"tcp.mute",
+"tcp.pan",
+"tcp.pan.color",
+"tcp.pan.fadermode",
+"tcp.pan.label",
+"tcp.pan.label.color",
+"tcp.pan.label.font",
+"tcp.pan.label.margin",
+"tcp.phase",
+"tcp.recarm",
+"tcp.recinput",
+"tcp.recinput.color",
+"tcp.recinput.font",
+"tcp.recinput.margin",
+"tcp.recmode",
+"tcp.recmon",
+"tcp.sendlist",
+"tcp.sendlist.font",
+"tcp.sendlist.margin",
+"tcp.size",
+"tcp.solo",
+"tcp.trackidx",
+"tcp.trackidx.color",
+"tcp.trackidx.font",
+"tcp.trackidx.margin",
+"tcp.volume",
+"tcp.volume.color",
+"tcp.volume.fadermode",
+"tcp.volume.label",
+"tcp.volume.label.color",
+"tcp.volume.label.font",
+"tcp.volume.label.margin",
+"tcp.width",
+"tcp.width.color",
+"tcp.width.fadermode",
+"tcp.width.label",
+"tcp.width.label.color",
+"tcp.width.label.font",
+"tcp.width.label.margin",
+"master.tcp.env",
+"master.tcp.fx",
+"master.tcp.fxbyp",
+"master.tcp.fxembed",
+"master.tcp.fxembedheader.color",
+"master.tcp.fxparm",
+"master.tcp.fxparm.font",
+"master.tcp.fxparm.margin",
+"master.tcp.io",
+"master.tcp.label",
+"master.tcp.label.color",
+"master.tcp.label.font",
+"master.tcp.label.margin",
+"master.tcp.margin",
+"master.tcp.meter",
+"master.tcp.meter.readout.color",
+"master.tcp.meter.rmsreadout.color",
+"master.tcp.meter.scale.color.lit.bottom",
+"master.tcp.meter.scale.color.lit.top",
+"master.tcp.meter.scale.color.unlit.bottom",
+"master.tcp.meter.scale.color.unlit.top",
+"master.tcp.meter.vu.div",
+"master.tcp.mono",
+"master.tcp.mute",
+"master.tcp.pan",
+"master.tcp.pan.color",
+"master.tcp.pan.fadermode",
+"master.tcp.pan.label",
+"master.tcp.pan.label.color",
+"master.tcp.pan.label.font",
+"master.tcp.pan.label.margin",
+"master.tcp.sendlist",
+"master.tcp.sendlist.font",
+"master.tcp.sendlist.margin",
+"master.tcp.size",
+"master.tcp.solo",
+"master.tcp.volume",
+"master.tcp.volume.color",
+"master.tcp.volume.fadermode",
+"master.tcp.volume.label",
+"master.tcp.volume.label.color",
+"master.tcp.volume.label.font",
+"master.tcp.volume.label.margin",
+"master.tcp.width",
+"master.tcp.width.color",
+"master.tcp.width.fadermode",
+"master.tcp.width.label",
+"master.tcp.width.label.color",
+"master.tcp.width.label.font",
+"master.tcp.width.label.margin",
+"mcp.env",
+"mcp.extmixer.mode",
+"mcp.extmixer.position",
+"mcp.folder",
+"mcp.fx",
+"mcp.fxbyp",
+"mcp.fxin",
+"mcp.fxlist.font",
+"mcp.fxlist.margin",
+"mcp.fxparm.font",
+"mcp.fxparm.margin",
+"mcp.io",
+"mcp.label",
+"mcp.label.color",
+"mcp.label.font",
+"mcp.label.margin",
+"mcp.margin",
+"mcp.meter",
+"mcp.meter.inputlabel.color",
+"mcp.meter.inputlabelbox.color",
+"mcp.meter.readout.color",
+"mcp.meter.rmsreadout.color",
+"mcp.meter.scale.color.lit.bottom",
+"mcp.meter.scale.color.lit.top",
+"mcp.meter.scale.color.unlit.bottom",
+"mcp.meter.scale.color.unlit.top",
+"mcp.meter.vu.div",
+"mcp.mute",
+"mcp.pan",
+"mcp.pan.color",
+"mcp.pan.fadermode",
+"mcp.pan.label",
+"mcp.pan.label.color",
+"mcp.pan.label.font",
+"mcp.pan.label.margin",
+"mcp.phase",
+"mcp.recarm",
+"mcp.recinput",
+"mcp.recinput.color",
+"mcp.recinput.font",
+"mcp.recinput.margin",
+"mcp.recmode",
+"mcp.recmon",
+"mcp.sendlist.font",
+"mcp.sendlist.margin",
+"mcp.size",
+"mcp.solo",
+"mcp.trackidx",
+"mcp.trackidx.color",
+"mcp.trackidx.font",
+"mcp.trackidx.margin",
+"mcp.volume",
+"mcp.volume.color",
+"mcp.volume.fadermode",
+"mcp.volume.label",
+"mcp.volume.label.color",
+"mcp.volume.label.font",
+"mcp.volume.label.margin",
+"mcp.width",
+"mcp.width.color",
+"mcp.width.fadermode",
+"mcp.width.label",
+"mcp.width.label.color",
+"mcp.width.label.font",
+"mcp.width.label.margin",
+"master.mcp.env",
+"master.mcp.extmixer.mode",
+"master.mcp.extmixer.position",
+"master.mcp.fx",
+"master.mcp.fxbyp",
+"master.mcp.fxlist.font",
+"master.mcp.fxlist.margin",
+"master.mcp.fxparm.font",
+"master.mcp.fxparm.margin",
+"master.mcp.io",
+"master.mcp.label",
+"master.mcp.label.color",
+"master.mcp.label.font",
+"master.mcp.label.margin",
+"master.mcp.margin",
+"master.mcp.menubutton",
+"master.mcp.meter",
+"master.mcp.meter.readout.color",
+"master.mcp.meter.rmsreadout.color",
+"master.mcp.meter.scale.color.lit.bottom",
+"master.mcp.meter.scale.color.lit.top",
+"master.mcp.meter.scale.color.unlit.bottom",
+"master.mcp.meter.scale.color.unlit.top",
+"master.mcp.meter.vu.div",
+"master.mcp.meter.vu.rmsdiv",
+"master.mcp.mono",
+"master.mcp.mute",
+"master.mcp.pan",
+"master.mcp.pan.color",
+"master.mcp.pan.fadermode",
+"master.mcp.pan.label",
+"master.mcp.pan.label.color",
+"master.mcp.pan.label.font",
+"master.mcp.pan.label.margin",
+"master.mcp.sendlist.font",
+"master.mcp.sendlist.margin",
+"master.mcp.size",
+"master.mcp.solo",
+"master.mcp.volume",
+"master.mcp.volume.color",
+"master.mcp.volume.fadermode",
+"master.mcp.volume.label",
+"master.mcp.volume.label.color",
+"master.mcp.volume.label.font",
+"master.mcp.volume.label.margin",
+"master.mcp.width",
+"master.mcp.width.color",
+"master.mcp.width.fadermode",
+"master.mcp.width.label",
+"master.mcp.width.label.color",
+"master.mcp.width.label.font",
+"master.mcp.width.label.margin",
+"envcp.arm",
+"envcp.bypass",
+"envcp.fader",
+"envcp.fader.color",
+"envcp.fader.fadermode",
+"envcp.hide",
+"envcp.label",
+"envcp.label.color",
+"envcp.label.font",
+"envcp.label.margin",
+"envcp.learn",
+"envcp.margin",
+"envcp.mod",
+"envcp.size",
+"envcp.value",
+"envcp.value.color",
+"envcp.value.font",
+"envcp.value.margin",
+"trans.automode",
+"trans.bpm.edit",
+"trans.bpm.edit.color",
+"trans.bpm.edit.font",
+"trans.bpm.edit.margin",
+"trans.bpm.tap",
+"trans.bpm.tap.color",
+"trans.bpm.tap.font",
+"trans.bpm.tap.margin",
+"trans.curtimesig",
+"trans.curtimesig.color",
+"trans.curtimesig.font",
+"trans.fwd",
+"trans.margin",
+"trans.pause",
+"trans.play",
+"trans.rate",
+"trans.rate.color",
+"trans.rate.fader",
+"trans.rate.fader.color",
+"trans.rate.fader.fadermode",
+"trans.rate.font",
+"trans.rate.margin",
+"trans.rec",
+"trans.repeat",
+"trans.rew",
+"trans.sel",
+"trans.sel.color",
+"trans.sel.font",
+"trans.sel.margin",
+"trans.size",
+"trans.size.dockedheight",
+"trans.size.minmax",
+"trans.status",
+"trans.status.margin",
+"trans.stop"}
+
+
 
 
 
 -- Load ModulatorLoad3000
 
 if ultraschall.US_BetaFunctions==false then
-  dofile(script_path.."ultraschall_ModulatorLoad3000.lua")
+  dofile(ultraschall.Api_Path.."ultraschall_ModulatorLoad3000.lua")
 else
   for i=0, 1024 do
-    file=reaper.EnumerateFiles(script_path.."/Modules/", i)
-    if file==nil then break end
-    dofile(script_path.."/Modules/"..file)
+    ultraschall.temp_file=reaper.EnumerateFiles(ultraschall.Api_Path.."/Modules/", i)
+    if ultraschall.temp_file==nil then break end
+    dofile(ultraschall.Api_Path.."/Modules/"..ultraschall.temp_file)
   end
 end
 ultraschall.ShowLastErrorMessage()

@@ -36,6 +36,7 @@ REAPER Filetype-descriptions
                             <td></td>
                             <td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper-Filetype-Descriptions.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Filetype Descriptions&nbsp;</a></td>
                             <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Config_Variables.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;Config Variables&nbsp;</a></td>
+                            <td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="Reaper_Misc_Docs.html" style="color:#BBBBBB; text-decoration: none; white-space:pre;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misc Docs&nbsp;</a></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -56,26 +57,27 @@ REAPER Filetype-descriptions
                 <h2>Filetype Descriptions</h2>
                 <h3>Index</h3>
                 <a href="#Introduction">Introduction</a><br>
+                
                 <a href="#MetadataCache">MetadataCache</a><br>
-                <a href="#RfxChain">RfxChain</a> - (export-)file that contains settings for a chain of FX<br>
-                <a href="#Reaper-presets.ini">Preset-Files</a> - stores presets for Audio/Video-Plugins<br>
-                <a href="#ReaperChanMap">ReaperChanMap</a> - exportfile, that stores channel aliases for hardware channels	<br>
-                <a href="#reaper-defpresets.ini">reaper-defpresets.ini</a> 		<br>
                 <a href="#Reaper-dxplugins64.ini">Reaper-dxplugins[64].ini</a> - caches the DirectX-Plugin-information(Windows)<br>
                 <a href="#Reaper-extstate.ini">reaper-extstate.ini</a> - stores external states from scripts and Reaper-plugins.<br>
-                <a href="#ReaperFileList">ReaperFileList</a> - The database-files for the Media-Explorer<br>
                 <a href="#Reaper-fxfolders.ini">Reaper-fxfolders.ini</a> - manages the "My Folders"-section for FX-selection dialogue<br>
-                <a href="#ReaperIDETheme">ReaperIDETheme</a> - stores the color-theme of the Reaper-ReaScriptIDE<br>
                 <a href="#Reaper-kb.ini">Reaper-kb.ini</a> - stores custom ActionCommandIDs, Script/Action-Descriptions, Shortcuts(Key/Midi)<br>
                 <a href="#Reaper-menu.ini">Reaper-menu.ini</a> - stores menu and toolbar customization<br>
                 <a href="#Reaper-mouse.ini">Reaper-mouse.ini</a> - stores Mouse modifier settings<br>
+                <a href="#Reaper-presets.ini">Preset-Files</a> - stores presets for Audio/Video-Plugins<br>
                 <a href="#Reaper-vstplugins64.ini">Reaper-vstplugins[64].ini</a> - caches the VST-Plugin-information<br>
+                <a href="#ReaperChanMap">ReaperChanMap</a> - exportfile, that stores channel aliases for hardware channels	<br>
                 <a href="#ReaperConfigZip">ReaperConfigZip</a> - configuration-export-files<br>
+                <a href="#ReaperFileList">ReaperFileList</a> - The database-files for the Media-Explorer<br>
+                <a href="#ReaperIDETheme">ReaperIDETheme</a> - stores the color-theme of the Reaper-ReaScriptIDE<br>
                 <a href="#ReaperKeyMap">ReaperKeyMap</a> - export of selection of Reaper-kb.ini-entries<br>
                 <a href="#ReaperMenu">ReaperMenu</a> exportfile of one toolbar or menu<br>
                 <a href="#ReaperMenuSet">ReaperMenuSet</a> - export of reaper-menu.ini<br>
                 <a href="#ReaperMouseMap">ReaperMouseMap</a> - export/import file for Mouse modifier<br>
-                <a href="#ReaperProjectList">Reaper Project List(RPL)</a> - list of projects - needs SWS<br>
+                <a href="#RfxChain">RfxChain</a> - (export-)file that contains settings for a chain of FX<br>
+                <a href="#reaper-convertfx.ini">Reaper-convertfx.ini</a> - the FXChain for the Batch Converter<br>
+                <a href="#reaper-defpresets.ini">reaper-defpresets.ini</a> - stores the names of the default-preset each plugin shall use<br>
                
                 <p>
                 <div style="width: 95%;">
@@ -90,7 +92,7 @@ REAPER Filetype-descriptions
                 </div>
             <div style="width: 95%;">
                                 <hr>
-                <a id="Reaper-kb.ini"></a><h2>Reaper-kb.ini (as of Reaper 6.18)</h2>
+                <a id="Reaper-kb.ini"></a><h2>Reaper-kb.ini (as of Reaper 6.59)</h2>
                 Stored in Reaper-ressources-folder or in the Reaper-Application-Folder(in portable installations)<p>
                     In the file Reaper-kb.ini, the custom shortcuts, scripts and acts, their descriptions, sections-association and Action-Command-IDs are defined.<p> 
                     The reaper-kb.ini does NOT store OSC-Keybindings or FX-shortcuts, they are stored in reaper-osc-actions.ini or reaper-fxoptions.ini respectively.<p>
@@ -118,7 +120,15 @@ REAPER Filetype-descriptions
                     <pre style="padding-left:3%;"><code><i> ACT a b "Action Command ID" "Description" ActionCommandID [ActionCommandID] [ActionCommandID] ... </i></code></pre>
                 
                 <div style="padding-left: 4%; width:85%;">
-                    <i>a</i> - 1 consolidate undo points, 2 show in Actions-Menu, 3 consolidate undo points AND show in Actions Menu; maybe 4 and higher?
+                    <i>a</i> - various settings for new actions:<br>
+                             - &1 consolidate undo points<br>
+                             - &2 show in Actions-Menu<br>
+                             - &amp;16 &amp;32 - Show as active if all component actions are - checkbox<br>
+                             - &nbsp;&nbsp;16   0 - unchecked<br>
+                             - &nbsp;&nbsp;0    0 - Active<br>
+                             - &nbsp;&nbsp;0    32 - Active or indeterminate<br>
+
+                                 
                 </div><br>
                 <div style="padding-left: 4%; width:85%;">
                     <i>b</i> - Section ID, in which this action can be used. Only the numbers below are allowed, any other number may lead to the entry be removed, if reaper-kb.ini is rewritten by Reaper.<br> <br>
@@ -541,7 +551,28 @@ REAPER Filetype-descriptions
                         <i>Name</i> - Name of the plugin, as it will be displayed within Reaper. No empty names are allowed; a simple space is also not sufficient. Unicode doesn't work well; avoid it.<p>
                         <i>Load</i> - 0 - ignored by Reaper, any other number - it shows up in the FX-Plugin selection folder DX/DXi. When scanning plugins, Reaper seems to determine automatically, if a given DX-Plugin is useable within Reaper. You should trust Reaper about this, as some DX-Plugins may render Reaper busy to unresponsiveness.<p>
                     </div>
-            </div>
+                </div>
+                
+                <div style="wisth: 95%;">
+                    <hr>
+                    <a id="reaper-convertfx.ini"></a><h2>reaper-convertfx.ini</h2>
+                    The reaper-convertfx.ini can be found in the resource-folder of Reaper or in the Reaper-Application-Folder(with portable installations).<p>
+                    
+                    This is basically an FXChain. It stores the FX used in the FXChain of the Batch-Converter.<br>
+                    
+                    The format is like a regular FXChain, except, that it's not enclosed into<p>
+                    
+                    <pre><code>
+                    &lt;FXCHAIN
+                    
+                    &gt;
+                    </code></pre>
+                    
+                    tags, but rather the content of an FXChain only.<p>
+                    So if you want to read this FXChain and add it in a MediaTrack or MediaItem_Take-statechunk, you need to put the 
+                    &lt;FXCHAIN-tags surrounding it, or it will not be accepted.
+                </div>
+                
                 <div style="width: 95%;">
                     <hr>
                     <a id="Reaper-fxfolders.ini"></a><h2>Reaper-fxfolders.ini</h2>
@@ -987,6 +1018,23 @@ MIDI event list context<br>
 MIDI inline editor context<br>
 MIDI main menu context<br>
                 </div><br>
+                
+<strong>Media Explorer-Toolbar:</strong><br>
+<div style="padding-left:4%;">
+Media Explorer toolbar<br>
+                </div><br>
+                
+<strong>Media Explorer-menu:</strong><br>
+<div style="padding-left:4%;">
+Media Explorer main<br>
+Media Explorer show<br>
+Media Explorer options<br>
+                </div><br>
+                
+<strong>Media Explorer-context menu:</strong><br>
+<div style="padding-left:4%;">
+Media Explorer main context<br>
+                </div><br>
 <p></p>
 
 <h4>The Menu/Toolbar-entries themselves</h4>
@@ -1254,6 +1302,7 @@ Every [section] has it's own set of values you can set to each key. If you want 
 <br>
 Note: within the description you will find something like "Main-section" or "MIDI-Editor"; that is NOT a [section] but refers to the sections you have in the Actions->Show Actions List-dialoque within Reaper. The Reaper-mouse.ini-[sections] are always written as [sectionname].<p></p>
 Also note: Double Click and Left Click also allows _ActionCommandIDs and CommandIDs, with the exception of the section [MM_CTX_MIDI_CCEVT]. All others don't support CommandIDs and _ActionCommandIDs.<br>
+Especially note: when a default-action is selected, Reaper seems to remove the entry from the reaper-mouse.ini
 <br>
 <strong> [MM_CTX_ITEM_CLK] </strong>- Media Item - left click<br> <br>
  <div style="padding-left:4%;">
@@ -1275,7 +1324,8 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 13 </i> - Restore previous zoom/scroll <br>
  <i> 14 </i> - Restore previous zoom level <br>
  <i> 15 </i> - Add stretch marker <br>
- <i> 16 </i> - and higher: refer to CommandIDs for Main-section <br>
+ <i> 20 </i> - Extend razor edit area <br>
+ <i> 21 </i> - and higher: refer to CommandIDs for Main-section <br>
  </div>
  <br>
  
@@ -1342,8 +1392,14 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 54 </i> - Move item ignoring snap and time selection, enabling ripple edit for all tracks <br>
  <i> 55 </i> - Move item contents, ripple all adjacent items <br>
  <i> 56 </i> - Move item contents, ripple earlier adjacent items <br>
- <i> 57 </i> - Move item contents and right edge, ripple later adjacent items <br>
- <i> 58 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
+ <i> 57 </i> - Move item contents and right edge, ripple later adjacent items <br> 
+ <i> 62 </i> - Select razor edit area <br>
+ <i> 63 </i> - Select razor edit area ignoring snap <br>
+ <i> 64 </i> - Add to razor edit area <br>
+ <i> 65 </i> - Add to razor edit area ignoring snap <br>
+ <i> 66 </i> - Select razor edit area and time <br>
+ <i> 67 </i> - Select razor edit area and time ignoring snap<br>
+ <i> 68 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEM_DBLCLK] </strong>- Media Item - double click  <br> <br>
@@ -1381,9 +1437,10 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 12 </i> - Select item ignoring grouping <br>
  <i> 13 </i> - Restore previous zoom/scroll <br>
  <i> 14 </i> - Restore previous zoom level <br>
-  <br>
  <i> 15 </i> - Add stretch marker <br>
- <i> 16 </i> - and higher -> Reaper Command IDs <br>
+ <i> 19 </i> - Select razor edit area <br>
+ <i> 20 </i> - Extend razor edit area <br> 
+ <i> 21 </i> - and higher -> Reaper Command IDs <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMLOWER] </strong>- Media Item Bottom Half - left drag <br> <br>
@@ -1450,7 +1507,13 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 55 </i> - Move item contents, ripple all adjacent items <br>
  <i> 56 </i> - Move item contents, ripple earlier adjacent items <br>
  <i> 57 </i> - Move item contents and right edge, ripple later adjacent items <br>
- <i> 58 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
+ <i> 62 </i> - Select razor edit area <br>
+ <i> 63 </i> - Select razor edit area ignoring snap <br>
+ <i> 64 </i> - Add to razor edit area <br>
+ <i> 65 </i> - Add to razor edit area ignoring snap <br>
+ <i> 66 </i> - Select razor edit area and time <br>
+ <i> 67 </i> - Select razor edit area and time ignoring snap<br>
+ <i> 69 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMLOWER_DBLCLK] </strong>- Media Item Bottom Half - double click <br> <br>
@@ -1492,7 +1555,13 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 16 </i> - Move edge ignoring snap and selection/grouping without changing fade time <br>
  <i> 17 </i> - Move edge without changing fade time (relative edge edit) <br>
  <i> 18 </i> - Move edge ignoring snap without changing fade time (relative edge edit) <br>
- <i> 19 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
+ <i> 21 </i> - Select razor edit area <br>
+ <i> 22 </i> - Select razor edit area ignoring snap <br>
+ <i> 23 </i> - Add to razor edit area <br>
+ <i> 24 </i> - Add to razor edit area ignoring snap <br>
+ <i> 25 </i> - Select razor edit area and time <br>
+ <i> 26 </i> - Select razor edit area and time ignoring snap<br>
+ <i> 27 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMEDGE_DBLCLK] </strong>- Media Item Edge - double click <br> <br>
@@ -1819,7 +1888,13 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 6 </i> - Extend time selectino ignoring snap <br>
  <i> 7 </i> - Restore previous zoom/scroll <br>
  <i> 8 </i> - restore previous zoom level <br>
- <i> 9 </i> - and higher -> Reaper Command IDs from Main section <br>
+ <i> 25 </i> - Select razor edit area <br>
+ <i> 26 </i> - Select razor edit area ignoring snap <br>
+ <i> 27 </i> - Add to razor edit area <br>
+ <i> 28 </i> - Add to razor edit area ignoring snap <br>
+ <i> 29 </i> - Select razor edit area and time <br>
+ <i> 30 </i> - Select razor edit area and time ignoring snap<br>
+ <i> 31 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_TRACK] </strong>- Track - left drag <br> <br>
@@ -1999,7 +2074,9 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 4 </i> - Split media items at area edges<br>
  <i> 5 </i> - Move areas backwards <br>
  <i> 6 </i> - Move areas forwards<br>
- <i> 7 </i> - and higher -> Reaper Command IDs from Main section <br>
+ <i> 7 </i> - Move areas up without contents<br>
+ <i> 8 </i> - Move areas down without contents<br> 
+ <i> 9 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_AREASEL] </strong>- Razor edit area - left drag <br> <br>
@@ -2036,6 +2113,16 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div> 
  <br>
+ <strong> [MM_CTX_AREASEL_ENV] </strong>- Razor edit envelope area - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - No action <br>
+ <i> 1 </i> - Move or tilt envelope vertically<br>
+ <i> 2 </i> - Expand or compress envelope range<br>
+ <i> 3 </i> - Expand or compress envelope range toward top/bottom<br>
+ <i> 4 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ </div> 
+ <br>
  <strong> [MM_CTX_ARRANGE_RMOUSE] </strong>- Arrange view - right drag <br> <br>
  <div style="padding-left:4%;">
  <i> -1 </i> - default Reaper-builtin-behavior <br>
@@ -2060,13 +2147,17 @@ Also note: Double Click and Left Click also allows _ActionCommandIDs and Command
  <i> 21 </i> - Set edit cursor and hand scroll <br>
  <i> 22 </i> - Set edit cursor, hand scroll and horizontal zoom <br>
  <i> 23 </i> - <br>
- <i> 24 </i> - Create razor edit area<br>
+ <i> 24 </i> - Select razor edit area<br>
  <i> 25 </i> - Select razor edit area ignoring snap<br>
  <i> 26 </i> - Add to razor edit area <br>
  <i> 27 </i> - Add to razor edit area ignoring snap<br>
- <i> 28 </i> - Create razor edit area from cursor<br>
- <i> 29 </i> - Create razor edit area from cursor ignoring snap<br>
- <i> 30 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ <i> 28 </i> - Select razor edit area from cursor<br>
+ <i> 29 </i> - Select razor edit area from cursor ignoring snap<br>
+ <i> 30 </i> - Remove from razor edit area<br>
+ <i> 31 </i> - Remove from razor edit area ignoring snap<br>
+ <i> 32 </i> - Select razor edit area and time<br>
+ <i> 33 </i> - Select razor edit area and time ignoring snap<br>
+ <i> 34 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ARRANGE_MMOUSE_CLK] </strong>- Arrange view - middle click <br> <br>

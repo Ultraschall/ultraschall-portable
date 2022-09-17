@@ -2,7 +2,7 @@
   ################################################################################
   # 
   # Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
-  # 
+  #
   # Permission is hereby granted, free of charge, to any person obtaining a copy
   # of this software and associated documentation files (the "Software"), to deal
   # in the Software without restriction, including without limitation the rights
@@ -25,5 +25,7 @@
   --]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+filename=ultraschall.Api_Path.."/Documentation/Lua_5_3_Reference_Manual.html"
 
-ultraschall.OpenURL("file://"..ultraschall.Api_Path .."Documentation/Lua_5_3_Reference_Manual.html")
+reaper.CF_ShellExecute(filename)
+

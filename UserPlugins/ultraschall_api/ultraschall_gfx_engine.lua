@@ -28,28 +28,6 @@
 --- ULTRASCHALL - API - GFX-Engine ---
 --------------------------------------
 
-
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "GFX-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "GFX-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-  local Retval, HWND=ultraschall.GFX_Init()
-end
-
 if ultraschall.GFX_WindowHWND==nil then ultraschall.GFX_WindowHWND="Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window." end
 
 function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antialias)
@@ -619,8 +597,8 @@ function ultraschall.GFX_GetWindowHWND()
     Lua=5.3
   </requires>
   <functioncall>HWND hwnd = ultraschall.GFX_GetWindowHWND()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
-    Returns the HWND of the currently opened gfx-window. You need to use [ultraschall.GFX_Init()](#GFX_Init), otherwise 
+  <description>
+    Returns the HWND of the currently opened gfx-window. You need to use ultraschall.GFX_Init(), otherwise 
     it will contain the message "Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window."
   </description>
   <retvals>
@@ -960,7 +938,7 @@ function ultraschall.GFX_GetDropFile()
     Lua=5.3
   </requires>
   <functioncall>boolean changed, integer num_dropped_files, array dropped_files, integer drop_mouseposition_x, integer drop_mouseposition_y = ultraschall.GFX_GetDropFile()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the files drag'n'dropped into a gfx-window, including the mouseposition within the gfx-window, where the files have been dropped.
     
     if changed==true, then the filelist is updated, otherwise this function returns the last dropped files again.
@@ -1156,7 +1134,7 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
     Lua=5.3
   </requires>
   <functioncall>integer first_typed_character, integer num_characters, table character_queue = ultraschall.GFX_GetChar(optional integer character, optional boolean manage_clipboard, optional string to_clipboard, optional boolean readable_characters)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     gets all characters from the keyboard-queue of gfx.getchar as a handy table.
     
     the returned table character_queue is of the following format:
@@ -1290,4 +1268,67 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
   return first, CharacterCount, CharacterTable--, B, C
 end
 
+
+
+function ultraschall.GFX_GetTextLayout(bold, italic, underline, outline, nonaliased, inverse, rotate, rotate2)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_GetTextLayout</slug>
+  <requires>
+    Ultraschall=4.3
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>integer font_layout = ultraschall.GFX_GetTextLayout(optional boolean bold, optional boolean italic, optional boolean underline, optional boolean outline, optional boolean nonaliased, optional boolean inverse, optional boolean rotate, optional boolean rotate2)</functioncall>
+  <description>
+    Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.
+    
+    Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.
+    
+    Some combinations do not work together, so you need to experiment.
+  </description>
+  <parameters>
+    optional boolean bold - true, sets the font_layout to bold; false, no boldness
+    optional boolean italic - true, sets the font_layout to italic; false, no italic
+    optional boolean underline - true, sets the font_layout to underline; false, no underlining
+    optional boolean outline - true, sets the font_layout to outline; false, no outline
+    optional boolean nonaliased - true, sets the font_layout to aliased; false, keep it antialiased
+    optional boolean inverse - true, sets the font_layout to inverse; false, not inversed
+    optional boolean rotate - true, sets the font_layout to rotate the font clockwise; false, don't rotate
+    optional boolean rotate2 - true, sets the font_layout to rotate the font counterclockwise; false, don't rotate
+  </parameters>
+  <retvals>
+    integer font_layout - the returned value you can use for gfx.drawstr for its flags-parameter
+  </retvals>
+  <chapter_context>
+    Blitting
+  </chapter_context>
+  <target_document>US_Api_GFX</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, get, text layout</tags>
+</US_DocBloc>
+]]
+  local Bold=66
+  local Italic=73
+  local Underline=85
+  local Outline=79
+  local NonAliased=77
+  local Inverse=86
+  local Rotated=89
+  local Rotated2=90
+  
+
+  local Layout=0
+  if bold==true then Layout=Bold Layout=Layout<<8 end
+  if italic==true then Layout=Layout+Italic Layout=Layout<<8 end
+  if underline==true then Layout=Layout+Underline Layout=Layout<<8 end
+  if outline==true then Layout=Layout+Outline Layout=Layout<<8 end
+  if nonaliased==true then Layout=Layout+NonAliased Layout=Layout<<8 end
+  if inverse==true then Layout=Layout+Inverse Layout=Layout<<8 end
+  
+  if rotate==true then Layout=Layout+Rotated Layout=Layout<<8 end
+  if rotate2==true then Layout=Layout+Rotated2 Layout=Layout<<8 end
+  
+  return Layout
+end
 

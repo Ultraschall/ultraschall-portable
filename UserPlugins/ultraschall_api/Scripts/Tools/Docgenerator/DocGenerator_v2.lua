@@ -30,6 +30,8 @@
 -- Index=4 -- set the number of columns of the index (1-4)
 -- USDocMLLink="" -- which document to replace usdocml:// with?
 
+
+
 local FunctionList=FunctionList
 
 
@@ -137,6 +139,8 @@ function ultraschall.ColorateDatatypes(String)
   String=string.gsub(String, " MediaItem ", " <i>MediaItem</i> ")
   String=string.gsub(String, " MediaTrack ", " <i>MediaTrack</i> ")
   String=string.gsub(String, " MediaTrack%*", " <i>MediaTrack*</i> ")
+  
+  
   String=string.gsub(String, " AudioAccessor ", " <i>AudioAccessor</i> ")
   String=string.gsub(String, " AudioAccessor%* ", " <i>AudioAccessor*</i> ")
   String=string.gsub(String, " BR_Envelope ", " <i>BR_Envelope</i> ")
@@ -188,6 +192,7 @@ function ultraschall.ColorateDatatypes(String)
   String=string.gsub(String, " optional ", " <i>optional</i> ")  
   String=string.gsub(String, " table ", " <i>table</i> ")  
   String=string.gsub(String, " array ", " <i>array</i> ")  
+  String=string.gsub(String, " FxChain", " <i>FxChain</i> ")
   
   String=string.gsub(String, "%( ", "(")
   String=string.gsub(String, "%[ ", "[")
@@ -262,12 +267,13 @@ function contentindex()
     for i=1, count2 do
       if HeaderList[i]:match("(.-\n)")==temp then 
             HeaderList[i]=HeaderList[i]..Slug.."\n"
+            --print2(HeaderList[i])
             break 
       end
     end    
     count=count+1
   end
-  
+    
   if DontSort==nil then
     table.sort(HeaderList)
   end
@@ -279,11 +285,11 @@ function contentindex()
 
     local A2, AA2, AAA2 = ultraschall.SplitStringAtLineFeedToArray(slugs)
     if DontSort==nil then
-      table.sort(AA2)
+      table.sort(AA2)      
     end
     slugs=""
     for i=1, A2 do
-      slugs=slugs..AA2[i].."\n"
+      slugs=slugs..AA2[i].."\n"      
     end
     HeaderList[i]=chapter..slugs
   end
@@ -298,7 +304,9 @@ function contentindex()
     -- Header for each category
     local Top=HeaderList[i]:match("(.-),")
     local Second=HeaderList[i]:match(".-,(.-),")
+    if Second~=nil and Second:sub(1,1)==" " then Second=Second:sub(2,-1) end
     local Third=HeaderList[i]:match(".-,.-,(.-),")
+    if Third~=nil and Third:sub(1,1)==" " then Second=Second:sub(2,-1) end
     
     local Counts, Slugs=ultraschall.SplitStringAtLineFeedToArray(HeaderList[i]:match(".-\n(.*)\n"))
     slugs=""
@@ -373,7 +381,7 @@ function convertMarkdown(start, stop)
     --end
 
     if AllUSDocBloc_Header[i]["markup_type"]=="plaintext" then
-      AllUSDocBloc_Header[i][6]=ultraschall.Docs_ConvertPlainTextToHTML(Description)
+      AllUSDocBloc_Header[i][6]=ultraschall.Docs_ConvertPlainTextToHTML(Description, false, true)
     else
       ultraschall.WriteValueToFile(Tempfile.."1.md", "\n\n    TUDELU "..i.." "..AllUSDocBloc_Header[i][1].."\n\n"..Description.."\n\n---\n\n    TUDELUS \n\n---\n\n", nil, true)
 

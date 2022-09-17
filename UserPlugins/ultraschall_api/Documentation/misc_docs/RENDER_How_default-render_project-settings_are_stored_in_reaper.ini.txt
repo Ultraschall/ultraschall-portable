@@ -1,0 +1,110 @@
+Default Render Settings:
+
+Not stored with defaults:
+    path and filename
+    bounds dropdownlist; Reaper uses these as defaults:
+        When projrenderstems is
+         - Source Region Render Matrix then Bounds=3(All project regions)
+         - Selected Media Items (including via master) then Bounds=4(Media Items)
+         - Razor edit areas(includin via master) then Bounds=6(Razor Edit Areas)
+
+projrenderstems - Source-dropdownlist, stretch markers transient guides-checkbox(&256), embed metadata-checkbox(&512), 
+                                       take markers-checkbox(&1024), 2nd pass render-checkbox(&2048)
+                  0, Source Master Mix,
+                  1, Source Master mix + stems,
+                  3, Source Stems, selected tracks,
+                 &4, Multichannel Tracks to Multichannel Files,
+                  8, Source Region Render Matrix,
+                 &16, Tracks with only Mono-Media to Mono Files,  
+                  32, Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to GetProject_RenderRange to get RENDER_RANGE)
+                  64,  Selected media items via master
+                  128, Selected tracks via master
+                 &256, Embed stretch markers/transient guides-checkbox
+                 &512, Embed metadata
+                 &1024, Embed Take markers
+                 &2048, enable second pass rendering
+                  4096, Razor edit areas
+                  4224, Razor edit areas via master
+                  
+rendertails - tail
+
+rendertaillen - taillength in miliseconds
+
+projrendernch - SampleRate
+
+projrendersrate - channels
+
+projrenderlimit - offline/online
+
+projrenderrateinternal - Use project sample rate-checkbox
+
+projrenderresample - resample mode
+
+projrendernorm - Normalize to(&1), normalize mode, only normalize files that are too loud(&256), brickwall limiter(&64 and &128), to master target(&32)
+                     0, LUFS-I
+                     2, RMS-I
+                     4, Peak
+                     6, True Peak
+                     8, LUFS-M max
+                     10, LUFS-S max
+                     
+                     &1=0, Normalize disabled
+                     &1=1, Normalize enabled
+                     
+                     &32=0, Normalize/limit each file seperately
+                     &32=1, Normalize/limit master mix, common gain to stems
+                     
+                     &64=0, Brickwall limiter disabled
+                     &64=1, Brickwall limiter enabled
+                     
+                     &128=0, Peak
+                     &128=1, True Peak
+
+                     &256=0, Only Normalize files that are too loud disabled
+                     &256=1, Only Normalize files that are too loud enabled
+                     
+                     &512=0, Fade-in-checkbox - disabled
+                     &512=1, Fade-in-checkbox - enabled
+                        
+                     &1024=0, Fade-out-checkbox - disabled
+                     &1024=1, Fade-out-checkbox - enabled
+
+projrendernormtgt - normalize target
+
+projrenderbrickwall - brickwall limiter target
+
+rendercfg - default render settings (HEX-encoded)
+
+rendercfg2 - default render settings (HEX-encoded) for secondary render
+
+projrenderdither - Noise shape master; Dither master, Dither stems, Noise shape stems
+
+renderclosewhendone - silently increment filenames to avoid overwriting, 
+
+projrenderaddtoproj - add rendered items to new tracks in project(&1), Do not render files that are likely silent(&2)
+
+autosaveonrender - auto save copy of project to outfile.rpp
+                     0, disabled
+                     1, enabled
+                     
+projrenderfadeoutshape - the shape of the render fade-out
+           0, linear fade-out
+           1, inverted quadratic fade-out
+           2, quadratic fade-out
+           3, inverted quartic fade-out
+           4, quartic fade-out
+           5, Cosine S-curve fade-out
+           6, Quartic S-curve fade-out
+           
+projrenderfadeinshape - the shape of the render fade-in
+           0, linear fade-in
+           1, inverted quadratic fade-in
+           2, quadratic fade-in
+           3, inverted quartic fade-in
+           4, quartic fade-in
+           5, Cosine S-curve fade-in
+           6, Quartic S-curve fade-in
+
+projrenderfadein - the length of the fade-in in seconds(use fractions for milliseconds)
+
+projrenderfadeout - the length of the fade-out in seconds(use fractions for milliseconds)

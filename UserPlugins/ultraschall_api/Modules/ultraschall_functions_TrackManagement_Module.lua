@@ -30,30 +30,6 @@
 ---    Track Management Module    ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "TrackManagement-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
-
-
 function ultraschall.IsValidTrackString(trackstring)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -1593,7 +1569,7 @@ function ultraschall.AnyTrackRecarmed()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackRecarmed()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track is recarmed.
   </description>
   <retvals>
@@ -1624,7 +1600,7 @@ function ultraschall.AnyTrackPhased()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackPhased()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track has phase-invert activated.
   </description>
   <retvals>
@@ -1657,7 +1633,7 @@ function ultraschall.AnyTrackRecMonitored()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackRecMonitored()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track has monitoring of recinput activated.
   </description>
   <retvals>
@@ -1690,7 +1666,7 @@ function ultraschall.AnyTrackHiddenTCP(master)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackHiddenTCP(optional boolean master)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track is hidden in Track Control Panel.
   </description>
   <parameters>
@@ -1730,7 +1706,7 @@ function ultraschall.AnyTrackHiddenMCP(master)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackHiddenMCP(optional boolean master)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track is hidden in Mixer Control Panel.
   </description>
   <parameters>
@@ -1769,7 +1745,7 @@ function ultraschall.AnyTrackFreeItemPositioningMode()
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackFreeItemPositioningMode()</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track has free item positioning mode(freemode) activated.
   </description>
   <retvals>
@@ -1802,7 +1778,7 @@ function ultraschall.AnyTrackFXBypass(master)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.AnyTrackFXBypass(optional boolean master)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns true, if any track has fx-bypass activated.
   </description>
   <parameters>
@@ -2051,7 +2027,7 @@ function ultraschall.GetAllVisibleTracks_Arrange(master_track, completely_visibl
       Lua=5.3
     </requires>
     <functioncall>string trackstring, integer tracktable_count, table tracktable = ultraschall.GetAllVisibleTracks_Arrange(optional boolean master_track, optional boolean completely_visible)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns a trackstring with all tracks currently visible in the arrange-view.
       
       Note: Item who start above and end below the visible arrangeview will be treated as not completely visible!
@@ -2135,7 +2111,7 @@ function ultraschall.IsTrackVisible(track, completely_visible)
       Lua=5.3
     </requires>
     <functioncall>boolean retval = ultraschall.IsTrackVisible(MediaTrack track, boolean completely_visible)</functioncall>
-    <description markup_type="markdown" markup_version="1.0.1" indent="default">
+    <description>
       returns if a track is currently visible in arrangeview
         
       returns nil in case of error

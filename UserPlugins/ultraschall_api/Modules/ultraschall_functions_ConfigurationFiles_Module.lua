@@ -30,30 +30,6 @@
 ---  Configuration-Files  Module  ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "ConfFiles-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
-
-
 function ultraschall.SetIniFileExternalState(section, key, value, ini_filename_with_path)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -1742,7 +1718,8 @@ function ultraschall.GetIniFileValue(section, key, errval, inifile)
 --]]
   if type(inifile)~="string" then ultraschall.AddErrorMessage("GetIniFileValue", "inifile", "must be a string", -1) return -1 end
   if section==nil then ultraschall.AddErrorMessage("GetIniFileValue", "section", "must be a string", -2) return -1 end
-  if key==nil then ultraschall.AddErrorMessage("GetIniFileValue", "key", "must be a string", -3) return -1 end
+  if key==nil then ultraschall.AddErrorMessage("GetIniFileValue", "key", "must be a string", -3) return -1 end  
+  
   if reaper.file_exists(inifile)==false then ultraschall.AddErrorMessage("GetIniFileValue","inifile", "file does not exist", -4) return -1 end
   if errval==nil then errval="" end
   section=tostring(section)
@@ -1857,7 +1834,7 @@ function ultraschall.CharacterCodes_ReverseLookup(byte1, byte2, byte3, lang, smm
     Lua=5.3
   </requires>
   <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup(integer byte1, integer byte2, integer byte3, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the character-code+modifiers of a control-message-character as sent by reaper.StuffMIDIMessage with mode=1
     they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
     
@@ -2071,7 +2048,7 @@ function ultraschall.CharacterCodes_ReverseLookup(byte1, byte2, byte3, lang, smm
     -- get the character
     CharacterSet1=byte1&1
     CharacterSet2=byte3
-    Character=ultraschall.GetUSExternalState("Codes_"..lang, CharacterSet1.."_"..(byte2).."_"..CharacterSet2, "UserPlugins/ultraschall_api/IniFiles/StuffMidiMessage-CharacterCodes.ini")
+    Character=ultraschall.GetUSExternalState("Codes_"..lang, CharacterSet1.."_"..(byte2).."_"..CharacterSet2, ultraschall.Api_Path.."/IniFiles/StuffMidiMessage-CharacterCodes.ini")
     Character=ultraschall.ConvertHex2Ascii(Character)
     return Character, false, Shift, Control, Alt, Win, Opt, Cmd
   end
@@ -2087,7 +2064,7 @@ function ultraschall.CharacterCodes_ReverseLookup_KBIni(byte1, byte2, lang)
     Lua=5.3
   </requires>
   <functioncall>string Character, optional boolean special_modifier, optional boolean shift, optional boolean control, optional boolean alt, optional boolean win, optional boolean opt, optional boolean cmd = ultraschall.CharacterCodes_ReverseLookup_KBIni(integer byte1, integer byte2, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns the character-code+modifiers of a control-message-character as stored in the KEY-entries in the reaper-kb.ini
     they will be returned as shown in the add shortcut-dialog, though the keyboard-modifiers are returned as extra returnvalues.
     
@@ -2163,7 +2140,7 @@ function ultraschall.KBIniGetAllShortcuts(exclude_factory_default, lang)
     Lua=5.3
   </requires>
   <functioncall>integer number_of_shortcuts, table shortcut_attributes = ultraschall.KBIniGetAllShortcuts(optional boolean exclude_factory_default, optional integer lang)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     returns all shortcuts currently set in the current Reaper-installation(as stored in reaper-kb.ini) as a handy table.
     
     The table is of the following format:
@@ -2230,7 +2207,7 @@ function ultraschall.KBIniGetAllShortcuts(exclude_factory_default, lang)
   local one, two, section, aid
   
   if exclude_factory_default~=true then 
-    local AB=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/Reaper-factory-default-KEY-Codes_for_reaper-kb_ini.aidfile")
+    local AB=ultraschall.ReadFullFile(ultraschall.Api_Path.."/IniFiles/Reaper-factory-default-KEY-Codes_for_reaper-kb_ini.aidfile")
      
     for k in string.gmatch(AB.."\n", "(.-)\n") do
       one, two, section, aid=k:match("(.-)_(.-)_(.-)=(.*)")

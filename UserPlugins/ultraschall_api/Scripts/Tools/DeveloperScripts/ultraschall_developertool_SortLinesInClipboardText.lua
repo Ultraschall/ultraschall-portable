@@ -24,14 +24,18 @@
   ################################################################################
   --]]
   
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 if reaper.GetExtState("ultraschall_api", "dontask_developertools")~="false" then 
   retval = reaper.MB("Put the text into clipboard, which you want to have sorted.\n\nIt will sort it by line.", "", 1)
   if retval==2 then return end
 end
 
-A=FromClip()
+A=FromClip().."\n"
 
 B={}
 

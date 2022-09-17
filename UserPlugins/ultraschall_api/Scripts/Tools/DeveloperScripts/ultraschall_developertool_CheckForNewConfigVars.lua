@@ -24,7 +24,12 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 -- This checks, whether any string, stored in reaper.exe, is a valid config-var
 -- after that, it will put a string into clipboard with all found strings.
 -- This looks for configvars, who can be either int, double or string.
@@ -37,12 +42,12 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- When running this script with Ultraschall-API installed, it will only show config-vars not already existing in the 
 -- config-vars-documentation of Reaper-Internals, which is supplied together with Ultraschall-API.
 --
--- Meo-Ada Mespotine 27th of October 2021
+-- Meo-Ada Mespotine 18th of April 2022 - licensed under MIT-license
 
 
 print_update("Checking for new config-var-names.\n\n")
 print("Read known config-var-names")
-A2=ultraschall.ReadFullFile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api/DocsSourcefiles/reaper-config_var.USDocML")
+A2=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_Config_Variables.USDocML")
 if A2==nil then A2="" end
 
 
@@ -109,7 +114,9 @@ end
 
 Intstring="Ints:\n"
 for i=1, Intcount do
-  Intstring=Intstring..Int[i].."\n"
+  local _temp=reaper.SNM_GetIntConfigVar(Int[i], -99999999999999999)
+  if _temp==-99999999999999999 then _temp="" end
+  Intstring=Intstring..Int[i].." \t - current value: ".._temp.."\n"
 end
 
 -- Double
@@ -126,7 +133,7 @@ for i=1, count do
     end
     if found==false then 
       Doublecount=Doublecount+1 
-      Double[Doublecount]=split_string[i]:lower() 
+      Double[Doublecount]=split_string[i]:lower()
     end
     found=false
   end
@@ -140,7 +147,9 @@ end
 
 Doublestring="Doubles:\n"
 for i=1, Doublecount do
-  Doublestring=Doublestring..Double[i].."\n"
+  local _temp=reaper.SNM_GetDoubleConfigVar(Double[i], -99999999999999999)
+  if _temp==-99999999999999999 then _temp="" end
+  Doublestring=Doublestring..Double[i].." \t - current value: ".._temp.."\n"
 end
 
 -- String
@@ -171,7 +180,8 @@ end
 Stringsstring="Strings:\n"
 for i=1, Stringscount do
   if Strings[i]~=nil then
-    Stringsstring=Stringsstring..Strings[i].."\n"
+    local _, _temp = reaper.get_config_var_string(Strings[i])
+    Stringsstring=Stringsstring..Strings[i].." \t - current value: ".._temp.."\n"
   end
 end
 

@@ -61,8 +61,8 @@ Ultraschall API Video-Functions
 <script src="./scripts/scripts.js.Download"></script>
 <table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a><strong> <u>Project Settings</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#ProjectSettings_GetVideoFramerate">ProjectSettings_GetVideoFramerate</a></td><td class="tdsm"><a href="#ProjectSettings_SetVideoFramerate">ProjectSettings_SetVideoFramerate</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
-<b style="font-size:small;"><br><a class="inpad" id=" Coordinates"><a href="# Coordinates">^</a></a>  Coordinates</b>
-</td></tr><tr><td class="tdsm"><a href="#VID_Pixels2VideoUIStateCoords">VID_Pixels2VideoUIStateCoords</a></td><td class="tdsm"><a href="#VID_VideoUIStateCoords2Pixels">VID_VideoUIStateCoords2Pixels</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id=" Window Management"><a href="# Window Management">^</a></a>  Window Management</b>
+<b style="font-size:small;"><br><a class="inpad" id="Coordinates"><a href="#Coordinates">^</a></a> Coordinates</b>
+</td></tr><tr><td class="tdsm"><a href="#VID_Pixels2VideoUIStateCoords">VID_Pixels2VideoUIStateCoords</a></td><td class="tdsm"><a href="#VID_VideoUIStateCoords2Pixels">VID_VideoUIStateCoords2Pixels</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Window Management"><a href="#Window Management">^</a></a> Window Management</b>
 </td></tr><tr><td class="tdsm"><a href="#GetVideoHWND">GetVideoHWND</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><br></div><div class="ch">
 <hr>
 <a class="anch" id="ProjectSettings_GetVideoFramerate"></a>
@@ -74,7 +74,7 @@ Ultraschall API Video-Functions
 <div class="l">Lua: <code> <i>integer</i> framerate, <i>string</i> addnotes = <em>ultraschall.ProjectSettings_GetVideoFramerate</em>()</code></div>
 </div><p>
 <div class="ch">
-returns the video-framerate of the current project              
+returns the video-framerate of the current project<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -98,9 +98,9 @@ returns the video-framerate of the current project
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.ProjectSettings_SetVideoFramerate</em>(<i>integer</i> framerate, <i>boolean</i> persist)</code></div>
 </div><p>
 <div class="ch">
-sets the video-framerate of the current project and optionally the default video-framerate for new projects<br/>
-<br/>
-returns false in case of an error              
+sets the video-framerate of the current project and optionally the default video-framerate for new projects<br>
+<br>
+returns false in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -132,11 +132,11 @@ returns false in case of an error
 <div class="l">Lua: <code> <i>number</i> uistate_x, <i>number</i> uistate_y = <em>ultraschall.VID_Pixels2VideoUIStateCoords</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
 <div class="ch">
-converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br/>
-<br/>
-You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.<br/>
-<br/>
-returns nil in case of an error              
+converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br>
+<br>
+You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -177,11 +177,11 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> x_coordinate, <i>integer</i> y_coordinate = <em>ultraschall.VID_VideoUIStateCoords2Pixels</em>(<i>number</i> uistate_x, <i>number</i> uistate_y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
 <div class="ch">
-converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br/>
-<br/>
-You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.<br/>
-<br/>
-returns nil in case of an error              
+converts the ui_state-coordinates of the Video-Processor into pixel-coordinates within the Video Window<br>
+<br>
+You should add x and y-position of the Video-Processor-window, to get the actual screen-coordinates.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -223,9 +223,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>HWND</i> hwnd = <em>ultraschall.GetVideoHWND</em>()</code></div>
 </div><p>
 <div class="ch">
-returns the HWND of the Video window, if the window is opened.<br/>
-<br/>
-returns nil if the Video Window is closed              
+returns the HWND of the Video window, if the window is opened.<br>
+<br>
+returns nil if the Video Window is closed<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -237,7 +237,7 @@ returns nil if the Video Window is closed
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 5 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.7  - 5 elements available <br></td></table>
         <hr>
       </div>
       <br>

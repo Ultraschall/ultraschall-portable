@@ -1,0 +1,304 @@
+Parameter-Learn/Modulation/Alias-Chunk - documentation
+compiled by Meo-Ada Mespotine 20.08.2020
+
+Thanks to Anton9 for helping me with that :)
+
+
+
+Assignment of MIDI and OSC-commands to Parameter-Learn:
+
+PARMLEARN  integer parmidx:optional string parametername   integer midi_note  integer checkboxflags  optional string osc_message
+
+    For TrackFX:
+        Stored in TrackStateChunks in the   <FXCHAIN-chunk, usually before the WAK-entry
+        The WAK-entry itself usually marks the end of the settings of one fx-plugin, so PARMLEARN-entries following 
+        after a WAK, are associated to the next plugin in the fx-chain of this track
+        
+    For Item/TakeFX:
+        Stored in MediaItemStateChunks in the   <TAKEFX-chunk, usually before the WAK-entry
+        The WAK-entry itself usually marks the end of the settings of one fx-plugin, so PARMLEARN-entries 
+        following after a WAK, are associated to the next plugin in the fx-chain of this MediaItemTake
+        
+    For MonitoringFX: 
+        Stored into reaper-hwoutfx.ini in the resource-folder of Reaper. Follows the same rules, as above, 
+        means: assignment is stored before WAK-entry.
+
+parameters:
+     integer parmidx - the idx of the parameter that has LEARN activated, 
+                      in the order of the contextmenu "Param -> FX parameter list -> Learn"
+                      
+     optional string parametername - this is shown directly after parmidx, separated by a : 
+                                        e.g. 1:wet
+                                    usually only wet or bypass
+                                    In most other parameters, this is omitted!
+                                    
+     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
+                         being the MIDI-mode, and the second byte the MIDI/CC-note
+                             0,   OSC is used
+                             176, MIDI Chan 1 CC 0     (Byte1=176, Byte2=0)
+                             ...
+                             432, MIDI Chan 1 CC 1     (Byte1=176, Byte2=1)
+                             ...
+                             144,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=0)
+                             400,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=1)
+                             ...
+                             9360, MIDI Chan 1 Note 36 (Byte1=144, Byte2=36)
+                             9616, MIDI Chan 1 Note 37 (Byte1=144, Byte2=37)
+                             9872, MIDI Chan 1 Note 38 (Byte1=144, Byte2=38)
+                               ...
+                               
+                         CC Mode-dropdownlist:
+                            set the following flags to their specific values (0=0, 1=the value beginning &, like &65536 or &131072 or &262144)
+                             &65536 &131072 &262144 
+                                0       0       0,      Absolute
+                                1       0       0,      Relative 1(127=-1, 1=+1)
+                                0       1       0,      Relative 2(63=-1, 65=+1)
+                                1       1       0,      Relative 3(65=-1, 1=+1)
+                                0       0       1,      Toggle (>0=toggle)
+                             
+                               
+     integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                              0, no checkboxes
+                              1, enable only when track or item is selected
+                              2, Soft takeover (absolute mode only)
+                              3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                              4, enable only when effect configuration is focused
+                              8, MUST NOT BE SET, or this entry will be changed into LFOLEARN instead!
+                              20, enable only when effect configuration is visible
+                              
+     optional string string osc_message - the message of the osc-controller; only when midi_note is set to 0
+     
+     Examples:
+        PARMLEARN 12 0 4 I am the OSC message
+        PARMLEARN 14 19600 4 
+        PARMLEARN 16:wet 0 4 I am the OSC message
+        
+        
+        
+FX-Parameter aliases:
+
+PARMALIAS  integer parmidx  string aliasname
+
+     stores aliasnames for the Track-FX-parameters, that will be shown instead of the original ones in menus.
+     Only Tracks can have parameter-aliases!
+     
+     
+parameters:
+     integer parmidx - the idx of the parameter that has LEARN activated, 
+                      in the order of the contextmenu "Param -> FX parameter list -> Learn"
+                      
+     string aliasname - the aliasname of the fx-parameter, will be shown instead of the "real name" 
+                        of the parameter in the context-menus of the Param-button
+                        
+                        
+FX-parameter-modulation:
+    This stores all parameter-settings for modulation
+    
+    For TrackFX:
+        Stored in TrackStateChunks in the   <FXCHAIN-chunk,  usually after the FX-entry
+        
+    For Item/TakeFX:
+        Stored in MediaItemStateChunks in the   <TAKEFX-chunk, usually after the FX-entry
+
+    <PROGRAMENV  integer parm_idx[:name]  integer enable_parameter_modulation_checkbox
+        integer parm_idx  - the id of the parameter, that shall be modulated; order like in the dropdownlist
+        optional string name - the name of the parameter, usually bypass or wet
+        integer enable_parameter_modulation_checkbox - 0, enabled; 1, disabled
+      
+      PARAMBASE number parameter_modulation_baseline_slider
+        number parameter_modulation_baseline_slider - between 0.0000 and 1.0000; default is 0.2500
+        
+      LFO integer LFO_checkbox
+        integer LFO_checkbox - 0, disabled; 1, enabled
+      
+      LFOWT number LFO_Strength_slider  integer LFO_direction_radiobuttons
+        number LFO_Strength_slider - 0.0000(0%) to 1.000(100%); 0.493(49.3%); default is 1
+        integer LFO_direction_radiobuttons - -1, Negative; 0, Centered; 1, Positive
+        
+      AUDIOCTL  integer AudioControlSignal_checkbox
+        integer AudioControlSignal_checkbox - 0, disabled; 1, enabled
+      
+      AUDIOCTLWT number AudioCTL_Strength_slider  integer AudioCTL_direction_radiobuttons
+        number AudioCTL_Strength_slider - 0.0000(0%) to 1.000(100%); 0.493(49.3%); default is 1
+        integer AudioCTL_direction_radiobuttons - -1, Negative; 0, Centered; 1, Positive
+        
+      MODWND integer opened  integer win_x_position  integer win_y_position  integer winright_readonly  integer winbottom_readonly
+      usually stored as last entry in the PROGRAMENV-statechunk
+      appears only, after the window has been moved but can be set as well, if not existing yet
+        integer opened - 0, ParmMod-window is closed; 1, ParmMod-window is opened; can be set to open/close ParmMod-window of this parmmodulation
+        integer win_x_position - the x-position in pixels of the ParmMod-window; can be set, when opened=0
+        integer win_y_position - the y-position in pixels of the ParmMod-window; can be set, when opened=0
+        integer winright_readonly - the position of the right side of the window in pixels; can't be set so set it to anything
+        integer winbottom_readonly - the position of the bottom side of the window in pixels; can't be set so set it to anything
+      
+the following are only available, when Link from MIDI or FX parameter-checkbox is enabled
+      PLINK  number Scale  integer midi_fx_idx[:fx_idx] integer parmidx  number offset
+        number Scale - Scale-slider; -1.00(-100%) to 1.00(100%); default is 0(0%)
+        integer midi_fx_idx[:relative_fx_idx] - the big MIDI/FX-button in the "Link from MIDI or FX parameter"-area; the part "[:fx_idx]" is only available, if you want to select a plugin relative to the current plugin, otherwise(when using MIDI or a specific plugin) this is omitted
+                
+              midi_fx_idx - the plugin to use; will be ignored if relative_fx_idx is used
+                -1, nothing selected
+                -100, MIDI-parameter-settings
+                0, first plugin in the FXChain
+                1, second plugin in the FXChain
+                etc
+              
+              relative_fx_idx - the plugin used relative to the current plugin; use only if you want to select a plugin relative to the current one
+                0, use a parameter of the current plugin
+                negative, use a plugin above in the FXChain relative to the current one(-1, the one directly above; -2, two above, etc)
+                positive, use a plugin below in the FXChain relative to the current one(1, the one directly below; 2, two below, etc)
+                
+                
+        integer parmidx - the parameter idx, that you want to link; 
+                    When MIDI, this value is ignored and can be set to anything.
+                    When FX-parameter:
+                        0 to n; 0 for the first; 1, for the second, etc
+                        
+        number offset - Offset-slider; -1.00(-100%) to 1.00(100%); default is 0(0%) 
+        
+      MIDIPLINK integer bus  integer channel  integer category  integer midi_note
+        only available, when parameter midi_fx_idx of the PLINK entry is set to an midi-setting(-100)
+        
+        integer bus - the MIDI-bus; 0 to 15 for bus 1 to 16
+        integer channel - the MIDI-channel; 0, omni; 1 to 16 for channel 1 to 16
+        integer category - the MIDI-category, which affects the meaning of parameter midi_note
+                    144, MIDI note
+                    160, Aftertouch
+                    176, CC 14Bit and CC
+                    192, Program Change
+                    208, Channel Pressure
+                    224, Pitch
+                    
+        integer midi_note - the midi_note/command, whose meaning depends on parameter category
+                       When MIDI note:
+                            0(C-2) to 127(G8)
+                       When Aftertouch:
+                            0(C-2) to 127(G8)
+                       When CC14 Bit:
+                            128 to 159; see dropdownlist for the commands(the order of the list is the same as this numbering)
+                       When CC:
+                            0 to 119; see dropdownlist for the commands(the order of the list is the same as this numbering)
+                       When Program Change:
+                            0
+                       When Channel Pressure:
+                            0
+                       When Pitch:
+                            0
+                            
+The following are only available when LFO 1:
+      LFOSHAPE  integer shape
+        integer shape - the shape of the LFO/the old shape of LFO(if LFOSYNC -> lfo_shape_old=1)
+                    0, sine/sine(old)
+                    1, square/square(old)
+                    2, saw L/saw L(old)
+                    3, saw R/saw R(old)
+                    4, triangle/triangle(old)
+                    5, random/random(old)
+      
+      LFOSYNC  integer tempo_sync_checkbox  integer lfo_shape_old  integer phase_reset_dropdownlist
+        integer tempo_sync_checkbox - 0, disabled; 1, enabled
+        integer lfo_shape_old - switches between old and new LFO-shape-versions; 0, new LFO-shapes; 1, old LFO-shapes
+                                must be turned on deliberatly using this parameter of they are not available in the dropdownlist                                
+        integer phase_reset_dropdownlist - phase-reset-dropdownlist
+                                   0, On seek/loop (deterministic output)
+                                   1, Free-running (non-deterministic output)
+        
+      LFOSPEED  number lfo_speed_slider  number lfo_phase
+        number lfo_speed_slider - 0(0.0039Hz) to 1(8.0000Hz); higher values are possible, lower values go into negative; default is 0.124573(1.0000Hz)
+        number lfo_phase - 0.000 to to 1.000; default is 0.5
+        
+        
+The following are only available when AUDIOCTL 1:
+      CHAN  integer Track_audio_channel_dropdownlist
+        linked to entry STEREO as well
+        
+        integer Track_audio_channel_dropdownlist - -1, no channel selected(yet) (default)
+                                                   0 and higher, track 1 and higher is selected
+                                                   
+      STEREO  integer stereo_mode
+        linked to CHAN-entry
+        
+        integer stereo_mode - 0, mono(use only the channel set in CHAN); 1, stereo(use the channel set in CHAN and CHAN+1)
+        
+      RMS  integer attack_slider  integer release_slider
+        integer attack_slider - attack in milliseconds; 0 to 1000; default is 300
+        integer release_slider - release in milliseconds; 0 to 1000; default is 300
+        
+      DBLO  number Min_volume
+        DBLO decides the lowest value possible for parameter DBHI; DBHI decides the highest volume for DBLO
+        
+        number Min_volume - Min volume-slider in dB; maximum valuerange possible is -60dB to 11.9dB
+        
+      DBHI  number Max_volume
+        DBLO decides the lowest value possible for parameter DBHI; DBHI decides the highest volume for DBLO
+        
+        number Max_volume - Max volume-slider in dB; maximum valuerange possible is -59.9dB to 12dB
+        
+      X2  number audio_control_signal_shaping_x
+        number audio_control_signal_shaping_x - the x-position of the shaping-dragging-point; between 0.000000 and 1.000000
+        
+      Y2  number audio_control_signal_shaping_y
+        number audio_control_signal_shaping_y - the y-position of the shaping-dragging-point; between 0.000000 and 1.000000
+    >
+
+
+
+
+LFOLearn:
+    LFOLEARN integer parmidx:optional string parametername   integer midi_note  integer checkboxflags  optional string osc_message
+    
+    For TrackFX:
+        Stored in TrackStateChunks in the   <FXCHAIN-chunk, usually before the WAK-entry
+        The WAK-entry itself marks the end of the settings of one fx-plugin, so PARMLEARN-entries following 
+        after a WAK, are associated to the next plugin in the fx-chain of this track
+        
+    For Item/TakeFX:
+        Stored in MediaItemStateChunks in the   <TAKEFX-chunk, usually before the WAK-entry
+        The WAK-entry itself marks the end of the settings of one fx-plugin, so PARMLEARN-entries 
+        following after a WAK, are associated to the next plugin in the fx-chain of this MediaItemTake
+        
+     NOTE: Not available for monitoring FX!
+    
+     integer parmidx - the idx of the parameter that has LEARN activated, 
+                      in the order of the contextmenu "Param -> FX parameter list -> Learn"
+                      
+     optional string parametername - this is shown directly after parmidx, separated by a : 
+                                        e.g. 1:wet
+                                    usually only wet or bypass
+                                    In most other parameters, this is omitted!
+                                    
+     integer midi_note - the midinote, that is assigned to this; this is a multibyte value, with the first byte
+                         being the MIDI-mode, and the second byte the MIDI/CC-note
+                             0,   OSC is used
+                             176, MIDI Chan 1 CC 0     (Byte1=176, Byte2=0)
+                             ...
+                             432, MIDI Chan 1 CC 1     (Byte1=176, Byte2=1)
+                             ...
+                             144,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=0)
+                             400,  MIDI Chan 1 Note 1  (Byte1=144, Byte2=1)
+                             ...
+                             9360, MIDI Chan 1 Note 36 (Byte1=144, Byte2=36)
+                             9616, MIDI Chan 1 Note 37 (Byte1=144, Byte2=37)
+                             9872, MIDI Chan 1 Note 38 (Byte1=144, Byte2=38)
+                               ...
+                               
+                         CC Mode-dropdownlist:
+                            set the following flags to their specific values (0=0, 1=the value beginning &, like &65536 or &131072 or &262144)
+                            they seem not to work under some circumstances...
+                             &65536 &131072 &262144 
+                                0       0       0,      Absolute
+                                1       0       0,      Relative 1(127=-1, 1=+1)
+                                0       1       0,      Relative 2(63=-1, 65=+1)
+                                1       1       0,      Relative 3(65=-1, 1=+1)
+                                0       0       1,      Toggle (>0=toggle)
+                               
+     integer checkboxflags - the checkboxes checked in the MIDI/OSC-learn dialog
+                              0, no checkboxes
+                              1, enable only when track or item is selected
+                              2, Soft takeover (absolute mode only)
+                              3, Soft takeover (absolute mode only)+enable only when track or item is selected
+                              4, enable only when effect configuration is focused
+                              8, MUST BE SET, or this entry will be changed into PARMLEARN instead!
+                              20, enable only when effect configuration is visible
+                              
+     optional string string osc_message - the message of the osc-controller; only when midi_note is set to 0

@@ -24,9 +24,13 @@
   ################################################################################
   --]]
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
-versionnumber, version, date, beta, tagline = ultraschall.GetApiVersion()
+versionnumber, version, api_date, beta, tagline = ultraschall.GetApiVersion()
 majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 
 SWS=reaper.CF_GetSWSVersion("")
@@ -91,7 +95,7 @@ Ultraschall API Downloads
     </div>
     <div style="position:absolute; top:17%; padding-left:5%; width:90%;">
     <h3>Download Ultraschall Package</h3>
-    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.2_]]..beta..[[.zip">ultraschall_api4.2_]]..beta..[[.zip</a> - the downloadpackage of the ultraschall-api<p>
+    <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.4.zip">ultraschall_api4.4.zip</a> - the downloadpackage of the ultraschall-api<p>
     <a href="https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml">ReaPack-installable</a>-index-file. See <a href="https://reapack.com/">ReaPack-Website</a> for more details on the ReaPack-package-manager.
     </div>
 </html>

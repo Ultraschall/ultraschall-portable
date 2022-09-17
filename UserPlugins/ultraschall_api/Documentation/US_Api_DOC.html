@@ -67,15 +67,15 @@ Ultraschall API Docs-Functions
 <a class="anch" id="Docs_ConvertPlainTextToHTML"></a>
 <a href="#Docs_ConvertPlainTextToHTML"> ^</a> 
 <img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_ConvertPlainTextToHTML</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.4.png" alt="Ultraschall version 4.4"><u><b>Docs_ConvertPlainTextToHTML</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>string</i> html_text = <em>ultraschall.Docs_ConvertPlainTextToHTML</em>(<i>string</i> String)</code></div>
+<div class="l">Lua: <code> <i>string</i> html_text = <em>ultraschall.Docs_ConvertPlainTextToHTML</em>(<i>string</i> String, <i>optional</i> <i>boolean</i> nobsp, <i>optional</i> <i>boolean</i> ignore_pre)</code></div>
 </div><p>
 <div class="ch">
-Converts a plaintext into HTML.<br/>
-<br/>
-Converts newlines to <br>, Double Spaces to &nbsp;&nbsp; and Tabs to &nbsp;&nbsp;&nbsp;&nbsp;<br/>
-returns nil in case of an error              
+Converts a plaintext into HTML.<br>
+<br>
+Converts newlines to <br>, Double Spaces to &nbsp;&nbsp; and Tabs to &nbsp;&nbsp;&nbsp;&nbsp;<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -87,6 +87,14 @@ returns nil in case of an error
 <table class="ch">
 <tr><td class="pr"><i>string</i> text</td></tr>
 <tr><td class="ch2">the text, which shall be converted to html</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> nobsp</td></tr>
+<tr><td class="ch2">true, keep tabs and whitespaces as they are; false or nil, replace tabs with &nbsp;&nbsp;&nbsp;&nbsp; and two whitespaces in a row with two &nbsp;&nbsp;</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> ignore_pre</td></tr>
+<tr><td class="ch2">true, do not insert <br> between lines using <pre> and </pre>; false or nil; always end each line with <br></td></tr>
 </table>
 <br>
 </div>
@@ -100,9 +108,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> found_usdocblocs, <i>array</i> all_found_usdocblocs = <em>ultraschall.Docs_GetAllUSDocBlocsFromString</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns all US_DocBloc-elements from a string.<br/>
-<br/>
-returns nil in case of an error              
+returns all US_DocBloc-elements from a string.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -131,11 +139,11 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> changelogscount, <i>table</i> changelogs = <em>ultraschall.Docs_GetUSDocBloc_Changelog</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the changelog-entries of an US_DocBloc-entry<br/>
-<br/>
-this returns the version-number of the software and the changes introduced in that version inside a table.<br/>
-<br/>
-returns nil in case of an error              
+returns the changelog-entries of an US_DocBloc-entry<br>
+<br>
+this returns the version-number of the software and the changes introduced in that version inside a table.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -174,10 +182,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> chapters, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_ChapterContext</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the chapters and subchapters, in which the US_DocBloc shall be stored into<br/>
-A US_DocBloc can have multiple chapter-entries, e.g. for multiple languages.<br/>
-<br/>
-returns nil in case of an error              
+returns the chapters and subchapters, in which the US_DocBloc shall be stored into<br>
+A US_DocBloc can have multiple chapter-entries, e.g. for multiple languages.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -214,9 +222,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> what, <i>string</i> when, <i>string</i> alternative = <em>ultraschall.Docs_GetUSDocBloc_Deprecated</em>(<i>string</i> US_DocBloc)</code></div>
 </div><p>
 <div class="ch">
-returns the deprecated-tag of an US-DocBloc, which holds the information about, is a function is deprecated and what to use alternatively.<br/>
-<br/>
-returns nil in case of an error or if no such deprecated-tag exists for this US_DocBloc              
+returns the deprecated-tag of an US-DocBloc, which holds the information about, is a function is deprecated and what to use alternatively.<br>
+<br>
+returns nil in case of an error or if no such deprecated-tag exists for this US_DocBloc<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -253,13 +261,13 @@ returns nil in case of an error or if no such deprecated-tag exists for this US_
 <div class="l">Lua: <code> <i>string</i> description, <i>string</i> markup_type, <i>string</i> markup_version, <i>string</i> indent, <i>optional</i> <i>string</i> language, <i>optional</i> <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Description</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the description-text from an US_DocBloc-element.<br/>
-There can be multiple descriptions, e.g. in multiple languages<br/>
-<br/>
-It will remove automatically indentation(as requested by the description-tag of the US_DocBloc), if unindent_description==true.<br/>
-If no indentation is requested by the description-tag, it will assume default(the indentation of the first line will be applied to all other lines).<br/>
-<br/>
-returns nil in case of an error              
+returns the description-text from an US_DocBloc-element.<br>
+There can be multiple descriptions, e.g. in multiple languages<br>
+<br>
+It will remove automatically indentation(as requested by the description-tag of the US_DocBloc), if unindent_description==true.<br>
+If no indentation is requested by the description-tag, it will assume default(the indentation of the first line will be applied to all other lines).<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -316,11 +324,11 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> functioncall, <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Functioncall</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the functioncall-entries from an US_DocBloc-element<br/>
-<br/>
-There can be multiple functioncall-entries, e.g. for multiple programming-languages<br/>
-<br/>
-returns nil in case of an error              
+returns the functioncall-entries from an US_DocBloc-element<br>
+<br>
+There can be multiple functioncall-entries, e.g. for multiple programming-languages<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -353,9 +361,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> linked_to_count, <i>table</i> links, <i>string</i> description = <em>ultraschall.Docs_GetUSDocBloc_LinkedTo</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the linked_to-tags of an US_DocBloc-entry<br/>
-<br/>
-returns nil in case of an error              
+returns the linked_to-tags of an US_DocBloc-entry<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -399,9 +407,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> next_chapter = <em>ultraschall.Docs_GetUSDocBloc_NextChapter</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the slug of the next chapter of an US_DocBloc-element<br/>
-<br/>
-returns nil in case of an error              
+returns the slug of the next chapter of an US_DocBloc-element<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -426,10 +434,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> parmcount, <i>table</i> Params, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Params</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the parameters of an US_DocBloc-entry<br/>
-A US_DocBloc can have multiple parameter-entries, e.g. for multiple languages.<br/>
-<br/>
-returns nil in case of an error              
+returns the parameters of an US_DocBloc-entry<br>
+A US_DocBloc can have multiple parameter-entries, e.g. for multiple languages.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -493,9 +501,9 @@ That means, indentation relative to the first line is kept.</td></tr>
 <div class="l">Lua: <code> <i>string</i> previous_chapter = <em>ultraschall.Docs_GetUSDocBloc_PreviousChapter</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the slug of the previous chapter of an US_DocBloc-element<br/>
-<br/>
-returns nil in case of an error              
+returns the slug of the previous chapter of an US_DocBloc-element<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -520,9 +528,9 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> requires, <i>array</i> requires_alt = <em>ultraschall.Docs_GetUSDocBloc_Requires</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the requires-entries from an US_DocBloc-element<br/>
-<br/>
-returns nil in case of an error              
+returns the requires-entries from an US_DocBloc-element<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -555,10 +563,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> retvalscount, <i>table</i> retvals, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Retvals</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the retvals of an US_DocBloc-entry<br/>
-A US_DocBloc can have multiple retvals-entries, e.g. for multiple languages.<br/>
-<br/>
-returns nil in case of an error              
+returns the retvals of an US_DocBloc-entry<br>
+A US_DocBloc can have multiple retvals-entries, e.g. for multiple languages.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -622,9 +630,9 @@ That means, indentation relative to the first line is kept.</td></tr>
 <div class="l">Lua: <code> <i>string</i> slug = <em>ultraschall.Docs_GetUSDocBloc_Slug</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the slug from an US_DocBloc-element<br/>
-<br/>
-returns nil in case of an error              
+returns the slug from an US_DocBloc-element<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -649,10 +657,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> source_document = <em>ultraschall.Docs_GetUSDocBloc_SourceDocument</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the source-document from an US_DocBloc-element.<br/>
-The source-document is the document, into which the converted DocBloc shall be stored into.<br/>
-<br/>
-returns nil in case of an error              
+returns the source-document from an US_DocBloc-element.<br>
+The source-document is the document, into which the converted DocBloc shall be stored into.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -677,10 +685,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> tags, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Tags</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the tags of an US_DocBloc-entry<br/>
-A US_DocBloc can have multiple tag-entries, e.g. for multiple languages.<br/>
-<br/>
-returns nil in case of an error              
+returns the tags of an US_DocBloc-entry<br>
+A US_DocBloc can have multiple tag-entries, e.g. for multiple languages.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -717,10 +725,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> target_document = <em>ultraschall.Docs_GetUSDocBloc_TargetDocument</em>(<i>string</i> String)</code></div>
 </div><p>
 <div class="ch">
-returns the target-document from an US_DocBloc-element.<br/>
-The target-document is the document, into which the converted DocBloc shall be stored into.<br/>
-<br/>
-returns nil in case of an error              
+returns the target-document from an US_DocBloc-element.<br>
+The target-document is the document, into which the converted DocBloc shall be stored into.<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -745,10 +753,10 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> title, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Title</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
 <div class="ch">
-returns the title from an US_DocBloc-element.<br/>
-There can be multiple titles, e.g. in multiple languages<br/>
-<br/>
-returns nil in case of an error              
+returns the title from an US_DocBloc-element.<br>
+There can be multiple titles, e.g. in multiple languages<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -781,16 +789,16 @@ returns nil in case of an error
 <div class="l">Lua: <code> <i>string</i> unindented_text = <em>ultraschall.Docs_RemoveIndent</em>(<i>string</i> String, <i>string</i> indenttype)</code></div>
 </div><p>
 <div class="ch">
-unindents an indented text from a US_DocBloc.<br/>
-<br/>
-There are different styles of unindentation:<br/>
-&nbsp;&nbsp;as_typed - keeps the text, as it is<br/>
-&nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the firt - in it<br/>
-&nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br/>
-&nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that means, indentation relative to the first line is kept<br/>
-<br/>
-returns nil in case of an error              
+unindents an indented text from a US_DocBloc.<br>
+<br>
+There are different styles of unindentation:<br>
+&nbsp;&nbsp;as_typed - keeps the text, as it is<br>
+&nbsp;&nbsp;minus_starts_line - will throw away everything from start of the line until(and including) the firt - in it<br>
+&nbsp;&nbsp;preceding_spaces - will remove all spaces/tabs in the beginning of each line<br>
+&nbsp;&nbsp;default - will take the indentation of the first line and apply it to each of the following lines<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that means, indentation relative to the first line is kept<br>
+<br>
+returns nil in case of an error<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -817,7 +825,7 @@ That means, indentation relative to the first line is kept.</td></tr>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.2 006 - 19 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.7  - 19 elements available <br></td></table>
         <hr>
       </div>
       <br>

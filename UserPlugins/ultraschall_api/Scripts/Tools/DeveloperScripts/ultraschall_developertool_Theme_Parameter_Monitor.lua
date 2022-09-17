@@ -29,7 +29,12 @@
 --
 -- Meo-Ada Mespotine 27th of June 2020
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
+
 fontsize=12
 gfx.setfont(2, "arial", fontsize)
 gfx.setfont(3, "arial", fontsize, 73)
@@ -48,6 +53,12 @@ for i=1, index do
 end
 
 function UpdateThemeParameters()
+  path, theme_filename = ultraschall.GetPath(reaper.GetLastColorThemeFile())
+  if old_filename~=theme_filename then
+    old_filename=theme_filename
+    upd=0
+    refreshcounter=0
+  end
   Newindex, NewThemeLayoutParameters = ultraschall.GetAllThemeLayoutParameters()
   local updated2
   if Newindex~=index then
@@ -85,18 +96,19 @@ AA=os.time()
   gfx.dest=2
   gfx.set(0)
   gfx.rect(0,0,2048,2048,1)
+  gfx.x=0
+  gfx.y=3
+  gfx.set(1)
+  gfx.drawstr("Ultraschall Theme-Parameters Monitor v1.0 - Meo-Ada Mespotine -> H for Help")
+  gfx.x=8
+  gfx.y=gfx.texth+4
+  path, filename = ultraschall.GetPath(reaper.GetLastColorThemeFile())
+  gfx.drawstr("Loaded Theme: "..filename)
+  gfx.x=0
+  gfx.y=gfx.texth+gfx.texth+5
+  if index==-1 then tindex=0 else tindex=index end
+  gfx.drawstr("There are "..(tindex).." Parameters available.")
   if index>=0 then
-    gfx.x=0
-    gfx.y=3
-    gfx.set(1)
-    gfx.drawstr("Ultraschall Theme-Parameters Monitor v1.0 - Meo-Ada Mespotine -> H for Help")
-    gfx.x=8
-    gfx.y=gfx.texth+4
-    path, filename = ultraschall.GetPath(reaper.GetLastColorThemeFile())
-    gfx.drawstr("Loaded Theme: "..filename)
-    gfx.x=0
-    gfx.y=gfx.texth+gfx.texth+5
-    gfx.drawstr("There are "..index.." Parameters available.")
     gfx.x=0
     local yoffset=30
     gfx.y=gfx.texth+gfx.texth+yoffset

@@ -1,0 +1,416 @@
+
+/Development/mpl_API help.lua
+	 string extname
+
+/Envelopes/js_Envelope LFO generator and shaper.lua
+	 "LFO Generator"
+
+/FX/BuyOne_FX presets navigation/BuyOne_Dedicated FX presets backwards switcher (FX ID dependent) (guide inside).lua
+	 scr_name
+	 scr_name
+
+/FX/BuyOne_FX presets navigation/BuyOne_Dedicated FX presets forward switcher (FX ID dependent) (guide inside).lua
+	 scr_name
+	 scr_name
+
+/FX/larryseyer_Live keys scripts.lua
+	 "Live_Inst_"
+
+/Items Editing/ak5k_Drums to MIDI.lua
+	 ext_name
+	 ext_name
+	 ext_name
+	 ext_name
+	 ext_name
+	 ext_name
+
+/Items Editing/pandabot_Copy and paste rhythm/pandabot_Copy rhythm.lua
+	 sectionName
+
+/Items Editing/pandabot_Copy and paste rhythm/pandabot_Paste rhythm.lua
+	 sectionName
+
+/Items Editing/pandabot_Select every N items within selection.eel
+	 sectionName
+
+/Items Editing/pandabot_Select every N tracks within selection.eel
+	 sectionName
+
+/Items Editing/triode_Track-based item selection/triode_Individual item range selection (compatible with track-based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Individual item selection (compatible with track-based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Individual non-contiguous item selection (compatible with track-based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Play-Stop Toggle (compatible with track based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Record Toggle (compatible with track based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Track-based item range selection.lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Track-based item selection.lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Track-based non-contiguous item selection.lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Track-based split items (select left).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Track-based split items (select right).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/Items Editing/triode_Track-based item selection/triode_Unselect all items (track-based item selection).lua
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+	 "TrackBasedItems"
+
+/MIDI Editor/BuyOne_Insert note at constant velocity set via a dialogue (guide inside).lua
+	 cmd_ID..scr_name
+
+/MIDI Editor/pandabot_Select every N notes within selection.eel
+	 sectionName
+
+/MIDI Editor/timtam_AccessiChords/timtam_AccessiChords.lua
+	 sectionName
+
+/Markers/acendan_Find and Replace in Marker Region Names.lua
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+	 "FindReplaceStorage"
+
+/Regions/ausbaxter_Save and Load region render matrix.lua
+	 "RegionRenderMatrixState"
+
+/Tracks Properties/ak5k_Toggle track visibility by items in current region.lua
+	 extname
+
+/Tracks Properties/rodilab_Toggle hide tracks with no items in current time selection.lua
+	 extstate_id
+	 extstate_id
+
+/Tracks Properties/rodilab_Track name groups.lua
+	 extstate_id
+
+/Various/BuyOne_Duplicate selected tracks, media or automation items with input box.lua
+	 named_ID
+	 named_ID
+
+/Various/JamesHE_Comps Display.eel
+	 #section
+	  #section
+	#section
+
+/Various/ak5k_Low latency monitoring.lua
+	 extName
+	 extName
+
+/Various/amagalma_Edit Group Management Utility.lua
+	 "Edit Groups"
+	 "Edit Groups"
+	 "Edit Groups"
+	 "Edit Groups"
+	 "Edit Groups"
+
+/Various/amagalma_Smart contextual zoom.lua
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+	 "Smart Zoom"
+
+/Various/amagalma_Toggle enclose focused FX chain with ABLM2 Level Matching VST.lua
+	 "ABLM2 Toggle"
+	 "ABLM2 Toggle"
+
+/Various/amagalma_Toggle enclose focused FX chain with AB_LM Level Matching VST or JSFX.lua
+	 "AB_LM Toggle"
+	 "AB_LM Toggle"
+
+/Various/amagalma_Toggle enclose selected or focused FX in visible chain with ABLM2 Level Matching VST.lua
+	 "ABLM2 Toggle"
+	 "ABLM2 Toggle"
+
+/Various/amagalma_Toggle enclose selected or focused FX in visible chain with AB_LM Level Matching VST or JSFX.lua
+	 "AB_LM Toggle"
+	 "AB_LM Toggle"
+
+/Various/pandabot_ChordGun/pandabot_ChordGun decrement chord inversion.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun decrement chord type.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun decrement octave.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun decrement scale tonic note.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun decrement scale type.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun double grid size.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun halve grid size.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 1.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 2.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 3.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 4.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 5.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 6.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun higher scale note 7.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun increment chord inversion.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun increment chord type.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun increment octave.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun increment scale tonic note.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun increment scale type.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 1.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 2.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 3.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 4.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 5.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 6.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun lower scale note 7.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 1.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 2.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 3.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 4.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 5.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 6.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale chord 7.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 1.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 2.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 3.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 4.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 5.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 6.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun scale note 7.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun stop all notes from playing.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGun.lua
+	 sectionName
+	 sectionName
+
+/Various/pandabot_ChordGun/pandabot_ChordGunMini.lua
+	 sectionName
+	 sectionName
+
+/Various/sexan_Project time counter.lua
+	 "time"
+	 "time"
+	 "time"
+	 "time"
+
+/Various/spk77_Track Tags.lua
+	 "spk77 Track Tags"
+	 "spk77 Track Tags"
+	 "spk77 Track Tags"
+	 "spk77 Track Tags"
+
+/Various/tompad_Practice coach.lua
+	 "practice_coach"
+	 "practice_coach"
+	 "practice_coach"
+
+/Video/js_Video - Create thumbnail items in selected track for selected video items.lua
+	 "js_Thumbnails"
+
+/Video/js_Video - Extract thumbnails of video items to empty, MIDI or video processor items.lua
+	 "js_Thumbnails"

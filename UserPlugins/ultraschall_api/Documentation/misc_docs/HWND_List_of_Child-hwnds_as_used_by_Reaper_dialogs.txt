@@ -1,0 +1,1791 @@
+ChildWindowIDs and Window-ClassNames in Reaper
+compiled by Meo-Ada Mespotine
+
+
+This is a list of all Classnames as well as the IDs of ChildHWNDs in Reaper. A ChildHWND can be a dialog-element, like
+checkboxes, inputboxes, dropdownlists, other hwnds, etc.
+This list is far from complete, including currently:
+    Preferences, Render to File, Project Settings(partially, due limitations), Save live output to disk,
+    ReaScript Development Environment(IDE), ReaScript console, reaper.MessageBox, reaper.GetUserInputs,
+    Open file dialog(Windows only?), Actions-dialog, Main Window, Render queue-dialog, Media Explorer
+
+more will follow.
+    
+You can use them either from within C++ or using Julian Sader's extension plugin, which provides the function
+    JS_Window_FindChildByID
+to get the hwnds of the child-hwnd by the id.
+
+The list of childhwnd-ids follows the scheme:
+
+    ID      content or name of the hwnd     classname
+
+    
+Classnames:
+    REAPERwnd               - Reapers MainHwnd-class
+    REAPERvkbctl            - Reaper Virtual MIDI keyboard
+    REAPERTrackListWindow   - ArrangeView
+    REAPERVirtWndDlgHost    - several dialog-elements
+    REAPERTimeDisplay       - Ruler
+    REAPERvu                - the MasterVU in the Mixer
+    REAPERtrackvu           - the vu of a track in the trackview
+    REAPERhorzvu            - unknown
+    REAPERvertvu            - unknown
+    REAPERmixervu           - the vu of a track in the mixer
+    REAPERstatusdisp        - the timer-display in the Transport-field
+    REAPERVideoMainwnd      - the video-window-class
+    WDLCursesWindow         - a class for the editor-area of the IDE(maybe others?)
+    ReaEQWindow             - the windowclass for the ReaEQ-eq-field
+    REAPERvfader            - a vertical fader in a dialog
+    REAPERhfader            - a horizontal fader in a dialog
+    ComboBox                - Presetlist
+    ComboLBox               - dropdownlist of a presetlist
+    FFTdisp                 - ReaFir-plugin-editor-field
+    Edit                    - editable inputbox
+    Button                  - a button or a checkbox or radiobuttons
+    RichEditChild           - Richtext-editor-area
+    HotTrackButton          - themed buttons (only in ReaNINJAM-plugin?)
+    Static                  - shown text
+    ReaSurroundWindow       - the surround-editingfield in ReaSurround-plugin
+    REAPERknob              - a knob in a dialog
+    ReatuneCtrl             - the displayfield in ReaTune-plugin
+    ImpDisp                 - the impulse-showing-window of ReaVerb-plugin
+    SysListView32           - a listview, like tables and lists of entries/values
+    ReaXcompWindow          - the editing-field of the ReaXcomp-plugin
+    SplDisp                 - editing-area of the ReaSamplOmatic5000-plugin
+    #32770                  - a parent-hwnd for other hwnds
+    WDLTabCtrl              - for projecttabs themselves
+    msctls_trackbar32       - Slider
+    SysTabControl32         - Tabs
+    MEpeaks                 - Peaks-display in MediaExplorer
+
+
+ChildIDs:
+
+>MainWindow(GetMainHWND)
+    0    Transport(Windows)/MainHWND(Mac)                                 -   REAPERVirtWndDlgHost
+            has a childhwnd on windows(maybe Mac and Linux as well?)
+    999  project-tabs(if tabs are existing, otherwise will be nil)        -   WDLTabCtrl
+    1000 trackview                                                        -   REAPERTrackListWindow
+    1005 timeline                                                         -   REAPERTimeDisplay
+    1259 Mouse editing help in the area beneath the track control panels  -   Static
+
+>MainWindow(GetMainHWND) -> 0 - Transport(on Windows only?)
+    1010  status   -   REAPERstatusdisp
+    
+
+    
+>Render to File-dialog, excluding output-format-settings
+    1     Render 1 file...      -   Button
+    2     Cancel                -   Button
+    1000  Fast (16pt Sinc)      -   ComboBox
+    1001  Full-speed Offline    -   ComboBox
+    1002  Custom time range     -   ComboBox
+    1003  Master mix            -   ComboBox
+    1007  Directory-inputbox    -   Edit
+    1008  Render to-inputbox    -   Edit
+    1009  Start-inputbox        -   Edit
+    1010  End-inputbox          -   Edit
+    1011  Length-inputbox       -   Edit
+    1012  Tail-inputbox         -   Edit
+    1013  Filename-inputbox     -   Edit
+    1030  Browse...             -   Button
+    1041  Samplerate-dropdown   -   ComboBox
+    1042  Silently increment filenames to avoid overwriting   -   Button
+    1043  Start:                -   Static
+    1044  End:                  -   Static
+    1045  Length:               -   Static
+    1046  Tail:                 -   Button
+    1056  Region Manager...     -   Button
+    1057  Presets               -   Button
+    1058  x file                -   Button
+    1059  Multichannel tracks to multichannel files    -   Button
+    1060  Save copy of project to outfile.wav.RPP      -   Button
+    1061  Noise shaping                                -   Button
+    1062  Use project sample rate for mixing and FX/synth processing   -   Button
+    1063  Tracks with only mono media to mono files    -   Button
+    1064  Region Matrix...                             -   Button
+    1065  Wildcards                                    -   Button
+    1115                                               -   Static
+    1116  Output-format-dropdownlist                   -   ComboBox
+	1118  Output formats							   -   SysTabControl32
+	1155  Do not render files that are likely silent   -   Button
+    1154  Add rendered items to new tracks in project  -   Button
+	1173  Stretch markers/transient guides			   -   Button
+	1178  Metadata									   -   Button
+	1179  Take markers								   -   Button
+    1240  ms                                           -   Static
+    1241  Master mix:                                  -   Static
+    1307  Dither                                       -   Button
+    1397  Channels-dropdownlist                        -   ComboBox
+    1447  Add to render queue                          -   Button
+    1448  Open render queue...                         -   Button
+    1449  Save changes and close                       -   Button
+    1692  x region/x media items                       -   Edit
+    1808  Delay queued render to allow samples to load -   Button
+    58000  Hwnd for Output-format-settings             -   #32770
+           this childhwnd changes, when you change 
+           render-output-settings
+	58002  Hwnd for Secondary Output-format-settings   -   #32770
+           this childhwnd changes, when you change 
+           render-output-settings
+
+-- Primary output formats -> children of 58000
+>Render to File-dialog -> WAV
+    1000  16 bit PCM                            -   ComboBox
+    1001  Do not include markers or regions     -   ComboBox
+    1002  Auto WAV/Wave64                       -   ComboBox
+    1042  Write BWF ('bext') chunk              -   Button
+    1044  Include project filename in BWF data  -   Button
+    1059  Embed tempo 						    -   Button
+    1185  WAV bit depth:                        -   Static
+    1816  Large files:                          -   Static
+    
+>Render to File-dialog -> AIFF
+    1000  16 bit PCM        -   ComboBox
+    1185  AIFF bit depth:   -   Static
+   
+    The following are unused and invisible for AIFF, probably leftovers from WAV:
+    1001                                         -   ComboBox
+    1002                                         -   ComboBox
+    1042  Write BWF ('bext') chunk               -   Button
+    1044  Include project filename in BWF data   -   Button
+    1059  Embed project tempo (use with care)    -   Button
+    1816  Large files:                           -   Static
+
+>Render to File-dialog -> AudioCD-image
+    1001  Extra Lead-in silence for disc-inputbox   -   Edit
+    1002  Lead-in silence for tracks                -   Edit
+    1014  Markers define new tracks                 -   ComboBox
+    1016  Burn CD image after render                -   Button
+    1017  Only use markers starting with #          -   Button
+    65535  Lead-in silence for tracks:              -   Static
+
+>Render to File-dialog -> DDP
+    1000  Help   -   Button
+    65535  DDP is only compatible with      -   Static
+
+>Render to File-dialog -> FLAC
+    1002  FLAC encoding depth-dropdownlist  -   ComboBox
+    1003  Data compression-dropdownlist     -   ComboBox
+    65535  FLAC encoding depth:             -   Static
+    
+>Render to File-dialog -> MP3
+    1003  Bitrate-dropdownlist          -   ComboBox
+    1006  Quality                       -   ComboBox
+    1014  Constant bitrate  (CBR)       -   ComboBox
+    1017  Quality:                      -   Static
+    1018  Bitrate:                      -   Static
+    1019  approximate                   -   Static
+    1020  approximate                   -   Static
+    1024  Encode-dropdownlist           -   ComboBox
+    1025  LAME X.XX.X                   -   Static
+    1039  Do not allow joint stereo     -   Button
+    1040  Write ReplayGain tag          -   Button
+    65535  Mode:                        -   Static
+    
+>Render to File-dialog -> OGG Vorbis
+    1001  VBR-quality-inputbox      -   Edit
+    1002  VBR   quality:            -   Button
+    1003  CBR:                      -   Button
+    1004  CBR-Bitrate-inputbox      -   Edit
+    1005  ABR:                      -   Button
+    1006  ABR-bitrate-inputbox      -   Edit
+    1007  ABR-minbitrate-inputbox   -   Edit
+    1008  ABR-maxbitrate-inputbox   -   Edit
+    65535  (0.0 = lowest, 1.0 = highest):   -   Static
+
+>Render to File-dialog -> Video(ffmpeg/libav encoder) -> AVI
+    -1  Format:     -   Static
+    1002  Videobitrate-inputbox   -   Edit
+    1003  Audiobitrate-inputbox   -   Edit
+    1004  Width-inputbox          -   Edit
+    1005  Height-inputbox         -   Edit
+    1006  FPS-inputbox            -   Edit
+    1007  Videocodec-dropdownlist -   ComboBox
+    1008  Audiocodec-dropdownlist -   ComboBox
+    1009  >                       -   Button
+    1014  Format-dropdownlist     -   ComboBox
+    1018  Video-Codes quality(MJPEG)  -   Edit
+    1019  kbps or %(MJPEG)        -   Static
+    1020  kbps                    -   Static
+
+>Render to File-dialog -> Video(GIF)
+    -1    Size:                                             -   Static
+    1003  Preserve aspect ratio (black bars if necessary)   -   Button
+    1004  Width-inputbox    -   Edit
+    1005  Height-inputbox   -   Edit
+    1006  FPS               -   Edit
+    1007  Ignore changes in low bits of color-inputbox      -   Edit
+    1010  Encode transparency (bad for normal video, good for some things possibly)   -   Button
+
+>Render to File-dialog -> Video(LCF)
+    -1    Size:                 -   Static
+    1003  Preserve aspect ratio (black bars if necessary)   -   Button
+    1004  Width-inputbox        -   Edit
+    1005  Height-inputbox       -   Edit
+    1006  FPS-inputbox          -   Edit
+    1012  LCF options tweak-inputbox  -   Edit
+
+>Render to File-dialog -> WavPack lossless compressor
+    1000  Mode-dropdownlist         -   ComboBox
+    1002  Bit depth-dropdownlist    -   ComboBox
+    1042  Write BWF chunk           -   Button
+    1044  Include project filename in BWF data   -   Button
+    1045  Only write markers starting with #     -   Button
+    1057  Write markers as cues     -   Button
+    65535  Bit depth:               -   Static
+
+-- Secondary output formats -> children of 58002
+-- for some reason, they share the same id as primary. How to separate them from each other?
+    1115 the area of the actual secondary fileformat output-elements - Static
+	1116 Format-dropdownlist										 - ComboBox
+	1429 Same file type as primary, secondary output disabled 		 - Static
+	65535 Format										 			 - Static
+	
+
+
+
+
+>"Rendering to file..." or "Finished in ($time) (XX.Xx realtime)"
+    1      Close       -   Button
+    2      Cancel      -   Button
+    1007   output-filename with path textbox                         -   Edit
+    1036   the time elapse status/errormessage below Render status   -   Static
+    1039   Render status-area                                        -   Button
+    1040   the outputformat/errormessage below the output file-textboxframe      -   Static
+    1042   Automatically close when finished-checkbox                -   Button
+    1165   Peaks-area below the master-mix vus   -   REAPERminipeaks
+    1166   vu for channel 1    -   REAPERhorzvu
+    1167   vu for channel 2    -   REAPERhorzvu
+    1168   vu for channel 3    -   REAPERhorzvu
+    1169   vu for channel 4    -   REAPERhorzvu
+    1170   vu for channel 5    -   REAPERhorzvu
+    1171   vu for channel 6    -   REAPERhorzvu
+    1172   vu for channel 7    -   REAPERhorzvu
+    1173   vu for channel 8    -   REAPERhorzvu
+    1174   vu for channel 9    -   REAPERhorzvu
+    1175   vu for channel 10   -   REAPERhorzvu
+    1176   vu for channel 11   -   REAPERhorzvu
+    1177   vu for channel 12   -   REAPERhorzvu
+    1178   vu for channel 13   -   REAPERhorzvu
+    1179   vu for channel 14   -   REAPERhorzvu
+    1180   vu for channel 15   -   REAPERhorzvu
+    1181   vu for channel 16   -   REAPERhorzvu
+    1182   vu for channel 17   -   REAPERhorzvu
+    1183   vu for channel 18   -   REAPERhorzvu
+    1184   vu for channel 19   -   REAPERhorzvu
+    1185   vu for channel 20   -   REAPERhorzvu
+    1186   vu for channel 21   -   REAPERhorzvu
+    1187   vu for channel 22   -   REAPERhorzvu
+    1188   vu for channel 23   -   REAPERhorzvu
+    1189   vu for channel 24   -   REAPERhorzvu
+    1228   Launch File           -   Button
+    1229   Show in explorer...   -   Button
+    1230   Shup File  (purpose unknown) -   Button
+    40249  Output file           -   Button
+
+>Render-queue-dialog    
+    1     Render all        -   Button
+    2     Close             -   Button
+    1062  Remove selected   -   Button
+    1063  Render selected   -   Button
+    1106  List1             -   SysListView32
+
+
+>Actions-Dialog:
+    1  Run/close    -   Button
+    2  Close        -   Button
+    3  New...       -   Button
+    4  Delete       -   Button
+    5  Edit...      -   Button
+    6  Import/export...   -   Button
+    7  Copy         -   Button
+    8  Add...       -   Button
+    9  Find shortcut...   -   Button
+    10  Delete      -   Button
+    11  Clear       -   Button
+    13  Run         -   Button
+    16  Load...     -   Button
+    17  Edit...     -   Button
+    18  Delete      -   Button
+    19  New...      -   Button
+    1279  Filter:   -   Static
+    1317  Main      -   ComboBox
+    1323  List1     -   SysListView32
+    1324  Filter-inputbox   -   Edit
+    1328  Section:  -   Static
+    1329            -   ListBox
+    1331  Shortcuts for selected action   -   Button
+    1526  ReaScript:        -   Static
+    1527  Custom actions:   -   Static
+    1528  Menu editor...    -   Button
+    
+
+    
+>Preferences:
+    0  HWND of the current preferences-page,     -   #32770
+            has the childhwnds of the first selected page, when (re-)opening prefs
+    1    OK                     -   Button
+    2    Cancel                 -   Button
+    1110 The category-tree      -   SysTreeView32
+    1111                        -   Static
+    1144 Apply                  -   Button
+    1259                        -   Static
+    1311 Find                   -   Button
+    1312 Find-inputbox          -   Edit
+    
+>Preferences -> General
+    1000  Open project(s) on startup-dialogbox                        -   ComboBox
+    1008  Maximum undo memory use-inputbox                            -   Edit
+    1009  Maximum projects in recent project list-inputbox            -   Edit
+    1010  Warn when REAPER's memory use reaches-inputbox              -   Edit
+    1042  Show splash screen on startup                               -   Button
+    1043  When approaching full undo memory, keep newest undo states  -   Button
+    1044  Save undo history with project files (in .RPP-UNDO file)    -   Button
+    1045  Allow load of undo history                                  -   Button
+    1046  Automatically check for new versions of REAPER on startup   -   Button
+    1056  Clear list                                                  -   Button
+    1057  Advanced UI/system tweaks...                                -   Button
+    1058  Import configuration...                                     -   Button
+    1059  Store multiple redo paths when possible (can use a lot of RAM)   -   Button
+    1060  Check for multiple instances when launching                 -   Button
+    1061  item                                                        -   Button
+    1062  time                                                        -   Button
+    1063  track                                                       -   Button
+    1064  when launching with project/media                           -   Button
+    1065  cursor position                                             -   Button
+    1066  Export configuration...                                     -   Button
+    1067  Download language packs                                     -   Button
+    1173  Create new project tab when opening media from explorer/finder   -   Button
+    1178  envelope point                                -   Button
+    1261  Maximum undo memory use:                      -   Static
+    1262  megabytes (0 disables undo/prompt to save)    -   Static
+    1263  Maximum projects in recent project list:      -   Static
+    1264  (maximum is 100)                              -   Static
+    1266  Open project(s) on startup:                   -   Static
+    1313  General settings                              -   Button
+    1721  Warn when REAPER's memory use reaches         -   Static
+    1722  megabytes (0 to never warn)                   -   Static
+    1723  Language:                                     -   Static
+    1724  (restart REAPER after changing language)      -   Static
+    1725  English [US] - default                        -   ComboBox
+    65535  Undo settings                                -   Button
+
+> Preferences -> Paths
+    1007  Default render path-inputbox     -   Edit
+    1008  Default-rec-path-inputbox        -   Edit
+    1009  Peak-Cache-inputbox              -   Edit
+    1010  Alt Peak-cache-inputbox          -   Edit
+    1011  Defaultpath new projects         -   Edit
+    1031  Browse...                        -   Button
+    1033  Browse...                        -   Button
+    1034  Browse...                        -   Button
+    1044  Store all peak caches (.reapeaks) in alternate path:                                       -   Button
+    1260  Default render path (if left empty the current project directory, if any, will be used):   -   Static
+    1261  Default recording path, when project is unsaved and no recording path is configured:       -   Static
+    1262  Use alternate peak cache path for the following paths (multiple paths separated by semicolons):   -   Static
+    1263  Default path to save new projects:    -   Static
+    1313  Path settings                         -   Button
+    1647  Browse...                             -   Button
+    1648  Browse...                             -   Button
+    
+> Preferences -> Keyboard-Multitouch
+    1007  Multitouch-swipe-gearing-inputbox             -   Edit
+    1008  Multitouch-zoom-gearing-inputbox              -   Edit
+    1009  Multitouch-rotate-gearing-inputbox            -   Edit
+    1042  Use alternate keyboard section when recording -   Button
+    1043  Prevent ALT key from focusing main menu       -   Button
+    1044  Commit changes to some edit fields after 1 second of no typing    -   Button
+    1045  Allow space key to be used for navigation in various windows      -   Button
+    1225  View keyboard shortcuts as printable/searchable web page          -   Button
+    1226  Assign keyboard shortcuts to actions or change existing shortcuts -   Button
+    1227  Assign multitouch gestures to actions or change existing shortcuts   -   Button
+    1313  Keyboard                      -   Button
+    1617  Multitouch                    -   Button
+    1618  Enable multitouch swipe       -   Button
+    1619  Enable multitouch zoom        -   Button
+    1620  Enable multitouch rotate      -   Button
+    1621  Ignore scroll after multitouch gesture:           -   Static
+    1622  Ignore-scroll after multitouch gesture-inputbox   -   Edit
+    1623  ms                                                -   Static
+    1624  Suppress inertia                                  -   Button
+    1625  Ignore new gesture after multitouch gesture:      -   Static
+    1626  Ignore new gesture after multitouch gesture-inputbox  -   Edit
+    1627  ms                                                -   Static
+    1628  Suppress inertia                                  -   Button
+    1629  Suppress inertia                                  -   Button
+    1630  Reverse                                           -   Button
+    1631  Reverse                                           -   Button
+    1632  Reverse                                           -   Button
+    1633  Reverse vertical scroll                           -   Button
+    1634  Reverse horizontal scroll                         -   Button
+    1635  Gearing:                                          -   Static
+    1636  Gearing:                                          -   Static
+    1637  Gearing:                                          -   Static
+
+    
+>Preferences -> Project
+    1000  Every xxx minutes-dropdownlist       -   ComboBox
+    1007  When creating new projects, use the following project file as template-inputbox -   Edit
+    1009  Every xxx-minutes-inputbox           -   Edit
+    1010  Timestamped-projects-inputbox(the one with the browse-button) -   Edit
+    1031  Browse...                                                     -   Button
+    1042  When overwriting project file, rename old project to .rpp-bak -   Button
+    1043  Save to project file (not recommended)                        -   Button
+    1044  Look for project media items in project directory before qualified path   -   Button
+    1045  Prompt when files are not found on project load               -   Button
+    1046  Show load status and splash while loading projects            -   Button
+    1056  Browse...                                                     -   Button
+    1057  Save project file references with relative pathnames          -   Button
+    1059  Save to timestamped file in project directory                 -   Button
+    1060  Save to timestamped file in additional directory:             -   Button
+    1062  Prompt to save on new project                                 -   Button
+    1063  Timestamp backup                                              -   Button
+    1064  Open properties on new project                                -   Button
+    1173  Save undo history (RPP-UNDO) (if enabled in general prefs)    -   Button
+    1178  Keep undo histories                                           -   Button
+    1182  Keep multiple versions                                        -   Button
+    1260  When creating new projects, use the following project file as a template:   -   Static
+    1261  Every                                                         -   Static
+    1262  minutes:                                                      -   Static
+    1313  Project settings                                              -   Button
+    65535  Project loading                                              -   Button
+    
+>Preferences -> Track/Send Defaults
+    1009  Track volume fader default gain-inputbox      -   Edit
+    1010  Send default gain-inputbox                    -   Edit
+    1011  Hardware output default gain-inputbox         -   Edit
+    1017  Record arm                -   Button
+    1031  Amplitude scaling         -   Button
+    1032  Volume fader scaling      -   Button
+    1042  Volume                    -   Button
+    1043  Pan                       -   Button
+    1044  Volume (pre-FX)           -   Button
+    1045  Pan (pre-FX)              -   Button
+    1046  Arm new envelopes         -   Button
+    1047  Warn when changing volume envelope scaling will change envelope sound   -   Button
+    1056  Input 1                   -   Button
+    1057  Show in Mixer             -   Button
+    1059  Main (parent) send        -   Button
+    1060  Sends send MIDI by default            -   Button
+    1061  Sends send audio by default           -   Button
+    1062  Mute                                  -   Button
+    1087  Default automation mode-dropdownlist  -   ComboBox
+    1088  Default envelope shape-dropdownlist   -   ComboBox
+    1089  Default track height in new projects-dropdownlist -   ComboBox
+    1173  Free item positioning                 -   Button
+    1214  Send/hardware output default mode     -   ComboBox
+    1262  Track volume fader default gain:      -   Static
+    1313  Defaults for tracks/sends/track hardware outputs   -   Button
+    1544  Default envelope point shape:         -   Static
+    1545  Default automation mode:              -   Static
+    1546  Default track height in new projects: -   Static
+    1547  Send/hardware output default mode:    -   Static
+    1548  Default visible envelopes:            -   Static
+    1654  Scaling for new volume envelopes:     -   Static
+    65535  Tracks                               -   Button
+    
+>Preferences -> Media Item Defaults
+    1023  Create automatic fade-in/fadeout...-inputbox      -   Edit
+    1025  Overlap and crossfade items...-inputbox           -   Edit
+    1042  Right-click on crossfade sets fade shape for only one side of the crossfade (shift toggles)   -   Button
+    1062  Overlap and crossfade items when splitting, length:   -   Button
+    1063  Loop source for new MIDI items                    -   Button
+    1064  Loop source for imported items                    -   Button
+    1065  Loop source for recorded items                    -   Button
+    1066  Time selection auto-punch audio recording creates loopable section   -   Button
+    1067  Loop source for glued items                       -   Button
+    1068  Trim content behind media items when editing      -   Button
+    1127                                                    -   Button
+    1128                                                    -   Button
+    1178  Create automatic fade-in/fade-out for new items, length:   -   Button
+    1240  Default fade-in/fade-out shape:                   -   Static
+    1241  Default crossfade shape:                          -   Static
+    1313  Defaults for media items                          -   Button
+    1516  Enable automatic fade-in/fade-out and autocrossfade for MIDI note velocity   -   Button
+
+>Preferences -> Audio
+    1042  Close audio device when stopped and active (less responsive)  -   Button
+    1043  Close audio device when inactive and ReWire devices are open  -   Button
+    1044  Warn when unable to open audio devices                        -   Button
+    1045  Close audio device when stopped and application is inactive   -   Button
+    1047  Warn when unable to open MIDI devices                         -   Button
+    1048  Warn when enabled MIDI devices are not present                -   Button
+    1056  Edit Names/Map...                                             -   Button
+    1057  Input channel name aliasing/remapping                         -   Button
+    1061  Output channel name aliasing/remapping                        -   Button
+    1062  Edit Names/Map...                                             -   Button
+    1063  Use all project master outs                                   -   Button
+    1064  Close audio device when inactive and tracks are record armed  -   Button
+    1173  Reduce CPU use of silent tracks during playback (experimental)      -   Button
+    1178  Show non-standard stereo channel pairs (i.e. Input 2/Input 3 etc)   -   Button
+    1313  Audio settings                    -   Button
+    1399  Tiny fade out on playback stop    -   Button
+    1400  Tiny fade in on playback start    -   Button
+    65535  Channel naming/mapping           -   Button
+    
+>Preferences -> Device
+    -1                                                  -   Button
+    0     the HWND of the individual Audio-settings     -   #32770
+    1000  Audio system-dropdownlist                     -   ComboBox
+    1001                                                -   Static
+    1002  Audio thread priority-dropdownlist              -   ComboBox
+    1042  Allow projects to override device sample rate   -   Button
+    1260  Audio system:                                 -   Static
+    1313  Audio device settings                         -   Button
+    
+>Preferences -> Device -> WDM Kernel Streaming (Windows XP)
+    1000  Input-device-dropdownlist     -   ComboBox
+    1001  Output-device-dropdownlist    -   ComboBox
+    1004  16 bit                        -   Button
+    1005  24 bit                        -   Button
+    1006  32 bit                        -   Button
+    1007  Samplerate-inputbox       -   Edit
+    1008  Buffers-inputbox          -   Edit
+    1009  Buffers-Samples-inputbox  -   Edit
+    1010  (latency: xxx ms)         -   Static
+    1011  Input-channels-inputbox   -   Edit
+    1012  Output-channels-inputbox  -   Edit
+    1201                            -   Static
+    1202                            -   Static
+    1203                            -   Static
+    1204                            -   Static
+    1260  Input device:             -   Static
+    1261  Output device:            -   Static
+    1262  Sample format:            -   Static
+    1263  Input channels:           -   Static
+    1264  Output channels:          -   Static
+    1266  Samplerate:               -   Static
+    1267  Buffers:                  -   Static
+    1268  x                         -   Static
+    1269  samples                   -   Static
+    65535  Hz                       -   Static
+
+>Preferences -> Device -> DirectSound
+    1000  Input device-dropdownlist     -   ComboBox
+    1001  Output device-dropdownlist    -   ComboBox
+    1004  16 bit                        -   Button
+    1005  24 bit                        -   Button
+    1006  32 bit                        -   Button
+    1007  Samplerate-inputbox           -   Edit
+    1008  Buffers-inputbox              -   Edit
+    1009  Buffers-samples-inputbox      -   Edit
+    1010  (latency: xxx ms)             -   Static
+    1011  Input channels-inputbox       -   Edit
+    1012  Output channels-inputbox      -   Edit
+    1201                            -   Static
+    1202                            -   Static
+    1203                            -   Static
+    1204                            -   Static
+    1260  Input device:                 -   Static
+    1261  Output device:                -   Static
+    1262  Sample format:                -   Static
+    1263  Input channels:               -   Static
+    1264  Output channels:              -   Static
+    1266  Samplerate:                   -   Static
+    1267  Buffers:                      -   Static
+    1268  x                         -   Static
+    1269  samples                   -   Static
+    65535  Hz                       -   Static
+    
+>Preferences -> Device -> WaveOut
+    1000  Input device-dropdownlist   -   ComboBox
+    1001  Output device-dropdownlist  -   ComboBox
+    1004  16 bit                      -   Button
+    1005  24 bit                      -   Button
+    1006  32 bit                      -   Button
+    1007  Samplerate-inputbox         -   Edit
+    1008  Buffers-inputbox            -   Edit
+    1009  Buffers-samples-inputbox    -   Edit
+    1010  (latency: xxx ms)           -   Static
+    1011  Input Channels-inputbox     -   Edit
+    1012  Output Channels-inputbox    -   Edit
+    1201                      -   Static
+    1202                      -   Static
+    1203                      -   Static
+    1204                      -   Static
+    1260  Input device:           -   Static
+    1261  Output device:          -   Static
+    1262  Sample format:          -   Static
+    1263  Input channels:         -   Static
+    1264  Output channels:        -   Static
+    1266  Samplerate:             -   Static
+    1267  Buffers:                -   Static
+    1268  x                   -   Static
+    1269  samples             -   Static
+    65535  Hz                 -   Static
+    
+>Preferences -> Device -> ASIO
+    1000  ASIO Driver-dropdownlist          -   ComboBox
+    1001  Inputs-first-dropdownlist         -   ComboBox
+    1002  Output range-first-dropdownlist   -   ComboBox
+    1003  Inputs-last-dropdownlist          -   ComboBox
+    1004  Output range-last-dropdownlist    -   ComboBox
+    1007  Samplerate-inputbox             -   Edit
+    1008  Request block size-inputbox     -   Edit
+    1042  Request sample rate:            -   Button
+    1043  Pre-zero output buffers, useful on some hardware (higher CPU use)   -   Button
+    1044  Enable inputs:                    -   Button
+    1045  Request block size:               -   Button
+    1056  ASIO Configuration...             -   Button
+    1057  Ignore ASIO reset messages (needed for some buggy drivers)   -   Button
+    1260  ASIO Driver:                      -   Static
+    1261  first                             -   Static
+    1262  last                              -   Static
+    1263  Output range:                     -   Static
+    1264  first                             -   Static
+    1266  last                              -   Static
+    
+>Preferences -> Device -> Dummy Audio
+    1007  Samplerate-inputbox   -   Edit
+    1009  Buffer size-inpubox   -   Edit
+    65535  samples              -   Static
+    
+>Preferences -> Device -> WASAPI (Windows 7/8/10/Vista)
+    1000  Input device-dropdownlist    -   ComboBox
+    1001  Output device-dropdownlist   -   ComboBox
+    1002  Mode-dropdownlist            -   ComboBox
+    1004  16 bit                -   Button
+    1005  24 bit                -   Button
+    1006  32 bit                -   Button
+    1007  Samplerate-inputbox   -   Edit
+    1009  Block size            -   Edit
+    1010  (latency: xxx ms)     -   Static
+    1011  Input channels-inputbox   -   Edit
+    1012  Output channels-inputbox  -   Edit
+    1201  (0 to disable)    -   Static
+    1204  (0 to disable)    -   Static
+    1260  Input device:     -   Static
+    1261  Output device:    -   Static
+    1262  Preferred depth:  -   Static
+    1263  Input channels:   -   Static
+    1264  Output channels:  -   Static
+    1266  Samplerate:       -   Static
+    1267  Block size:       -   Static
+    1269  samples           -   Static
+    65535  Mode:            -   Static
+    
+>Preferences -> MIDI Devices
+    1042  Play                  -   Button
+    1043  Stop/stopped seek     -   Button
+    1056  Add joystick MIDI...  -   Button
+    1057  Reset all MIDI devices   -   Button
+    1114  List1                 -   SysListView32
+    1115  List1                 -   SysListView32
+    1313  MIDI hardware settings    -   Button
+    1450  All-notes-off             -   Button
+    1451  Pitch/sustain             -   Button
+    1453  Restrict MIDI hardware output to one thread   -   Button
+    65535  MIDI inputs to make available (selectable as track inputs and/or learnable or action-bindable):   -   Static
+    
+>Preferences -> Buffering
+    1007  Media buffer size-inputbox                  -   Edit
+    1008  Audio reading/processing threads-inputbox   -   Edit
+    1009  Media buffer size-prebuffer-percent-inputbox  -   Edit
+    1010  Render-ahead-inputbox                         -   Edit
+    1011  Allow live FX multiprocessing on-inputbox     -   Edit
+    1012  Media buffer size when per-take FX UI open-inputbox         -   Edit
+    1042  Auto-detect the number of needed audio processing threads   -   Button
+    1043  Anticipative FX processing - superior multiprocessing and lower interface latencies   -   Button
+    1044  Allow on tracks with open MIDI editors (will increase MIDI preview latency)           -   Button
+    1045  Disable media buffering for tracks with open MIDI editors (recommended)               -   Button
+    1046  Use old v4.x worker thread scheduling                 -   Button
+    1047  Disable media buffering for tracks that are selected  -   Button
+    1056  Advanced Disk I/O options...                          -   Button
+    1057  Allow live FX multiprocessing on:                     -   Button
+    1059  Use native events for synchronizing (recommended)     -   Button
+    1063  Allow on tracks without FX (may give higher multiprocessor utilization)   -   Button
+    1213  Thread Priority-dropdownlist                          -   ComboBox
+    1214  Behavior-dropdownlist                                 -   ComboBox
+    1215  Thread priority:                              -   Static
+    1216  Behavior:                                     -   Static
+    1217  Render-ahead:                                 -   Static
+    1218  ms (default: 200)                             -   Static
+    1219  FX processing/multiprocessing settings        -   Button
+    1220  Media buffer size:                            -   Static
+    1221  ms (default is 1200ms), prebuffer:            -   Static
+    1222  % (default is 100%)                           -   Static
+    1224  CPUs                                          -   Static
+    1240  Media buffer size when per-take FX UI open:   -   Static
+    1241  ms (default is 200ms)                         -   Static
+    1242  Audio reading/processing threads:             -   Static
+    1243  (recommended: 1 per CPU core. can also be 0)  -   Static
+    1313  Audio buffering settings                      -   Button
+    1539  [may not be compatible with certain FX (UAD), live monitoring is not multiprocessed]   -   Static
+    1540  [enables multiprocessing of live input, but may reduce performance at low latencies]   -   Static
+    
+>Preferences -> Mute/Solo
+    1000  Mute settings-dropdownlist     -   ComboBox
+    1008  when volume exceeds-inputbox   -   Edit
+    1042  Parent and hardware sends unsoloed when a soloed-in-place track sends to another soloed track   -   Button
+    1046  Solos default to in-place solo (alt+click for ignore-routing solo)    -   Button
+    1059  Reset on playback start                                               -   Button
+    1060  Do not process muted tracks (muted tracks take no CPU time, etc)      -   Button
+    1240  when volume exceeds           -   Static
+    1241  dB                            -   Static
+    1313  Mute settings                 -   Button
+    1333  Track mute fade-inputbox      -   Edit
+    1334  Solo in front dimming         -   Edit
+    65535  Track mute fade:             -   Static
+
+>Preferences -> Playback
+    -1  CC reset overrides:             -   Static
+    1000  When moving edit cursor via action or control surface-dropdownlist   -   ComboBox
+    1007  CC reset overrides-inputbox   -   Edit
+    1009  Run FX for-inputbox           -   Edit
+    1010  Looped segment mode-inputbox  -   Edit
+    1011  Looped segment mode to-inputbox             -   Edit
+    1012  Scrub-mode controller sensitivity-inputbox  -   Edit
+    1042  Flush FX when looping (good for autotune etc, bad for VSTi/etc)   -   Button
+    1043  Send MIDI note-offs when un-record-arming a track                 -   Button
+    1047  Flush FX on stop                                                  -   Button
+    1057  Don't autoscroll view (when enabled) when viewing other parts of project   -   Button
+    1058  Engage scrub when playing (stopping playback)        -   Button
+    1059  Scroll view to edit cursor on stop                   -   Button
+    1060  Stop playback at end of loop if repeat is disabled   -   Button
+    1061  playback start                                       -   Button
+    1062  Stop/repeat playback at end of project               -   Button
+    1063  playback stop                                        -   Button
+    1064  playback loop/skip                                   -   Button
+    1065  Run FX when stopped (good for certain VSTi)          -   Button
+    1142  Reset MIDI CC/Pitch on:                              -   Static
+    1173  Only play selected tracks when scrubbing/jogging     -   Button
+    1174  Limit scrub rate to 1.0x                             -   Button
+    1175  Limit jog rate to 1.0x                               -   Button
+    1179  Faster responding jog                                -   Button
+    1181  Limit jog rate when near cursor                      -   Button
+    1240  ms to                                                -   Static
+    1241  Looped-segment mode:                                 -   Static
+    1250  (Note: set mouse scrub/jog behavior in Editing Behavior/Mouse Modifiers)   -   Static
+    1264  Run FX for                                           -   Static
+    1266  ms after stopping (for reverb tails, etc)            -   Static
+    1313  Playback settings                                    -   Button
+    1654  ms                                                   -   Static
+    1660  Scrub-mode controller sensitivity:                       -   Static
+    1661  When moving edit cursor via action or control surface:   -   Static
+    
+>Preferences -> Seeking
+    1007  Seek playback on item move/fade/size adjustment, pre-roll-inputbox   -   Edit
+    1008  Pre-roll-inputbox         -   Edit
+    1012  Play to end of-inputbox   -   Edit
+    1031  Play to end of            -   Button
+    1032  Play to next project marker, end of current region, or start of next region, before seeking   -   Button
+    1042  Do not change playback position immediately when seeking (smooth seek)                        -   Button
+    1043  Top ruler                 -   Button
+    1044  Empty areas of tracks     -   Button
+    1045  Empty area below tracks   -   Button
+    1057  Playback position follows project timebase (time or beats) when changing tempo    -   Button
+    1061  Seek playback on item move/size/fade adjustment, pre-roll:                        -   Button
+    1063  Seek on loop point change     -   Button
+    1064  Only when repeat is enabled   -   Button
+    1240  more measures before seeking  -   Static
+    1260  Seek playback when clicked:   -   Static
+    1261  Pre-roll:                     -   Static
+    1262  ms                            -   Static
+    1263  ms                            -   Static
+    1313  Seek settings                 -   Button
+    
+>Preferences -> Recording
+    1004  Manually                          -   Button
+    1008  Start new files every-inputbox    -   Edit
+    1009  Check free disk space on record start, warn if less-inputbox   -   Edit
+    1010  Filename for recorded files-inputbox      -   Edit
+    1011  Output manual offset-ms-inputbox          -   Edit
+    1012  Input manual offset-ms-inputbox           -   Edit
+    1013  Output manual offset-samples-inputbox     -   Edit
+    1014  Input manual offset-samples-inputbox      -   Edit
+    1015  Example-inputbox                          -   Edit
+    1031  On the fly (recommended)                  -   Button
+    1032  After recording                           -   Button
+    1042  on stop                                   -   Button
+    1043  Show preview of recording items while recording, update frequency:            -   Button
+    1044  Scroll track view while recording (if enabled for playback in options menu)   -   Button
+    1045  on punch-out/play                                      -   Button
+    1046  Always show full track control panel on armed tracks   -   Button
+    1057  Prevent recording from starting when no tracks armed   -   Button
+    1059  Use audio driver reported latency                      -   Button
+    1060  Start new files every                                  -   Button
+    1061  When recording multiple tracks, offset file switches for better performance   -   Button
+    1062  Record audio during pre-roll                                -   Button
+    1065  Wildcards                                                   -   Button
+    1178  Check free disk space on record start, warn if less than:   -   Button
+    1179  Show primary recording path in menu bar                     -   Button
+    1182  Show free disk space in menu bar                            -   Button
+    1211  Output manual offset:                                       -   Static
+    1212  ms +                                  -   Static
+    1213  Input manual offset:                  -   Static
+    1214  ms +                                  -   Static
+    1215  samples                               -   Static
+    1216  samples                               -   Static
+    1260  Build peaks for recorded files:       -   Static
+    1262  Prompt to save/delete/rename new files:   -   Static
+    1263  megabytes (approximate)               -   Static
+    1265  megabytes                             -   Static
+    1266  Filename format for recorded files:   -   Static
+    1313  Recording settings                    -   Button
+    1488  40                                    -   Edit
+    1489  Hz (default 3)                        -   Static
+    65535  Example:                             -   Static
+    
+>Preferences -> Loop Recording
+    1005  On stop (default, recommended)        -   Button
+    1006  At each loop (creates new files, good for recording multiple audio layers on the fly etc)   -   Button
+    1007  Threshold for complete take-inputbox  -   Edit
+    1048  In loop recording, discard incomplete first or last takes if at least one full loop was recorded   -   Button
+    1049  MIDI overdub/replace recording always creates selection-length media item   -   Button
+    1173  Create new files on loop                                                    -   Button
+    1261  When recording and looped, add recorded media to project:                   -   Static
+    1313  Loop recording settings                                                     -   Button
+    65535  Threshold for complete take:                                               -   Static
+    
+>Preferences -> Rendering
+    1010  Block size to use when rendering-inputbox   -   Edit
+    1011  Default tail length-inputbox                -   Edit
+    1042  Process all tracks during stem render (some hardware-based plugins may need this)   -   Button
+    1043  When freezing, render the entire track length if there are track or per-take FX     -   Button
+    1044  Rendering stems for full project via action     -   Button
+    1045  Include tail when freezing entire tracks        -   Button
+    1046  Rendering stems for time selection via action   -   Button
+    1059  Limit apply FX/render stems to realtime (good for some plug-ins)           -   Button
+    1173  Allow anticipative FX processing when rendering (better multiprocessing)   -   Button
+    1241  Default tail length:                            -   Static
+    1260  Block size to use when rendering:               -   Static
+    1261  samples (leave blank for auto)                  -   Static
+    1313  Rendering settings                              -   Button
+    65535  ms, render tails when:                         -   Static
+
+>Preferences -> Appearance
+    1007  Pixels between items on adjacent tracks-inputbox                            -   Edit
+    1008  Maximum number of lanes, when showing overlapping items in lanes-inputbox   -   Edit
+    1009  Divide arrange view vertically every-inputbox     -   Edit
+    1011  Play cursor width-inputbox                        -   Edit
+    1042  Show project regions/markers in grid              -   Button
+    1043  Show guide lines when editing                     -   Button
+    1044  Horizontal grid lines in automation lanes         -   Button
+    1045  Show time signature changes in grid               -   Button
+    1046  Frameless floating toolbar windows                -   Button
+    1056  Divide arrange view vertically every              -   Button
+    1059  Draw vertical text bottom-up                      -   Button
+    1061  Tooltips for UI elements                          -   Button
+    1063  Tooltips for items/envelopes                      -   Button
+    1064  Envelope tooltips on hover                        -   Button
+    1065  Show dotted grid lines                            -   Button
+    1140  Grid line Z order-dropdownlist                    -   ComboBox
+    1141  Marker line Z order                               -   ComboBox
+    1234  Tooltip delay-slider                              -   msctls_trackbar32
+    1265  Tooltip delay:                                    -   Static
+    1313  Appearance settings                               -   Button
+    1400  Show last undo point in menu bar                  -   Button
+    1427  Faster text rendering (reduces antialiasing)      -   Button
+    1457  Solid edge on time selection highlight            -   Button
+    1459  Solid edge on loop selection                      -   Button
+    1460  Pixels between items on adjacent tracks:          -   Static
+    1461  Maximum number of lanes, when showing overlapping items in lanes:   -   Static
+    1463  Antialiased fades and envelopes                   -   Button
+    1464  Filled automation envelopes                       -   Button
+    1465  Filled envelopes when drawn over media            -   Button
+    1564  Don't scale toolbar buttons above 1:1             -   Button
+    1566  Don't scale toolbar buttons below 1:1             -   Button
+    1731  Play cursor width:                                -   Static
+    1837  measures (0=zoom dependent)                       -   Static
+    65535  Envelopes                                        -   Button
+    
+>Preferences -> Media
+    1002  Item volume control-dropdownlist                  -   ComboBox
+    1010  Hide buttons when take lane height is less than   -   Edit
+    1011  Hide labels when media item take lane is less than-inputbox   -   Edit
+    1045  Show labels for items when item edges are not visible         -   Button
+    1046  Draw labels over solid background for easier reading          -   Button
+    1048  Draw labels above the item, rather than within the item           -   Button
+    1049  Except when the media item height is less than the label height   -   Button
+    1050  Not locked    -   Button
+    1051  Per-take FX   -   Button
+    1052  No FX         -   Button
+    1053  Muted         -   Button
+    1054  Notes         -   Button
+    1055  Not muted     -   Button
+    1056  No notes      -   Button
+    1057  Automation envelopes  -   Button
+    1058  Grouped items         -   Button
+    1059  No active envelopes   -   Button
+    1060  Pooled MIDI           -   Button
+    1061  Display media item take name                       -   Button
+    1063  Display media item pitch/playrate if set           -   Button
+    1064  Display media item gain if set                     -   Button
+    1240  pixels                                             -   Static
+    1241  Hide buttons when take lane height is less than:   -   Static
+    1242  pixels                    -   Static
+    1246  Item volume control:      -   Static
+    1313  Media item appearance     -   Button
+    1401  Locked                    -   Button
+    1419  Abbreviate                -   Button
+    1420  Numbers only              -   Button
+    1421  Normal labels             -   Button
+    1540  Item Properties           -   Button
+    1541  Item Properties only if resampled media                          -   Button
+    1586  Item take rate/pitch:                                            -   Static
+    1654  Hide labels when the media item take lane height is less than:   -   Static
+    65535  Media item labels                                               -   Button
+    
+>Preferences -> Peaks/Waveforms
+    1000  Sample-level waveform view-dropdownlist      -   ComboBox
+    1001  Multiple lanes when space permits (default)  -   ComboBox
+    1008  Tint strength (0-4) for selected media item background-inputbox              -   Edit
+    1009  Tint strength (0-4) for selected media item background-unselected-inputbox   -   Edit
+    1042  Scale peaks by pre-fx volume/pan envelopes        -   Button
+    1043  Fill waveforms to zero line                       -   Button
+    1044  Track color                                       -   Button
+    1047  Item color                                        -   Button
+    1049  Take color                                        -   Button
+    1059  Draw faint peaks in folder tracks                 -   Button
+    1060  Display peaks for media items                     -   Button
+    1061  Draw faint peaks in automation envelope lanes     -   Button
+    1062  Draw waveform zero-lines above peaks/waveforms    -   Button
+    1063  Track color                               -   Button
+    1064  Display while recording                   -   Button
+    1065  Item color                                -   Button
+    1067  Take color                                -   Button
+    1068  Automatically color any recording pass that adds new takes to existing media items    -   Button
+    1069  Automatically color any media items that share pooled MIDI events                     -   Button
+    1173  Draw edges on peaks                       -   Button
+    1174  Antialiased peak and waveform drawing     -   Button
+    1178  Draw edges on waveforms                   -   Button
+    1179  Draw edges on MIDI events                 -   Button
+    1182  Only display peaks for selected tracks    -   Button
+    1183  Only display peaks for tracks and items that are soloed or not muted   -   Button
+    1240  Display MIDI CC lanes in arrange view:    -   Static
+    1313  Audio peak/waveform appearance            -   Button
+    1458  Sample-level waveform view:               -   Static
+    1648  Tint media item waveform peaks to:        -   Static
+    1649  Tint media item background to:            -   Static
+    1650  Set custom track colors from the Track menu, custom item and take colors from the Item menu.   -   Static
+    1651  Tint strength (0-4) for selected media item background:                                        -   Static
+    1652  Unselected:                               -   Static
+    65535  Custom colors                            -   Button
+    
+>Preferences -> Fades/Crossfades
+    1004  always                    -   Button
+    1005  when fade is less than:   -   Button
+    1006  never                     -   Button
+    1007  always                    -   Button
+    1008  when media items are not aligned vertically                               -   Button
+    1012  Prevent editing fade-in/out when item is less than xxx wide-inputbox      -   Edit
+    1013  Prevent editing fade-in/out when item is less than xxx tall-inputbox      -   Edit
+    1014  Show fade-in/out handle xxx pixels wide-inputbox                          -   Edit
+    1042  When editing crossfades with the mouse, use crossfade editor theme colors -   Button
+    1062  fade-in/out curve                                                         -   Button
+    1065  fade start/end line                                                       -   Button
+    1243  Prevent editing fade-in/out when item is less than:                       -   Static
+    1244  pixels wide or                        -   Static
+    1245  pixels wide                           -   Static
+    1313  Media item fade/crossfade appearance  -   Button
+    1655  pixels tall                           -   Static
+    1726  Allow mouse to target:                -   Static
+    1727  Show crossfade handle:                -   Static
+    1780  Show fade-in/out handle:              -   Static
+    
+>Preferences -> Track Control Panels
+    1003  Pan fader unit display-dropdownlist       -   ComboBox
+    1004  Volume fader range, shape-dropdownlist    -   ComboBox
+    1006  None                                      -   Button
+    1007  Meter update frequency (Hz)               -   Edit
+    1008  Meter decay (dB/sec)-inputbox             -   Edit
+    1009  Meter minimum value(dB)-inputbox          -   Edit
+    1010  Max value(dB)-inputbox                    -   Edit
+    1011  Volume fader range-inputbox               -   Edit
+    1012  Volume fader range to-inputbox            -   Edit
+    1031  Ribbons                                   -   Button
+    1032  Lines on edge                             -   Button
+    1042  Track meters display pre-fader levels     -   Button
+    1045  Tint track panel backgrounds              -   Button
+    1046  Show dB scales on track meters            -   Button
+    1047  Show dB scales on rec-armed track meters  -   Button
+    1057  Set track label background to custom track colors   -   Button
+    1059  Sticky clip indicators                        -   Button
+    1062  Reset meter peak indicators on play/seek      -   Button
+    1064  Show track input when rec-armed               -   Button
+    1065  Make obvious that track input is clickable    -   Button
+    1266  Meter update frequency (Hz):                  -   Static
+    1267  Meter decay (dB/sec):                         -   Static
+    1268  Meter minimum value (dB):                     -   Static
+    1269  Max value (dB):                               -   Static
+    1313  Track control panel settings                  -   Button
+    1401  Align TCP controls when track icons are used  -   Button
+    1444  Show MIDI velocity on track VU                -   Button
+    1445  Show MIDI output activity on track VU         -   Button
+    1464  Volume fader range:                           -   Static
+    1465  to                                        -   Static
+    1466  dB, shape:                                -   Static
+    1467  Pan fader unit display:                   -   Static
+    65535  Track grouping indicators:               -   Static
+    
+>Preferences -> Editing Behavior
+    1000  Vertical zoom center-dropdownlist                             -   ComboBox
+    1001  Horizontal zoom center-dropdownlist                           -   ComboBox
+    1002  Locked item ripple editing behavior-dropdownlist              -   ComboBox
+    1042  Move edit cursor to start of time selection on time selection change              -   Button
+    1043  Move edit cursor when pasting/inserting media                                     -   Button
+    1044  Allow dual trim (edit shared media item edges) only if both items are selected    -   Button
+    1046  Link loop points to time selection                                                -   Button
+    1047  Clear time selection when edit cursor moves on click in arrange view              -   Button
+    1048  Clear loop points on click in ruler                           -   Button
+    1056  Adjust sensitivity...                                         -   Button
+    1057  Tab through MIDI notes                                        -   Button
+    1058  Treat media item edges as transients                          -   Button
+    1059  Move edit cursor to end of recorded items on record stop      -   Button
+    1062  Crossfades stay together during fade edits when trim content behind media items is enabled    -   Button
+    1063  Automatically delete empty tracks created by dragging items below the last track and back     -   Button
+    1064  Dragging the source start offset of the active take adjusts the offset for all takes          -   Button
+    1065  If no items are selected, some split/trim/delete actions affect all items at the edit cursor  -   Button
+    1246  Locked item ripple editing behavior:      -   Static
+    1313  Editing behavior                          -   Button
+    1469  Vertical zoom center:                     -   Static
+    1470  Horizontal zoom center:                   -   Static
+    65535  Transient detection                      -   Button
+    
+>Preferences -> Envelope Display
+    1003  Changing envelope in lane-dropdownlist              -   ComboBox
+    1004  Volume envelope range-dropdownlist                  -   ComboBox
+    1005  Per-take pitch envelope range, snap-inputbox        -   ComboBox
+    1007  When drawn over media, overlap envelopes if each is less than-inputbox   -   Edit
+    1009  Transition time for automatically created envelope edge points-inputbox  -   Edit
+    1011  Per-take pitch envelope range x semitones-inputbox  -   Edit
+    1012  Project tempo map envelope display min-inputbox     -   Edit
+    1013  Project tempo map envelope display max-inputbox     -   Edit
+    1042  First click on unselected envelope can insert a point (depends on mouse modifier settings)   -   Button
+    1043  fader-scaled volume envelopes                                                          -   Button
+    1044  When adding envelopes or setting visible, set the focus to the envelope                -   Button
+    1045  Automatically show affected envelopes when moving media items across tracks            -   Button
+    1046  Prevent mouse edits of single envelope points from moving past other envelope points   -   Button
+    1057  When drawn over media, overlap envelopes if each is less than                          -   Button
+    1059  Multiple points                                                                        -   Button
+    1060  other envelopes                                                                        -   Button
+    1061  Automatically append envelope name to automation item label                            -   Button
+    1065  Envelope point selection follows time selection for the active envelope                -   Button
+    1066  Media items                                                       -   Button
+    1068  Ripple editing or inserting time                                  -   Button
+    1240  ms (minimum 0.1)                                                  -   Static
+    1241  Transition time for automatically created envelope edge points:   -   Static
+    1313  Envelope Display/Editing                                          -   Button
+    1389  Show new envelopes in separate envelope lanes                     -   Button
+    1471  Volume envelope range:                                            -   Static
+    1474  pixels high                                                       -   Static
+    1475  Changing envelope in lane:                                        -   Static
+    1476  Per-take pitch envelope range:                                    -   Static
+    1654  Use relative mouse edits for:                                     -   Static
+    1684  semitones, snap:                                                  -   Static
+    1726  Project tempo map envelope display min:                           -   Static
+    1727  bpm, max:                                                         -   Static
+    1728  bpm                                                               -   Static
+    65535  Automatically add edge points when editing:                      -   Static
+    
+>Preferences -> Automation
+    1002  When adding volume/pan envelopes, apply trim to envelope and reset trim-dropdownlist   -   ComboBox
+    1008  Automation recording return speed-inputbox   -   Edit
+    1009  Action transition time-inputbox              -   Edit
+    1010  After recording automation in write mode, on repeat/seek/stop-dropdownlist    -   ComboBox
+    1011  When recording automation and stopped-dropdownlist                            -   ComboBox
+    1042  Editing baseline/amplitude in properties dialog affects pooled copies         -   Button
+    1043  Loop new automation items by default                                          -   Button
+    1044  Reset latch state when looping                                                -   Button
+    1045  Pool source data when pasting automation items                                -   Button
+    1046  When copying with media items                                                 -   Button
+    1057  Trim content behind automation items when editing or writing automation       -   Button
+    1059  Insert new automation item when writing automation and underlying envelope enabled   -   Button
+    1062  Automatically add envelopes when tweaking parameters in automation write modes       -   Button
+    1063  Display read automation feedback                                              -   Button
+    1064  Allow writing automation                                                      -   Button
+    1069  Reduce envelope point data when recording or drawing automation               -   Button
+    1241  Action transition time:                                                       -   Static
+    1313  Automation                            -   Button
+    1472  ms                                    -   Static
+    1473  Automation recording return speed:    -   Static
+    1474  ms                                    -   Static
+    1555  When adding volume/pan envelopes, apply trim to envelope and reset trim:  -   Static
+    1556  After recording automation in write mode, on repeat/seek/stop:            -   Static
+    1557  When recording automation and stopped:                                    -   Static
+    65535  Hidden envelopes:                                                        -   Static
+    
+>Preferences -> Mouse
+    1003  Mousewheel targets-dropdownlist                           -   ComboBox
+    1042  Ignore mousewheel on all faders                           -   Button
+    1043  Mouse click/edit in track view changes track selection    -   Button
+    1044  Mouse click on volume/pan faders and track buttons changes track selection    -   Button
+    1045  Allow modifying edges of time selection over items in tracks                  -   Button
+    1046  Mouse click below the last track clears media item selection                  -   Button
+    1057  Ignore mousewheel on track panel faders                             -   Button
+    1058  Ignore mousewheel on transport edit fields                          -   Button
+    1059  Edit track names on single click (otherwise doubleclick required)   -   Button
+    1060  Control+left-click emulates right-click (control key will be unavailable as a modifier)   -   Button
+    1061  Use pen/tablet-safe mode -- do not reposition mouse cursor while adjusting knobs/etc      -   Button
+    1062  Allow resizing ruler by dragging bottom edge (otherwise drag below toolbar)               -   Button
+    1064  Treat scroll messages from some laptop trackpads as mousewheel                            -   Button
+    1065  Mousewheel moves transport time selection by beats (alt toggles)                          -   Button
+    1313  Mouse editing behavior                                              -   Button
+    1491  Mousewheel targets:                                                 -   Static
+    
+>Preferences -> Mouse modifiers
+    1000  Context-dropdownlist                                                -   ComboBox
+    1001  Context-mousebutton-dropdownlist(right from Context-dropdownlist)   -   ComboBox
+    1056  Import/export                                                       -   Button
+    1071  List3                                                               -   SysListView32
+    1185  Context:                                                            -   Static
+    1313  Mouse modifiers                                                     -   Button
+    
+  When MediaItem, Track,  is selected:
+    1043  When drawn above media items, treat item label area the same as empty track space   -   Button
+    
+  When Mediaitem bottom half is selected:
+    1007  Disable targeting bottom part of media item when take lane height is less than-inputbox -   Edit
+    1660  pixels                                                                                  -   Static
+    1250  Disable targeting bottom part of media item when take lane height is less than:         -   Static
+    
+  When Automation item, Automation item edge is selected
+    1060  Edits affect all pooled automation items at the same time position   -   Button
+    
+  When Project marker/region lane, Arrange view, MIDI marker/region lanes is selected
+    1059  Reverse horizontal zoom behavior when hand-scrolling                 -   Button
+    
+  When MIDI CC event, MIDI CC lane is selected
+    1045  Allow selecting a single event in a CC lane with a mouse click       -   Button
+  
+    
+>Preferences -> MIDI Editor
+    1000  Behavior for "open items in built-in MIDI editor"-dropdownlist  -   ComboBox
+    1004  project                                                         -   Button
+    1007  Events per quarter note when drawing in CC lanes-inputbox       -   Edit
+    1008  Default note color map-inputbox                                 -   Edit
+    1009  Opacity (1-3)for notes/CC in secondary media items-inputbox     -   Edit
+    1031  media item                                                      -   Button
+    1032  track                                                           -   Button
+    1042  Make secondary items editable by default                        -   Button
+    1043  Double-click outside the bounds of any media item to extend the nearest media item   -   Button
+    1044  Horizontal grid lines in CC lanes                                                    -   Button
+    1045  Active MIDI item follows selection changes in arrange view                           -   Button
+    1046  Media item selection is linked to visibility                                         -   Button
+    1047  Selection is linked to editability                                                   -   Button
+    1056  Browse...                                                                            -   Button
+    1057  zoom dependent                                                                       -   Button
+    1058  More information about displaying multiple media items in a single MIDI editor       -   Button
+    1059  Avoid automatically setting MIDI items from other tracks editable                    -   Button
+    1060  Close editor when the active item is deleted in the arrange view                     -   Button
+    1240  One MIDI editor per:                                            -   Static
+    1241  Behavior for "open items in built-in MIDI editor":              -   Static
+    1313  MIDI editor settings                                            -   Button
+    1480  RBN-friendly MIDI editor settings                               -   Button
+    1487  Default note color map:                                         -   Static
+    1488  Flash MIDI editor keys on track input                           -   Button
+    1690  Opacity (1-3) for notes/CC in secondary media items:            -   Static
+    1700  Events per quarter note when drawing in CC lanes:               -   Static
+    1701  (default 32)                                                    -   Static
+    65535  When using one MIDI editor per project:                        -   Static
+
+>Preferences -> Media (NOT the Media-page in Appearances!)
+    1000  When importing multiple media items-dropdownlist   -   ComboBox
+    1007  Tail length when using Apply FX to items-inputbox  -   Edit
+    1008  Desired cache resolution-inputbox                  -   Edit
+    1010  Take-FX tail length                                -   Edit
+    1042  on project load                                    -   Button
+    1043  on import                                          -   Button
+    1044  Remove trailing numbers                            -   Button
+    1045  Store peak caches in alternate path if unable to write to media file directory   -   Button
+    1046  Automatically name unnamed tracks on media import         -   Button
+    1057  Prompt to confirm filename on "open copy in editor"       -   Button
+    1059  Set media items offline when application is not active    -   Button
+    1060  Show status window                                        -   Button
+    1061  Copy imported media to project media directory            -   Button
+    1062  Automatically rebuild peaks                               -   Button
+    1063  Put new peak files in peaks/ subfolder relative to media  -   Button
+    1064  Always generate spectral peak information (default is only when spectral peaks enabled)   -   Button
+    1065  Automatically rebuild peaks if necessary when enabling spectral peaks                     -   Button
+    1173  Duplicate take FX when splitting items (including splits caused by recording new takes)   -   Button
+    1313  Media settings                                                                            -   Button
+    65535  When importing multiple media items:                                                     -   Static
+    
+>Preferences -> MIDI
+    1007  MIDI octave name display offset-inputbox   -   Edit
+    1010  Ticks per quarter note for new MIDI items  -   Edit
+    1031  MIDI items (in project, recommended)       -   Button
+    1032  .MID files                                 -   Button
+    1033  MIDI items (in project, recommended)       -   Button
+    1034  .MID file reference                        -   Button
+    1042  Allow trim of MIDI items when splitting (does not apply to pooled MIDI)                       -   Button
+    1043  Always prompt to import tempo from MIDI files with simple tempo maps (holding ctrl toggles)   -   Button
+    1044  Snap time signature change events to whole bars when importing MIDI files                     -   Button
+    1045  Pool MIDI source data when pasting or duplicating media items                                 -   Button
+    1046  Snap tempo change events to whole beats when importing MIDI files                             -   Button
+    1047  Handle type 0 MIDI files containing meta-events as if they were multichannel MIDI files       -   Button
+    1182  Prompt to confirm filename on "insert new MIDI item"  -   Button
+    1313  MIDI settings                                         -   Button
+    1481  MIDI octave name display offset:                      -   Static
+    1482  octaves                                               -   Static
+    1483  Create new MIDI items as:                             -   Static
+    1484  Import existing MIDI files as:                        -   Static
+    1485  Ticks per quarter note for new MIDI items:            -   Static
+    1486  (default: 960)                                        -   Static
+    1573  Import multichannel MIDI files:                       -   Static
+    1574  Import multichannel MIDI files                        -   ComboBox
+    1575  Character set for exported .MID text events:          -   Static
+    1576  Character set for exported .MID text events           -   ComboBox
+    65535  Note: set pooling behavior for mouse edits in Editing Behavior/Mouse modifiers.   -   Static
+    
+>Preferences -> Video/REX/Misc
+    1000  Output-dropdownlist                               -   ComboBox
+    1007  Video decoder priority-inputbox                   -   Edit
+    1008  Video outut delay-editbox                         -   Edit
+    1042  Allow I420/YV12 colorspace output (recommended)   -   Button
+    1043  Allow YUY2 colorspace output                      -   Button
+    1044  Auto-rotate videos and images with orientation tags on import   -   Button
+    1045  Video window follows edits                      -   Button
+    1056  Reset to default                                -   Button
+    1057  Show available decoder information              -   Button
+    1059  Disable high-resolution peaks for video items   -   Button
+    1241  Output:                                         -   Static
+    1260  When moving audio items, seek video frame to:   -   Static
+    1313  Video                                           -   Button
+    1314  REX                                             -   Button
+    1315  Media with embedded tempo information           -   Button
+    1569  Import REX files as:                            -   Static
+    1570  REX slice tails:                                -   Static
+    1571  Import REX files as-dropdownlist                -   ComboBox
+    1572  REX slice tails-dropdownlist                    -   ComboBox
+    1573  When importing media:                           -   Static
+    1574  When importing media-dropdownlist               -   ComboBox
+    1575  When moving audio-items, seek video frame to-dropdownlist   -   ComboBox
+    1639  Note: when importing media from REAPER's Media Explorer, the tempo match setting in the Media Explorer will override this preference.   -   Static
+    1794  Video decoder priority:   -   Static
+    1814  Video output delay:       -   Static
+    65535  Append :ext or :ext1,ext2 or :!ext3 to limit decoder to particular extensions   -   Static
+
+    
+>Preferences -> Plug-ins
+    -1  Only show FX matching filter string:            -   Static
+    1007  Only show FX matching filter string-inputbox  -   Edit
+    1042  up                                            -   Button
+    1043  down                                          -   Button
+    1044  Auto-open FX add dialog when opening empty track FX chain   -   Button
+    1045  Auto-position new floating FX windows                       -   Button
+    1046  Auto-position new FX chain windows                          -   Button
+    1056  reset to recommended default                          -   Button
+    1057  Show current track FX in FX button right-click menu   -   Button
+    1062  Set foreground to floating windows when selected      -   Button
+    1063  Auto-float newly created FX windows                   -   Button
+    1064  Only allow one FX chain window open at a time         -   Button
+    1065  Auto-dock new FX chain windows                        -   Button
+    1173  Open track FX window on track selection change        -   Button
+    1178  Only if any FX window is open                         -   Button
+    1313  Plug-ins                                              -   Button
+    1446  Recently Added list max-inputbox                      -   Edit
+    1456  Auto-open FX windows after quick-add                  -   Button
+    1513  Automatically resize FX windows:                      -   Static
+    1514  Recently Added list max:                              -   Static
+    
+>Preferences -> Compatibility
+    -1  Note: some plug-ins (especially synths and samplers) store a lot of data with the project, which can cause interruptions when REAPER saves undo points for plug-in parameter adjustments.   -   Static
+    1044  Disable saving full plug-in state (not recommended, set minimal undo for the plug-in instead)   -   Button
+    1060  Reduce denormalization from plug-ins (recommended)                                              -   Button
+    1061  Terminate REAPER immediately if a plug-in corrupts the process heap                             -   Button
+    1062  Pre-zero plug-in output buffers                                                                 -   Button
+    1313  Plug-in compatibility                                                                           -   Button
+    1511  VST bridging/firewalling:                                                                       -   Static
+    1512  VST bridging/firewalling-dropdownlist                                                           -   ComboBox
+    1588  Note: this security setting will cause REAPER to crash immediately if a buggy or malicious plug-in is detected.   -   Static
+    1691  Set minimal undo, bridging/firewalling, and other compatibility settings per-plugin by pressing the + button on the FX UI, or by right-clicking the plug-in name in the FX browser.   -   Static
+  
+  Not always visible:
+    1515  [feature not installed]   -   Static
+    
+>Preferences -> VST
+    1000  Knob mode-dropdownlist                                        -   ComboBox
+    1001  Parameter automation notification-dropdownlist                -   ComboBox
+    1042  Don't send note-offs or pitch reset messages on stop/reset    -   Button
+    1043  UAD-1 synchronous mode (reduces CPU munch) - requires anticipative FX disabled          -   Button
+    1045  Do not scan VST names/types (deprecated)                                                -   Button
+    1046  Allow complete unload of VST plug-ins (reduces memory use, but may not be compatible)   -   Button
+    1057  Re-scan                                               -   Button
+    1058  Clear cache/re-scan                                   -   Button
+    1059  Default VST to generic UI (instead of plug-in UI)     -   Button
+    1062  Don't flush synthesizer plug-ins on stop/reset        -   Button
+    1063  Inform plug-ins of offline rendering state            -   Button
+    1064  Bypass audio while opening plug-in config window (good for some non-threadsafe VSTs)   -   Button
+    1112  VST-plug-in paths-inputbox                            -   Edit
+    1114  Edit...                                               -   Button
+    1117  Auto-detect                                           -   Button
+    1313  VST plug-ins settings                                 -   Button
+    1460  VST plug-in paths (can be multiple paths separated by semicolons):   -   Static
+    1461  Knob mode:                                            -   Static
+    1575  If multiple VSTs are scanned with the same dll name, only one will be available: either the plugin found later in the path list, or highest in the directory structure for a given path.    -   Static
+    65535  VST compatibility                                    -   Button
+    
+>Preferences -> ReWire/DX
+    1045  Auto-open panels when opening ReWire devices      -   Button
+    1046  Run FX on stop when ReWire devices are active     -   Button
+    1056  ReWire slave project settings                     -   Button
+    1057  ReWire mixer support (act as ReWire mixer, show ReWire devices in plug-in browser)         -   Button
+    1059  Scan for new DX plug-ins                          -   Button
+    1060  Rescan all DX plug-ins                            -   Button
+    1061  Check for ReWire mixer/device on startup (and automatically enter slave mode if present)   -   Button
+    1063  Enable DX plug-ins                                -   Button
+    1064  Scan DX plug-ins on startup (not required)        -   Button
+    1065  Disable DX plug-ins scanning                      -   Button
+    1179  Use alternate configuration file (reaper-rewire.ini) when in slave mode                    -   Button
+    1313  ReWire/Direct-X plug-ins settings                 -   Button
+    1584  Direct-X (DX)                                     -   Button
+    65535  ReWire                                           -   Button
+    
+    
+>Preferences -> ReaScript
+    -1  ReaScript can be used to create simple macros to perform frequently repeated tasks, or to create complex REAPER extensions.   -   Static
+    1007  Custom path to Python dll directory-inputbox          -   Edit
+    1008  Force ReaScript to use specific Python .dll-inputbox  -   Edit
+    1010  Timeout limit for Lua ReaScripts-inputbox             -   Edit
+    1042  Enable Python for use with ReaScript                  -   Button
+    1043  Clear ReaScript console on ShowConsoleMsg("")         -   Button
+    1044  Clear ReaScript console before running any ReaScript  -   Button
+    1056  Browse...                                             -   Button
+    1058  View local ReaScript documentation                    -   Button
+    1059  .dll path                                             -   Button
+    1060  View online ReaScript overview                        -   Button
+    1062  Download Python                                       -   Button
+    1240  No compatible version of Python was found.            -   Static
+    1241  Python:                                               -   Static
+    1250  Force ReaScript to use specific Python .dll:          -   Static
+    1313  ReaScript                                             -   Button
+    1654  Custom path to Python dll directory:                  -   Static
+    1665  Timeout limit for Lua ReaScripts:                     -   Static
+    1666  seconds                                               -   Static
+    
+    
+>Preferences -> ReaMote
+    1000  Sample format-dropdownlist    -   ComboBox
+    1007  Render send-ahead-inputbox    -   Edit
+    1008  Max. packet size-inputbox     -   Edit
+    1042  Enable ReaMote processing     -   Button
+    1057  Edit                          -   Button
+    1058  Remove                        -   Button
+    1075  Add                           -   Button
+    1076  Auto-Search                   -   Button
+    1077  Plugin list...                -   Button
+    1106  List1                         -   SysListView32
+    1230  32 blocks                     -   Static
+    1231  Slider1                       -   msctls_trackbar32
+    1313  ReaMote configuration         -   Button
+    65535  Sample format:               -   Static
+
+>Preferences -> Control/OSC/web
+    1007  Control surface display update frequency-inputbox     -   Edit
+    1042  Warn when errors opening surface MIDI devices         -   Button
+    1043  Close control surface devices when stopped and not active application   -   Button
+    1057  Edit                                                  -   Button
+    1058  Remove                                                -   Button
+    1075  Add                                                   -   Button
+    1117  List1                                                 -   SysListView32
+    1313  Control surfaces/OSC/web control                      -   Button
+    65535  Control surface display update frequency:            -   Static
+
+>Preferences -> External Editors
+    1057  Edit              -   Button
+    1058  Remove            -   Button
+    1075  Add               -   Button
+    1106  List1             -   SysListView32
+    1313  External editors  -   Button
+
+    
+    
+>Project Settings-dialog
+    0     the parent-HWND of the contents of the individual tabs -   #32770
+             only the Project Settings tab seems to be available as ChildByID
+    1     OK                                                  -   Button
+    2     Cancel                                              -   Button
+    1064  Pages                                               -   SysTabControl32
+    1145  Save as default project settings                    -   Button
+
+>Project Settings -> Project Settings
+    1005  Normal                                                    -   Button
+    1027  Project BPM-inputbox                                      -   Edit
+    1028  Timesignature length(the first inputbox, before /)        -   Edit
+    1029  Timesignature demoninator(the second inputbox, after / )  -   Edit
+    1041  Project sample rate-dropdownlist                          -   ComboBox
+    1042  Base ruler markings off this measure                      -   Button
+    1168  Project start time-inputbox                               -   Edit
+    1169  Project start measure-inputbox                            -   Edit
+    1706  Default pitch shift mode-dropdownlist                     -   ComboBox
+    1707  Project sample rate:                                      -   Button
+    1708  Force project tempo/time signature changes to occur on whole samples   -   Button
+    1709  Timebase for items/envelopes/markers-dropdownlist         -   ComboBox
+    1711  Set 0:00 to edit cursor                                   -   Button
+    1712  Playback resample mode-dropdownlist                       -   ComboBox
+    1713  Render resample mode-dropdownlist                         -   ComboBox
+    1714  Timebase for tempo/time signature envelope-dropownlist    -   ComboBox
+    65535  Hz (if unset, hardware default will be used)             -   Static
+    
+>Project Settings -> Media, Video, Advanced, Notes
+    not available as ChildByID-HWNDs, at least on Windows.
+
+    
+>reaper.GetUserInputs-dialog()
+    1     OK           -   Button
+    2     Cancel       -   Button
+    1000  1.  inputbox -   Edit
+    1001  2.  inputbox -   Edit
+    1002  3.  inputbox -   Edit
+    1003  4.  inputbox -   Edit
+    1004  5.  inputbox -   Edit
+    1005  6.  inputbox -   Edit
+    1006  7.  inputbox -   Edit
+    1007  8.  inputbox -   Edit
+    1008  9.  inputbox -   Edit
+    1009  10. inputbox -   Edit
+    1010  11. inputbox -   Edit
+    1011  12. inputbox -   Edit
+    1012  13. inputbox -   Edit
+    1013  14. inputbox -   Edit
+    1014  15. inputbox -   Edit
+    1015  16. inputbox -   Edit
+    2000  1.  caption  -   Static
+    2001  2.  caption  -   Static
+    2002  3.  caption  -   Static
+    2003  4.  caption  -   Static
+    2004  5.  caption  -   Static
+    2005  6.  caption  -   Static
+    2006  7.  caption  -   Static
+    2007  8.  caption  -   Static
+    2008  9.  caption  -   Static
+    2009  10. caption  -   Static
+    2010  11. caption  -   Static
+    2011  12. caption  -   Static
+    2012  13. caption  -   Static
+    2013  14. caption  -   Static
+    2014  15. caption  -   Static
+    2015  16. caption  -   Static
+    
+    
+>MessageBox (reaper.MB)
+    type 0:
+        2      OK           -   Button
+        65535  Captiontext  -   Static
+        
+    type 1:
+        1      OK           -   Button
+        2      Abbrechen    -   Button
+        65535  Captiontext  -   Static
+        
+    type 2:
+        3      Cancel       -   Button
+        4      Retry        -   Button
+        5      Ignore       -   Button
+        65535  Captiontext  -   Static
+        
+    type 3:
+        2      Cancel       -   Button
+        6      Yes          -   Button
+        7      No           -   Button
+        65535  Captiontext  -   Static
+        
+    type 4:
+        6      Yes          -   Button
+        7      No           -   Button
+        65535  Captiontext  -   Static
+        
+    type 5:
+        2      Cancel       -   Button
+        4      Retry        -   Button
+        65535  Captiontext  -   Static
+
+    type 6:
+        2      Cancel       -   Button
+        10     Retry        -   Button
+        11     Continue     -   Button
+        65535  Captiontext  -   Static
+        
+        
+>ReaScript console output-dialog
+    2    Close       -   Button
+    3    Clear       -   Button
+    1177 Textfield   -   Edit
+    
+>ReaScript - IDE
+    1007                     -   Edit
+    1015  Start              -   Button
+    1016  Step               -   Button
+    1017  atexit()           -   Button
+    1042  Run defer() code   -   Button
+    1071  List1(variables-list) -   SysListView32
+    1106  Editor             -   WDLCursesWindow
+    41065  API help          -   Button
+    
+    
+>Open File-dialog
+    -1                -   ScrollBar
+    0                 -   DUIViewWndClassName
+    1     Open        -   Button
+    2     Cancel      -   Button
+    1038  Help        -   Button
+    1089  Filetype:   -   Static
+    1090  Filename:   -   Static
+    1091              -   Static
+    1092              -   Static
+    1093              -   Static
+    1095              -   Static
+    1120              -   ListBox
+    1136  Filetypes-dropdownlist               -   ComboBox
+    1148  Filename-inputbox and dropdownlist   -   ComboBoxEx32
+    
+>Save live output to disk(bounce)
+    -1    dB for                              -   Static
+    0     HWND for the individual-outputformat-setting-elements -   #32770
+    1     Start                               -   Button
+    2     Cancel                              -   Button
+    1007  Output file-inputbox                -   Edit
+    1008  Don't save when below-inputbox, dB  -   Edit
+    1009  Don't save when below-inputbox, ms  -   Edit
+    1030  Browse...                           -   Button
+    1042  Save output only while playing or recording   -   Button
+    1043  Stop saving output on first stop    -   Button
+    1044  Don't save when below               -   Button
+    1115                                      -   Static
+    1116  Outputformat-dropdownlist           -   ComboBox
+    1397  Channels-dropdownlist               -   ComboBox
+    
+>Save live output to disk(bounce) -> WAV
+    1000  WAV bit depth-dropdownlist                        -   ComboBox
+    1001  Do not include markers or regions-dropdownlist    -   ComboBox
+    1002  Large files-dropdownlist                          -   ComboBox
+    1042  Write BWF ('bext') chunk                          -   Button
+    1044  Include project filename in BWF data              -   Button
+    1059  Embed project tempo (use with care)               -   Button
+    1185  WAV bit depth:                                    -   Static
+    1816  Large files:                                      -   Static
+    
+>Save live output to disk(bounce) -> AIFF
+    1000  AIFF bit depth-dropdownlist   -   ComboBox
+    
+    The following seem to be not available, probably leftovers from WAV
+    1001                                        -   ComboBox
+    1002                                        -   ComboBox
+    1042  Write BWF ('bext') chunk              -   Button
+    1044  Include project filename in BWF data  -   Button
+    1059  Embed project tempo (use with care)   -   Button
+    1185  AIFF bit depth:                       -   Static
+    1816  Large files:                          -   Static
+
+>Save live output to disk(bounce) -> DDP
+    1000   Help                           -   Button
+    65535  DDP is only compatible with    -   Static
+
+>Save live output to disk(bounce) -> FLAC
+    1002  FLAC encoding depth-dropdownlist -   ComboBox
+    1003  Data compression-dropdownlist    -   ComboBox
+    65535  FLAC encoding depth:            -   Static
+
+>Save live output to disk(bounce) -> MP3
+    1003  Bitrate-dropdownlist  -   ComboBox
+    1006  Quality-dropdownlist  -   ComboBox
+    1014  Mode-dropdownlist     -   ComboBox
+    1017  Quality:              -   Static
+    1018  Bitrate:              -   Static
+    1019  approximate           -   Static
+    1020  approximate           -   Static
+    1024  Maximum q=0 (slow)    -   ComboBox
+    1025  LAME 3.99.5           -   Static
+    1039  Do not allow joint stereo   -   Button
+    1040  Write ReplayGain tag  -   Button
+    65535  Mode:                -   Static
+
+>Save live output to disk(bounce) -> OGG Vorbis
+    1001  VBR quality-inputbox  -   Edit
+    1002  VBR   quality:        -   Button
+    1003  CBR:                  -   Button
+    1004  CBR-kbps-inputbox     -   Edit
+    1005  ABR:                  -   Button
+    1006  ABR-kbps-inputbox     -   Edit
+    1007  ABR-minimum-inputbox  -   Edit
+    1008  ABR-maximum-inputbox  -   Edit
+    65535  (0.0 = lowest, 1.0 = highest):   -   Static
+
+
+>Save live output to disk(bounce) -> OGG Opus
+    1001  Bitrate-inputbox          -   Edit
+    1002  Mode-dropdownlist         -   ComboBox
+    1004  Complexity-inputbox       -   Edit
+    1006  Per-channel (6-256 kbps)  -   Button
+    1007  Combined                  -   Button
+    1008  Encode 3-8 channel audio as 2.1-7.1 (LFE)   -   Button
+    65535  Mode:                    -   Static
+
+>Save live output to disk(bounce) -> Video(ffmpeg/libav encoder)
+    -1  Format:                     -   Static
+    1002  Video Bitrate-inputbox    -   Edit
+    1003  Audio Bitrate-inputbox    -   Edit
+    1004  Width-inputbox            -   Edit
+    1005  Height-inputbox           -   Edit
+    1006  Framerate-inputbox        -   Edit
+    1007  Video codec-dropdownlist  -   ComboBox
+    1008  Audio codec-dropdownlist  -   ComboBox
+    1009  >                         -   Button
+    1014  Format-dropdownlist       -   ComboBox
+    1018  Video codec MJPEG quality-inputbox   -   Edit
+    1019  kbps or %(MJPEG)          -   Static
+    1020  kbps                      -   Static
+
+>Save live output to disk(bounce) -> Video (GIF)
+    -1    Size:                         -   Static
+    1003  Preserve aspect ratio (black bars if necessary)   -   Button
+    1004  Width-inputbox                -   Edit
+    1005  Height-inputbox               -   Edit
+    1006  Max. Framerate-inputbox       -   Edit
+    1007  Ignore changes in low bits of color-inputbox   -   Edit
+    1010  Encode transparency (bad for normal video, good for some things possibly)   -   Button
+
+>Save live output to disk(bounce) -> Video (LCF)
+    -1    Size:                         -   Static
+    1003  Preserve aspect ratio (black bars if necessary)   -   Button
+    1004  Width-inputbox                -   Edit
+    1005  Height-inputbox               -   Edit
+    1006  Max. framerate-inputbox       -   Edit
+    1012  LCF options tweak-inputbox    -   Edit
+
+
+>Save live output to disk(bounce) -> WavPack lossless compressor
+    1000  Mode-dropdownlist     -   ComboBox
+    1002  Bit depth             -   ComboBox
+    1042  Write BWF chunk       -   Button
+    1044  Include project filename in BWF data  -   Button
+    1045  Only write markers starting with #    -   Button
+    1057  Write markers as cues                 -   Button
+    65535  Bit depth:           -   Static
+    
+>Media Explorer
+    0     a HWND                            -   REAPERMediaExplorerMainwnd
+    1000                                    -   SysListView32
+    1001                                    -   Static
+    1002  Path-inputbox and dropdownlis     -   ComboBox
+    1004  Parent directory                  -   Button
+    1006  Details/List dropdownlist         -   ComboBox
+    1008                                    -   HotTrackButton
+    1009                                    -   HotTrackButton
+    1010                                    -   HotTrackButton
+    1011  Auto play                         -   Button
+    1012  Start on bar                      -   Button
+    1014  Filename of the currently running file  -   Static
+    1015  Filer-inputbox                    -   Edit
+    1016  playtime-display                  -   Static
+    1017                                    -   Static
+    1018  Tempo match-dropdownlist          -   ComboBox
+    1020  Pitch:                            -   Static
+    1021  pitch-inputbox                    -   Edit
+    1045  vol                               -   REAPERhfader
+    1046  seek                              -   MEpeaks
+    1047  volume-value-display              -   Static
+    1068                                    -   HotTrackButton
+    1087                                    -   HotTrackButton
+    1449                                    -   REAPERknob
+    1450  Navigate backwards                -   Button
+    1451  Navigate forwards                 -   Button
+    
+>Media Explorer -> childHWND 0
+    1000  List1     -   SysListView32
+
+
+>Track Manager 
+    1007  Filter-inputbox at the top of the window  -   Edit
+    1056  Clear                                     -   Button
+    1057  Project                                   -   Button
+    1058  Show all                                  -   Button
+    1060  Freeze                                    -   Button
+    1061  Options                                   -   Button
+    1062  List                                      -   Button
+    1071  List2                                     -   SysListView32
+    1644  Set selection from:                       -   Static
+ 
+ 
+>Virtual MIDI keyboard    
+    1237                                            -   REAPERvkbctl
+    1238  Center note (right click a key to set):   -   Static
+    1239  Center note-inputbox                      -   Edit
+    1377  MIDI channel-dropdownlist                 -   ComboBox
+    1378  MIDI channel:                             -   Static
+    1495  Arrow keys change octave/channel          -   Button
+
+
+>Transient Detection Settings
+    -1    Sensitivity:                                                  -   Static
+    1008  Threshold Inputbox                                            -   Edit
+    1042  Use zero crossings (not as precise but prevents clicks)       -   Button
+    1043  Display threshold in media items while this window is open    -   Button
+    1044  Media item selection follows tab-to-transient                 -   Button
+    1045  Move by at least 1 pixel when navigating by transients        -   Button
+    1057  Sensitivity-inputbox                                          -   Edit
+    1636  Slider1                                                       -   REAPERhfader
+    1637  Slider1                                                       -   REAPERhfader
+    
+
+>Media Item Properties
+   -1     Position:                         -   Static
+    1     OK                                -   Button
+    2     Cancel                            -   Button
+    3     Nudge/Set...                      -   Button
+    4     Take FX...                        -   Button
+    1000  Item-timebase-dropdownlist        -   ComboBox
+    1001  Item mix behavior-dropdownlist    -   ComboBox
+    1002  Active take-dropdownlist          -   ComboBox
+    1004  Take pitchshift/stretchmode-dropdownlist  -   ComboBox
+    1007  Position-inputfield               -   Edit
+    1008  Length-inputfield                 -   Edit
+    1009  Snap-offset-inputfield            -   Edit
+    1010  Fade in-inputbox                  -   Edit
+    1011  Fade out-inputbox                 -   Edit
+    1012  Start in source-inputfield        -   Edit
+    1013  Pitch adjust-inputfield           -   Edit
+    1014  Playback-rate-inputfield          -   Edit
+    1015  Fade in Curve-inputfield          -   Edit
+    1016  Fade out Curve-inputfield         -   Edit
+    1022  Section-start-inputfield          -   Edit
+    1023  Section-length-inputfield         -   Edit
+    1031  time                              -   Button
+    1032  beats                             -   Button
+    1033  HMSF                              -   Button
+    1037  Take name-inputfield              -   Edit
+    1042  &Loop source                      -   Button
+    1043  &Mute                             -   Button
+    1044  Lock                              -   Button
+    1045  Play all ta&kes                   -   Button
+    1046  Slider1                           -   REAPERhfader
+    1047  Slider1                           -   REAPERhpanfader
+    1048  0.00dB                            -   Static
+    1056                                    -   Button
+    1057                                    -   Button
+    1058  Normal                            -   Button
+    1059  No autofades                      -   Button
+    1060  &Invert phase                     -   Button
+    1061  Preserve pitc&h when changing rate  -   Button
+    1062  Section:                          -   Button
+    1063  Reverse                           -   Button
+    1065                                    -   Button
+    1104  &Normalize                        -   Button
+    1105  Take envelopes..                  -   Button
+    1144  Apply                             -   Button
+    1151  Take media source-RESAMPLED-textbox  -   Edit
+    1240  Start in source:                  -   Static
+    1241  &Take name:                       -   Static
+    1250  Playback rate:                    -   Static
+    1654  Pitch adjust (semitones):         -   Static
+    1656  Take properties                   -   Button
+    1657  Take pitch shift/time stretch mode   -   Button
+    1658  Take media source:  RESAMPLED     -   Button
+    1659  center                            -   Static
+    1660  Volume/pan:                       -   Static
+    1661  Channel mode:                     -   Static
+    1664  Take Media Source-Fade-inputbox   -   Edit
+    1665  Fade:                             -   Static
+    1666  ms                                -   Static
+    1667  Length:                           -   Static
+    1668  &Properties...                    -   Button
+    1669  &Choose new file...               -   Button
+    1670  &Rename file...                   -   Button
+    1671  Stretch markers: fade size-inputfield  -   Edit
+    1672                                    -   Button
+    1673  ms  Mode:                         -   Static
+    1674  Active take:                      -   Static
+    1710  Project default                   -   ComboBox
+    1800  Stretch markers: fade size:       -   Static

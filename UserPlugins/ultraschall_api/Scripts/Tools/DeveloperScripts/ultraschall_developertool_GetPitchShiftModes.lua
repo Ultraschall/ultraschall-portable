@@ -26,7 +26,11 @@
 
 -- Gets all pitchshiftmodes and their corresponding id-number, as used in configvar defpitchcfg as well as in
 -- ProjectStateChunks(entry DEFPITCHMODE) and ItemStateChunks(entry PLAYRATE) and puts them into the clipboard
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 P=""
 
@@ -43,20 +47,24 @@ for i=0, 10000 do
       sub=str:match(".-,(.*)")
       A1,A2,A3,A4=ultraschall.SplitIntegerIntoBytes(a)
       I1,I2,I3,I4=ultraschall.SplitIntegerIntoBytes(i)
-      P=P.."    "..ultraschall.CombineBytesToInteger(0, A1, A2, I1).." - "..str2:sub(1,-2).."\n"
+      P=P.."   "..ultraschall.CombineBytesToInteger(0, A1, A2, I1).." - "..str2:sub(1,-2).."\n"
     end
   end
 end
 
+print3(P)
 
 --2ndpass, which formats the Rubber Band Library-modes, who are otherwise hard to read
 i=0
 P2=""
-PP=P:match("Rubber Band Library:\n(.*)")
+
+PP,PP2=P:match("Rubber Band Library:\n(.*)(\nRrreeeaaa:.*)")
+print3(PP)
 
 for k in string.gmatch(PP, ".-\n") do
   num, modes = k:match("(%d.....)%s%-%s(.*)")
-  modes=modes..","
+  if modes==nil then modes="nil" end
+  if num==nil then num="nil" end
 
   if modes:match("Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing")~=nil then
     modes2="Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing"
@@ -115,13 +123,14 @@ for k in string.gmatch(PP, ".-\n") do
   if transients==nil then transients=modes:sub(1,-3) modes2="Nothing" end
 
   if transients~=oldtransients then
-    P2=P2.."\nRubber Band Library - "..transients.."\n"
+    P2=P2.."\nRubber Band Library: - "..transients
   end
   oldtransients=transients
-  P2=P2.."    "..num.." - "..modes2.."\n"
+  P2=P2.."   "..num.." - "..modes2.."\n"
 end
+PP=string.gsub(P2,"\n,\n", "\n")..PP2
 
-PP=string.gsub(P2,"\n,\n", "\n")
-
+print3(P:match("(.-)Rubber")..PP)
 -- put them into the clipboard
-print3(P:match("(.-)Rubber Band Library:\n")..PP)
+--print3(P:match("(.-)Rubber Band Library:\n"))
+

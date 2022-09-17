@@ -30,28 +30,6 @@
 ---         Color Module          ---
 -------------------------------------
 
-if type(ultraschall)~="table" then 
-  -- update buildnumber and add ultraschall as a table, when programming within this file
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Functions-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "Color-Module-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  if string=="" then string=10000 
-  else 
-    string=tonumber(string) 
-    string=string+1
-  end
-  if string2=="" then string2=10000 
-  else 
-    string2=tonumber(string2)
-    string2=string2+1
-  end 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "Functions-Build", string, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")  
-  ultraschall={} 
-  
-  ultraschall.API_TempPath=reaper.GetResourcePath().."/UserPlugins/ultraschall_api/temp/"
-end
-
 function ultraschall.ConvertColor(r,g,b)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -449,7 +427,7 @@ function ultraschall.IsValidColorTable(ColorTable)
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsValidColorTable(array ColorTable)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Checks for valid color-tables.
     
     returns false in case of an error
@@ -624,7 +602,7 @@ function ultraschall.ChangeColorBrightness(r, g, b, bright_r, bright_g, bright_b
     Lua=5.3
   </requires>
   <functioncall>integer red, integer green, integer blue, boolean retval = ultraschall.ChangeColorBrightness(integer r, integer g, integer b, integer bright_r, optional integer bright_g, optional integer bright_b)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Changes brightness of a colorvalue. If you only set bright_r without setting bright_g and bright_b, then the value for bright_r will affect g and b as well.
     
     If a color-value becomes >255 or <0, it will be set to 255 or 0 respectively.
@@ -696,7 +674,7 @@ function ultraschall.ChangeColorContrast(r, g, b, Minimum_r, Maximum_r, Minimum_
     Lua=5.3
   </requires>
   <functioncall>integer red, integer green, integer blue, boolean retval = ultraschall.ChangeColorContrast(integer r, integer g, integer b, integer Minimum_r, optional integer Maximum_r, optional integer Minimum_g, optional integer Maximum_g, optional integer Minimum_b, optional integer Maximum_b)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Changes contrast of a colorvalue.
     
     Minimum will set the new minimal, Maximum will set the new maximum-brightness-level.
@@ -705,7 +683,7 @@ function ultraschall.ChangeColorContrast(r, g, b, Minimum_r, Maximum_r, Minimum_
     The lower you set Minimum/Maximum, the darker it becomes; the higher, the brighter it becomes.
     The farther away Minimum is from Maximum, the stronger the contrast becomes; the closer Minimum is to Maximum, the weaker the contrast becomes.
     
-    If you only set Minimum\_r and Maximum\_r, then these values will be applied to g and b too.
+    If you only set Minimum_r and Maximum_r, then these values will be applied to g and b too.
     
     If you omit/set to nil a Maximum-value; it's default value will be 255.
     
@@ -805,7 +783,7 @@ function ultraschall.ChangeColorSaturation(r,g,b,delta)
     Lua=5.3
   </requires>
   <functioncall>integer red, integer green, integer blue, number median, boolean retval = ultraschall.ChangeColorSaturation(integer r, integer g, integer b, integer delta)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Changes saturation of a colorvalue by delta.
     
     If a color-value becomes >255 or <0, it will be set to 255 or 0 respectively.

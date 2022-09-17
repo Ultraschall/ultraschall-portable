@@ -1,0 +1,218 @@
+<html>
+	<head>
+  <style type="text/css">
+.padby4percent{
+  padding-left:4%;
+}
+h5{
+  padding-left:4%;
+}
+</style>
+
+	</head>
+	<body bgcolor="#9F9F9F">
+    
+    <div style="position:absolute; width:19.9%; top:35%; height:8000; background: #FFFFFF; border: 1px solid #909090;">
+    </div>
+    <div style="position:absolute; width:19.9%; padding-top:18.9%; padding-left:0.1%;">
+        <img style="width:100%;" src="gfx/MetadataDocs/US-MetadataExport-Milestones.png">
+    </div>
+
+<div style="position:absolute; background: #A3A3A3; padding-left: 1.4%; top:1%; width:18.5%; text-align: center; border: 1px solid #909090;">
+    <img style="position:relative; padding-left: 1%;" src="gfx/us-Kopie2.png"><br>
+        <b>Podcast Metadata For Ultraschall</b><br>
+ &nbsp;<a href="Ultraschall_PodcastMetadata_Introduction.html">1. Introduction</a><br>
+ &nbsp;<a href="Ultraschall_PodcastMetadata_Testende.html"><b>2. Für Testende</b></a><br>
+ &nbsp;<a href="Ultraschall_PodcastMetadata_Entwickelnde.html">3. Für Entwickelnde</a><br>
+ &nbsp;<a href="Ultraschall_PodcastMetadata_ChangeLog.html">4. Changelog</a><br>
+ &nbsp;
+</div>    
+
+        <div style="position:absolute; left:22%; top: 13.1%; width:70%;">
+<html>
+	<head>
+	</head>
+	<body>
+<h2>Index</h2>
+<a href="#Meilensteine">Meilensteine für Metadaten in Ultraschall</a><br>
+<a href="#Phase1_Derzeitiger_Stand">Derzeitiger Stand Phase 1</a><br>
+<a href="#Shownotes">Shownotes</a><br>
+<a href="#Kapitelmarken">Kapitelmarken</a><br>
+<a href="#Geplante_Kapitelmarken">Geplante Kapitelmarken</a><br>
+<a href="#Markerkontextmenü">Das Markerkontextmenü</a><br>
+<a href="#Episode_Metadata">Edit Episode/Podcast Metadata-Dialog</a><br>
+<a href="#Export HTML">Rudimentärer Export als HTML-Block für Episoden-Artikel</a><br>
+<a href="#Fazit">Fazit und was nun zu testen wäre</a><br>
+
+<a id="Meilensteine"></a><h2>Meilensteine für Metadaten in Ultraschall</h2>
+<p>Die Entwicklung von Podcast-Metadaten-Export in Ultraschall ist ein Großprojekt, daher hab ich mich dazu entschlossen es etwas zu entzerren und in einige Entiwcklungsschritte aufzuteilen, die da wären:</p>
+<p><strong>Phase 1:</strong></p>
+<ul>
+<li>Eingabe von Metadaten</li>
+<li>Marker-Kontext-Menü</li>
+<li>rudimentärer Export von Shownotes als HTML</li>
+</ul>
+<p><strong>Phase 2:</strong></p>
+<ul>
+<li>Neuer Markermanager, zugeschnitten auf Ultraschall-Marker und Metadaten</li>
+</ul>
+<p><strong>Phase 3:</strong></p>
+<ul>
+<li>Export mit neuem Exportassistenten(normal, region rendering) in Mediendatei und in Exportformaten</li>
+<li>Allgemeine Hilfswerkzeuge für Metadaten</li>
+</ul>
+<p><strong>Phase 4:</strong></p>
+<ul>
+<li>Dokumentation(Anwendung Ultraschall, Doku für den Metadaten-Übergabeformat-Standard)</li>
+</ul>
+<p>In dieser ersten Version geht es erstmal um die Features von Phase 1 und diese gemeinsam mit Euch zu entwickeln.</p>
+<a id="Phase1_Derzeitiger_Stand"></a><h2>Derzeitiger Stand Phase 1</h2>
+<p>Diese besteht aus diversen neuen Features. Zum Einen gibt es, zusätzlich zu Kapitelmarken, die Möglichkeit Shownotes zu erstellen. Beide, Kapitelmarken und Shownotes, haben einen eigenen Dialog, in dem Ihr die wichtigsten Attribute dafür eintragen könnt, also z.B. Bilder bei Kapitelmarken oder URLs bei Shownotes. Darüberhinaus gibt es noch einen Dialog für das Eingeben von Metadaten für den Podcast/die Episode. Dieser Dialog ist quasi eine Erweiterung des bisherigen Dialogs, wo Ihr Titel, Podcastnamen, Veröffentlichungsjahr, etc eingetragen habt. Erreichbar ist dieser über den Export Assistant. Als kleines Bonus, um Euch zu zeigen was hiermit alles möglich ist, hab ich noch einen Export gebaut, der es ermöglicht Kapitelmarken mit den dazu gehörigen Shownotes als HTML-Liste zu exportieren, die Ihr einfach Copy n Pasten könnt in den Episodenbeitrag.</p>
+<p>Auch gibt es nun ein Kontextmenü für Marker, mit passenden Einträgen für den jeweiligen Markertyp, also Kapitelmarke, geplante Kapitelmarke, Shownotes, Edit-Marker, Time-Marker und Action-Marker. Musstet Ihr also für diverse Bearbeitungen immer umständlich mit diversen Dialogen oder mit Shortcuts rumhantieren, so könnt Ihr einfach rechtsklick auf eine Kapitelmarke machen und dort auswählen "Edit Chapter". Dann öffnet sich ein Dialog für diese Kapitelmarke, wo Ihr alles eintragen könnt.</p>
+<p>Gehen wir also etwas in die Tiefe und fangen wir an mit Shownotes.</p>
+<a id="Shownotes"></a><h2>Shownotes</h2>
+<p>Neue Shownotes könnt Ihr erstellen mit dem Shortcut T bzw Shift+T zusammen mit einem Eingabedialog. (Diese Shortcuts können sich eventuell später noch ändern.)</p>
+<p>Nehmt Ihr Shift+T, öffnet sich damit der folgende Shownote-Dialog:</p>
+<p><img src="gfx/MetadataDocs/5-0-1-Shownote-Dialog.jpg" alt="Der Dialog, der es ermöglicht, Shownote-Attribute zu setzen" /></p>
+<p>Wie Ihr seht, könnt Ihr eine Reihe an Attributen setzen, die sich in(bisher) drei Kategorien aufteilen:</p>
+<p><strong>General Attributes:</strong><br />
+Das sind ein paar generelle Infos zu der Shownote, wie der Titel(wird später auch im Marker direkt angezeigt), eine Beschreibung, worum es in dieser Shownote geht und ein paar Tags, die sinnvoll noch angegeben werden, aber eine Beschreibung aufblähen würden.</p>
+<p><strong>URL Attributes:</strong><br />
+Hier kommen nun die URL-Attribute rein. Allen voran: die URL selbst. Dann eine Beschreibung dessen, was sich hinter der URL verbirgt, einige Daten wie Datum, Zeit, Zeitzone, wann Ihr die URL abgerufen habt.</p>
+<p>Darüberhinaus noch die Möglichkeit eine archivierte Version der URL zu hinterlegen. Letzteres ist speziell für journalistische Formate wichtig, da sich der Inhalt hinter einer URL ändern kann. Seiten wie archive.org erlauben es aber, dass man einen Snapshot der URL zu einem bestimmten Zeitpunkt macht. Diese URL zum Snapshot öffnet eine Seite, die den Inhalt exakt so präsentiert, wie er zum Zeitpunkt des Snapshots war.<br>
+Diese URL könnt Ihr hier nun angeben um zu beweisen, dass der Inhalt, auf den Ihr Euch bezieht, wirklich hinter der URL vorhanden war, selbst wenn der Inhalt hinter der OriginalURL geändert wurde. Das ist wichtig für journalistische Nachvollziehbarkeit der Quellen. Viele Journalist_innen arbeiten damit in ihrem Alltag, also gehört dies auch in Shownotes.</p>
+<p><strong>Additionals</strong>:<br />
+Dieser Teil ist noch relativ unbespielt und beinhaltet ein Feature, welches sich Tim einstmals gewünscht hat: das Angeben von Wikidata-URIs.<br />
+Wikidata-URIs sind Adressen, die in einer Datenbank der WikiMedia-Foundation existieren. Zu diesen Adressen werden viele zusätzliche, maschinenlesbare, Attribute mit angeboten.<br />
+Als ein Beispiel mag dienen, dass man die WikiData-URI von Leipzig hier angeben kann. Ein PodcastPlayer könnte nun einige der zusätzlichen Attribute visualisieren wie Einwohnerzahl. Oder die geographische Lage so abrufen um Leipzig in Google Maps zu öffnen. Oder das Wappen von Leipzig als "Shownote-Bild" anzuzeigen.</p>
+<p>Viele Dinge haben eine URI in der WikiData-Datenbank. So auch Tim Pritlove selbst. Seine WikiData-URI lautet beispielsweise: <a href="https://www.wikidata.org/wiki/Q102053">https://www.wikidata.org/wiki/Q102053</a></p>
+<p>Wenn Ihr mehr dazu wissen wollt, könnt Ihr dazu passende Podcastfolgen hören wie den <a href="https://cre.fm/cre205-wikidata">CRE 205</a> oder <a href="https://forschergeist.de/podcast/fg044-digitalisierung-der-bibliotheken/">Forschergeist 44</a>.</p>
+<p>Notiz: macht es Sinn, <a href="https://meta.wikimedia.org/wiki/WikiCite">WikiCite</a> mit dazu zu packen? Damit kann man Zitate und bibliographische Infos referenzieren. Ich wäre neugierig auf Eure Gedanken dazu.</p>
+<p>Zum Eingeben der Infos klickt Ihr auf die Textfelder. Bisher öffnet sich dafür noch ein gesonderter Dialog. Das ist noch meh aber (noch) nicht zu vermeiden. Ich versuche es zu umschiffen und es direkt eingebbar zu machen, aber speziell unter Windows hat Reaper einige Bugs, die es u.U. verhindern so etwas wie @ oder € einzugeben. Der derzeitige Ansatz ist da der Einzige um das 100% zu lösen.</p>
+<p>Wenn Ihr fertig seid, könnt Ihr auf Done klicken oder die ESC-Taste.</p>
+<a id="Kapitelmarken"></a><h2>Kapitelmarken</h2>
+<p>Hier ist vieles wie gehabt. Ihr setzt mit M eine Kapitelmarke, mit B eine geplante Kapitelmarke und mit Shift+M eine Kapitelmarke, deren Attribute Ihr verändern könnt.</p>
+<p>Wenn Ihr mit Shift+M eine Kapitelmarke setzt, so öffnet sich ein ähnlicher Dialog, wie Ihr ihn bereits von den Shownotes gesehen habt:</p>
+<p><img src="gfx/MetadataDocs/5-1-1-Kapitelmarken-Dialog.jpg" alt="Der Dialog zur Eingabe von Kapitelmarken-Metadaten" /></p>
+<p>Auch hier seht Ihr, dass es mehrere Kategorien gibt, in die sich die Metadaten aufteilen.</p>
+<p><strong>General Attributes</strong><br />
+Dort tragt Ihr den Titel ein(der dann auch im Marker angezeigt wird), eine Beschreibung, worum es in dem Kapitel geht, ein paar Tags, die das Kapitel beschreiben. Es gibt auch zwei Checkboxen, mit denen Ihr angeben könnt, ob ein Kapitel Spoiler enthält(und man es deswegen lieber skippen möchte) und ob ein Kapitel Werbung ist.<br />
+Zu guter Letzt könnt Ihr noch ein paar Tags angeben, die vor bestimmten Inhalten warnen. Das ist speziell im Hinblick auf den <a href="https://de.wikipedia.org/wiki/Werther-Effekt">Werther Effekt</a> wichtig.</p>
+<p><strong>Url-Attributes</strong><br />
+Hier könnt Ihr die bereits aus Ultraschall 4 &amp; 5 bekannten Kapitelmarken-URLs eintragen. Ich bin allerdings nicht so sicher ob die Sinn ergeben, da meiner Meinung nach, Urls eher in Shownotes etwas zu suchen haben<br />
+Ich bin offen für Gedanken zum Thema.<br />
+Auch hier: Ihr könnt eine URL angeben und eine Beschreibung, was hinter der Url zu finden ist.</p>
+<p><strong>Chapter Image</strong><br />
+Hier geht es um das Kapitelmarkenbild. Das könnt Ihr einfach per Drag n Drop in das Fenster fallen lassen. Oder Ihr klickt mit links darauf um ein Neues zu wählen.<br />
+Es gibt auch ein Kontextmenu, welches Ihr mit Rechtsklick erreicht. Dort findet Ihr die Möglichkeit das Bild zu entfernen oder es in der Standard-Applikation zu öffnen, um eventuell eine Nachbearbeitung zu machen.</p>
+<p>Auch findet Ihr einige Attribute, mit denen Ihr die Quellen und Lizenzen für die verwendeten Kapitelmarkenbilder angeben könnt(was bisher in Ultraschall fehlt und das Potenzial hat, juristische Konsequenzen nach sich zu ziehen).</p>
+<p><em>Zu beachten ist</em>: dass dieser Ansatz mit Kapitelmarkenbildern den bisherigen Ansatz ersetzt, bei dem das Bild in die Timeline gedropped wurde. Ihr dropped die Bilder nun stattdessen in den Dialog für die Kapitelmarke.<br />
+Dabei wird eine Kopie der Grafikdatei im Projektverzeichnis erstellt und diese mit dieser Kapitelmarke verknüpft. Das heißt, wenn Ihr die Kapitelmarke bewegt, bewegt sich automatisch das Bild mit, was bisher nicht möglich war.</p>
+<p>Nun gibt es gute Gründe die Bilder, so wie bisher, direkt im Projekt zu haben. Speziell wenn man den Podcast als Video exportieren will. Das wird zu einem späteren Zeitpunkt wieder möglich sein, indem man einzelne oder alle Kapitelmarkenbilder in einen neuen Track einfügen kann(das war schon für jetzt geplant, aber ich muss noch einige Bugs in meinem Code fixen, kommt daher etwas später.) Dazu wird es einen speziellen Menüpunkt im Kontextmenü für Kapitelmarken geben, der das Euch ermöglicht.</p>
+<p>Ein weiterer Punkt, der mit dem bisherigen Ansatz besser war ist: es ist einfacher die Bilder schnell ins Projekt fallen zu lassen ohne dafür umständlich Dialoge nutzen zu müssen. Das wird in Zukunft mit dem neuen Markermanager möglich sein, das heißt: Ihr dropped die Bilder nicht mehr in die Timeline Eures Projektes, sondern stattdessen in die entsprechende Kapitelmarke direkt im Markermanager.</p>
+<p>Die Gründe für diese Änderung sind vielfältig und sprengen den Rahmen in dieser Erklärung. Kurz zusammengefasst aber ist dieser Ansatz performanter, stabiler, hat weniger Stolperstellen über die Nutzer_innen stolpern können ohne zu wissen, wie sie diese umschiffen können. <br>
+Das Markerdashboard kann z.B. so schneller werden, was für langsame Systeme wichtig ist. Auch fallen viele Supportanfragen weg, die bisher im Sendegate auftauchen(z.B. Bild ist an Kapitelmarke, wird aber vom Marker Dashboard nicht erkannt, etc).<br>
+ Ein weiterer Grund ist, dass der bisherige Ansatz eine Weiterentwicklung mit neuen Feaures zu Kapitelmarkenbildern schlichtweg einfach komplizierter oder unmöglich macht. Ein solches Feature wäre ein sauberer Video-Export von Podcasts. Was mir vorschwebt sind mehrere Layouts für Video-Export von Podcasts. Sprich, wir ordnen Bilder von Sprecher_innen im Video an, machen eine Wellenform daneben, so dass man immer sieht, wer gerade redet. Und in der Mitte die entsprechenden Kapitelmarkenbilder, sauber gelayoutet und skaliert und eventuell Transkription unten eingeblendet.</p>
+<p>Das könnte grob so aussehen</p>
+<p><img src="gfx/MetadataDocs/5-1-2-Kapitelmarken-Videoexport.jpg" alt="Video-Export, wie er irgendwann aussehen könnte(Symbolbild)" /></p>
+<p>Um so etwas möglich zu machen, brauchen wir aber eins: die volle Kontrolle über alle Bilder im Projekt. Und das ist mit dem bisherigen Ansatz kaum bis gar nicht machbar und würde ein solches Feature so schwer zu realisieren machen, dass es sehr viel Zeit bräuchte oder sogar besser wäre es gar nicht zu machen.</p>
+<p>Ich weiß, Paradigmenwechsel sind immer etwas meh und ungewohnt, aber die Features die dadurch möglich werden, werden Euch entschädigen, versprochen.</p>
+<p>Ich werde noch etwas bauen, dass die Kapitelmarkenbilder von bisherigen Projekten direkt beim Laden in die Kapitelmarken eingefügt werden. So müsst Ihr da nix per Hand machen, wenn Ihr mit einem Ultraschall 4 &amp; 5 Projekt in (voraussichtlich) Ultraschall 6 arbeiten wollt.</p>
+<p>Ihr seht, vieles ist identisch zu Shownotes und ein wenig ändert sich zu Kapitelmarkenbildern.</p>
+<a id="Geplante_Kapitelmarken"></a><h2>Geplante Kapitelmarken</h2>
+<p>Für diese gelten die gleichen Möglichkeiten, wie für Kapitelmarken. Das heißt, Ihr könnt die geplanten Kapitelmarken einfügen ins Projekt und dann (per rechtsklick) im Attribute-bearbeiten-Dialog deren Attribute bearbeiten, inklusive der Kapitelmarkenbilder.<br />
+Wenn Ihr also alle Infos bereits vor der Sendung zusammen habt, so könnt Ihr diese komplett angeben und müsst es nicht während der Sendung machen oder in der Nachbearbeitung.</p>
+<p>Sprich: wenn Ihr diese gesetzt und mit Attributen versehen habt, braucht Ihr nur noch B drücken, um die geplante Kapitelmarke zu setzen und alle Attribute werden mitgesetzt.</p>
+<a id="Markerkontextmenü"></a><h2>Das Markerkontextmenü</h2>
+<p>Es gibt nun Kontextmenüs für die verschiedenen Markertypen. Das heißt, je nach Markertyp(Kapitelmarke, geplante Kapitelmarke, Shownote, Editmarke, Zeitmarke, Actionmarker) gibt es sinnvolle Einträge, die für diesen Markertypen Sinn ergeben.</p>
+<p>Im folgenden Gif seht Ihr die verschiedenen Einträge, die zu den jeweiligen Markern existieren.</p>
+<p><img src="gfx/MetadataDocs/5-3-Markerkontextmenue-0.gif" alt="Menüeinträge für die verschiedenen Markertypen" /></p>
+<p>In der Hauptsache sind dies Dinge wie Attribute bearbeiten(für (geplante) Kapitelmarken und Shownotes) oder den Titel(Edit-Marker), die Zeitanzeige starten(für _Time-Marker) sowie Actions aussuchen für Action-Marker.<br />
+Oder einfach nur das Entfernen dieses Markers.</p>
+<p>Die Einträge, die Ihr dort findet, sind nicht fix. Falls Ihr also Ideen habt, was dort noch rein sollte, oder was eher keinen Sinn ergibt, bin ich offen für Vorschläge und Ideen. Alles was das Arbeiten mit bestimmten Markertypen leichter machen könnte, sollten wir hier durchaus mal ausprobieren.</p>
+<a id="Episode_Metadata"></a><h2>Edit Episode/Podcast Metadata-Dialog</h2>
+<p>Natürlich haben nicht nur Kapitelmarken und Shownotes Metadaten, sondern die ganze Episode an sich auch.<br />
+Deswegen gibt es einen neuen Dialog, in dem Ihr Metadaten für die Episode angeben könnt.</p>
+<p><img src="gfx/MetadataDocs/5-4-EpisodenAttribute-Dialog.jpg" alt="Episoden und Podcast-Attribute angeben im neuen Dialog" /></p>
+<p>Auch hier seht Ihr diverse Kategorien, in welche die Episodenattribute eingeteilt sind.</p>
+<p><strong>General Episode Attributes</strong><br />
+Hierbei handelt es sich um Attribute, die diese aktuelle Episode betreffen, also Titel, eine Beschreibung, die Podcastenden, eine Tagline und beschreibende Tags zu grob den Themen der Episode.</p>
+<p><strong>General Podcast Attributes</strong><br />
+Hier kommen Attribute rein, die den gesamten Podcast betreffen und nicht nur die einzelne Episode. Also Titel des Podcasts, die Website des Podcasts, Kontakt-eMail und die Kategorie.<br />
+Zukünftig sollen auch noch Social-Media-Accounts dazu kommen, aber daran arbeite ich noch.</p>
+<p><strong>Release Time/Date</strong><br />
+Die Infos, wann die Episode rauskommen soll und wird, also Datum, Zeit und Zeitzone.</p>
+<p><strong>Additional Attributes</strong><br />
+Hier kommen Dinge rein, die die Episode etwas innerhalb des Podcasts verorten, wie Episoden-Nummer, Season-Nummer(falls Ihr Euren Podcast in Staffeln aufteilt), die Sprache des Podcasts(da werden noch weitere Sprachen dazu kommen), ob es explizite Sprache gibt und eventuelle Content-Notification Tags, die vor bestimmten Inhalten warnen können(also auch hier z.B. den Werther Effekt verhindern sollen).</p>
+<p><strong>Sponsor</strong><br />
+Hier kommt der Name des Sponsors der gesamten Episode rein und eine Url zu diesem. Ich bin noch nicht sicher, ob es nicht sinnvoll ist es hier zu entfernen und nicht sinnvoller ist, stattdessen ein Sponsored-Tag in Shownotes einzubauen. Speziell weil manche Podcasts mehrere Werbepartner_innen haben pro Episode. Da wäre ich offen für Eure Gedanken dazu...</p>
+<p><strong>Episode Cover</strong><br />
+Das Episoden-Cover, welches Ihr auch hier drag n droppen könnt oder mit links-klick einen Dialog öffnen. Ihr könnt es auch weiterhin im Export Assistant auswählen. Es ist auch möglich mit rechtsklick ein Kontextmenü zu öffnen um das Cover zu entfernen oder in der Default-App zu öffnen(zum Bearbeiten z.B.).</p>
+<p>Noch ein paar generelle Anmerkungen: in Zukunft wird dieser Dialog Euch Presets ermöglichen. Sprich, Ihr werdet die Attribute, die Ihr eh für alle Episoden eines Podcasts braucht, in nem Preset speichern können um sie schnell abrufen zu können. Das wird mit dem neuen Exportassistant kommen und Euch nochmal lästige Sachen ersparen.</p>
+<p>Sämtliche Attribute dieses Dialogs könnt Ihr auch als Project-Template abspeichern.</p>
+<p>Es werden noch nicht alle Attribute des Dialogs für den Export genutzt, dies wird aber zukünftig der Fall sein(spätestens ab Phase 3). Es lohnt sich also das Erfassen schon jetzt.</p>
+<a id="Export HTML"></a><h2>Rudimentärer Export als HTML-Block für Episoden-Artikel</h2>
+<p>Nun haben wir ne Menge an Eingabe für Metadaten durchgemacht, aber wie sieht es denn jetzt damit aus, diese Daten irgendwie auch weiterverwenden zu können?</p>
+<p>Dafür hab ich einen rudimentären Export gebaut, der Euch die Kapitelmarken und die dazugehörigen Shownotes als HTML-Code exportiert. Das heißt, Ihr bekommt eine gelayoutete Liste, in der die Kapitel mit Zeitmarken und Beschreibung drin sind, die Shownotes mit Zeitmarken, Beschreibung und URLs(inklusive archived Urls, wenn Ihr diese angegeben habt!). Diese könnt Ihr dann einfach in Euren Episodenartikel einbinden und voila, habt Ihr die Shownotes zumindest schonmal anzeigbar.<br />
+Das ist, wie gesagt, eher noch rudimentär und noch ausbaufähig. Es soll Euch aber schon einmal vermitteln, was zum Beispiel möglich sein kann und wird, aber dem sind an sich kaum Grenzen gesetzt. Falls Ihr also da Wünsche und Ideen habt, immer her damit.<br />
+Speziell, wie man andere, von Euch eingebenene, Metadaten dort sinnvoll und übersichtlicht visualisieren kann(Spoiler Warnung, Kapitel ist eine Ad, WikiData-URI, Datum und Zeit des Abrufs der Shownote-Url usw).<br />
+Was ich auch eingebaut habe sind ein paar CSS-Klassen für die einzelnen Elemente. Wer von Euch also sich die Shownotes mit CSS etwas gesondert layouten will, kann sich damit mal austoben.</p>
+<p>Den Export findet Ihr auch im Export-Assistant unten, unter dem Finalize MP3-Button.</p>
+<a id="Fazit"></a><h2>Fazit und was nun zu testen wäre</h2>
+<p>Nun habt Ihr einen groben Überblick darüber, was Phase 1 beinhaltet. Es umfasst so in etwa 30% dessen, was zum Ende geplant ist, ermöglicht Euch aber schon Einiges.</p>
+<p>Was gilt es also nun konkret zu testen?</p>
+<p><strong>Dialoge</strong></p>
+<ul>
+<li>Funktionieren die Dialoge?<br />
+</li>
+<li>Bleiben Attribute erhalten wenn Ihr die Dialog wieder öffnet oder ändern sich Attribute hin zu Attributen von anderen Shownotes/Kapitelmarken?<br />
+</li>
+<li>Bleiben die Attribute für den Episoden-Dialog erhalten oder ändern die sich, ohne dass Ihr das wolltet?</li>
+</ul>
+<p><strong>Marker Menu</strong></p>
+<ul>
+<li>Öffnet sich immer das richtige Menü für den entsprechenden Markertyp?<br />
+</li>
+<li>Bekommt Ihr manchmal das "Standard-Marker-Menü" von Reaper angezeigt und wenn ja, wie macht Ihr das?<br />
+</li>
+<li>Funktionieren die Einträge korrekt oder öffnet sich ein Dialog für einen anderen Marker als den angeklickten?</li>
+</ul>
+<p><strong>Export as HTML-Liste</strong></p>
+<ul>
+<li>Tauchen alle Kapitelmarken und Shownotes auf?<br />
+</li>
+<li>Sind alle URLs intakt?<br />
+</li>
+<li>Sind die Zeitmarken die richtigen oder weichen sie ab?</li>
+</ul>
+<p><strong>Generell</strong></p>
+<ul>
+<li>Tauchen Fehlermeldungen auf und wenn ja, wie lauten diese(bitte exakt, notfalls mit Screenshot)?<br />
+</li>
+<li>Wie habt Ihr die Fehlermeldung ausgelöst?<br />
+</li>
+<li>Fühlt sich irgendwas nicht richtig an oder verhält sich anders, als ichs hier beschrieben habe? Wenn ja was passiert und was habt Ihr stattdessen erwartet?<br />
+</li>
+<li>Funktioniert alles auch auf Mac und Linux(habs auf Windows bisher hauptsächlich getestet)?</li>
+</ul>
+<p><strong>Ideen und Feedback</strong></p>
+<ul>
+<li>Gibt es Dinge, die Ihr euch wünschen würdet?<br />
+</li>
+<li>Gibt es Dinge, die Euch fehlen oder sogar offensichtlich fehlen?<br />
+</li>
+<li>Was gefällt Euch, was gefällt Euch nicht und warum? Was würdet Ihr stattdessen gern haben?</li>
+<li>Gibt es Attribute in Dialogen, die Euch fehlen oder sind welche Eurer Meinung nach überflüssig und wenn ja, warum?<br />
+</li>
+<li>Gibt es Dinge, die sich komisch anfühlen und Ihr denkt "ja aber, das meld ich nicht, weil ich machs vermutlich einfach nur falsch"? Was sind diese, auch wenn sie unbedeutend erscheinen mögen?</li>
+</ul>
+
+Ich bin gespannt auf Euer Feedback und Eure Ideen.<br />
+<br />
+Meo-Ada Mespotine - Leipzig 27. August 2022<br />
+
+		</body>
+</html>
+    </div>    
+	</body>
+</html>

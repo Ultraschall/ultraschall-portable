@@ -29,7 +29,11 @@
 -- All duplicates will be shown, so if a line is at line 1 and at line 332, it will show both being duplicates, 
 -- not only the first duplicate appearing. That way, you know, where all the duplicates are located.
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 -- get string from clipboard
 A=FromClip()

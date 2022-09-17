@@ -31,11 +31,15 @@
 -- puts the statechunk of the track under the mouse into the clipboard
 -- statechunk will be layouted, according to RPP-file-layouting-rules
 
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+else
+  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+end
 
 x,y=reaper.GetMousePosition()
 Track=reaper.GetTrackFromPoint(x,y)
 if Track==nil then return end
-retval, TrackStateChunk = reaper.GetTrackStateChunk(Track, "", false)
+retval, TrackStateChunk = reaper.SetTrackStateChunk(Track, FromClip(), false)
 
-print3(ultraschall.StateChunkLayouter(TrackStateChunk))
+
