@@ -121,8 +121,8 @@ function atexit()
   reaper.DeleteExtState("ultraschall_eventmanager", "state", false)
   reaper.DeleteExtState("ultraschall_eventmanager", "registered_scripts", false)
   reaper.DeleteExtState("ultraschall_eventmanager", "Execution Time", false)
-  reaper.DeleteExtState("ultraschall_eventmanager", "EventNames", EventNames, false)
-  reaper.DeleteExtState("ultraschall_eventmanager", "EventIdentifier", EventNames, false)
+  reaper.DeleteExtState("ultraschall_eventmanager", "EventNames", false)
+  reaper.DeleteExtState("ultraschall_eventmanager", "EventIdentifier", false)
   for i=1, CountOfEvents do
     reaper.DeleteExtState("ultraschall_eventmanager", "checkfunction_returnstate"..i, false)
     reaper.DeleteExtState("ultraschall_eventmanager", "Event_Pause"..i, false)
@@ -676,4 +676,3 @@ reaper.DeleteExtState("ultraschall_eventmanager", "eventstop_scriptidentifier", 
 InitialiseStartupEvents()  -- load StartUp Events
 UpdateEventList_ExtState() -- update the EventList-extstate, which is used by Enumerate-functions of the EventManager-API-functions
 main()                     -- start the checking
-
