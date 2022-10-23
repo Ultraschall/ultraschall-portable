@@ -1,0 +1,9 @@
+Bevor Export, lass alle Marker nochmal mit 
+
+ultraschall.GetSetChapterMarker_Attributes(true, marker_index, "chap_guid", "", false)
+ultraschall.GetSetShownoteMarker_Attributes(true, marker_index, "shown_guid", "", false)
+ultraschall.GetSetPodcastEpisode_Attributes(true, marker_index, "epsd_guid", "", false)
+
+mit ner Guid versehen, damit bereits bestehende Projekte beim reexport gleich sauber geguided werden in ihren Shownotes und Chapters.
+
+Damit können Chapter und Shownotes direkt referenziert werden, was wichtig ist wenn man sich auch eine Shownote bezieht.

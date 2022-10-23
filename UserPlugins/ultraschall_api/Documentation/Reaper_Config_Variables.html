@@ -4175,7 +4175,7 @@ It is an integer</p>
 &amp;65536=1, Show mouse editing-help(off), unchecked</p>
 </blockquote>
 <blockquote>
-<p>Context-menu in performane meter display: &amp;131072=0, Display CPU utilization as 100% = all cores fully utilized &amp;131072=1, Display CPU utilization as 1.0c = 1 core fully utilized</p>
+<p>Context-menu in performane meter display: &amp;131072=0, &amp;262144=0, Display CPU utilization as 100% = all cores fully utilized &amp;131072=1, &amp;262144=0, Display CPU utilization as 1.0c = 1 core fully utilized &amp;131072=1, &amp;262144=1, Display CPU utilization as 1.0! = longest block is realtime (worst case)</p>
 </blockquote>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>
 </div><br>
@@ -5788,6 +5788,9 @@ It is an integer-bitfield</p>
 </blockquote>
 <blockquote>
 <p>&amp;256=0, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - unchecked &amp;256=1, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - checked</p>
+</blockquote>
+<blockquote>
+<p>&amp;512=0, When space key is pressed in plug-in text fields, send to main window - unchecked &amp;512=1, When space key is pressed in plug-in text fields, send to main window - checked</p>
 </blockquote>
 <p>For more settings set in Preferences -&gt; Mouse, see <a href="#transflags">transflags</a>, <a href="#trackselonmouse">trackselonmouse</a>, <a href="#loopclickmode">loopclickmode</a>, <a href="#scnameedit">scnameedit</a></p>
 <p>Stored in reaper.ini under the same name in the section REAPER.</p>

@@ -2593,6 +2593,106 @@ else
     ultraschall.LM(18)
     return ultraschall.GetMarkerType(table.unpack({...}))
   end
+  function ultraschall.MarkerMenu_Start(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_Start(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_Stop(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_Stop(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_Debug(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_Debug(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetEntry(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetEntry(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_SetEntry(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_SetEntry(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetAvailableTypes(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetAvailableTypes(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetEntry_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetEntry_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_SetEntry_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_SetEntry_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_RemoveEntry(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_RemoveEntry(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_RemoveEntry_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_RemoveEntry_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetLastClickedMenuEntry(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetLastClickedMenuEntry(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_CountEntries(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_CountEntries(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_CountEntries_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_CountEntries_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_InsertEntry(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_InsertEntry(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_SetStartupAction(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_SetStartupAction(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_SetStartupAction_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_SetStartupAction_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_RemoveSubMenu(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_RemoveSubMenu(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_RemoveSubMenu_DefaultMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_RemoveSubMenu_DefaultMarkers(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetLastTouchedMarkerRegion(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetLastTouchedMarkerRegion(table.unpack({...}))
+  end
+  function ultraschall.MarkerMenu_GetLastClickState(...)
+    ultraschall.LM(18)
+    return ultraschall.MarkerMenu_GetLastClickState(table.unpack({...}))
+  end
+  function ultraschall.GetSetChapterMarker_Attributes(...)
+    ultraschall.LM(18)
+    return ultraschall.GetSetChapterMarker_Attributes(table.unpack({...}))
+  end
+  function ultraschall.GetSetPodcast_Attributes(...)
+    ultraschall.LM(18)
+    return ultraschall.GetSetPodcast_Attributes(table.unpack({...}))
+  end
+  function ultraschall.GetSetPodcastEpisode_Attributes(...)
+    ultraschall.LM(18)
+    return ultraschall.GetSetPodcastEpisode_Attributes(table.unpack({...}))
+  end
+  function ultraschall.GetSetShownoteMarker_Attributes(...)
+    ultraschall.LM(18)
+    return ultraschall.GetSetShownoteMarker_Attributes(table.unpack({...}))
+  end
   function ultraschall.GetItemPosition(...)
     ultraschall.LM(19)
     return ultraschall.GetItemPosition(table.unpack({...}))

@@ -217,7 +217,7 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#TrackManager_ClearFilter">TrackManager_ClearFilter</a></td><td class="tdsm"><a href="#TrackManager_OpenClose">TrackManager_OpenClose</a></td><td class="tdsm"><a href="#TrackManager_SelectionFromList">TrackManager_SelectionFromList</a></td></tr><td class="tdsm"><a href="#TrackManager_SelectionFromProject">TrackManager_SelectionFromProject</a></td><td class="tdsm"><a href="#TrackManager_SetFilter">TrackManager_SetFilter</a></td><td class="tdsm"><a href="#TrackManager_ShowAll">TrackManager_ShowAll</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Ultraschall Specific"><a href="#Ultraschall Specific">^</a></a><strong> <u>Ultraschall Specific</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Followmode"><a href="#Followmode">^</a></a> Followmode</b>
 </td></tr><tr><td class="tdsm"><a href="#pause_follow_one_cycle">pause_follow_one_cycle</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LUFS Loudness Meter"><a href="#LUFS Loudness Meter">^</a></a> LUFS Loudness Meter</b>
-</td></tr><tr><td class="tdsm"><a href="#LUFS_Metering_AddEffect">LUFS_Metering_AddEffect</a></td><td class="tdsm"><a href="#LUFS_Metering_GetValues">LUFS_Metering_GetValues</a></td><td class="tdsm"><a href="#LUFS_Metering_MatchGain">LUFS_Metering_MatchGain</a></td></tr><td class="tdsm"><a href="#LUFS_Metering_MatchGain">LUFS_Metering_MatchGain</a></td><td class="tdsm"><a href="#LUFS_Metering_Reset">LUFS_Metering_Reset</a></td><td class="tdsm"><a href="#LUFS_Metering_Reset">LUFS_Metering_Reset</a></td></tr><td class="tdsm"><a href="#LUFS_Metering_SetValues">LUFS_Metering_SetValues</a></td><td class="tdsm"><a href="#LUFS_Metering_ShowEffect">LUFS_Metering_ShowEffect</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Routing"><a href="#Routing">^</a></a> Routing</b>
+</td></tr><tr><td class="tdsm"><a href="#LUFS_Metering_AddEffect">LUFS_Metering_AddEffect</a></td><td class="tdsm"><a href="#LUFS_Metering_GetValues">LUFS_Metering_GetValues</a></td><td class="tdsm"><a href="#LUFS_Metering_MatchGain">LUFS_Metering_MatchGain</a></td></tr><td class="tdsm"><a href="#LUFS_Metering_Reset">LUFS_Metering_Reset</a></td><td class="tdsm"><a href="#LUFS_Metering_SetValues">LUFS_Metering_SetValues</a></td><td class="tdsm"><a href="#LUFS_Metering_ShowEffect">LUFS_Metering_ShowEffect</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Routing"><a href="#Routing">^</a></a> Routing</b>
 </td></tr><tr><td class="tdsm"><a href="#GetAllAUXSendReceives2">GetAllAUXSendReceives2</a></td><td class="tdsm"><a href="#GetAllHWOuts2">GetAllHWOuts2</a></td><td class="tdsm"><a href="#GetAllMainSendStates2">GetAllMainSendStates2</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Soundboard"><a href="#Soundboard">^</a></a> Soundboard</b>
 </td></tr><tr><td class="tdsm"><a href="#SoundBoard_Play">SoundBoard_Play</a></td><td class="tdsm"><a href="#SoundBoard_PlayList_CurrentIndex">SoundBoard_PlayList_CurrentIndex</a></td><td class="tdsm"><a href="#SoundBoard_PlayList_Next">SoundBoard_PlayList_Next</a></td></tr><td class="tdsm"><a href="#SoundBoard_PlayList_Previous">SoundBoard_PlayList_Previous</a></td><td class="tdsm"><a href="#SoundBoard_PlayList_SetIndex">SoundBoard_PlayList_SetIndex</a></td><td class="tdsm"><a href="#SoundBoard_Stop">SoundBoard_Stop</a></td></tr><td class="tdsm"><a href="#SoundBoard_StopAllSounds">SoundBoard_StopAllSounds</a></td><td class="tdsm"><a href="#SoundBoard_TogglePlayPause">SoundBoard_TogglePlayPause</a></td><td class="tdsm"><a href="#SoundBoard_TogglePlayStop">SoundBoard_TogglePlayStop</a></td></tr><td class="tdsm"><a href="#SoundBoard_TogglePlay_FadeOutStop">SoundBoard_TogglePlay_FadeOutStop</a></td><td class="tdsm"><a href="#Soundboard_PlayFadeIn">Soundboard_PlayFadeIn</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track Management"><a href="#Track Management">^</a></a> Track Management</b>
 </td></tr><tr><td class="tdsm"><a href="#GetTypeOfTrack">GetTypeOfTrack</a></td><td class="tdsm"><a href="#IsTrackSoundboard">IsTrackSoundboard</a></td><td class="tdsm"><a href="#IsTrackStudioLink">IsTrackStudioLink</a></td></tr><td class="tdsm"><a href="#IsTrackStudioLinkOnAir">IsTrackStudioLinkOnAir</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Ultraschall.ini"><a href="#Ultraschall.ini">^</a></a> Ultraschall.ini</b>
@@ -22394,6 +22394,11 @@ returns -1 in case of an error<br>
 returns the regions at a given absolute-x-pixel-position. It sees regions according their graphical representation in the arrange-view, not just their position! Returned string will be "Regionidx\npos\nName\nRegionidx2\npos2\nName2\n...".<br>
 Returns only regions, no time markers or other markers!<br>
 Will return "", if no region has been found.<br>
+<br>
+Note: there might be an offset, when the drag-edges-cursor is activated at the edges of the "head" of the region.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;So if you notice the edge of the region before the drag-cursor is visible, this is actually precise.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the future, I might add an option to correct this offset, so getting the left-draggable areas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of the region is possible(it's complicated).<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<br>
 returns nil in case of an error<br>
 </div><br>      
@@ -25619,7 +25624,7 @@ stops the marker-menu background-script.<br>
 <a class="anch" id="AddNormalMarker"></a>
 <a href="#AddNormalMarker"> ^</a> 
 <img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>AddNormalMarker</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>AddNormalMarker</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> marker_number, <i>string</i> guid, <i>integer</i> normal_marker_idx = <em>ultraschall.AddNormalMarker</em>(<i>number</i> position, <i>integer</i> shown_number, <i>string</i> markertitle)</code></div>
 </div><p>
@@ -25904,7 +25909,8 @@ this can be used for non-linear podcasts, like "choose your own adventure"<br/>
 format is: "chap_number:description\nchap_number:description\n"<br/>
 chap_number is the number of the chapter in timeline-order<br/>
 it's possible to set multiple chapters as the previous chapters; chap_number is 0-based<br/>
-this can be used for non-linear podcasts, like "choose your own adventure"</td></tr>
+this can be used for non-linear podcasts, like "choose your own adventure"<br/>
+"chap_guid" - a unique guid for this chapter-marker; read-only</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>string</i> content</td></tr>
@@ -26228,7 +26234,7 @@ Returns -1 in case of an error<br>
 <a class="anch" id="AddShownoteMarker"></a>
 <a href="#AddShownoteMarker"> ^</a> 
 <img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.6.png" alt="Ultraschall version 4.6"><u><b>AddShownoteMarker</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>AddShownoteMarker</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> markernumber, <i>string</i> guid, <i>integer</i> shownotemarker_index = <em>ultraschall.AddShownoteMarker</em>(<i>number</i> pos, <i>string</i> name)</code></div>
 </div><p>
@@ -26450,7 +26456,8 @@ supported attributes are:<br/>
 "shwn_event_ics_data" - the event as ics-data-format; will NOT set other event-attributes; will not be checked for validity!<br/>
 "shwn_quote_cite_source" - a specific place you want to cite, like bookname + page + paragraph + line or something via webcite<br/>
 "shwn_quote" - a quote from the cite_source<br/>
-"shwn_wikidata_uri" - the uri to an entry to wikidata</td></tr>
+"shwn_wikidata_uri" - the uri to an entry to wikidata<br/>
+"shwn_guid" - a unique identifier for this shownote; read-only</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>string</i> content</td></tr>
@@ -31627,15 +31634,15 @@ If you have a MediaItemArray with items from track 1,2,3,4,5 and you give tracks
 <a href="#InsertMediaItemFromFile"> ^</a> 
 <img width="3%" src="gfx/reaper6.20.png" alt="Reaper version 6.20">
 <img width="3%" src="gfx/sws2.9.7.png" alt="SWS version 2.9.7">
-<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>InsertMediaItemFromFile</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>InsertMediaItemFromFile</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>integer</i> retval, <i>MediaItem</i> item, <i>number</i> endposition, <i>integer</i> numchannels, <i>integer</i> Samplerate, <i>string</i> Filetype, <i>number</i> editcursorposition, <i>MediaTrack</i> track = <em>ultraschall.InsertMediaItemFromFile</em>(<i>string</i> filename, <i>integer</i> track, <i>number</i> position, <i>number</i> length, <i>integer</i> editcursorpos, <i>optional</i> <i>number</i> offset)</code></div>
+<div class="l">Lua: <code> <i>integer</i> retval, <i>MediaItem</i> item, <i>number</i> endposition, <i>integer</i> numchannels, <i>integer</i> Samplerate, <i>string</i> Filetype, <i>number</i> editcursorposition, <i>MediaTrack</i> track = <em>ultraschall.InsertMediaItemFromFile</em>(<i>string</i> filename, <i>integer</i> track, <i>number</i> position, <i>number</i> length, <i>integer</i> editcursorpos, <i>optional</i> <i>number</i> offset, <i>optional</i> <i>boolean</i> looped, <i>optional</i> <i>boolean</i> locked)</code></div>
 </div><p>
 <div class="ch">
 Inserts the mediafile filename into the project at position in track<br>
 When giving an rpp-projectfile, it will be rendered by Reaper and inserted as subproject!<br>
 <br>
-Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when length isn't -1).&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Due API-limitations, it creates two undo-points: one for inserting the MediaItem and one for changing the length(when length isn't -1).<br>
 <br>
 Returns -1 in case of failure<br>
 </div><br>      
@@ -31682,7 +31689,8 @@ Returns -1 in case of failure<br>
 <tr><td class="pr"><i>integer</i> track</td></tr>
 <tr><td class="ch2">the track, in which the file shall be inserted<br/>
 0, insert the file into a newly inserted track after the last track<br/>
--1, insert the file into a newly inserted track before the first track</td></tr>
+-1, insert the file into a newly inserted track before the first track<br/>
+-2, insert into the last touched track</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>number</i> position</td></tr>
@@ -31702,6 +31710,14 @@ Returns -1 in case of failure<br>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>number</i> offset</td></tr>
 <tr><td class="ch2">an offset, to delay the insertion of the item, to overcome possible "too late"-starting of playback of item during recording</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> looped</td></tr>
+<tr><td class="ch2">true, loop source; false or nil, don't loop source</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> locked</td></tr>
+<tr><td class="ch2">true, lock MediaItem; false or nil, don't lock MediaItem</td></tr>
 </table>
 <br>
 </div>
@@ -35108,7 +35124,8 @@ supported attributes are:<br/>
 "epsd_descriptive_tags" - some tags, that describe the content of the episode, must separated by commas<br/>
 "epsd_sponsor" - the name of the sponsor of this episode<br/>
 "epsd_sponsor_url" - a link to the sponsor's website<br/>
-"epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by commas</td></tr>
+"epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by commas<br/>
+"epsd_guid" - a unique identifier for this episode; contains three guids in a row; read-only; can't be stored in presets!</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>string</i> additional_attribute</td></tr>
@@ -64383,32 +64400,6 @@ Hits programmatically the "Match Gain"-Button of Ultraschall's LUFS Loudness Met
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="LUFS_Metering_MatchGain"></a>
-<a href="#LUFS_Metering_MatchGain"> ^</a> 
-<img width="3%" src="gfx/reaper6.20.png" alt="Reaper version 6.20">
-<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>LUFS_Metering_MatchGain</b></u><br>			<p>
-<div class="cc">
-<div class="l">Lua: <code> <em>ultraschall.LUFS_Metering_MatchGain</em>()</code></div>
-</div><p>
-<div class="ch">
-Hits programmatically the "Match Gain"-Button of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="LUFS_Metering_Reset"></a>
-<a href="#LUFS_Metering_Reset"> ^</a> 
-<img width="3%" src="gfx/reaper6.20.png" alt="Reaper version 6.20">
-<img width="3%" src="gfx/ultraschall4.7.png" alt="Ultraschall version 4.7"><u><b>LUFS_Metering_Reset</b></u><br>			<p>
-<div class="cc">
-<div class="l">Lua: <code> <em>ultraschall.LUFS_Metering_Reset</em>()</code></div>
-</div><p>
-<div class="ch">
-Hits programmatically the "Reset"-Button of Ultraschall's LUFS Loudness Meter, when running(only available in Ultraschall-installations).<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
 <a class="anch" id="LUFS_Metering_Reset"></a>
 <a href="#LUFS_Metering_Reset"> ^</a> 
 <img width="3%" src="gfx/reaper6.20.png" alt="Reaper version 6.20">
@@ -68117,7 +68108,7 @@ Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as 
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.7  - 1583 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.7  - 1581 elements available <br></td></table>
         <hr>
       </div>
       <br>

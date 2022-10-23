@@ -4624,9 +4624,9 @@
              &65536=1, Show mouse editing-help(off), unchecked  
            
            > Context-menu in performane meter display:
-             &131072=0, Display CPU utilization as 100% = all cores fully utilized 
-             &131072=1, Display CPU utilization as 1.0c = 1 core fully utilized
-            
+             &131072=0, &262144=0, Display CPU utilization as 100% = all cores fully utilized 
+             &131072=1, &262144=0, Display CPU utilization as 1.0c = 1 core fully utilized
+             &131072=1, &262144=1, Display CPU utilization as 1.0! = longest block is realtime (worst case)
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -6700,7 +6700,8 @@
            >&256=0, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - unchecked
            >&256=1, Horizontal mousewheel over mixer scrolls tracks rather than arrangeview - checked
            
-           
+           >&512=0, When space key is pressed in plug-in text fields, send to main window - unchecked
+           >&512=1, When space key is pressed in plug-in text fields, send to main window - checked
            
           For more settings set in Preferences -> Mouse, see [transflags](#transflags), [trackselonmouse](#trackselonmouse), [loopclickmode](#loopclickmode), [scnameedit](#scnameedit)  
             

@@ -276,32 +276,13 @@ Note: Doesn't fucking work...
 readd in next version
 ToDo Marker Menu: 
   - only run action, when mouse-button has been released
-  - check, if someone dragged a marker, so a left-click does not run an action when dragging
+  - check, if someone dragged a marker, so a left-click does not run an action when dragging(for later, when left click is activated too...)
+    - Region: do not react, when the drag-cursor is shown(mouse hovering at the edges of a region) when left-click
   - prevent # and < > in the beginnings of the description of the marker-menu from the add/set/insert markermenu-entries-functions; do additional parameters instead, that enter it by themselves,
        including the Entry_X_SubMenu=start|end thing.
-  - add doubleclick-state as well
+  - add doubleclick-state as well -> later
 
-  - MarkerManagement: MarkerMenu\_GetLastClickState - gets the last clickstate, when someone has clicked markers/regions with markermenu running
-  - MarkerManagement: MarkerMenu\_GetLastTouchedMarkerRegion - gets the last clicked marker/region with markermenu running
-  - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
-  - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
-  - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
-  - MarkerManagement: MarkerMenu\_GetAvailableTypes - gets the marker- and region-types, that are currently added to the marker-menu
-  - MarkerManagement: MarkerMenu\_GetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
-  - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
-  - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
-  - MarkerManagement: MarkerMenu\_InsertEntry - inserts a new marker-entry into the marker menu for a custom marker/region
-  - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
-  - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
-  - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
-  - MarkerManagement: MarkerMenu\_RemoveSubMenu - removes a submenu from the marker-menu of a specific custom-marker/region
-  - MarkerManagement: MarkerMenu\_RemoveSubMenu\_DefaultMarkers - removes a submenu from the marker-menu of a specific default marker/region
-  - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
-  - MarkerManagement: MarkerMenu\_SetEntry\_DefaultMarkers - sets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
-  - MarkerManagement: MarkerMenu\_SetStartupAction - sets a startup-action in the markermenu for a specific custom marker/region
-  - MarkerManagement: MarkerMenu\_SetStartupAction\_DefaultMarkers - sets a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
-  - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
-  - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
+  
   - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST\_METADATA:"v1"-standard
@@ -310,16 +291,14 @@ ToDo Marker Menu:
   - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
   - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
   - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
-  - PodcastMetadata: GetSetChapterMarker\_Attributes - gets/sets metadata-attributes of a chapter-marker(using Ultraschall 4+ methods)
-  - PodcastMetadata: GetSetPodcast\_Attributes - gets/sets metadata-attributes of a podcast
-  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - gets/sets metadata-attributes of a podcast-episode
   - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
   - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetShownoteMarker\_Attributes - gets/sets additional attributes of a shownote-marker
   - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
   - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
   - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
   - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
+  
+  
 </TODO>
 
 ## Ultraschall Framework - Changelog
@@ -351,14 +330,40 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: GetGuidFromCustomRegionID - returns the guid from a custom-region-index
   - MarkerManagement: GetCustomMarkerIDFromGuid - returns the custom-marker-index and name from a guid
   - MarkerManagement: GetCustomRegionIDFromGuid - returns the custom-region-index and name from a guid
+  - MarkerManagement: MarkerMenu\_GetLastClickState - gets the last clickstate, when someone has clicked markers/regions with markermenu running
+  - MarkerManagement: MarkerMenu\_GetLastTouchedMarkerRegion - gets the last clicked marker/region with markermenu running
+  - MarkerManagement: MarkerMenu\_CountEntries - counts the number of entries in the markermenu for a specific custom marker/region
+  - MarkerManagement: MarkerMenu\_CountEntries\_DefaultMarkers - counts the number of entries in the markermenu for a specific default marker/region
+  - MarkerManagement: MarkerMenu\_Debug - shows in the ReaScript-console debug-messages like the right-clicked-marker-type, when using the marker/region-hijack-script(see MarkerMenu_Start)
+  - MarkerManagement: MarkerMenu\_GetAvailableTypes - gets the marker- and region-types, that are currently added to the marker-menu
+  - MarkerManagement: MarkerMenu\_GetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
+  - MarkerManagement: MarkerMenu\_InsertEntry - inserts a new marker-entry into the marker menu for a custom marker/region
+  - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
+  - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_RemoveSubMenu - removes a submenu from the marker-menu of a specific custom-marker/region
+  - MarkerManagement: MarkerMenu\_RemoveSubMenu\_DefaultMarkers - removes a submenu from the marker-menu of a specific default marker/region
+  - MarkerManagement: MarkerMenu\_SetEntry - gets the action and description of a marker-entry for a certain custom-marker/region-type
+  - MarkerManagement: MarkerMenu\_SetEntry\_DefaultMarkers - sets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_SetStartupAction - sets a startup-action in the markermenu for a specific custom marker/region
+  - MarkerManagement: MarkerMenu\_SetStartupAction\_DefaultMarkers - sets a startup-action in the markermenu for a certain default-marker/region-type from Ultraschall
+  - MarkerManagement: MarkerMenu\_Start - starts a background-script that hijacks the marker-context-menu when rightclicking markers/regions
+  - MarkerManagement: MarkerMenu\_Stop - stops the background-script that hijacks the marker-context-menu when rightclicking markers/regions
   - MarkerManagement: RenumerateNormalMarkers - renumerates the shown-number of all normal-markers
-  - MarkerManagement: RenumerateShownoteMarkers - renumerates the shown-number of all shownote-markers
+  - MarkerManagement: RenumerateShownoteMarkers - renumerates the shown-number of all shownote-markers  
   - MediaItem\_Takes: GetProjectPosByTakeSourcePos - gets the project-position of a take's source-position, obeying stretch-markers, offset, etc
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - gets the source-position of a take by the project-position, obeying stretch-markers, offset, etc
+  - MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems
   - Navigation: GetNextClosestItemEnd - gets the next closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
   - Navigation: GetNextClosestItemStart - gets the next closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
   - Navigation: GetPreviousClosestItemEnd - gets the previous closest item-end within given tracks and from a specific position(requested by Moritz Klenk)
   - Navigation: GetPreviousClosestItemStart - gets the previous closest item-start within given tracks and from a specific position(requested by Moritz Klenk)
+  - PodcastMetadata: GetSetChapterMarker\_Attributes - gets/sets metadata-attributes of a chapter-marker(using Ultraschall 4+ methods)
+  - PodcastMetadata: GetSetPodcast\_Attributes - gets/sets metadata-attributes of a podcast
+  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - gets/sets metadata-attributes of a podcast-episode
+  - PodcastMetadata: GetSetShownoteMarker\_Attributes - gets/sets additional attributes of a shownote-marker
   - Rendering: ResolvePresetName - resolves the name of a preset into the correct case-sensitivity, as stored in reaper-render.ini
   - Ultraschall: LUFS\_Metering\_AddEffect - adds the Ultraschall's LUFS Loudness Metering-JSFX
   - Ultraschall: LUFS\_Metering\_GetValues - gets currently measured LUFS-values of Ultraschall's LUFS Loudness Metering-JSFX, when running
@@ -381,16 +386,19 @@ Has now 1532 functions, with XX new ones
   - DeveloperTools: SortLinesInClipboardText - lost the last line before sorting -> fixed
   - DeveloperTools: Theme Parameter Monitor - updates now the list immediately, when the current theme is changed
   - DeveloperTools: Trackstatechunk from clip to track under mouse - copied trackstatechunk into clipboard instead of setting it -> fixed
-  - Docs: Reaper Internals - updated to Reaper 6.64 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals
+  - Docs: Reaper Internals - updated to Reaper 6.68 and ReaImGui 0.6.2, added the various misc-docs to a dedicated page in Reaper-Internals
   - Docs: render-strings - updated to Reaper 6.62(includes wmf now and FFMPEG-command-line-options)
   - Docs: misc\_docs-folder/Reaper-Render-Strings-docs\_Jul2018.txt - removed, due being outdated  
   - EventManager: EventManager\_GetLastCheckfunctionState2 - improved speed
+  - EventManager: main script - stopping the eventmanager could have lead to an error message -> fixed(thanks to rstockm)
   - HelperFunctions: Base64\_Decoder - sped up massively for longer strings(up to 94% faster)
   - HelperFunctions: Base64\_Encoder - sped up massively for longer strings(up to 90% faster)
   - HelperFunctions: ConvertAscii2Hex - sped up massively for longer strings
   - HelperFunctions: ConvertHex2Ascii - sped up massively for longer strings
-  - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1
+  - Helperfunctions: OpenURL - did return true in case of success, though the docs state integer should be returned -> fixed now, returns 1  
   - MarkerManagement: AddEditMarker - added guid to name due old code forgotten to remove; some improvements on edittitle -> fixed now
+  - MarkerManagement: AddNormalMarker - adds a unique guid for this marker to be used for chapters markers in export
+  - MarkerManagement: AddShownoteMarker - adds a unique guid for this shownote to be used in export
   - MarkerManagement: DeleteNormalMarker - did not correctly delete the first normal marker, when it was the first one in the project -> fixed
   - MarkerManagement: EnumerateEditMarker - some improvements on edittitle
   - MarkerManagement: GetMarkerByScreenCoordinates - returns now an additional retval with the marker-number(s); takes now scale-factor into account  
@@ -403,8 +411,8 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: SetEditMarker - some improvements on edittitle
   - MarkerManagement: SetShownoteMarker - allows now setting the shown_number of a shownote as well
   - MarkerManagement: StoreTemporaryMarker - supports now different positions(editcursor, play, mouse-position) to get the marker to store from; marker_id should be 0-based -> fixed
+  - MediaItemManagement: InsertMediaItemFromFile - rewritten from scratch and should work properly now; supports now insertion into last touched track and setting looped/locked state
   - MediaItemManagement: RippleCut - supports now optional parameter to add crossfade to the edit(requested by NiklasM)
-  - MediaItemManagement: ToggleCrossfadeStateForSplits - toggles/sets the option for crossfades on splits of MediaItems
   - MetaData: GetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - MetaData: SetGuidExtState - didn't store extstates, when not using a guid as key -> fixed
   - Navigation: GetClosestNextMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
@@ -412,6 +420,7 @@ Has now 1532 functions, with XX new ones
   - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
+  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
   - Rendering: CreateNewRenderTable - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: CreateRenderCFG\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
   - Rendering: CreateRenderCFG\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
@@ -421,7 +430,6 @@ Has now 1532 functions, with XX new ones
   - Rendering: CreateRenderCFG\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WebMVideo - renamed to CreateRenderCFG_WebM_Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though)
-  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
   - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
   - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
