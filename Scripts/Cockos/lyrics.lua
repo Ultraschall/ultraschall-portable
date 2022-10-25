@@ -20,7 +20,7 @@ _capm,_capb=1,1
 _caret={1,0}
 _clock=0
 _bullet=utf8.char(0x2219) -- 0x2022 or 0x2219
-_downarrow=utf8.char(0x23F7)  -- 0x2BC6 or 0x23F7
+_downarrow=utf8.char(0x2228)  -- 0x2BC6 or 0x23F7
 ENSURE_MIDI_ITEMS,IMPORT_LYRICS,EXPORT_LYRICS=42069,42070,42071
 
 gfx.init("MIDI Lyrics", 
