@@ -305,15 +305,50 @@ ToDo Marker Menu:
 
 ## Ultraschall Framework - Changelog
 
-### 4.7 - "Pearl Jam - Alive" - 18th of September 2022
+### 4.7 - "Pearl Jam - Alive" - 16th of October 2022
 
-Has now 1532 functions, with XX new ones
+Has now 1590 functions, with 58 new ones
 
 **new in this release:**  
 
-  - **Bla**  
-  Bla
+  - **Marker Menu**  
+  You can code now your own left-click marker-context-menus. Add Entries with MarkerMenu\_InsertEntry and MarkerMenu\_InsertEntry\_DefaultMarkers
+  and start the menu with MarkerMenu\_Start. You can add new menuentries or remove them during runtime. So if you add a new marker-menu-entry, it will 
+  be shown in the menu the next time the user hits left-click on a marker.  
+  And: you can create menus for custom markers as well. So a custom marker called \_ShowNote: can have a different menu than \_AliceInWonderland:
+  It also includes regions.  
+  And action-marker.  
   
+  - **ShowNote/Podcast Metadata**  
+  Relevant for podcasting use-cases, you can now add metadata to shownote/normal-markers as well as podcast/podcast-episode metadata.  
+  Future versions will include export functions for putting them into the mediafile's metadata.  
+  
+  - **EventManager - Debug**  
+  New features for debugging EventManager stuff, like getting additional states and execution-times. So you can check for performance. 
+  And if you don't want to code one yourself: there's a EventManager monitoring-script in the developer-tools, which shows you the 
+  execution-times for each check-function-cycle AND the time from after the end of the execution-time until the next one.  
+  This allows you to tweak performance for your check-functions. The monitoring-tool even gives you a hint, how low the execution-times  
+  must be for Reaper's UI not lagging.
+  
+  - **Get Project-time by MediaSource-time and the other way round**  
+  Get the exact project position from a given source-position or the exact source-position from a project-position.  
+  So inserting take-markers at project-position is now possible. Or other cool stuff, where you need to convert the 
+  project-position into take-position.
+  
+  - **ScaleFromDPIFromScale**  
+  You can convert now the dpi-value currently set into its corresponding scale-value vice versa. With that, you can always scale 
+  your script's ui properly.  
+  
+  - **Base64De/Encoder, ASCII2HEX2ASCII-enocders**  
+  Used to be slow on bigger strings. Not anymore. Sped up by magnitudes...
+  
+  - **Create/Get-Render-CFG-functions**  
+  FFMPEG-support added, NONE as video/audio-format added, wmf-support added  
+  
+  - **Render functions**  
+  Support now marker-rendering and fade-in/out-feature  
+  
+  - **Bugfixes Bugfixes Bugfixes**    
 
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
@@ -342,7 +377,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
   - MarkerManagement: MarkerMenu\_InsertEntry - inserts a new marker-entry into the marker menu for a custom marker/region
-  - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
+  - MarkerManagement: MarkerMenu\_InsertEntry\_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveSubMenu - removes a submenu from the marker-menu of a specific custom-marker/region

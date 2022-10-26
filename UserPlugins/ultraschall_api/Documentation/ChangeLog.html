@@ -35,12 +35,33 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.7 - "Pearl Jam - Alive" - 18th of September 2022</h3>
-<p>Has now 1532 functions, with XX new ones</p>
+<h3>4.7 - "Pearl Jam - Alive" - 16th of October 2022</h3>
+<p>Has now 1590 functions, with 58 new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
-<li><strong>Bla</strong><br />
-Bla</li>
+<li><p><strong>Marker Menu</strong><br />
+You can code now your own left-click marker-context-menus. Add Entries with MarkerMenu_InsertEntry and MarkerMenu_InsertEntry_DefaultMarkers and start the menu with MarkerMenu_Start. You can add new menuentries or remove them during runtime. So if you add a new marker-menu-entry, it will be shown in the menu the next time the user hits left-click on a marker.<br />
+And: you can create menus for custom markers as well. So a custom marker called _ShowNote: can have a different menu than _AliceInWonderland: It also includes regions.<br />
+And action-marker.</p></li>
+<li><p><strong>ShowNote/Podcast Metadata</strong><br />
+Relevant for podcasting use-cases, you can now add metadata to shownote/normal-markers as well as podcast/podcast-episode metadata.<br />
+Future versions will include export functions for putting them into the mediafile's metadata.</p></li>
+<li><p><strong>EventManager - Debug</strong><br />
+New features for debugging EventManager stuff, like getting additional states and execution-times. So you can check for performance. And if you don't want to code one yourself: there's a EventManager monitoring-script in the developer-tools, which shows you the execution-times for each check-function-cycle AND the time from after the end of the execution-time until the next one.<br />
+This allows you to tweak performance for your check-functions. The monitoring-tool even gives you a hint, how low the execution-times<br />
+must be for Reaper's UI not lagging.</p></li>
+<li><p><strong>Get Project-time by MediaSource-time and the other way round</strong><br />
+Get the exact project position from a given source-position or the exact source-position from a project-position.<br />
+So inserting take-markers at project-position is now possible. Or other cool stuff, where you need to convert the project-position into take-position.</p></li>
+<li><p><strong>ScaleFromDPIFromScale</strong><br />
+You can convert now the dpi-value currently set into its corresponding scale-value vice versa. With that, you can always scale your script's ui properly.</p></li>
+<li><p><strong>Base64De/Encoder, ASCII2HEX2ASCII-enocders</strong><br />
+Used to be slow on bigger strings. Not anymore. Sped up by magnitudes...</p></li>
+<li><p><strong>Create/Get-Render-CFG-functions</strong><br />
+FFMPEG-support added, NONE as video/audio-format added, wmf-support added</p></li>
+<li><p><strong>Render functions</strong><br />
+Support now marker-rendering and fade-in/out-feature</p></li>
+<li><p><strong>Bugfixes Bugfixes Bugfixes</strong></p></li>
 </ul>
 <h4>New features in 4.7</h4>
 <ul>
