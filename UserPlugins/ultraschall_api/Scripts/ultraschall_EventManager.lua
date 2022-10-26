@@ -676,3 +676,4 @@ reaper.DeleteExtState("ultraschall_eventmanager", "eventstop_scriptidentifier", 
 InitialiseStartupEvents()  -- load StartUp Events
 UpdateEventList_ExtState() -- update the EventList-extstate, which is used by Enumerate-functions of the EventManager-API-functions
 main()                     -- start the checking
+

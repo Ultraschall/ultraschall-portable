@@ -1026,16 +1026,16 @@ function ultraschall.GetRenderCFG_Settings_WAVPACK(rendercfg)
 end
 
 
-function ultraschall.GetRenderCFG_Settings_WebMVideo(rendercfg)
+function ultraschall.GetRenderCFG_Settings_WebM_Video(rendercfg)
   --[[
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-    <slug>GetRenderCFG_Settings_WebMVideo</slug>
+    <slug>GetRenderCFG_Settings_WebM_Video</slug>
     <requires>
-      Ultraschall=4.2
-      Reaper=5.975
+      Ultraschall=4.7
+      Reaper=6.62
       Lua=5.3
     </requires>
-    <functioncall>integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, integer AudioCodec = ultraschall.GetRenderCFG_Settings_WebMVideo(string rendercfg)</functioncall>
+    <functioncall>integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, integer AudioCodec, string VideoExportOptions, string AudioExportOptions = ultraschall.GetRenderCFG_Settings_WebM_Video(string rendercfg)</functioncall>
     <description>
       Returns the settings stored in a render-cfg-string for WEBM_Video.
       
@@ -1053,9 +1053,18 @@ function ultraschall.GetRenderCFG_Settings_WebMVideo(rendercfg)
       integer VideoCodec - the video-codec used
                          - 0, VP8
                          - 1, VP9 (needs FFMPEG 4.1.3 installed)
+                         - 2, NONE
       integer AudioCodec - the video-codec used
                          - 0, VORBIS
                          - 1, OPUS (needs FFMPEG 4.1.3 installed)
+                         - 2, NONE
+      string VideoExportOptions - the options for FFMPEG to apply to the video; examples: 
+                                - g=1 ; all keyframes
+                                - crf=1  ; h264 high quality
+                                - crf=51 ; h264 small size
+      string AudioExportOptions - the options for FFMPEG to apply to the audio; examples: 
+                                - q=0 ; mp3 VBR highest
+                                - q=9 ; mp3 VBR lowest
     </retvals>
     <parameters>
       string render_cfg - the render-cfg-string, that contains the webm-settings
@@ -1069,14 +1078,14 @@ function ultraschall.GetRenderCFG_Settings_WebMVideo(rendercfg)
     <tags>render management, get, settings, rendercfg, renderstring, webm, video</tags>
   </US_DocBloc>
   ]]
-  if type(rendercfg)~="string" then ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebMVideo", "rendercfg", "must be a string", -1) return -1 end
-  local Decoded_string
+  if type(rendercfg)~="string" then ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebM_Video", "rendercfg", "must be a string", -1) return -1 end
+  local Decoded_string, VideoCodec, AudioCodec
   local num_integers, VidKBPS, AudKBPS, Width, Height, FPS, AspectRatio
   Decoded_string = ultraschall.Base64_Decoder(rendercfg)
-  if Decoded_string==nil or Decoded_string:sub(1,4)~="PMFF" or string.byte(Decoded_string:sub(5,5))~=6 then ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebMVideo", "rendercfg", "not a render-cfg-string of the format webm-video", -2) return -1 end
+  if Decoded_string==nil or Decoded_string:sub(1,4)~="PMFF" or string.byte(Decoded_string:sub(5,5))~=6 then ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebM_Video", "rendercfg", "not a render-cfg-string of the format webm-video", -2) return -1 end
   
   if Decoded_string:len()==4 then
-    ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebMVideo", "rendercfg", "can't make out, which video format is chosen", -3) return nil
+    ultraschall.AddErrorMessage("GetRenderCFG_Settings_WebM_Video", "rendercfg", "can't make out, which video format is chosen", -3) return nil
   end
   
   VideoCodec=string.byte(Decoded_string:sub(9,9))  
@@ -1089,8 +1098,13 @@ function ultraschall.GetRenderCFG_Settings_WebMVideo(rendercfg)
   FPS=ultraschall.IntToDouble(FPS[1])
   AspectRatio=string.byte(Decoded_string:sub(37,37))~=0
   
-  return VidKBPS[1], AudKBPS[1], Width[1], Height[1], FPS, AspectRatio, VideoCodec, AudioCodec
+  local FFMPEG_Options=Decoded_string:sub(45, -1)
+  local FFMPEG_Options_Audio, FFMPEG_Options_Video=FFMPEG_Options:match("(.-)\0(.-)\0")
+  
+  return VidKBPS[1], AudKBPS[1], Width[1], Height[1], FPS, AspectRatio, VideoCodec, AudioCodec, FFMPEG_Options_Video, FFMPEG_Options_Audio
 end
+
+ultraschall.GetRenderCFG_Settings_WebMVideo=ultraschall.GetRenderCFG_Settings_WebM_Video
 
 
 function ultraschall.GetRenderCFG_Settings_MKV_Video(rendercfg)
@@ -1118,6 +1132,7 @@ function ultraschall.GetRenderCFG_Settings_MKV_Video(rendercfg)
                           - 3, MPEG-2 (needs FFMPEG 4.1.3 installed)
                           - 4, H.264 (needs FFMPEG 4.1.3 installed)
                           - 5, XviD (needs FFMPEG 4.1.3 installed)
+                          - 6, NONE
       integer MJPEG_quality - the MJPEG-quality of the MKV-video, if VIDEO_CODEC=2 or when VIDEO_CODEC=4
       integer AUDIO_CODEC - the audio-codec of the MKV-video
                           - 0, 16 bit PCM
@@ -1125,6 +1140,7 @@ function ultraschall.GetRenderCFG_Settings_MKV_Video(rendercfg)
                           - 2, 32 bit FP
                           - 3, MP3 (needs FFMPEG 4.1.3 installed)
                           - 4, AAC (needs FFMPEG 4.1.3 installed)
+                          - 5, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -1160,10 +1176,14 @@ function ultraschall.GetRenderCFG_Settings_MKV_Video(rendercfg)
   end
    
   VideoCodec=string.byte(Decoded_string:sub(9,9))-2
+  if VideoCodec==4 then VideoCodec=6 end
   if VideoCodec==-2 then VideoCodec=4 end
   if VideoCodec==-1 then VideoCodec=5 end
+  
   num_integers, MJPEG_quality= ultraschall.ConvertStringToIntegers(Decoded_string:sub(41,44), 4)
   AudioCodec=string.byte(Decoded_string:sub(17,17))-2
+  
+  if AudioCodec==3 then AudioCodec=5 end
   if AudioCodec==-2 then AudioCodec=3 end
   if AudioCodec==-1 then AudioCodec=4 end
   num_integers, Width  = ultraschall.ConvertStringToIntegers(Decoded_string:sub(25,28), 4)
@@ -1302,6 +1322,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
                           - 2, 32 bit FP
                           - 3, AAC(only with FFMPEG 4.1.3 installed)
                           - 4, MP3(only with FFMPEG 4.1.3 installed)
+                          - 5, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -1310,6 +1331,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
                          - 0, H.264(only with FFMPEG 4.1.3 installed)
                          - 1, MPEG-2(only with FFMPEG 4.1.3 installed)
                          - 2, MJPEG
+                         - 3, NONE
       string VideoExportOptions - the options for FFMPEG to apply to the video; examples: 
                                 - g=1 ; all keyframes
                                 - crf=1  ; h264 high quality
@@ -1343,6 +1365,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
   VideoCodec=string.byte(Decoded_string:sub(9,9))
   num_integers, MJPEG_quality= ultraschall.ConvertStringToIntegers(Decoded_string:sub(41,44), 4)
   AudioCodec=string.byte(Decoded_string:sub(17,17))-2
+  if AudioCodec==3 then AudioCodec=5 end
   if AudioCodec==-2 then AudioCodec=3 end
   if AudioCodec==-1 then AudioCodec=4 end
   num_integers, Width  = ultraschall.ConvertStringToIntegers(Decoded_string:sub(25,28), 4)
@@ -1516,16 +1539,16 @@ end
 --A=ultraschall.CreateRenderCFG_LCF(10,10,120,true,"Tudelu                                                         A")
 
 
-function ultraschall.CreateRenderCFG_WebMVideo(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoCodec, AudioCodec)
+function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoCodec, AudioCodec, VideoOptions, AudioOptions)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>CreateRenderCFG_WebMVideo</slug>
+  <slug>CreateRenderCFG_WebM_Video</slug>
   <requires>
     Ultraschall=4.3
-    Reaper=5.975
+    Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebMVideo(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
+  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebM_Video(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the WebM-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1547,10 +1570,19 @@ function ultraschall.CreateRenderCFG_WebMVideo(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, 
                        - nil, VP8
                        - 1, VP8
                        - 2, VP9(needs FFMPEG 4.1.3 to be installed)
+                       - 3, NONE
     optional integer AudioCodec - the audiocodec to use for the video
                        - nil, VORBIS
                        - 1, VORBIS
                        - 2, OPUS(needs FFMPEG 4.1.3 to be installed)
+                       - 3, NONE
+    optional string VideoOptions - additional FFMPEG-options for rendering the video; examples:
+                                 - g=1 ; all keyframes
+                                 - crf=1  ; h264 high quality
+                                 - crf=51 ; h264 small size
+    optional string AudioOptions - additional FFMPEG-options for rendering the video; examples:
+                                 - q=0 ; mp3 VBR highest
+                                 - q=9 ; mp3 VBR lowest    
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -1561,23 +1593,29 @@ function ultraschall.CreateRenderCFG_WebMVideo(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, 
   <tags>render management, create, render, outputformat, webm</tags>
 </US_DocBloc>
 ]]
-  if math.type(VIDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VIDKBPS", "Must be an integer!", -2) return nil end
-  if math.type(AUDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AUDKBPS", "Must be an integer!", -3) return nil end
-  if math.type(WIDTH)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "WIDTH", "Must be an integer!", -4) return nil end
-  if math.type(HEIGHT)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "HEIGHT", "Must be an integer!", -5) return nil end
-  if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -6) return nil end
-  if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AspectRatio", "Must be a boolean!", -7) return nil end
-  if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VIDKBPS", "Must be between 1 and 2147483647.", -8) return nil end
-  if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AUDKBPS", "Must be between 1 and 2147483647.", -9) return nil end
-  if WIDTH<1 or WIDTH>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "WIDTH", "Must be between 1 and 2147483647.", -10) return nil end
-  if HEIGHT<1 or HEIGHT>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "HEIGHT", "Must be between 1 and 2147483647.", -11) return nil end
-  if FPS<0.01 or FPS>2000.00 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "FPS", "Ultraschall-API supports only fps-values between 0.01 and 2000.00, sorry.", -12) return nil end
-  if VideoCodec~=nil and math.type(VideoCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VideoCodec", "Must be an integer!", -13) return nil end  
+  if math.type(VIDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VIDKBPS", "Must be an integer!", -2) return nil end
+  if math.type(AUDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AUDKBPS", "Must be an integer!", -3) return nil end
+  if math.type(WIDTH)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "WIDTH", "Must be an integer!", -4) return nil end
+  if math.type(HEIGHT)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "HEIGHT", "Must be an integer!", -5) return nil end
+  if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -6) return nil end
+  if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AspectRatio", "Must be a boolean!", -7) return nil end
+  if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VIDKBPS", "Must be between 1 and 2147483647.", -8) return nil end
+  if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AUDKBPS", "Must be between 1 and 2147483647.", -9) return nil end
+  if WIDTH<1 or WIDTH>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "WIDTH", "Must be between 1 and 2147483647.", -10) return nil end
+  if HEIGHT<1 or HEIGHT>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "HEIGHT", "Must be between 1 and 2147483647.", -11) return nil end
+  if FPS<0.01 or FPS>2000.00 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "FPS", "Ultraschall-API supports only fps-values between 0.01 and 2000.00, sorry.", -12) return nil end
+  
+  if VideoOptions~=nil and type(VideoOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VideoOptions", "Must be a string with maximum length of 255 characters!", -14) return nil end
+  if AudioOptions~=nil and type(AudioOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AudioOptions", "Must be a string with maximum length of 255 characters!", -15) return nil end
+  if VideoOptions==nil then VideoOptions="" end
+  if AudioOptions==nil then AudioOptions="" end
+  
+  if VideoCodec~=nil and math.type(VideoCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VideoCodec", "Must be an integer!", -13) return nil end  
   if VideoCodec==nil then VideoCodec=0 end
-  if AudioCodec~=nil and math.type(AudioCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AudioCodec", "Must be an integer!", -14) return nil end
+  if AudioCodec~=nil and math.type(AudioCodec)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AudioCodec", "Must be an integer!", -14) return nil end
   if AudioCodec==nil then AudioCodec=0 end
-  if VideoCodec<1 or VideoCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "VideoCodec", "Must be between 1 and 2", -15) return nil end  
-  if AudioCodec<1 or AudioCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_WebMVideo", "AudioCodec", "Must be between 1 and 2", -16) return nil end
+  if VideoCodec<1 or VideoCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VideoCodec", "Must be between 1 and 2", -15) return nil end  
+  if AudioCodec<1 or AudioCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AudioCodec", "Must be between 1 and 2", -16) return nil end
 
   WIDTH=ultraschall.ConvertIntegerIntoString2(4, WIDTH)
   HEIGHT=ultraschall.ConvertIntegerIntoString2(4, HEIGHT)
@@ -1593,10 +1631,12 @@ function ultraschall.CreateRenderCFG_WebMVideo(VIDKBPS, AUDKBPS, WIDTH, HEIGHT, 
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
 end
 
---LLL=ultraschall.CreateRenderCFG_WebMVideo(1, 1, 1, 1, 1, true)
+--LLL=ultraschall.CreateRenderCFG_WebM_Video(1, 1, 1, 1, 1, true)
+
+ultraschall.CreateRenderCFG_WebMVideo=ultraschall.CreateRenderCFG_WebM_Video
 
 
 function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioCodec, WIDTH, HEIGHT, FPS, AspectRatio, VIDKBPS, AUDKBPS, VideoOptions, AudioOptions)
@@ -1627,6 +1667,7 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
                        -   4, MPEG-2
                        -   5, H.264
                        -   6, XviD
+                       -   7, NONE
     integer MJPEG_quality - set here the MJPEG-quality in percent, when VideoCodec=3; otherwise just set it to 0
     integer AudioCodec - the audiocodec to use for the video
                        - 1, 16 bit PCM
@@ -1634,6 +1675,7 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
                        - 3, 32 bit FP
                        - 4, MP3
                        - 5, AAC
+                       - 6, NONE
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     number FPS - the fps of the video; must be a double-precision-float value (e.g. 9.09 or 25.00); 0.01 to 2000.00
@@ -1665,21 +1707,23 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
   if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -6) return nil end
   if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "AspectRatio", "Must be a boolean!", -7) return nil end
   
-  if VideoCodec<1 or VideoCodec>6 then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "VideoCodec", "Must be between 1 and 6", -8) return nil end
+  if VideoCodec<1 or VideoCodec>7 then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "VideoCodec", "Must be between 1 and 6", -8) return nil end
   if VideoCodec==1 then VideoCodec=2 
   elseif VideoCodec==2 then VideoCodec=3 
   elseif VideoCodec==3 then VideoCodec=4 
   elseif VideoCodec==4 then VideoCodec=5 
   elseif VideoCodec==5 then VideoCodec=0 
   elseif VideoCodec==6 then VideoCodec=1 
+  elseif VideoCodec==7 then VideoCodec=6
   end
   if MJPEG_quality<0 or MJPEG_quality>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "MJPEG_quality", "Must be between 1 and 2147483647", -9) return nil end
-  if AudioCodec<1 or AudioCodec>5 then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "AudioCodec", "Must be between 1 and 5", -10) return nil end
+  if AudioCodec<1 or AudioCodec>6 then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "AudioCodec", "Must be between 1 and 5", -10) return nil end
   if AudioCodec==1 then AudioCodec=2 
   elseif AudioCodec==2 then AudioCodec=3 
   elseif AudioCodec==3 then AudioCodec=4 
   elseif AudioCodec==4 then AudioCodec=0 
   elseif AudioCodec==5 then AudioCodec=1 
+  elseif AudioCodec==6 then AudioCodec=5
   end  
   
   if VIDKBPS~=nil and math.type(VIDKBPS)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_MKV_Video", "VIDKBPS", "Must be an integer!", -14) return nil end
@@ -1743,6 +1787,7 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
                        - 1, MJPEG
                        - 2, H.264(needs FFMPEG 4.1.3 installed)
                        - 3, MPEG-2(needs FFMPEG 4.1.3 installed)
+                       - 4, NONE
     integer MJPEG_quality - set here the MJPEG-quality in percent
     integer AudioCodec - the audiocodec to use for the video
                        - 1, 16 bit PCM
@@ -1750,6 +1795,7 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
                        - 3, 32 bit FP
                        - 4, AAC(needs FFMPEG 4.1.3 installed)
                        - 5, MP3(needs FFMPEG 4.1.3 installed)
+                       - 6, NONE
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     number FPS - the fps of the video; must be a double-precision-float value (e.g. 9.09 or 25.00); 0.01 to 2000.00
@@ -1788,18 +1834,20 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
   if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "VIDKBPS", "Must be between 1 and 2147483647.", -16) return nil end
   if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "AUDKBPS", "Must be between 1 and 2147483647.", -17) return nil end
   
-  if VideoCodec<1 or VideoCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "VideoCodec", "Must be between 1 and 3", -8) return nil end
+  if VideoCodec<1 or VideoCodec>4 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "VideoCodec", "Must be between 1 and 3", -8) return nil end
   if VideoCodec==1 then VideoCodec=2 
   elseif VideoCodec==2 then VideoCodec=0 
   elseif VideoCodec==3 then VideoCodec=1 
+  elseif VideoCodec==4 then VideoCodec=3
   end
   if MJPEG_quality<0 or MJPEG_quality>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "MJPEG_quality", "Must be between 1 and 2147483647", -9) return nil end
-  if AudioCodec<1 or AudioCodec>5 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "AudioCodec", "Must be between 1 and 5", -10) return nil end
+  if AudioCodec<1 or AudioCodec>6 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "AudioCodec", "Must be between 1 and 5", -10) return nil end
   if AudioCodec==1 then AudioCodec=2
   elseif AudioCodec==2 then AudioCodec=3 
   elseif AudioCodec==3 then AudioCodec=4   
   elseif AudioCodec==4 then AudioCodec=0 
   elseif AudioCodec==5 then AudioCodec=1 
+  elseif AudioCodec==6 then AudioCodec=5
   end
 
   if WIDTH<1 or WIDTH>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_QTMOVMP4_Video", "WIDTH", "Must be between 1 and 2147483647.", -11) return nil end
@@ -1858,8 +1906,10 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
                       - 2, MJPEG
                       - 3, FFV1 (lossless)
                       - 4, Hufyuv (lossless)
-                      - 5, XviD (only with FFMPEG 4.1.3 installed)
-                      - 6, H.264 (only with FFMPEG 4.1.3 installed)
+                      - 5, MPEG-2
+                      - 6, XviD (only with FFMPEG 4.1.3 installed)
+                      - 7, H.264 (only with FFMPEG 4.1.3 installed)
+                      - 8, NONE
     integer MJPEG_quality - set here the MJPEG-quality in percent when VideoCodec=2, otherwise just set it to 0
     integer AudioCodec - the audiocodec to use for the video
                        - 1, 16 bit PCM
@@ -1868,6 +1918,7 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
                        - 4, MP3 (only with FFMPEG 4.1.3 installed)
                        - 5, AAC (only with FFMPEG 4.1.3 installed)
                        - 6, AC3 (only with FFMPEG 4.1.3 installed)
+                       - 7, NONE
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     number FPS - the fps of the video; must be a double-precision-float value (e.g. 9.09 or 25.00); 0.01 to 2000.00
@@ -1897,14 +1948,16 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
   if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -6) return nil end
   if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "AspectRatio", "Must be a boolean!", -7) return nil end
   
-  if VideoCodec<1 or VideoCodec>7 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "VideoCodec", "Must be between 1 and 7", -8) return nil end
+  if VideoCodec<1 or VideoCodec>8 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "VideoCodec", "Must be between 1 and 7", -8) return nil end
   if VideoCodec==6 then VideoCodec=-1 end
   if VideoCodec==7 then VideoCodec=0 end
+  if VideoCodec==8 then VideoCodec=6 end
   if MJPEG_quality<0 or MJPEG_quality>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "MJPEG_quality", "Must be between 1 and 2147483647", -9) return nil end
-  if AudioCodec<1 or AudioCodec>6 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "AudioCodec", "Must be between 1 and 6", -10) return nil end
+  if AudioCodec<1 or AudioCodec>7 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "AudioCodec", "Must be between 1 and 6", -10) return nil end
   if AudioCodec==4 then AudioCodec=-2 end
   if AudioCodec==5 then AudioCodec=-1 end
   if AudioCodec==6 then AudioCodec=0 end
+  if AudioCodec==7 then AudioCodec=5 end
 
   if WIDTH<1 or WIDTH>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "WIDTH", "Must be between 1 and 2147483647.", -11) return nil end
   if HEIGHT<1 or HEIGHT>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_AVI_Video", "HEIGHT", "Must be between 1 and 2147483647.", -12) return nil end
@@ -2373,8 +2426,8 @@ function ultraschall.GetRenderTable_Project()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_Project</slug>
   <requires>
-    Ultraschall=4.4
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -2394,6 +2447,8 @@ function ultraschall.GetRenderTable_Project()
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 
@@ -2408,6 +2463,26 @@ function ultraschall.GetRenderTable_Project()
             RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
             RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
             RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
@@ -2555,8 +2630,18 @@ function ultraschall.GetRenderTable_Project()
   if RenderTable["SaveCopyOfProject"]==1 then RenderTable["SaveCopyOfProject"]=true else RenderTable["SaveCopyOfProject"]=false end
   
   RenderTable["Normalize_Method"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false))
+  RenderTable["FadeIn"]=reaper.GetSetProjectInfo(0, "RENDER_FADEIN", 0, false)
+  RenderTable["FadeOut"]=reaper.GetSetProjectInfo(0, "RENDER_FADEOUT", 0, false)
+  RenderTable["FadeIn_Shape"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_FADEINSHAPE", 0, false))
+  RenderTable["FadeOut_Shape"]=math.tointeger(reaper.GetSetProjectInfo(0, "RENDER_FADEOUTSHAPE", 0, false))
   
-  RenderTable["Normalize_Enabled"]=reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false)&1==1
+  RenderTable["FadeIn_Enabled"]=RenderTable["Normalize_Method"]&512==512
+  if RenderTable["FadeIn_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-512 end
+  RenderTable["FadeOut_Enabled"]=RenderTable["Normalize_Method"]&1024==1024 
+  if RenderTable["FadeOut_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1024 end
+  
+  local retval = reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE", 0, false)&1==1
+  RenderTable["Normalize_Enabled"]=retval
   if RenderTable["Normalize_Enabled"]==true then RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1 end
   if reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE_TARGET", 0, false)~="" then
     RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(reaper.GetSetProjectInfo(0, "RENDER_NORMALIZE_TARGET", 0, false))  
@@ -2602,8 +2687,8 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
   <functioncall>table RenderTable = ultraschall.GetRenderTable_ProjectFile(string projectfilename_with_path)</functioncall>
@@ -2621,6 +2706,8 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 
@@ -2635,6 +2722,26 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
             RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
             RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
             RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
@@ -2781,7 +2888,20 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   RenderTable["SaveCopyOfProject"]=false
   RenderTable["CloseAfterRender"]=true
   
-  RenderTable["Normalize_Method"], RenderTable["Normalize_Target"], RenderTable["Brickwall_Limiter_Target"] = ultraschall.GetProject_Render_Normalize(nil, ProjectStateChunk)
+  RenderTable["Normalize_Method"], 
+  RenderTable["Normalize_Target"], 
+  RenderTable["Brickwall_Limiter_Target"],
+  RenderTable["FadeIn"],
+  RenderTable["FadeOut"],
+  RenderTable["FadeIn_Shape"],
+  RenderTable["FadeOut_Shape"] = ultraschall.GetProject_Render_Normalize(nil, ProjectStateChunk)
+  
+  if RenderTable["Brickwall_Limiter_Enabled"]==nil then RenderTable["Brickwall_Limiter_Enabled"]=false end
+  if RenderTable["FadeIn"]==nil then RenderTable["FadeIn"]=0.0 end
+  if RenderTable["FadeOut"]==nil then RenderTable["FadeOut"]=0.0 end
+  if RenderTable["FadeIn_Shape"]==nil then RenderTable["FadeIn_Shape"]=0 end
+  if RenderTable["FadeOut_Shape"]==nil then RenderTable["FadeOut_Shape"]=0 end
+    
   if RenderTable["Normalize_Method"]==nil then
     RenderTable["Normalize_Method"]=0
     RenderTable["Normalize_Target"]=-24
@@ -2797,6 +2917,20 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
     RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(RenderTable["Normalize_Target"])
     RenderTable["Normalize_Stems_to_Master_Target"]=RenderTable["Normalize_Method"]&32==32
   
+    if RenderTable["Normalize_Method"]&1024==0 then
+      RenderTable["FadeOut_Enabled"]=false
+    else
+      RenderTable["FadeOut_Enabled"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-1024
+    end
+  
+    if RenderTable["Normalize_Method"]&512==0 then
+      RenderTable["FadeIn_Enabled"]=false
+    else
+      RenderTable["FadeIn_Enabled"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-512
+    end
+    
     if RenderTable["Normalize_Method"]&256==0 then     
       RenderTable["Normalize_Only_Files_Too_Loud"]=false
     elseif RenderTable["Normalize_Method"]&256==256 then
@@ -3344,6 +3478,13 @@ function ultraschall.IsValidRenderTable(RenderTable)
   if type(RenderTable["Brickwall_Limiter_Enabled"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Brickwall_Limiter_Enabled\"] must be a boolean", -27) return false end
   if type(RenderTable["Brickwall_Limiter_Target"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Brickwall_Limiter_Target\"] must be a number", -28) return false end
   if type(RenderTable["Normalize_Only_Files_Too_Loud"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Only_Files_Too_Loud\"] must be a boolean", -29) return false end
+  
+  if type(RenderTable["FadeIn"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeIn\"] must be a number", -30) return false end
+  if type(RenderTable["FadeOut"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeOut\"] must be a number", -31) return false end
+  if type(RenderTable["FadeIn_Enabled"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeIn_Enabled\"] must be a boolean", -32) return false end
+  if type(RenderTable["FadeOut_Enabled"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeOut_Enabled\"] must be a boolean", -33) return false end
+  if math.type(RenderTable["FadeIn_Shape"])~="integer" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeIn_Shape\"] must be an integer", -34) return false end
+  if math.type(RenderTable["FadeOut_Shape"])~="integer" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"FadeOut_Shape\"] must be an integer", -35) return false end
 
   return true
 end
@@ -3353,8 +3494,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_Project</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.65
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -3380,6 +3521,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -3395,6 +3538,26 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
             RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
                                                  false, normalization not enabled
@@ -3554,6 +3717,14 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   if RenderTable["Brickwall_Limiter_Method"]==2 and normalize_method&128==0 then normalize_method=normalize_method+128 end
   if RenderTable["Brickwall_Limiter_Method"]==1 and normalize_method&128==128 then normalize_method=normalize_method-128 end
   
+  if RenderTable["FadeIn_Enabled"]==true and normalize_method&512==0 then normalize_method=normalize_method+512 end
+  if RenderTable["FadeOut_Enabled"]==true and normalize_method&1024==0 then normalize_method=normalize_method+1024 end
+  
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEIN", RenderTable["FadeIn"], true)
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEOUT", RenderTable["FadeOut"], true)
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEINSHAPE", RenderTable["FadeIn_Shape"], true)
+  reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEOUTSHAPE", RenderTable["FadeOut_Shape"], true)
+  
   reaper.GetSetProjectInfo(0, "RENDER_BRICKWALL", ultraschall.DB2MKVOL(RenderTable["Brickwall_Limiter_Target"]), true)
   
   reaper.GetSetProjectInfo(ReaProject, "RENDER_NORMALIZE", normalize_method, true)
@@ -3636,8 +3807,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(table RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
@@ -3659,6 +3830,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -3674,6 +3847,26 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
             RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
                                                  false, normalization not enabled
@@ -3777,6 +3970,7 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   if ProjectStateChunk==nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
   if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("ApplyRenderTable_ProjectFile", "projectfilename_with_path", "not a valid rpp-projectfile", -4) return false end
   if apply_rendercfg_string~=nil and type(apply_rendercfg_string)~="boolean" then ultraschall.AddErrorMessage("ApplyRenderTable_ProjectFile", "apply_rendercfg_string", "must be boolean", -5) return false end
+  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("ApplyRenderTable_ProjectFile", "RenderTable", "not a valid RenderTable", -6) return nil end
   
   local Source=RenderTable["Source"]
   
@@ -3851,9 +4045,11 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   if RenderTable["Brickwall_Limiter_Method"]==1 and normalize_method&128==128 then normalize_method=normalize_method-128 end
   if RenderTable["Brickwall_Limiter_Method"]==2 and normalize_method&128==0 then normalize_method=normalize_method+128 end
   
-  retval, ProjectStateChunk = ultraschall.SetProject_Render_Normalize(nil, normalize_method, normalize_target, ProjectStateChunk, brickwall_target)
+  if RenderTable["FadeIn_Enabled"]==true and normalize_method&512==0 then normalize_method=normalize_method+512 end
+  if RenderTable["FadeOut_Enabled"]==true and normalize_method&1024==0 then normalize_method=normalize_method+1024 end  
   
-  
+  retval, ProjectStateChunk = ultraschall.SetProject_Render_Normalize(nil, normalize_method, normalize_target, ProjectStateChunk, brickwall_target, RenderTable["FadeIn"], RenderTable["FadeOut"], RenderTable["FadeInShape"], RenderTable["FadeOutShape"])
+    
   retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, RenderTable["Source"], ProjectStateChunk)
   retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, RenderTable["Bounds"], RenderTable["Startposition"], RenderTable["Endposition"], RenderTable["TailFlag"], RenderTable["TailMS"], ProjectStateChunk)  
   retval, ProjectStateChunk = ultraschall.SetProject_RenderFreqNChans(nil, 0, RenderTable["Channels"], RenderTable["SampleRate"], ProjectStateChunk)
@@ -3909,16 +4105,16 @@ RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers
 EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender, 
 Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
 Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
-Normalize_Only_Files_Too_Loud)
+Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     Lua=5.3
   </requires>
-  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Method)</functioncall>
+  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Method, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape)</functioncall>
   <description>
     Creates a new RenderTable.
     
@@ -3939,6 +4135,12 @@ Normalize_Only_Files_Too_Loud)
               RenderTable["EmbedTakeMarkers"]=false
               RenderTable["Enable2ndPassRender"]=false
               RenderTable["Endposition"]=0
+              RenderTable["FadeIn_Enabled"]=false
+              RenderTable["FadeIn"]=0
+              RenderTable["FadeIn_Shape"]=0
+              RenderTable["FadeOut_Enabled"]=false
+              RenderTable["FadeOut"]=0
+              RenderTable["FadeOut_Shape"]=false
               RenderTable["MultiChannelFiles"]=false
               RenderTable["Normalize_Enabled"]=false
               RenderTable["Normalize_Only_Files_Too_Loud"]=false
@@ -3985,6 +4187,9 @@ Normalize_Only_Files_Too_Loud)
                    - 3, Project regions
                    - 4, Selected Media Items(in combination with Source 32)
                    - 5, Selected regions
+                   - 6, Razor edit areas
+                   - 7, All project markers
+                   - 8, Selected markers
     optional number Startposition - the startposition of the render-section in seconds; only used when Bounds=0(Custom time range); default=0
     optional number Endposition - the endposition of the render-section in seconds; only used when Bounds=0(Custom time range); default=0
     optional integer TailFlag - in which bounds is the Tail-checkbox checked? (default=18)
@@ -4057,6 +4262,26 @@ Normalize_Only_Files_Too_Loud)
     optional integer Brickwall_Limiter_Method - the brickwall-limiter-method; 1, peak; 2, True Peak
     optional number Brickwall_Limiter_Target - the target of brickwall-limiter in dB
     optional boolean Normalize_Only_Files_Too_Loud - only normalize files that are too loud; true, enabled; false, disabled
+    optional boolean FadeIn_Enabled - true, fade in is enabled; false, fade-in is not enabled
+    optional number FadeIn - the fade-in in seconds
+    optional integer FadeIn_Shape - the fade-in-shape
+                                  - 0, Linear fade in
+                                  - 1, Inverted quadratic fade in
+                                  - 2, Quadratic fade in
+                                  - 3, Inverted quartic fade in
+                                  - 4, Quartic fade in
+                                  - 5, Cosine S-curve fade in
+                                  - 6, Quartic S-curve fade in
+    optional boolean FadeOut_Enabled - true, fade-out is enabled; false, fade-out is disabled
+    optional number FadeOut - the fade-out time in seconds
+    optional integer FadeOut_Shape - the fade-out-shape 
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -4113,6 +4338,13 @@ Normalize_Only_Files_Too_Loud)
   
   if Normalize_Only_Files_Too_Loud~=nil and type(Normalize_Only_Files_Too_Loud)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Only_Files_Too_Loud", "#37: must be nil or boolean", -38) return end
     
+  if FadeIn_Enabled~=nil and type(FadeIn_Enabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn_Enabled", "#38: must be nil or boolean", -39) return end
+  if FadeIn~=nil and type(FadeIn)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn", "#39: must be nil or a number", -40) return end
+  if FadeIn_Shape~=nil and math.type(FadeIn_Shape)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeIn_Shape", "#40: must be nil or an integer", -41) return end
+  if FadeOut_Enabled~=nil and type(FadeOut_Enabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut_Enabled", "#41: must be nil or boolean", -42) return end
+  if FadeOut~=nil and type(FadeOut)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut", "#42: must be nil or a number", -43) return end
+  if FadeOut_Shape~=nil and math.type(FadeOut_Shape)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "FadeOut_Shape", "#43: must be nil or an integer", -44) return end
+    
     
 
   -- create Reaper-vanilla default RenderTable
@@ -4155,6 +4387,12 @@ Normalize_Only_Files_Too_Loud)
   RenderTable["Brickwall_Limiter_Method"]=1
   RenderTable["Brickwall_Limiter_Target"]=1
   RenderTable["Normalize_Only_Files_Too_Loud"]=false
+  RenderTable["FadeIn_Enabled"]=false
+  RenderTable["FadeIn"]=0
+  RenderTable["FadeIn_Shape"]=0
+  RenderTable["FadeOut_Enabled"]=false
+  RenderTable["FadeOut"]=0
+  RenderTable["FadeOut_Shape"]=false
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end
@@ -4195,6 +4433,12 @@ Normalize_Only_Files_Too_Loud)
   if Brickwall_Limiter_Target~=nil then RenderTable["Brickwall_Limiter_Target"]=Brickwall_Limiter_Target end
   
   if Normalize_Only_Files_Too_Loud~=nil then RenderTable["Normalize_Only_Files_Too_Loud"]=Normalize_Only_Files_Too_Loud end
+  if FadeIn_Enabled~=nil then RenderTable["FadeIn_Enabled"]=FadeIn_Enabled end
+  if FadeIn~=nil then RenderTable["FadeIn"]=FadeIn end
+  if FadeIn_Shape~=nil then RenderTable["FadeIn_Shape"]=FadeIn_Shape end
+  if FadeOut_Enabled~=nil then RenderTable["FadeOut_Enabled"]=FadeOut_Enabled end
+  if FadeOut~=nil then RenderTable["FadeOut"]=FadeOut end
+  if FadeOut_Shape~=nil then RenderTable["FadeOut_Shape"]=FadeOut_Shape end
  
   return RenderTable
 end
@@ -4209,14 +4453,17 @@ A=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0,                          -- 5
                                      true, 0, true, true, "",               -- 25
                                      true, true, true, true, true,          -- 30
                                      1, true, 1, false, 1,                  -- 35
-                                     3, true)                               -- 40 Brickwall_Limiter_Target plus
+                                     3, true, true, 1.1, 9,                 -- 40 Brickwall_Limiter_Target plus
+                                     true, 1, 9)                            -- 43
                                      SLEM()
 --]]
 --Source, Bounds, Startposition, Endposition, TailFlag, TailMS, RenderFile, RenderPattern,
 --SampleRate, Channels, OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
 --Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, RenderQueueDelay
 -- RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers, RenderString2, 
--- EmbedTakeMarkers, SilentRender, EmbedMetadata, Enable2ndPassRender)
+-- EmbedTakeMarkers, SilentRender, EmbedMetadata, Enable2ndPassRender, Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
+-- Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
+-- Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape)
 
 
 --O=ultraschall.CreateNewRenderTable(2, 0, 2, 22, 0, 190, "aRenderFile", "apattern", 99, 3, 3,    false,   2, false, false, 1, "l3pm", true, true, true, true)
@@ -4675,7 +4922,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
      Ultraschall=4.7
-     Reaper=6.62
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>table RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
@@ -4701,6 +4948,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -4716,6 +4965,26 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
             RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
             RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
                                                  false, normalization not enabled
@@ -4906,14 +5175,16 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Quote=""
       Presetname2=A:match("%s(.-)%s")
     end
-    local A1, A2, A3=A:match(".* (%d-) (.*) (.*)")
+    local A1, A2, A3, A4, A5, A6, A7 = A:match(".* (%d-) (.*) (.*) (.*) (.*) (.*) (.*)")
 
     if A1==nil then
       A1, A2=A:match(".* (%d-) (.*)")
       A3=0
     end
     if A1~=nil then 
-      Normalize_Method, Normalize_Target, Brickwall_Target=tonumber(A1), tonumber(A2), tonumber(A3)
+      Normalize_Method, Normalize_Target, Brickwall_Target, FadeIn_Length, FadeOut_Length, FadeIn_Shape, FadeOut_Shape 
+        = 
+      tonumber(A1), tonumber(A2), tonumber(A3), tonumber(A4), tonumber(A5), tonumber(A6), tonumber(A7)
     end
     
     if Presetname2==Options_and_Format_Name then found=true break end
@@ -4976,7 +5247,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     Normalize_Method=Normalize_Method-128
   else
     RenderTable["Brickwall_Limiter_Method"]=1
-  end
+  end  
   
   if Normalize_Method&256==0 then     
     RenderTable["Normalize_Only_Files_Too_Loud"]=false
@@ -4984,6 +5255,25 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     RenderTable["Normalize_Only_Files_Too_Loud"]=true
     Normalize_Method=Normalize_Method-256
   end
+  
+  if Normalize_Method&512==0 then     
+    RenderTable["FadeIn_Enabled"]=false
+  elseif Normalize_Method&512==512 then
+    RenderTable["FadeIn_Enabled"]=true
+    Normalize_Method=Normalize_Method-512
+  end
+  
+    if Normalize_Method&1024==0 then     
+    RenderTable["FadeOut_Enabled"]=false
+  elseif Normalize_Method&1024==1024 then
+    RenderTable["FadeOut_Enabled"]=true
+    Normalize_Method=Normalize_Method-1024
+  end
+  
+  if FadeIn_Length==nil then RenderTable["FadeIn"]=0 else RenderTable["FadeIn"]=FadeIn_Length end
+  if FadeOut_Length==nil then RenderTable["FadeOut"]=0 else RenderTable["FadeOut"]=FadeOut_Length end
+  if FadeIn_Shape==nil then RenderTable["FadeIn_Shape"]=0 else RenderTable["FadeIn_Shape"]=FadeIn_Shape end
+  if FadeOut_Shape==nil then RenderTable["FadeOut_Shape"]=0 else RenderTable["FadeOut_Shape"]=FadeOut_Shape end
   
   RenderTable["Brickwall_Limiter_Target"]=ultraschall.MKVOL2DB(Brickwall_Target)
   
@@ -5107,8 +5397,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>AddRenderPreset</slug>
    <requires>
-     Ultraschall=4.3
-     Reaper=6.62
+     Ultraschall=4.7
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5133,6 +5423,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       4, Selected Media Items(in combination with Source 32)
                                       5, Selected regions 
                                       6, Razor edit areas
+                                      7, All project markers
+                                      8, Selected markers
               RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
               RenderTable["Source"] - the source dropdownlist, includes 
@@ -5208,6 +5500,26 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
               RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
               RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
+              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+              RenderTable["FadeIn"] - the fade-in-time in seconds
+              RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+              RenderTable["FadeOut"] - the fade-out time in seconds
+              RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
   
      Returns false in case of an error
    </description>
@@ -5301,7 +5613,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
       if RenderTable["Normalize_Only_Files_Too_Loud"]==true then normalize_method=normalize_method+256 end
       local brickwall_target=ultraschall.DB2MKVOL(RenderTable["Brickwall_Limiter_Target"])
       local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
-      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target
+      --local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"]
       A=A..String..String2..String3
   end
     
@@ -5321,7 +5634,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
    <slug>SetRenderPreset</slug>
    <requires>
      Ultraschall=4.7
-     Reaper=6.62
+     Reaper=6.64
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5346,6 +5659,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       4, Selected Media Items(in combination with Source 32)
                                       5, Selected regions
                                       6, Razor edit areas
+                                      7, All project markers
+                                      8, Selected markers
               RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
               RenderTable["Source"]+RenderTable["MultiChannelFiles"]+RenderTable["OnlyMonoMedia"] - the source dropdownlist, includes 
@@ -5417,6 +5732,26 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                                 false, normalize each file individually
               RenderTable["Normalize_Target"] - the normalize-target as dB-value
+              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+              RenderTable["FadeIn"] - the fade-in-time in seconds
+              RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+              RenderTable["FadeOut"] - the fade-out time in seconds
+              RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
               RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
               RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
               RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
@@ -5525,7 +5860,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
       
       local brickwall_target=ultraschall.DB2MKVOL(RenderTable["Brickwall_Limiter_Target"])
       local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
-      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.. " "..brickwall_target
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.. " "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"]
       A=A.."\n"
       local RenderNormalization=A:match("\nRENDERPRESET_EXT "..Options_and_Format_Name..".-\n")
       
@@ -5554,8 +5889,8 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RenderProject_RenderTable</slug>
   <requires>
-    Ultraschall=4.3
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.64
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -5576,6 +5911,8 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
                                        4, Selected Media Items(in combination with Source 32); 
                                        5, Selected regions
                                        6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                           1, mono; 
                                           2, stereo; 
@@ -8170,9 +8507,11 @@ function ultraschall.GetRenderCFG_Settings_MPEG1_Video(rendercfg)
     <retvals>
       integer VIDEO_CODEC - the used VideoCodec for the MPEG-1-video
                           - 0, MPEG-1
+                          - 1, NONE
       integer AUDIO_CODEC - the audio-codec of the MPEG-1-video
                           - 0, mp3
                           - 1, mp2
+                          - 2, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -8244,10 +8583,12 @@ function ultraschall.GetRenderCFG_Settings_MPEG2_Video(rendercfg)
     <retvals>
       integer VIDEO_CODEC - the used VideoCodec for the MPEG-2-video
                           - 0, MPEG-2
+                          - 1, NONE
       integer AUDIO_CODEC - the audio-codec of the MPEG-2-video
                           - 0, aac
                           - 1, mp3
                           - 2, mp2
+                          - 3, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -8320,10 +8661,12 @@ function ultraschall.GetRenderCFG_Settings_FLV_Video(rendercfg)
       integer VIDEO_CODEC - the used VideoCodec for the FLV-video
                           - 0, H.264
                           - 1, FLV1
+                          - 2, NONE
       integer MJPEG_quality - the MJPEG-quality of the MKV-video, if VIDEO_CODEC=0
       integer AUDIO_CODEC - the audio-codec of the FLV-video
                           - 0, MP3
                           - 1, AAC
+                          - 2, NONE
       integer WIDTH  - the width of the video in pixels
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
@@ -8396,11 +8739,13 @@ function ultraschall.CreateRenderCFG_MPEG1_Video(VideoCodec, VIDKBPS, AudioCodec
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
-                       - 1, MPEG 1
+                       - 1, MPEG-1
+                       - 2, NONE
     integer VIDKBPS - the video-bitrate of the video in kbps; 1 to 2147483647
     integer AudioCodec - the audiocodec to use for the video
                        - 1, MP3
                        - 2, MP2
+                       - 3, NONE
     integer AUDKBPS - the audio-bitrate of the video in kbps; 1 to 2147483647
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
@@ -8432,8 +8777,8 @@ function ultraschall.CreateRenderCFG_MPEG1_Video(VideoCodec, VIDKBPS, AudioCodec
   if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -7) return nil end
   if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "AspectRatio", "Must be a boolean!", -8) return nil end
   
-  if VideoCodec<1 or VideoCodec>1 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "VideoCodec", "Must be 1", -9) return nil end  
-  if AudioCodec<1 or AudioCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "AudioCodec", "Must be between 1 and 2", -10) return nil end
+  if VideoCodec<1 or VideoCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "VideoCodec", "Must be 1", -9) return nil end  
+  if AudioCodec<1 or AudioCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "AudioCodec", "Must be between 1 and 2", -10) return nil end
   if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "VIDKBPS", "Must be between 1 and 2147483647.", -11) return nil end
   if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG1_Video", "AUDKBPS", "Must be between 1 and 2147483647.", -12) return nil end
 
@@ -8485,11 +8830,14 @@ function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
-                       - 1, MPEG 2
+                       - 1, MPEG-2
+                       - 2, NONE
     integer VIDKBPS - the video-bitrate of the video in kbps; 1 to 2147483647
     integer AudioCodec - the audiocodec to use for the video
-                       - 1, MP3
-                       - 2, MP2
+                       - 1, AAC
+                       - 2, MP3
+                       - 3, MP2
+                       - 4, NONE
     integer AUDKBPS - the audio-bitrate of the video in kbps; 1 to 2147483647
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
@@ -8521,8 +8869,8 @@ function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec
   if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -7) return nil end
   if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "AspectRatio", "Must be a boolean!", -8) return nil end
   
-  if VideoCodec<1 or VideoCodec>1 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "VideoCodec", "Must be 1", -9) return nil end  
-  if AudioCodec<1 or AudioCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "AudioCodec", "Must be between 1 and 3", -10) return nil end
+  if VideoCodec<1 or VideoCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "VideoCodec", "Must be 1", -9) return nil end  
+  if AudioCodec<1 or AudioCodec>4 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "AudioCodec", "Must be between 1 and 3", -10) return nil end
   if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "VIDKBPS", "Must be between 1 and 2147483647.", -11) return nil end
   if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_MPEG2_Video", "AUDKBPS", "Must be between 1 and 2147483647.", -12) return nil end
 
@@ -8575,11 +8923,13 @@ function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, 
   <parameters>
     integer VideoCodec - the videocodec used for the video;
                        - 1, H.264
-                       - 2, FLV 1
+                       - 2, FLV1
+                       - 3, NONE
     integer VIDKBPS - the video-bitrate of the video in kbps; 1 to 2147483647
     integer AudioCodec - the audiocodec to use for the video
                        - 1, MP3
                        - 2, AAC
+                       - 3, NONE
     integer AUDKBPS - the audio-bitrate of the video in kbps; 1 to 2147483647
     integer WIDTH - the width of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
@@ -8611,8 +8961,8 @@ function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, 
   if type(FPS)~="number" then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "FPS", "Must be a float-value with two digit precision (e.g. 29.97 or 25.00)!", -7) return nil end
   if type(AspectRatio)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "AspectRatio", "Must be a boolean!", -8) return nil end
   
-  if VideoCodec<1 or VideoCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "VideoCodec", "Must be between 1 and 2", -9) return nil end  
-  if AudioCodec<1 or AudioCodec>2 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "AudioCodec", "Must be between 1 and 2", -10) return nil end
+  if VideoCodec<1 or VideoCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "VideoCodec", "Must be between 1 and 2", -9) return nil end  
+  if AudioCodec<1 or AudioCodec>3 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "AudioCodec", "Must be between 1 and 2", -10) return nil end
   if VIDKBPS<1 or VIDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "VIDKBPS", "Must be between 1 and 2147483647.", -11) return nil end
   if AUDKBPS<1 or AUDKBPS>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_FLV_Video", "AUDKBPS", "Must be between 1 and 2147483647.", -12) return nil end
 
@@ -8648,8 +8998,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectDefaults</slug>
   <requires>
-    Ultraschall=4.4
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.65
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -8670,6 +9020,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                     4, Selected Media Items(in combination with Source 32); 
                                     5, Selected regions
                                     6, Razor edit areas
+                                    7, All project markers
+                                    8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
                                       1, mono; 
                                       2, stereo; 
@@ -8684,6 +9036,26 @@ function ultraschall.GetRenderTable_ProjectDefaults()
             RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
             RenderTable["Endposition"] - the endposition of the rendering selection in seconds; always 0 because it's not stored with project defaults
+            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+            RenderTable["FadeIn"] - the fade-in-time in seconds
+            RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
+            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+            RenderTable["FadeOut"] - the fade-out time in seconds
+            RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                   - 0, Linear fade in
+                                   - 1, Inverted quadratic fade in
+                                   - 2, Quadratic fade in
+                                   - 3, Inverted quartic fade in
+                                   - 4, Quartic fade in
+                                   - 5, Cosine S-curve fade in
+                                   - 6, Quartic S-curve fade in
             RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
             RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
             RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
@@ -8793,7 +9165,11 @@ function ultraschall.GetRenderTable_ProjectDefaults()
     "projrenderaddtoproj",
     "autosaveonrender", 
     "rendercfg",
-    "rendercfg2"
+    "rendercfg2",
+    "projrenderfadein",
+    "projrenderfadeout",
+    "projrenderfadeinshape",
+    "projrenderfadeoutshape"
   }
 
   for i=1, #attributetable do
@@ -8807,7 +9183,6 @@ function ultraschall.GetRenderTable_ProjectDefaults()
   end
   
   attributetable["rendercfg"]=ultraschall.ConvertHex2Ascii(attributetable["rendercfg"])
-  --A_temp=attributetable["rendercfg"]
   attributetable["rendercfg"]=ultraschall.Base64_Encoder(attributetable["rendercfg"]:sub(1,-2))
 
   attributetable["rendercfg2"]=ultraschall.ConvertHex2Ascii(attributetable["rendercfg2"])
@@ -8924,6 +9299,22 @@ function ultraschall.GetRenderTable_ProjectDefaults()
   
   if attributetable["projrenderdither"]~=nil then
     RenderTable["Dither"]=attributetable["projrenderdither"]
+  end
+  
+  if attributetable["projrenderfadein"]~=nil then
+    RenderTable["FadeIn"]=attributetable["projrenderfadein"]
+  end
+  
+  if attributetable["projrenderfadeout"]~=nil then
+    RenderTable["FadeOut"]=attributetable["projrenderfadeout"]
+  end
+  
+  if attributetable["projrenderfadeinshape"]~=nil then
+    RenderTable["FadeIn_Shape"]=attributetable["projrenderfadeinshape"]
+  end
+
+  if attributetable["projrenderfadeoutshape"]~=nil then
+    RenderTable["FadeOut_Shape"]=attributetable["projrenderfadeoutshape"]
   end
   
   return RenderTable

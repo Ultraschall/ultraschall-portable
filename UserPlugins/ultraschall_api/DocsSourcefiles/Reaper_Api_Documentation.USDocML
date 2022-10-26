@@ -7586,7 +7586,7 @@
         <functioncall prog_lang="lua">number retval = reaper.GetMediaTrackInfo_Value(MediaTrack tr, string parmname)</functioncall>
         <functioncall prog_lang="python">Float retval = RPR_GetMediaTrackInfo_Value(MediaTrack tr, String parmname)</functioncall>
         <requires>
-            Reaper=6.60
+            Reaper=6.65
         </requires>
         <description prog_lang="*">
             Get track numerical-value attributes.
@@ -7628,7 +7628,8 @@
             D_DUALPANL : double * : dualpan position 1, -1..1, only if I_PANMODE==6
             D_DUALPANR : double * : dualpan position 2, -1..1, only if I_PANMODE==6
             I_PANMODE : int * : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
-            D_PANLAW : double * : pan law of track, <0=project default, 1=+0dB, etc
+            D_PANLAW : double * : pan law of track, <0=project default, 0.5=-6dB, 0.707..=-3dB, 1=+0dB, 1.414..=-3dB with gain compensation, 2=-6dB with gain compensation, etc
+            I_PANLAW_FLAGS : int * : pan law flags, 0=sine taper, 1=hybrid taper with deprecated behavior when gain compensation enabled, 2=linear taper, 3=hybrid taper
             P_ENV:&envchunkname or P_ENV:{GUID... : TrackEnvelope * : (read-only) chunkname can be &VOLENV, &PANENV, etc; GUID is the stringified envelope GUID
             B_SHOWINMIXER : bool * : track control panel visible in mixer (do not use on master track)
             B_SHOWINTCP : bool * : track control panel visible in arrange view (do not use on master track)
@@ -7667,6 +7668,7 @@
         </linked_to>
         <tags></tags>
         <changelog>
+            Reaper 6.65 - attribute "I_PANLAW_FLAGS" added
             Reaper 6.60 - attribute "I_RECMODE_FLAGS" added
             Reaper 6.54 - attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled
         </changelog>
@@ -9480,18 +9482,58 @@
         <description>
             Get or set project information.
  
-            RENDER_SETTINGS : &(1|2)=0:master mix, &1=stems+master mix, &2=stems only, &4=multichannel tracks to multichannel files, &8=use render matrix, &16=tracks with only mono media to mono files, &32=selected media items, &64=selected media items via master, & 128=Selected tracks via master, &256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), &512=Embed Metadata, if format supports is, &1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master); &2048=2nd pass render  
+            RENDER_SETTINGS : 
+                &(1|2)=0:master mix, 
+                &1=stems+master mix, 
+                &2=stems only, 
+                &4=multichannel tracks to multichannel files, 
+                &8=use render matrix, 
+                &16=tracks with only mono media to mono files, 
+                &32=selected media items, 
+                &64=selected media items via master, 
+                &128=Selected tracks via master, 
+                &256=Stretch markers/transient guide-checkbox(Only with WAV/AIFF and Source=Selected media items/Selected media items via master), 
+                &512=Embed Metadata, if format supports is, 
+                &1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master); 
+                &2048=2nd pass render  
             OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using GetSetProjectInfo_String.  
-            RENDER_BOUNDSFLAG : 0=custom time bounds, 1=entire project, 2=time selection, 3=all project regions, 4=selected media items, 5=selected project regions, 6=all project markers, 7=selected project markers
+            RENDER_BOUNDSFLAG : 
+              0=custom time bounds, 
+              1=entire project, 
+              2=time selection, 
+              3=all project regions, 
+              4=selected media items, 
+              5=selected project regions, 
+              6=all project markers, 
+              7=selected project markers
             RENDER_CHANNELS : number of channels in rendered file  
             RENDER_SRATE : sample rate of rendered file (or 0 for project sample rate)  
             RENDER_STARTPOS : render start time when RENDER_BOUNDSFLAG=0  
             RENDER_ENDPOS : render end time when RENDER_BOUNDSFLAG=0  
-            RENDER_TAILFLAG : apply render tail setting when rendering: &1=custom time bounds, &2=entire project, &4=time selection, &8=all project markers/regions, &16=selected media items, &32=selected project markers/regions
+            RENDER_TAILFLAG : apply render tail setting when rendering: 
+              &1=custom time bounds, 
+              &2=entire project, 
+              &4=time selection, 
+              &8=all project markers/regions, 
+              &16=selected media items, 
+              &32=selected project markers/regions
             RENDER_TAILMS : tail length in ms to render (only used if RENDER_BOUNDSFLAG and RENDER_TAILFLAG are set)  
-            RENDER_ADDTOPROJ : &1=add rendered files to project, &2=Do not render files that are likely silent  
-            RENDER_DITHER : &1=dither, &2=noise shaping, &4=dither stems, &8=noise shaping on stems  
-            RENDER_NORMALIZE: &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max, &32=normalize stems to common gain based on master, &64=enable brickwall limit, &128=brickwall limit true peak, &256=only normalize files that are too loud, &512=apply fade-in, &1024=apply fade-out
+            RENDER_ADDTOPROJ : 
+              &1=add rendered files to project, 
+              &2=Do not render files that are likely silent  
+            RENDER_DITHER : 
+              &1=dither, 
+              &2=noise shaping, 
+              &4=dither stems, 
+              &8=noise shaping on stems  
+            RENDER_NORMALIZE: 
+              &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max, 
+              &32=normalize stems to common gain based on master, 
+              &64=enable brickwall limit, 
+              &128=brickwall limit true peak, 
+              &256=only normalize files that are too loud, 
+              &512=apply fade-in, 
+              &1024=apply fade-out
             RENDER_NORMALIZE_TARGET: render normalization target as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc  
             RENDER_BRICKWALL: render brickwall limit as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc
             RENDER_FADEIN: render fade-in (0.001 means 1 ms, requires RENDER_NORMALIZE&512)
@@ -9536,7 +9578,7 @@
         <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
         <requires>
-            Reaper=6.48
+            Reaper=6.68
         </requires>
         <description>
             Get or set project information.  
@@ -9553,6 +9595,7 @@
             RENDER_METADATA : get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: valuestr="ID3:TALB" to get, valuestr="ID3:TALB|my album name" to set. Call with valuestr="" and is_set=false to get a semicolon-separated list of defined project metadata identifiers.  
             RENDER_TARGETS: semicolon separated list of files that would be written if the project is rendered using the most recent render settings  
             RENDER_STATS: (read-only) semicolon separated list of statistics for the most recently rendered files. call with valuestr="XXX" to run an action (for example, "42437"=dry run render selected items) before returning statistics.  
+                          returns nothing, when user aborted rendering.
             RENDER_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.  
             RENDER_FORMAT2: base64-encoded secondary sink configuration. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type, or "" to disable secondary render.  
             see <a href="misc_docs/RENDER_How_RenderCFG-Base64-strings_are_encoded.txt">RENDER_How_RenderCFG-Base64-strings_are_encoded.txt</a> for how the unencoded RENDER_FORMAT-string is structured.  
@@ -9620,6 +9663,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+            Reaper 6.68 - "RENDER_STATS" returns now nothing, when user cancelled rendering
             Reaper 6.48 - "wmf" added as new render-output-format
             Reaper 6.47 - RENDER_METADATA supports now strings longer than 1024 bytes
             Reaper 6.43 - "caff" as render-outputformat for the CAF-format now supported
@@ -17628,7 +17672,8 @@
             D_DUALPANL : double * : dualpan position 1, -1..1, only if I_PANMODE==6
             D_DUALPANR : double * : dualpan position 2, -1..1, only if I_PANMODE==6
             I_PANMODE : int * : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
-            D_PANLAW : double * : pan law of track, <0=project default, 1=+0dB, etc
+            D_PANLAW : double * : pan law of track, <0=project default, 0.5=-6dB, 0.707..=-3dB, 1=+0dB, 1.414..=-3dB with gain compensation, 2=-6dB with gain compensation, etc
+            I_PANLAW_FLAGS : int * : pan law flags, 0=sine taper, 1=hybrid taper with deprecated behavior when gain compensation enabled, 2=linear taper, 3=hybrid taper
             P_ENV:<envchunkname or P_ENV:{GUID... : TrackEnvelope* : read only. Chunkname can be <VOLENV, <PANENV, etc; GUID is the stringified envelope GUID.
             B_SHOWINMIXER : bool * : track control panel visible in mixer (do not use on master track)
             B_SHOWINTCP : bool * : track control panel visible in arrange view (do not use on master track)
@@ -17659,6 +17704,7 @@
                    returns a numerical value of a MediaTrack-attribute
         </linked_to>
         <changelog>
+            Reaper 6.65 - attribute "I_PANLAW_FLAGS" added
             Reaper 6.60 - attribute "I_RECMODE_FLAGS" added
             Reaper 6.54 - attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled
         </changelog>
@@ -18138,10 +18184,12 @@
         <functioncall prog_lang="lua">reaper.SetRegionRenderMatrix(ReaProject proj, integer regionindex, MediaTrack track, integer addorremove)</functioncall>
         <functioncall prog_lang="python">RPR_SetRegionRenderMatrix(ReaProject proj, Int regionindex, MediaTrack track, Int addorremove)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.68
         </requires>
         <description>
-            Add (addorremove > 0) or remove (addorremove < 0) a track from this region when using the region render matrix.
+            Add (flag > 0) or remove (flag < 0) a track from this region when using the region render matrix. 
+            
+            If adding, flag==2 means force mono, flag==4 means force stereo, flag==N means force N/2 channels.
             
             see TrackList_AdjustWindows to refresh the region-render-matrix
         </description>
@@ -18163,6 +18211,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.68 - allows now forcing number of rendered channels using additional flag-values for addorremove-parameter
         </changelog>
     </US_DocBloc>
 
@@ -45939,7 +45988,7 @@ mespotine
         <title>GetSetMediaTrackInfo</title>
         <functioncall prog_lang="cpp">void* (*GetSetMediaTrackInfo)(MediaTrack* tr, const char* parmname, void* setNewValue)</functioncall>
         <requires>
-            Reaper=6.60
+            Reaper=6.65
         </requires>
         <description indent="default">
             Gets/Sets MediaTrack-parameters. Works like GetMediaTrackInfo_Value and SetMediaTrackInfo_Value but has more parameters.
@@ -45951,7 +46000,7 @@ mespotine
                  -P_MCP_LAYOUT : const char * : layout name
                  -P_RAZOREDITS : const char * : list of razor edit areas, as space-separated triples of start time, end time, and envelope GUID string.
                    -Example: "0.00 1.00 \"\" 0.00 1.00 "{xyz-...}"
-                 P_RAZOREDITS_EXT : const char * : list of razor edit areas, as comma-separated sets of space-separated tuples of start time, end time, optional envelope GUID string, optional fixed/fipm top y-position, optional fixed/fipm bottom y-position(fipm means fixed item positioning).
+                 -P_RAZOREDITS_EXT : const char * : list of razor edit areas, as comma-separated sets of space-separated tuples of start time, end time, optional envelope GUID string, optional fixed/fipm top y-position, optional fixed/fipm bottom y-position(fipm means fixed item positioning).
                   - Example: "0.0 1.0,0.0 1.0 "{xyz-...}",1.0 2.0 "" 0.25 0.5"
                  -P_TCP_LAYOUT : const char * : layout name
                  -P_EXT:xyz : char * : extension-specific persistent data
@@ -45992,7 +46041,8 @@ mespotine
                  -D_DUALPANL : double * : dualpan position 1, -1..1, only if I_PANMODE==6
                  -D_DUALPANR : double * : dualpan position 2, -1..1, only if I_PANMODE==6
                  -I_PANMODE : int * : pan mode, 0=classic 3.x, 3=new balance, 5=stereo pan, 6=dual pan
-                 -D_PANLAW : double * : pan law of track, <0=project default, 1=+0dB, etc
+                 -D_PANLAW : double * : pan law of track, <0=project default, 0.5=-6dB, 0.707..=-3dB, 1=+0dB, 1.414..=-3dB with gain compensation, 2=-6dB with gain compensation, etc
+                 -I_PANLAW_FLAGS : int * : pan law flags, 0=sine taper, 1=hybrid taper with deprecated behavior when gain compensation enabled, 2=linear taper, 3=hybrid taper
                  -P_ENV:<envchunkname or P_ENV:{GUID... : TrackEnvelope*, read only. chunkname can be <VOLENV, <PANENV, etc; GUID is the stringified envelope GUID.
                  -B_SHOWINMIXER : bool * : track control panel visible in mixer (do not use on master track)
                  -B_SHOWINTCP : bool * : track control panel visible in arrange view (do not use on master track)
@@ -46025,7 +46075,8 @@ mespotine
         </chapter_context>
         <tags>cpp, get, set, track, parameters, info</tags>
         <changelog>
-          Reaper 6.60 - attribute I_RECMODE_FLAGS added
+          Reaper 6.65 - attribute "I_PANLAW_FLAGS" added
+          Reaper 6.60 - attribute "I_RECMODE_FLAGS" added
         </changelog>
     </US_DocBloc>
 
@@ -48864,6 +48915,67 @@ mespotine
         </chapter_context>
         <tags>cpp, project, config, var, getoffs, offset</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
+        <slug>realloc_cmd_clear</slug>
+        <title>realloc_cmd_clear</title>
+        <functioncall prog_lang="cpp">void (*realloc_cmd_clear)(int tok)</functioncall>
+        <requires>
+            Reaper=6.68
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            clears a buffer/buffer-size registration added with realloc_cmd_register_buf, and clears any later registrations, frees any allocated buffers. call after values are read from any registered pointers etc.
+            
+            Stored in reaper_plugin_functions.h
+        </description>
+        <retvals>
+            void -
+        </retvals>
+        <parameters>
+            int tok - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper_plugin.h</source_document>
+        <chapter_context>
+            C++-only functions
+            Config Vars
+        </chapter_context>
+        <tags>cpp, realloc, clear, buffer, register</tags>
+        <changelog>
+          Reaper 6.68 - added to Reaper
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
+        <slug>realloc_cmd_register_buf</slug>
+        <title>realloc_cmd_register_buf</title>
+        <functioncall prog_lang="cpp">int (*realloc_cmd_register_buf)(char** ptr, int* ptr_size)</functioncall>
+        <requires>
+            Reaper=6.68
+        </requires>
+        <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
+            clears a buffer/buffer-size registration added with realloc_cmd_register_buf, and clears any later registrations, frees any allocated buffers. call after values are read from any registered pointers etc.
+            
+            Stored in reaper_plugin_functions.h
+        </description>
+        <retvals>
+            int -
+        </retvals>
+        <parameters>
+            char** ptr - 
+            int* ptr_size - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>reaper_plugin.h</source_document>
+        <chapter_context>
+            C++-only functions
+            Config Vars
+        </chapter_context>
+        <tags>cpp, realloc, buffer, register</tags>
+        <changelog>
+          Reaper 6.68 - added to Reaper
         </changelog>
     </US_DocBloc>
 

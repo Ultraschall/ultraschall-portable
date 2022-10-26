@@ -5,7 +5,8 @@ desc:Ultraschall Dynamics (Ultraschall.fm)
 
 // Dynamics Code derived from Cockos General Dynamcis
 // Limiter Code from LOSERs "MGA JS Limiter"
-// modiefied by fernsehmuell and rstockm (ultraschall.fm)
+// modified by fernsehmuell and rstockm (ultraschall.fm)
+// added further options by Meo-Ada Mespotine
 
 slider1:slider_detect=0<0,1,1{main,aux (use with caution! can result in loud signals!),feedback (caution too!)}>-Detector Input
 slider2:0<-40,40,1>-Detector Gain (dB)
