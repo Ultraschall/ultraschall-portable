@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall 4.0 - Changelog - Meo Mespotine
+-- Ultraschall 5.1 - Changelog - Meo-Ada Mespotine
 -- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
 --    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
 --   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
@@ -51,7 +51,9 @@
 -- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
 
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+isnewvalue, filename, section, cmdid = reaper.get_action_context()
 
 -- hole GUI Library
 
@@ -104,17 +106,28 @@ end
 
 
 function count_all_warnings() -- zähle die Arten von Soundchecks aus
-
+  
   event_count = ultraschall.EventManager_CountRegisteredEvents()
+  EventIdentifier=ultraschall.EventManager_GetAllEventIdentifier()
+  --event_count=1
   local active_warning_count = 0
   local paused_warning_count = 0
   local passed_warning_count = 0
 
+  --print_update("")
   for i = 1, event_count do
 
-    local EventIdentifier = ""
-    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
-    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+-- old code,can be removed, if soundcheck works fine...
+--    local EventIdentifier = ""
+--    EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
+--    A=reaper.GetExtState("ultraschall_eventmanager", "EventIdentifier")
+--    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
+
+-- new code, that shall replace the old code, as this here is much faster
+    local EventPaused = ultraschall.EventManager_GetEventPausedState(i)
+    
+    
+    last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier[i])
 
     if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
       active_warning_count = active_warning_count +1
@@ -124,16 +137,9 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
 
   end
   passed_warning_count = event_count - active_warning_count - paused_warning_count
-
+  --]]
+  
   return active_warning_count, paused_warning_count, passed_warning_count
-end
-
-function showLUFSEffect()
-    
-  tr = reaper.GetMasterTrack(0)
-  reaper.SetTrackSelected(tr, true)   
-  runcommand("_S&M_SHOWFXCHAIN1")     -- zeige FX des Masters
-    
 end
 
 
@@ -283,6 +289,7 @@ end
 
 function InitGFX()
   gfx.clear=0x333333 --background color
+  reaper.SetToggleCommandState(section, cmdid, 1)
   gfx.init("Dashboard",width,height,false) --create window
   if docked then d=1 else d=0 end
 
@@ -398,12 +405,12 @@ function openWindowLUFS()
     end
   end
 
-  if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf em Master, also hinzufügen. 
-    fx_slot = reaper.TrackFX_AddByName(mastertrack, "LUFS_Loudness_Meter", false, 1) 
-    reaper.TrackFX_SetEnabled(mastertrack, fx_slot, false)
+  if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf dem Master, also hinzufügen. 
+    added = ultraschall.LUFS_Metering_AddEffect(false)
+
   end
 
-  showLUFSEffect() -- zeige den Effek
+  ultraschall.LUFS_Metering_ShowEffect() -- zeige den Effek
     
 end
 
@@ -426,7 +433,7 @@ function drawClock()
       elseif playstate == 0 then txt_color=0xeeeeee status="STOPPED" --record/pause
       else txt_color=0xb3b3b3 status=""
     end
-    A=uc_menu[5].checked
+    --A=uc_menu[5].checked
     if uc_menu[4].checked==true then pos=get_position(1)//1
     else
       pos=get_position()//1
@@ -454,7 +461,7 @@ function drawClock()
     end
   end
   if preset~=oldpreset then
-    AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
+    --AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
   end
 
   oldpreset=preset
@@ -466,22 +473,14 @@ function drawClock()
   --write text
   -- Date
   if uc_menu[1].checked then
-    -- date=os.date("%d.%m.%Y")
-    
-    reaper.gmem_attach ("lufs")  
-    -- reaper.gmem_attach ("limit")
-    
-    -- if reaper.gmem_read(1) < 15.9 or reaper.gmem_read(1) > 16.1 then
-      -- updateLUFS()
-    -- end
-    
-    target = reaper.gmem_read(2)
 
-    if reaper.gmem_read(1) > target-1 and reaper.gmem_read(1) <= target+1 then -- Grün
+    LUFS_integral, target, dB_Gain, FX_active = ultraschall.LUFS_Metering_GetValues()
+
+    if LUFS_integral > target-1 and LUFS_integral <= target+1 then -- Grün
       date_color = 0x15ee15
-    elseif reaper.gmem_read(1) > target+1 and reaper.gmem_read(1) <= target+2 then -- Gelb
+    elseif LUFS_integral > target+1 and LUFS_integral <= target+2 then -- Gelb
       date_color = 0xeeee15
-    elseif reaper.gmem_read(1) > target+2 then -- Rot
+    elseif LUFS_integral > target+2 then -- Rot
       date_color = 0xee5599
     else
       date_color = 0x2092c7 -- Blau
@@ -492,8 +491,8 @@ function drawClock()
     --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
     -- end
 
-    date = tostring(reaper.gmem_read(1)).." LUFS"
-    if reaper.gmem_read(3) == 0 then 
+    date = tostring(LUFS_integral).." LUFS"
+    if FX_active == 0 then 
       date = "? LUFS" 
       date_color = 0x777777
     end
@@ -729,13 +728,14 @@ function MainLoop()
       reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
     end
     gfx.update()
-    ALABAMASONG=GetProjectLength()
+    --ALABAMASONG=GetProjectLength()
     reaper.defer(MainLoop)
   end
 end
 
 function exit_clock()
   gfx.quit()
+  reaper.SetToggleCommandState(section, cmdid, 0)
 end
 
 reaper.atexit(exit_clock)

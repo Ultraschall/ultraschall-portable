@@ -11865,11 +11865,11 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_Render_Normalize</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.65
     Lua=5.3
   </requires>
-  <functioncall>integer render_normalize_mode, number normalize_target = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <functioncall>integer render_normalize_mode, number normalize_target, optional number brickwall_target, optional number fadein_length, optional number fadeout_length, optional integer fadein_shape, optional integer fadeout_shape = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
     returns the master-view-state of the master-track of the project or a ProjectStateChunk.
     
@@ -11905,7 +11905,25 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
                                     -     0, disabled
                                     -     1, enabled
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
-    number brickwall_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
+    optional number brickwall_target - the brickwall-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.    
+    optional number fadein_length - the length of the fade-in in seconds(use fractions for milliseconds)
+    optional number fadeout_length - the length of the fade-out in seconds(use fractions for milliseconds)
+    optional integer fadein_shape - the shape of the fade-in-curve
+                             0, linear fade-in
+                             1, inverted quadratic fade-in
+                             2, quadratic fade-in
+                             3, inverted quartic fade-in
+                             4, quartic fade-in
+                             5, Cosine S-curve fade-in
+                             6, Quartic S-curve fade-in
+    optional integer fadeout_shape - the shape of the fade-out-curve
+                              0, linear fade-out
+                              1, inverted quadratic fade-out
+                              2, quadratic fade-out
+                              3, inverted quartic fade-out
+                              4, quartic fade-out
+                              5, Cosine S-curve fade-out
+                              6, Quartic S-curve fade-out
   </retvals>
   <chapter_context>
     Project-Management
@@ -11913,22 +11931,22 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
-  <tags>projectmanagement, get, view, projectstatechunk</tags>
+  <tags>projectmanagement, get, view, fade in, fade out, projectstatechunk</tags>
 </US_DocBloc>
 ]]
   return ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, "RENDER_NORMALIZE", ProjectStateChunk, "GetProject_Render_Normalize")
 end
 
-function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk, brickwall_target)
+function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk, brickwall_target, fadein_length, fadeout_length, fadein_shape, fadeout_shape)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_Render_Normalize</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=6.48
+    Ultraschall=4.7
+    Reaper=6.65
     Lua=5.3
   </requires>
-  <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target)</functioncall>
+  <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target, optional number fadein_length, optional number fadeout_length, optional integer fadein_shape, optional integer fadeout_shape)</functioncall>
   <description>
     Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
     
@@ -11963,6 +11981,24 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
     optional number brickwall_target - the brickwall-normalizatin-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
+    optional number fadein_length - the length of the fade-in in seconds(use fractions for milliseconds)
+    optional number fadeout_length - the length of the fade-out in seconds(use fractions for milliseconds)
+    optional integer fadein_shape - the shape of the fade-in-curve
+                             0, linear fade-in
+                             1, inverted quadratic fade-in
+                             2, quadratic fade-in
+                             3, inverted quartic fade-in
+                             4, quartic fade-in
+                             5, Cosine S-curve fade-in
+                             6, Quartic S-curve fade-in
+    optional integer fadeout_shape - the shape of the fade-out-curve
+                              0, linear fade-out
+                              1, inverted quadratic fade-out
+                              2, quadratic fade-out
+                              3, inverted quartic fade-out
+                              4, quartic fade-out
+                              5, Cosine S-curve fade-out
+                              6, Quartic S-curve fade-out
   </parameters>
   <retvals>
     integer retval - -1 in case of error, 1 in case of success
@@ -11973,7 +12009,7 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
-  <tags>projectfiles, rpp, state, set, render, normalize, brickwall</tags>
+  <tags>projectfiles, rpp, state, set, render, normalize, brickwall, fade in, fade out</tags>
 </US_DocBloc>
 ]]  
   if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
@@ -11984,12 +12020,23 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   if math.type(render_normalize_method)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "render_normalize_method", "Must be an integer", -4) return -1 end
   if type(normalize_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "normalize_target", "Must be a number", -5) return -1 end
   if brickwall_target~=nil and type(brickwall_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "brickwall_target", "Must be a number", -7) return -1 end
-
+  
+  if brickwall_target~=nil and type(brickwall_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "brickwall_target", "Must be a number", -8) return -1 end
+  if fadein_length~=nil and type(fadein_length)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "fadein_length", "Must be a number", -9) return -1 end
+  if fadeout_length~=nil and type(fadeout_length)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "fadeout_length", "Must be a number", -10) return -1 end
+  if fadein_shape~=nil and math.type(fadein_shape)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "fadein_shape", "Must be an integer", -11) return -1 end
+  if fadeout_shape~=nil and math.type(fadeout_shape)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "fadeout_shape", "Must be an integer", -12) return -1 end
+  
   if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "No valid RPP-Projectfile!", -6) return -1 end
   if brickwall_target==nil then brickwall_target="" else brickwall_target=" "..brickwall_target end
+  if fadein_length==nil then fadein_length="" else fadein_length=" "..fadein_length end
+  if fadeout_length==nil then fadeout_length="" else fadeout_length=" "..fadeout_length end
+  if fadein_shape==nil then fadein_shape="" else fadein_shape=" "..fadein_shape end
+  if fadeout_shape==nil then fadeout_shape="" else fadeout_shape=" "..fadeout_shape end
+  
   local ProjectEntry=""
   
-  ProjectEntry="  RENDER_NORMALIZE "..render_normalize_method.." "..normalize_target..brickwall_target.."\n" 
+  ProjectEntry="  RENDER_NORMALIZE "..render_normalize_method.." "..normalize_target..brickwall_target..fadein_length..fadeout_length..fadein_shape..fadeout_shape.."\n" 
   
   if ProjectStateChunk:match("RENDER_NORMALIZE")~=nil then
     ProjectStateChunk=string.gsub(ProjectStateChunk, "\n  RENDER_NORMALIZE .-%c", "\n"..ProjectEntry)

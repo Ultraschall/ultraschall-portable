@@ -606,6 +606,8 @@
                                                4, Selected Media Items(in combination with Source 32); 
                                                5, Selected regions
                                                6, Razor edit areas
+                                               7, All project markers
+                                               8, Selected markers
                     RenderTable["Channels"] - the number of channels in the rendered file; 
                                                   1, mono; 
                                                   2, stereo; 
@@ -621,6 +623,26 @@
                     RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
                     RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
                     RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
+                    RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+                    RenderTable["FadeIn"] - the fade-in-time in seconds
+                    RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                           - 0, Linear fade in
+                                           - 1, Inverted quadratic fade in
+                                           - 2, Quadratic fade in
+                                           - 3, Inverted quartic fade in
+                                           - 4, Quartic fade in
+                                           - 5, Cosine S-curve fade in
+                                           - 6, Quartic S-curve fade in
+                    RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+                    RenderTable["FadeOut"] - the fade-out time in seconds
+                    RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                           - 0, Linear fade in
+                                           - 1, Inverted quadratic fade in
+                                           - 2, Quadratic fade in
+                                           - 3, Inverted quartic fade in
+                                           - 4, Quartic fade in
+                                           - 5, Cosine S-curve fade in
+                                           - 6, Quartic S-curve fade in
                     RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
                     RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
                                                          false, normalization not enabled
