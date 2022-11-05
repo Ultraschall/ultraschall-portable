@@ -16,25 +16,18 @@ end
 -- read all chapters available from file 
 local i=0 -- count variable
 local retval
-local Chaps={} -- table to get all chapternames, and their positions
-while Chap~="" do
-  i=i+1
-  i2=tostring(i)
-  if i2:len()==2 then i2="0"..i2
-  elseif i2:len()==1 then i2="00"..i2
-  end
-  retval, Chap = reaper.GetMediaFileMetadata(src, "ID3:CHAP"..i2)
-  if Chap=="" then break end
-
-  Chaps[i]={tonumber(Chap:match("(.-):")), tonumber(Chap:match(".-:(.-):")), Chap:match(".-:.-:(.*)")}
+Chaps={} -- table to get all chapternames, and their positions
+for i=0, 65500 do
+  Chaps[i]={reaper.CF_EnumMediaSourceCues(src,  i)}
+  if Chaps[i][4]==false then Chaps[i]=nil break end
 end
 
 -- when no chapters, show error-message
 if #Chaps==0 then reaper.MB("No Chapter markers available.", "No chapter markers", 0) return end
 
 -- insert chapters and renumerate the marker-numbers
-for i=1, #Chaps do
-  marker_number, guid, normal_marker_idx = ultraschall.AddNormalMarker(Chaps[i][1]/1000, 0, Chaps[i][3])
+for i=0, #Chaps do
+  marker_number, guid, normal_marker_idx = ultraschall.AddNormalMarker(Chaps[i][3], 0, Chaps[i][5])
 end
 ultraschall.RenumerateNormalMarkers()
 
