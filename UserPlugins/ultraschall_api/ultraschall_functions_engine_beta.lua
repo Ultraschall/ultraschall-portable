@@ -1167,102 +1167,6 @@ end
 
 
 
-function ultraschall.GetPodcastShownote_MetaDataEntry(shownote_idx, shownote_index_in_metadata, offset)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetPodcastShownote_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval, string shownote_entry = ultraschall.GetPodcastShownote_MetaDataEntry(integer shownote_idx, integer shownote_index_in_metadata, number offset)</functioncall>
-  <description>
-    returns the metadata-entry of a shownote
-    
-    The offset allows to offset the starttimes of a shownote-marker. 
-    For instance, for files that aren't rendered from projectstart but from position 33.44, this position should be passed as offset
-    so the shownote isn't at the wrong position.
-    
-    Also helpful for podcasts rendered using region-rendering.    
-
-    returns false in case of an error
-  </description>
-  <retvals>
-    boolean retval - true, shownote returned; false, shownote not returned
-    string shownote_entry - the created shownote-entry for this shownote, according to PODCAST_METADATA:"v1"-standard
-  </retvals>
-  <parameters>
-    integer shownote_idx - the index of the shownote to return
-    integer shownote_index_in_metadata - the index, that shall be inserted into the metadata
-                                       - this is for cases, where shownote #4 would be the first shownote in the file(region-rendering),
-                                       - so you would want it indexed as shownote 1 NOT shownote 4.
-                                       - in that case, set this parameter to 1, wheras shownote_idx would be 4
-                                       - 
-                                       - If you render out the project before the first shownote and after the last one(entire project), 
-                                       - simply make shownote_idx=shownote_index_in_metadata
-    number offset - the offset in seconds to subtract from the shownote-position(see description for details); set to 0 for no offset; must be 0 or higher
-  </parameters>  
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, get, shownote, reaper metadata</tags>
-</US_DocBloc>
-]]
-  if math.type(shownote_idx)~="integer" then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "shownote_idx", "must be an integer", -1) return false end
-  if shownote_idx<0 then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "shownote_idx", "must be bigger than 0", -2) return false end
-  if math.type(shownote_index_in_metadata)~="integer" then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "shownote_index_in_metadata", "must be an integer", -3) return false end
-  if shownote_index_in_metadata<0 then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "shownote_index_in_metadata", "must be bigger than 0", -4) return false end
-  
-  if type(offset)~="number" then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "offset", "must be a number", -5) return false end
-  if offset<0 then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "offset", "must be bigger than 0", -6) return false end
-  local retval, marker_index, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(shownote_idx)
-  if retval==false then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "shownote_idx", "no such shownote", -7) return false end
-  
-  -- WARNING!! CHANGES HERE MUST REFLECT CHANGES IN GetSetShownoteMarker_Attributes() !!!
-  local Tags=ultraschall.ShowNoteAttributes
-  
-  pos=pos-offset
-  if pos<0 then ultraschall.AddErrorMessage("GetPodcastShownote_MetaDataEntry", "offset", "shownote-position minus offset is smaller than 0", -8) return false end
-  name=string.gsub(name, "\\", "\\\\")
-  name=string.gsub(name, "\"", "\\\"")
-  --name=string.gsub(name, "\n", "\\n")
-
-  local Shownote_String="  pos:\""..pos.."\" \n  title:\""..name.."\" "
-  local temp, retval, gap
-
-  for i=1, #Tags do    
-    retval, temp = ultraschall.GetSetShownoteMarker_Attributes(false, shownote_idx, Tags[i], "")
-    local gap=""
-    for a=0, Tags[i]:len() do
-     gap=gap.." "
-    end
-    if temp=="" or retval==false then 
-      temp="" 
-    else 
-      temp=string.gsub(temp, "\r", "")
-      temp=string.gsub(temp, "\"", "\\\"")
-      temp=string.gsub(temp, "\n", "\"\n  "..gap.."\"")
-      
-      temp="\n  "..Tags[i]..":\""..temp.."\"" 
-      temp=temp.." "
-    end
-      
-    Shownote_String=Shownote_String..temp
-  end
-
-
-  Shownote_String="PODCAST_SHOWNOTE:\"BEG\"\n  idx:\""..shownote_index_in_metadata.."\"\n"..Shownote_String.."\nPODCAST_SHOWNOTE:\"END\""
-  --print2(Shownote_String)
-  
-  return true, Shownote_String
-end
- 
-
-
 
 
 
@@ -1440,229 +1344,7 @@ function ultraschall.GetSetPodcastExport_Attributes_Value(is_set, attribute, val
   return true, value
 end
 
-function ultraschall.GetAllShownotes_MetaDataEntry(start_time, end_time, offset)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetAllShownotes_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>integer number_of_shownotes, array shownote_entries = ultraschall.GetAllShownotes_MetaDataEntry(number start_time, number end_time, number offset)</functioncall>
-  <description>
-    gets the metadata-entries of all shownotes
-    
-    The offset allows to offset the starttimes of a shownote-marker. 
-    For instance, for files that aren't rendered from projectstart but from position 33.44, this position should be passed as offset
-    so the shownote isn't at the wrong position.
-    
-    Also helpful for podcasts rendered using region-rendering.
-    
-    returns false in case of an error
-  </description>
-  <retvals>
-    integer number_of_shownotes - the number of added shownotes
-    array shownote_entries - the individual shownote-entries
-  </retvals>
-  <parameters>
-    number start_time - the start-time of the range, from which to get the shownotes
-    number end_time - the end-time of the range, from which to get the shownotes
-    number offset - the offset in seconds to subtract from the shownote-positions(see description for details); set to 0 for no offset; must be 0 or higher
-  </parameters>  
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, get, all, shownote, reaper metadata</tags>
-</US_DocBloc>
-]]
 
-  if type(start_time)~="number" then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "start_time", "must be a number", -1) return -1 end
-  if start_time<0 then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "start_time", "must be bigger than 0", -2) return -1 end
-  if type(end_time)~="number" then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "end_time", "must be a number", -3) return -1 end
-  if start_time>end_time then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "end_time", "must be bigger than 0", -4) return -1 end
-  
-  if type(offset)~="number" then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "offset", "must be a number", -5) return -1 end
-  if offset<0 then ultraschall.AddErrorMessage("GetAllShownotes_MetaDataEntry", "offset", "must be bigger than 0", -6) return -1 end
-  
-  local A={}
-  local counter=0
-  for i=1, ultraschall.CountShownoteMarkers()-1 do
-    local A1, A2, pos = ultraschall.EnumerateShownoteMarkers(i)
-    if pos>=start_time and pos<=end_time then
-      counter=counter+1
-      retval, A[#A+1]=ultraschall.GetPodcastShownote_MetaDataEntry(i, counter, offset)
-    end
-  end
-  return #A, A
-end
-
---A,B=ultraschall.Commit4AllShownotes_ReaperMetadata(4, 7.1, 0, true, true, true, true)
-
-
---ultraschall.RemoveAllShownotes_ReaperMetaData(true, true, true, true)
-
-
-function ultraschall.GetPodcastChapter_MetaDataEntry(chapter_idx, chapter_index_in_metadata, offset)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetPodcastShownote_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval, string chapter_entry = ultraschall.GetPodcastChapter_MetaDataEntry(integer chapter_idx, integer chapter_index_in_metadata, number offset)</functioncall>
-  <description>
-    returns the metadata-entry of a chapter
-    
-    The offset allows to offset the starttimes of a chapter-marker. 
-    For instance, for files that aren't rendered from projectstart but from position 33.44, this position should be passed as offset
-    so the chapter isn't at the wrong position.
-    
-    Also helpful for podcasts rendered using region-rendering.
-
-    Note: this will include the metadata of "normal markers", that are used as chapter-markers in Ultraschall!
-
-    returns false in case of an error
-  </description>
-  <retvals>
-    boolean retval - true, chapter committed; false, chapter not committed
-    string chapter_entry - the created chapter-entry for this chapter, according to PODCAST_METADATA:"v1"-standard
-  </retvals>
-  <parameters>
-    integer chapter_idx - the index of the chapter to commit
-    integer chapter_index_in_metadata - the index, that shall be inserted into the metadata
-                                       - this is for cases, where chapter #4 would be the first chapter in the file(region-rendering),
-                                       - so you would want it indexed as chapter 1 NOT chapter 4.
-                                       - in that case, set this parameter to 1, wheras chapter_idx would be 4
-                                       - 
-                                       - If you render out the project before the first chapter and after the last one(entire project), 
-                                       - simply make chapter_idx=chapter_index_in_metadata
-    number offset - the offset in seconds to subtract from the chapter-position(see description for details); set to 0 for no offset; must be 0 or higher
-  </parameters>  
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, get, chapter, reaper metadata</tags>
-</US_DocBloc>
-]]
-  if math.type(chapter_idx)~="integer" then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "chapter_idx", "must be an integer", -1) return false end
-  if chapter_idx<0 then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "chapter_idx", "must be bigger than 0", -2) return false end
-  if math.type(chapter_index_in_metadata)~="integer" then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "chapter_index_in_metadata", "must be an integer", -3) return false end
-  if chapter_index_in_metadata<0 then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "chapter_index_in_metadata", "must be bigger than 0", -4) return false end
-  
-  if type(offset)~="number" then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "offset", "must be a number", -5) return false end
-  if offset<0 then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "offset", "must be bigger than 0", -6) return false end
-  local retval, marker_index, pos, name, shown_number, color, guid = ultraschall.EnumerateNormalMarkers(chapter_idx)
-  if retval==false then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "chapter_idx", "no such chapter", -7) return false end
-  
-  -- WARNING!! CHANGES HERE MUST REFLECT CHANGES IN GetSetChapterMarker_Attributes() !!!
-  local Tags=ultraschall.ChapterAttributes
-  
-  pos=pos-offset
-  if pos<0 then ultraschall.AddErrorMessage("GetPodcastChapter_MetaDataEntry", "offset", "chapter-position minus offset is smaller than 0", -8) return false end
-  name=string.gsub(name, "\\", "\\\\")
-  name=string.gsub(name, "\"", "\\\"")
-
-  local Chapter_String="  pos:\""..pos.."\" \n  title:\""..name.."\" "
-  local temp, retval, gap
-
-  for i=1, #Tags do
-    local retval, temp = ultraschall.GetSetChapterMarker_Attributes(false, chapter_idx, Tags[i], "")
-    local gap=""
-    for a=0, Tags[i]:len() do
-     gap=gap.." "
-    end
-    if temp=="" then 
-      temp="" 
-    else 
-      temp=string.gsub(temp, "\r", "")
-      temp=string.gsub(temp, "\"", "\\\"")
-      temp=string.gsub(temp, "\n", "\"\n  "..gap.."\"")
-
-      temp="\n  "..Tags[i]..":\""..temp.."\"" 
-      temp=temp.." "
-    end
-    
-    Chapter_String=Chapter_String..temp
-  end
-  
-  Chapter_String="PODCAST_CHAPTER:\"BEG\"\n  idx:\""..chapter_index_in_metadata.."\"\n"..Chapter_String.."\nPODCAST_CHAPTER:\"END\""
-  
-  return true, Chapter_String
-end
-
-function ultraschall.GetAllChapters_MetaDataEntry(start_time, end_time, offset)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetAllChapters_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>integer number_of_chapters, array chapter_entries = ultraschall.GetAllChapters_MetaDataEntry(number start_time, number end_time, number offset)</functioncall>
-  <description>
-    gets all the metadata-entries of all chapters
-    
-    The offset allows to offset the starttimes of a chapter-marker. 
-    For instance, for files that aren't rendered from projectstart but from position 33.44, this position should be passed as offset
-    so the chapter isn't at the wrong position.
-    
-    Also helpful for podcasts rendered using region-rendering.
-    
-    Note: uses metadata stored with "normal markers", as they are used by Ultraschall for chapter-markers
-    
-    returns false in case of an error
-  </description>
-  <retvals>
-    integer number_of_chapters - the number of added chapters
-    array chapter_entries - the individual chapter-entries
-  </retvals>
-  <parameters>
-    number start_time - the start-time of the range, from which to commit the chapters
-    number end_time - the end-time of the range, from which to commit the chapters
-    number offset - the offset in seconds to subtract from the chapter-positions(see description for details); set to 0 for no offset; must be 0 or higher
-  </parameters>  
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, get, all, chapter, reaper metadata</tags>
-</US_DocBloc>
-]]
-
-  if type(start_time)~="number" then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "start_time", "must be a number", -1) return -1 end
-  if start_time<0 then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "start_time", "must be bigger than 0", -2) return -1 end
-  if type(end_time)~="number" then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "end_time", "must be a number", -3) return -1 end
-  if start_time>end_time then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "end_time", "must be bigger than 0", -4) return -1 end
-  
-  if type(offset)~="number" then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "offset", "must be a number", -5) return -1 end
-  if offset<0 then ultraschall.AddErrorMessage("GetAllChapters_MetaDataEntry", "offset", "must be bigger than 0", -6) return -1 end
-  
-  local A={}
-  local counter=0
-  for i=1, ultraschall.CountNormalMarkers() do
-    local A1, A2, pos = ultraschall.EnumerateNormalMarkers(i)
-    if pos>=start_time and pos<=end_time then
-      counter=counter+1
-      retval, A[#A+1]=ultraschall.GetPodcastChapter_MetaDataEntry(i, counter, offset)
-    end
-  end
-  return #A, A
-end
-
---A,B=ultraschall.GetAllChapters_MetaDataEntry(0, 1000, 0, true, true, true, true)
---B=ultraschall.CountNormalMarkers()
 
 
 
@@ -1844,117 +1526,6 @@ end
 
 --A,B=ultraschall.GetPodcastEpisodeAttributesPreset_Name(1)
 
-function ultraschall.GetPodcastEpisode_MetaDataEntry()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetPodcastEpisode_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>string episode_entry = ultraschall.GetPodcastEpisode_MetaDataEntry()</functioncall>
-  <description>
-    Returns the podcast-metadata-standard-entry of an episode
-  </description>
-  <retvals>
-    string episode_entry - the created podcast-episode-entry for this project, according to PODCAST_METADATA:"v1"-standard
-  </retvals>
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, episode, podcast, reaper metadata</tags>
-</US_DocBloc>
-]]
-  local Tags=ultraschall.EpisodeAttributes
-
-  local Episode_String=""
-  local temp
-
-  for i=1, #Tags do
-    local retval, temp = ultraschall.GetSetPodcastEpisode_Attributes(false, Tags[i], "", "")
-    local gap=""
-    for a=0, Tags[i]:len() do
-     gap=gap.." "
-    end
-    if temp=="" then 
-      temp="" 
-    else 
-      temp=string.gsub(temp, "\r", "")
-      temp=string.gsub(temp, "\"", "\\\"")
-      temp=string.gsub(temp, "\n", "\"\n  "..gap.."\"")
-
-      temp="\n  "..Tags[i]..":\""..temp.."\"" 
-      temp=temp.." "
-    end
-      
-    Episode_String=Episode_String..temp
-  end
-
-
-  Episode_String="PODCAST_EPISODE:\"BEG\" "..Episode_String.."\nPODCAST_EPISODE:\"END\""
-
-  return Episode_String
-end
-
-function ultraschall.GetPodcast_MetaDataEntry()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetPodcast_MetaDataEntry</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.43
-    Lua=5.3
-  </requires>
-  <functioncall>string podcast_entry = ultraschall.GetPodcast_MetaDataEntry()</functioncall>
-  <description>
-    Returns the podcast-metadata-standard-entry with the general podcast-attributes
-  </description>
-  <retvals>
-    string podcast_entry - the created podcast-entry for this project, according to PODCAST_METADATA:"v1"-standard
-  </retvals>
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, podcast, reaper metadata</tags>
-</US_DocBloc>
-]]
-  local Tags=ultraschall.PodcastAttributes
-
-  local Podcast_String=""
-  local temp
-
-  for i=1, #Tags do
-    local retval, temp = ultraschall.GetSetPodcast_Attributes(false, Tags[i], "", "")
-    local gap=""
-    for a=0, Tags[i]:len() do
-     gap=gap.." "
-    end
-    if temp=="" then 
-      temp="" 
-    else 
-      temp=string.gsub(temp, "\r", "")
-      temp=string.gsub(temp, "\"", "\\\"")
-      temp=string.gsub(temp, "\n", "\"\n  "..gap.."\"")
-
-      temp="\n  "..Tags[i]..":\""..temp.."\"" 
-      temp=temp.." "
-    end
-    
-    Podcast_String=Podcast_String..temp
-  end
-
-
-  Podcast_String="PODCAST_GENERAL:\"BEG\" "..Podcast_String.."\nPODCAST_GENERAL:\"END\""
-
-  return Podcast_String
-end
 
 
 function ultraschall.WritePodcastMetaData(start_time, end_time, offset, filename, do_id3, do_vorbis, do_ape_deactivated, do_ixml_deactivated)
@@ -2352,4 +1923,237 @@ function ultraschall.EscapeCharactersForXMLText(String)
 end
 
 --A=ultraschall.EscapeCharactersForXMLText("HULA&HO\"HooP\"Oh now that you 'mention' it OP&amp;")
+
+function ultraschall.GetPodcastAttributesAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string podcastmetadata_json = ultraschall.GetPodcastAttributesAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for podcast as JSON according to PodcastMetaDataV1_Standard.
+  </description>
+  <retvals>
+    string podcastmetadata_json - the podcast-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, metadata, json, podcast metadata v1</tags>
+</US_DocBloc>
+]]
+  local JSON="\"podc\":{\n"
+  for i=1, #ultraschall.PodcastAttributes do
+    local retval, content = ultraschall.GetSetPodcast_Attributes(false, ultraschall.PodcastAttributes[i], "")
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      --[[
+      if ultraschall.PodcastAttributes[i]=="epsd_cover" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+      end
+      --]]
+      JSON=JSON.."\t\""..ultraschall.PodcastAttributes[i].."\":\""..content.."\",\n"
+    end
+  end
+  JSON=JSON.."}\n"
+  return JSON
+end
+
+--print3(ultraschall.PodcastMetadata_GetPodcastAttributesAsJSON())
+--if lol==nil then return end
+
+function ultraschall.GetEpisodeAttributesAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetEpisodeAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string episodemetadata_json = ultraschall.GetEpisodeAttributesAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for the podcast's episode as JSON according to PodcastMetaDataV1_Standard.
+  </description>
+  <retvals>
+    string episodemetadata_json - the podcast's episode-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, episode, metadata, json, podcast metadata v1</tags>
+</US_DocBloc>
+]]
+  local JSON="\"epsd\":{\n"
+  for i=1, #ultraschall.EpisodeAttributes do
+    local retval, content = ultraschall.GetSetPodcastEpisode_Attributes(false, ultraschall.EpisodeAttributes[i], "")
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if ultraschall.EpisodeAttributes[i]=="epsd_cover" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+      end
+      JSON=JSON.."\t\""..ultraschall.EpisodeAttributes[i].."\":\""..content.."\",\n"
+    end
+  end
+  JSON=JSON.."}\n"
+  return JSON
+end
+
+--print3(ultraschall.PodcastMetadata_GetEpisodeAttributesAsJSON())
+--if lol==nil then return end
+
+function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetChapterAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string chaptermetadata_json = ultraschall.GetChapterAttributesAsJSON(integer chaptermarker_id)</functioncall>
+  <description>
+    Returns the MetaDataEntry for a chapter as JSON according to PodcastMetaDataV1_Standard.
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    integer chaptermarker_id - the index of the chapter-marker, whose metadata-entry you want to get as JSON; 1-based
+  </parameters>
+  <retvals>
+    string chaptermetadata_json - the chapter-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, chapter, metadata, json, podcast metadata v1</tags>
+</US_DocBloc>
+]]
+  if math.type(chaptermarker_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "must be an integer", -1) return end
+  if chaptermarker_id<1 or chaptermarker_id>ultraschall.CountNormalMarkers() then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "no such chapter-marker", -2) return end
+  local JSON="\"chap_"..chaptermarker_id.."\":{\n"
+  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(chaptermarker_id)
+  JSON=JSON.."\t\"chap_name\":\""..markertitle.."\",\n"
+  JSON=JSON.."\t\"chap_position\":\""..position.."\",\n"
+  local retval, content = ultraschall.GetSetChapterMarker_Attributes(true, chaptermarker_id, "chap_guid", "")
+  
+  for i=1, #ultraschall.ChapterAttributes do
+    local attribute=ultraschall.ChapterAttributes[i]     
+    local retval, content = ultraschall.GetSetChapterMarker_Attributes(false, chaptermarker_id, attribute, "")
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if attribute=="chap_image" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      elseif attribute=="chap_image_path" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+        attribute="chap_image"
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      else
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      end
+      
+    end
+  end  
+  JSON=JSON.."}\n"
+  return JSON
+end
+
+--print3(ultraschall.PodcastMetadata_GetChapterAttributesAsJSON(1))
+--SLEM()
+--if lol==nil then return end
+
+function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetShownoteAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string shownotemetadata_json = ultraschall.GetShownoteAttributesAsJSON(integer shownotemarker_id)</functioncall>
+  <description>
+    Returns the MetaDataEntry for a shownote as JSON according to PodcastMetaDataV1_Standard.
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    integer chaptermarker_id - the index of the shownote-marker, whose metadata-entry you want to get as JSON; 1-based
+  </parameters>
+  <retvals>
+    string shownotemetadata_json - the chapter-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, shownote, metadata, json, podcast metadata v1</tags>
+</US_DocBloc>
+]]
+  if math.type(shownotemarker_id)~="integer" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "shownotemarker_id", "must be an integer", -1) return end
+  if shownotemarker_id<1 or shownotemarker_id>ultraschall.CountShownoteMarkers() then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "marker_id", "no such shownote-marker", -2) return end
+  local JSON="\"shwn_"..shownotemarker_id.."\":{\n"
+  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateShownoteMarkers(shownotemarker_id)
+  JSON=JSON.."\t\"shwn_name\":\""..markertitle.."\",\n"
+  JSON=JSON.."\t\"shwn_position\":\""..position.."\",\n"
+  
+  local retval, content = ultraschall.GetSetShownoteMarker_Attributes(true, shownotemarker_id, "shwn_guid", "")
+
+  for i=1, #ultraschall.ShowNoteAttributes do
+    local attribute=ultraschall.ShowNoteAttributes[i]
+    local retval, content = ultraschall.GetSetShownoteMarker_Attributes(false, shownotemarker_id, attribute, "")
+    --SLEM()
+    --print2(attribute)
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if attribute=="chap_image" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      elseif attribute=="chap_image_path" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        --content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+        attribute="chap_image"
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      else
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      end
+      
+    end
+  end  
+  JSON=JSON.."}\n"
+  return JSON
+end
 

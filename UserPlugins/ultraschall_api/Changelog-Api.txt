@@ -266,12 +266,27 @@ Note: Doesn't fucking work...
     toggle to enable/disable all FX instance oversampling settings
   
 - Render To Do:
- - Fade In/Fade Out added now
+ - Render stems-prefade added now
+ - save outfile-statistics added now(is global setting)
+ - GetRenderPreset\_RenderTable - please rewrite, the code is a mess for _EXT. Needs a much more robust solution...
  
  (Later)
  - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
     Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
     The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
+
+ParamModulation: Go fix it, pls...
+  https://forum.cockos.com/showpost.php?p=2608181&postcount=765
+
+-Modulator speedup entfernen, weil Issues mit 32Bit Systemen...
+
+- Markers:
+  SetNormalMarkers(probably others) has problems adressing markers, when markers share the exact same position.
+  We need to rewrite this, as otherwise markers get skipped.
+  EnumerateNormalMarkers doesn't work because of that.
+  Add multiple markers at position 30 secs named A, B and C.
+  Try to set the first one of them with a new name multiple times and you will succeed once, then fail. 
+    You'll set one of them at the position but never a specific one...
 
 readd in next version
 ToDo Marker Menu: 
@@ -283,35 +298,91 @@ ToDo Marker Menu:
   - add doubleclick-state as well -> later
 
   
-  - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastChapter\_MetaDataEntry - returns a podcast's chapter-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisode\_MetaDataEntry - returns the podcast's episode-related metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
-  - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
-  - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
-  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
-  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
+
   
-  
+
 </TODO>
 
 ## Ultraschall Framework - Changelog
 
-### 4.7 - "Pearl Jam - Alive" - 18th of September 2022
+### 4.75 - " - " - 16th of October 2022
 
-Has now 1532 functions, with XX new ones
+Has now 1590 functions, with XX new ones
 
 **new in this release:**  
 
   - **Bla**  
   Bla
   
+
+#### New features in 4.75  
+  - GFX-Functions: GFX\_ResizeImageKeepAspectRatio - resizes a loaded image while keeping aspect ratio
+  - PodcastMetadata: GetChapterAttributesAsJSON get the metadata of a chapter as JSON
+  - PodcastMetadata: GetEpisodeAttributesAsJSON get the metadata of an episode as JSON
+  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
+  - PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON
+  - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
+  - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
+  - PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON
+  - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
+  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
+  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
+  
+#### Changes from 4.7 to 4.75  
+  - API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -> thanks binbinfr
+  - MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks<the number of tracks needed by the items to be inserted
+  - MediaItemManagement: RippleCut - had trouble with project, where there's only one item on track 1 and no other tracks
+  - PodcastMetadata: GetSetShownoteMarker\_Attributes - supports now attribute shwn_linked_audiovideomedia, which allows linking media directly with a time_stamp
+  - PodcastMetadata: GetSetPodcast\_Attributes - supports now new attributes podc_twitch, podc_pinterest, podc_reddit, podc_slack, podc_discord
+  
+---
+
+### 4.7 - "Pearl Jam - Alive" - 16th of October 2022
+
+Has now 1590 functions, with 58 new ones
+
+**new in this release:**  
+
+  - **Marker Menu**  
+  You can code now your own left-click marker-context-menus. Add Entries with MarkerMenu\_InsertEntry and MarkerMenu\_InsertEntry\_DefaultMarkers
+  and start the menu with MarkerMenu\_Start. You can add new menuentries or remove them during runtime. So if you add a new marker-menu-entry, it will 
+  be shown in the menu the next time the user hits left-click on a marker.  
+  And: you can create menus for custom markers as well. So a custom marker called \_ShowNote: can have a different menu than \_AliceInWonderland:
+  It also includes regions.  
+  And action-marker.  
+  
+  - **ShowNote/Podcast Metadata**  
+  Relevant for podcasting use-cases, you can now add metadata to shownote/normal-markers as well as podcast/podcast-episode metadata.  
+  Future versions will include export functions for putting them into the mediafile's metadata.  
+  
+  - **EventManager - Debug**  
+  New features for debugging EventManager stuff, like getting additional states and execution-times. So you can check for performance. 
+  And if you don't want to code one yourself: there's a EventManager monitoring-script in the developer-tools, which shows you the 
+  execution-times for each check-function-cycle AND the time from after the end of the execution-time until the next one.  
+  This allows you to tweak performance for your check-functions. The monitoring-tool even gives you a hint, how low the execution-times  
+  must be for Reaper's UI not lagging.
+  
+  - **Get Project-time by MediaSource-time and the other way round**  
+  Get the exact project position from a given source-position or the exact source-position from a project-position.  
+  So inserting take-markers at project-position is now possible. Or other cool stuff, where you need to convert the 
+  project-position into take-position.
+  
+  - **ScaleFromDPIFromScale**  
+  You can convert now the dpi-value currently set into its corresponding scale-value vice versa. With that, you can always scale 
+  your script's ui properly.  
+  
+  - **Base64De/Encoder, ASCII2HEX2ASCII-enocders**  
+  Used to be slow on bigger strings. Not anymore. Sped up by magnitudes...
+  
+  - **Create/Get-Render-CFG-functions**  
+  FFMPEG-support added, NONE as video/audio-format added, wmf-support added  
+  
+  - **Render functions**  
+  Support now marker-rendering and fade-in/out-feature  
+  
+  - **Bugfixes Bugfixes Bugfixes**    
 
 #### New features in 4.7
   - DeveloperTools: FindCurrentlyUsedExtstatesNamesInAFile - looks through a selected file and checks, whether its strings are currently used extstates
@@ -340,7 +411,7 @@ Has now 1532 functions, with XX new ones
   - MarkerManagement: MarkerMenu\_GetEntry\_DefaultMarkers - gets the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_GetLastClickedMenuEntry - gets the last clicked marker-menu-entry, including name, position, additional data and marker-type
   - MarkerManagement: MarkerMenu\_InsertEntry - inserts a new marker-entry into the marker menu for a custom marker/region
-  - MarkerManagement: MarkerMenu\_InsertEntry_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
+  - MarkerManagement: MarkerMenu\_InsertEntry\_DefaultMarkers - inserts a new marker-entry into the marker menu for markers/regions of Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveEntry - removes the action and description of a marker-entry for a certain custom-marker/region-type
   - MarkerManagement: MarkerMenu\_RemoveEntry\_DefaultMarkers - removes the action and description of a marker-entry for a certain default-marker/region-type from Ultraschall
   - MarkerManagement: MarkerMenu\_RemoveSubMenu - removes a submenu from the marker-menu of a specific custom-marker/region
@@ -420,7 +491,11 @@ Has now 1532 functions, with XX new ones
   - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
-  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+
+  - ProjectManagement: GetProject\_Render\_Normalize - supports now fade_in and fade_out rendering-modes
+  - ProjectManagement: SetProject\_Render\_Normalize - supports now fade_in and fade_out rendering-modes
+  - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+; supports now FadeIn/Out and marker-rendering
+  - Rendering: ApplyRenderTable\_Project - supports now marker-rendering as well as fade-in/fade-out
+  - Rendering: ApplyRenderTable\_ProjectFile - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: CreateNewRenderTable - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: CreateRenderCFG\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
   - Rendering: CreateRenderCFG\_FLV\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
@@ -438,12 +513,15 @@ Has now 1532 functions, with XX new ones
   - Rendering: GetRenderCFG\_Settings\_MPEG2\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: GetRenderCFG\_Settings\_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
-  - Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thanx to Malik)
-  - Rendering: GetRenderTable_Project - supports now marker-rendering as well as fade-in/fade-out
+  - Rendering: GetRenderPreset\_RenderTable - TailMS supported now as of Reaper 6.62+; marker rendering and fade in/out supported; bounds and options-name are now case-insensitive -> (thanx to Malik)
+  - Rendering: GetRenderTable\_ProjectDefaults - supports now marker-rendering as well as fade-in/fade-out
+  - Rendering: GetRenderTable\_Project - supports now marker-rendering as well as fade-in/fade-out
+  - Rendering: GetRenderTable\_ProjectFile - supports now marker-rendering as well as fade-in/fade-out  
   - Rendering: DeleteRenderPreset\_Bounds - bounds-name is now case-insensitive -> (thnx to Malik)
   - Rendering: DeleteRenderPreset\_FormatOptions - options-name is now case-insensitive -> (thnx to Malik)
+  - Rendering: IsValidRenderTable - supports now FadeIn/Out and marker-rendering
   - Rendering: RenderProject\_RenderTable - didn't increment filename when rendering filename under certain circumstances -> fixed (thnx to aurelien)
-  - Rendering: SetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -> (thnx to Malik)
+  - Rendering: SetRenderPreset - TailMS supported now as of Reaper 6.62+; supports now FadeIn/Out and marker-rendering; bounds and options-name are now case-insensitive -> (thnx to Malik)
   - UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -> fixed
   - UserInterface: SetUIScale - allows now for scaling higher than 2000
   - UserInterface: ShowMenu - did only open once in a script though it should open multiple times -> fixed
@@ -2250,22 +2328,22 @@ This is the last beta-release for the Ultraschall-API4.00 and the feature-freeze
    - Miscellaneous: WinterlySnowflakes - did produce Lua-error, when number of snowflakes was >5000; limited to 5000 now
    - ParmAlias: GetParmAlias_MediaTrack - had wrong functionname in error-messages -> fixed
    - ParmAlias: Docs - all functions ParmLearn-function in the docs move to proper subchapters for clearer index-navigation
-   - Project Management: GetAllMediaItems_FromProjectBayStateChunk - didn't return ProjectBayStateChunk properly -> fixed
-   - Project Management: GetProject_RenderCFG - returns now the render-cfg-string for the secondary renderformat as well
-   - Project Management: SetProject_RenderCFG - allows now setting of secondary render-format as well; backwards compatible with old scripts, who set only primary rendering format in ProjectStateChunks
+   - Project Management: GetAllMediaItems\_FromProjectBayStateChunk - didn't return ProjectBayStateChunk properly -> fixed
+   - Project Management: GetProject\_RenderCFG - returns now the render-cfg-string for the secondary renderformat as well
+   - Project Management: SetProject\_RenderCFG - allows now setting of secondary render-format as well; backwards compatible with old scripts, who set only primary rendering format in ProjectStateChunks
    - Rendering: AddRenderPreset - allows now adding the render-cfg-string for secondary renderformat as well; had inner variable exposed -> fixed
-   - Rendering: ApplyRenderTable_Project - allows now setting the render-cfg-string for secondary renderformat as well
+   - Rendering: ApplyRenderTable\_Project - allows now setting the render-cfg-string for secondary renderformat as well
    - Rendering: CreateNewRenderTable - allows now adding the render-cfg-string for secondary renderformat as well; had wrong functionname in docs -> fixed
    - Rendering: DeleteRenderPreset_FormatOptions - deletes now the render-cfg-string for secondary renderformat, if existing
-   - Rendering: GetRenderPreset_RenderTable - returns now possible render-cfg-string for secondary renderformat as well; some error-messages didn't work -> fixed
-   - Rendering: GetRenderTable_Project - returns now a render-cfg-string for secondary renderformat
-   - Rendering: GetRenderTable_ProjectFile - returns now a render-cfg-string for secondary renderformat
+   - Rendering: GetRenderPreset\_RenderTable - returns now possible render-cfg-string for secondary renderformat as well; some error-messages didn't work -> fixed
+   - Rendering: GetRenderTable\_Project - returns now a render-cfg-string for secondary renderformat
+   - Rendering: GetRenderTable\_ProjectFile - returns now a render-cfg-string for secondary renderformat
    - Rendering: IsValidRenderTable - checks now for the render-cfg-string for secondary renderformat as well
    - Rendering: RenderProject - allows now setting the render-cfg-string for secondary renderformat as well; checks now, if projectfilename is a valid project
-   - Rendering: RenderProject_RenderTable - allows now setting the render-cfg-string for secondary renderformat as well; checks now, if projectfilename is a valid project
+   - Rendering: RenderProject\_RenderTable - allows now setting the render-cfg-string for secondary renderformat as well; checks now, if projectfilename is a valid project
    - Rendering: SetRenderPreset - allows now setting the render-cfg-string for secondary renderformat as well; set RenderString2="" to remove the secondary renderformat
-   - Track Management: GetTrackState_NumbersOnly - had wrong description in the docs -> fixed
-   - User Interface: GetHWND_ArrangeViewAndTimeLine - moved to User Interface -> Reaper-Windowhandler in the index of the docs
+   - Track Management: GetTrackState\_NumbersOnly - had wrong description in the docs -> fixed
+   - User Interface: GetHWND\_ArrangeViewAndTimeLine - moved to User Interface -> Reaper-Windowhandler in the index of the docs
    
    
 

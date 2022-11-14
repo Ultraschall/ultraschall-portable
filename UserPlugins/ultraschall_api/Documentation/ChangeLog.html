@@ -35,12 +35,65 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.7 - "Pearl Jam - Alive" - 18th of September 2022</h3>
-<p>Has now 1532 functions, with XX new ones</p>
+<h3>4.75 - " - " - 16th of October 2022</h3>
+<p>Has now 1590 functions, with XX new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
 <li><strong>Bla</strong><br />
 Bla</li>
+</ul>
+<h4>New features in 4.75</h4>
+<ul>
+<li>GFX-Functions: GFX_ResizeImageKeepAspectRatio - resizes a loaded image while keeping aspect ratio</li>
+<li>PodcastMetadata: GetChapterAttributesAsJSON get the metadata of a chapter as JSON</li>
+<li>PodcastMetadata: GetEpisodeAttributesAsJSON get the metadata of an episode as JSON</li>
+<li>PodcastMetadata: GetPodcastEpisodeAttributesPreset_Name - gets the name of an episode-metadata-preset</li>
+<li>PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON</li>
+<li>PodcastMetadata: GetPodcastAttributesPreset_Name - gets the name of a podcast-metadata-preset</li>
+<li>PodcastMetadata: GetSetPodcastExport_Attributes_String - gets/sets string attributes for podcast-export in Ultraschall</li>
+<li>PodcastMetadata: GetSetPodcastExport_Attributes_Value - gets/sets number attributes for podcast-export in Ultraschall</li>
+<li>PodcastMetadata: GetSetTranscription_Attributes gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)</li>
+<li>PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON</li>
+<li>PodcastMetadata: SetPodcastEpisodeAttributesPreset_Name - sets the name of an episode-metadata-preset</li>
+<li>PodcastMetadata: SetPodcastAttributesPreset_Name - sets the name of a podcast-metadata-preset</li>
+<li>PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes</li>
+</ul>
+<h4>Changes from 4.7 to 4.75</h4>
+<ul>
+<li>API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -&gt; thanks binbinfr</li>
+<li>MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks&lt;the number of tracks needed by the items to be inserted</li>
+<li>MediaItemManagement: RippleCut - had trouble with project, where there's only one item on track 1 and no other tracks</li>
+<li>PodcastMetadata: GetSetShownoteMarker_Attributes - supports now attribute shwn<em>linked</em>audiovideomedia, which allows linking media directly with a time_stamp</li>
+<li>PodcastMetadata: GetSetPodcast_Attributes - supports now new attributes podc<em>twitch, podc</em>pinterest, podc<em>reddit, podc</em>slack, podc_discord</li>
+</ul>
+<hr />
+<h3>4.7 - "Pearl Jam - Alive" - 16th of October 2022</h3>
+<p>Has now 1590 functions, with 58 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Marker Menu</strong><br />
+You can code now your own left-click marker-context-menus. Add Entries with MarkerMenu_InsertEntry and MarkerMenu_InsertEntry_DefaultMarkers and start the menu with MarkerMenu_Start. You can add new menuentries or remove them during runtime. So if you add a new marker-menu-entry, it will be shown in the menu the next time the user hits left-click on a marker.<br />
+And: you can create menus for custom markers as well. So a custom marker called _ShowNote: can have a different menu than _AliceInWonderland: It also includes regions.<br />
+And action-marker.</p></li>
+<li><p><strong>ShowNote/Podcast Metadata</strong><br />
+Relevant for podcasting use-cases, you can now add metadata to shownote/normal-markers as well as podcast/podcast-episode metadata.<br />
+Future versions will include export functions for putting them into the mediafile's metadata.</p></li>
+<li><p><strong>EventManager - Debug</strong><br />
+New features for debugging EventManager stuff, like getting additional states and execution-times. So you can check for performance. And if you don't want to code one yourself: there's a EventManager monitoring-script in the developer-tools, which shows you the execution-times for each check-function-cycle AND the time from after the end of the execution-time until the next one.<br />
+This allows you to tweak performance for your check-functions. The monitoring-tool even gives you a hint, how low the execution-times<br />
+must be for Reaper's UI not lagging.</p></li>
+<li><p><strong>Get Project-time by MediaSource-time and the other way round</strong><br />
+Get the exact project position from a given source-position or the exact source-position from a project-position.<br />
+So inserting take-markers at project-position is now possible. Or other cool stuff, where you need to convert the project-position into take-position.</p></li>
+<li><p><strong>ScaleFromDPIFromScale</strong><br />
+You can convert now the dpi-value currently set into its corresponding scale-value vice versa. With that, you can always scale your script's ui properly.</p></li>
+<li><p><strong>Base64De/Encoder, ASCII2HEX2ASCII-enocders</strong><br />
+Used to be slow on bigger strings. Not anymore. Sped up by magnitudes...</p></li>
+<li><p><strong>Create/Get-Render-CFG-functions</strong><br />
+FFMPEG-support added, NONE as video/audio-format added, wmf-support added</p></li>
+<li><p><strong>Render functions</strong><br />
+Support now marker-rendering and fade-in/out-feature</p></li>
+<li><p><strong>Bugfixes Bugfixes Bugfixes</strong></p></li>
 </ul>
 <h4>New features in 4.7</h4>
 <ul>
@@ -161,7 +214,11 @@ Bla</li>
 <li>Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -&gt; fixed</li>
 <li>ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -&gt; fixed</li>
-<li>Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+</li>
+<li>ProjectManagement: GetProject_Render_Normalize - supports now fade<em>in and fade</em>out rendering-modes</li>
+<li>ProjectManagement: SetProject_Render_Normalize - supports now fade<em>in and fade</em>out rendering-modes</li>
+<li>Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+; supports now FadeIn/Out and marker-rendering</li>
+<li>Rendering: ApplyRenderTable_Project - supports now marker-rendering as well as fade-in/fade-out</li>
+<li>Rendering: ApplyRenderTable_ProjectFile - supports now marker-rendering as well as fade-in/fade-out</li>
 <li>Rendering: CreateNewRenderTable - supports now marker-rendering as well as fade-in/fade-out</li>
 <li>Rendering: CreateRenderCFG_AVI_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs</li>
 <li>Rendering: CreateRenderCFG_FLV_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
@@ -179,12 +236,16 @@ Bla</li>
 <li>Rendering: GetRenderCFG_Settings_MPEG2_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: GetRenderCFG_Settings_QTMOVMP4_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
 <li>Rendering: GetRenderCFG_Settings_WebMVideo - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec</li>
-<li>Rendering: GetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -&gt; (thanx to Malik)</li>
+<li>Rendering: GetRenderPreset_RenderTable - TailMS supported now as of Reaper 6.62+; marker rendering and fade in/out supported; bounds and options-name are now case-insensitive -&gt; (thanx to Malik)</li>
+<li>Rendering: GetRenderTable_ProjectDefaults - supports now marker-rendering as well as fade-in/fade-out</li>
 <li>Rendering: GetRenderTable_Project - supports now marker-rendering as well as fade-in/fade-out</li>
+<li>Rendering: GetRenderTable_ProjectFile - supports now marker-rendering as well as fade-in/fade-out<br />
+</li>
 <li>Rendering: DeleteRenderPreset_Bounds - bounds-name is now case-insensitive -&gt; (thnx to Malik)</li>
 <li>Rendering: DeleteRenderPreset_FormatOptions - options-name is now case-insensitive -&gt; (thnx to Malik)</li>
+<li>Rendering: IsValidRenderTable - supports now FadeIn/Out and marker-rendering</li>
 <li>Rendering: RenderProject_RenderTable - didn't increment filename when rendering filename under certain circumstances -&gt; fixed (thnx to aurelien)</li>
-<li>Rendering: SetRenderPreset - TailMS supported now as of Reaper 6.62+; bounds and options-name are now case-insensitive -&gt; (thnx to Malik)</li>
+<li>Rendering: SetRenderPreset - TailMS supported now as of Reaper 6.62+; supports now FadeIn/Out and marker-rendering; bounds and options-name are now case-insensitive -&gt; (thnx to Malik)</li>
 <li>UltraschallConfigFiles: GetUSExternalState - did return nil when file did not exist, though docs claimed "" -&gt; fixed</li>
 <li>UserInterface: SetUIScale - allows now for scaling higher than 2000</li>
 <li>UserInterface: ShowMenu - did only open once in a script though it should open multiple times -&gt; fixed</li>

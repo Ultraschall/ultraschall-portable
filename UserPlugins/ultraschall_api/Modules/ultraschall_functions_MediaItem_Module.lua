@@ -1337,7 +1337,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
   local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)
-  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition+0.0000000000000001, endposition,trackstring,true)
+  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition, endposition,trackstring,true)
   
 --if lol==nil then return end
   
@@ -1603,7 +1603,9 @@ function ultraschall.InsertMediaItemArray(position, MediaItemArray, trackstring)
   if trackstring==-1 or trackstring==""  then return -1 end
   local count=1
   local i,LL
-
+  
+  
+  
   local NewMediaItemArray={}
   local _count, individual_values = ultraschall.CSV2IndividualLinesAsArray(trackstring) 
   local ItemStart=reaper.GetProjectLength()+1
@@ -1854,16 +1856,16 @@ end
 
 
 
-function ultraschall.InsertMediaItemStateChunkArray(position, MediaItemStateChunkArray, trackstring)
+function ultraschall.InsertMediaItemStateChunkArray(position, MediaItemStateChunkArray, trackstring, add_needed_tracks)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InsertMediaItemStateChunkArray</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer number_of_items, array MediaItemArray = ultraschall.InsertMediaItemStateChunkArray(number position, array MediaItemStateChunkArray, string trackstring)</functioncall>
+  <functioncall>integer number_of_items, array MediaItemArray = ultraschall.InsertMediaItemStateChunkArray(number position, array MediaItemStateChunkArray, string trackstring, optional boolean add_needed_tracks)</functioncall>
   <description>
     Inserts the MediaItems from MediaItemStateChunkArray at position into the tracks, as given by trackstring.
     Note:Needs ULTRASCHALL_TRACKNUMBER within the statechunks, which includes the tracknumber for each mediaitem to be included. Else it will return -1. That entry will be included automatically into the MediaItemStateChunkArray as provided by <a href="#GetAllMediaItemsBetween">GetAllMediaItemsBetween</a>. If you need to manually insert that entry into a statechunk, use <a href="#SetItemUSTRackNumber_StateChunk">SetItemUSTRackNumber_StateChunk</a>.
@@ -1878,6 +1880,7 @@ function ultraschall.InsertMediaItemStateChunkArray(position, MediaItemStateChun
     number position - the position of the newly created mediaitem
     array MediaItemStateChunkArray - an array with the statechunks of the MediaItems to be inserted
     string trackstring - the numbers of the tracks, separated by a ,
+    optional boolean add_needed_tracks - true, adds tracks to the project, if needed; nil or false, will only insert into existing tracks
   </parameters>
   <retvals>
     integer number_of_items - the number of MediaItems created
@@ -1904,6 +1907,24 @@ function ultraschall.InsertMediaItemStateChunkArray(position, MediaItemStateChun
   local LL
   local _count, individual_values = ultraschall.CSV2IndividualLinesAsArray(trackstring) 
   local ItemStart=reaper.GetProjectLength()+1
+  
+  if add_needed_tracks==true then 
+    
+    local max_tracknumber=0
+    for i=1, #MediaItemStateChunkArray do
+      local tracknumber = ultraschall.GetItemUSTrackNumber_StateChunk(MediaItemStateChunkArray[i])
+      if tracknumber>max_tracknumber then max_tracknumber=tracknumber end
+    end
+    --print2(max_tracknumber,reaper.CountTracks(0))
+    if max_tracknumber>reaper.CountTracks(0) then
+    --print2(max_tracknumber < reaper.CountTracks(0))
+      for i=reaper.CountTracks(0), max_tracknumber-1 do
+        --print2("")
+        reaper.Main_OnCommand(40001, 0)
+      end
+    end
+  end
+  
   while MediaItemStateChunkArray[count]~=nil do
     local ItemStart_temp=ultraschall.GetItemPosition(nil,MediaItemStateChunkArray[count])
     if ItemStart>ItemStart_temp then ItemStart=ItemStart_temp end

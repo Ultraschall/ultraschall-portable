@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.64 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.69 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -949,6 +949,9 @@
            
            >&8=0, Allow drag-import to insert tracks - unchecked
            >&8=1, Allow drag-import to insert tracks - checked
+           
+           >&16=0, Also copy media when pasting into project - unchecked
+           >&16=1, Also copy media when pasting into project - unchecked
            
           For other settings, set in the preferences -> Media, see [showpeaksbuild](#showpeaksbuild), [relativeedges](#relativeedges), [applyfxtail](#applyfxtail), [itemfxtail](#itemfxtail), [peakcachegenmode](#peakcachegenmode), [opencopyprompt](#opencopyprompt)  
                                                 [altpeaks](#altpeaks), [showpeaks](#showpeaks), [peakcachegenrs](#peakcachegenrs), [offlineinact](#offlineinact), [insertmtrack](#insertmtrack)  
@@ -5989,6 +5992,31 @@
             >> 0 0, Use global preference
             >> 1 0, Copy media to project path
             >> 0 1, Do not copy media to project path
+            
+          >&512 &1024 &2048 &4096 &8192
+          
+            >> 0 0 0 0 0 = 2 channels
+            >> 1 0 0 0 0 = 4 channels
+            >> 0 1 0 0 0 = 6 channels
+            >> 1 1 0 0 0 = 8 channels
+            >> ...
+            >> ...
+            >> 1 0 1 1 1 = 60 channels
+            >> 0 1 1 1 1 = 62 channels
+            >> 1 1 1 1 1 = 64 channels
+            
+          >&65536 &131.072 &262.144 &524.288 &1.048.576 &2.097.152 &4.194.304
+          
+            >> 0 0 0 0 0 0 0 = All
+            >> 1 0 0 0 0 0 0 = Mono
+            >> 0 1 0 0 0 0 0 = Stereo
+            >> 1 1 0 0 0 0 0 = 
+            >> ...
+            >> ...
+            >> 1 0 1 1 1 1 0 = 61 chan
+            >> 0 1 1 1 1 1 0 = 62 chan
+            >> 1 1 1 1 1 1 0 = 63 chan
+            >> 0 0 0 0 0 0 1 = 64 chan
                     
           Stored in reaper.ini under the same name in the section REAPER.  
             
@@ -9160,6 +9188,7 @@
            >&1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
            >4096, Razor edit areas
            >4224, Razor edit areas via master
+           >&8192, Render stems pre-fader; 0, unchecked; 1, checked
            
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
@@ -10631,6 +10660,9 @@
            
            >&16384=0, Return to render setup-checkbox as set in the rendering window -> unchecked
            >&16384=1, Return to render setup-checkbox as set in the rendering window -> checked
+           
+           >&32768=0, Save outfile.render_stats.html - unchecked
+           >&32768=1, Save outfile.render_stats.html - checked
            
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  

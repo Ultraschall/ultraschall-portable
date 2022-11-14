@@ -93,7 +93,7 @@ end
 --gfx.init()
 --A=ultraschall.GFX_DrawThickRoundRect(1,2,300,140,5,40,true)
 
-function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
+function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx, destination)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GFX_BlitFramebuffer</slug>
@@ -125,12 +125,23 @@ function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
   <tags>gfx, functions, gfx, blit, framebuffer</tags>
 </US_DocBloc>
 ]]
+--print2("")
   if math.type(framebufferidx)~="integer" then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "framebufferidx", "must be an integer", -1) return false end
   if framebufferidx<-1 or framebufferidx>1023 then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "framebufferidx", "must be between -1 and 1023", -1) return false end
   if showidx~=nil and type(showidx)~="boolean" then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "showidx", "must be a boolean", -3) return false end
   local x,y=gfx.getimgdim(framebufferidx)
-  local ratiox=((100/x)*gfx.w)/100
-  local ratioy=((100/y)*gfx.h)/100
+  local ratiox, ratioy
+  local old_dest=gfx.dest
+  if destination==nil or destination==-1 then
+    ratiox=((100/x)*gfx.w)/100
+    ratioy=((100/y)*gfx.h)/100
+    gfx.dest=-1
+  else
+    local w,h=gfx.getimgdim(destination)
+    ratiox=((100/x)*w)/100
+    ratioy=((100/y)*h)/100
+    gfx.dest=destination
+  end
   if ratiox<ratioy then ratio=ratiox else ratio=ratioy end
   if x<gfx.w and y<gfx.h then ratio=1 end
   local oldx=gfx.x
@@ -154,6 +165,7 @@ function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
   end    
   gfx.x=oldx
   gfx.y=oldy
+  gfx.dest=old_dest
   return true
 end
 
@@ -1332,3 +1344,75 @@ function ultraschall.GFX_GetTextLayout(bold, italic, underline, outline, nonalia
   return Layout
 end
 
+function ultraschall.GFX_ResizeImageKeepAspectRatio(image, neww, newh, bg_r, bg_g, bg_b)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GFX_ResizeImageKeepAspectRatio</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=5.95
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.GFX_ResizeImageKeepAspectRatio(integer image, integer neww, integer newh, optional number r, optional number g, optional number b)</functioncall>
+  <description>
+    Resizes an image, keeping its aspect-ratio. You can set a background-color for non rectangular-images.
+    
+    Resizing upwards will probably cause artifacts!
+    
+    Note: this uses image 1023 as temporary buffer so don't use image 1023, when using this function!
+  </description>
+  <parameters>
+    integer image - an image between 0 and 1022, that you want to resize
+    integer neww - the new width of the image
+    integer newh - the new height of the image
+    optional number r - the red-value of the background-color
+    optional number g - the green-value of the background-color
+    optional number b - the blue-value of the background-color
+  </parameters>
+  <retvals>
+    boolean retval - true, blitting was successful; false, blitting was unsuccessful
+  </retvals>
+  <chapter_context>
+    Blitting
+  </chapter_context>
+  <target_document>US_Api_GFX</target_document>
+  <source_document>ultraschall_gfx_engine.lua</source_document>
+  <tags>gfx, functions, get, text layout</tags>
+</US_DocBloc>
+]]
+  if math.type(image)~="integer" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "image", "must be an integer", -1) return false end
+  if math.type(neww)~="integer" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "neww", "must be an integer", -2) return false end
+  if math.type(newh)~="integer" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "newh", "must be an integer", -3) return false end
+  
+  if bg_r~=nil and type(bg_r)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_r", "must be a number", -4) return false end
+  if bg_g~=nil and type(bg_g)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_g", "must be a number", -5) return false end
+  if bg_b~=nil and type(bg_b)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_b", "must be a number", -6) return false end
+  
+  if image<0 or image>1022 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "image", "must be between 0 and 1022", -7) return false end
+  if neww<0 or neww>8192 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "neww", "must be between 0 and 8192", -8) return false end
+  if newh<0 or newh>8192 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "newh", "must be between 0 and 8192", -9) return false end
+  
+  local old_r, old_g, old_g=gfx.r, gfx.g, gfx.b  
+  local old_dest=gfx.dest
+  local oldx, oldy = gfx.x, gfx.y
+  local x,y=gfx.getimgdim(image)
+  local ratiox=((100/x)*neww)/100
+  local ratioy=((100/y)*newh)/100
+  if ratiox<ratioy then ratio=ratiox else ratio=ratioy end
+  gfx.setimgdim(1023, neww, newh)
+  gfx.dest=1023
+  gfx.blit(image, ratio, 0)
+
+  gfx.setimgdim(image, neww, newh)
+  gfx.dest=image
+  if bg_r~=nil then gfx.r=bg_r end
+  if bg_g~=nil then gfx.g=bg_g end
+  if bg_b~=nil then gfx.b=bg_b end
+  x,y=gfx.getimgdim(image)
+  gfx.rect(-1,-1,x+1,y+1,1)
+  gfx.set(old_r, old_g, old_g)
+  gfx.blit(1023, 1, 0)
+  gfx.dest=old_dest
+  gfx.x, gfx.y = oldx, oldy
+  return true
+end

@@ -5412,7 +5412,7 @@ function ultraschall.AddShownoteMarker(pos, name)
   local A={ultraschall.AddCustomMarker("Shownote", pos, name2, Count+1, Color)}  
   A[4]=A[4]+1
   ultraschall.SetShownoteMarker(A[4], pos, name)
-  local A1,B1,C1=ultraschall.GetSetShownoteMarker_Attributes(true, A[4], "shwn_guid", "", false)
+  local A1,B1,C1=ultraschall.GetSetShownoteMarker_Attributes(true, A[4], "shwn_guid", "")
   if A[1]==false then A[2]=-1 end
   table.remove(A,1)
   return table.unpack(A)
@@ -7230,7 +7230,7 @@ function ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(marker_type, clicktyp
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(string marker_name, integer clicktype, integer entry_nr, string action, string description, string additional_data, integer submenu, boolean greyed, optional boolean checked)</functioncall>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr, string action, string description, string additional_data, integer submenu, boolean greyed, optional boolean checked)</functioncall>
   <description>
     inserts a menu-entry into the marker-menu, associated with a certain default marker/region as in Ultraschall and moves all others one up
     
@@ -7240,8 +7240,13 @@ function ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(marker_type, clicktyp
     boolean retval - true, inserting was successful; false, inserting was unsuccessful
   </retvals>
   <parameters>
-    string marker_name - the custom-marker/region name, whose menu-entry you want to insert
-    boolean is_marker_region - true, if the marker is a region; false, if not
+    integer marker_type - the marker_type, whose menu-entry you want to get
+                        - 0, normal(chapter) markers
+                        - 1, planned markers (Custom markers whose name is _Planned:)
+                        - 2, edit (Custom markers, whose name is _Edit: or _Edit)
+                        - 3, shownote
+                        - 4, region
+                        - 5, action marker
     integer clicktype - the clicktype; 0, right-click
     integer entry_nr - the entry-number, that you want to insert
     string action - the action-command-id for this new marker-entry
@@ -7736,7 +7741,7 @@ function ultraschall.MarkerMenu_GetLastTouchedMarkerRegion()
   <tags>markermanagement, get, last touched, marker, region, markermenu</tags>
 </US_DocBloc>
 ]]
-  return tonumber(reaper.SetExtState("ultraschall_api", "markermenu_last_touched_marker"))
+  return tonumber(reaper.GetExtState("ultraschall_api", "markermenu_last_touched_marker"))
 end
 
 
@@ -7813,7 +7818,8 @@ ultraschall.ChapterAttributes={
               "chap_image_license",
               "chap_image_origin",
               "chap_image_url",
-              "chap_guid"
+              "chap_guid",
+              "chap_image_path"
               }
 
 function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, content, planned)
@@ -7898,12 +7904,13 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     end
   end
   
-  if attributename=="chap_guid" then 
+  if attributename=="chap_guid" then     
     if ultraschall.GetMarkerExtState(idx, attributename)==nil then
       ultraschall.SetMarkerExtState(idx, attributename, reaper.genGuid(""))
     end
-    return ultraschall.GetMarkerExtState(idx, attributename)
+    return true, ultraschall.GetMarkerExtState(idx, attributename)
   end
+  
   if attributename=="chap_url" then attributename="url" end
   
   if found==false then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "attributename not supported", -7) return false end
@@ -7949,6 +7956,11 @@ ultraschall.PodcastAttributes={
               "podc_instagram",
               "podc_tiktok",
               "podc_mastodon",
+              "podc_twitch",
+              "podc_pinterest",
+              "podc_reddit",
+              "podc_slack",
+              "podc_discord",
               --"podc_donate", 
               "podc_contact_email",
               "podc_descriptive_tags"
@@ -7959,7 +7971,7 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetPodcast_Attributes</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=4.75
     Reaper=6.20
     SWS=2.10.0.1
     Lua=5.3
@@ -7980,6 +7992,11 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
          "podc_instagram" - instagram-channel of the podcast
          "podc_tiktok" - tiktok-channel of the podcast
          "podc_mastodon" - mastodon-channel of the podcast
+         "podc_twitch" - the twitch-channel of the podcast
+         "podc_pinterest" - the pinterest-profile of the podcast
+         "podc_reddit" - the reddit-profile of the podcast
+         "podc_slack" - the slack-workspace of the podcast
+         "podc_discord" - the discord-server of the podcast
          "podc_descriptive_tags" - some tags, who describe the podcast, must be separated by commas
          "podc_category" - a category that describes the podcast
     
@@ -8242,7 +8259,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
       reaper.SetProjExtState(0, "EpisodeMetaData", attributename, reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")) 
     end
     local _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
-    return content
+    return true, content
   end
   
   if is_set==true then
@@ -8311,19 +8328,20 @@ ultraschall.ShowNoteAttributes={"shwn_language",           -- check for validity
               "shwn_wikidata_uri",
               "shwn_descriptive_tags",
               "shwn_is_advertisement",
-              "shwn_guid"
+              "shwn_guid",
+              "shwn_linked_audiovideomedia"
               }
 
-function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename, content)
+function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename, content, additional_content)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetShownoteMarker_Attributes</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=4.75
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string content = ultraschall.GetSetShownoteMarker_Attributes(boolean is_set, integer idx, string attributename, string content)</functioncall>
+  <functioncall>boolean retval, string content = ultraschall.GetSetShownoteMarker_Attributes(boolean is_set, integer idx, string attributename, string content, optional string additional_content)</functioncall>
   <description>
     Will get/set additional attributes of a shownote-marker.
     
@@ -8372,11 +8390,14 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
                          - "shwn_quote" - a quote from the cite_source
                          - "shwn_wikidata_uri" - the uri to an entry to wikidata
                          - "shwn_guid" - a unique identifier for this shownote; read-only
+                         - "shwn_linked_audiovideomedia" - a link to a mediafile like a podcast-episode; the additional attribute is the time-position in seconds
     string content - the new contents to set the attribute with
+    optional string additional_content - additional content, needed by some attributes; see list of attributes for more details
   </parameters>
   <retvals>
     boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
     string content - the content of a specific attribute
+    optional string additional_content - additional content, needed by some attributes; see list of attributes for more details
   </retvals>
   <chapter_context>
     Markers
@@ -8384,14 +8405,14 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>marker management, get, set, attribute, shownote, image, png, jpg, citation</tags>
+  <tags>marker management, get, set, attribute, shownote, citation</tags>
 </US_DocBloc>
 ]]
   if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "is_set", "must be a boolean", -1) return false end  
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "idx", "must be an integer", -2) return false end    
   if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "attributename", "must be a string", -3) return false end  
   if is_set==true and type(content)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "must be a string", -4) return false end  
-  
+  if is_set==true and additional_content~=nil and type(additional_content)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "must be a string", -8) return false end  
   -- WARNING!! CHANGES HERE MUST REFLECT CHANGES IN THE CODE OF CommitShownote_ReaperMetadata() !!!
   local tags=ultraschall.ShowNoteAttributes
               
@@ -8409,24 +8430,36 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   A={ultraschall.EnumerateShownoteMarkers(idx)}
   if A[1]==false then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "idx", "no such shownote-marker", -5) return false end
   
+  -- add a guid
   if attributename=="shwn_guid" then
     if ultraschall.GetMarkerExtState(A[2]+1, attributename)==nil then
       ultraschall.SetMarkerExtState(A[2]+1, attributename, reaper.genGuid(""))
     end
-    return ultraschall.GetMarkerExtState(A[2]+1, attributename)
+    return true, ultraschall.GetMarkerExtState(A[2]+1, attributename)
   end
   
   if is_set==true then
     local content2=content
-    if attributename=="image_content" and content:sub(1,6)~="ÿØÿ" and content:sub(2,4)~="PNG" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "image_content: only png and jpg are supported", -6) return false end    
+    if attributename=="shwn_linked_audiovideomedia" then
+      if tonumber(additional_content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "the content for shwn_linked_media must be a number as a string", -9) return false end
+      C=additional_content
+      B=content
+      Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
+      Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename.."_time", additional_content)
+    end
     if attributename=="shwn_event_ics_data" then content2=ultraschall.Base64_Encoder(content) end
     Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
     if Retval==-1 then Retval=false else Retval=true end
     B=content
   else
-    B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
-    if attributename=="shwn_event_ics_data" then B=ultraschall.Base64_Decoder(B) end
-    if B==nil then Retval=false B="" else Retval=true end
+    if attributename=="shwn_linked_audiovideomedia" then 
+      B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
+      if B==nil then Retval=false B="" else Retval=true C=ultraschall.GetMarkerExtState(A[2]+1, attributename.."_time", content) end
+    else
+      B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
+      if attributename=="shwn_event_ics_data" then if B==nil then B="" end B=ultraschall.Base64_Decoder(B) end
+      if B==nil then Retval=false B="" else Retval=true end
+    end
   end
-  return Retval, B
+  return Retval, B, C
 end

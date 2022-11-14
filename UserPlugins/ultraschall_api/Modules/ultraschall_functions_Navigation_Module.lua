@@ -1379,9 +1379,11 @@ function ultraschall.GetNextClosestItemStart(trackstring, time_position)
   if type(time_position)~="number" then ultraschall.AddErrorMessage("GetNextClosestItemStart", "time_position", "must be a number", -1) return -1 end
 
   local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(time_position, reaper.GetProjectLength(), trackstring, true)
-  if count==0 then return -1 end
+  
+  if count==0 or count==-1 then return -1 end
   local pos=reaper.GetProjectLength(0)
   local found_item=nil
+  --print2(count)
   for i=1, #MediaItemArray do
     local pos2=reaper.GetMediaItemInfo_Value(MediaItemArray[i], "D_POSITION")
     if pos2<pos and pos2>time_position then pos=pos2 found_item=MediaItemArray[i] end
@@ -1427,7 +1429,7 @@ function ultraschall.GetPreviousClosestItemStart(trackstring, time_position)
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetPreviousClosestItemStart", "trackstring", "must be a valid trackstring", -1) return -2 end
   if type(time_position)~="number" then ultraschall.AddErrorMessage("GetPreviousClosestItemStart", "time_position", "must be a number", -1) return -2 end
   local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, time_position, trackstring, false)
-  if count==0 then return -1 end
+  if count==0 or count==-1 then return -1 end
   local pos=-1
   local found_item=nil
   for i=#MediaItemArray, 1, -1 do
@@ -1475,7 +1477,7 @@ function ultraschall.GetPreviousClosestItemEnd(trackstring, time_position)
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetPreviousClosestItemEnd", "trackstring", "must be a valid trackstring", -1) return -2 end
   if type(time_position)~="number" then ultraschall.AddErrorMessage("GetPreviousClosestItemEnd", "time_position", "must be a number", -1) return -2 end
   local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, true)
-  if count==0 then return -1 end
+  if count==0 or count==-1 then return -1 end
   local pos=-1
   local found_item=nil
   for i=1, #MediaItemArray do
@@ -1523,7 +1525,7 @@ function ultraschall.GetNextClosestItemEnd(trackstring, time_position)
   if type(time_position)~="number" then ultraschall.AddErrorMessage("GetNextClosestItemEnd", "time_position", "must be a number", -1) return -2 end
   if time_position>reaper.GetProjectLength(0) then return -1 end
   local count, MediaItemArray, MediaItemStateChunkArray = ultraschall.GetAllMediaItemsBetween(0, reaper.GetProjectLength(), trackstring, false)
-  if count==0 then return -1 end
+  if count==0 or count==-1 then return -1 end
   local pos=reaper.GetProjectLength(0)+1
   local found_item=nil
   for i=1, #MediaItemArray do
