@@ -4392,7 +4392,7 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
   RenderTable["FadeIn_Shape"]=0
   RenderTable["FadeOut_Enabled"]=false
   RenderTable["FadeOut"]=0
-  RenderTable["FadeOut_Shape"]=false
+  RenderTable["FadeOut_Shape"]=0
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end

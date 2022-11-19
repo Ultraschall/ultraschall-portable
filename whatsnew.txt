@@ -1,3 +1,215 @@
+v6.70 - November 15 2022
+  + Actions: add various actions to render multichannel (parent send only) stems
+  + Custom action editor: increase column width for long action names [p=2613434]
+  + Envelopes: improve redraw of envelope panel and track panel knobs with touch automation
+  + Localization: support localizing menu/toolbar names, metronome dotted strings [t=271122]
+  + macOS: improve behavior when reordering treeview items by dragging
+  + Metadata: fix possible mislabeling of generic metadata in source properties dialog and media explorer
+  + Mouse modifiers: sort list of contexts by name [twtr=1583750824177856512]
+  + MP3: fix corruption of embedded chapter metadata when mp3 media goes offline [t=272284]
+  + Razor edits: when duplicating razor edit area, ignore preference to crossfade on finalizing razor edits [t=272630]
+  + Razor edits: fix crash when pasting over a grouped item
+  + Razor edits: fix splitting on multiple razor edits on the same media item
+  + ReaScript: improve behavior with Track/TakeFX_AddByName() for JSFX [t=271878]
+  + ReaScript: support RENDER_TARGETS_EX in EEL2/Lua [t=272114]
+  + Render: add option to render only track channels that are sent to parent
+  + Render: avoid creating paths for rendered files when dry-run rendering [t=272323]
+  + Video: add action to clear cache/re-render frames [t=270994]
+  + Video: fix potential resource leak in WMF encoder
+  + Video: improve gfx_evalrect, adding _slice, _slices, _slice_size, _span variables
+  + Video: fix VLC defaulting to RGB colorspace before first frame is decoded
+
+v6.69 - October 24 2022
+  + API: add support for GetSetProjectInfo_String("RENDER_TARGETS_EX"), which returns the list double-null separated ("RENDER_TARGETS" is semicolon-separated)
+  + Batch converter: fix support for <METADATA <TAG when using -batchconvert from command line
+  + Fades/crossfades: limit automatically created fade length to half the width of the arrange view rather than 50 pixels
+  + FX: Improve handling of stepped parameters when displayed in TCP/mixer [p=2593196]
+  + Loopback device: allow configuring up to 512 channels of loopback via rearoute_loopback= key in reaper.ini
+  + Media explorer: fix Windows UTF-8 issues with path combo box text [t=270328]
+  + Media explorer: if media does not contain embedded tempo, display tempo implied by media or selection length
+  + Media explorer: shift+mousewheel horizontally scrolls waveform preview when zoomed in (shift+drag hand-scrolls)
+  + Media import: add option to copy media to project directory on paste of items/tracks [p=2600753]
+  + MIDI: fix incorrect start time on retroactive record [t=270558]
+  + Notation editor: fix caption for "Enter Text" dialog
+  + Pan: fix linear-taper mode when gain compensation applied and pan law is not +0dB [t=271230]
+  + Preferences: move import-related options from Media to Media/Import
+  + Project settings: add configuration for default track channel count, parent send channel count
+  + Razor edit: fix deleting razor edit areas with ripple-all-tracks enabled [p=2599415]
+  + ReaEQ: improve analyzer update when automating/modulating global gain [t=271038]
+  + ReaFIR: improve subtract mode behavior with very quiet noise profiles [t=271555]
+  + ReaFIR: fix analysis quality when in 'reduce artifacts' mode
+  + ReaFIR: correct input vs output analysis gain offset
+  + ReaPlugs: improve spectrum analyzer smoothing to ensure that local peaks are accurately displayed
+  + ReaScript: drag/drop from FX browser to gfx windows will send filenames of @fx:fx_ident to gfx.getdropfile() [t=271052]
+  + ReaScript: fix return value for CalcMediaSrcLoudness()
+  + ReaScript: fix TrackFX_AddByName with only VST2-UID specified
+  + Region/Marker Manager: add option to display take markers that are outside the visible part of the media item [t=271487] [t=271732]
+  + Render: add option to write outfile.render_stats.html for each rendered file [t=263705]
+  + Render: support rendering stems pre-fader from render dialog
+  + Routing: allow arbitrary channel counts for parent send [t=270441]
+  + Video: fix gfx_fillrect() alpha channel writing corner case [t=270611]
+  + VST: hold down control/command key during startup to suppress scanning new/updated VST plugins
+
+v6.68 - September 22 2022
+  + API: expose realloc_cmd_register_buf/realloc_cmd_clear to C/C++ API [p=2596093]
+  + Control surfaces: send notifications when FX bypass parameters are automated
+  + FLAC: fix occasional fail when embedding image metadata in rendered FLAC file
+  + CPU metering: fix incorrect performance meter FX total CPU use readout in percentage mode (6.67 regression) [p=2594183]
+  + CPU metering: fix incorrect display when using per-instance FX oversampling
+  + Media explorer: improve undo behavior when inserting samples into RS5k [t=270372]
+  + Media explorer: preserve cached user-overridden metadata when loading filesystem cache that was created in an older version of REAPER [t=270612]
+  + Media explorer: when creating database from folder via context menu, name the database "DB: <foldername>" by default, for consistency
+  + Media item fades: when not using relative edge edit mouse modifier, edit selected item fades only if the fade start and end both line up with the edited item
+  + Metadata: fix deadlink to XMP metadata specification
+  + MIDI editor: support CC shapes when playing back unsynchronized from project transport [p=2593482]
+  + MIDI editor: support CC shapes when scrubbing
+  + Notation editor: more drawing corner case fixes [p=2585984]
+  + Pan: fix stereo pan calculation at narrow pans with certain pan laws (6.65 regression) [t=270792]
+  + Project load: display more descriptive warning messages when non-automatable parameter has automation [t=268362]
+  + Project load: slightly improve warning message when project elements are not recognized
+  + Razor edits: improve reassignment of item groups after split and delete in certain scenarios
+  + Razor edits: preserve item grouping when cutting or deleting razor edits with ripple-all-tracks enabled
+  + ReaScript: add support to SetRegionRenderMatrix() to force number of rendered channels
+  + ReaSurroundPan: do not include channel number when automatically naming channels from receives [p=2596582]
+  + Render: after user-cancelled render, render statistics actions and API functions return nothing
+
+v6.67 - September 7 2022
+  + Actions: add action to build selected item peaks if necessary
+  + Actions: respect preferences to trim media behind items, or auto-crossfade, when running action "move to media source preferred position" [t=270296]
+  + AIFF: support reading ID3 metadata embedded in .aif files [t=270431]
+  + Batch converter: add dropdown to choose how many CPU cores to use
+  + Custom action editor: allow longer action names to display when window is resized large [t=270195]
+  + Filenames: allow more than 10,000 similarly named filenames to be generated
+  + FX CPU Metering: improve full accounting of CPU use (from oversampling, bypass envelope, etc)
+  + Glue: ensure per-take FX are reinitialized prior to glue [t=269131]
+  + JSFX: allow reading #dbg_desc from code [t=270068]
+  + JSFX: fix timing of MIDI Arpeggiator [t=269926]
+  + Linux: fix right-doubleclick behavior in MIDI editor keys [p=2592921]
+  + Linux: fix doubleclick in track area going to correct context [t=269854]
+  + Localization: add a few missing localized strings [p=2586604]
+  + Localization: fix langpack definition for new media import page help text
+  + Localization: improve appearance of envelope window with width scaling [t=270191]
+  + Localization: improve auto-sizing/scaling for controls embedded in various file open/save dialogs [p=2589871]
+  + Localization: improve control auto-resizing on Windows when used with dialog scaling [t=269228]
+  + Localization: improve macOS handling of strings that have a key prefix for Windows [p=2585852]
+  + Localization: support media explorer size units
+  + macOS: improve mouse hit testing/cursor testing consistency on retina displays/subpixel input devices
+  + Media explorer: enable metadata editing menu items for .aif [t=270084]
+  + Media explorer: fix incoherent file size display for certain sizes [p=2591068]
+  + MIDI: add actions to insert retroactively recorded MIDI
+  + MIDI: fix incorrect ordering of certain notes in MIDI_GetRecentInputEvent
+  + MIDI: improve MIDI replace recording corner cases
+  + MIDI: when recording new MIDI items, show all CC data in one lane [t=270404]
+  + MIDI: update arrange view when changing CC lanes in MIDI editor [t=270404]
+  + Peak building: avoid full peakbuild rescan when inserting media
+  + Peak building: optimize for very large projects [t=266953]
+  + Performance meter: add option to show FX CPU as worst-block (for diagnosing problematic realtime plug-ins)
+  + Performance meter: display track media CPU use (includes resampling, take FX, timestretch, etc)
+  + Project bay: add option to disable grouping similar FX in FX tab
+  + Project bay: add option to show track numbers in track column
+  + Project bay: add performance column to FX tab
+  + Project bay: avoid unnecessary metadata cache flushing
+  + Project bay: display idle status for FX when applicable
+  + Project bay: preserve selection when changing FX online/bypass, presets
+  + Project bay: default new folders to expanded
+  + Project metadata: support sorting metadata list by category
+  + Razor edits: fix media item mouse modifier to extend razor edits to item [p=2585455]
+  + ReaScript IDE: improve handling of maximize state/docking/etc [t=269228]
+  + ReaSurroundPan: fix influence of height speakers in Auro 11.1 and 13.1 setups
+  + Region manager: add option to add/remove child tracks to render list when adding/removing parent
+  + Region manager: option to display track dropdown list nested by folder is disabled by default
+  + Region manager: support sorting by "Info" column
+  + Region manager: when not displaying track dropdown list nested by folder, indent tracks in folders
+  + Region render matrix: support forcing individual track+region combinations to mono/stereo/multichannel render by right-clicking in region render matrix
+  + Region render matrix: support selecting regions (for rendering selected regions) via click on region number or context menu
+  + Region render matrix: simplify context menu
+  + Region render matrix: recalculate scrollbar size/position when expanding/collapsing tracks or when region names change [t=270076]
+  + Render: add button to display rendered file in Media Explorer
+  + Render: don't automatically replace .mp4 extension when setting video or audio encoder to "none" [t=269863]
+  + Render: fix embedding markers when rendering selected media items and project has customized start offset [t=270010]
+  + Routing/Grouping/Region render matrix: remove "view mode" options from context menu, because dropdown is always available
+  + Routing/Grouping/Region render matrix: improve appearance with very long track/group/region names [t=269963]
+  + Routing/Grouping matrix: improve appearance of folder expand/collapse icons
+  + SD2/PCM/RAW: support reading preferred file position from resource file (after importing .sd2 file, run "move to media source preferred position" to move imported files to their position in the original project)
+  + Spectral edits: fix hit testing of the bottom edge of the last channel [t=269951]
+  + Spectral edits: increase the size of edge/corner hit test regions slightly
+  + User prompts: use OK/Cancel for various proceed/cancel prompts rather than Yes/No [t=251472]
+  + Video: fix re-enabling DirectShow media reading on Windows using dshow_depr [t=269473]
+  + Video: fix video FX when applied to MIDI files that have a playrate greater than 1.0 [t=269925]
+  + Virtual MIDI keyboard: highlight notes being played by armed track inputs
+  + VST: fix VST2 to VST3 migration state conversion
+  + VST: fix VST2 to VST3 migration mapping for plug-ins with non-alphanumeric characters in their names [t=269523]
+  + VST: fix incorrect parameter changes being sent to bridged VST3 in certain instances
+  + VST: avoid crashing reaper when a bridged VST3 crashes [t=270087]
+  + VST: do not show default preset name of 'Program 1' for plug-ins that do not have multiple programs
+  + VST: improve locking behavior when loading presets [t=269869]
+  + Windows: fix shortcut creation for DX plug-ins [t=270111]
+  + WMF: use .m4a extension when rendering audio-only MPEG-4 files
+
+v6.66 - August 17 2022
+  + FX: fix UI glitches when showing offline FX in chain view (6.65 regression) [p=2586072]
+  + Linux: improve behavior of listview clicks to listview images and manager fields
+  + Linux: improve listview column alignment to match other platforms
+  + Master metering: fix RMS stereo loudness readout when RMS window length has been customized
+  + Media: support Sound Designer II audio files (add .sd2 extension so REAPER can identify the file)
+  + Media: when loading .sd2 files on macOS, copy resource fork to plain file "mediafile.sd2.rsrc" for portability to non-macOS systems
+  + Media: import files with .L/.R/.pcm/.raw extensions as raw PCM audio
+  + Media: when importing raw PCM audio (including .sd2), use best-guess audio parameters and warn with instructions about how to fix incorrect playback
+  + MIDI: fix stuck notes when using replace recording [t=269470] [t=255728]
+  + Notation editor: fix various drawing glitches [t=269232]
+  + Notation editor: improve hit testing of dynamics/custom notation [t=269376]
+  + Preferences: move media/video and media/import preferences to separate pages
+  + Project settings: fix enabling/disabling pan law gain compensation in project settings advanced tab (6.65 regression) [p=2586016]
+  + Render: fix applying render fades when project start time is negative and also applying brickwall limiter [t=269619]
+  + Render: improve behavior of option to automatically increment rendered file name [t=269586]
+  + Routing/grouping matrix: improve appearance of folder expand/collapse icons
+
+v6.65 - August 12 2022
+  + Audio Units: fix support for AUv3 musical time/tempo/transport state callbacks
+  + Automation items: fix behavior of action to split automation items without changing selection
+  + Configuration files: fix various issues for FX shortcut/safemode/etc settings on plug-ins/themes with odd filenames
+  + Envelope window: improve appearance of scrollbars with retina displays
+  + FX: add option to use space key to start/stop transport in plug-in text edit fields [t=268837]
+  + FX: add oversample options to floating FX window context menu
+  + FX: fix generic UI when last parameter is an enum
+  + FX: improve syncing displayed value in generic UI [p=2583032]
+  + FX: optimize performance with many docked-but-invisible FX chains [t=267313]
+  + FX: when changing compatibility settings, update all matching FX instances
+  + FX: encode envelopes name in project file, for use when loading with FX offline [t=269009]
+  + FX browser: allow configuring defaults per-plugin of want-all-keyboard, TCP/MCP embedding, and oversampling
+  + FX browser: move compatibility settings to submenu
+  + Grouping Matrix: right-click in grouping matrix opens group settings dialog for already-selected tracks, rather than auto-selecting tracks
+  + Linux: improve behavior of text edit fields with control-key shortcuts
+  + macOS: support decoding .rx2 files on native Apple Silicon
+  + Media: sort Insert Media file description/extension dropdown list in alphabetical order
+  + Media items: fix flickering when moving media items across tracks and "automatically display affected envelopes" is enabled
+  + Media Explorer: support typing in preview volume
+  + MIDI Editor: actions to move edit cursor by grid respect snap settings
+  + Mouse modifiers: add razor edit mouse modifier to move or tilt envelope (fine adjustment)
+  + Pan: explicitly support sine taper, linear taper, and hybrid taper pan functions [p=2571092]
+  + Pan: special case -3dB and -6dB pan laws to be exactly equivalent to constant power (-3.01..dB) and constant gain (-6.02..dB); preserve existing settings in existing projects
+  + Pan: fix implementation of hybrid taper pan law when applying gain compensation
+  + Pan: document ReaScript/API settings for pan law flags
+  + Pan: simplify pan law preferences
+  + Pan: fix pan function evaluation when playback is stopped [p=2571736]
+  + Pan: improve calculation of hybrid taper pan law with certain manually entered pan laws (thanks ErBird) [p=2572055]
+  + Pan: only list deprecated pan mode in pan law dialog if the project already has pan mode set that way
+  + Razor edits: ignore razor edit areas on envelopes when running action to crossfade media items [p=2579146]
+  + ReaGate: implement string-to-parameter conversion for threshold
+  + ReaLimit: fix continuous automation recording [t=268807]
+  + Region/Marker Manager: fix display glitch when resizing window
+  + Render: add post-render button to display rendered file in Media Explorer
+  + Routing/Grouping/Render Matrix: dynamically adjust margins to fit text
+  + Routing/Grouping/Render Matrix: add context-specific help, accessible via the (?) button
+  + Theme: fix 3 small issues [p=2581377]
+  + Theme: fix mixer send knob 150%-scaled image
+  + VST: fix return value for IContextInfoProvider::setContextInfoValue
+  + VST: add IContextInfoProvider3 support
+  + VST: support IComponentHandler2::setDirty [t=268392]
+  + VST: improve space key behavior with various plug-ins (e.g. Softube)
+  + WALTER: fix h (height) variable in tcp.fxembed context [p=2584238]
+  + Windows: improve alt-key behavior relating to menu activation and cursor updating
+
 v6.64 - July 13 2022
   + Batch converter: allow window to be resized to a smaller minimum height
   + GIF: fix memory leak when decoding files that have per-frame color maps

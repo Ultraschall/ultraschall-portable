@@ -297,7 +297,13 @@ ToDo Marker Menu:
        including the Entry_X_SubMenu=start|end thing.
   - add doubleclick-state as well -> later
 
+  moved
+  - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall  
   
+  removed
+  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
 
   
 
@@ -305,7 +311,7 @@ ToDo Marker Menu:
 
 ## Ultraschall Framework - Changelog
 
-### 4.75 - " - " - 16th of October 2022
+### 4.75 - "Soundgarden - Black Hole Sun" - 26th of November 2022
 
 Has now 1590 functions, with XX new ones
 
@@ -322,20 +328,22 @@ Has now 1590 functions, with XX new ones
   - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
   - PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON
   - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
   - PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON
+  - PodcastMetadata: PodcastMetadata\_CreateJSON\_Entry - creates entire podcast-metadata-entry as JSON according to PodMeta_v1-standard
   - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
-  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
-  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
+  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset    
   
 #### Changes from 4.7 to 4.75  
   - API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -> thanks binbinfr
+  - MarkerManagement: CountAllCustomMarkers - allows now counting custom-markers within a start and end-time
+  - MarkerManagement: CountNormalMarkers - allows now counting normal markers within a start and end-time
+  - MarkerManagement: CountShownoteMarkers - allows now counting shownotes within a start and end-time
   - MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks<the number of tracks needed by the items to be inserted
-  - MediaItemManagement: RippleCut - had trouble with project, where there's only one item on track 1 and no other tracks
-  - PodcastMetadata: GetSetShownoteMarker\_Attributes - supports now attribute shwn_linked_audiovideomedia, which allows linking media directly with a time_stamp
+  - MediaItemManagement: RippleCut - had trouble with projects, where there's only one item on track 1 and no other tracks
+  - PodcastMetadata: GetSetChapterMarker\_Attributes - supports now setting position "chap_position" and markertitle "chap_title"
   - PodcastMetadata: GetSetPodcast\_Attributes - supports now new attributes podc_twitch, podc_pinterest, podc_reddit, podc_slack, podc_discord
+  - PodcastMetadata: GetSetShownoteMarker\_Attributes - supports now attribute shwn_linked_audiovideomedia, which allows linking media directly with a time_stamp; supports now setting position "shwn_position" and markertitle "shwn_title"
+  - Rendering: CreateNewRenderTable - default RenderTable did return bool instead of integer for FadeOut\_Shape -> fixed (thnx to aurelien)
   
 ---
 

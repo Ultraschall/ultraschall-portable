@@ -1528,109 +1528,6 @@ end
 
 
 
-function ultraschall.WritePodcastMetaData(start_time, end_time, offset, filename, do_id3, do_vorbis, do_ape_deactivated, do_ixml_deactivated)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>WritePodcastMetaData</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.47
-    Lua=5.3
-  </requires>
-  <functioncall>string podcast_metadata = ultraschall.WritePodcastMetaData(number start_time, number end_time, number offset, optional string filename, optional boolean do_id3, optional boolean do_vorbis)</functioncall>
-  <description>
-    Creates and returns the metadata-file-entries according to PODCAST_METADATA:"v1"-standard and optionally stores it into a file and/or the accompanying metadata-schemes available.
-    
-    Includes shownotes and chapters as well as episode and podcast-general-metadata
-    
-    Note: needs Reaper 6.47 to work properly, as otherwise the metadata gets truncated to 1k!
-    
-    Returns nil in case of an error
-  </description>
-  <retvals>
-    string podcast_metadata - the created podcast-metadata, according to PODCAST_METADATA:"v1"-standard
-  </retvals>
-  <parameters>
-    number start_time - the start-time of the project, from which to include chapters/shownotes
-    number end_time - the end-time of the project, up to which to include chapters/shownotes
-    number offset - the offset to subtract from the chapter/shownote-positions(for time-selection/region rendering)
-    optional string filename - the filename, to which to write the metadata-data as PODCAST_METADATA:"v1"-standard
-    optional boolean do_id3 - add the metadata to id3(mp3)-tag-metadata scheme in Reaper's metadata-storage
-    optional boolean do_vorbis - add the metadata to the vorbis(Mp3, Flac, Ogg, Opus)-metadata scheme in Reaper's metadata-storage
-  </parameters>
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>marker management, write, podcast, reaper metadata, shownotes, chapters, id3, ape, vorbis, ixml</tags>
-</US_DocBloc>
-]]
-  if type(start_time)~="number" then ultraschall.AddErrorMessage("WritePodcastMetaData", "start_time", "must be a number", -1) return end
-  if start_time<0 then ultraschall.AddErrorMessage("WritePodcastMetaData", "start_time", "must be bigger than 0", -2) return end
-  if type(end_time)~="number" then ultraschall.AddErrorMessage("WritePodcastMetaData", "end_time", "must be a number", -3) return end
-  if start_time>end_time then ultraschall.AddErrorMessage("WritePodcastMetaData", "end_time", "must be bigger than 0", -4) return end
-  
-  if type(offset)~="number" then ultraschall.AddErrorMessage("WritePodcastMetaData", "offset", "must be a number", -5) return end
-  if offset<0 then ultraschall.AddErrorMessage("WritePodcastMetaData", "offset", "must be bigger than 0", -6) return end
-  
-  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("WritePodcastMetaData", "filename", "must be nil or a string", -7) return end
-  
-  local retval
-  local PodcastGeneralMetadata=ultraschall.GetPodcast_MetaDataEntry()
-  local PodcastEpisodeMetadata=ultraschall.GetPodcastEpisode_MetaDataEntry()
-  local Chapter_Count,  Chapters = ultraschall.GetAllChapters_MetaDataEntry(start_time, end_time, offset)
-  local Shownote_Count, Shownotes = ultraschall.GetAllShownotes_MetaDataEntry(start_time, end_time, offset)
-  
-  local PodcastMetadata="  "..PodcastGeneralMetadata.."\n\n"..PodcastEpisodeMetadata.."\n"
-  
-  for i=1, Chapter_Count do
-    PodcastMetadata=PodcastMetadata.."\n"..Chapters[i].."\n"
-  end
-  
-  for i=1, Shownote_Count do
-    PodcastMetadata=PodcastMetadata.."\n"..Shownotes[i].."\n"
-  end
-  --"PODCAST_METADATA:\"v1\""
-  
-  PodcastMetadata="PODCAST_METADATA:\"v1\"\n"..string.gsub(PodcastMetadata, "\n", "\n  "):sub(1,-3).."\nPODCAST_METADATA:\"end\""
-  
-  if filename~=nil then 
-    local errorindex = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
-    retval=ultraschall.WriteValueToFile(filename, PodcastMetadata)
-    
-    if retval==-1 then 
-      local errorindex2, parmname, errormessage = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
-      ultraschall.AddErrorMessage("WritePodcastMetaData", "filename", errormessage, -8) 
-      return 
-    end
-  end
-  
-  if do_id3==true then
-    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TXXX:Podcast_Metadata|"..PodcastMetadata, true)
-  end
-  
-  if do_vorbis==true then
-    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "VORBIS:USER:Podcast_Metadata|"..PodcastMetadata, true)
-  end
-  
-  if do_ape==true then
-    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "APE:User Defined:Podcast_Metadata|"..PodcastMetadata, true)
-  end
-  
-  if do_ixml==true then
-    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "IXML:USER:Podcast_Metadata|"..PodcastMetadata, true)
-  end
-  
-  return PodcastMetadata
-end
-
-
-
-
-
-
 
 function ultraschall.GFX_BlitBBCodeAsText(text)
   -- example code, that parses and shows BBCode, with [b][i] and [u], even combined.
@@ -1935,7 +1832,7 @@ function ultraschall.GetPodcastAttributesAsJSON()
   </requires>
   <functioncall>string podcastmetadata_json = ultraschall.GetPodcastAttributesAsJSON()</functioncall>
   <description>
-    Returns the MetaDataEntry for podcast as JSON according to PodcastMetaDataV1_Standard.
+    Returns the MetaDataEntry for podcast as JSON according to PodMeta_v1-standard..
   </description>
   <retvals>
     string podcastmetadata_json - the podcast-metadata as json
@@ -1946,28 +1843,21 @@ function ultraschall.GetPodcastAttributesAsJSON()
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>metadata, get, podcast, metadata, json, podcast metadata v1</tags>
+  <tags>metadata, get, podcast, metadata, json, podmeta_v1</tags>
 </US_DocBloc>
 ]]
-  local JSON="\"podc\":{\n"
+  local JSON="\"podc\":{ \n"
   for i=1, #ultraschall.PodcastAttributes do
     local retval, content = ultraschall.GetSetPodcast_Attributes(false, ultraschall.PodcastAttributes[i], "")
     if retval==true and content~="" then
       content=string.gsub(content, "\"", "\\\"")
       content=string.gsub(content, "\\n", "\\\\n")
       content=string.gsub(content, "\n", "\\n")
-      --[[
-      if ultraschall.PodcastAttributes[i]=="epsd_cover" then
-        local prj, path=reaper.EnumProjects(-1)
-        path=string.gsub(path, "\\", "/")
-        path=path:match("(.*)/")
-        content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
-      end
-      --]]
-      JSON=JSON.."\t\""..ultraschall.PodcastAttributes[i].."\":\""..content.."\",\n"
+      JSON=JSON.."\t\t\""..ultraschall.PodcastAttributes[i].."\":\""..content.."\",\n"
     end
   end
-  JSON=JSON.."}\n"
+  --]]
+  JSON=JSON:sub(1,-3).."\n\t}\n"
   return JSON
 end
 
@@ -1985,7 +1875,7 @@ function ultraschall.GetEpisodeAttributesAsJSON()
   </requires>
   <functioncall>string episodemetadata_json = ultraschall.GetEpisodeAttributesAsJSON()</functioncall>
   <description>
-    Returns the MetaDataEntry for the podcast's episode as JSON according to PodcastMetaDataV1_Standard.
+    Returns the MetaDataEntry for the podcast's episode as JSON according to PodMeta_v1-standard..
   </description>
   <retvals>
     string episodemetadata_json - the podcast's episode-metadata as json
@@ -1996,7 +1886,7 @@ function ultraschall.GetEpisodeAttributesAsJSON()
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>metadata, get, podcast, episode, metadata, json, podcast metadata v1</tags>
+  <tags>metadata, get, podcast, episode, metadata, json, podmeta_v1</tags>
 </US_DocBloc>
 ]]
   local JSON="\"epsd\":{\n"
@@ -2012,17 +1902,16 @@ function ultraschall.GetEpisodeAttributesAsJSON()
         path=path:match("(.*)/")
         content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
       end
-      JSON=JSON.."\t\""..ultraschall.EpisodeAttributes[i].."\":\""..content.."\",\n"
+      JSON=JSON.."\t\t\""..ultraschall.EpisodeAttributes[i].."\":\""..content.."\",\n"
     end
   end
-  JSON=JSON.."}\n"
+  JSON=JSON:sub(1,-3).."\n\t}\n"
   return JSON
 end
 
 --print3(ultraschall.PodcastMetadata_GetEpisodeAttributesAsJSON())
 --if lol==nil then return end
-
-function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
+function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id, shown_id, within_start, within_end, offset)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetChapterAttributesAsJSON</slug>
@@ -2031,14 +1920,24 @@ function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
     Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>string chaptermetadata_json = ultraschall.GetChapterAttributesAsJSON(integer chaptermarker_id)</functioncall>
+  <functioncall>string chaptermetadata_json = ultraschall.GetChapterAttributesAsJSON(integer chaptermarker_id, integer shown_id, number within_start, number within_end, optional number offset)</functioncall>
   <description>
-    Returns the MetaDataEntry for a chapter as JSON according to PodcastMetaDataV1_Standard.
+    Returns the MetaDataEntry for a chapter as JSON according to PodMeta_v1-standard..
+    
+    You can choose a range within which the marker must be for chapters only within a certain region, etc. 
+    If it is outside of it, this function returns "".
+    
+    You can set an offset to subtract. This could be important, if you want to render a region and want the 
+    chapter be the right position from the starting point of the region.
     
     Returns nil in case of an error
   </description>
   <parameters>
     integer chaptermarker_id - the index of the chapter-marker, whose metadata-entry you want to get as JSON; 1-based
+    integer shown_id - the number to give to this chapter within the JSON
+    number within_start - the starttime of the range to export valid chapters
+    number within_end - the starttime of the range to export valid chapters
+    optional number offset - subtracts time from the position of the chapter
   </parameters>
   <retvals>
     string chaptermetadata_json - the chapter-metadata as json
@@ -2049,15 +1948,22 @@ function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>metadata, get, podcast, chapter, metadata, json, podcast metadata v1</tags>
+  <tags>metadata, get, podcast, chapter, metadata, json, podmeta_v1</tags>
 </US_DocBloc>
 ]]
   if math.type(chaptermarker_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "must be an integer", -1) return end
   if chaptermarker_id<1 or chaptermarker_id>ultraschall.CountNormalMarkers() then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "no such chapter-marker", -2) return end
-  local JSON="\"chap_"..chaptermarker_id.."\":{\n"
+  if math.type(shown_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "shown_id", "must be an integer", -3) return end
+  if type(within_start)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_start", "must be a number", -4) return end
+  if type(within_end)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_end", "must be a number", -5) return end
+  if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "offset", "must be a number", -6) return end
+  
+  local JSON="\"chap_"..shown_id.."\":{\n"
   local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(chaptermarker_id)
-  JSON=JSON.."\t\"chap_name\":\""..markertitle.."\",\n"
-  JSON=JSON.."\t\"chap_position\":\""..position.."\",\n"
+  if within_start==nil then within_start=0 end
+  if within_end==nil then within_end=reaper.GetProjectLength() end
+  if within_start>position or within_end<position then return "" end
+  if offset~=nil then position=position-offset end
   local retval, content = ultraschall.GetSetChapterMarker_Attributes(true, chaptermarker_id, "chap_guid", "")
   
   for i=1, #ultraschall.ChapterAttributes do
@@ -2069,6 +1975,8 @@ function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
       content=string.gsub(content, "\n", "\\n")
       if attribute=="chap_image" then
         JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      elseif attribute=="chap_position" then 
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(position).."\",\n"
       elseif attribute=="chap_image_path" then
         local prj, path=reaper.EnumProjects(-1)
         path=string.gsub(path, "\\", "/")
@@ -2082,7 +1990,7 @@ function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id)
       
     end
   end  
-  JSON=JSON.."}\n"
+  JSON=JSON:sub(1,-3).."\n}\n"
   return JSON
 end
 
@@ -2090,7 +1998,7 @@ end
 --SLEM()
 --if lol==nil then return end
 
-function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id)
+function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id, shown_id, within_start, within_end, offset)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetShownoteAttributesAsJSON</slug>
@@ -2099,17 +2007,21 @@ function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id)
     Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>string shownotemetadata_json = ultraschall.GetShownoteAttributesAsJSON(integer shownotemarker_id)</functioncall>
+  <functioncall>string shownotemetadata_json = ultraschall.GetShownoteAttributesAsJSON(integer shownotemarker_id, integer shown_id, number within_start, number within_end, optional number offset)</functioncall>
   <description>
-    Returns the MetaDataEntry for a shownote as JSON according to PodcastMetaDataV1_Standard.
+    Returns the MetaDataEntry for a shownote as JSON according to PodMeta_v1-standard.
     
     Returns nil in case of an error
   </description>
   <parameters>
     integer chaptermarker_id - the index of the shownote-marker, whose metadata-entry you want to get as JSON; 1-based
+    integer shown_id - the number to give to this shownote within the JSON
+    number within_start - the starttime of the range to export valid shownotes
+    number within_end - the starttime of the range to export valid shownotes
+    optional number offset - subtracts time from the position of the shownotes
   </parameters>
   <retvals>
-    string shownotemetadata_json - the chapter-metadata as json
+    string shownotemetadata_json - the shownote-metadata as json
   </retvals>
   <chapter_context>
     Metadata Management
@@ -2117,29 +2029,37 @@ function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id)
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>metadata, get, podcast, shownote, metadata, json, podcast metadata v1</tags>
+  <tags>metadata, get, podcast, shownote, metadata, json, podmeta_v1</tags>
 </US_DocBloc>
 ]]
   if math.type(shownotemarker_id)~="integer" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "shownotemarker_id", "must be an integer", -1) return end
   if shownotemarker_id<1 or shownotemarker_id>ultraschall.CountShownoteMarkers() then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "marker_id", "no such shownote-marker", -2) return end
-  local JSON="\"shwn_"..shownotemarker_id.."\":{\n"
-  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateShownoteMarkers(shownotemarker_id)
-  JSON=JSON.."\t\"shwn_name\":\""..markertitle.."\",\n"
-  JSON=JSON.."\t\"shwn_position\":\""..position.."\",\n"
+  if math.type(shown_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "shown_id", "must be an integer", -3) return end
+  if type(within_start)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_start", "must be a number", -4) return end
+  if type(within_end)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_end", "must be a number", -5) return end
+  if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "offset", "must be a number", -6) return end
+    
+  local JSON="\"shwn_"..shown_id.."\":{\n"
   
   local retval, content = ultraschall.GetSetShownoteMarker_Attributes(true, shownotemarker_id, "shwn_guid", "")
-
+  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateShownoteMarkers(shownotemarker_id)
+  if within_start==nil then within_start=0 end
+  if within_end==nil then within_end=reaper.GetProjectLength() end
+  if within_start>position or within_end<position then return "" end
+  if offset~=nil then position=position-offset end
+  
   for i=1, #ultraschall.ShowNoteAttributes do
     local attribute=ultraschall.ShowNoteAttributes[i]
     local retval, content = ultraschall.GetSetShownoteMarker_Attributes(false, shownotemarker_id, attribute, "")
-    --SLEM()
-    --print2(attribute)
+
     if retval==true and content~="" then
       content=string.gsub(content, "\"", "\\\"")
       content=string.gsub(content, "\\n", "\\\\n")
       content=string.gsub(content, "\n", "\\n")
       if attribute=="chap_image" then
         JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      elseif attribute=="shwn_position" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(position).."\",\n"
       elseif attribute=="chap_image_path" then
         local prj, path=reaper.EnumProjects(-1)
         path=string.gsub(path, "\\", "/")
@@ -2153,7 +2073,117 @@ function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id)
       
     end
   end  
-  JSON=JSON.."}\n"
+  JSON=JSON:sub(1,-3).."\t\n}\n"
   return JSON
 end
 
+
+function ultraschall.PodcastMetadata_CreateJSON_Entry(start_time, end_time, offset, filename, do_id3, do_vorbis, do_ape, do_ixml)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>PodcastMetadata_CreateJSON_Entry</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string podmeta_entry_JSON = ultraschall.PodcastMetadata_CreateJSON_Entry(number start_time, number end_time, optional number offset, optional string filename, optional boolean do_id3, optional boolean do_vorbis, optional boolean do_ape, optional boolean do_ixml)</functioncall>
+  <description>
+    Returns the MetaDataEntry for the entire podcast as JSON according to PodMeta_v1-standard.
+    
+    Includes all chapters and shownotes as well as episode and podcast attributes
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    number start_time - the starttime from which to add chapters/shownotes into the JSON
+    number end_time - the endtime to which to add chapters/shownotes into the JSON
+    optional number offset - the offset to subtract from the position-attributes of the shownotes/chapters
+    optional string filename - path+filename to where the JSON shall be output to
+    optional boolean do_id3 - true, add to the ID3-metadata storage of Reaper for the current project; false or nil, don't add(default)
+    optional boolean do_vorbis - true, add to the VORBIS-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+    optional boolean do_ape - true, add to the APE-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+    optional boolean do_ixml - true, add to the IXML-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+  </parameters>
+  <retvals>
+    string podmeta_entry_JSON - the podcast's entire-metadata as json according to the PodMeta_v1-standard
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, shownote, chapter, episode, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  if type(start_time)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "start_time", "must be a number", -1) return end
+  if start_time<0 then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "start_time", "must be bigger than 0", -2) return end
+  if type(end_time)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "end_time", "must be a number", -3) return end
+  if start_time>end_time then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "end_time", "must be bigger than 0", -4) return end
+  
+  if type(offset)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "offset", "must be a number", -5) return end
+  if offset<0 then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "offset", "must be bigger than 0", -6) return end
+  
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "filename", "must be nil or a string", -7) return end
+
+  -- add podcast-attributes
+  local JSON="{\n\t\"PodMeta_Standard\":\"1.0\",\n"
+  JSON=JSON.."\t"..string.gsub(ultraschall.GetPodcastAttributesAsJSON(), "\n", "\t\n"):sub(1,-3)..",\n"
+  
+  -- add episode attributes
+  JSON=JSON.."\t"..string.gsub(ultraschall.GetEpisodeAttributesAsJSON(), "\n", "\t\n"):sub(1,-3)..",\n"
+  
+  -- add chapters
+  local comma
+  local ChapterNum=ultraschall.CountNormalMarkers(start_time, end_time)
+  if ChapterNum>0 then JSON=JSON:sub(1,-3)..",\n" end 
+  chapter_num=1
+  for i=1, ChapterNum do
+    chapter=ultraschall.GetChapterAttributesAsJSON(i, chapter_num, start_time, end_time, offset)
+    if chapter~="" then chapter_num=chapter_num+1 end
+    if chapter~="" and i==1 then JSON=JSON:sub(1,-3)..",\n" end
+    JSON=JSON.."\t"..string.gsub(chapter, "\n", "\n\t"):sub(1,-3)..",\n"
+  end
+ --JSON=JSON.."\n "
+
+  -- add Shownotes
+  local ShownoteNum=ultraschall.CountShownoteMarkers(start_time, end_time)
+  shownote_num=1
+  for i=1, ShownoteNum do  
+    shownote=ultraschall.GetShownoteAttributesAsJSON(i, shownote_num, start_time, end_time, offset)
+    if shownote~="" then shownote_num=shownote_num+1 end
+    JSON=JSON.."\t"..string.gsub(shownote, "\n", "\n\t"):sub(1,-3)..",\n"
+  end
+  
+  JSON=JSON:sub(1,-3).."\n}"
+  
+  if do_id3==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TXXX:PodMeta|"..JSON, true)
+  end
+  
+  if do_vorbis==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "VORBIS:USER:PodMeta|"..JSON, true)
+  end
+  
+  if do_ape==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "APE:User Defined:PodMeta|"..JSON, true)
+  end
+  
+  if do_ixml==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "IXML:USER:PodMeta|"..JSON, true)
+  end
+  
+  if filename~=nil then 
+    local errorindex = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
+    retval=ultraschall.WriteValueToFile(filename, JSON)
+  
+    if retval==-1 then 
+      local errorindex2, parmname, errormessage = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
+      ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "filename", errormessage, -8) 
+      return 
+    end
+  end
+  
+  return JSON
+end

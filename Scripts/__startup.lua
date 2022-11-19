@@ -327,4 +327,4 @@ if first_start == "true" or first_start == "-1" then
 end
 
 
-print2("Ultraschall Metadata Testbranch \"Caroline Herschel\"\n27. August 2022\n\n\nFür weitere Infos bzw Anleitung, klickt oben auf den Ultraschall-Button.\n\nDies ist eine Experimental-Version von Ultraschall und nur bedingt für den produktiven Gebrauch geeignet!")
+print2("Ultraschall Metadata Testbranch \"Caroline Herschel\"\nPhase 2 vom 12. Dezember 2022\n\n\nFür weitere Infos bzw Anleitung, klickt oben auf den Ultraschall-Button.\n\nDies ist eine Experimental-Version von Ultraschall und nur bedingt für den produktiven Gebrauch geeignet!")

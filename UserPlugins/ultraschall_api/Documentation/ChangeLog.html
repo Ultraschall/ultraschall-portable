@@ -35,7 +35,7 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>4.75 - " - " - 16th of October 2022</h3>
+<h3>4.75 - "Soundgarden - Black Hole Sun" - 26th of November 2022</h3>
 <p>Has now 1590 functions, with XX new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
@@ -50,21 +50,23 @@ Bla</li>
 <li>PodcastMetadata: GetPodcastEpisodeAttributesPreset_Name - gets the name of an episode-metadata-preset</li>
 <li>PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON</li>
 <li>PodcastMetadata: GetPodcastAttributesPreset_Name - gets the name of a podcast-metadata-preset</li>
-<li>PodcastMetadata: GetSetPodcastExport_Attributes_String - gets/sets string attributes for podcast-export in Ultraschall</li>
-<li>PodcastMetadata: GetSetPodcastExport_Attributes_Value - gets/sets number attributes for podcast-export in Ultraschall</li>
-<li>PodcastMetadata: GetSetTranscription_Attributes gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)</li>
 <li>PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON</li>
+<li>PodcastMetadata: PodcastMetadata_CreateJSON_Entry - creates entire podcast-metadata-entry as JSON according to PodMeta_v1-standard</li>
 <li>PodcastMetadata: SetPodcastEpisodeAttributesPreset_Name - sets the name of an episode-metadata-preset</li>
 <li>PodcastMetadata: SetPodcastAttributesPreset_Name - sets the name of a podcast-metadata-preset</li>
-<li>PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes</li>
 </ul>
 <h4>Changes from 4.7 to 4.75</h4>
 <ul>
 <li>API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -&gt; thanks binbinfr</li>
+<li>MarkerManagement: CountAllCustomMarkers - allows now counting custom-markers within a start and end-time</li>
+<li>MarkerManagement: CountNormalMarkers - allows now counting normal markers within a start and end-time</li>
+<li>MarkerManagement: CountShownoteMarkers - allows now counting shownotes within a start and end-time</li>
 <li>MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks&lt;the number of tracks needed by the items to be inserted</li>
-<li>MediaItemManagement: RippleCut - had trouble with project, where there's only one item on track 1 and no other tracks</li>
-<li>PodcastMetadata: GetSetShownoteMarker_Attributes - supports now attribute shwn<em>linked</em>audiovideomedia, which allows linking media directly with a time_stamp</li>
+<li>MediaItemManagement: RippleCut - had trouble with projects, where there's only one item on track 1 and no other tracks</li>
+<li>PodcastMetadata: GetSetChapterMarker_Attributes - supports now setting position "chap<em>position" and markertitle "chap</em>title"</li>
 <li>PodcastMetadata: GetSetPodcast_Attributes - supports now new attributes podc<em>twitch, podc</em>pinterest, podc<em>reddit, podc</em>slack, podc_discord</li>
+<li>PodcastMetadata: GetSetShownoteMarker_Attributes - supports now attribute shwn<em>linked</em>audiovideomedia, which allows linking media directly with a time<em>stamp; supports now setting position "shwn</em>position" and markertitle "shwn_title"</li>
+<li>Rendering: CreateNewRenderTable - default RenderTable did return bool instead of integer for FadeOut_Shape -&gt; fixed (thnx to aurelien)</li>
 </ul>
 <hr />
 <h3>4.7 - "Pearl Jam - Alive" - 16th of October 2022</h3>

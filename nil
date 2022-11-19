@@ -1,0 +1,29 @@
+{
+  "PodMeta_Standard": "1.0",
+  "podc": {},
+  "epsd": {
+    "epsd_guid": "{EB39A94D-EF06-40AC-A5F6-CA8029F65076}{8B1FA3D8-9799-43FC-9F0E-2613C18133D9}{B9BE5672-518F-4F21-A0D7-AD9A63CC5378}"
+  },
+  "chap_1": {
+    "chap_position": "10.230399848812",
+    "chap_guid": "{B4647383-1E88-4978-BFC8-56B94A6B2B52}"
+  },
+  "chap_2": {
+    "chap_position": "17.304612510224",
+    "chap_guid": "{4D292715-7178-4131-A148-CFF7C7CBC2EE}"
+  },
+  "chap_3": {
+    "chap_position": "27.462456331739",
+    "chap_guid": "{0E44FA0A-A757-49F0-8D46-F10098FE07B9}"
+  },
+  "shwn_1": {
+    "shwn_title": "jsiud",
+    "shwn_position": "32.831602351682",
+    "shwn_guid": "{77A828CB-BC9C-410D-B9D4-475C7455448A}"
+  },
+  "shwn_2": {
+    "shwn_title": "Hula Boo",
+    "shwn_position": "39.361644808371",
+    "shwn_guid": "{641DD868-A680-4C45-A23A-9B6F685F8FA6}"
+  }
+}

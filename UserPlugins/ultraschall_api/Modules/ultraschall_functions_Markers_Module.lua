@@ -459,21 +459,25 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
   return marker_index, guid, ultraschall.GetEditMarkerIDFromGuid(guid)
 end
 
-function ultraschall.CountNormalMarkers()
+function ultraschall.CountNormalMarkers(starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountNormalMarkers</slug>
   <requires>
-    Ultraschall=4.3
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall> integer number_of_markers = ultraschall.CountNormalMarkers()</functioncall>
+  <functioncall> integer number_of_markers = ultraschall.CountNormalMarkers(optional number starttime, optional number endtime)</functioncall>
   <description>
     Counts all normal markers. 
     
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" or custommarkers with the scheme "_custommarker:" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
   </description>
+  <parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>
   <retvals>
      integer number_of_markers  - number of normal markers
   </retvals>
@@ -486,6 +490,11 @@ function ultraschall.CountNormalMarkers()
   <tags>markermanagement, normal marker, marker, count</tags>
 </US_DocBloc>
 --]]
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountNormalMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountNormalMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
+
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local count=0
@@ -499,7 +508,10 @@ function ultraschall.CountNormalMarkers()
     color == ultraschall.planned_marker_color 
     then 
         -- if marker is shownote, chapter, edit or planned chapter
-    elseif isrgn==false then count=count+1 -- elseif marker is no region, count up
+    elseif isrgn==false then 
+      if pos>=starttime and pos<=endtime then
+        count=count+1 -- elseif marker is no region, count up
+      end
     end
   end 
 
@@ -3855,16 +3867,16 @@ end
 
 --A,B,C=ultraschall.GetAllCustomRegions("Whiskey")
 
-function ultraschall.CountAllCustomMarkers(custom_marker_name)
+function ultraschall.CountAllCustomMarkers(custom_marker_name, starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountAllCustomMarkers</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.75
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>integer count = ultraschall.CountAllCustomMarkers(string custom_marker_name)</functioncall>
+  <functioncall>integer count = ultraschall.CountAllCustomMarkers(string custom_marker_name, optional number starttime, optional number endtime)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will count all custom-markers with a certain name.
     
@@ -3890,7 +3902,9 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
                               - "" counts all custom markers, regardless of their name
-  </parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>  
   <retvals>
     integer count - the number of found markers; -1, in case of an error
   </retvals>
@@ -3905,12 +3919,18 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
 ]]
   if type(custom_marker_name)~="string" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "must be a string", -1) return -1 end
   if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return -1 end
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
   local count=0
   if custom_marker_name=="" then custom_marker_name=".*" end
   for i=0, reaper.CountProjectMarkers(0)-1 do
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
-      count=count+1 
+    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)    
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
+      if pos>=starttime and pos<=endtime then
+        count=count+1 
+      end
     end
   end
   return count
@@ -5524,16 +5544,16 @@ function ultraschall.EnumerateShownoteMarkers(idx)
   return table.unpack(A)
 end
 
-function ultraschall.CountShownoteMarkers()
+function ultraschall.CountShownoteMarkers(starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountShownoteMarkers</slug>
   <requires>
-    Ultraschall=4.6
+    Ultraschall=4.75
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer num_shownotes = ultraschall.CountShownoteMarkers()</functioncall>
+  <functioncall>integer num_shownotes = ultraschall.CountShownoteMarkers(optional number starttime, optional number endtime)</functioncall>
   <description>
     Returns count of all shownotes
     
@@ -5545,6 +5565,10 @@ function ultraschall.CountShownoteMarkers()
   <retvals>
     integer num_shownotes - the number of shownotes in the current project
   </retvals>
+  <parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>
   <chapter_context>
     Markers
     ShowNote Markers
@@ -5554,7 +5578,11 @@ function ultraschall.CountShownoteMarkers()
   <tags>marker management, count, shownote</tags>
 </US_DocBloc>
 ]]
-  return ultraschall.CountAllCustomMarkers("Shownote")
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountShownoteMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountShownoteMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
+  return ultraschall.CountAllCustomMarkers("Shownote", starttime, endtime)
 end
 --Kuddel=FromClip()
 --A,B,C=ultraschall.GetSetShownoteMarker_Attributes(false, 1, "image_content", "kuchen")
@@ -7804,6 +7832,8 @@ function ultraschall.MarkerMenu_GetLastClickState()
 end
 
 ultraschall.ChapterAttributes={
+              "chap_title",
+              "chap_position",
               "chap_description",
               "chap_url",
               "chap_url_description",              
@@ -7842,6 +7872,8 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     integer idx - the index of the chapter-marker, whose attribute you want to get; 1-based
     string attributename - the attributename you want to get/set
                          - supported attributes are:
+                         - "chap_title" - the title of this chapter
+                         - "chap_position" - the current position of this chapter in seconds
                          - "chap_url" - the url for this chapter(check first, if a shownote is not suited better for the task!)
                          - "chap_url_description" - a description for this url
                          - "chap_description" - a description of the content of this chapter
@@ -7888,7 +7920,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "must be an integer", -2) return false end  
   if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "must be a string", -3) return false end  
   if is_set==true and type(content)~="string" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "content", "must be a string", -4) return false end  
-  
+  local marker_index=idx
   local tags=ultraschall.ChapterAttributes
   local retval
   
@@ -7925,16 +7957,27 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   if idx<1 then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such chapter-marker", -8) return false end
   local content2=content
   if is_set==false then    
-    --print2("")
     local B=ultraschall.GetMarkerExtState(idx, attributename)
     if B==nil then B="" end
-    --if attributename=="chap_image" then
---      B=ultraschall.Base64_Decoder(B)
-    --end
+    if attributename=="chap_title" then    
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      B=markertitle
+    elseif attributename=="chap_position" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      B=tostring(position)
+    end
     return true, B
   elseif is_set==true then
-    if attributename=="chap_image" then
-      --content2=ultraschall.Base64_Encoder(content)
+    if attributename=="chap_title" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      local retval = ultraschall.SetNormalMarker(marker_index, position, shown_number, content)
+      return true, content
+    elseif attributename=="chap_position" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      local newposition=tonumber(content)
+      if newposition==nil then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "content", "chap_position must be a valid number, converted to string", -10) return false end
+      local retval = ultraschall.SetNormalMarker(marker_index, newposition, shown_number, markertitle)
+      return true, content
     else
       --content2=content
     end
@@ -8290,7 +8333,10 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
 end
 
 
-ultraschall.ShowNoteAttributes={"shwn_language",           -- check for validity ISO639
+ultraschall.ShowNoteAttributes={
+              "shwn_title", -- shownote-markertitle
+              "shwn_position", -- position of the shownote in seconds
+              "shwn_language",           -- check for validity ISO639
               "shwn_description",
               "shwn_location_gps",       -- check for validity
               "shwn_location_google_maps",-- check for validity
@@ -8356,6 +8402,8 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
     integer idx - the index of the shownote-marker, whose attribute you want to get; 1-based
     string attributename - the attributename you want to get/set
                          - supported attributes are:
+                         - "shwn_title" - the title of the shownote
+                         - "shwn_position"
                          - "shwn_description" - a more detailed description for this shownote
                          - "shwn_descriptive_tags" - some tags, that describe the content of the shownote, must separated by commas
                          - "shwn_url" - the url you want to set
@@ -8415,7 +8463,8 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   if is_set==true and additional_content~=nil and type(additional_content)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "must be a string", -8) return false end  
   -- WARNING!! CHANGES HERE MUST REFLECT CHANGES IN THE CODE OF CommitShownote_ReaperMetadata() !!!
   local tags=ultraschall.ShowNoteAttributes
-              
+  local marker_index=idx
+  
   local found=false
   for i=1, #tags do
     if attributename==tags[i] then      
@@ -8440,19 +8489,38 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   
   if is_set==true then
     local content2=content
-    if attributename=="shwn_linked_audiovideomedia" then
+    if attributename=="shwn_title" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      ultraschall.SetShownoteMarker(marker_index, pos, content, shown_number)
+      return true, content
+    elseif attributename=="shwn_position" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      if tonumber(content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "shwn_position must be a number, converted to string", -10) return false end
+      ultraschall.SetShownoteMarker(marker_index, tonumber(content), name, shown_number)
+      return true, content
+    elseif attributename=="shwn_linked_audiovideomedia" then
       if tonumber(additional_content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "the content for shwn_linked_media must be a number as a string", -9) return false end
       C=additional_content
       B=content
       Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
       Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename.."_time", additional_content)
     end
-    if attributename=="shwn_event_ics_data" then content2=ultraschall.Base64_Encoder(content) end
+    if attributename=="shwn_event_ics_data" then 
+      content2=ultraschall.Base64_Encoder(content)     
+    end
     Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
     if Retval==-1 then Retval=false else Retval=true end
     B=content
   else
-    if attributename=="shwn_linked_audiovideomedia" then 
+    if attributename=="shwn_title" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      B=name
+      Retval=true
+    elseif attributename=="shwn_position" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      B=tostring(pos)
+      Retval=true
+    elseif attributename=="shwn_linked_audiovideomedia" then 
       B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
       if B==nil then Retval=false B="" else Retval=true C=ultraschall.GetMarkerExtState(A[2]+1, attributename.."_time", content) end
     else
