@@ -2586,7 +2586,7 @@ function ultraschall.GetTakeEnvelopeUnderMouseCursor()
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>GetTakeEnvelopeUnderMouseCursor</slug>
     <requires>
-      Ultraschall=4.1 
+      Ultraschall=4.1
       Reaper=6.10
       SWS=2.8.8
       Lua=5.3

@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 470, "4.7","26th of October 2022", "",  "\"Pearl Jam - Alive\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 475, "4.75","19th of December 2022", "",  "\"Soundgarden - Black Hole Sun\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -333,7 +333,7 @@ function ultraschall.AddErrorMessage(functionname, parametername, errormessage, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>AddErrorMessage</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.75
     Reaper=5.965
     Lua=5.3
   </requires>
@@ -371,6 +371,13 @@ function ultraschall.AddErrorMessage(functionname, parametername, errormessage, 
       if type(errorcode)~="number" then errorcode=-1 end
       
       -- let's create the new errormessage
+      local context_nr=6
+      local context=debug.getinfo(context_nr)
+      if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
+      if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
+      if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
+      if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
+      if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
       local ErrorMessage={}
       ErrorMessage["funcname"]=functionname
       ErrorMessage["errmsg"]=errormessage
@@ -379,6 +386,11 @@ function ultraschall.AddErrorMessage(functionname, parametername, errormessage, 
       ErrorMessage["time"]=os.time()
       ErrorMessage["parmname"]=parametername
       ErrorMessage["errcode"]=errorcode
+      ErrorMessage["Context_Function"]=context["name"]
+      ErrorMessage["Context_Sourcefile"]=context["source"]
+      ErrorMessage["Context_SourceLine"]=context["currentline"]
+      if ErrorMessage["Context_Function"]==nil then ErrorMessage["Context_Function"]=debug.getinfo(context_nr-1)["name"] end
+      
       
       -- add it to the error-message-system
       ultraschall.ErrorMessage[ultraschall.ErrorCounter]=ErrorMessage
@@ -548,11 +560,11 @@ function ultraschall.ReadErrorMessage(errornumber, keep_unread)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ReadErrorMessage</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer errcode, string functionname, string parmname, string errormessage, string lastreadtime, string err_creation_date, string err_creation_timestamp = ultraschall.ReadErrorMessage(integer errornumber, optional boolean keep_unread)</functioncall>
+  <functioncall>boolean retval, integer errcode, string functionname, string parmname, string errormessage, string lastreadtime, string err_creation_date, string err_creation_timestamp, string context_function, string context_sourcefile, string context_sourceline = ultraschall.ReadErrorMessage(integer errornumber, optional boolean keep_unread)</functioncall>
   <description>
     Reads an error-message within the Ultraschall-ErrorMessagesystem.
     Returns a boolean value, the functionname, the errormessage, the "you've already read this message"-status, the date and a timestamp of the creation of the errormessage.
@@ -571,6 +583,9 @@ function ultraschall.ReadErrorMessage(errornumber, keep_unread)
     string readstatus - "unread" if the message hasn't been read yet or a date_time from when the message has been read already
     string err_creation_date - the date_time of when the error-message was created
     string err_creation_timestamp - the timestamp of when the error-message was created. Usually seconds, since system got started
+    string context_function - the function, in which AddErrorMessage was called
+    string context_sourcefile - the sourcefile, in which AddErrorMessage was called
+    string context_sourceline - the line in the sourcefile, in which AddErrorMessage was called
   </retvals>
   <chapter_context>
     Developer
@@ -598,7 +613,10 @@ function ultraschall.ReadErrorMessage(errornumber, keep_unread)
                ultraschall.ErrorMessage[errornumber]["errmsg"],
                readstate,
                ultraschall.ErrorMessage[errornumber]["date"],
-               ultraschall.ErrorMessage[errornumber]["time"]
+               ultraschall.ErrorMessage[errornumber]["time"],
+               ultraschall.ErrorMessage[errornumber]["Context_Function"],
+               ultraschall.ErrorMessage[errornumber]["Context_Sourcefile"],
+               ultraschall.ErrorMessage[errornumber]["Context_SourceLine"]
 end
 
 
@@ -644,11 +662,11 @@ function ultraschall.GetLastErrorMessage()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetLastErrorMessage</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, integer errcode, string functionname, string parmname, string errormessage, string lastreadtime, string err_creation_date, string err_creation_timestamp, integer errorcounter = ultraschall.GetLastErrorMessage()</functioncall>
+  <functioncall>boolean retval, integer errcode, string functionname, string parmname, string errormessage, string lastreadtime, string err_creation_date, string err_creation_timestamp, integer errorcounter, string context_function, string context_sourcefile, string context_sourceline = ultraschall.GetLastErrorMessage()</functioncall>
   <description>
     Reads the last error-message stored in the Ultraschall-ErrorMessagesystem.
     Returns a boolean value, the functionname, the errormessage, the date and a timestamp of the creation of the errormessage, the unread-status as well as the error-message-number.
@@ -667,6 +685,9 @@ function ultraschall.GetLastErrorMessage()
     string err_creation_date - the date_time of when the error-message was created
     string err_creation_timestamp - the timestamp of when the error-message was created. Usually seconds, since system got started
     integer errorcounter - the error-message-number within the Ultraschall-Error-Message-System
+    string context_function - the function, in which AddErrorMessage was called
+    string context_sourcefile - the sourcefile, in which AddErrorMessage was called
+    string context_sourceline - the line in the sourcefile, in which AddErrorMessage was called
   </retvals>
   <chapter_context>
     Developer
@@ -689,7 +710,10 @@ function ultraschall.GetLastErrorMessage()
                  readstate,
                  ultraschall.ErrorMessage[errornumber]["date"],
                  ultraschall.ErrorMessage[errornumber]["time"],
-                 ultraschall.ErrorCounter
+                 ultraschall.ErrorCounter,
+                 ultraschall.ErrorMessage[errornumber]["Context_Function"],
+                 ultraschall.ErrorMessage[errornumber]["Context_Sourcefile"],
+                 ultraschall.ErrorMessage[errornumber]["Context_SourceLine"]
 end
 
 function ultraschall.DeleteLastErrorMessage()
@@ -890,7 +914,7 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ShowLastErrorMessage</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -941,7 +965,7 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
   if dunk<0 then dunk=CountErrMessage+dunk else dunk=CountErrMessage-dunk end
   -- get the error-information
   --local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
-    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp = ultraschall.ReadErrorMessage(dunk, true)
+    local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, context_function, context_sourcefile, context_sourceline = ultraschall.ReadErrorMessage(dunk, true)
     --AAA=retval
   -- if errormessage exists and message is unread
   if retval==true and lastreadtime=="unread" then 
@@ -949,7 +973,10 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
       if parmname~="" then 
         -- if error-causing-parameter was given, display this message
         parmname="param: "..parmname 
-        reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
+        if context_function==nil then context_function="" end
+        if context_sourceline==nil then context_sourceline=-1 end
+        if context_sourcefile==nil then context_sourcefile="" end
+        reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1) , "Ultraschall Api Error Message",0) 
       else
         -- if no error-causing-parameter was given, display that message
         reaper.MB(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
@@ -958,19 +985,19 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
       if parmname~="" then 
         -- if error-causing-parameter was given, display this message
         parmname="param: "..parmname 
-        reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
       else
         -- if no error-causing-parameter was given, display that message
-        reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
       end
     elseif target==2 then
       if parmname~="" then 
         -- if error-causing-parameter was given, display this message
         parmname="param: "..parmname 
-        print3(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        print3(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
       else
         -- if no error-causing-parameter was given, display that message
-        print3(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+        print3(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
       end  
     elseif target==3 then
       if      message_type==nil or message_type==1 then return retval
@@ -987,10 +1014,10 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
   local retval
   if parmname~="" then 
     -- if error-causing-parameter was given, display this message
-    retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+    retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)
   else
     -- if no error-causing-parameter was given, display that message
-    retval=functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+    retval=functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)
   end  
   return retval, three
 end
@@ -999,7 +1026,7 @@ end
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SLEM</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -2720,7 +2747,7 @@ function SFEM(dunk, target, message_type)
   <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
     <slug>SFEM</slug>
     <requires>
-      Ultraschall=4.2
+      Ultraschall=4.75
       Reaper=5.40
       Lua=5.3
     </requires>
@@ -2771,7 +2798,8 @@ function SFEM(dunk, target, message_type)
     if dunk<0 then dunk=CountErrMessage+dunk else dunk=CountErrMessage-dunk end
     -- get the error-information
     --local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, errorcounter = ultraschall.GetLastErrorMessage()
-      local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp = ultraschall.ReadErrorMessage(dunk, true)
+      local retval, errcode, functionname, parmname, errormessage, lastreadtime, err_creation_date, err_creation_timestamp, context_function, context_sourcefile, context_sourceline = ultraschall.ReadErrorMessage(dunk, true)
+      
       --AAA=retval
     -- if errormessage exists and message is unread
     if retval==true and lastreadtime=="unread" then 
@@ -2779,28 +2807,28 @@ function SFEM(dunk, target, message_type)
         if parmname~="" then 
           -- if error-causing-parameter was given, display this message
           parmname="param: "..parmname 
-          reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
+          reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1),"Ultraschall Api Error Message", 0) 
         else
           -- if no error-causing-parameter was given, display that message
-          reaper.MB(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode,"Ultraschall Api Error Message",0) 
+          reaper.MB(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1),"Ultraschall Api Error Message",0) 
         end
       elseif target==1 then
         if parmname~="" then 
           -- if error-causing-parameter was given, display this message
           parmname="param: "..parmname 
-          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
         else
           -- if no error-causing-parameter was given, display that message
-          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+          reaper.ShowConsoleMsg("\n\nErrortime: "..os.date().."\n"..functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
         end
       elseif target==2 then
         if parmname~="" then 
           -- if error-causing-parameter was given, display this message
           parmname="param: "..parmname 
-          print3(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+          print3(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
         else
           -- if no error-causing-parameter was given, display that message
-          print3(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode) 
+          print3(functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)) 
         end  
       elseif target==3 then
         if      message_type==nil or message_type==1 then return retval
@@ -2817,10 +2845,10 @@ function SFEM(dunk, target, message_type)
     local retval
     if parmname~="" then 
       -- if error-causing-parameter was given, display this message
-      retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+      retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)
     else
       -- if no error-causing-parameter was given, display that message
-      retval=functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode
+      retval=functionname.."\n\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)
     end  
     return retval, three
 end

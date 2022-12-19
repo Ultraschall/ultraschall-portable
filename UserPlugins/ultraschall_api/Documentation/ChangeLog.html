@@ -35,6 +35,94 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.75 - "Soundgarden - Black Hole Sun" - 19th of December 2022</h3>
+<p>Has now 1614 functions, with 24 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>AutoBypass settings</strong><br />
+You can now get and set autobypass for projects as well as global preferences, using GetFXAutoBypassSettings and SetFXAutoBypassSettings.<br />
+You can also force autobypass for an fx, using GetFXAutoBypass_FXStateChunk and SetFXAutoBypass_FXStateChunk.</p></li>
+<li><p><strong>Better ErrorMessages</strong><br />
+Error messages, returned by functions like SLEM() or SFEM, return now more information about, in which script the error happened, in which function exactly and the linenumber.<br />
+So debugging is much more easier now.</p></li>
+<li><p><strong>Resize of gfx-images</strong><br />
+You can now resize gfx-images, load with gfx.loadimg, keeping aspect ratio, using GFX_ResizeImageKeepAspectRatio.<br />
+It's better for making images smaller than making them bigger(causes artifacts) but, you can do it now.</p></li>
+<li><p><strong>Only markers within timerange</strong><br />
+The Count markers-functions allow now counting from start to end-position. That way you can get the exact number of markers within the range.</p></li>
+<li><p><strong>Rendering</strong><br />
+supports now "Render stems pre-fader" and "Only render channels that are sent to parent" options; fixed various bugs with them too.<br />
+You can also get/set, if you want to output statistics-outfiles, using SetRender_SaveRenderStats and GetRender_SaveRenderStats.</p></li>
+<li><p><strong>PodcastMetaData</strong><br />
+fixed various bugs, added contributors and websites and a way to export the podcast-metadata as JSON according to the PodMeta_v1-standard,<br />
+including setting them into ID3, APE, IXML and VORBIS-COMMENT-metadata storage of Reaper.</p></li>
+<li><p><strong>Bugfixes</strong></p></li>
+</ul>
+<h4>New features in 4.75</h4>
+<ul>
+<li>FXManagement: GetFXAutoBypass_FXStateChunk - sets autobypass state of an fx within an FXStateChunk</li>
+<li>FXManagement: GetFXAutoBypassSettings - gets current states of various autobypass-settings</li>
+<li>FXManagement: SetFXAutoBypass_FXStateChunk - sets autobypass state of an fx within an FXStateChunk</li>
+<li>FXManagement: SetFXAutoBypassSettings - gets current states of various autobypass-settings</li>
+<li>GFX-Functions: GFX_ResizeImageKeepAspectRatio - resizes a loaded image while keeping aspect ratio</li>
+<li>GFX-Functions: GFX_BlitText_AdaptLineLength - draws a text and resizes the the line-lengths so they fit into the width and height-parameters</li>
+<li>Helper functions: GetRandomString - returns a random generated string with characters (requested by ChatGPT) [p=2622707]</li>
+<li>PodcastMetadata: CountContributors - counts the podcast contributors stored in an opened project</li>
+<li>PodcastMetadata: GetChapterAttributesAsJSON get the metadata of a chapter as JSON<br />
+</li>
+<li>PodcastMetadata: GetEpisodeAttributesAsJSON get the metadata of an episode as JSON</li>
+<li>PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON<br />
+</li>
+<li>PodcastMetadata: GetPodcastEpisodeAttributesPreset_Name - gets the name of an episode-metadata-preset</li>
+<li>PodcastMetadata: GetPodcastAttributePresetSlotByName - gets the preset-slot of podcast-presets by its name</li>
+<li>PodcastMetadata: GetEpisodeAttributePresetSlotByName - gets the preset-slot of episode-presets by its name</li>
+<li>PodcastMetadata: GetPodcastAttributesPreset_Name - gets the name of a podcast-metadata-preset</li>
+<li>PodcastMetadata: GetPodcastContributorAttributesAsJSON - gets the contributors as JSON</li>
+<li>PodcastMetadata: GetSetContributor_Attributes - gets/sets the attributes of an episode's contributor<br />
+</li>
+<li>PodcastMetadata: GetSetPodcastWebsite - gets/sets websites for a podcast</li>
+<li>PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON</li>
+<li>PodcastMetadata: PodcastMetadata_CreateJSON_Entry - creates entire podcast-metadata-entry as JSON according to PodMeta_v1-standard</li>
+<li>PodcastMetadata: PodcastMetaData_ExportWebsiteAsJSON - creates website's metadata as JSON</li>
+<li>PodcastMetadata: SetPodcastEpisodeAttributesPreset_Name - sets the name of an episode-metadata-preset</li>
+<li>PodcastMetadata: SetPodcastAttributesPreset_Name - sets the name of a podcast-metadata-preset<br />
+</li>
+<li>Rendering: GetRender_SaveRenderStats - gets the save outfile.render_states.html-checkbox-state</li>
+<li>Rendering: SetRender_SaveRenderStats - sets the save outfile.render_states.html-checkbox-state</li>
+</ul>
+<h4>Changes from 4.7 to 4.75</h4>
+<ul>
+<li>API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -&gt; thanks binbinfr</li>
+<li>Docs: updated to Reaper 6.72; config-variable-docs has improved index</li>
+<li>ErrorMessagingSystem: SLEM/ShowLastErrorMessage/SFEM - return now the function, linenumber and sourcefile, in which AddErrorMessage was called</li>
+<li>FXManagement: GetFXFromFXStateChunk - rewritten from scratch, should be more stable now</li>
+<li>MarkerManagement: CountAllCustomMarkers - allows now counting custom-markers within a start and end-time</li>
+<li>MarkerManagement: CountNormalMarkers - allows now counting normal markers within a start and end-time</li>
+<li>MarkerManagement: CountShownoteMarkers - allows now counting shownotes within a start and end-time</li>
+<li>MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks&lt;the number of tracks needed by the items to be inserted</li>
+<li>MediaItemManagement: RippleCut - had trouble with projects, where there's only one item on track 1 and no other tracks</li>
+<li>PodcastMetadata: GetSetChapterMarker_Attributes - supports now setting position "chap_position" and markertitle "chap_title"</li>
+<li>PodcastMetadata: GetSetPodcast_Attributes - can now get/store attributes either in the current project or a preset, not in both at the same time; removed websites; will be done by GetSetPodcastWebsite instead</li>
+<li>PodcastMetadata: GetSetPodcastEpisode_Attributes - can now get/store attributes either in the current project or a preset, not in both at the same time</li>
+<li>PodcastMetadata: GetSetShownoteMarker_Attributes - supports now attribute shwn_linked_audiovideomedia, which allows linking media directly with a time_stamp; supports now setting position "shwn_position" and markertitle "shwn_title"</li>
+<li>ProjectFiles: GetProject_RenderStems - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>ProjectFiles: SetProject_RenderStems - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: AddRenderPreset - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: ApplyRenderTable_Project - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; didn't apply various settings -&gt; fixed</li>
+<li>RenderManagement: ApplyRenderTable_ProjectFile - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: CreateNewRenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; default RenderTable did return bool instead of integer for FadeOut_Shape -&gt; fixed (thnx to aurelien)</li>
+<li>RenderManagement: GetRenderPreset_RenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: GetRenderTable_Project - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: GetRenderTable_ProjectDefaults - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: GetRenderTable_ProjectFile - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: IsValidRenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options</li>
+<li>RenderManagement: SetRenderPreset - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; fixed edge-cases that could prevent presets from being replaced with the new one</li>
+<li>TrackManagement: GetTrackGroupFlags - supports now Media/Razor-Edit Lead and Follow</li>
+<li>TrackManagement: GetTrackGroupFlags_HighState - supports now Media/Razor-Edit Lead and Follow</li>
+<li>TrackManagement: SetTrackGroupFlags - supports now Media/Razor-Edit Lead and Follow</li>
+<li>TrackManagement: SetTrackGroupFlags_HighState - supports now Media/Razor-Edit Lead and Follow</li>
+</ul>
+<hr />
 <h3>4.7 - "Pearl Jam - Alive" - 16th of October 2022</h3>
 <p>Has now 1590 functions, with 58 new ones</p>
 <p><strong>new in this release:</strong></p>

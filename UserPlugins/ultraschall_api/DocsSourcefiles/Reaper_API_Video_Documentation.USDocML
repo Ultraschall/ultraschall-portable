@@ -336,22 +336,22 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>param1..param24</slug>
-        <title>param1..param24</title>
-        <functioncall prog_lang="eel">param1..param24</functioncall>
+        <slug>param</slug>
+        <title>param1..param40</title>
+        <functioncall prog_lang="eel">param1..param40</functioncall>
         <requires>
-            Reaper=6.13
+            Reaper=6.72
         </requires>
         <description prog_lang="*">
             Manage the knobs of your video-processor-script.
-            param1 hold the value for parameter 1 .. param24 for parameter 24.
+            param1 hold the value for parameter 1 .. param40 for parameter 40.
             
             used as:
             
             //@param X:ParameterVariableName "ParamShownName" default_value minimum_val maximum_val medium_value step_size
         </description>
         <parameters>
-            @param X: - the parameter number, where X is a number between 1 and 24
+            @param X: - the parameter number, where X is a number between 1 and 40
             string ParameterVariableName - the variable, which holds the current setting of the knob 
             string "ParamShownName" - this will be shown at the knob
             number default_value - the default-value, with which it will be initialized or reset to, when doubleclicking the knob; can be float and/or negative as well; should be between minimum_val and maximum_val; 0, if not given
@@ -1041,7 +1041,7 @@
         <title>gfx_evalrect</title>
         <functioncall prog_lang="eel">integer retval = gfx_evalrect(integer x, integer y, integer w, integer h, string code_string[, optional integer flags, optional integer src, optional string init_code_string, optional string src2])</functioncall>
         <requires>
-            Reaper=6.13
+            Reaper=6.70
         </requires>
         <description prog_lang="*">
             Processes a rectangle with code_string being executed for every pixel/pixel-group. 
@@ -1065,7 +1065,7 @@
                 If init_code_string specified, it will be executed in each thread context before processing
                 If src specified (and >= -1), sr/sg/sb/sa, sy1/su/sv etc will be available to read. In this case only the intersection of valid rectangles between src and the destination buffer will be processed. 
                 If src and src2 specified (and >= -1), s2r/s2g/s2b/s2a, s2y1/s2u/s2v etc will also be available to read. 
-                Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1)
+                Note: variables _1-_99 are thread-local variables which will always be initialized to 0, and _0 will be initialized to the thread index (usually 0 or 1). 6.70+: _slice is an alias of _0. _slices is a count of the multiprocessing slices, _span is the number of calls per line, and _slice_size is the size of each slice in lines (the last slice may vary in size).
         </description>
         <retvals>
             integer retval - -1, in case of an error(compilation of the code_string was unsuccessful)
@@ -1744,7 +1744,7 @@
         <title>ui_get_state</title>
         <functioncall prog_lang="eel">integer click_modifier_state = ui_get_state(integer #ctx[, optional integer #mouse_x, optional integer #mouse_y, optional integer force_frame_in, optional integer #mouse_wheel_state, optional integer #mouse_hwheel_state])</functioncall>
         <requires>
-            Reaper=6.13
+            Reaper=6.72
         </requires>
         <description prog_lang="*">
             Gets UI state and context, only usable from Monitoring FX (returns 0 if used from track). 
@@ -1763,7 +1763,7 @@
                                          - 1024 is whether configuration for this processor is visible
         </retvals>
         <parameters>
-            integer #ctx - -1, mouse is above video-processor; 1-24, mouse is changing knob 1-24; 0, mouse is outside the video-window
+            integer #ctx - -1, mouse is above video-processor; 1-40, mouse is changing knob 1-40; 0, mouse is outside the video-window
             optional integer #mouse_x - ui_get_state puts into this variable the current x-mouse-position(0-1)/knob-control area-xposition, when ctc>-1
             optional integer #mouse_y - ui_get_state puts into this variable the current y-mouse-position(0-1)/knob-control area-yposition, when ctc>-1
             optional number force_frame_in - positive, update getting the ui-state even if no video is available; in seconds
@@ -1809,10 +1809,10 @@
         <title>on_parameter_change</title>
         <functioncall prog_lang="eel">on_parameter_change(float pvar[, optional integer isdone])</functioncall>
         <requires>
-            Reaper=6.13
+            Reaper=6.72
         </requires>
         <description prog_lang="*">
-            Notifies that the parameter pointed to by pvar (must be param1..param24 or a user-defined parameter) has changed. 
+            Notifies that the parameter pointed to by pvar (must be param1..param40 or a user-defined parameter) has changed. 
             
             Specify isdone=1 when done modifying parameter (e.g. releasing touch)
         </description>

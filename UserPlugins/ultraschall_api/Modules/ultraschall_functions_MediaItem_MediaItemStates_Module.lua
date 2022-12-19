@@ -3011,7 +3011,8 @@ function ultraschall.GetItemUSTrackNumber_StateChunk(statechunk)
     Returns the tracknumber as well as the mediatrack-object from where the mediaitem was from, as given by a MediaItemStateChunk.
     This works only, if the StateChunk contains the entry "ULTRASCHALL_TRACKNUMBER", which holds the original tracknumber of the MediaItem.
 
-    This entry will only be added by functions from the Ultraschall-API, like [GetAllMediaItemsBetween](#GetAllMediaItemsBetween)
+    This entry will only be added by functions from the Ultraschall-API, like [GetAllMediaItemsBetween](#GetAllMediaItemsBetween)  
+    
     Returns -1 in case of error.
   </description>
   <parameters>
