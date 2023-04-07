@@ -65,6 +65,21 @@ function DrawString(str,rect,iscentered)
   gfx.drawstr(str,flag,rect[3],rect[4])
 end
 
+function utf8_len(str)
+  local a = utf8.len(str);
+  if a == nil then return str:len() end
+  return a;
+end
+
+function utf8_chars_to_bytes(str, a, b)
+  a = utf8.offset(str,a)
+  b = utf8.offset(str,b)
+  if a == nil then a = str:len()+1 end
+  if b == nil then b = str:len()+1 end
+  if b < a then return b,a end
+  return a,b
+end
+
 function DrawEditingText(str,rect)
   w,h=gfx.measurestr(str)
   if rect[3] < rect[1]+w+_th then rect[3]=rect[1]+w+_th end
@@ -72,10 +87,8 @@ function DrawEditingText(str,rect)
   DrawBox(_cureditrect,"",false)
   gfx.x,gfx.y=rect[1],rect[2]+(rect[4]-rect[2]-_th)/2      
   
-  sc,ec=_caret[1],_caret[1]+_caret[2]
-  if sc > ec then sc,ec=ec,sc end
+  sc,ec=utf8_chars_to_bytes(str,_caret[1],_caret[1]+_caret[2])
   if sc < 1 then sc=1 end
-  if ec > str:len()+1 then ec=str:len()+1 end
   gfx.set(_fg[1],_fg[2],_fg[3])   
   if sc > 1 then gfx.drawstr(str:sub(1,sc-1)) end
 
@@ -100,11 +113,11 @@ end
 function GetEditCaret(x,y)
   str=GetLyric(_capm,_capb)
   sx=_cureditrect[1]+_th/4
-  for i=1,str:len() do
-    w=gfx.measurestr(str:sub(1,i))
+  for i=1,utf8_len(str) do
+    w=gfx.measurestr(str:sub(1,utf8.offset(str,i)))
     if x < sx+w then return i end
   end
-  return str:len()+1
+  return utf8_len(str)+1
 end
 
 function DrawBox(rect,str,iscombo)
@@ -453,7 +466,7 @@ function StartEdit(m,b)
   _origlyric=_lyrics[m][b]
   if _lyrics[m][b] == _bullet then _lyrics[m][b]="" end
   _capm,_capb=m,b
-  _caret={1,_lyrics[m][b]:len()+1}  
+  _caret={1,utf8_len(_lyrics[m][b])+1}
 end
 
 function EndEdit()
@@ -507,7 +520,7 @@ function OnMouseDown(x,y,doubleclick)
       if m == _capm and b == _capb then
         if doubleclick == true then 
           str=GetLyric(_capm,_capb)
-          _caret={1,str:len()}
+          _caret={1,utf8_len(str)}
         else
           i=GetEditCaret(x,y)
           _caret={i,0}        
@@ -592,7 +605,7 @@ function OnNavigateChar(c,ctrl,shift)
     return true
   end  
   if (c == RIGHT and shift == true) or c == TAB or c == RET or
-    (c == RIGHT and _caret[1] == GetLyric(_capm,_capb):len()+1 and _caret[2] == 0) then
+    (c == RIGHT and _caret[1] == utf8_len(GetLyric(_capm,_capb))+1 and _caret[2] == 0) then
     if _capb < _tsnum[_capm] or _capm < _maxm then
       m,b=_capm,_capb+1
       if b > _tsnum[m] then m,b=m+1,1 end
@@ -650,21 +663,22 @@ function OnEditChar(c,ctrl,shift)
   end   
   if c == RIGHT then
     str=GetLyric(_capm,_capb)
-    if _caret[1] < str:len()+1 then _caret[1]=_caret[1]+1 end
+    if _caret[1] < utf8_len(str)+1 then _caret[1]=_caret[1]+1 end
     _caret[2]=0
     return true
   end
   if c == BKSP or c == DEL then
-    sc,ec=_caret[1],_caret[1]+_caret[2]
-    if sc > ec then sc,ec=ec,sc end
     str=GetLyric(_capm,_capb)
     if _caret[2] ~= 0 then
+      sc,ec=utf8_chars_to_bytes(str,_caret[1],_caret[1]+_caret[2])
       _lyrics[_capm][_capb]=str:sub(1,sc-1)..str:sub(ec)
     elseif c == BKSP and _caret[1] > 1 then
-      _lyrics[_capm][_capb]=str:sub(1,sc-2)..str:sub(ec)
+      sc,ec=utf8_chars_to_bytes(str,_caret[1]-1,_caret[1])
       _caret[1]=_caret[1]-1
-    elseif c == DEL and _caret[1] <= str:len() then
-      _lyrics[_capm][_capb]=str:sub(1,sc-1)..str:sub(ec+1)
+      _lyrics[_capm][_capb]=str:sub(1,sc-1)..str:sub(ec)
+    elseif c == DEL and _caret[1] <= utf8_len(str) then
+      sc,ec=utf8_chars_to_bytes(str,_caret[1],_caret[1]+1)
+      _lyrics[_capm][_capb]=str:sub(1,sc-1)..str:sub(ec)
     end
     _caret[2]=0    
     return true
@@ -674,17 +688,16 @@ function OnEditChar(c,ctrl,shift)
     return true
   end
   if c == END then
-    _caret={GetLyric(_capm,_capb):len()+1,0}
+    _caret={utf8_len(GetLyric(_capm,_capb))+1,0}
   end
   return false
 end
 
 function OnInputChar(c)
-  if c >= 0x20 and c <= 0x7E then
-    sc,ec=_caret[1],_caret[1]+_caret[2]
-    if sc > ec then sc,ec=ec,sc end
+  if ( c >= 0x20 and c <= 0xff ) or (c>>24) == 0x75 then
     str=GetLyric(_capm,_capb)
-    _lyrics[_capm][_capb]=str:sub(1,sc-1)..string.char(c)..str:sub(ec)
+    sc,ec=utf8_chars_to_bytes(str,_caret[1],_caret[1]+_caret[2])
+    _lyrics[_capm][_capb]=str:sub(1,sc-1)..utf8.char(c & 0xffffff)..str:sub(ec)
     _caret={_caret[1]+1,0}  
     return true
   end
@@ -693,11 +706,11 @@ end
 
 function OnMetaChar(c,ctrl,shift)
   if c == ESC then
-    if _lyrics[_capm][_capb] == _origlyric and _caret[1] == _origlyric:len()+1 and _caret[2] == 0 then
+    if _lyrics[_capm][_capb] == _origlyric and _caret[1] == utf8_len(_origlyric)+1 and _caret[2] == 0 then
       _editing=false
     else
       _lyrics[_capm][_capb]=_origlyric    
-      _caret={_origlyric:len()+1,0}
+      _caret={utf8_len(_origlyric)+1,0}
     end
     return true
   end
