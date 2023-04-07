@@ -38,6 +38,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 mv=2^(-0.2/6);
 history1=history2=history3=history4=0;
 history1l=history2l=history3l=history4l=0;

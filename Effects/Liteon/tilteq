@@ -30,6 +30,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 amp = 6/log(2);
 denorm = 10^-30;
 pi = 22/7;

@@ -32,6 +32,7 @@ out_pin:right output
 @init
 cDenorm = 10^-30;
 cAmpDB = 8.65617025;
+ext_tail_size=-1;
 
 @slider
 lVol = exp(slider1/cAmpDB); 

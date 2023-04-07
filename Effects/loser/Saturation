@@ -26,6 +26,8 @@ out_pin:right output
 
 @init
 gfx_clear = 0;
+ext_tail_size = -2;
+
 @slider
 foo=slider1/200*$pi;
 bar = sin(slider1/200*$pi);

@@ -25,6 +25,8 @@ out_pin:right output
 
 @init
 b=0;
+ext_tail_size=-1;
+
 @slider
 tmp=bs;
 bs=floor( min(slider1*srate/1000 , 500000) );

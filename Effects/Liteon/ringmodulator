@@ -42,6 +42,8 @@ out_pin:right output
 //2*pi
 pi2 = 2*$pi;
 
+ext_tail_size=-1;
+
 //sim resistance
 r = 0.85;
 

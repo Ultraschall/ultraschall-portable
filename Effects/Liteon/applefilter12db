@@ -31,6 +31,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 mX1l=mX2l=mY1l=mY2l=mX1r=mX2r=mY1r=mY2r=0;
 
 @slider

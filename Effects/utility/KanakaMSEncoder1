@@ -7,6 +7,9 @@ in_pin:right input
 out_pin:mid output
 out_pin:side output
 
+@init
+ext_tail_size = -2;
+
 @sample
 spl0orig=spl0;
 spl1orig=spl1;

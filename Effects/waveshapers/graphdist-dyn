@@ -16,6 +16,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-1;
 tabsize=40; // actually twice this, but x per side, and 0 is always 0
 tab=0; // first x are 0..1, next x are 0..-1
 i=0;

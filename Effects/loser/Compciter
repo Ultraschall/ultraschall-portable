@@ -29,6 +29,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 gain = seekgain = 1;
 c = 8.65617025;
 dc = 10^-30;

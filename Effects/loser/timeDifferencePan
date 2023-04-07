@@ -29,6 +29,7 @@ b=0;
 tmp=bs;
 pan = abs(slider1/100);
 bs=floor( min(pan/500*srate , 1000000) );
+ext_tail_size=1+bs;
 tmp < bs ? freembuf(bs);
 @sample
 b[0]= slider1 > 0 ? spl0:spl1;

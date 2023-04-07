@@ -27,6 +27,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init
+ext_tail_size = -2;
+
 @slider
 rot=slider1*0.017453292;
 width = slider2 / 200;

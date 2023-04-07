@@ -12,7 +12,7 @@ out_pin:left output
 out_pin:right output
 
 @init
-
+ext_tail_size = -2;
 AMP_dB_i=1/8.68588963806504;
 
 db=slider1; // initialize here but not in @slider for playback start

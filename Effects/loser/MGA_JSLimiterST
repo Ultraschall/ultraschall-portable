@@ -29,6 +29,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-1;
 HOLDTIME = srate/128;
 
 r1Timer = 0;

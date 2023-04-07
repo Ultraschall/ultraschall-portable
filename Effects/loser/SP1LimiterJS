@@ -25,8 +25,9 @@ out_pin:left output
 out_pin:right output
 
 @init
-gain = 1; c = 8.65617025; dc = 10^(-30);
+ext_tail_size=-1;
 
+gain = 1; c = 8.65617025; dc = 10^(-30);
 
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));

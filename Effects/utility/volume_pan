@@ -13,6 +13,7 @@ out_pin:right output
 
 @init
 
+ext_tail_size = -1;
 AMP_dB = 8.68588963806504;
 src_vol = tgt_vol = exp(slider1/AMP_DB);
 src_pan = tgt_pan = 0.01*slider2;

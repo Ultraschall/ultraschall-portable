@@ -23,6 +23,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init
+ext_tail_size = -2;
+
 @slider
 hdistr = min(slider1/100,.999);
 foo = 2*hdistr/(1-hdistr);

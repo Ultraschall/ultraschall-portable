@@ -18,6 +18,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init
+  ext_tail_size=srate;
+
 @slider
   lbufsize=bufsize; bufsize=(srate*0.001*slider4)&65534; 
   lbufsize!=bufsize ? bufpos=0;
