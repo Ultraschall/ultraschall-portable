@@ -13,6 +13,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init
+ext_tail_size = -2;
+
 @slider
   adj1=2 ^ (slider1/6); 
   adj2=2 ^ (slider2/6);

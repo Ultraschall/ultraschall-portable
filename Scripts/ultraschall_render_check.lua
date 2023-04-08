@@ -31,18 +31,17 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 
-if ultraschall.AnyTrackMute(true) == true then
+--A=reaper.GetMasterMuteSoloFlags()
+--if lol==nil then return end
 
-  Retval=reaper.MB("There are muted tracks. Do you want to continue rendering?", "Warning: muted tracks!", 4)
-  if Retval==6 then
-    A=false
-    -- print (Retval)
-  end
+if ultraschall.AnyTrackMute(true) == true then
+  if reaper.GetMasterMuteSoloFlags()&1==1 then text="(including Master track)" else text="" end
+  Retval=reaper.MB("There are muted tracks"..text..". Do you want to continue rendering?", "Warning: muted tracks!", 4)
 else
-  A=false
+  Retval=6
 end
 
-if A == false then
+if Retval == 6 then
   cmd=reaper.NamedCommandLookup("40521")  -- set playrate to 1
   reaper.Main_OnCommand(cmd,0)
 

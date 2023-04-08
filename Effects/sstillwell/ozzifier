@@ -41,6 +41,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+  ext_tail_size = srate * 4;
   bufsize = srate|0;
   xfade=(srate*0.10)|0; // 100ms xfade
   bufloc0 = 10000;

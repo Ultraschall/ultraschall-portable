@@ -44,6 +44,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 n = 0;
 sqrt2 = sqrt(2);
 s2 = sqrt2/2;

@@ -38,6 +38,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init
+  ext_tail_size = -1;
+
 @slider
 
   mix=slider1 / 100;

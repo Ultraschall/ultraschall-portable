@@ -15,6 +15,7 @@ out_pin:right output
 
 @init
 bpos=0;
+ext_tail_size = srate;
 
 @slider
 wet=2^(slider2/6);

@@ -78,7 +78,7 @@ function ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetFXFromFXStateChunk</slug>
     <requires>
-      Ultraschall=4.2
+      Ultraschall=4.75
       Reaper=6.10
       Lua=5.3
     </requires>
@@ -113,20 +113,29 @@ function ultraschall.GetFXFromFXStateChunk(FXStateChunk, fxindex)
   -- so its easy to manipulate the stuff
   if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXFromFXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return end
   if math.type(fxindex)~="integer" then ultraschall.AddErrorMessage("GetFXFromFXStateChunk", "fxindex", "must be an integer", -2) return end
-  local index=0
-  
-  for a,b,c in string.gmatch(FXStateChunk, "()(%s-BYPASS.-\n.-WAK.-)\n()") do    
-    index=index+1
-    if index==fxindex then         
-      --print2(1,b:sub(1,1000))
-      local temp, offset=FXStateChunk:sub(c,-1):match("(    <COMMENT \n.-\n.->\n)()")
-      --print2(2,b:sub(1,1000),temp)
-      if offset==nil then offset=0 end
-      --print2(3,b:sub(1,1000))
-      if temp==nil then temp="\n" else temp="\n"..temp end
-      --print2(4,b:sub(1,1000))
-      return b..temp,a,c+offset
+  local end_offset=-1
+  for i=FXStateChunk:len(), 1, -1 do
+    if FXStateChunk:sub(i,i)==">" then
+      end_offset=i-1
+      break
     end
+  end
+  --print2(end_offset, FXStateChunk)
+  --print2(FXStateChunk:sub(0, end_offset))--:match("(BYPASS.-%s)()(BYPASS)"))
+  --print2(FXStateChunk:sub(2529, -1))--:match("(BYPASS.-%s)()(BYPASS)"))
+  
+  local Found=""
+  local oldcount=0
+  local index_count=0
+  local count
+  --if lol==nil then return end
+  while Found~=nil do    
+    Found, count=(FXStateChunk:sub(oldcount, end_offset).."  BYPASS"):match("(%s%sBYPASS.-)() %s%sBYPASS")
+    --print2(oldcount, FXStateChunk:len(), Found)
+    if Found==nil then return end
+    index_count=index_count+1
+    if index_count==fxindex then return Found, oldcount, oldcount+count end
+    oldcount=oldcount+count
   end
   
   return nil
@@ -7873,6 +7882,8 @@ function ultraschall.GetFXFloatPos_FXStateChunk(FXStateChunk, fx_id)
   return float~="POS", table.unpack(individual_values)
 end
 
+
+
 function ultraschall.GetFXGuid_FXStateChunk(FXStateChunk, fx_id)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -7915,7 +7926,7 @@ function ultraschall.GetFXGuid_FXStateChunk(FXStateChunk, fx_id)
   return GUID
 end
 
-function ultraschall.GetWndRect_FXStateChunk(FXStateChunk, fx_id)
+function ultraschall.GetWndRect_FXStateChunk(FXStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetWndRect_FXStateChunk</slug>
@@ -7924,7 +7935,7 @@ function ultraschall.GetWndRect_FXStateChunk(FXStateChunk, fx_id)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer x, integer y, integer width, integer height = ultraschall.GetWndRect_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <functioncall>integer x, integer y, integer width, integer height = ultraschall.GetWndRect_FXStateChunk(string FXStateChunk)</functioncall>
   <description>
     returns the WNDRECT-entryvalues from an FXStateChunk.
     
@@ -7960,7 +7971,9 @@ function ultraschall.GetWndRect_FXStateChunk(FXStateChunk, fx_id)
   return table.unpack(individual_values)
 end
 
-function ultraschall.GetShow_FXStateChunk(FXStateChunk, fx_id)
+
+
+function ultraschall.GetShow_FXStateChunk(FXStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetShow_FXStateChunk</slug>
@@ -7969,7 +7982,7 @@ function ultraschall.GetShow_FXStateChunk(FXStateChunk, fx_id)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer showstate = ultraschall.GetShow_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <functioncall>integer showstate = ultraschall.GetShow_FXStateChunk(string FXStateChunk)</functioncall>
   <description>
     returns the SHOW-entryvalues from an FXStateChunk.
     
@@ -8002,7 +8015,7 @@ function ultraschall.GetShow_FXStateChunk(FXStateChunk, fx_id)
   return table.unpack(individual_values)
 end
 
-function ultraschall.GetLastSel_FXStateChunk(FXStateChunk, fx_id)
+function ultraschall.GetLastSel_FXStateChunk(FXStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetLastSel_FXStateChunk</slug>
@@ -8011,7 +8024,7 @@ function ultraschall.GetLastSel_FXStateChunk(FXStateChunk, fx_id)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer last_selected_fx = ultraschall.GetLastSel_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <functioncall>integer last_selected_fx = ultraschall.GetLastSel_FXStateChunk(string FXStateChunk)</functioncall>
   <description>
     returns the LASTSEL-entryvalues from an FXStateChunk.
     
@@ -8042,7 +8055,7 @@ function ultraschall.GetLastSel_FXStateChunk(FXStateChunk, fx_id)
   return table.unpack(individual_values)
 end
 
-function ultraschall.GetDocked_FXStateChunk(FXStateChunk, fx_id)
+function ultraschall.GetDocked_FXStateChunk(FXStateChunk)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetDocked_FXStateChunk</slug>
@@ -8051,7 +8064,7 @@ function ultraschall.GetDocked_FXStateChunk(FXStateChunk, fx_id)
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer dockstate = ultraschall.GetDocked_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <functioncall>integer dockstate = ultraschall.GetDocked_FXStateChunk(string FXStateChunk)</functioncall>
   <description>
     returns the DOCKED-entryvalues from an FXStateChunk.
     
@@ -9605,3 +9618,202 @@ function ultraschall.GetFXByGuid(guid)
   return FoundGuids
 end
 
+function ultraschall.SetFXAutoBypassSettings(reduce_cpu, autobypass_when_fx_open, disable_autobypass_when_offline, auto_bypass_report_tail, auto_bypass_report_tail_thresh)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXAutoBypassSettings</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.72
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetFXAutoBypassSettings(boolean reduce_cpu, boolean autobypass_when_fx_open, boolean disable_autobypass_when_offline, boolean auto_bypass_report_tail, integer auto_bypass_report_tail_thresh)</functioncall>
+  <description>
+    Sets states of various autobypass-settings.
+    
+    Returns false in case of an error.
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    boolean reduce_cpu - true, reduce CPU use of silent tracks during playback; false, don't reduce cpu use of silent tracks during playback
+    boolean autobypass_when_fx_open - true, Auto-bypass FX (when set via project or manual setting) even when FX configuration is open; false, don't auto-bypass fx
+    boolean disable_autobypass_when_offline - true, Disable FX auto-bypass when using offline render/apply FX/render stems; false, don't disable FX auto-bypass when using offline render/apply FX/render stems
+    boolean auto_bypass_report_tail - true, Auto-bypass FX that report tail length or have auto-tail set; false, don't auto-bypass FX that report tail length or have auto-tail set
+    integer auto_bypass_report_tail_thresh - Auto-bypass FX that report tail length or have auto-tail set, threshold in dB; always negative
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, autobypass</tags>
+</US_DocBloc>
+]]  
+  if type(reduce_cpu)~="boolean" then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "reduce_cpu", "must be a boolean", -1) return false end
+  if type(autobypass_when_fx_open)~="boolean" then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "autobypass_when_fx_open", "must be a boolean", -2) return false end
+  if type(disable_autobypass_when_offline)~="boolean" then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "disable_autobypass_when_offline", "must be a boolean", -3) return false end
+  if type(auto_bypass_report_tail)~="boolean" then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "auto_bypass_report_tail", "must be a boolean", -4) return false end
+  if math.type(auto_bypass_report_tail_thresh)~="integer" then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "auto_bypass_report_tail_thresh", "must be a boolean", -5) return false end
+  if auto_bypass_report_tail_thresh>0 then ultraschall.AddErrorMessage("SetFXAutoBypassSettings", "auto_bypass_report_tail_thresh", "must be a negative value", -6) return false end
+  
+  local configvar=0
+  local configvar2=0
+  if reduce_cpu==true then configvar=configvar+1 end
+  if autobypass_when_fx_open==true then configvar=configvar+4 end
+  if disable_autobypass_when_offline==true then configvar=configvar+8 end
+  reaper.SNM_SetIntConfigVar("optimizesilence", configvar)
+  
+  if auto_bypass_report_tail==true then configvar2=configvar2+1 end
+  reaper.SNM_SetIntConfigVar("silenceflags", configvar2)
+  
+  reaper.SNM_SetIntConfigVar("silencethreshdb", auto_bypass_report_tail_thresh)
+  return true
+end
+
+--A=ultraschall.SetAutoBypassSettings(true, true, false)
+--SLEM()
+function ultraschall.GetFXAutoBypassSettings()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXAutoBypassSettings</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.72
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean reduce_cpu, boolean autobypass_when_fx_open, boolean disable_autobypass_when_offline = ultraschall.GetFXAutoBypassSettings()</functioncall>
+  <description>
+    Gets states of various autobypass-settings, as set in Preferences-> Audio and Preferences -> Rendering as well as in Project Settings -> Advanced Tab
+  </description>
+  <retvals>
+    boolean reduce_cpu - true, reduce CPU use of silent tracks during playback; false, don't reduce cpu use of silent tracks during playback
+    boolean autobypass_when_fx_open - true, Auto-bypass FX (when set via project or manual setting) even when FX configuration is open; false, don't auto-bypass fx
+    boolean disable_autobypass_when_offline - true, Disable FX auto-bypass when using offline render/apply FX/render stems; false, don't disable FX auto-bypass when using offline render/apply FX/render stems
+    boolean auto_bypass_report_tail - true, Auto-bypass FX that report tail length or have auto-tail set; false, don't auto-bypass FX that report tail length or have auto-tail set
+    integer auto_bypass_report_tail_thresh - Auto-bypass FX that report tail length or have auto-tail set, threshold in dB; always negative
+  </retvals>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, autobypass</tags>
+</US_DocBloc>
+]]  
+  local configvar=reaper.SNM_GetIntConfigVar("optimizesilence", -1)
+  local configvar2=reaper.SNM_GetIntConfigVar("silenceflags", -1)
+  local configvar3=reaper.SNM_GetIntConfigVar("silencethreshdb", -1)
+  return configvar&1==1, configvar&4==4, configvar&8==8, configvar2&1==1, configvar3
+end
+
+--A,B,C=ultraschall.GetAutoBypassSettings()
+
+function ultraschall.GetFXAutoBypass_FXStateChunk(FXStateChunk, fx_id)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetFXAutoBypass_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.71
+    Lua=5.3
+  </requires>
+  <functioncall>integer state = ultraschall.GetFXAutoBypass_FXStateChunk(string FXStateChunk, integer fxid)</functioncall>
+  <description>
+    Gets the state of autobypass of an FX within an FXStateChunk.
+    
+    It is the AUTOBYPASS-entry
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer state - 0, autobypass is disabled; 1, autobypass is enabled
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, from whose fx you want to return the autobypass-state
+    integer fxid - the fx, whose autobypass-state you want to retrieve
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Get States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, get, fx, autobypass</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("GetFXAutoBypass_FXStateChunk.GetFXWAK_FXStateChunk()", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("GetFXAutoBypass_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  ultraschall.SuppressErrorMessages(true)
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+  if fx_lines==nil then ultraschall.SuppressErrorMessages(false) ultraschall.AddErrorMessage("GetFXAutoBypass_FXStateChunk", "fx_id", "no such fx", -4) return nil end
+  local AutoBypass=fx_lines:match("\n.-AUTOBYPASS (.-)\n")
+  if AutoBypass==nil then return 0 end
+  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(AutoBypass.." ", " ")
+  for i=1, count do
+    individual_values[i]=tonumber(individual_values[i])
+  end
+  ultraschall.SuppressErrorMessages(false)
+  return table.unpack(individual_values)
+end
+
+function ultraschall.SetFXAutoBypass_FXStateChunk(FXStateChunk, fx_id, newstate)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetFXAutoBypass_FXStateChunk</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.71
+    Lua=5.3
+  </requires>
+  <functioncall>string FXStateChunk = ultraschall.SetFXAutoBypass_FXStateChunk(string FXStateChunk, integer fxid, integer newstate)</functioncall>
+  <description>
+    Sets the autobypass-state of an fx within an FXStateChunk
+    
+    It is the AUTOBYPASS-entry.
+    
+    Keep in mind, when passing 0, the AUTOBYPASS-entry disappears. This is normal.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    string FXStateChunk - the altered FXStateChunk with the new AUTOBYPASS-state
+  </retvals>
+  <parameters>
+    string FXStateChunk - the FXStateChunk, into which you want to set the new bypass-state
+    integer fxid - the fx, whose bypass-state you want to set
+    integer newstate - 1, autobypass enabled; 0, autobypass disabled
+  </parameters>
+  <chapter_context>
+    FX-Management
+    Set States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
+  <tags>fx management, set, fx, autobypass</tags>
+</US_DocBloc>
+]]
+
+  if ultraschall.IsValidFXStateChunk(FXStateChunk)==false then ultraschall.AddErrorMessage("SetFXAutoBypass_FXStateChunk", "FXStateChunk", "must be a valid FXStateChunk", -1) return nil end
+  if math.type(fx_id)~="integer" then ultraschall.AddErrorMessage("SetFXAutoBypass_FXStateChunk", "fx_id", "must be an integer", -2) return nil end
+  if math.type(newstate)~="integer" then ultraschall.AddErrorMessage("SetFXAutoBypass_FXStateChunk", "newstate", "must be a boolean", -3) return nil end
+
+  local fx_lines, startoffset, endoffset = ultraschall.GetFXFromFXStateChunk(FXStateChunk, fx_id)
+
+  local newpass
+  if newstate==0 then newpass="" else newpass="   AUTOBYPASS "..newstate.."\n " end
+
+  fx_lines=string.gsub(fx_lines, "    AUTOBYPASS.-\n", "")
+  local insertoffset=fx_lines:match(".-WAK.-\n()")  
+  
+  fx_lines=fx_lines:sub(1,insertoffset)..newpass..fx_lines:sub(insertoffset+1, -1)
+  --print_update(fx_lines)
+  FXStateChunk=FXStateChunk:sub(1, startoffset-1)..fx_lines..FXStateChunk:sub(endoffset, -1)
+  return FXStateChunk
+end

@@ -58,6 +58,7 @@ out_pin:right output
   sweepBoost = 9;
   sweepQ = 2;
 
+  ext_tail_size = -1;
 
 @slider
 

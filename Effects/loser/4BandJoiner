@@ -35,6 +35,7 @@ out_pin:right output
 
 @init
 c_ampdB = 8.65617025;
+ext_tail_size = -2;
 
 @slider
 band1 = exp(slider1/c_ampdB);

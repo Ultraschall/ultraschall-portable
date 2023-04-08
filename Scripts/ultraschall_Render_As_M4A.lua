@@ -30,7 +30,7 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-if ultraschall.IsOS_Mac()==false then reaper.MB("M4a export is only available on MacOS.", "Can't export as m4a", 0) return end
+if ultraschall.IsOS_Other()==true then reaper.MB("M4a export is only available on MacOS and Windows.", "Can't export as m4a", 0) return end
 
 if ultraschall.AnyTrackMute(true) == true then
 
@@ -49,8 +49,30 @@ if A == false then
 
   -- cmd=reaper.NamedCommandLookup("40296")  -- select all tracks
   -- reaper.Main_OnCommand(cmd,0)
+  if ultraschall.IsOS_Mac()==true then 
+    RenderTable = ultraschall.GetRenderPreset_RenderTable("m4a_Mac", "m4a_Mac")
+    if RenderTable==nil then
+      RenderTable=ultraschall.CreateNewRenderTable()
+      RenderTable["RenderString"]="RlZBWAMAAAAAAAAAAAgAAAAAAACAAAAAgAcAADgEAAAAAPBBAQAAAF8AAAA="
+      RenderTable["TailFlag"]=1
+      RenderTable["RenderPattern"]="$project"
+      RenderTable["Brickwall_Limiter_Target"]=1
+      RenderTable["Normalize_Target"]=-24
+      RenderTable["RenderResample"]=7
+    end
+  elseif ultraschall.IsOS_Windows()==true then 
+    RenderTable = ultraschall.GetRenderPreset_RenderTable("m4a_Windows", "m4a_Windows")
+    if RenderTable==nil then
+      RenderTable=ultraschall.CreateNewRenderTable()
+      RenderTable["RenderString"]="RlZBWAMAAAAAAAAAAAgAAAAAAACAAAAAgAcAADgEAAAAAPBBAQAAAF8AAAA="
+      RenderTable["TailFlag"]=1
+      RenderTable["RenderPattern"]="$project"
+      RenderTable["Brickwall_Limiter_Target"]=1
+      RenderTable["Normalize_Target"]=-24
+      RenderTable["RenderResample"]=7
+    end
+  end
 
-  RenderTable = ultraschall.GetRenderPreset_RenderTable("m4a", "m4a")
   retval, RenderTable["RenderPattern"] = reaper.GetSetProjectInfo_String(0, "RENDER_PATTERN", "", false)
   retval, RenderTable["RenderFile"] = reaper.GetSetProjectInfo_String(0, "RENDER_FILE", "", false)
   RenderTable["SilentlyIncrementFilename"] = false

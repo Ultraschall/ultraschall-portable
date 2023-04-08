@@ -34,6 +34,7 @@ out_pin:uberhigh output right
 
 @init
 cDenorm=10^-30;
+ext_tail_size=-1;
 
 @slider
 

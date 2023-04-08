@@ -980,8 +980,8 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackGroupFlagsState</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=5.40
+    Ultraschall=4.75
+    Reaper=6.72
     Lua=5.3
   </requires>
   <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetTrackGroupFlagsState(integer tracknumber, optional string TrackStateChunk)</functioncall>
@@ -1022,6 +1022,8 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
                            21 - VCA Master
                            22 - VCA Follow
                            23 - VCA pre-FX Follow
+                           24 - Media/Razor Edit Lead
+                           25 - Media/Razor Edit Lead
     
     The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
     
@@ -1036,40 +1038,40 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
     -returns -1 in case of failure
     -
     -the following flags are available:
-    -2^0 - Volume Master
-    -2^1 - Volume Follow
-    -2^2 - Pan Master
-    -2^3 - Pan Follow
-    -2^4 - Mute Master
-    -2^5 - Mute Follow
-    -2^6 - Solo Master
-    -2^7 - Solo Follow
-    -2^8 - Record Arm Master
-    -2^9 - Record Arm Follow
-    -2^10 - Polarity/Phase Master
-    -2^11 - Polarity/Phase Follow
-    -2^12 - Automation Mode Master
-    -2^13 - Automation Mode Follow
-    -2^14 - Reverse Volume
-    -2^15 - Reverse Pan
-    -2^16 - Do not master when slaving
-    -2^17 - Reverse Width
-    -2^18 - Width Master
-    -2^19 - Width Follow
-    -2^20 - VCA Master
-    -2^21 - VCA Follow
-    -2^22 - VCA pre-FX Follow
+    -&1 - Volume Master
+    -&2 - Volume Follow
+    -&4 - Pan Master
+    -&8 - Pan Follow
+    -&16 - Mute Master
+    -&32 - Mute Follow
+    -&64 - Solo Master
+    -&128 - Solo Follow
+    -&256 - Record Arm Master
+    -&512 - Record Arm Follow
+    -&1024 - Polarity/Phase Master
+    -&2048 - Polarity/Phase Follow
+    -&4096 - Automation Mode Master
+    -&8192 - Automation Mode Follow
+    -&16384 - Reverse Volume
+    -&32768 - Reverse Pan
+    -&65536 - Do not master when slaving
+    -&131072 - Reverse Width
+    -&262144 - Width Master
+    -&524288 - Width Follow
+    -&1048576 - VCA Master
+    -&2097152 - VCA Follow
+    -&4194304 - VCA pre-FX Follow
+    -&8388608 - Media/Razor Edit Lead
+    -&16777216 - Media/Razor Edit Follow
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 1, entry 1 in the array will be set to 1. If Volume Master is set on Group 2 and Group 4, the first entry in the array will be set to 10.
     -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
     -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
-    -2^0 - Group 1
-    -2^1 - Group 2
-    -2^2 - Group 3
-    -2^3 - Group 4
-    -...
-    -2^30 - Group 31
-    -2^31 - Group 32
+    -&1 - Group 1
+    -&2 - Group 2
+    -&4 - Group 3
+    -&8 - Group 4
+    -etc...
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
@@ -1104,10 +1106,10 @@ function ultraschall.GetTrackGroupFlagsState(tracknumber, str)
   if Track_TrackGroupFlags==nil then ultraschall.AddErrorMessage("GetTrackGroupFlagsState", "", "no trackgroupflags available", -4) return -1 end
   
   -- get groupflags-state  
-  local GroupflagString= Track_TrackGroupFlags:match("GROUP_FLAGS (.-)%c")
+  local GroupflagString = Track_TrackGroupFlags:match("GROUP_FLAGS (.-)%c")
   local count, Tracktable=ultraschall.CSV2IndividualLinesAsArray(GroupflagString, " ")
 
-  for i=1,23 do
+  for i=1,32 do
     Tracktable[i]=tonumber(Tracktable[i])
     if Tracktable[i]==nil then Tracktable[i]=0 end
     if Tracktable[i]~=nil and Tracktable[i]>=1 then retval=retval+2^(i-1) end
@@ -1121,8 +1123,8 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackGroupFlags_HighState</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=5.941
+    Ultraschall=4.75
+    Reaper=6.72
     Lua=5.3
   </requires>
   <functioncall>integer GroupState_as_Flags, array IndividualGroupState_Flags = ultraschall.GetTrackGroupFlags_HighState(integer tracknumber, optional string TrackStateChunk)</functioncall>
@@ -1163,7 +1165,8 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
                            21 - VCA Master
                            22 - VCA Follow
                            23 - VCA pre-FX Follow
-    
+                           24 - Media/Razor Edit Lead
+                           25 - Media/Razor Edit Lead    
     The GroupState_as_Flags-bitfield is a hint, if a certain flag is set in any of the groups. So, if you want to know, if VCA Master is set in any group, check if flag &1048576 (2^20) is set to 1048576.
     
     This function will work only for Groups 33(2^0) to 64(2^31). To get Groups 1 to 32, use <a href="#GetTrackGroupFlagsState">GetTrackGroupFlagsState</a> instead!
@@ -1177,40 +1180,40 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
     -returns -1 in case of failure
     -
     -the following flags are available:
-    -2^0 - Volume Master
-    -2^1 - Volume Follow
-    -2^2 - Pan Master
-    -2^3 - Pan Follow
-    -2^4 - Mute Master
-    -2^5 - Mute Follow
-    -2^6 - Solo Master
-    -2^7 - Solo Follow
-    -2^8 - Record Arm Master
-    -2^9 - Record Arm Follow
-    -2^10 - Polarity/Phase Master
-    -2^11 - Polarity/Phase Follow
-    -2^12 - Automation Mode Master
-    -2^13 - Automation Mode Follow
-    -2^14 - Reverse Volume
-    -2^15 - Reverse Pan
-    -2^16 - Do not master when slaving
-    -2^17 - Reverse Width
-    -2^18 - Width Master
-    -2^19 - Width Follow
-    -2^20 - VCA Master
-    -2^21 - VCA Follow
-    -2^22 - VCA pre-FX Follow
+    -&1 - Volume Master
+    -&2 - Volume Follow
+    -&4 - Pan Master
+    -&8 - Pan Follow
+    -&16 - Mute Master
+    -&32 - Mute Follow
+    -&64 - Solo Master
+    -&128 - Solo Follow
+    -&256 - Record Arm Master
+    -&512 - Record Arm Follow
+    -&1024 - Polarity/Phase Master
+    -&2048 - Polarity/Phase Follow
+    -&4096 - Automation Mode Master
+    -&8192 - Automation Mode Follow
+    -&16384 - Reverse Volume
+    -&32768 - Reverse Pan
+    -&65536 - Do not master when slaving
+    -&131072 - Reverse Width
+    -&262144 - Width Master
+    -&524288 - Width Follow
+    -&1048576 - VCA Master
+    -&2097152 - VCA Follow
+    -&4194304 - VCA pre-FX Follow
+    -&8388608 - Media/Razor Edit Lead
+    -&16777216 - Media/Razor Edit Follow
      array IndividualGroupState_Flags  - returns an array with 23 entries. Every entry represents one of the GroupState_as_Flags, but it's value is a flag, that describes, in which of the 32 Groups a certain flag is set.
     -e.g. If Volume Master is set only in Group 33, entry 1 in the array will be set to 1. If Volume Master is set on Group 34 and Group 36, the first entry in the array will be set to 10.
     -refer to the upper GroupState_as_Flags list to see, which entry in the array is for which set flag, e.g. array[22] is VCA pre-F Follow, array[16] is Do not master when slaving, etc
     -As said before, the values in each entry is a flag, that tells you, which of the groups is set with a certain flag. The following flags determine, in which group a certain flag is set:
-    -2^0 - Group 33
-    -2^1 - Group 34
-    -2^2 - Group 35
-    -2^3 - Group 36
-    -...
-    -2^30 - Group 63
-    -2^31 - Group 64
+    -&1 - Group 33
+    -&2 - Group 34
+    -&4 - Group 35
+    -&8 - Group 36
+    -etc...
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
@@ -1248,7 +1251,7 @@ function ultraschall.GetTrackGroupFlags_HighState(tracknumber, str)
   local GroupflagString= Track_TrackGroupFlags:match("GROUP_FLAGS_HIGH (.-)%c")
   local count, Tracktable=ultraschall.CSV2IndividualLinesAsArray(GroupflagString, " ")
 
-  for i=1,23 do
+  for i=1,32 do
     Tracktable[i]=tonumber(Tracktable[i])
     if Tracktable[i]==nil then Tracktable[i]=0 end
     if Tracktable[i]~=nil and Tracktable[i]>=1 then retval=retval+2^(i-1) end
@@ -4883,8 +4886,8 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackGroupFlagsState</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.941
+    Ultraschall=4.75
+    Reaper=6.72
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string TrackStateChunk = ultraschall.SetTrackGroupFlagsState(integer tracknumber, array groups_bitfield_table, optional string TrackStateChunk)</functioncall>
@@ -4923,6 +4926,8 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
                            21 - VCA Master
                            22 - VCA Follow
                            23 - VCA pre-FX Follow
+                           24 - Media/Razor Edit Lead
+                           25 - Media/Razor Edit Lead
     
     This function will work only for Groups 1 to 32. To set Groups 33 to 64, use <a href="#SetTrackGroupFlags_HighState">SetTrackGroupFlags_HighState</a> instead!
     
@@ -4951,7 +4956,7 @@ function ultraschall.SetTrackGroupFlagsState(tracknumber, groups_bitfield_table,
   if tracknumber<-1 or tracknumber>reaper.CountTracks(0) then ultraschall.AddErrorMessage("SetTrackGroupFlagsState", "tracknumber", "no such track in the project", -2) return false end
   if type(groups_bitfield_table)~="table" then ultraschall.AddErrorMessage("SetTrackGroupFlagsState", "groups_bitfield_table", "must be a table", -3) return false end
   local str="GROUP_FLAGS"
-  for i=1, 23 do
+  for i=1, 32 do
     if groups_bitfield_table[i]==nil then break end
     if math.type(groups_bitfield_table[i])~="integer" then ultraschall.AddErrorMessage("SetTrackGroupFlagsState", "groups_bitfield_table", "every entry must be an integer", -5) return false end
     str=str.." "..groups_bitfield_table[i]
@@ -5001,8 +5006,8 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetTrackGroupFlags_HighState</slug>
   <requires>
-    Ultraschall=4.00
-    Reaper=5.941
+    Ultraschall=4.75
+    Reaper=6.72
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string TrackStateChunk = ultraschall.SetTrackGroupFlags_HighState(integer tracknumber, array groups_bitfield_table, optional string TrackStateChunk)</functioncall>
@@ -5041,6 +5046,8 @@ function ultraschall.SetTrackGroupFlags_HighState(tracknumber, groups_bitfield_t
                            21 - VCA Master
                            22 - VCA Follow
                            23 - VCA pre-FX Follow
+                           24 - Media/Razor Edit Lead
+                           25 - Media/Razor Edit Lead
     
     This function will work only for Groups 33(2^0) to 64(2^31). To set Groups 1 to 32, use <a href="#SetTrackGroupFlagsState">SetTrackGroupFlagsState</a> instead!
     

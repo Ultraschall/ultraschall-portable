@@ -10,6 +10,7 @@ out_pin:left output
 out_pin:right output
 
 @init 
+  ext_tail_size = 16384;
 
   fftsize = -1;
   pdc_bot_ch = 0;

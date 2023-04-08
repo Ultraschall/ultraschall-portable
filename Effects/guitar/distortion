@@ -16,6 +16,8 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-2;
+
 @slider
 preamp=2^(slider1/6);
 soft=2^slider2;

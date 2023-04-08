@@ -39,6 +39,7 @@ out_pin:right output
 
 @init
 
+  ext_tail_size = -1;
   pi = 3.1415926535;
   halfpi = pi / 2;
 

@@ -42,6 +42,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+  ext_tail_size = -1;
   gain0 = 0;
   freq0 = 20;
   q0 = 1;

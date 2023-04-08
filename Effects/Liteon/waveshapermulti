@@ -45,6 +45,8 @@ bl_c1 = 0.52;
 bl_c2 = 0.54;
 bl_c3 = -0.02;
 
+ext_tail_size = -1;
+
 @slider
 
 os = slider7;

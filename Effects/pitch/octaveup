@@ -17,6 +17,7 @@ out_pin:right output
 
 @init
 bufsize=-1;
+ext_tail_size=srate;
 
 @slider
 nbufsize=srate*0.001*slider1; 

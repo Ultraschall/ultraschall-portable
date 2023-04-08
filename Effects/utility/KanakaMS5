@@ -11,6 +11,9 @@ in_pin:side input
 out_pin:left output
 out_pin:right output
 
+@init
+ext_tail_size = -2;
+
 @slider
 // so we'll set our multiplier to be used later
 // so realistically this happens once or when the user changes shit.

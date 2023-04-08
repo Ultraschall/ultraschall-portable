@@ -47,6 +47,8 @@ slider1 >= 0 && slider2 >= 0 ?
 
 );
 
+ext_tail_size = max(buflL, bufrR)+1;
+
 @sample
 bufLpos[0] = spl0 ;
 bufLpos = bufLpos + 1 ;

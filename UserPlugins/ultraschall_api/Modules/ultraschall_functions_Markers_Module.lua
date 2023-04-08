@@ -459,21 +459,25 @@ function ultraschall.AddEditMarker(position, shown_number, edittitle)
   return marker_index, guid, ultraschall.GetEditMarkerIDFromGuid(guid)
 end
 
-function ultraschall.CountNormalMarkers()
+function ultraschall.CountNormalMarkers(starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountNormalMarkers</slug>
   <requires>
-    Ultraschall=4.3
+    Ultraschall=4.75
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall> integer number_of_markers = ultraschall.CountNormalMarkers()</functioncall>
+  <functioncall> integer number_of_markers = ultraschall.CountNormalMarkers(optional number starttime, optional number endtime)</functioncall>
   <description>
     Counts all normal markers. 
     
     Normal markers are all markers, that don't include "_Shownote:" or "_Edit" or custommarkers with the scheme "_custommarker:" in the beginning of their name, as well as markers with the color 100,255,0(planned chapter).
   </description>
+  <parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>
   <retvals>
      integer number_of_markers  - number of normal markers
   </retvals>
@@ -486,6 +490,11 @@ function ultraschall.CountNormalMarkers()
   <tags>markermanagement, normal marker, marker, count</tags>
 </US_DocBloc>
 --]]
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountNormalMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountNormalMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
+
   -- prepare variables
   local a,nummarkers,b=reaper.CountProjectMarkers(0)
   local count=0
@@ -499,7 +508,10 @@ function ultraschall.CountNormalMarkers()
     color == ultraschall.planned_marker_color 
     then 
         -- if marker is shownote, chapter, edit or planned chapter
-    elseif isrgn==false then count=count+1 -- elseif marker is no region, count up
+    elseif isrgn==false then 
+      if pos>=starttime and pos<=endtime then
+        count=count+1 -- elseif marker is no region, count up
+      end
     end
   end 
 
@@ -3855,16 +3867,16 @@ end
 
 --A,B,C=ultraschall.GetAllCustomRegions("Whiskey")
 
-function ultraschall.CountAllCustomMarkers(custom_marker_name)
+function ultraschall.CountAllCustomMarkers(custom_marker_name, starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountAllCustomMarkers</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=4.75
     Reaper=5.965
     Lua=5.3
   </requires>
-  <functioncall>integer count = ultraschall.CountAllCustomMarkers(string custom_marker_name)</functioncall>
+  <functioncall>integer count = ultraschall.CountAllCustomMarkers(string custom_marker_name, optional number starttime, optional number endtime)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will count all custom-markers with a certain name.
     
@@ -3890,7 +3902,9 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
     string custom_marker_name - the name of the custom-marker. Don't include the _ at the beginning and the : at the end, or it might not be found. Exception: Your custom-marker is called "__CustomMarker::"
                               - Lua-pattern-matching-expressions are allowed. This parameter is NOT case-sensitive.
                               - "" counts all custom markers, regardless of their name
-  </parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>  
   <retvals>
     integer count - the number of found markers; -1, in case of an error
   </retvals>
@@ -3905,12 +3919,18 @@ function ultraschall.CountAllCustomMarkers(custom_marker_name)
 ]]
   if type(custom_marker_name)~="string" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "must be a string", -1) return -1 end
   if ultraschall.IsValidMatchingPattern(custom_marker_name)==false then ultraschall.AddErrorMessage("CountAllCustomMarkers", "custom_marker_name", "not a valid matching-pattern", -2) return -1 end
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountAllCustomMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
   local count=0
   if custom_marker_name=="" then custom_marker_name=".*" end
   for i=0, reaper.CountProjectMarkers(0)-1 do
-    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)
-    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then 
-      count=count+1 
+    local retval, isrgn, pos, rgnend, name, markrgnindexnumber, color = reaper.EnumProjectMarkers3(0,i)    
+    if isrgn==false and name:match("^_"..custom_marker_name..":")~=nil then
+      if pos>=starttime and pos<=endtime then
+        count=count+1 
+      end
     end
   end
   return count
@@ -5412,7 +5432,7 @@ function ultraschall.AddShownoteMarker(pos, name)
   local A={ultraschall.AddCustomMarker("Shownote", pos, name2, Count+1, Color)}  
   A[4]=A[4]+1
   ultraschall.SetShownoteMarker(A[4], pos, name)
-  local A1,B1,C1=ultraschall.GetSetShownoteMarker_Attributes(true, A[4], "shwn_guid", "", false)
+  local A1,B1,C1=ultraschall.GetSetShownoteMarker_Attributes(true, A[4], "shwn_guid", "")
   if A[1]==false then A[2]=-1 end
   table.remove(A,1)
   return table.unpack(A)
@@ -5524,16 +5544,16 @@ function ultraschall.EnumerateShownoteMarkers(idx)
   return table.unpack(A)
 end
 
-function ultraschall.CountShownoteMarkers()
+function ultraschall.CountShownoteMarkers(starttime, endtime)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CountShownoteMarkers</slug>
   <requires>
-    Ultraschall=4.6
+    Ultraschall=4.75
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>integer num_shownotes = ultraschall.CountShownoteMarkers()</functioncall>
+  <functioncall>integer num_shownotes = ultraschall.CountShownoteMarkers(optional number starttime, optional number endtime)</functioncall>
   <description>
     Returns count of all shownotes
     
@@ -5545,6 +5565,10 @@ function ultraschall.CountShownoteMarkers()
   <retvals>
     integer num_shownotes - the number of shownotes in the current project
   </retvals>
+  <parameters>
+    optional number starttime - the starttime, from which to count the markers
+    optional number endtime - the endtime, to which to count the markers
+  </parameters>
   <chapter_context>
     Markers
     ShowNote Markers
@@ -5554,7 +5578,11 @@ function ultraschall.CountShownoteMarkers()
   <tags>marker management, count, shownote</tags>
 </US_DocBloc>
 ]]
-  return ultraschall.CountAllCustomMarkers("Shownote")
+  if starttime~=nil and type(starttime)~="number" then ultraschall.AddErrorMessage("CountShownoteMarkers", "starttime", "must be nil or a number", -3) return -1 end
+  if endtime~=nil and type(endtime)~="number" then ultraschall.AddErrorMessage("CountShownoteMarkers", "endtime", "must be nil or a number", -4) return -1 end
+  if starttime==nil then starttime=0 end
+  if endtime==nil then endtime=reaper.GetProjectLength(0) end
+  return ultraschall.CountAllCustomMarkers("Shownote", starttime, endtime)
 end
 --Kuddel=FromClip()
 --A,B,C=ultraschall.GetSetShownoteMarker_Attributes(false, 1, "image_content", "kuchen")
@@ -7230,7 +7258,7 @@ function ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(marker_type, clicktyp
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(string marker_name, integer clicktype, integer entry_nr, string action, string description, string additional_data, integer submenu, boolean greyed, optional boolean checked)</functioncall>
+  <functioncall>boolean retval = ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(integer marker_type, integer clicktype, integer entry_nr, string action, string description, string additional_data, integer submenu, boolean greyed, optional boolean checked)</functioncall>
   <description>
     inserts a menu-entry into the marker-menu, associated with a certain default marker/region as in Ultraschall and moves all others one up
     
@@ -7240,8 +7268,13 @@ function ultraschall.MarkerMenu_InsertEntry_DefaultMarkers(marker_type, clicktyp
     boolean retval - true, inserting was successful; false, inserting was unsuccessful
   </retvals>
   <parameters>
-    string marker_name - the custom-marker/region name, whose menu-entry you want to insert
-    boolean is_marker_region - true, if the marker is a region; false, if not
+    integer marker_type - the marker_type, whose menu-entry you want to get
+                        - 0, normal(chapter) markers
+                        - 1, planned markers (Custom markers whose name is _Planned:)
+                        - 2, edit (Custom markers, whose name is _Edit: or _Edit)
+                        - 3, shownote
+                        - 4, region
+                        - 5, action marker
     integer clicktype - the clicktype; 0, right-click
     integer entry_nr - the entry-number, that you want to insert
     string action - the action-command-id for this new marker-entry
@@ -7736,7 +7769,7 @@ function ultraschall.MarkerMenu_GetLastTouchedMarkerRegion()
   <tags>markermanagement, get, last touched, marker, region, markermenu</tags>
 </US_DocBloc>
 ]]
-  return tonumber(reaper.SetExtState("ultraschall_api", "markermenu_last_touched_marker"))
+  return tonumber(reaper.GetExtState("ultraschall_api", "markermenu_last_touched_marker"))
 end
 
 
@@ -7799,6 +7832,8 @@ function ultraschall.MarkerMenu_GetLastClickState()
 end
 
 ultraschall.ChapterAttributes={
+              "chap_title",
+              "chap_position",
               "chap_description",
               "chap_url",
               "chap_url_description",              
@@ -7808,12 +7843,12 @@ ultraschall.ChapterAttributes={
               "chap_spoiler_alert",
               "chap_next_chapter_numbers",
               "chap_previous_chapter_numbers",
-              "chap_image",
               "chap_image_description",
               "chap_image_license",
               "chap_image_origin",
               "chap_image_url",
-              "chap_guid"
+              "chap_guid",
+              "chap_image_path"
               }
 
 function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, content, planned)
@@ -7829,37 +7864,39 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   <description>
     Will get/set additional attributes of a chapter-marker.
         
+    Supported attributes are:
+      "chap_title" - the title of this chapter
+      "chap_position" - the current position of this chapter in seconds
+      "chap_url" - the url for this chapter(check first, if a shownote is not suited better for the task!)
+      "chap_url_description" - a description for this url
+      "chap_description" - a description of the content of this chapter
+      "chap_is_advertisement" - yes, if this chapter is an ad; "", to unset it
+      "chap_image_path" - the path to the filename of the chapter-image(Ultraschall will see it as placed in the project-folder!)
+      "chap_image_description" - a description for the chapter-image
+      "chap_image_license" - the license of the chapter-image
+      "chap_image_origin" - the origin of the chapterimage, like an institution or similar 
+      "chap_image_url" - the url that links to the chapter-image
+      "chap_descriptive_tags" - some tags, that describe the chapter-content, must separated by commas
+      "chap_content_notification_tags" - some tags, that warn of specific content; must be separated by commas
+      "chap_spoiler_alert" - "yes", if spoiler; "", if no spoiler
+      "chap_next_chapter_numbers" - decide, which chapter could be the next after this one; 
+                                   - format is: "chap_number:description\nchap_number:description\n"
+                                   - chap_number is the number of the chapter in timeline-order
+                                   - it's possible to set multiple chapters as the next chapters; chap_number is 0-based
+                                   - this can be used for non-linear podcasts, like "choose your own adventure"
+      "chap_previous_chapter_numbers" - decide, which chapter could be the previous before this one
+                                   - format is: "chap_number:description\nchap_number:description\n"
+                                   - chap_number is the number of the chapter in timeline-order
+                                   - it's possible to set multiple chapters as the previous chapters; chap_number is 0-based
+                                   - this can be used for non-linear podcasts, like "choose your own adventure"
+      "chap_guid" - a unique guid for this chapter-marker; read-only
+        
     returns false in case of an error
   </description>
   <parameters>
     boolean is_set - true, set the attribute; false, retrieve the current content
     integer idx - the index of the chapter-marker, whose attribute you want to get; 1-based
     string attributename - the attributename you want to get/set
-                         - supported attributes are:
-                         - "chap_url" - the url for this chapter(check first, if a shownote is not suited better for the task!)
-                         - "chap_url_description" - a description for this url
-                         - "chap_description" - a description of the content of this chapter
-                         - "chap_is_advertisement" - yes, if this chapter is an ad; "", to unset it
-                         - "chap_image" - the content of the chapter-image, either png or jpg
-                         - "chap_image_path" - the path to the filename of the chapter-image(Ultraschall will see it as placed in the project-folder!)
-                         - "chap_image_description" - a description for the chapter-image
-                         - "chap_image_license" - the license of the chapter-image
-                         - "chap_image_origin" - the origin of the chapterimage, like an institution or similar 
-                         - "chap_image_url" - the url that links to the chapter-image
-                         - "chap_descriptive_tags" - some tags, that describe the chapter-content, must separated by commas
-                         - "chap_content_notification_tags" - some tags, that warn of specific content; must be separated by commas
-                         - "chap_spoiler_alert" - "yes", if spoiler; "", if no spoiler
-                         - "chap_next_chapter_numbers" - decide, which chapter could be the next after this one; 
-                                                       - format is: "chap_number:description\nchap_number:description\n"
-                                                       - chap_number is the number of the chapter in timeline-order
-                                                       - it's possible to set multiple chapters as the next chapters; chap_number is 0-based
-                                                       - this can be used for non-linear podcasts, like "choose your own adventure"
-                         - "chap_previous_chapter_numbers" - decide, which chapter could be the previous before this one
-                                                       - format is: "chap_number:description\nchap_number:description\n"
-                                                       - chap_number is the number of the chapter in timeline-order
-                                                       - it's possible to set multiple chapters as the previous chapters; chap_number is 0-based
-                                                       - this can be used for non-linear podcasts, like "choose your own adventure"
-                         - "chap_guid" - a unique guid for this chapter-marker; read-only
     string content - the new contents to set the attribute with
     optional boolean planned - true, get/set this attribute with planned marker; false or nil, get/set this attribute with normal marker(chapter marker)
   </parameters>
@@ -7882,7 +7919,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "must be an integer", -2) return false end  
   if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "must be a string", -3) return false end  
   if is_set==true and type(content)~="string" then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "content", "must be a string", -4) return false end  
-  
+  local marker_index=idx
   local tags=ultraschall.ChapterAttributes
   local retval
   
@@ -7898,12 +7935,13 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
     end
   end
   
-  if attributename=="chap_guid" then 
+  if attributename=="chap_guid" then     
     if ultraschall.GetMarkerExtState(idx, attributename)==nil then
       ultraschall.SetMarkerExtState(idx, attributename, reaper.genGuid(""))
     end
-    return ultraschall.GetMarkerExtState(idx, attributename)
+    return true, ultraschall.GetMarkerExtState(idx, attributename)
   end
+  
   if attributename=="chap_url" then attributename="url" end
   
   if found==false then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "attributename not supported", -7) return false end
@@ -7918,16 +7956,27 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   if idx<1 then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "idx", "no such chapter-marker", -8) return false end
   local content2=content
   if is_set==false then    
-    --print2("")
     local B=ultraschall.GetMarkerExtState(idx, attributename)
     if B==nil then B="" end
-    --if attributename=="chap_image" then
---      B=ultraschall.Base64_Decoder(B)
-    --end
+    if attributename=="chap_title" then    
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      B=markertitle
+    elseif attributename=="chap_position" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      B=tostring(position)
+    end
     return true, B
   elseif is_set==true then
-    if attributename=="chap_image" then
-      --content2=ultraschall.Base64_Encoder(content)
+    if attributename=="chap_title" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      local retval = ultraschall.SetNormalMarker(marker_index, position, shown_number, content)
+      return true, content
+    elseif attributename=="chap_position" then
+      local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(marker_index)
+      local newposition=tonumber(content)
+      if newposition==nil then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "content", "chap_position must be a valid number, converted to string", -10) return false end
+      local retval = ultraschall.SetNormalMarker(marker_index, newposition, shown_number, markertitle)
+      return true, content
     else
       --content2=content
     end
@@ -7941,30 +7990,36 @@ ultraschall.PodcastAttributes={
               "podc_title", 
               "podc_description", 
               "podc_category",
-              --"podc_feed",
-              "podc_website", 
-              "podc_twitter",
-              "podc_facebook",
-              "podc_youtube",
-              "podc_instagram",
-              "podc_tiktok",
-              "podc_mastodon",
+              --"podc_feed",              
               --"podc_donate", 
               "podc_contact_email",
               "podc_descriptive_tags"
               }
+         --[[     
+         "podc_twitter" - twitter-profile of the podcast
+         "podc_facebook" - facebook-page of the podcast
+         "podc_youtube" - youtube-channel of the podcast
+         "podc_instagram" - instagram-channel of the podcast
+         "podc_tiktok" - tiktok-channel of the podcast
+         "podc_mastodon" - mastodon-channel of the podcast
+         "podc_twitch" - the twitch-channel of the podcast
+         "podc_pinterest" - the pinterest-profile of the podcast
+         "podc_reddit" - the reddit-profile of the podcast
+         "podc_slack" - the slack-workspace of the podcast
+         "podc_discord" - the discord-server of the podcast
+         --]]
 
 function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_attribute, content, preset_slot)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetPodcast_Attributes</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=4.75
     Reaper=6.20
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string content, optional string presetcontent = ultraschall.GetSetPodcast_Attributes(boolean is_set, string attributename, string content, optional integer preset_slot)</functioncall>
+  <functioncall>boolean retval, string content = ultraschall.GetSetPodcast_Attributes(boolean is_set, string attributename, string content, optional integer preset_slot)</functioncall>
   <description>
     Will get/set metadata-attributes for a podcast.
     
@@ -7973,19 +8028,15 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
          "podc_title" - the title of the podcast
          "podc_description" - a description for your podcast
          "podc_website" - either one url or a list of website-urls of the podcast,separated by newlines
-         "podc_contact_email" - an email-address that can be used to contact the podcasters         
-         "podc_twitter" - twitter-profile of the podcast
-         "podc_facebook" - facebook-page of the podcast
-         "podc_youtube" - youtube-channel of the podcast
-         "podc_instagram" - instagram-channel of the podcast
-         "podc_tiktok" - tiktok-channel of the podcast
-         "podc_mastodon" - mastodon-channel of the podcast
+         "podc_contact_email" - an email-address that can be used to contact the podcasters                  
          "podc_descriptive_tags" - some tags, who describe the podcast, must be separated by commas
          "podc_category" - a category that describes the podcast
     
     For episode's-metadata, use [GetSetPodcastEpisode\_Attributes](#GetSetPodcastEpisode_Attributes)
     
-    preset-values will be stored into ressourcepath/ultraschall\_podcast\_presets.ini
+    preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
+    
+    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
         
     returns false in case of an error
   </description>
@@ -8000,8 +8051,7 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
   </parameters>
   <retvals>
     boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
-    string content - the content of a specific attribute
-    optional string presetcontent - the content of the preset's value in the preset_slot
+    string content - the content of a specific attribute; when preset_slot is not nil then this is the content of the presetslot
   </retvals>
   <chapter_context>
     Metadata Management
@@ -8067,7 +8117,6 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
   
   if found==false then ultraschall.AddErrorMessage("GetSetPodcast_Attributes", "attributename", "attributename not supported", -7) return false end
   local presetcontent, _
-  --if attributename=="image_content" and content:sub(1,6)~="ÿØÿ" and content:sub(2,4)~="PNG" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "image_content: only png and jpg are supported", -6) return false end
   
   if is_set==true then
     -- set state
@@ -8076,10 +8125,11 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
       retval = ultraschall.SetUSExternalState("PodcastMetaData_"..preset_slot, attributename..additional_attribute, string.gsub(content, "\n", "\\n"), "ultraschall_podcast_presets.ini")
       if retval==false then ultraschall.AddErrorMessage("GetSetPodcast_Attributes", "", "can not write to ultraschall_podcast_presets.ini", -8) return false end
       presetcontent=content
+      return presetcontent~="", presetcontent
     else
       presetcontent=nil      
     end
-    reaper.SetProjExtState(0, "PodcastMetaData", attributename, content)
+    local _ = reaper.SetProjExtState(0, "PodcastMetaData", attributename, content)
   else
     -- get state
     if preset_slot~=nil then
@@ -8090,6 +8140,7 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, additional_
         return false
       end
       presetcontent=string.gsub(presetcontent, "\\n", "\n")
+      return presetcontent~="", presetcontent
     end
     _, content=reaper.GetProjExtState(0, "PodcastMetaData", attributename)
   end
@@ -8122,12 +8173,12 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetPodcastEpisode_Attributes</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=4.75
     Reaper=6.02
     SWS=2.10.0.1
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string content, optional string presetcontent = ultraschall.GetSetPodcastEpisode_Attributes(boolean is_set, string attributename, string content, optional integer preset_slot)</functioncall>
+  <functioncall>boolean retval, string content = ultraschall.GetSetPodcastEpisode_Attributes(boolean is_set, string attributename, string content, optional integer preset_slot)</functioncall>
   <description>
     Will get/set metadata-attributes for a podcast-episode.
     
@@ -8135,39 +8186,41 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
     
     For podcast's-metadata, use [GetSetPodcast\_Attributes](#GetSetPodcast_Attributes)
     
-    preset-values will be stored into ressourcepath/ultraschall\_podcast\_presets.ini
+    Supported attributes are:
+        "epsd_title" - the title of the episode
+        "epsd_number" - the number of the episode
+        "epsd_season" - the season of the episode
+        "epsd_author" - the authors of this episode as comma separated list
+        "epsd_release_date" - releasedate of the episode; yyyy-mm-dd
+        "epsd_release_time" - releasedate of the episode; hh:mm:ss
+        "epsd_release_timezone" - the time's timezone in UTC of the release-time; +hh:mm or -hh:mm
+        "epsd_tagline" - the tagline of the episode
+        "epsd_description" - the descriptionof the episode
+        "epsd_cover" - the cover-image of the episode(path+filename)
+        "epsd_language" - the language of the episode; Languagecode according to ISO639
+        "epsd_explicit" - yes, if explicit; "", if not explicit
+        "epsd_descriptive_tags" - some tags, that describe the content of the episode, must separated by commas
+        "epsd_sponsor" - the name of the sponsor of this episode
+        "epsd_sponsor_url" - a link to the sponsor's website
+        "epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by commas
+        "epsd_guid" - a unique identifier for this episode; contains three guids in a row; read-only; can't be stored in presets!
+    
+    preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
+    
+    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
         
     returns false in case of an error
   </description>
   <parameters>
     boolean is_set - true, set the attribute; false, retrieve the current content
     string attributename - the attributename you want to get/set
-                         - supported attributes are:
-                          - "epsd_title" - the title of the episode
-                          - "epsd_number" - the number of the episode
-                          - "epsd_season" - the season of the episode
-                          - "epsd_author" - the authors of this episode as comma separated list
-                          - "epsd_release_date" - releasedate of the episode; yyyy-mm-dd
-                          - "epsd_release_time" - releasedate of the episode; hh:mm:ss
-                          - "epsd_release_timezone" - the time's timezone in UTC of the release-time; +hh:mm or -hh:mm
-                          - "epsd_tagline" - the tagline of the episode
-                          - "epsd_description" - the descriptionof the episode
-                          - "epsd_cover" - the cover-image of the episode(path+filename)
-                          - "epsd_language" - the language of the episode; Languagecode according to ISO639
-                          - "epsd_explicit" - yes, if explicit; "", if not explicit
-                          - "epsd_descriptive_tags" - some tags, that describe the content of the episode, must separated by commas
-                          - "epsd_sponsor" - the name of the sponsor of this episode
-                          - "epsd_sponsor_url" - a link to the sponsor's website
-                          - "epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by commas
-                          - "epsd_guid" - a unique identifier for this episode; contains three guids in a row; read-only; can't be stored in presets!
     string additional_attribute - some attributes allow additional attributes to be set; in all other cases set to ""
     string content - the new contents to set the attribute
     optional integer preset_slot - the slot in the podcast-presets to get/set the value from/to; nil, no preset used
   </parameters>
   <retvals>
     boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
-    string content - the content of a specific attribute
-    optional string presetcontent - the content of the preset's value in the preset_slot
+    string content - the content of a specific attribute; when preset_slot is not nil then this is the content of the presetslot
   </retvals>
   <chapter_context>
     Metadata Management
@@ -8199,42 +8252,8 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
   
   local retval
   
-  -- management additional additional attributes for some attributes(currently not used, so I keep some defaults in here)
-  --[[
-  if attributename=="podcast_feed" then
-    if additional_attribute:lower()~="mp3" and
-       additional_attribute:lower()~="aac" and
-       additional_attribute:lower()~="opus" and
-       additional_attribute:lower()~="ogg" and
-       additional_attribute:lower()~="flac"
-       then
-      ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "additional_attribute", "attributename \"podcast_feed\" needs content_attibute being set to the audioformat(mp3, ogg, opus, aac, flac)", -10) 
-      return false 
-    elseif additional_attribute~="" then
-      additional_attribute="_"..additional_attribute
-    end
-  elseif attributename=="podcast_website" then
-    if math.tointeger(additional_attribute)==nil or math.tointeger(additional_attribute)<1 then
-      ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "additional_attribute", "attributename \"podcast_website\" needs content_attibute being set to an integer >=1(as counter for potentially multiple websites of the podcast)", -11) 
-      return false 
-    elseif additional_attribute~="" then
-      additional_attribute="_"..additional_attribute
-    end
-  elseif attributename=="podcast_donate" then
-    if math.tointeger(additional_attribute)==nil or math.tointeger(additional_attribute)<1 then
-      ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "additional_attribute", "attributename \"podcast_donate\" needs content_attibute being set to an integer >=1(as counter for potentially multiple websites of the podcast)", -11) 
-      return false 
-    elseif additional_attribute~="" then
-      additional_attribute="_"..additional_attribute
-    end
-  else
-    additional_attribute=""
-  end
-  --]]
-  
   if found==false then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "attributename", "attributename not supported", -7) return false end
   local presetcontent, _
-  --if attributename=="image_content" and content:sub(1,6)~="ÿØÿ" and content:sub(2,4)~="PNG" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "image_content: only png and jpg are supported", -6) return false end
   
   if attributename=="epsd_guid" then
     local _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
@@ -8242,7 +8261,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
       reaper.SetProjExtState(0, "EpisodeMetaData", attributename, reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")) 
     end
     local _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
-    return content
+    return true, content
   end
   
   if is_set==true then
@@ -8252,6 +8271,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
       retval = ultraschall.SetUSExternalState("EpisodeMetaData_"..preset_slot, attributename..additional_attribute, string.gsub(content, "\n", "\\n"), "ultraschall_podcast_presets.ini")
       if retval==false then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "", "can not write to ultraschall_podcast_presets.ini", -8) return false end
       presetcontent=content
+      return presetcontent~="", presetcontent
     else
       presetcontent=nil      
     end
@@ -8266,6 +8286,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
         return false
       end
       presetcontent=string.gsub(presetcontent, "\\n", "\n")
+      return presetcontent~="", presetcontent
     end
     _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
   end
@@ -8273,7 +8294,10 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
 end
 
 
-ultraschall.ShowNoteAttributes={"shwn_language",           -- check for validity ISO639
+ultraschall.ShowNoteAttributes={
+              "shwn_title", -- shownote-markertitle
+              "shwn_position", -- position of the shownote in seconds
+              "shwn_language",           -- check for validity ISO639
               "shwn_description",
               "shwn_location_gps",       -- check for validity
               "shwn_location_google_maps",-- check for validity
@@ -8311,19 +8335,20 @@ ultraschall.ShowNoteAttributes={"shwn_language",           -- check for validity
               "shwn_wikidata_uri",
               "shwn_descriptive_tags",
               "shwn_is_advertisement",
-              "shwn_guid"
+              "shwn_guid",
+              "shwn_linked_audiovideomedia"
               }
 
-function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename, content)
+function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename, content, additional_content)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetShownoteMarker_Attributes</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=4.75
     Reaper=6.02
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, string content = ultraschall.GetSetShownoteMarker_Attributes(boolean is_set, integer idx, string attributename, string content)</functioncall>
+  <functioncall>boolean retval, string content = ultraschall.GetSetShownoteMarker_Attributes(boolean is_set, integer idx, string attributename, string content, optional string additional_content)</functioncall>
   <description>
     Will get/set additional attributes of a shownote-marker.
     
@@ -8331,52 +8356,59 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
         
         _Shownote: name for this marker
         
+        
+    Supported attributes are:
+           "shwn_title" - the title of the shownote
+           "shwn_position" - the position of the shownote
+           "shwn_description" - a more detailed description for this shownote
+           "shwn_descriptive_tags" - some tags, that describe the content of the shownote, must separated by commas
+           "shwn_url" - the url you want to set
+           "shwn_url_description" - a short description of the url
+           "shwn_url_retrieval_date" - the date, at which you retrieved the url; yyyy-mm-dd
+           "shwn_url_retrieval_time" - the time, at which you retrieved the url; hh:mm:ss
+           "shwn_url_retrieval_timezone_utc" - the timezone of the retrieval time as utc; +hh:mm or -hh:mm
+           "shwn_url_archived_copy_of_original_url" - if you have an archived copy of the url(from archive.org, etc), you can place the link here
+           "shwn_is_advertisement" - yes, if the shownote is an ad; "", to unset it
+           "shwn_language" - the language of the content; Languagecode according to ISO639
+           "shwn_location_gps" - the gps-coordinates of the location
+           "shwn_location_google_maps" - the coordinates as used in Google Maps
+           "shwn_location_open_street_map" - the coordinates as used in Open Street Maps
+           "shwn_location_apple_maps" - the coordinates as used in Apple Maps                         
+           "shwn_date" - the date of the content of the shownote(when talking about events, etc); yyyy-mm-dd; use XX or XXXX, for when day/month/year is unknown or irrelevant
+           "shwn_time" - the time of the content of the shownote(when talking about events, etc); hh:mm:ss; use XX for when hour/minute/second is unknown or irrelevant
+           "shwn_timezone" - the timezone of the content of the shownote(when talking about events, etc); UTC-format; +hh:mm or -hh:mm
+           "shwn_event_date_start" - the startdate of an event associated with the show; yyyy-mm-dd
+           "shwn_event_date_end" - the enddate of an event associated with the show; yyyy-mm-dd
+           "shwn_event_time_start" - the starttime of an event associated with the show; hh:mm:ss
+           "shwn_event_time_end" - the endtime of an event associated with the show; hh:mm:ss
+           "shwn_event_timezone" - the timezone of the event assocated with the show; UTC-format; +hh:mm or -hh:mm
+           "shwn_event_name" - a name for the event
+           "shwn_event_description" - a description for the event
+           "shwn_event_url" - an url of the event(for ticket sale or the general url for the event)
+           "shwn_event_location_gps" - the gps-coordinates of the event-location
+           "shwn_event_location_google_maps" - the google-maps-coordinates of the event-location
+           "shwn_event_location_open_street_map" - the open-streetmap-coordinates of the event-location
+           "shwn_event_location_apple_maps" - the apple-maps-coordinates of the event-location
+           "shwn_event_ics_data" - the event as ics-data-format; will NOT set other event-attributes; will not be checked for validity!
+           "shwn_quote_cite_source" - a specific place you want to cite, like bookname + page + paragraph + line or something via webcite
+           "shwn_quote" - a quote from the cite_source
+           "shwn_wikidata_uri" - the uri to an entry to wikidata
+           "shwn_guid" - a unique identifier for this shownote; read-only
+           "shwn_linked_audiovideomedia" - a link to a mediafile like a podcast-episode; the additional attribute is the time-position in seconds
+        
     returns false in case of an error
   </description>
   <parameters>
     boolean is_set - true, set the attribute; false, retrieve the current content
     integer idx - the index of the shownote-marker, whose attribute you want to get; 1-based
     string attributename - the attributename you want to get/set
-                         - supported attributes are:
-                         - "shwn_description" - a more detailed description for this shownote
-                         - "shwn_descriptive_tags" - some tags, that describe the content of the shownote, must separated by commas
-                         - "shwn_url" - the url you want to set
-                         - "shwn_url_description" - a short description of the url
-                         - "shwn_url_retrieval_date" - the date, at which you retrieved the url; yyyy-mm-dd
-                         - "shwn_url_retrieval_time" - the time, at which you retrieved the url; hh:mm:ss
-                         - "shwn_url_retrieval_timezone_utc" - the timezone of the retrieval time as utc; +hh:mm or -hh:mm
-                         - "shwn_url_archived_copy_of_original_url" - if you have an archived copy of the url(from archive.org, etc), you can place the link here
-                         - "shwn_is_advertisement" - yes, if the shownote is an ad; "", to unset it
-                         - "shwn_language" - the language of the content; Languagecode according to ISO639
-                         - "shwn_location_gps" - the gps-coordinates of the location
-                         - "shwn_location_google_maps" - the coordinates as used in Google Maps
-                         - "shwn_location_open_street_map" - the coordinates as used in Open Street Maps
-                         - "shwn_location_apple_maps" - the coordinates as used in Apple Maps                         
-                         - "shwn_date" - the date of the content of the shownote(when talking about events, etc); yyyy-mm-dd; use XX or XXXX, for when day/month/year is unknown or irrelevant
-                         - "shwn_time" - the time of the content of the shownote(when talking about events, etc); hh:mm:ss; use XX for when hour/minute/second is unknown or irrelevant
-                         - "shwn_timezone" - the timezone of the content of the shownote(when talking about events, etc); UTC-format; +hh:mm or -hh:mm
-                         - "shwn_event_date_start" - the startdate of an event associated with the show; yyyy-mm-dd
-                         - "shwn_event_date_end" - the enddate of an event associated with the show; yyyy-mm-dd
-                         - "shwn_event_time_start" - the starttime of an event associated with the show; hh:mm:ss
-                         - "shwn_event_time_end" - the endtime of an event associated with the show; hh:mm:ss
-                         - "shwn_event_timezone" - the timezone of the event assocated with the show; UTC-format; +hh:mm or -hh:mm
-                         - "shwn_event_name" - a name for the event
-                         - "shwn_event_description" - a description for the event
-                         - "shwn_event_url" - an url of the event(for ticket sale or the general url for the event)
-                         - "shwn_event_location_gps" - the gps-coordinates of the event-location
-                         - "shwn_event_location_google_maps" - the google-maps-coordinates of the event-location
-                         - "shwn_event_location_open_street_map" - the open-streetmap-coordinates of the event-location
-                         - "shwn_event_location_apple_maps" - the apple-maps-coordinates of the event-location
-                         - "shwn_event_ics_data" - the event as ics-data-format; will NOT set other event-attributes; will not be checked for validity!
-                         - "shwn_quote_cite_source" - a specific place you want to cite, like bookname + page + paragraph + line or something via webcite
-                         - "shwn_quote" - a quote from the cite_source
-                         - "shwn_wikidata_uri" - the uri to an entry to wikidata
-                         - "shwn_guid" - a unique identifier for this shownote; read-only
     string content - the new contents to set the attribute with
+    optional string additional_content - additional content, needed by some attributes; see list of attributes for more details
   </parameters>
   <retvals>
     boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
     string content - the content of a specific attribute
+    optional string additional_content - additional content, needed by some attributes; see list of attributes for more details
   </retvals>
   <chapter_context>
     Markers
@@ -8384,17 +8416,18 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
-  <tags>marker management, get, set, attribute, shownote, image, png, jpg, citation</tags>
+  <tags>marker management, get, set, attribute, shownote, citation</tags>
 </US_DocBloc>
 ]]
   if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "is_set", "must be a boolean", -1) return false end  
   if math.type(idx)~="integer" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "idx", "must be an integer", -2) return false end    
   if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "attributename", "must be a string", -3) return false end  
   if is_set==true and type(content)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "must be a string", -4) return false end  
-  
+  if is_set==true and additional_content~=nil and type(additional_content)~="string" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "must be a string", -8) return false end  
   -- WARNING!! CHANGES HERE MUST REFLECT CHANGES IN THE CODE OF CommitShownote_ReaperMetadata() !!!
   local tags=ultraschall.ShowNoteAttributes
-              
+  local marker_index=idx
+  
   local found=false
   for i=1, #tags do
     if attributename==tags[i] then      
@@ -8409,24 +8442,1139 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
   A={ultraschall.EnumerateShownoteMarkers(idx)}
   if A[1]==false then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "idx", "no such shownote-marker", -5) return false end
   
+  -- add a guid
   if attributename=="shwn_guid" then
     if ultraschall.GetMarkerExtState(A[2]+1, attributename)==nil then
       ultraschall.SetMarkerExtState(A[2]+1, attributename, reaper.genGuid(""))
     end
-    return ultraschall.GetMarkerExtState(A[2]+1, attributename)
+    return true, ultraschall.GetMarkerExtState(A[2]+1, attributename)
   end
   
   if is_set==true then
     local content2=content
-    if attributename=="image_content" and content:sub(1,6)~="ÿØÿ" and content:sub(2,4)~="PNG" then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "image_content: only png and jpg are supported", -6) return false end    
-    if attributename=="shwn_event_ics_data" then content2=ultraschall.Base64_Encoder(content) end
+    if attributename=="shwn_title" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      ultraschall.SetShownoteMarker(marker_index, pos, content, shown_number)
+      return true, content
+    elseif attributename=="shwn_position" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      if tonumber(content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "content", "shwn_position must be a number, converted to string", -10) return false end
+      ultraschall.SetShownoteMarker(marker_index, tonumber(content), name, shown_number)
+      return true, content
+    elseif attributename=="shwn_linked_audiovideomedia" then
+      if tonumber(additional_content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "the content for shwn_linked_media must be a number as a string", -9) return false end
+      C=additional_content
+      B=content
+      Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
+      Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename.."_time", additional_content)
+    end
+    if attributename=="shwn_event_ics_data" then 
+      content2=ultraschall.Base64_Encoder(content)     
+    end
     Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
     if Retval==-1 then Retval=false else Retval=true end
     B=content
   else
-    B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
-    if attributename=="shwn_event_ics_data" then B=ultraschall.Base64_Decoder(B) end
-    if B==nil then Retval=false B="" else Retval=true end
+    if attributename=="shwn_title" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      B=name
+      Retval=true
+    elseif attributename=="shwn_position" then
+      local retval, marker_index2, pos, name, shown_number, guid = ultraschall.EnumerateShownoteMarkers(marker_index)
+      B=tostring(pos)
+      Retval=true
+    elseif attributename=="shwn_linked_audiovideomedia" then 
+      B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
+      if B==nil then Retval=false B="" else Retval=true C=ultraschall.GetMarkerExtState(A[2]+1, attributename.."_time", content) end
+    else
+      B=ultraschall.GetMarkerExtState(A[2]+1, attributename, content)
+      if attributename=="shwn_event_ics_data" then if B==nil then B="" end B=ultraschall.Base64_Decoder(B) end
+      if B==nil then Retval=false B="" else Retval=true end
+    end
   end
-  return Retval, B
+  return Retval, B, C
 end
+
+
+function ultraschall.GetPodcastAttributesAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string podcastmetadata_json = ultraschall.GetPodcastAttributesAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for podcast as JSON according to PodMeta_v1-standard..
+  </description>
+  <retvals>
+    string podcastmetadata_json - the podcast-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  local JSON="\"podc\":{\n"
+  local found=false
+  for i=1, #ultraschall.PodcastAttributes do
+    local retval, content = ultraschall.GetSetPodcast_Attributes(false, ultraschall.PodcastAttributes[i], "")
+    if retval==true and content~="" then
+      found=true
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      JSON=JSON.."\t\t\""..ultraschall.PodcastAttributes[i].."\":\""..content.."\",\n"
+    end
+  end
+  --]]  
+  local websites=string.gsub(ultraschall.PodcastMetaData_ExportWebsiteAsJSON(), "\n", "\n\t")
+  if websites~="" then 
+    JSON=JSON.."\t"..string.gsub(ultraschall.PodcastMetaData_ExportWebsiteAsJSON(), "\n", "\n\t").."\n\t}"
+    found=true
+  else
+    JSON=JSON:sub(1,-3).."\n\t}"
+  end
+  if found==false then 
+    return "\"podc\":{}"
+  else
+    return JSON
+  end
+end
+--print3(ultraschall.PodcastMetadata_GetPodcastAttributesAsJSON())
+--if lol==nil then return end
+
+function ultraschall.PodcastMetaData_ExportWebsiteAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>PodcastMetaData_ExportWebsiteAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string website_entry_JSON = ultraschall.PodcastMetaData_ExportWebsiteAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for a website as JSON according to PodMeta_v1-standard.
+  </description>
+  <retvals>
+    string website_entry_JSON - the podcast's website-metadata as json according to the PodMeta_v1-standard
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, shownote, website, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  local _,maxindex=reaper.GetProjExtState(0, "PodcastMetaData", "podc_maxindex")
+  if maxindex=="" then maxindex=0 end
+  local count=0
+  local JSON=""
+  for index=0, tonumber(maxindex) do
+    local _,A=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_name")
+    local _,B=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_description")
+    local _,C=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_url")
+    if A~="" and B~="" and C~="" then
+      A=string.gsub(A, "\"", "\\\"")
+      A=string.gsub(A, "\\n", "\\\\n")
+      A=string.gsub(A, "\n", "\\n")
+      B=string.gsub(B, "\"", "\\\"")
+      B=string.gsub(B, "\\n", "\\\\n")
+      B=string.gsub(B, "\n", "\\n")
+      C=string.gsub(C, "\"", "\\\"")
+      C=string.gsub(C, "\\n", "\\\\n")
+      C=string.gsub(C, "\n", "\\n")
+      count=count+1
+      JSON=JSON.."\t\"podc_website_"..count.."\":{"
+      JSON=JSON.."\n\t\t\"podc_website_name\":\""..A.."\","
+      JSON=JSON.."\n\t\t\"podc_website_description\":\""..B.."\","
+      JSON=JSON.."\n\t\t\"podc_website_url\":\""..C.."\""
+      JSON=JSON.."\n\t},\n"
+    end
+  end
+  if count>0 then JSON=JSON:sub(1,-3) end
+  
+  JSON=JSON..""
+  return JSON
+end
+
+function ultraschall.GetEpisodeAttributesAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetEpisodeAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string episodemetadata_json = ultraschall.GetEpisodeAttributesAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for the podcast's episode as JSON according to PodMeta_v1-standard..
+  </description>
+  <retvals>
+    string episodemetadata_json - the podcast's episode-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, episode, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  local JSON="\"epsd\":{\n"
+  for i=1, #ultraschall.EpisodeAttributes do
+    local retval, content = ultraschall.GetSetPodcastEpisode_Attributes(false, ultraschall.EpisodeAttributes[i], "")
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if ultraschall.EpisodeAttributes[i]=="epsd_cover" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+        if content==nil then content="" end
+      end
+      JSON=JSON.."\t\t\""..ultraschall.EpisodeAttributes[i].."\":\""..content.."\",\n"
+    end
+  end
+  JSON=JSON:sub(1,-3).."\n\t}"
+  return JSON
+end
+
+--print3(ultraschall.PodcastMetadata_GetEpisodeAttributesAsJSON())
+--if lol==nil then return end
+function ultraschall.GetChapterAttributesAsJSON(chaptermarker_id, shown_id, within_start, within_end, offset)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetChapterAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string chaptermetadata_json = ultraschall.GetChapterAttributesAsJSON(integer chaptermarker_id, integer shown_id, number within_start, number within_end, optional number offset)</functioncall>
+  <description>
+    Returns the MetaDataEntry for a chapter as JSON according to PodMeta_v1-standard..
+    
+    You can choose a range within which the marker must be for chapters only within a certain region, etc. 
+    If it is outside of it, this function returns "".
+    
+    You can set an offset to subtract. This could be important, if you want to render a region and want the 
+    chapter be the right position from the starting point of the region.
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    integer chaptermarker_id - the index of the chapter-marker, whose metadata-entry you want to get as JSON; 1-based
+    integer shown_id - the number to give to this chapter within the JSON
+    number within_start - the starttime of the range to export valid chapters
+    number within_end - the starttime of the range to export valid chapters
+    optional number offset - subtracts time from the position of the chapter
+  </parameters>
+  <retvals>
+    string chaptermetadata_json - the chapter-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, chapter, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  if math.type(chaptermarker_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "must be an integer", -1) return end
+  if chaptermarker_id<1 or chaptermarker_id>ultraschall.CountNormalMarkers() then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "chaptermarker_id", "no such chapter-marker", -2) return end
+  if math.type(shown_id)~="integer" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "shown_id", "must be an integer", -3) return end
+  if type(within_start)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_start", "must be a number", -4) return end
+  if type(within_end)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "within_end", "must be a number", -5) return end
+  if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("GetChapterAttributesAsJSON", "offset", "must be a number", -6) return end
+  
+  local JSON="\"chap_"..shown_id.."\":{\n"
+  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(chaptermarker_id)
+  if within_start==nil then within_start=0 end
+  if within_end==nil then within_end=reaper.GetProjectLength() end
+  if within_start>position or within_end<position then return "" end
+  if offset~=nil then position=position-offset end
+  local retval, content = ultraschall.GetSetChapterMarker_Attributes(true, chaptermarker_id, "chap_guid", "")
+  
+  for i=1, #ultraschall.ChapterAttributes do
+    local attribute=ultraschall.ChapterAttributes[i]     
+    local retval, content = ultraschall.GetSetChapterMarker_Attributes(false, chaptermarker_id, attribute, "")
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if attribute=="chap_image" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..ultraschall.Base64_Encoder(content).."\",\n"
+      elseif attribute=="chap_position" then 
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(string.format("%.4f", position)).."\",\n"
+      elseif attribute=="chap_image_path" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        content=ultraschall.ReadFullFile(path.."/"..content, true)
+        if content==nil then content="" end
+        content=ultraschall.Base64_Encoder(content)
+        attribute="chap_image"
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      else
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      end
+      
+    end
+  end  
+  JSON=JSON:sub(1,-3).."\n}"
+  return JSON
+end
+
+--print3(ultraschall.PodcastMetadata_GetChapterAttributesAsJSON(1))
+--SLEM()
+--if lol==nil then return end
+
+function ultraschall.GetShownoteAttributesAsJSON(shownotemarker_id, shown_id, within_start, within_end, offset)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetShownoteAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string shownotemetadata_json = ultraschall.GetShownoteAttributesAsJSON(integer shownotemarker_id, integer shown_id, number within_start, number within_end, optional number offset)</functioncall>
+  <description>
+    Returns the MetaDataEntry for a shownote as JSON according to PodMeta_v1-standard.
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    integer chaptermarker_id - the index of the shownote-marker, whose metadata-entry you want to get as JSON; 1-based
+    integer shown_id - the number to give to this shownote within the JSON
+    number within_start - the starttime of the range to export valid shownotes
+    number within_end - the starttime of the range to export valid shownotes
+    optional number offset - subtracts time from the position of the shownotes
+  </parameters>
+  <retvals>
+    string shownotemetadata_json - the shownote-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, shownote, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  if math.type(shownotemarker_id)~="integer" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "shownotemarker_id", "must be an integer", -1) return end
+  if shownotemarker_id<1 or shownotemarker_id>ultraschall.CountShownoteMarkers() then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "marker_id", "no such shownote-marker", -2) return end
+  if math.type(shown_id)~="integer" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "shown_id", "must be an integer", -3) return end
+  if type(within_start)~="number" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "within_start", "must be a number", -4) return end
+  if type(within_end)~="number" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "within_end", "must be a number", -5) return end
+  if offset~=nil and type(offset)~="number" then ultraschall.AddErrorMessage("GetShownoteAttributesAsJSON", "offset", "must be a number", -6) return end
+    
+  local JSON="\"shwn_"..shown_id.."\":{\n"
+  
+  local retval, content = ultraschall.GetSetShownoteMarker_Attributes(true, shownotemarker_id, "shwn_guid", "")
+  local retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateShownoteMarkers(shownotemarker_id)
+  if within_start==nil then within_start=0 end
+  if within_end==nil then within_end=reaper.GetProjectLength() end
+  if within_start>position or within_end<position then return "" end
+  if offset~=nil then position=position-offset end
+  
+  for i=1, #ultraschall.ShowNoteAttributes do
+    local attribute=ultraschall.ShowNoteAttributes[i]
+    local retval, content = ultraschall.GetSetShownoteMarker_Attributes(false, shownotemarker_id, attribute, "")
+
+    if retval==true and content~="" then
+      content=string.gsub(content, "\"", "\\\"")
+      content=string.gsub(content, "\\n", "\\\\n")
+      content=string.gsub(content, "\n", "\\n")
+      if attribute=="chap_image" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..ultraschall.Base64_Encoder(content).."\",\n"
+      elseif attribute=="shwn_position" then
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(string.format("%.4f", position)).."\",\n"
+      elseif attribute=="chap_image_path" then
+        local prj, path=reaper.EnumProjects(-1)
+        path=string.gsub(path, "\\", "/")
+        path=path:match("(.*)/")
+        --content=ultraschall.Base64_Encoder(ultraschall.ReadFullFile(path.."/"..content, true))
+        attribute="chap_image"
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      else
+        JSON=JSON.."\t\""..tostring(attribute).."\":\""..tostring(content).."\",\n"
+      end
+      
+    end
+  end  
+  JSON=JSON:sub(1,-3).."\t\n}\n"
+  return JSON
+end
+
+
+function ultraschall.PodcastMetadata_CreateJSON_Entry(start_time, end_time, offset, filename, do_id3, do_vorbis, do_ape, do_ixml)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>PodcastMetadata_CreateJSON_Entry</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string podmeta_entry_JSON = ultraschall.PodcastMetadata_CreateJSON_Entry(number start_time, number end_time, optional number offset, optional string filename, optional boolean do_id3, optional boolean do_vorbis, optional boolean do_ape, optional boolean do_ixml)</functioncall>
+  <description>
+    Returns the MetaDataEntry for the entire podcast as JSON according to PodMeta_v1-standard.
+    
+    Includes all chapters and shownotes as well as episode and podcast attributes
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    number start_time - the starttime from which to add chapters/shownotes into the JSON
+    number end_time - the endtime to which to add chapters/shownotes into the JSON
+    optional number offset - the offset to subtract from the position-attributes of the shownotes/chapters
+    optional string filename - path+filename to where the JSON shall be output to
+    optional boolean do_id3 - true, add to the ID3-metadata storage of Reaper for the current project; false or nil, don't add(default)
+    optional boolean do_vorbis - true, add to the VORBIS-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+    optional boolean do_ape - true, add to the APE-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+    optional boolean do_ixml - true, add to the IXML-metadata storage of Reaper for the current project;  false or nil, don't add(default)
+  </parameters>
+  <retvals>
+    string podmeta_entry_JSON - the podcast's entire-metadata as json according to the PodMeta_v1-standard
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, shownote, chapter, episode, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  if type(start_time)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "start_time", "must be a number", -1) return end
+  if start_time<0 then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "start_time", "must be bigger than 0", -2) return end
+  if type(end_time)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "end_time", "must be a number", -3) return end
+  if start_time>end_time then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "end_time", "must be bigger than 0", -4) return end
+  
+  if type(offset)~="number" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "offset", "must be a number", -5) return end
+  if offset<0 then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "offset", "must be bigger than 0", -6) return end
+  
+  if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "filename", "must be nil or a string", -7) return end
+
+  local JSON="{\n\t\"PodMeta\":\"version 1.0\","
+  JSON=JSON.."\n\t\"PodMetaContent\":{\n"
+  local NumChapter=ultraschall.CountNormalMarkers()
+  local NumShownotes=ultraschall.CountShownoteMarkers()
+  local chapter, shownote
+  
+  -- Podcast
+  JSON=JSON.."\t\t"..string.gsub(ultraschall.GetPodcastAttributesAsJSON(), "\n", "\n\t")..",\n"
+   
+  -- Episode
+  JSON=JSON.."\t\t"..string.gsub(ultraschall.GetEpisodeAttributesAsJSON(), "\n", "\n\t")
+  
+  -- Contributors
+  if ultraschall.CountContributors()>0 then JSON=JSON..",\n" else end
+  local A=ultraschall.GetPodcastContributorAttributesAsJSON()
+  if A~="" then JSON=JSON.."\t\t"..string.gsub(A, "\n", "\n\t\t") end
+  
+  -- Chapters
+  if NumChapter>0 then 
+    JSON=JSON..",\n" 
+    chapter_num=1
+    for i=1, NumChapter do
+      chapter=ultraschall.GetChapterAttributesAsJSON(i, chapter_num, start_time, end_time, offset)
+      if chapter~="" then chapter_num=chapter_num+1 end
+      if chapter~="" and i==1 then 
+        JSON=JSON:sub(1,-3)..",\n"
+        JSON=JSON.."\t\t"..string.gsub(chapter, "\n", "\n\t\t")..",\n"
+      end
+    end
+    JSON=JSON:sub(1,-3)
+  else 
+    --JSON=JSON.."\nHUH?"
+  end
+
+  -- Shownotes
+  if NumShownotes>0 then 
+    JSON=JSON..",\n" 
+    shownote_num=1
+    for i=1, NumShownotes do
+      shownote=ultraschall.GetShownoteAttributesAsJSON(i, shownote_num, start_time, end_time, offset)
+      if shownote~="" then 
+        shownote_num=shownote_num+1
+        JSON=JSON.."\t\t"..string.gsub(shownote, "\n", "\n\t\t")..",\n"
+      end
+    end
+    JSON=JSON:sub(1,-3)
+    --]]
+  else 
+    JSON=JSON.."\n" 
+  end
+  --]]
+  JSON=JSON:sub(1,-1).."\n\t}\n}"  
+  
+  if do_id3==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TXXX:PodMeta|"..JSON, true)
+  end
+  
+  if do_vorbis==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "VORBIS:USER:PodMeta|"..JSON, true)
+  end
+  
+  if do_ape==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "APE:User Defined:PodMeta|"..JSON, true)
+  end
+  
+  if do_ixml==true then
+    reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "IXML:USER:PodMeta|"..JSON, true)
+  end
+  
+  if filename~=nil then 
+    local errorindex = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
+    retval=ultraschall.WriteValueToFile(filename, JSON)
+  
+    if retval==-1 then 
+      local errorindex2, parmname, errormessage = ultraschall.GetErrorMessage_Funcname("WriteValueToFile", 1)
+      ultraschall.AddErrorMessage("PodcastMetadata_CreateJSON_Entry", "filename", errormessage, -8) 
+      return 
+    end
+  end
+    
+  
+  local function TestJson()
+    --print3(JSON)
+    -- test for validity(testsystem only)
+    if reaper.file_exists(reaper.GetResourcePath().."/jq-win64.exe")==true then
+      ultraschall.WriteValueToFile(reaper.GetResourcePath().."/JSON-test.txt", JSON.."")
+      os.execute(reaper.GetResourcePath().."/JSON-test.Bat")
+    end
+    gfx.quit()
+  end
+  
+  ---WriteMessage("Podcast")
+  --reaper.defer(CreatePodcastEntry)
+  
+  TestJson()
+  return JSON
+end
+
+
+function ultraschall.GetSetPodcastWebsite(is_set, index, name, description, url, preset_slot)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetSetPodcastWebsite</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string name, string description, string url = ultraschall.GetSetPodcastWebsite(boolean is_set, integer index, string name, string description, string url, optional index preset_slot)</functioncall>
+  <description>
+    Will get/set website-metadata-attributes for a podcast.
+    
+    This is about the podcast globally, NOT the individual episodes.
+    
+    preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
+        
+    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+        
+    returns false in case of an error
+  </description>
+  <parameters>
+    boolean is_set - true, set the attribute; false, retrieve the current content
+    integer index - the index of the url to store, 1 and higher
+    string name - the name of the url
+    string description - a description of this url
+    string url - the url itself
+    optional index preset_slot - nil, don't return any preset's content; 1 and higher, set/return the website of the index-slot
+  </parameters>
+  <retvals>
+    boolean retval - true, if the url could be set; false, if an error occurred
+    string name - the name of the url; when preset_slot is not nil then this is the content of the presetslot
+    string description - a description of this url; when preset_slot is not nil then this is the content of the presetslot
+    string url - the url itself; when preset_slot is not nil then this is the content of the presetslot
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, set, podcast, website</tags>
+</US_DocBloc>
+]]
+--is_set, index, name, description, url, preset_slot
+  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "is_set", "must be boolean", -1) return false end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "index", "must be an integer", -2) return false end
+  if type(name)~="string" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "name", "must be a string", -3) return false end
+  if type(description)~="string" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "description", "must be a string", -4) return false end
+  if type(url)~="string" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "url", "must be a string", -5) return false end
+  if preset_slot~=nil and math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "preset_slot", "must be an integer", -6) return false end
+
+  local _, A, B, C, A1, D, E, F
+  if is_set==true then
+    if preset_slot~=nil then
+      name=string.gsub(name, "\r", "")
+      description=string.gsub(description, "\r", "")
+      url=string.gsub(url, "\r", "")
+      retval = ultraschall.SetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_name", string.gsub(name, "\n", "\\n"), "ultraschall_podcast_presets.ini")
+      retval = ultraschall.SetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_description", string.gsub(description, "\n", "\\n"), "ultraschall_podcast_presets.ini")
+      retval = ultraschall.SetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_url", string.gsub(url, "\n", "\\n"), "ultraschall_podcast_presets.ini")
+      if retval==false then ultraschall.AddErrorMessage("GetSetPodcastWebsite", "", "can not write to ultraschall_podcast_presets.ini", -8) return false end
+      presetcontent=content
+      return retval, name, description, url
+    else
+      presetcontent=nil
+    end
+
+    _,A1=reaper.GetProjExtState(0, "PodcastMetaData", "podc_maxindex")
+    if A1=="" or index>tonumber(A1) then
+      reaper.SetProjExtState(0, "PodcastMetaData", "podc_maxindex", index)
+    end
+    reaper.SetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_name", name)
+    reaper.SetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_description", description)
+    reaper.SetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_url", url)
+    return true, name, description, url
+  else
+    if preset_slot~=nil then
+      --print2("")
+      local old_errorcounter = ultraschall.CountErrorMessages()
+      D=ultraschall.GetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_name", "ultraschall_podcast_presets.ini")
+      E=ultraschall.GetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_description", "ultraschall_podcast_presets.ini")
+      F=ultraschall.GetUSExternalState("PodcastMetaData_"..preset_slot, "podc_website_"..index.."_url", "ultraschall_podcast_presets.ini")
+      if old_errorcounter~=ultraschall.CountErrorMessages() then
+        ultraschall.AddErrorMessage("GetSetPodcast_Attributes", "", "can not retrieve value from ultraschall_podcast_presets.ini", -9)
+        return false
+      end
+      D=string.gsub(D, "\\n", "\n")
+      E=string.gsub(E, "\\n", "\n")
+      F=string.gsub(F, "\\n", "\n")
+      if D=="" and E=="" and F=="" then retval=false else retval=true end
+      return retval, D, E, F
+    end
+    _,A=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_name")
+    _,B=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_description")
+    _,C=reaper.GetProjExtState(0, "PodcastMetaData", "podc_website_"..index.."_url")
+    return true, A, B, C
+  end
+end
+
+
+--A,B,C=ultraschall.GetSetPodcastWebsite(true, 34, "My \"url\"", "This\n \\n is my url, use this and not another one", "http://www.name.de")
+
+
+
+--A=ultraschall.PodcastMetaData_ExportWebsiteAsJSON()
+--print3(A)
+
+ultraschall.PodcastContributorAttributes = {
+  "ctrb_name",
+  "ctrb_description",
+  "ctrb_email",
+  "ctrb_website_name",
+  "ctrb_website_description",
+  "ctrb_website_url"
+}
+
+function ultraschall.GetSetContributor_Attributes(is_set, index, attributename, additional_attribute, content, preset_slot)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetSetContributor_Attributes</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string content = ultraschall.GetSetContributor_Attributes(boolean is_set, integer index, string attributename, string content, integer preset_slot)</functioncall>
+  <description>
+    Get/set contributor-metadata-attributes for an episode. You can have multiple contributors per episode.
+    
+    This is about the the individual episodes.    
+    
+    Accepted attributes are:
+    
+      "ctrb_name" - the name of the contributor
+      "ctrb_description" - a description of the contributor
+      "ctrb_email" - the email of the contributor
+      
+      The following store websites for a contributor. The parameter additional_attribute represents the website-index.
+      So when additional_attribute=1 then the following attributes are for website number 1, when additional_attribute=2 then they are for website number 2.
+      ctrb_website_name - the name of the website; additional_attribute must be set to 1 and higher
+      ctrb_website_description - the name of the website; additional_attribute must be set to 1 and higher
+      ctrb_website_url - the name of the website; additional_attribute must be set to 1 and higher
+      
+    preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
+    
+    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    boolean is_set - true, set the attribute; false, retrieve the current content
+    integer index - the index of the contributor to store, 1 and higher
+    string attributename - the name of the attribute for the contributor
+    string additional_attribute - the additional attribute for some attributes; set to nil, if not needed.
+    string content - the value for this contributor
+    optional index preset_slot - nil, don't return any preset's content; 1 and higher, set/return the contributor's entry as stored in the presets
+  </parameters>
+  <retvals>
+    boolean retval - true, if the url could be set; false, if an error occurred
+    string content - the content of the attribute for this contributor; when preset_slot is not nil then this will be content of the preset-slot
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, set, contributor</tags>
+</US_DocBloc>
+]]
+--is_set, index, attributename, content, preset_slot
+  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "is_set", "must be a boolean", -1) return false end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "index", "must be an integer", -2) return false end
+  if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "attributename", "must be a string", -3) return false end
+  if type(content)~="string" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "content", "must be a string", -4) return false end
+  if preset_slot~=nil and math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "preset_slot", "must be an integer", -5) return false end
+  if attributename=="ctrb_website_name" or attributename=="ctrb_website_description" or attributename=="ctrb_website_url" then
+    if math.type(tonumber(additional_attribute))~="integer" then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "preset_slot", "must be a string representing an integer 1 or higher", -6) return false end
+  else
+    additional_attribute=nil
+  end
+  if additional_attribute==nil then additional_attribute="" else additional_attribute="_"..additional_attribute end
+  local tags=ultraschall.PodcastContributorAttributes 
+  local presetcontent, retval
+  local found=false
+  for i=1, #tags do
+    if attributename==tags[i] then
+      found=true
+      break
+    end
+  end
+  if found==false then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "attributename", "attributename not supported", -7) return false end
+  
+  if is_set==true then
+    if preset_slot~=nil then
+      content=string.gsub(content, "\r", "")
+      retval = ultraschall.SetUSExternalState("ContributorsMetaData_"..preset_slot, attributename.."_"..index..additional_attribute, string.gsub(content, "\n", "\\n"), "ultraschall_podcast_presets.ini")
+      if retval==false then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "", "can not write to ultraschall_podcast_presets.ini", -8) return false end
+      presetcontent=content
+      return retval, content
+    else
+      presetcontent=nil
+    end
+    
+    local _,A1=reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex")
+    if A1=="" or index>tonumber(A1) then
+      reaper.SetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex", index)
+    end
+    _=reaper.SetProjExtState(0, "ContributorsMetaData_", attributename..index..additional_attribute, content)
+    return _>0, content, presetcontent
+  else
+    if preset_slot~=nil then
+      --print2("")
+      local old_errorcounter = ultraschall.CountErrorMessages()
+      presetcontent=ultraschall.GetUSExternalState("ContributorsMetaData_"..preset_slot, attributename.."_"..index..additional_attribute, "ultraschall_podcast_presets.ini")
+      if presetcontent=="" then return false, "" end
+      if old_errorcounter~=ultraschall.CountErrorMessages() then
+        ultraschall.AddErrorMessage("GetSetContributor_Attributes", "", "can not retrieve value from ultraschall_podcast_presets.ini", -9)
+        return false
+      end
+      presetcontent=string.gsub(presetcontent, "\\n", "\n")
+      return true, presetcontent
+    end
+    local _, content = reaper.GetProjExtState(0, "ContributorsMetaData_", attributename..index..additional_attribute)
+    return _>0, content
+  end
+end
+
+
+function ultraschall.GetPodcastAttributePresetSlotByName(name)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastAttributePresetSlotByName</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>integer index = ultraschall.GetPodcastAttributePresetSlotByName(string name)</functioncall>
+  <description>
+    Gets the preset-index of a Podcast-Attribute-Preset by its name.
+    
+    Index must be between 1 and 4096 or it will return -1
+    
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    string name - the name of the preset, non case-sensitive
+  </parameters>
+  <retvals>
+    integer index - the index of the preset; -1, in case of an error
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, preset</tags>
+</US_DocBloc>
+]]
+  if type(name)~="string" then ultraschall.AddErrorMessage("GetPodcastAttributePresetSlotByName", "name", "must be a string", -1) return -1 end
+  name=name:lower()
+  for i=1, 4096 do
+    local temp=ultraschall.GetPodcastAttributesPreset_Name(i)
+    if temp~=nil and name==temp:lower() then 
+      return i 
+    end
+  end
+  return -1
+end
+
+--A1=ultraschall.GetPodcastPresetSlotByPresetName(1)
+
+function ultraschall.GetEpisodeAttributePresetSlotByName(name)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetEpisodeAttributePresetSlotByName</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>integer index = ultraschall.GetEpisodeAttributePresetSlotByName(string name)</functioncall>
+  <description>
+    Gets the preset-index of an Episode-Attribute-Preset by its name.
+    
+    Index must be between 1 and 4096 or it will return -1
+    
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    string name - the name of the preset, non case-sensitive
+  </parameters>
+  <retvals>
+    integer index - the index of the preset; -1, in case of an error
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, episode, preset</tags>
+</US_DocBloc>
+]]
+  if type(name)~="string" then ultraschall.AddErrorMessage("GetEpisodeAttributePresetSlotByName", "name", "must be a string", -1) return -1 end
+  name=name:lower()
+  for i=1, 4096 do
+    local temp=ultraschall.GetPodcastEpisodeAttributesPreset_Name(i)
+    if temp~=nil and name==temp:lower() then 
+      return i 
+    end
+  end
+  return -1
+end
+
+--ultraschall.SetPodcastEpisodeAttributesPreset_Name(1021, "orbital")
+--A=ultraschall.GetPodcastEpisodePresetSlotByPresetName(1)
+
+function ultraschall.GetPodcastContributorAttributesAsJSON()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastContributorAttributesAsJSON</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string podcastmetadata_json = ultraschall.GetPodcastContributorAttributesAsJSON()</functioncall>
+  <description>
+    Returns the MetaDataEntry for contributors as JSON according to PodMeta_v1-standard..
+  </description>
+  <retvals>
+    string contributorsmetadata_json - the contributor's-metadata as json
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, contributor, metadata, json, podmeta_v1</tags>
+</US_DocBloc>
+]]
+  local JSON=""
+  local _, max_index=reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex")
+  if max_index=="" then max_index=0 end
+  for a=1, tonumber(max_index) do
+    JSON=JSON.."\"ctrb_"..a.."\":{ \n"
+    for i=1, #ultraschall.PodcastContributorAttributes-3 do
+      local retval, content = ultraschall.GetSetContributor_Attributes(false, a, ultraschall.PodcastContributorAttributes[i], nil, "")
+      if retval==true and content~="" then
+        content=string.gsub(content, "\"", "\\\"")
+        content=string.gsub(content, "\\n", "\\\\n")
+        content=string.gsub(content, "\n", "\\n")
+        JSON=JSON.."\t\t\""..ultraschall.PodcastContributorAttributes[i].."\":\""..content.."\",\n"
+      end
+    end
+    -- contributor's websites
+    local count=0
+    for b=1, 1024 do
+      local retval1, name = ultraschall.GetSetContributor_Attributes(false, a, "ctrb_website_name", b, "")
+      local retval2, description = ultraschall.GetSetContributor_Attributes(false, a, "ctrb_website_description", b, "")
+      local retval3, url = ultraschall.GetSetContributor_Attributes(false, a, "ctrb_website_url", b, "")           
+      if retval1==true or retval2==true or retval3==true then
+        name=string.gsub(name, "\"", "\\\"")
+        name=string.gsub(name, "\\n", "\\\\n")
+        name=string.gsub(name, "\n", "\\n")
+        
+        description=string.gsub(description, "\"", "\\\"")
+        description=string.gsub(description, "\\n", "\\\\n")
+        description=string.gsub(description, "\n", "\\n")
+        
+        url=string.gsub(url, "\"", "\\\"")
+        url=string.gsub(url, "\\n", "\\\\n")
+        url=string.gsub(url, "\n", "\\n")
+       --print2(a, b, name, description, url)
+        count=count+1
+        JSON=JSON.."\t\t\"ctrb_website_"..count.."\":{\n"
+        JSON=JSON.."\t\t\t\"ctrb_website_name\":\""..name.."\",\n"
+        JSON=JSON.."\t\t\t\"ctrb_website_description\":\""..description.."\",\n"
+        JSON=JSON.."\t\t\t\"ctrb_website_url\":\""..url.."\"\n"
+        JSON=JSON.."\t\t},\n"
+      end
+    end
+    JSON=JSON:sub(1,-3).."\n},\n"
+  end
+
+  return JSON:sub(1,-3)
+end
+
+function ultraschall.CountContributors()
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CountContributors</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>integer contributors_count = ultraschall.CountContributors()</functioncall>
+  <description>
+    Returns the number of podcast-contributors stored in this project.
+  </description>
+  <retvals>
+    integer contributors_count - the number of stored contributors in this project
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, count, contributor</tags>
+</US_DocBloc>
+]]
+  local _, max_index=reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex")
+  if max_index=="" then max_index=0 end
+  return tonumber(max_index)
+end
+
+
+
+function ultraschall.SetPodcastAttributesPreset_Name(preset_slot, preset_name)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetPodcastAttributesPreset_Name</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetPodcastAttributesPreset_Name(integer preset_slot, string preset_name)</functioncall>
+  <description>
+    Sets the name of a podcast-metadata-preset
+        
+    Note, this sets only the presetname for the podcast-metadata-preset. To set the name of the podcast-episode-metadata-preset, see: [SetPodcastEpisodeAttributesPreset\_Name](#SetPodcastEpisodeAttributesPreset_Name)
+        
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer preset_slot - the preset-slot, whose name you want to set
+    string preset_name - the new name of the preset
+  </parameters>
+  <retvals>
+    boolean retval - true, if setting the name was successful; false, if setting the name was unsuccessful
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, set, podcast, metadata, preset, name</tags>
+</US_DocBloc>
+]]
+  if math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("SetPodcastAttributesPreset_Name", "preset_slot", "must be an integer", -1) return false end
+  if preset_slot<1 then ultraschall.AddErrorMessage("SetPodcastAttributesPreset_Name", "preset_slot", "must be bigger or equal 1", -2) return false end
+  if type(preset_name)~="string" then ultraschall.AddErrorMessage("SetPodcastAttributesPreset_Name", "preset_name", "must be a string", -3) return false end
+  preset_name=string.gsub(preset_name, "\n", "\\n")
+  local retval = ultraschall.SetUSExternalState("PodcastMetaData_"..preset_slot, "Preset_Name", preset_name, "ultraschall_podcast_presets.ini")
+  if retval==false then ultraschall.AddErrorMessage("SetPodcastAttributesPreset_Name", "", "couldn't store presetname in ultraschall_podcast_presets.ini; is it accessible?", -3) return false end
+  return true
+end
+  
+
+--ultraschall.SetPodcastAttributesPreset_Name(1, "Atuch")
+
+function ultraschall.GetPodcastAttributesPreset_Name(preset_slot)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastAttributesPreset_Name</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string preset_name = ultraschall.GetPodcastAttributesPreset_Name(integer preset_slot)</functioncall>
+  <description>
+    Gets the name of a podcast-metadata-preset
+        
+    Note, this gets only the presetname for the podcast-metadata-preset. To get the name of the podcast-episode-metadata-preset, see: [GetPodcastEpisodeAttributesPreset\_Name](#GetPodcastEpisodeAttributesPreset_Name)
+        
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer preset_slot - the preset-slot, whose name you want to get
+  </parameters>
+  <retvals>
+    string preset_name - the name of the podcast-metadata-preset
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, metadata, preset, name</tags>
+</US_DocBloc>
+]]
+  if math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("GetPodcastAttributesPreset_Name", "preset_slot", "must be an integer", -1) return end
+  if preset_slot<1 then ultraschall.AddErrorMessage("GetPodcastAttributesPreset_Name", "preset_slot", "must be bigger or equal 1", -2) return end
+  
+  local presetname = ultraschall.GetUSExternalState("PodcastMetaData_"..preset_slot, "Preset_Name", "ultraschall_podcast_presets.ini")
+  return string.gsub(presetname, "\\n", "\n")
+end
+
+
+--A,B=ultraschall.GetPodcastAttributesPreset_Name(1)
+
+function ultraschall.SetPodcastEpisodeAttributesPreset_Name(preset_slot, presetname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetPodcastEpisodeAttributesPreset_Name</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.SetPodcastEpisodeAttributesPreset_Name(integer preset_slot, string preset_name)</functioncall>
+  <description>
+    Sets the name of a podcast-episode-metadata-preset
+    
+    Note, this sets only the presetname for the episode-metadata-preset. To set the name of the podcast-metadata-preset, see: [SetPodcastAttributesPreset\_Name](#SetPodcastAttributesPreset_Name)
+    
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer preset_slot - the preset-slot, whose name you want to set
+    string preset_name - the new name of the preset
+  </parameters>
+  <retvals>
+    boolean retval - true, if setting the name was successful; false, if setting the name was unsuccessful
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, set, podcast, metadata, preset, name, episode</tags>
+</US_DocBloc>
+]]
+  if math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("SetPodcastEpisodeAttributesPreset_Name", "preset_slot", "must be an integer", -1) return false end
+  if preset_slot<1 then ultraschall.AddErrorMessage("SetPodcastEpisodeAttributesPreset_Name", "preset_slot", "must be bigger or equal 1", -2) return false end
+  if type(presetname)~="string" then ultraschall.AddErrorMessage("SetPodcastEpisodeAttributesPreset_Name", "preset_name", "must be a string", -3) return false end
+  presetname=string.gsub(presetname, "\n", "\\n")
+  local retval = ultraschall.SetUSExternalState("Episode_"..preset_slot, "Preset_Name", presetname, "ultraschall_podcast_presets.ini")
+  if retval==false then ultraschall.AddErrorMessage("SetPodcastEpisodeAttributesPreset_Name", "", "couldn't store presetname in ultraschall_podcast_presets.ini; is it accessible?", -3) return false end
+  return true
+end
+  
+
+--A=ultraschall.SetPodcastEpisodeAttributesPreset_Name(1, "AKullerauge sei wachsam")
+
+function ultraschall.GetPodcastEpisodeAttributesPreset_Name(preset_slot)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetPodcastEpisodeAttributesPreset_Name</slug>
+  <requires>
+    Ultraschall=4.75
+    Reaper=6.20
+    SWS=2.10.0.1
+    Lua=5.3
+  </requires>
+  <functioncall>string preset_name = ultraschall.GetPodcastEpisodeAttributesPreset_Name(integer preset_slot)</functioncall>
+  <description>
+    Gets the name of a podcast-metadata-preset
+        
+    Note, this gets only the presetname for the episode-metadata-preset. To get the name of the podcast-metadata-preset, see: [GetPodcastAttributesPreset\_Name](#GetPodcastAttributesPreset_Name)
+        
+    returns false in case of an error
+  </description>
+  <parameters>
+    integer preset_slot - the preset-slot, whose name you want to get
+  </parameters>
+  <retvals>
+    string preset_name - the name of the podcast-metadata-preset
+  </retvals>
+  <chapter_context>
+    Metadata Management
+    Podcast Metadata
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, podcast, metadata, preset, name</tags>
+</US_DocBloc>
+]]
+  if math.type(preset_slot)~="integer" then ultraschall.AddErrorMessage("GetPodcastEpisodeAttributesPreset_Name", "preset_slot", "must be an integer", -1) return end
+  if preset_slot<1 then ultraschall.AddErrorMessage("GetPodcastEpisodeAttributesPreset_Name", "preset_slot", "must be bigger or equal 1", -2) return end
+  
+  local presetname=ultraschall.GetUSExternalState("Episode_"..preset_slot, "Preset_Name", "ultraschall_podcast_presets.ini")
+  return string.gsub(presetname, "\\n", "\n")
+end
+
+--A,B=ultraschall.GetPodcastEpisodeAttributesPreset_Name(1)
+
