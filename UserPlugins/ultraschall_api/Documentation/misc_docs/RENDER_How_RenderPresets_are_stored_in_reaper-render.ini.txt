@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.69
+Render-Presets-docs as of Reaper 6.71
 
-compiled by Meo-Ada Mespotine, 25th of October 2022
+compiled by Meo-Ada Mespotine, 7th of December 2022
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -130,6 +130,7 @@ RENDERPRESET_EXT
                                     &1024, Embed take markers
                                     &2048, 2nd pass render
                                     &8192, Render stems pre-fader
+                                    &16384, Only render channels that are sent to parent
 
     string render_cfg - the render-format-settings(mp3, wav, flac, etc) encoded as BASE64-string
 

@@ -61,10 +61,10 @@ Ultraschall API GFX-Functions
 <script src="./scripts/scripts.js.Download"></script>
 <table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Basic Shapes"><a href="#Basic Shapes">^</a></a><strong> <u>Basic Shapes</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_DrawEmbossedSquare">GFX_DrawEmbossedSquare</a></td><td class="tdsm"><a href="#GFX_DrawThickRoundRect">GFX_DrawThickRoundRect</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Blitting"><a href="#Blitting">^</a></a><strong> <u>Blitting</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td class="tdsm"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td class="tdsm"><a href="#GFX_GetTextLayout">GFX_GetTextLayout</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Font Handling"><a href="#Font Handling">^</a></a><strong> <u>Font Handling</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Key-Management"><a href="#Key-Management">^</a></a><strong> <u>Key-Management</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_BlitFramebuffer">GFX_BlitFramebuffer</a></td><td class="tdsm"><a href="#GFX_BlitImageCentered">GFX_BlitImageCentered</a></td><td class="tdsm"><a href="#GFX_ResizeImageKeepAspectRatio">GFX_ResizeImageKeepAspectRatio</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Key-Management"><a href="#Key-Management">^</a></a><strong> <u>Key-Management</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetChar">GFX_GetChar</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Mouse Handling"><a href="#Mouse Handling">^</a></a><strong> <u>Mouse Handling</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_GetMouseCap">GFX_GetMouseCap</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Text"><a href="#Text">^</a></a><strong> <u>Text</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#GFX_BlitText_AdaptLineLength">GFX_BlitText_AdaptLineLength</a></td><td class="tdsm"><a href="#GFX_GetTextLayout">GFX_GetTextLayout</a></td><td class="tdsm"><a href="#GFX_SetFont">GFX_SetFont</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Lokasenna Gui Lib v2"><a href="#Lokasenna Gui Lib v2">^</a></a> Lokasenna Gui Lib v2</b>
 </td></tr><tr><td class="tdsm"><a href="#Lokasenna_LoadGuiLib_v2">Lokasenna_LoadGuiLib_v2</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Window Handling"><a href="#Window Handling">^</a></a><strong> <u>Window Handling</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#GFX_GetDropFile">GFX_GetDropFile</a></td><td class="tdsm"><a href="#GFX_GetWindowHWND">GFX_GetWindowHWND</a></td><td class="tdsm"><a href="#GFX_Init">GFX_Init</a></td></tr></table><br></div><div class="ch">
@@ -304,100 +304,50 @@ has no effect, when destx, desty, destw, desth are given</td></tr>
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="GFX_GetTextLayout"></a>
-<a href="#GFX_GetTextLayout"> ^</a> 
+<a class="anch" id="GFX_ResizeImageKeepAspectRatio"></a>
+<a href="#GFX_ResizeImageKeepAspectRatio"> ^</a> 
 <img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
-<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>GFX_GetTextLayout</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall4.75.png" alt="Ultraschall version 4.75"><u><b>GFX_ResizeImageKeepAspectRatio</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>integer</i> font_layout = <em>ultraschall.GFX_GetTextLayout</em>(<i>optional</i> <i>boolean</i> bold, <i>optional</i> <i>boolean</i> italic, <i>optional</i> <i>boolean</i> underline, <i>optional</i> <i>boolean</i> outline, <i>optional</i> <i>boolean</i> nonaliased, <i>optional</i> <i>boolean</i> inverse, <i>optional</i> <i>boolean</i> rotate, <i>optional</i> <i>boolean</i> rotate2)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_ResizeImageKeepAspectRatio</em>(<i>integer</i> image, <i>integer</i> neww, <i>integer</i> newh, <i>optional</i> <i>number</i> r, <i>optional</i> <i>number</i> g, <i>optional</i> <i>number</i> b)</code></div>
 </div><p>
 <div class="ch">
-Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.<br>
+Resizes an image, keeping its aspect-ratio. You can set a background-color for non rectangular-images.<br>
 <br>
-Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.<br>
+Resizing upwards will probably cause artifacts!<br>
 <br>
-Some combinations do not work together, so you need to experiment.<br>
+Note: this uses image 1023 as temporary buffer so don't use image 1023, when using this function!<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
-<tr><td class="pr"><i>integer</i> font_layout</td></tr>
-<tr><td class="ch2">the returned value you can use for gfx.drawstr for its flags-parameter</td></tr>
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, blitting was successful; false, blitting was unsuccessful</td></tr>
 </table>
 <br>
 <u>Parameters:</u>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> bold</td></tr>
-<tr><td class="ch2">true, sets the font_layout to bold; false, no boldness</td></tr>
+<tr><td class="pr"><i>integer</i> image</td></tr>
+<tr><td class="ch2">an image between 0 and 1022, that you want to resize</td></tr>
 </table>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> italic</td></tr>
-<tr><td class="ch2">true, sets the font_layout to italic; false, no italic</td></tr>
+<tr><td class="pr"><i>integer</i> neww</td></tr>
+<tr><td class="ch2">the new width of the image</td></tr>
 </table>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> underline</td></tr>
-<tr><td class="ch2">true, sets the font_layout to underline; false, no underlining</td></tr>
+<tr><td class="pr"><i>integer</i> newh</td></tr>
+<tr><td class="ch2">the new height of the image</td></tr>
 </table>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> outline</td></tr>
-<tr><td class="ch2">true, sets the font_layout to outline; false, no outline</td></tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> r</td></tr>
+<tr><td class="ch2">the red-value of the background-color</td></tr>
 </table>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> nonaliased</td></tr>
-<tr><td class="ch2">true, sets the font_layout to aliased; false, keep it antialiased</td></tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> g</td></tr>
+<tr><td class="ch2">the green-value of the background-color</td></tr>
 </table>
 <table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> inverse</td></tr>
-<tr><td class="ch2">true, sets the font_layout to inverse; false, not inversed</td></tr>
-</table>
-<table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> rotate</td></tr>
-<tr><td class="ch2">true, sets the font_layout to rotate the font clockwise; false, don't rotate</td></tr>
-</table>
-<table class="ch">
-<tr><td class="pr"><i>optional</i> <i>boolean</i> rotate2</td></tr>
-<tr><td class="ch2">true, sets the font_layout to rotate the font counterclockwise; false, don't rotate</td></tr>
-</table>
-<br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="GFX_SetFont"></a>
-<a href="#GFX_SetFont"> ^</a> 
-<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_SetFont</b></u><br>			<p>
-<div class="cc">
-<div class="l">Lua: <code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
-</div><p>
-<div class="ch">
-Sets the font of the gfx-window.<br>
-<br>
-As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br>
-<br>
-returns false in case of an error<br>
-</div><br>          <u>Parameters:</u>
-<table class="ch">
-<tr><td class="pr"><i>integer</i> fontindex</td></tr>
-<tr><td class="ch2">the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font</td></tr>
-</table>
-<table class="ch">
-<tr><td class="pr"><i>string</i> font</td></tr>
-<tr><td class="ch2">the name of the font</td></tr>
-</table>
-<table class="ch">
-<tr><td class="pr"><i>integer</i> size</td></tr>
-<tr><td class="ch2">the size of the font</td></tr>
-</table>
-<table class="ch">
-<tr><td class="pr"><i>string</i> flagStr</td></tr>
-<tr><td class="ch2">a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br/>
-The following are valid:<br/>
-B - bold<br/>
-i - italic<br/>
-o - white outline<br/>
-r - blurred<br/>
-s - sharpen<br/>
-u - underline<br/>
-v - inverse</td></tr>
+<tr><td class="pr"><i>optional</i> <i>number</i> b</td></tr>
+<tr><td class="ch2">the blue-value of the background-color</td></tr>
 </table>
 <br>
 </div>
@@ -540,6 +490,150 @@ Note: After doubleclicked, this will not return mouse-clicked-states, until the 
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="GFX_BlitText_AdaptLineLength"></a>
+<a href="#GFX_BlitText_AdaptLineLength"> ^</a> 
+<img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
+<img width="3%" src="gfx/ultraschall4.75.png" alt="Ultraschall version 4.75"><u><b>GFX_BlitText_AdaptLineLength</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GFX_ResizeImageKeepAspectRatio</em>(<i>string</i> text, <i>integer</i> x, <i>integer</i> y, <i>integer</i> width, <i>optional</i> <i>integer</i> height, <i>optional</i> <i>integer</i> align)</code></div>
+</div><p>
+<div class="ch">
+This draws text to x and y and adapts the line-lengths to fit into width and height.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, text-blitting was successful; false, text-blitting was unsuccessful</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> text</td></tr>
+<tr><td class="ch2">the text to be shown</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the text</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the text</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> width</td></tr>
+<tr><td class="ch2">the maximum width of a line in pixels; text after this will be put into the next line</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> height</td></tr>
+<tr><td class="ch2">the maximum height the text shall be shown in pixels; everything after this will be truncated</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> align</td></tr>
+<tr><td class="ch2">0 or nil, left aligned text; 1, center text</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_GetTextLayout"></a>
+<a href="#GFX_GetTextLayout"> ^</a> 
+<img width="3%" src="gfx/reaper5.95.png" alt="Reaper version 5.95">
+<img width="3%" src="gfx/ultraschall4.3.png" alt="Ultraschall version 4.3"><u><b>GFX_GetTextLayout</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>integer</i> font_layout = <em>ultraschall.GFX_GetTextLayout</em>(<i>optional</i> <i>boolean</i> bold, <i>optional</i> <i>boolean</i> italic, <i>optional</i> <i>boolean</i> underline, <i>optional</i> <i>boolean</i> outline, <i>optional</i> <i>boolean</i> nonaliased, <i>optional</i> <i>boolean</i> inverse, <i>optional</i> <i>boolean</i> rotate, <i>optional</i> <i>boolean</i> rotate2)</code></div>
+</div><p>
+<div class="ch">
+Returns a font_layout-value that can be used for the parameter flags for the function gfx.drawstr.<br>
+<br>
+Note: as per limitation of Reaper, you can only have up to 4 font_layout-parameters at the same time.<br>
+<br>
+Some combinations do not work together, so you need to experiment.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> font_layout</td></tr>
+<tr><td class="ch2">the returned value you can use for gfx.drawstr for its flags-parameter</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> bold</td></tr>
+<tr><td class="ch2">true, sets the font_layout to bold; false, no boldness</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> italic</td></tr>
+<tr><td class="ch2">true, sets the font_layout to italic; false, no italic</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> underline</td></tr>
+<tr><td class="ch2">true, sets the font_layout to underline; false, no underlining</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> outline</td></tr>
+<tr><td class="ch2">true, sets the font_layout to outline; false, no outline</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> nonaliased</td></tr>
+<tr><td class="ch2">true, sets the font_layout to aliased; false, keep it antialiased</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> inverse</td></tr>
+<tr><td class="ch2">true, sets the font_layout to inverse; false, not inversed</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> rotate</td></tr>
+<tr><td class="ch2">true, sets the font_layout to rotate the font clockwise; false, don't rotate</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> rotate2</td></tr>
+<tr><td class="ch2">true, sets the font_layout to rotate the font counterclockwise; false, don't rotate</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GFX_SetFont"></a>
+<a href="#GFX_SetFont"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GFX_SetFont</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <em>ultraschall.GFX_SetFont</em>(<i>integer</i> fontindex, <i>string</i> font, <i>integer</i> size, <i>string</i> flagStr)</code></div>
+</div><p>
+<div class="ch">
+Sets the font of the gfx-window.<br>
+<br>
+As Mac and Windows have different visible font-sizes for the same font-size, this function adapts the font-size correctly(unlike Reaper's own native gfx.setfont-function).<br>
+<br>
+returns false in case of an error<br>
+</div><br>          <u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> fontindex</td></tr>
+<tr><td class="ch2">the font-id; idx=0 for default bitmapped font, no configuration is possible for this font. idx=1..16 for a configurable font</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> font</td></tr>
+<tr><td class="ch2">the name of the font</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> size</td></tr>
+<tr><td class="ch2">the size of the font</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> flagStr</td></tr>
+<tr><td class="ch2">a string, which holds the desired font-styles. You can combine multiple ones, up to 4.<br/>
+The following are valid:<br/>
+B - bold<br/>
+i - italic<br/>
+o - white outline<br/>
+r - blurred<br/>
+s - sharpen<br/>
+u - underline<br/>
+v - inverse</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="Lokasenna_LoadGuiLib_v2"></a>
 <a href="#Lokasenna_LoadGuiLib_v2"> ^</a> 
 <img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
@@ -675,7 +769,7 @@ Opens a new graphics window and returns its HWND-windowhandler object.<br>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.7  - 12 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.75  - 14 elements available <br></td></table>
         <hr>
       </div>
       <br>

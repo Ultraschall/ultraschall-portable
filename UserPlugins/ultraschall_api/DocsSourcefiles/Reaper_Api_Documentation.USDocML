@@ -959,7 +959,8 @@
         </chapter_context>
         <tags>audio management, calculated, loudness, source, lufs, rms, peak, true peak</tags>
         <changelog>
-          Reaper 6.64  - added to the API
+          Reaper 6.69 - fixed return value-bug
+          Reaper 6.64 - added to the API
         </changelog>
     </US_DocBloc>
 
@@ -1154,6 +1155,55 @@
         </chapter_context>
         <tags>colormanagement, native, from, conversion</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CountActionShortcuts</slug>
+        <title>CountActionShortcuts</title>
+        <functioncall prog_lang="cpp">int retval = CountActionShortcuts(KbdSectionInfo* section, int cmdID)</functioncall>
+        <functioncall prog_lang="eel">int retval = CountActionShortcuts(KbdSectionInfo section, int cmdID)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.CountActionShortcuts(KbdSectionInfo section, integer cmdID)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_CountActionShortcuts(KbdSectionInfo section, Int cmdID)</functioncall>
+        <requires>
+            Reaper=6.72
+        </requires>
+        <description>
+            Returns the number of shortcuts that exist for the given command ID.
+        </description>
+        <retvals>
+            integer retval - the number of available shortcuts for this action
+        </retvals>
+        <parameters>
+            KbdSectionInfo section - the section, in which the action is located, use retval of SectionFromUniqueID for this parameter
+                    -0, Main
+                    -100, Main (alt recording)
+                    -32060, MIDI Editor
+                    -32061, MIDI Event List Editor
+                    -32062, MIDI Inline Editor
+                    -32063, Media Explorer
+            integer cmdID - the action command-id of the action, whose shortcuts you want to count
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:GetActionShortcutDesc
+                   for getting the description of the shortcut
+            Reaper:DeleteActionShortcut
+                   for deleting a shortcut
+            Reaper:DoActionShortcutDialog
+                   for opening the add shortcut-dialog
+            Reaper:SectionFromUniqueID
+                   get the section, that you want to pass to this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Shortcuts
+        </chapter_context>
+        <tags>shortcuts, count</tags>
+        <changelog>
+          Reaper 6.71 - exposed to ReaScript-API
+          Reaper 6.72 - section allows now the section-numbers as parameter section
         </changelog>
     </US_DocBloc>
 
@@ -3437,6 +3487,56 @@
         <changelog>
         </changelog>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DeleteActionShortcut</slug>
+        <title>DeleteActionShortcut</title>
+        <functioncall prog_lang="cpp">bool retval = DeleteActionShortcut(KbdSectionInfo* section, int cmdID, int shortcutidx)</functioncall>
+        <functioncall prog_lang="eel">bool retval = DeleteActionShortcut(KbdSectionInfo section, int cmdID, int shortcutidx)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.DeleteActionShortcut(KbdSectionInfo section, integer cmdID, integer shortcutidx)</functioncall>
+        <functioncall prog_lang="python">Boolean retval = RPR_DeleteActionShortcut(KbdSectionInfo section, Int cmdID, Int shortcutidx)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            Delete the specific shortcut for the given command ID.
+        </description>
+        <retvals>
+            boolean retval - true, such shortcuts exists; false, no such shortcut
+        </retvals>
+        <parameters>
+            KbdSectionInfo section - the section, in which the action is located
+                                    -0, Main
+                                    -100, Main (alt recording)
+                                    -32060, MIDI Editor
+                                    -32061, MIDI Event List Editor
+                                    -32062, MIDI Inline Editor
+                                    -32063, Media Explorer
+            integer cmdID - the action command-id of the action, whose shortcut you want to delete
+            integer shortcutidx - the index of the shortcut
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:CountActionShortcuts
+                   for counting the available shortcuts of an action
+            Reaper:GetActionShortcutDesc
+                   for getting a shortcut's description
+            Reaper:DoActionShortcutDialog
+                   for opening the add shortcut-dialog
+            Reaper:SectionFromUniqueID
+                   get the section, that you want to pass to this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Shortcuts
+        </chapter_context>
+        <tags>shortcuts, delete</tags>
+        <changelog>
+            Reaper 6.71 - exposed to ReaScript-API
+            Reaper 6.72 - section allows now the section-numbers as parameter section
+        </changelog>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>DeleteEnvelopePointEx</slug>
@@ -3878,6 +3978,57 @@
         </changelog>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>DoActionShortcutDialog</slug>
+        <title>DoActionShortcutDialog</title>
+        <functioncall prog_lang="cpp">bool retval = DoActionShortcutDialog(HWND hwnd, KbdSectionInfo* section, int cmdID, int shortcutidx)</functioncall>
+        <functioncall prog_lang="eel">bool retval = DoActionShortcutDialog(HWND hwnd, KbdSectionInfo section, int cmdID, int shortcutidx)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.DoActionShortcutDialog(HWND hwnd, KbdSectionInfo section, integer cmdID, integer shortcutidx)</functioncall>
+        <functioncall prog_lang="python">Boolean retval = RPR_DoActionShortcutDialog(HWND hwnd, KbdSectionInfo section, Int cmdID, Int shortcutidx)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            Open the action shortcut dialog to edit or add a shortcut for the given command ID. If (shortcutidx >= 0 && shortcutidx < CountActionShortcuts()), that specific shortcut will be replaced, otherwise a new shortcut will be added.
+        </description>
+        <retvals>
+            boolean retval - true, shortcuts has been edited/added; false, not added/edited
+        </retvals>
+        <parameters>
+            HWND hwnd - unknown, which hwnd to pass over here
+            KbdSectionInfo section - the section, in which the action is located 
+                                    -0, Main
+                                    -100, Main (alt recording)
+                                    -32060, MIDI Editor
+                                    -32061, MIDI Event List Editor
+                                    -32062, MIDI Inline Editor
+                                    -32063, Media Explorer
+            integer cmdID - the action command-id of the action, whose shortcut you want to delete
+            integer shortcutidx - the index of the shortcut to add/edit
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:CountActionShortcuts
+                   for counting the available shortcuts of an action
+            Reaper:GetActionShortcutDesc
+                   for getting a shortcut's description
+            Reaper:DeleteActionShortcutDialog
+                   for deleting a shortcut
+            Reaper:SectionFromUniqueID
+                   get the section, that you want to pass to this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Shortcuts
+        </chapter_context>
+        <tags>shortcuts, add, edit</tags>
+        <changelog>
+            Reaper 6.71 - exposed to ReaScript-API
+            Reaper 6.72 - section allows now the section-numbers as parameter section
+        </changelog>
+    </US_DocBloc>
+    
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Dock_UpdateDockID</slug>
         <title>Dock_UpdateDockID</title>
@@ -5204,6 +5355,57 @@
         <changelog>
         </changelog>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetActionShortcutDesc</slug>
+        <title>GetActionShortcutDesc</title>
+        <functioncall prog_lang="cpp">bool GetActionShortcutDesc(KbdSectionInfo* section, int cmdID, int shortcutidx, char* descOut, int descOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool GetActionShortcutDesc(KbdSectionInfo section, int cmdID, int shortcutidx, #desc)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string desc = reaper.GetActionShortcutDesc(KbdSectionInfo section, integer cmdID, integer shortcutidx)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, KbdSectionInfo section, Int cmdID, Int shortcutidx, String descOut, Int descOut_sz) = RPR_GetActionShortcutDesc(section, cmdID, shortcutidx, descOut, descOut_sz)</functioncall>
+        <requires>
+            Reaper=6.72
+        </requires>
+        <description>
+            Get the text description of a specific shortcut for the given command ID.
+        </description>
+        <retvals>
+            boolean retval - true, such shortcuts exists; false, no such shortcut
+            string desc - the description of the shortcut
+        </retvals>
+        <parameters>
+            KbdSectionInfo section - the section, in which the action is located
+                                    -0, Main
+                                    -100, Main (alt recording)
+                                    -32060, MIDI Editor
+                                    -32061, MIDI Event List Editor
+                                    -32062, MIDI Inline Editor
+                                    -32063, Media Explorer
+            integer cmdID - the action command-id of the action, whose shortcut's description you want
+            integer shortcutidx - the index of the shortcut
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:CountActionShortcuts
+                   for counting the available shortcuts of an action
+            Reaper:DeleteActionShortcut
+                   for deleting a shortcut
+            Reaper:DoActionShortcutDialog
+                   for opening the add shortcut-dialog
+            Reaper:SectionFromUniqueID
+                   get the section, that you want to pass to this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Shortcuts
+        </chapter_context>
+        <tags>shortcuts, get, description</tags>
+        <changelog>
+            Reaper 6.71 - exposed to ReaScript-API
+            Reaper 6.72 - section allows now the section-numbers as parameter section; removed Lua-parameters desc, desclen
+        </changelog>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>GetActiveTake</slug>
@@ -6119,6 +6321,37 @@
         </chapter_context>
         <tags>envelopemanagement, get, statechunk</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>GetEnvelopeUIState</slug>
+        <title>GetEnvelopeUIState</title>
+        <functioncall prog_lang="cpp">int retval = GetEnvelopeUIState(TrackEnvelope* env)</functioncall>
+        <functioncall prog_lang="eel">int retval = GetEnvelopeUIState(TrackEnvelope env)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.GetEnvelopeUIState(TrackEnvelope env)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_GetEnvelopeUIState(TrackEnvelope env)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            gets information on the UI state of an envelope: returns &1 if automation/modulation is playing back, &2 if automation is being actively written, &4 if the envelope recently had an effective automation mode change
+        </description>
+        <retvals>
+            integer retval - the ui-state as flag-value
+        </retvals>
+        <parameters>
+            TrackEnvelope env - the envelope, whose ui-state you want
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Envelope Management
+            Get
+        </chapter_context>
+        <tags>envelopemanagement, ui, state, get</tags>
+        <changelog>
+            Reaper 6.71 - added
         </changelog>
     </US_DocBloc>
 
@@ -9578,7 +9811,7 @@
         <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
         <requires>
-            Reaper=6.68
+            Reaper=6.71
         </requires>
         <description>
             Get or set project information.  
@@ -9587,13 +9820,15 @@
             PROJECT_TITLE: title field from Project Settings/Notes dialog  
             PROJECT_AUTHOR: author field from Project Settings/Notes dialog  
             TRACK_GROUP_NAME:X: track group name, X should be 1..64  
-            MARKER_GUID:X: get the GUID (unique ID) of the marker or region with index X, where X is the index passed to EnumProjectMarkers, not necessarily the displayed number  
+            MARKER_GUID:X : get the GUID (unique ID) of the marker or region with index X, where X is the index passed to EnumProjectMarkers, not necessarily the displayed number (read-only)
+            MARKER_INDEX_FROM_GUID:{GUID} : get the GUID index of the marker or region with GUID {GUID} (read-only)
             RECORD_PATH: recording directory -- may be blank or a relative path, to get the effective path see [GetProjectPathEx](#GetProjectPathEx)  
             RECORD_PATH_SECONDARY: secondary recording directory  
             RENDER_FILE: render directory  
             RENDER_PATTERN: render file name (may contain wildcards)  
             RENDER_METADATA : get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: valuestr="ID3:TALB" to get, valuestr="ID3:TALB|my album name" to set. Call with valuestr="" and is_set=false to get a semicolon-separated list of defined project metadata identifiers.  
-            RENDER_TARGETS: semicolon separated list of files that would be written if the project is rendered using the most recent render settings  
+            RENDER_TARGETS: semicolon separated list of filenames that would be written if the project is rendered using the most recent render settings  
+            RENDER_TARGETS_EX: double-NULL (\0\0) separated list of filenames that would be written if the project is rendered using the most recent render settings  
             RENDER_STATS: (read-only) semicolon separated list of statistics for the most recently rendered files. call with valuestr="XXX" to run an action (for example, "42437"=dry run render selected items) before returning statistics.  
                           returns nothing, when user aborted rendering.
             RENDER_FORMAT: base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), to use default settings for that sink type.  
@@ -9663,6 +9898,9 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+            Reaper 6.71 - "MARKER_INDEX_FROM_GUID:{GUID}" - added, which allows getting marker-index by marker-guid
+            Reaper 6.70 - "RENDER_TARGETS_EX" - fixed bug with NULL-separation
+            Reaper 6.69 - "RENDER_TARGETS_EX" - added, but buggy; NULL-separation doesn't work
             Reaper 6.68 - "RENDER_STATS" returns now nothing, when user cancelled rendering
             Reaper 6.48 - "wmf" added as new render-output-format
             Reaper 6.47 - RENDER_METADATA supports now strings longer than 1024 bytes
@@ -12210,20 +12448,20 @@
         </requires>
         <description prog_lang="*">
             mode: 
-            0=add to current track(last touched track when &512==0)
-            1=add new track
-            3=add to selected items as takes
-            &4=stretch/loop to fit time sel
-            &8=try to match tempo 1x
-            &16=try to match tempo 0.5x
-            &32=try to match tempo 2x
-            &64=don't preserve pitch when matching tempo
-            &128=no loop/section if startpct/endpct set
-            &256=force loop regardless of global preference for looping imported items
-            &512=use high word(&65536 and higher) as absolute track index if mode&3==0
-            &1024=insert into reasamplomatic on a new track
-            &2048=insert into open reasamplomatic instance
-            &4096=move to BWF source preferred position(BWF start offset)
+            0=add to current track, 
+            1=add new track, 
+            3=add to selected items as takes, 
+            &4=stretch/loop to fit time sel, 
+            &8=try to match tempo 1x, 
+            &16=try to match tempo 0.5x, 
+            &32=try to match tempo 2x, 
+            &64=don't preserve pitch when matching tempo, 
+            &128=no loop/section if startpct/endpct set, 
+            &256=force loop regardless of global preference for looping imported items, 
+            &512=use high word as absolute track index if mode&3==0 or mode&2048, 
+            &1024=insert into reasamplomatic on a new track (add 1 to insert on last selected track), 
+            &2048=insert into open reasamplomatic instance (add 512 to use high word as absolute track index), 
+            &4096=move to source preferred position (BWF start offset), 
             &8192=reverse
             
             Example:
@@ -12717,6 +12955,91 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>kbd_enumerateActions</slug>
+        <title>kbd_enumerateActions</title>
+        <functioncall prog_lang="cpp">int retval = kbd_enumerateActions(KbdSectionInfo* section, int idx, const char** nameOut)</functioncall>
+        <functioncall prog_lang="eel">int retval = kbd_enumerateActions(KbdSectionInfo section, int idx, #name)</functioncall>
+        <functioncall prog_lang="lua">integer retval, string name = reaper.kbd_enumerateActions(KbdSectionInfo section, integer idx)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_kbd_enumerateActions(KbdSectionInfo section, Int idx, String nameOut)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            Returns the description of an action.
+        </description>
+        <retvals>
+            integer retval - true, the action exists; false, the action does not exist
+            string name - the name of the action
+        </retvals>
+        <parameters>
+            KbdSectionInfo section - the section, in which the action is located
+                                  -0, Main
+                                  -100, Main (alt recording)
+                                  -32060, MIDI Editor
+                                  -32061, MIDI Event List Editor
+                                  -32062, MIDI Inline Editor
+                                  -32063, Media Explorer
+            integer idx - the command-id of the action, whose description you want to have.
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:kbd_getTextFromCmd
+                   an alternative version of this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Action Related Functions
+        </chapter_context>
+        <tags>actions, get, name</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>RPR_kbd_enumerateActions</slug>
+        <title>RPR_kbd_enumerateActions</title>
+        <functioncall prog_lang="cpp">const name = char* kbd_getTextFromCmd(int cmd, KbdSectionInfo* section)</functioncall>
+        <functioncall prog_lang="eel">bool retval = kbd_getTextFromCmd(#name, int cmd, KbdSectionInfo section)</functioncall>
+        <functioncall prog_lang="lua">string name = reaper.kbd_getTextFromCmd(integer cmd, KbdSectionInfo section)</functioncall>
+        <functioncall prog_lang="python">String name = RPR_kbd_getTextFromCmd(Int cmd, KbdSectionInfo section)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            Returns the description of an action.
+        </description>
+        <retvals>
+            string name - the name of the action
+        </retvals>
+        <parameters>
+            integer cmd - the command-id of the action, whose description you want to have.
+            KbdSectionInfo section - the section, in which the action is located
+                                  -0, Main
+                                  -100, Main (alt recording)
+                                  -32060, MIDI Editor
+                                  -32061, MIDI Event List Editor
+                                  -32062, MIDI Inline Editor
+                                  -32063, Media Explorer
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:RPR_kbd_enumerateActions
+                   an alternative version of this function
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Action Related Functions
+        </chapter_context>
+        <tags>actions, get, name</tags>
+        <changelog>
+            Reaper 6.71 - added
         </changelog>
     </US_DocBloc>
 
@@ -15521,7 +15844,7 @@
             Reaper=5.62
         </requires>
         <description prog_lang="*">
-            Send an OSC message directly to REAPER. The value argument may be NULL. The message will be matched against the default OSC patterns. Only supported if control surface support was enabled when installing REAPER.
+            Send an OSC message directly to REAPER. The value argument may be NULL. The message will be matched against the default OSC patterns.
 
             This is not broadcast outside of Reaper, so you can't control devices, plugins, etc with it!
 
@@ -16817,6 +17140,54 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SectionFromUniqueID</slug>
+        <title>SectionFromUniqueID</title>
+        <functioncall prog_lang="cpp">KbdSectionInfo* section = SectionFromUniqueID(int uniqueID)</functioncall>
+        <functioncall prog_lang="eel">KbdSectionInfo section = SectionFromUniqueID(int uniqueID)/functioncall>
+        <functioncall prog_lang="lua">KbdSectionInfo section = reaper.SectionFromUniqueID(integer uniqueID)</functioncall>
+        <functioncall prog_lang="python">KbdSectionInfo section = RPR_SectionFromUniqueID(Int uniqueID)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            Delete the specific shortcut for the given command ID.
+        </description>
+        <retvals>
+            KbdSectionInfo section - the section-object, that can be used for the various shortcut-functions
+        </retvals>
+        <parameters>
+            integer uniqueID - the section, in which the action is located
+                                  -0, Main
+                                  -100, Main (alt recording)
+                                  -32060, MIDI Editor
+                                  -32061, MIDI Event List Editor
+                                  -32062, MIDI Inline Editor
+                                  -32063, Media Explorer
+        </parameters>
+        <linked_to desc="see:">
+            Reaper:CountActionShortcuts
+                   counts the number of shortcuts available for a command
+            Reaper:GetActionShortcutDesc
+                   for getting the description of the shortcut
+            Reaper:DeleteActionShortcut
+                   for deleting a shortcut
+            Reaper:DoActionShortcutDialog
+                   for opening the add shortcut-dialog
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Shortcuts
+        </chapter_context>
+        <tags>shortcuts, count</tags>
+        <changelog>
+            Reaper 6.71 - exposed to ReaScript-API
+            Reaper 6.72 - section allows now the section-numbers as parameter section
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SelectAllMediaItems</slug>
         <title>SelectAllMediaItems</title>
         <functioncall prog_lang="cpp">void SelectAllMediaItems(ReaProject* proj, bool selected)</functioncall>
@@ -18074,10 +18445,13 @@
         <functioncall prog_lang="lua">boolean retval = reaper.SetProjectMarkerByIndex2(ReaProject proj, integer markrgnidx, boolean isrgn, number pos, number rgnend, integer IDnumber, string name, integer color, integer flags)</functioncall>
         <functioncall prog_lang="python">Boolean retval = RPR_SetProjectMarkerByIndex2(ReaProject proj, Int markrgnidx, Boolean isrgn, Float pos, Float rgnend, Int IDnumber, String name, Int color, Int flags)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc (see [EnumProjectMarkers3](#EnumProjectMarkers3)), rather than representing the displayed marker/region ID number (see [SetProjectMarker3](#SetProjectMarker3)). Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK). , flags&1 to clear name.
+            Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc (see [EnumProjectMarkers3](#EnumProjectMarkers3)), rather than representing the displayed marker/region ID number (see [SetProjectMarker3](#SetProjectMarker3)). Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK).
+            
+            flags&1 to clear name
+            flags&2, markers will not be re-sorted, and after making updates, you MUST call SetProjectMarkerByIndex2 with markrgnidx=-1 and flags&2 to force re-sort/UI updates.
             
             set color=1&~0x10000000 to reset to default color for markers/regions
         </description>
@@ -18101,8 +18475,9 @@
             Marker Management
             Project Markers
         </chapter_context>
-        <tags></tags>
+        <tags>marker management, set, marker</tags>
         <changelog>
+          Reaper 6.71 - new flag&2 to prevent sorting temporarily(see description for details on how to use it!)
         </changelog>
     </US_DocBloc>
 
@@ -18683,6 +19058,7 @@
              * wiring_recinputwire : Wiring: Record input wire 
              * wiring_hwout : Wiring: System hardware outputs 
              * wiring_recinput : Wiring: System record inputs 
+             * autogroup : Automatic track group
              * group_0 : Group #1 
              * group_1 : Group #2 
              * group_2 : Group #3 
@@ -19184,6 +19560,329 @@
         </changelog>
     </US_DocBloc>
 
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIInputMonitor</slug>
+        <title>SetTrackUIInputMonitor</title>
+        <functioncall prog_lang="cpp">int retval = SetTrackUIInputMonitor(MediaTrack* track, int monitor, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">int retval = SetTrackUIInputMonitor(MediaTrack track, int monitor, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetTrackUIInputMonitor(MediaTrack track, integer monitor, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_SetTrackUIInputMonitor(MediaTrack track, Int monitor, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            monitor: 0=no monitoring, 1=monitoring, 2=auto-monitoring. 
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            integer retval - -1, in case of an error; else the monitoring state
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose monitoring you want to set
+            integer monitor - the monitoring mode
+                            - 0, no monitoring
+                            - 1, monitoring
+                            - 2, auto-monitoring
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>track management, set, monitoring</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIMute</slug>
+        <title>SetTrackUIMute</title>
+        <functioncall prog_lang="cpp">int retval = SetTrackUIMute(MediaTrack* track, int mute, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">int retval = SetTrackUIMute(MediaTrack track, int mute, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetTrackUIMute(MediaTrack track, integer mute, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_SetTrackUIMute(MediaTrack track, Int mute, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            mute: <0 toggles, >0 sets mute, 0=unsets mute. 
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            integer retval - the new mute-state; -1, in case of an error
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose mute-state you want to set
+            integer monitor - the mute-mode
+                            - <0, toggles
+                            - >0 sets mute
+                            - 0, unsets mute
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, mute</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIPan</slug>
+        <title>SetTrackUIPan</title>
+        <functioncall prog_lang="cpp">double retval = SetTrackUIPan(MediaTrack* track, double pan, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">double retval = SetTrackUIPan(MediaTrack track, pan, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.SetTrackUIPan(MediaTrack track, number pan, boolean relative, boolean done, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Float retval = RPR_SetTrackUIPan(MediaTrack track, Float pan, Boolean relative, Boolean done, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            sets pan of a certain track
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            number retval - 
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose panning you want to set
+            number pan - the pan-value; -1=-100%, -0.01=-1%, 0=center, 0.01=1%, 1=100%
+            boolean relative - true, change relative to the current value; false, set to absolute value
+            boolean done - false, allow touch controls; true, finish touch controls
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, pan</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIPolarity</slug>
+        <title>SetTrackUIPolarity</title>
+        <functioncall prog_lang="cpp">int retval = SetTrackUIPolarity(MediaTrack* track, int polarity, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">int retval = SetTrackUIPolarity(MediaTrack track, int polarity, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetTrackUIPolarity(MediaTrack track, integer polarity, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_SetTrackUIPolarity(MediaTrack track, Int polarity, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            polarity (AKA phase): <0 toggles, 0=normal, >0=inverted. 
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            integer retval - the new polarity state; -1, in case of an error
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose polarity-state you want to set
+            integer polarity - the polarity-mode
+                            - <0, toggles
+                            - >0 sets polarity
+                            - 0, unsets polarity
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, polarity</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIRecArm</slug>
+        <title>SetTrackUIRecArm</title>
+        <functioncall prog_lang="cpp">int retval = SetTrackUIRecArm(MediaTrack* track, int recarm, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">int retval = SetTrackUIRecArm(MediaTrack track, int recarm, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetTrackUIRecArm(MediaTrack track, integer recarm, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_SetTrackUIRecArm(MediaTrack track, Int recarm, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            recarm: <0 toggles, >0 sets recarm, 0=unsets recarm.
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            integer retval - the new recarm-state
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose recarm-state you want to set
+            integer recarm - the recarm-mode
+                            - <0, toggles
+                            - >0 sets recarm
+                            - 0, unsets recarm
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, recarm</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUISolo</slug>
+        <title>SetTrackUISolo</title>
+        <functioncall prog_lang="cpp">int retval = SetTrackUISolo(MediaTrack* track, int solo, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">int retval = SetTrackUISolo(MediaTrack track, int solo, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SetTrackUISolo(MediaTrack track, integer solo, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Int retval = RPR_SetTrackUISolo(MediaTrack track, Int solo, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            solo: <0 toggles, 1 sets solo (default mode), 0=unsets solo, 2 sets solo (non-SIP), 4 sets solo (SIP).
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            integer retval - the new solo-state
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose solo-state you want to set
+            integer solo - the solo-mode
+                            - <0, toggles
+                            - 0, unsets mute
+                            - 1, sets mute
+                            - 2, sets solo(non-SIP)
+                            - 4, sets solo (SIP)
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, solo</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIVolume</slug>
+        <title>SetTrackUIVolume</title>
+        <functioncall prog_lang="cpp">double retval = SetTrackUIVolume(MediaTrack* track, double volume, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">double retval = SetTrackUIVolume(MediaTrack track, volume, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.SetTrackUIVolume(MediaTrack track, number volume, boolean relative, boolean done, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Float retval = RPR_SetTrackUIVolume(MediaTrack track, Float volume, Boolean relative, Boolean done, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            sets the volume of a track
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            number retval - the new volume
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose volume you want to set
+            number volume - the volume in dB
+            boolean relative - true, change relative to the current value; false, set to absolute value
+            boolean done - false, allow touch controls; true, finish touch controls
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, volume</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SetTrackUIWidth</slug>
+        <title>SetTrackUIWidth</title>
+        <functioncall prog_lang="cpp">double retval = SetTrackUIWidth(MediaTrack* track, double width, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="eel">double retval = SetTrackUIWidth(MediaTrack track, width, bool relative, bool done, int igngroupflags)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.SetTrackUIWidth(MediaTrack track, number width, boolean relative, boolean done, integer igngroupflags)</functioncall>
+        <functioncall prog_lang="python">Float retval = RPR_SetTrackUIWidth(MediaTrack track, Float width, Boolean relative, Boolean done, Int igngroupflags)</functioncall>
+        <requires>
+            Reaper=6.71
+        </requires>
+        <description>
+            sets the width of a track 
+            
+            returns new value or -1 if error. 
+            
+            igngroupflags: &1 to prevent track grouping, &2 to prevent selection ganging
+        </description>
+        <retvals>
+            number retval - the new width of the track
+        </retvals>
+        <parameters>
+            MediaTrack track - the track, whose width you want to set
+            integer width - the width-mode; -1=-100%, 0=mono; 1=100%
+            boolean relative - true, change relative to the current value; false, set to absolute value
+            boolean done - false, allow touch controls; true, finish touch controls
+            integer igngroupflags - &1 to prevent track grouping
+                                  - &2 to prevent selection ganging
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Track Management
+            Set Track States
+        </chapter_context>
+        <tags>trackmanagement, set, width</tags>
+        <changelog>
+            Reaper 6.71 - added
+        </changelog>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ShowPopupMenu</slug>
@@ -19246,18 +19945,23 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ShowActionList</slug>
         <title>ShowActionList</title>
-        <functioncall prog_lang="cpp">void ShowActionList(KbdSectionInfo* caller, HWND callerWnd)</functioncall>
-        <functioncall prog_lang="eel">ShowActionList(KbdSectionInfo caller, HWND callerWnd)</functioncall>
-        <functioncall prog_lang="lua">reaper.ShowActionList(KbdSectionInfo caller, optional HWND callerWnd)</functioncall>
-        <functioncall prog_lang="python">RPR_ShowActionList(KbdSectionInfo caller, HWND callerWnd)</functioncall>
+        <functioncall prog_lang="cpp">void ShowActionList(KbdSectionInfo* section, HWND callerWnd)</functioncall>
+        <functioncall prog_lang="eel">ShowActionList(KbdSectionInfo section, HWND callerWnd)</functioncall>
+        <functioncall prog_lang="lua">reaper.ShowActionList(KbdSectionInfo section, optional HWND callerWnd)</functioncall>
+        <functioncall prog_lang="python">RPR_ShowActionList(KbdSectionInfo section, HWND callerWnd)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.72
         </requires>
         <description prog_lang="*">
             shows the action-list
         </description>
         <parameters>
-            KbdSectionInfo caller - 
+            KbdSectionInfo section - 0, Main  
+                                   - 100, Main (alt recording)  
+                                   - 32060, MIDI Editor  
+                                   - 32061, MIDI Event List Editor  
+                                   - 32062, MIDI Inline Editor  
+                                   - 32063, Media Explorer  
             optional HWND callerWnd - the HWND that shall call the ActionList; can be nil
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
@@ -19268,6 +19972,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.72 - parameter section allows now the section-numbers to be given
         </changelog>
     </US_DocBloc>
 
@@ -19592,6 +20297,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.70 - improve behavior with Track/TakeFX_AddByName() for JSFX [t=271878]
         </changelog>
     </US_DocBloc>
 
@@ -19989,15 +20695,41 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>TakeFX_GetNamedConfigParm</slug>
         <title>TakeFX_GetNamedConfigParm</title>
-        <functioncall prog_lang="cpp">bool TakeFX_GetNamedConfigParm(MediaItem_Take* take, int fx, const char* parmname, char* bufOut, int bufOut_sz)</functioncall>
-        <functioncall prog_lang="eel">bool TakeFX_GetNamedConfigParm(MediaItem_Take take, int fx, "parmname", #buf)</functioncall>
+        <functioncall prog_lang="cpp">bool retval = TakeFX_GetNamedConfigParm(MediaItem_Take* take, int fx, const char* parmname, char* bufOutNeedBig, int bufOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">bool retval = TakeFX_GetNamedConfigParm(MediaItem_Take take, int fx, "parmname", #buf)</functioncall>
         <functioncall prog_lang="lua">boolean retval, string buf = reaper.TakeFX_GetNamedConfigParm(MediaItem_Take take, integer fx, string parmname)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, MediaItem_Take take, Int fx, String parmname, String bufOut, Int bufOut_sz) = RPR_TakeFX_GetNamedConfigParm(take, fx, parmname, bufOut, bufOut_sz)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, MediaItem_Take take, Int fx, String parmname, String bufOutNeedBig, Int bufOutNeedBig_sz) = RPR_TakeFX_GetNamedConfigParm(take, fx, parmname, bufOutNeedBig, bufOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description prog_lang="*">
             gets plug-in specific named configuration value (returns true on success)
+            
+            Supported values for read:
+              pdc : PDC latency
+              in_pin_X : name of input pin X
+              out_pin_X : name of output pin X
+              fx_type : type string
+              fx_ident : type-specific identifier
+              fx_name : pre-aliased name
+              GainReduction_dB : [ReaComp + other supported compressors]
+              vst_chunk[_program] : base64-encoded VST-specific chunk.
+              clap_chunk : base64-encoded CLAP-specific chunk.
+              param.X.lfo.[active,dir,phase,speed,strength,temposync,free,shape] : parameter moduation LFO state
+              param.X.acs.[active,dir,strength,attack,release,dblo,dbhi,chan,stereo] : parameter modulation ACS state
+              param.X.plink.[active,scale,offset,effect,param,midi_bus,midi_chan,midi_msg,midi_msg2] : parameter link/MIDI link: set effect=-100 to support midi_*
+              param.X.mod.[active,baseline,visible] : parameter module global settings
+              param.X.learn.[midi1,midi2,osc] : first two bytes of MIDI message, or OSC string if set
+              param.X.learn.mode : absolution/relative mode flag (0: Absolute, 1: 127=-1,1=+1, 2: 63=-1, 65=+1, 3: 65=-1, 1=+1, 4: toggle if nonzero)
+              param.X.learn.flags : &1=selected track only, &2=soft takeover, &4=focused FX only, &8=LFO retrigger, &16=visible FX only
+              
+              BANDTYPEx, BANDENABLEDx : band configuration [ReaEQ]
+              THRESHOLD, CEILING, TRUEPEAK : [ReaLimit]
+              NUMCHANNELS, NUMSPEAKERS, RESETCHANNELS : [ReaSurroundPan]
+              ITEMx : [ReaVerb] state configuration line, when writing should be followed by a write of DONE
+              FILE, FILEx, -FILEx, +FILEx, -FILE* : [RS5k] file list, -/+ prefixes are write-only, when writing any, should be followed by a write of DONE
+              MODE, RSMODE : [RS5k] general mode, resample mode
+              VIDEO_CODE : [video processor] code
         </description>
         <retvals>
             boolean retval - 
@@ -20016,6 +20748,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.71 - added support for parameter modulation/linking; vst/videoprocessor-data getting
         </changelog>
     </US_DocBloc>
 
@@ -20519,10 +21252,30 @@
         <functioncall prog_lang="lua">boolean retval = reaper.TakeFX_SetNamedConfigParm(MediaItem_Take take, integer fx, string parmname, string value)</functioncall>
         <functioncall prog_lang="python">Boolean retval = RPR_TakeFX_SetNamedConfigParm(MediaItem_Take take, Int fx, String parmname, String value)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description prog_lang="*">
-            gets plug-in specific named configuration value (returns true on success)
+            sets plug-in specific named configuration value (returns true on success).
+
+            Support values for write:
+
+            vst_chunk[_program] : base64-encoded VST-specific chunk.
+            clap_chunk : base64-encoded CLAP-specific chunk.
+            param.X.lfo.[active,dir,phase,speed,strength,temposync,free,shape] : parameter moduation LFO state
+            param.X.acs.[active,dir,strength,attack,release,dblo,dbhi,chan,stereo] : parameter modulation ACS state
+            param.X.plink.[active,scale,offset,effect,param,midi_bus,midi_chan,midi_msg,midi_msg2] : parameter link/MIDI link: set effect=-100 to support midi_*
+            param.X.mod.[active,baseline,visible] : parameter module global settings
+            param.X.learn.[midi1,midi2,osc] : first two bytes of MIDI message, or OSC string if set
+            param.X.learn.mode : absolution/relative mode flag (0: Absolute, 1: 127=-1,1=+1, 2: 63=-1, 65=+1, 3: 65=-1, 1=+1, 4: toggle if nonzero)
+            param.X.learn.flags : &1=selected track only, &2=soft takeover, &4=focused FX only, &8=LFO retrigger, &16=visible FX only
+            
+            BANDTYPEx, BANDENABLEDx : band configuration [ReaEQ]
+            THRESHOLD, CEILING, TRUEPEAK : [ReaLimit]
+            NUMCHANNELS, NUMSPEAKERS, RESETCHANNELS : [ReaSurroundPan]
+            ITEMx : [ReaVerb] state configuration line, when writing should be followed by a write of DONE
+            FILE, FILEx, -FILEx, +FILEx, -FILE* : [RS5k] file list, -/+ prefixes are write-only, when writing any, should be followed by a write of DONE
+            MODE, RSMODE : [RS5k] general mode, resample mode
+            VIDEO_CODE : [video processor] code
         </description>
         <retvals>
             boolean retval - 
@@ -20541,6 +21294,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.71 - added support for parameter modulation/linking; vst/videoprocessor-data setting
         </changelog>
     </US_DocBloc>
 
@@ -21646,7 +22400,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.TrackFX_AddByName(MediaTrack track, string fxname, boolean recFX, integer instantiate)</functioncall>
         <functioncall prog_lang="python">Int retval = RPR_TrackFX_AddByName(MediaTrack track, String fxname, Boolean recFX, Int instantiate)</functioncall>
         <requires>
-            Reaper=5.92
+            Reaper=6.72
         </requires>
         <description prog_lang="*">
             Adds or queries the position of a named FX from the track FX chain (recFX=false) or record input FX/monitoring FX (recFX=true, monitoring FX are on master track). 
@@ -21673,6 +22427,9 @@
         </chapter_context>
         <tags>fxmanagement, add, track fx, input fx</tags>
         <changelog>
+          Reaper 6.72 - improve JSFX name matching in TrackFX_AddByName() [p=2621360] [p=2622666]
+          Reaper 6.70 - improve behavior with Track/TakeFX_AddByName() for JSFX [t=271878]
+          Reaper 6.69 - fix TrackFX_AddByName with only VST2-UID specified
         </changelog>
     </US_DocBloc>
 
@@ -22342,26 +23099,43 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>TrackFX_GetNamedConfigParm</slug>
         <title>TrackFX_GetNamedConfigParm</title>
-        <functioncall prog_lang="cpp">bool TrackFX_GetNamedConfigParm(MediaTrack* track, int fx, const char* parmname, char* bufOut, int bufOut_sz)</functioncall>
-        <functioncall prog_lang="eel">bool TrackFX_GetNamedConfigParm(MediaTrack track, int fx, "parmname", #buf)</functioncall>
+        <functioncall prog_lang="cpp">bool retval = TrackFX_GetNamedConfigParm(MediaTrack* track, int fx, const char* parmname, char* bufOutNeedBig, int bufOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">bool retval = TrackFX_GetNamedConfigParm(MediaTrack track, int fx, "parmname", #buf)</functioncall>
         <functioncall prog_lang="lua">boolean retval, string buf = reaper.TrackFX_GetNamedConfigParm(MediaTrack track, integer fx, string parmname)</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, Int fx, String parmname, String bufOut, Int bufOut_sz) = RPR_TrackFX_GetNamedConfigParm(track, fx, parmname, bufOut, bufOut_sz)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, MediaTrack track, Int fx, String parmname, String bufOutNeedBig, Int bufOutNeedBig_sz) = RPR_TrackFX_GetNamedConfigParm(track, fx, parmname, bufOutNeedBig, bufOutNeedBig_sz)</functioncall>
         <requires>
-            Reaper=6.37
+            Reaper=6.71
         </requires>
         <description prog_lang="*">
             gets plug-in specific named configuration value (returns true on success). 
             
-            Special values: 
-                'pdc' returns PDC latency. 
-                'in_pin_0' returns name of first input pin (if available), 
-                'out_pin_0' returns name of first output pin (if available), etc.            
-                'fx_type' returns type string, 
-                'fx_ident' returns type-specific identifier, 
-                'fx_name' returns pre-aliased name.
-
             By setting fx you can add 0x1000000 set to reference input FX. 
             To use global monitoring inputFX, use the master-track, any other track will access the track's rec-input-fx.            
+
+            Supported values for read:
+              pdc : PDC latency
+              in_pin_X : name of input pin X
+              out_pin_X : name of output pin X
+              fx_type : type string
+              fx_ident : type-specific identifier
+              fx_name : pre-aliased name
+              GainReduction_dB : [ReaComp + other supported compressors]
+              vst_chunk[_program] : base64-encoded VST-specific chunk.
+              clap_chunk : base64-encoded CLAP-specific chunk.
+              param.X.lfo.[active,dir,phase,speed,strength,temposync,free,shape] : parameter moduation LFO state
+              param.X.acs.[active,dir,strength,attack,release,dblo,dbhi,chan,stereo] : parameter modulation ACS state
+              param.X.plink.[active,scale,offset,effect,param,midi_bus,midi_chan,midi_msg,midi_msg2] : parameter link/MIDI link: set effect=-100 to support midi_*
+              param.X.mod.[active,baseline,visible] : parameter module global settings
+              param.X.learn.[midi1,midi2,osc] : first two bytes of MIDI message, or OSC string if set
+              param.X.learn.mode : absolution/relative mode flag (0: Absolute, 1: 127=-1,1=+1, 2: 63=-1, 65=+1, 3: 65=-1, 1=+1, 4: toggle if nonzero)
+              param.X.learn.flags : &1=selected track only, &2=soft takeover, &4=focused FX only, &8=LFO retrigger, &16=visible FX only
+              BANDTYPEx, BANDENABLEDx : band configuration [ReaEQ]
+              THRESHOLD, CEILING, TRUEPEAK : [ReaLimit]
+              NUMCHANNELS, NUMSPEAKERS, RESETCHANNELS : [ReaSurroundPan]
+              ITEMx : [ReaVerb] state configuration line, when writing should be followed by a write of DONE
+              FILE, FILEx, -FILEx, +FILEx, -FILE* : [RS5k] file list, -/+ prefixes are write-only, when writing any, should be followed by a write of DONE
+              MODE, RSMODE : [RS5k] general mode, resample mode
+              VIDEO_CODE : [video processor] code
         </description>
         <retvals>
             boolean retval - 
@@ -22380,6 +23154,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.71 - added support for parameter modulation/linking; vst/videoprocessor-data getting
         </changelog>
     </US_DocBloc>
 
@@ -23085,18 +23860,38 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>TrackFX_SetNamedConfigParm</slug>
         <title>TrackFX_SetNamedConfigParm</title>
-        <functioncall prog_lang="cpp">bool TrackFX_SetNamedConfigParm(MediaTrack* track, int fx, const char* parmname, const char* value)</functioncall>
-        <functioncall prog_lang="eel">bool TrackFX_SetNamedConfigParm(MediaTrack track, int fx, "parmname", "value")</functioncall>
+        <functioncall prog_lang="cpp">bool retval = TrackFX_SetNamedConfigParm(MediaTrack* track, int fx, const char* parmname, const char* value)</functioncall>
+        <functioncall prog_lang="eel">bool retval = TrackFX_SetNamedConfigParm(MediaTrack track, int fx, "parmname", "value")</functioncall>
         <functioncall prog_lang="lua">boolean retval = reaper.TrackFX_SetNamedConfigParm(MediaTrack track, integer fx, string parmname, string value)</functioncall>
         <functioncall prog_lang="python">Boolean retval = RPR_TrackFX_SetNamedConfigParm(MediaTrack track, Int fx, String parmname, String value)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description prog_lang="*">
             sets plug-in specific named configuration value (returns true on success)
 
             By setting fx you can add 0x1000000 set to reference input FX. 
             To use global monitoring inputFX, use the master-track, any other track will access the track's rec-input-fx.
+
+            Support values for write:
+
+            vst_chunk[_program] : base64-encoded VST-specific chunk.
+            clap_chunk : base64-encoded CLAP-specific chunk.
+            param.X.lfo.[active,dir,phase,speed,strength,temposync,free,shape] : parameter moduation LFO state
+            param.X.acs.[active,dir,strength,attack,release,dblo,dbhi,chan,stereo] : parameter modulation ACS state
+            param.X.plink.[active,scale,offset,effect,param,midi_bus,midi_chan,midi_msg,midi_msg2] : parameter link/MIDI link: set effect=-100 to support midi_*
+            param.X.mod.[active,baseline,visible] : parameter module global settings
+            param.X.learn.[midi1,midi2,osc] : first two bytes of MIDI message, or OSC string if set
+            param.X.learn.mode : absolution/relative mode flag (0: Absolute, 1: 127=-1,1=+1, 2: 63=-1, 65=+1, 3: 65=-1, 1=+1, 4: toggle if nonzero)
+            param.X.learn.flags : &1=selected track only, &2=soft takeover, &4=focused FX only, &8=LFO retrigger, &16=visible FX only
+            
+            BANDTYPEx, BANDENABLEDx : band configuration [ReaEQ]
+            THRESHOLD, CEILING, TRUEPEAK : [ReaLimit]
+            NUMCHANNELS, NUMSPEAKERS, RESETCHANNELS : [ReaSurroundPan]
+            ITEMx : [ReaVerb] state configuration line, when writing should be followed by a write of DONE
+            FILE, FILEx, -FILEx, +FILEx, -FILE* : [RS5k] file list, -/+ prefixes are write-only, when writing any, should be followed by a write of DONE
+            MODE, RSMODE : [RS5k] general mode, resample mode
+            VIDEO_CODE : [video processor] code
         </description>
         <retvals>
             boolean retval - 
@@ -23115,9 +23910,9 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.71 - added support for parameter modulation/linking; vst/videoprocessor-data setting
         </changelog>
     </US_DocBloc>
-
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>TrackFX_SetOffline</slug>
@@ -24287,7 +25082,7 @@
         <functioncall prog_lang="lua">integer groupstate = reaper.GetSetTrackGroupMembershipHigh(MediaTrack tr, string groupname, integer setmask, integer setvalue)</functioncall>
         <functioncall prog_lang="python">Int retval = RPR_GetSetTrackGroupMembershipHigh(MediaTrack tr, String groupname, Int setmask, Int setvalue)</functioncall>
         <requires>
-            Reaper=6.12
+            Reaper=6.72
         </requires>
         <description prog_lang="*"> 
             Gets or modifies the group membership for a track. Returns group state prior to call (each bit represents one of the high 32 group numbers). if setmask has bits set, those bits in setvalue will be applied to group. Group can be one of:
@@ -24314,6 +25109,8 @@
             WIDTH_REVERSE
             NO_LEAD_WHEN_FOLLOW
             VOLUME_VCA_FOLLOW_ISPREFX
+            MEDIA_EDIT_LEAD
+            MEDIA_EDIT_FOLLOW
 
             Note: REAPER v6.11 and earlier used _MASTER and _SLAVE rather than _LEAD and _FOLLOW, which is deprecated but still supported (scripts that must support v6.11 and earlier can use the deprecated strings).
         </description>
@@ -24334,6 +25131,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 6.72 - added MEDIA_EDIT_LEAD and MEDIA_EDIT_FOLLOW as groupname
         </changelog>
     </US_DocBloc>
 
@@ -32811,10 +33609,10 @@
     <US_DocBloc version="1.0" spok_lang="en">
         <slug>JS_VKeys_GetState</slug>
         <title>JS_VKeys_GetState(JS)</title>
-        <functioncall prog_lang="cpp">bool JS_VKeys_GetState(char* stateOutNeedBig, int* stateOutNeedBig_sz)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("JS_VKeys_GetState", #state)</functioncall>
-        <functioncall prog_lang="lua">boolean retval, string state = reaper.JS_VKeys_GetState()</functioncall>
-        <functioncall prog_lang="python">(Boolean retval, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="cpp">void JS_VKeys_GetState(double cutoffTime, char* stateOutNeedBig, int* stateOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">extension_api("JS_VKeys_GetState", cutoffTime, #state)</functioncall>
+        <functioncall prog_lang="lua">string state, integer unknown = reaper.JS_VKeys_GetState(number cutoffTime)</functioncall>
+        <functioncall prog_lang="python">(Float cutoffTime, String stateOutNeedBig, Int stateOutNeedBig_sz) = JS_VKeys_GetState(cutoffTime, stateOutNeedBig, stateOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.974
             JS=0.993
@@ -32832,8 +33630,8 @@
             * Auto-repeated KEYDOWN messages are ignored.
         </description>
         <retvals>
-           boolean retval - 
-           string state - 
+           string state - a 255-byte array, where each entry represents the key pressed. For instance, if A is pressed, the 65th byte=AsciiCode 1, else 65th byte=AsciiCode 0. The IDE-watchlist will probably truncate this string.
+           integer unknown - unknown; probably cutofftime
         </retvals>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -36730,9 +37528,9 @@
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
-            ReaFab
+            ReaLim
         </chapter_context>
-        <tags>reafab</tags>
+        <tags>realim</tags>
         <changelog>
           ReaLim 0.3.0 - added as new function
         </changelog>
@@ -36770,9 +37568,9 @@
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
-            ReaFab
+            ReaLim
         </chapter_context>
-        <tags>reafab</tags>
+        <tags>realim</tags>
         <changelog>
           ReaLim 0.3.0 - added as new function
         </changelog>
@@ -36801,9 +37599,9 @@
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
-            ReaFab
+            ReaLim
         </chapter_context>
-        <tags>reafab</tags>
+        <tags>realim</tags>
         <changelog>
           ReaLim 0.3.0 - added as new function
         </changelog>
@@ -40065,9 +40863,9 @@ Mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="eel">
         <slug>eel_get_action_context</slug>
         <title>get_action_context</title>
-        <functioncall prog_lang="eel">get_action_context(string #filename, integer sectionID, integer cmdID, integer mode, integer resolution, integer val)</functioncall>
+        <functioncall prog_lang="eel">get_action_context(string #filename, integer sectionID, integer cmdID, integer mode, integer resolution, integer val, string contextstr)</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description indent="default">
             Queries contextual information about the script, typically MIDI/OSC input values.
@@ -40076,6 +40874,15 @@ Mespotine
             Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
 
             For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
+            
+            contextstr may be empty or one of:
+
+            midi:XX[:YY] (one or two bytes hex)
+            [wheel|hwheel|mtvert|mthorz|mtzoom|mtrot|mediakbd]:flags
+            key:flags:keycode
+            osc:/msg[:f=FloatValue|:s=StringValue]
+            KBD_OnMainActionEx
+            (flags may include V=virtkey, S=shift, A=alt/option, C=control/command, W=win/control)
         </description>
         <parameters>
             string #filename - the filename plus path of the script
@@ -40090,6 +40897,7 @@ Mespotine
             integer mode - -1, if script isn't run by shortcut; 55953, if script is run by shortcut
             integer resolution - -1, if script isn't run by shortcut; resolution of OSC(14 bit)/MIDI(7 bit)
             integer val - the value sent by MIDI or OSC
+            string contextstr - the shortcut, that ran this action, more info in the description
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -41135,11 +41943,13 @@ Mespotine
         <title>eel_getdropfile</title>
         <functioncall prog_lang="eel">integer retval = gfx_getdropfile(integer idx[, string #filename])</functioncall>
         <requires>
-            Reaper=5.91
+            Reaper=6.69
         </requires>
         <description indent="default">
             Returns filenames, drag'n'dropped into a window created by gfx_init().
             Use idx to get a specific filename, that has been dropped into the gfx_init()-window.
+            
+            When returned filename starts with @fx: it is an fx dropped.
 
             Does NOT support mediaitems/takes or other Reaper-objects!
 
@@ -41147,7 +41957,7 @@ Mespotine
         </description>
         <retvals>
             integer retval - 0, if droppped-filename with indexnumber idx doesn't exist; 1, if it exists; hints, if you already read all dropped filenames.
-            string filename - the filename of dropped-file with indexnumber idx
+            string filename - the filename of dropped-file with indexnumber idx; when starting with @fx: it is an fx dropped
         </retvals>
         <parameters>
             integer idx - the indexnumber for a filename, that has been dropped into a gfx_init()-window.
@@ -41162,6 +41972,7 @@ Mespotine
         </chapter_context>
         <tags>dragndrop, drop, file, filename, window, gfx, window, eel</tags>
         <changelog>
+          Reaper 6.69 - added possibility to for drag/drop from FX browser to gfx windows with send filenames are @fx:fx_ident
         </changelog>
     </US_DocBloc>
 
@@ -42933,14 +43744,22 @@ mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="lua">
         <slug>lua_get_action_context</slug>
         <title>get_action_context</title>
-        <functioncall prog_lang="lua">boolean is_new_value, string filename_with_path, integer sectionID, integer cmdID, integer mode, integer resolution, integer val = reaper.get_action_context()</functioncall>
+        <functioncall prog_lang="lua">boolean is_new_value, string filename_with_path, integer sectionID, integer cmdID, integer mode, integer resolution, integer val, string contextstr = reaper.get_action_context()</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
         <description indent="default">
             Returns contextual information about the script, typically MIDI/OSC input values.val will be set to a relative or absolute value depending on mode (=0: absolute mode, >0: relative modes). resolution=127 for 7-bit resolution, =16383 for 14-bit resolution.Notes: sectionID, and cmdID will be set to -1 if the script is not part of the action list. mode, resolution and val will be set to -1 if the script was not triggered via MIDI/OSC.
 
             For relative mode bindings, calling get_action_context() will return the accumulated relative value in decoded form (not 65 or 63, but +1/-1 etc), and clear the internal state. So if you call it multiple times, the first one will return the accumulated value, and the second will always return 0.
+            
+            contextstr may be empty or one of:
+              midi:XX[:YY] (one or two bytes hex)
+              [wheel|hwheel|mtvert|mthorz|mtzoom|mtrot|mediakbd]:flags
+              key:flags:keycode
+              osc:/msg[:f=FloatValue|:s=StringValue]
+              KBD_OnMainActionEx
+              (flags may include V=virtkey, S=shift, A=alt/option, C=control/command, W=win/control)
         </description>
         <retvals>
             boolean is_new_value - unknown
@@ -42950,6 +43769,7 @@ mespotine
             integer mode - -1, if script isn't run by shortcut; 55953, if script is run by shortcut
             integer resolution - -1, if script isn't run by shortcut; resolution of OSC(14 bit)/MIDI(7 bit)-shortcut
             integer val - -1, if script isn't run by shortcut; the value sent by OSC or MIDI
+            string contextstr - the shortcut, that ran this action, more info in the description
         </retvals>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -43477,19 +44297,21 @@ mespotine
         <title>gfx.getdropfile</title>
         <functioncall prog_lang="lua">integer retval, string filename = gfx.getdropfile(integer idx)</functioncall>
         <requires>
-            Reaper=5.91
+            Reaper=6.69
         </requires>
         <description indent="default">
             Returns filenames, drag'n'dropped into a window created by gfx.init().
             Use idx to get a specific filename, that has been dropped into the gfx.init()-window.
 
+            When returned filename starts with @fx: it is an fx dropped.
+      
             Does NOT support mediaitems/takes or other Reaper-objects!
 
             It MUST be called BEFORE calling gfx.update, as gfx.update flushes the filelist accessible with gfx.getdropfile.
         </description>
         <retvals>
             integer retval - 0, if droppped-filename with indexnumber idx doesn't exist; 1, if it exists; hints, if you already reached the last filename dropped.
-            string filename - the filename of dropped-file with indexnumber idx
+            string filename - the filename of dropped-file with indexnumber idx; if filename starts with @fx: then the filename is a dropped fx
         </retvals>
         <parameters>
             integer idx - the indexnumber for a filename, that has been dropped into a gfx.init()-window.
@@ -43504,6 +44326,7 @@ mespotine
         </chapter_context>
         <tags>dragndrop, drop, file, filename, window, gfx, window, lua</tags>
         <changelog>
+          Reaper 6.69 - added possibility to for drag/drop from FX browser to gfx windows with send filenames are @fx:fx_ident
         </changelog>
     </US_DocBloc>
 
@@ -45203,45 +46026,6 @@ mespotine
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>CountActionShortcuts</slug>
-        <title>CountActionShortcuts</title>
-        <functioncall prog_lang="cpp">int retval = (*CountActionShortcuts)(KbdSectionInfo* section, int cmdID)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Returns the number of shortcuts that exist for the given command ID. 
-            See [GetActionShortcutDesc](#GetActionShortcutDesc), [DeleteActionShortcut](#DeleteActionShortcut), [DoActionShortcutDialog](#DoActionShortcutDialog).
-
-            Use [NamedCommandLookup](#NamedCommandLookup) if you want to have the right commandID of an action, that is registered with an ActionCommandID-string.
-            
-            Stored in reaper_plugin_functions.h
-        </description>
-        <retvals>
-            int retval -
-        </retvals>
-        <parameters>
-            KbdSectionInfo* section - the section, in which the action lies
-                    -0, Main
-                    -100, Main (alt recording)
-                    -32060, MIDI Editor
-                    -32061, MIDI Event List Editor
-                    -32062, MIDI Inline Editor
-                    -32063, Media Explorer
-            int cmdID - the commandID of the action, whose count of shortcuts you want to know.
-        </parameters>
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            C++-only functions
-            Shortcuts
-        </chapter_context>
-        <tags>cpp, count, actions, shortcuts</tags>
-        <changelog>
-        </changelog>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
         <slug>CreateLocalOscHandler</slug>
         <title>CreateLocalOscHandler</title>
         <functioncall prog_lang="cpp">void* (*CreateLocalOscHandler)(void* obj, void* callback)</functioncall>
@@ -45359,39 +46143,27 @@ mespotine
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>DeleteActionShortcut</slug>
-        <title>DeleteActionShortcut</title>
-        <functioncall prog_lang="cpp">bool retval = (*DeleteActionShortcut)(KbdSectionInfo* section, int cmdID, int shortcutidx)</functioncall>
+        <slug>CSurf_OnOscControlMessage2</slug>
+        <title>CSurf_OnOscControlMessage2</title>
+        <functioncall prog_lang="cpp">void (*CSurf_OnOscControlMessage2)(const char* msg, const float* arg, const char* argstr);</functioncall>
         <requires>
-            Reaper=5.62
+            Reaper=6.71
         </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Delete the specific shortcut for the given command ID.
-            See [CountActionShortcuts](#CountActionShortcuts), [GetActionShortcutDesc](#GetActionShortcutDesc), [DoActionShortcutDialog](#DoActionShortcutDialog).
-            
+        <description indent="default">
             Stored in reaper_plugin_functions.h
         </description>
-        <retvals>
-            bool retval - 
-        </retvals>
         <parameters>
-            KbdSectionInfo* section - the section, to which this action belongs to
-                    -0, Main
-                    -100, Main (alt recording)
-                    -32060, MIDI Editor
-                    -32061, MIDI Event List Editor
-                    -32062, MIDI Inline Editor
-                    -32063, Media Explorer
-            int cmdID - the commandID for the shortcut to be deleted
-            int shortcutidx - the shortcut to be deleted
+            const char* msg - 
+            const float* arg - 
+            const char* argstr - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>reaper_plugin.h</source_document>
         <chapter_context>
             C++-only functions
-            Shortcuts
+            OSC
         </chapter_context>
-        <tags>cpp, shortcut, actions, delete</tags>
+        <tags>cpp, control, surface, osc, message</tags>
         <changelog>
         </changelog>
     </US_DocBloc>
@@ -45418,40 +46190,6 @@ mespotine
             OSC
         </chapter_context>
         <tags>cpp, osc, destroy, local, handler</tags>
-        <changelog>
-        </changelog>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>DoActionShortcutDialog</slug>
-        <title>DoActionShortcutDialog</title>
-        <functioncall prog_lang="cpp">bool retval = (*DoActionShortcutDialog)(HWND hwnd, KbdSectionInfo* section, int cmdID, int shortcutidx)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Open the action shortcut dialog to edit or add a shortcut for the given command ID. 
-            If (shortcutidx >= 0 && shortcutidx < CountActionShortcuts()), that specific shortcut will be replaced, otherwise a new shortcut will be added.
-            See [CountActionShortcuts](#CountActionShortcuts), [GetActionShortcutDesc](#GetActionShortcutDesc), [DeleteActionShortcut](#DeleteActionShortcut). 
-            
-            Stored in reaper_plugin_functions.h
-        </description>
-        <retvals>
-            bool retval -
-        </retvals>
-        <parameters>
-            HWND hwnd - 
-            KbdSectionInfo* section - 
-            int cmdID - 
-            int shortcutidx -             
-        </parameters>
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            C++-only functions
-            Shortcuts
-        </chapter_context>
-        <tags>cpp, actions, commandid, shortcut, add, dialog</tags>
         <changelog>
         </changelog>
     </US_DocBloc>
@@ -45577,48 +46315,6 @@ mespotine
         <changelog>
         </changelog>
     </US_DocBloc>
-
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>GetActionShortcutDesc</slug>
-        <title>GetActionShortcutDesc</title>
-        <functioncall prog_lang="cpp">bool retval = (*GetActionShortcutDesc)(KbdSectionInfo* section, int cmdID, int shortcutidx, char* desc, int desclen)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description markup_type="markdown" markup_version="1.0.1" indent="default">
-            Get the text description of a specific shortcut for the given command ID.
-            See [CountActionShortcuts](#CountActionShortcuts),[DeleteActionShortcut](#DeleteActionShortcut),[DoActionShortcutDialog](#DoActionShortcutDialog).
-            
-            Stored in reaper_plugin_functions.h
-        </description>
-        <retvals>
-            bool retval -
-        </retvals>
-        <parameters>
-            KbdSectionInfo* section - the section of the action
-                    -0, Main
-                    -100, Main (alt recording)
-                    -32060, MIDI Editor
-                    -32061, MIDI Event List Editor
-                    -32062, MIDI Inline Editor
-                    -32063, Media Explorer
-            int cmdID - the commandID of the action, whose shortcut-description you want.
-            int shortcutidx - 
-            char* desc - 
-            int descclean -
-        </parameters>
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            C++-only functions
-            Menus
-        </chapter_context>
-        <tags>cpp, get, shortcut, description, section, command, commandid</tags>
-        <changelog>
-        </changelog>
-    </US_DocBloc>
-
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
         <slug>GetColorTheme</slug>
@@ -46394,43 +47090,6 @@ mespotine
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>kbd_enumerateActions</slug>
-        <title>kbd_enumerateActions</title>
-        <functioncall prog_lang="cpp">int retval = (*kbd_enumerateActions)(KbdSectionInfo* section, int idx, const char** nameOut)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description indent="default">
-            Enumerates actions.
-            
-            Stored in reaper_plugin_functions.h
-        </description>
-        <retvals>
-            int retval -
-        </retvals>
-        <parameters>
-            KbdSectionInfo* section - the section, in which the action exists
-                                    -0, Main
-                                    -100, Main (alt recording)
-                                    -32060, MIDI Editor
-                                    -32061, MIDI Event List Editor
-                                    -32062, MIDI Inline Editor
-                                    -32063, Media Explorer
-            int idx - 
-            const char** nameOut - 
-        </parameters>
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            C++-only functions
-            Actions
-        </chapter_context>
-        <tags>cpp, actions, section, enumerate</tags>
-        <changelog>
-        </changelog>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
         <slug>kbd_formatKeyName</slug>
         <title>kbd_formatKeyName</title>
         <functioncall prog_lang="cpp">void (*kbd_formatKeyName)(ACCEL* ac, char* s)</functioncall>
@@ -46501,7 +47160,7 @@ mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
         <slug>kbd_getTextFromCmd</slug>
         <title>kbd_getTextFromCmd</title>
-        <functioncall prog_lang="cpp">const char* retval = (*kbd_getTextFromCmd)(DWORD cmd, KbdSectionInfo* section)</functioncall>
+        <functioncall prog_lang="cpp">const char* retval = (*kbd_getTextFromCmd)(int cmd, KbdSectionInfo* section)</functioncall>
         <requires>
             Reaper=5.62
         </requires>
@@ -46514,7 +47173,7 @@ mespotine
             const char* -
         </retvals>
         <parameters>
-            DWORD cmd - 
+            int cmd - 
             KbdSectionInfo* section - the section, in which the action exists
                                     -0, Main
                                     -100, Main (alt recording)
@@ -49211,35 +49870,6 @@ mespotine
             Screensets
         </chapter_context>
         <tags>cpp, screenset, update, focus</tags>
-        <changelog>
-        </changelog>
-    </US_DocBloc>
-
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="cpp">
-        <slug>SectionFromUniqueID</slug>
-        <title>SectionFromUniqueID</title>
-        <functioncall prog_lang="cpp">KbdSectionInfo* retval = (*SectionFromUniqueID)(int uniqueID)</functioncall>
-        <requires>
-            Reaper=5.62
-        </requires>
-        <description indent="default">
-            Section from unique ID.
-            
-            Stored in reaper_plugin_functions.h
-        </description>
-        <retvals>
-            KbdSectionInfo* retval -
-        </retvals>
-        <parameters>
-            int uniqueID - 
-        </parameters>
-        <target_document>Reaper_Api_Documentation</target_document>
-        <source_document>reaper_plugin.h</source_document>
-        <chapter_context>
-            C++-only functions
-            Actions
-        </chapter_context>
-        <tags>cpp, section, unique, id</tags>
         <changelog>
         </changelog>
     </US_DocBloc>
