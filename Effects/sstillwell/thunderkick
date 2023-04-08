@@ -20,6 +20,7 @@ out_pin:right output
 
 @init
   fftsize=1024;
+  ext_tail_size = fftsize*8;
   bucketsize = (srate * 0.5 ) / fftsize;
   bufpos=bi1=0; 
   bi2=fftsize*2; 

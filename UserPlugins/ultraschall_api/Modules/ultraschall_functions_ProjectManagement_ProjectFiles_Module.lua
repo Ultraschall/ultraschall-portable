@@ -1693,8 +1693,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=6.20
+    Ultraschall=4.75
+    Reaper=6.71
     Lua=5.3
   </requires>
   <functioncall>integer render_stems = ultraschall.GetProject_RenderStems(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1723,7 +1723,9 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - &256, Embed stretch markers/transient guides-checkbox
     - &512, Embed metadata-checkbox
     - &1024, Embed Take markers
-    - &2048, enable second pass rendering
+    - &2048, 2nd pass rendering
+    - &8192, Render stems pre-fader
+    - &16384, Only render channels that are sent to parent
     - 4096, Razor edit areas
     - 4224, Razor edit areas via master
   </retvals>
@@ -6005,8 +6007,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.2
-    Reaper=6.20
+    Ultraschall=4.75
+    Reaper=6.71
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_RenderStems(string projectfilename_with_path, integer render_stems, optional string ProjectStateChunk)</functioncall>
@@ -6029,7 +6031,9 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - &256, Embed stretch markers/transient guides-checkbox 
     - &512, Embed metadata-checkbox
     - &1024, Embed Take markers
-    - &2048, enable second pass rendering
+    - &2048, 2nd pass rendering
+    - &8192, Render stems pre-fader
+    - &16384, Only render channels that are sent to parent
     - 4096, Razor edit areas
     - 4224, Razor edit areas via master
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed

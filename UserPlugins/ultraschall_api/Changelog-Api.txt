@@ -266,14 +266,23 @@ Note: Doesn't fucking work...
     toggle to enable/disable all FX instance oversampling settings
   
 - Render To Do:
- - Fade In/Fade Out added now
- - Render stems-prefade added now
  - GetRenderPreset\_RenderTable - please rewrite, the code is a mess for _EXT. Needs a much more robust solution...
  
  (Later)
  - Add MetaData-Userfield that stores the RenderTable-contents, so it's possible to retain the exact rendering-attributes from the rendered file.
     Probably only ID3, VORBIS COMMENT, IXML and APE, as all others have no USER-field...
     The Userfield should be called "Ultraschall-API RenderAttributes" and probably include the source-project-filename.
+
+ParamModulation: Go fix it, pls...
+  https://forum.cockos.com/showpost.php?p=2608181&postcount=765
+
+- Markers:
+  SetNormalMarkers(probably others) has problems adressing markers, when markers share the exact same position.
+  We need to rewrite this, as otherwise markers get skipped.
+  EnumerateNormalMarkers doesn't work because of that.
+  Add multiple markers at position 30 secs named A, B and C.
+  Try to set the first one of them with a new name multiple times and you will succeed once, then fail. 
+    You'll set one of them at the position but never a specific one...
 
 readd in next version
 ToDo Marker Menu: 
@@ -284,26 +293,104 @@ ToDo Marker Menu:
        including the Entry_X_SubMenu=start|end thing.
   - add doubleclick-state as well -> later
 
-  
-  - PodcastMetadata: GetAllChapters\_MetaDataEntry - gets all chapter-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetAllShownotes\_MetaDataEntry - gets all shownote-metadata-entries between start and endposition according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcast\_MetaDataEntry - returns the podcast's metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastChapter\_MetaDataEntry - returns a podcast's chapter-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisode\_MetaDataEntry - returns the podcast's episode-related metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
-  - PodcastMetadata: GetPodcastShownote\_MetaDataEntry - returns a podcast's shownote-metadata-entry according to the PODCAST\_METADATA:"v1"-standard
-  - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall
+  moved
   - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
-  - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
-  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset
-  - PodcastMetadata: WritePodcastMetaData - creates metadata-entries according to the PODCAST\_METADATA:"v1"-standard and optionally writes it into a file or adds it to id3, vorbis-metadata-schemes        
-  
-  
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
+  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall    
 </TODO>
 
 ## Ultraschall Framework - Changelog
+
+### 4.75 - "Soundgarden - Black Hole Sun" - 19th of December 2022
+
+Has now 1615 functions, with 25 new ones
+
+**new in this release:**  
+
+  - **AutoBypass settings**  
+  You can now get and set autobypass for projects as well as global preferences, using GetFXAutoBypassSettings and SetFXAutoBypassSettings.   
+  You can also force autobypass for an fx, using GetFXAutoBypass\_FXStateChunk and SetFXAutoBypass\_FXStateChunk.
+  
+  - **Better ErrorMessages**  
+  Error messages, returned by functions like SLEM() or SFEM, return now more information about, in which script the error happened, in which function exactly and the linenumber.  
+  So debugging is much more easier now.
+  
+  - **Resize of gfx-images**  
+  You can now resize gfx-images, load with gfx.loadimg, keeping aspect ratio, using GFX\_ResizeImageKeepAspectRatio.  
+  It's better for making images smaller than making them bigger(causes artifacts) but, you can do it now.
+  
+  - **Only markers within timerange**  
+  The Count markers-functions allow now counting from start to end-position. That way you can get the exact number of markers within the range.  
+  
+  - **Rendering**  
+  supports now "Render stems pre-fader" and "Only render channels that are sent to parent" options; fixed various bugs with them too.   
+  You can also get/set, if you want to output statistics-outfiles, using SetRender\_SaveRenderStats and GetRender\_SaveRenderStats.  
+  
+  - **PodcastMetaData**  
+  fixed various bugs, added contributors and websites and a way to export the podcast-metadata as JSON according to the PodMeta\_v1-standard,   
+  including setting them into ID3, APE, IXML and VORBIS-COMMENT-metadata storage of Reaper.
+  
+  - **Bugfixes**  
+
+#### New features in 4.75  
+  - FXManagement: GetFXAutoBypass\_FXStateChunk - sets autobypass state of an fx within an FXStateChunk
+  - FXManagement: GetFXAutoBypassSettings - gets current states of various autobypass-settings
+  - FXManagement: SetFXAutoBypass\_FXStateChunk - sets autobypass state of an fx within an FXStateChunk
+  - FXManagement: SetFXAutoBypassSettings - gets current states of various autobypass-settings
+  - GFX-Functions: GFX\_ResizeImageKeepAspectRatio - resizes a loaded image while keeping aspect ratio
+  - GFX-Functions: GFX\_BlitText\_AdaptLineLength - draws a text and resizes the the line-lengths so they fit into the width and height-parameters
+  - Helper functions: GetRandomString - returns a random generated string with characters (requested by ChatGPT) [p=2622707]
+  - PodcastMetadata: CountContributors - counts the podcast contributors stored in an opened project
+  - PodcastMetadata: GetChapterAttributesAsJSON get the metadata of a chapter as JSON  
+  - PodcastMetadata: GetEpisodeAttributesAsJSON get the metadata of an episode as JSON
+  - PodcastMetadata: GetPodcastAttributesAsJSON get the metadata of a podcast as JSON  
+  - PodcastMetadata: GetPodcastEpisodeAttributesPreset\_Name - gets the name of an episode-metadata-preset
+  - PodcastMetadata: GetPodcastAttributePresetSlotByName - gets the preset-slot of podcast-presets by its name
+  - PodcastMetadata: GetEpisodeAttributePresetSlotByName - gets the preset-slot of episode-presets by its name
+  - PodcastMetadata: GetPodcastAttributesPreset\_Name - gets the name of a podcast-metadata-preset
+  - PodcastMetadata: GetPodcastContributorAttributesAsJSON - gets the contributors as JSON
+  - PodcastMetadata: GetSetContributor\_Attributes - gets/sets the attributes of an episode's contributor  
+  - PodcastMetadata: GetSetPodcastWebsite - gets/sets websites for a podcast
+  - PodcastMetadata: GetShownoteAttributesAsJSON get the metadata of a shownote as JSON
+  - PodcastMetadata: PodcastMetadata\_CreateJSON\_Entry - creates entire podcast-metadata-entry as JSON according to PodMeta\_v1-standard
+  - PodcastMetadata: PodcastMetaData\_ExportWebsiteAsJSON - creates website's metadata as JSON
+  - PodcastMetadata: SetPodcastEpisodeAttributesPreset\_Name - sets the name of an episode-metadata-preset
+  - PodcastMetadata: SetPodcastAttributesPreset\_Name - sets the name of a podcast-metadata-preset  
+  - Rendering: GetRender\_SaveRenderStats - gets the save outfile.render\_states.html-checkbox-state
+  - Rendering: SetRender\_SaveRenderStats - sets the save outfile.render\_states.html-checkbox-state
+  
+#### Changes from 4.7 to 4.75  
+  - API: Modulator3000 - reverted speedup of the speedup, as it had trouble on 32-bit-machines -> thanks binbinfr
+  - Docs: updated to Reaper 6.72; config-variable-docs has improved index
+  - ErrorMessagingSystem: SLEM/ShowLastErrorMessage/SFEM - return now the function, linenumber and sourcefile, in which AddErrorMessage was called
+  - FXManagement: GetFXFromFXStateChunk - rewritten from scratch, should be more stable now
+  - MarkerManagement: CountAllCustomMarkers - allows now counting custom-markers within a start and end-time
+  - MarkerManagement: CountNormalMarkers - allows now counting normal markers within a start and end-time
+  - MarkerManagement: CountShownoteMarkers - allows now counting shownotes within a start and end-time
+  - MediaItemManagement: InsertMediaItemStateChunkArray - supports now inserting needed tracks, if the number of tracks<the number of tracks needed by the items to be inserted
+  - MediaItemManagement: RippleCut - had trouble with projects, where there's only one item on track 1 and no other tracks
+  - PodcastMetadata: GetSetChapterMarker\_Attributes - supports now setting position "chap\_position" and markertitle "chap\_title"
+  - PodcastMetadata: GetSetPodcast\_Attributes - can now get/store attributes either in the current project or a preset, not in both at the same time; removed websites; will be done by GetSetPodcastWebsite instead
+  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - can now get/store attributes either in the current project or a preset, not in both at the same time
+  - PodcastMetadata: GetSetShownoteMarker\_Attributes - supports now attribute shwn\_linked\_audiovideomedia, which allows linking media directly with a time\_stamp; supports now setting position "shwn\_position" and markertitle "shwn\_title"
+  - ProjectFiles: GetProject\_RenderStems - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - ProjectFiles: SetProject\_RenderStems - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: AddRenderPreset - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: ApplyRenderTable\_Project - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; didn't apply various settings -> fixed
+  - RenderManagement: ApplyRenderTable\_ProjectFile - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: CreateNewRenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; default RenderTable did return bool instead of integer for FadeOut\_Shape -> fixed (thnx to aurelien)
+  - RenderManagement: GetRenderPreset\_RenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: GetRenderTable\_Project - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: GetRenderTable\_ProjectDefaults - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: GetRenderTable\_ProjectFile - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: IsValidRenderTable - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options
+  - RenderManagement: SetRenderPreset - supports now new "Render stems pre-fader" and "Only render channels that are sent to parent" options; fixed edge-cases that could prevent presets from being replaced with the new one
+  - TrackManagement: GetTrackGroupFlags - supports now Media/Razor-Edit Lead and Follow
+  - TrackManagement: GetTrackGroupFlags_HighState - supports now Media/Razor-Edit Lead and Follow
+  - TrackManagement: SetTrackGroupFlags - supports now Media/Razor-Edit Lead and Follow
+  - TrackManagement: SetTrackGroupFlags_HighState - supports now Media/Razor-Edit Lead and Follow
+  
+---
 
 ### 4.7 - "Pearl Jam - Alive" - 16th of October 2022
 

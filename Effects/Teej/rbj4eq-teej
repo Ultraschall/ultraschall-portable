@@ -57,7 +57,7 @@ out_pin:right output
 @init
   cDcAdd = 10^-30;
   cDenorm = 10^-30;
-
+  ext_tail_size = -1;
 
 @slider
 

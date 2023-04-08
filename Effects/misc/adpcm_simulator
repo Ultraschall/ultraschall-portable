@@ -17,6 +17,7 @@ out_pin:right output
 
 @init
 a=1000000;
+ext_tail_size=1024;
 
 // build tables
 index_table = a;

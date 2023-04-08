@@ -18,6 +18,7 @@ out_pin:right output
 
 @init
   bufsize = srate|0;
+  ext_tail_size = bufsize*2;
   xfade=100;
   bufloc0 = 10000;
   bufloc1 = bufloc0+bufsize+1000;

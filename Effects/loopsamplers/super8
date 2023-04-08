@@ -51,23 +51,11 @@ desc:Super8 MIDI-controlled synchronized looper (Cockos)
 //   (useful for hand-shortages)
 // - latch: wait to run commands until next loop iteration
 
-
-in_pin:input 1
-in_pin:input 2
-in_pin:input 3
-in_pin:input 4
-in_pin:input 5
-in_pin:input 6
-in_pin:input 7
-in_pin:input 8
-out_pin:output 1
-out_pin:output 2
-out_pin:output 3
-out_pin:output 4
-out_pin:output 5
-out_pin:output 6
-out_pin:output 7
-out_pin:output 8
+<? nch = 8 ?>
+<?
+  loop(x=0;nch,printf("in_pin:input %d\n",x+=1));
+  loop(x=0;nch,printf("out_pin:output %d\n",x+=1));
+?>
 out_pin:monitor output
 out_pin:click output
 
@@ -79,7 +67,7 @@ slider4:g_slider_click_cnt=0<0,64,1>-Click count/length
 @init
 
 // constants
-g_nchan = 8;
+g_nchan = <? printf("%d",nch) ?>;
 g_max_alloc = __memtop(); // JSFX memory available
 g_latchq_len = 1024; // 1024 midi events queueable for latch mode
 g_maxlen = ((g_max_alloc-4096 - g_latchq_len*3)/(g_nchan+1))|0; // use nearly all of available memory
@@ -221,16 +209,8 @@ function is_chan_selected(idx) (
 );
 
 function setstate_for_rec(rec, state) (
-  // ugly cruft
   rec = (rec-mem_stlist)/st_num;
-  rec == 0 ? ch1.setstate(state) :
-  rec == 1 ? ch2.setstate(state) :
-  rec == 2 ? ch3.setstate(state) :
-  rec == 3 ? ch4.setstate(state) :
-  rec == 4 ? ch5.setstate(state) :
-  rec == 5 ? ch6.setstate(state) :
-  rec == 6 ? ch7.setstate(state) :
-  rec == 7 ? ch8.setstate(state);
+  <? loop(x=0;nch, printf("rec == %d ? ch%d.setstate(state) :\n",x,x+1); x+=1) ?> 0;
 );
 
 function play_or_stop_all() local(want_state rec)
@@ -423,27 +403,14 @@ function adjustsizes(scale, repup) local(nlen,olen, lp, l, offs, nlen2)
 
 function updatechfromrec()
 (
-  ch1.updatefromrec();
-  ch2.updatefromrec();
-  ch3.updatefromrec();
-  ch4.updatefromrec();
-  ch5.updatefromrec();
-  ch6.updatefromrec();
-  ch7.updatefromrec();
-  ch8.updatefromrec();
+  <? loop(x=0;nch,printf("ch%d.updatefromrec();\n",x+=1)) ?>
 );
 
 function reset() local(lp)
 ( 
   g_chan_selected=-1;
-  ch1.setstate(0); ch1.dirty_top=-1; // setstate() will latch dirty_top to st_dirty
-  ch2.setstate(0); ch2.dirty_top=-1;
-  ch3.setstate(0); ch3.dirty_top=-1;
-  ch4.setstate(0); ch4.dirty_top=-1;
-  ch5.setstate(0); ch5.dirty_top=-1;
-  ch6.setstate(0); ch6.dirty_top=-1;
-  ch7.setstate(0); ch7.dirty_top=-1;
-  ch8.setstate(0); ch8.dirty_top=-1;
+  // setstate() will latch dirty_top to st_dirty
+  <? loop(x=0;nch, x+=1; printf("ch%d.setstate(0); ch%d.dirty_top=-1;\n",x,x)) ?>
   lp = mem_stlist;
   loop(g_nchan,
     lp[st_dirty] > 0 ? (
@@ -551,15 +518,13 @@ ext_noinit == 0 ? (
   g_lastmsg = -1;
   g_spare_buf = alloc(g_maxlen);
   g_spare_buf_ztop = 0;
-  
-  ch1.init(0, 36,37, 128);
-  ch2.init(1, 38,39, 128);
-  ch3.init(2, 41,42, 128);
-  ch4.init(3, 43,44, 128);
-  ch5.init(4, 45,46, 128);
-  ch6.init(5, 48,49, 128);
-  ch7.init(6, 50,51, 128);
-  ch8.init(7, 53,54, 128);
+
+  <? loop(x=0;a=36; nch, 
+      printf("ch%d.init(%d,%d,%d, 128);\n",x+1,x,a,a+1);
+      a+= x==1 ||x==4 || x==6? 3 : 2;
+      x+=1;
+     )
+   ?>
 );
 
 @slider
@@ -691,14 +656,7 @@ function onblock()
   monmode_sel = monmode >= 2 || is_chan_selected(idx);
 );
 
-ch1.onblock();
-ch2.onblock();
-ch3.onblock();
-ch4.onblock();
-ch5.onblock();
-ch6.onblock();
-ch7.onblock();
-ch8.onblock();
+<? loop(x=0;nch, printf("ch%d.onblock();\n",x+=1)) ?>
 
 (g_click_int = (cfgp_clickcnt[]|0)) > 0 ?( 
   g_click_lenspls = (0.01*srate)|0;
@@ -718,14 +676,7 @@ function chan_onmsg(m1,m2,m3)
   );
 
   m2 == cfgp_playall[] || m2 == 1024+cfgp_playall ? play_or_stop_all();
-  ch1.onmsg(m1,m2,m3);
-  ch2.onmsg(m1,m2,m3);
-  ch3.onmsg(m1,m2,m3);
-  ch4.onmsg(m1,m2,m3);
-  ch5.onmsg(m1,m2,m3);
-  ch6.onmsg(m1,m2,m3);
-  ch7.onmsg(m1,m2,m3);
-  ch8.onmsg(m1,m2,m3);
+  <? loop(x=0;nch, printf("ch%d.onmsg(m1,m2,m3);\n",x+=1)) ?>
 );
 
 function latchq_add(m1,m2,m3) local(v)
@@ -812,18 +763,11 @@ g_chan_selected >= 0 ? (
   );
 );
 
-spl0=ch1.process(spl0);
-spl1=ch2.process(spl1);
-spl2=ch3.process(spl2);
-spl3=ch4.process(spl3);
-spl4=ch5.process(spl4);
-spl5=ch6.process(spl5);
-spl6=ch7.process(spl6);
-spl7=ch8.process(spl7);
+<? loop(x=0;nch, printf("spl%d=ch%d.process(spl%d);\n",x,x+1,x);x+=1) ?>
 
 g_prevent_processing==0 ? ( 
   g_click_int > 0 && g_active_mask && g_length > 0 && !g_firstrec ? (
-    spl9 = generate_click();
+    <? printf("spl%d",nch+1) ?> = generate_click();
   );
 
   g_firstrec ? (
@@ -840,11 +784,7 @@ g_prevent_processing==0 ? (
   );
 );
 
-g_chan_selected >= 0 ? (
-  spl8= spl(g_chan_selected);
-) : (
-  spl8=0;
-);
+<? printf("spl%d",nch) ?> = g_chan_selected >= 0 ? spl(g_chan_selected);
 
 @gfx 420 480
 
@@ -955,14 +895,7 @@ function draw_value_tweaker(xpos,ypos,midimem,draw, lbl)
             g_inject_midinote = 1024+midimem;
           ) : (
             t = ((midimem-mem_stlist)/st_num)|0;
-            t == 0 ? ch1.reverse() :
-            t == 1 ? ch2.reverse() :
-            t == 2 ? ch3.reverse() :
-            t == 3 ? ch4.reverse() :
-            t == 4 ? ch5.reverse() :
-            t == 5 ? ch6.reverse() :
-            t == 6 ? ch7.reverse() :
-            t == 7 ? ch8.reverse();
+            <? loop(x=0;nch, printf("t == %d ? ch%d.reverse() :\n",x,x+1); x+=1;) ?> 0;
           );
         );
       );
@@ -1124,10 +1057,10 @@ function draw(ixpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
 
   gap = 4;
   xpos = (ixpos += 2);
-  col = (gfx_h-ypos-8) / (gfx_w - ixpos);
+  col = 16*(gfx_h-ypos-8) / ((gfx_w - ixpos)*(g_nchan+8));
   rowsize = col <= .115 ? 16 : col <= .5 ? 8 : col <= 2 ? 4 : col <= 8 ? 2 : 1;
   w=(gfx_w - 2 - gap*(rowsize-1))/rowsize;
-  (nrows = 16/rowsize) != 2 ? w=min(w, ((gfx_h - ypos - 8 - gap*(nrows-1))/nrows));
+  (nrows = (8+g_nchan)/rowsize) != 2 ? w=min(w, ((gfx_h - ypos - 8 - gap*(nrows-1))/nrows));
 
   h=(w|=0);
   mw = (w*.2)|0;
@@ -1434,7 +1367,7 @@ function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastcl
   gfx_x=0;
   gfx_y=4;
   t=time_precise();
-  s="Super8";
+  s="Super<?printf("%d",nch)?>";
   i=0;
   loop(strlen(s),
     gfx_set(sin(t+i*0.2)*0.3+0.5, cos(t*.61+i*0.5)*.7+0.3, sin(t*2.1-i*0.6)*.3+0.7);

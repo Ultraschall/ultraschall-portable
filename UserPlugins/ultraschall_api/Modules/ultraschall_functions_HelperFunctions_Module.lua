@@ -6902,7 +6902,7 @@ function ultraschall.GetSetIDEAutocompleteSuggestions(is_set, value)
     <requires>
       Ultraschall=4.5
       Reaper=6.20
-      SWS=2.10.01
+      SWS=2.10.0.1
       Lua=5.3
     </requires>
     <functioncall>integer suggestions = ultraschall.GetSetIDEAutocompleteSuggestions(boolean is_set, integer value)</functioncall>
@@ -6938,4 +6938,40 @@ function ultraschall.GetSetIDEAutocompleteSuggestions(is_set, value)
   end
   reaper.SNM_SetIntConfigVar("edit_sug", value)
   return value
+end
+
+function ultraschall.GetRandomString()
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetRandomString</slug>
+    <requires>
+      Ultraschall=4.75
+      Reaper=6.20
+      Lua=5.3
+    </requires>
+    <functioncall>string random_string = ultraschall.GetRandomString()</functioncall>
+    <description>
+      creates a string with random upper and lowercase letters. Length it also random with maximum 256 characters.
+    </description>
+    <retvals>
+      string random_string - a random string
+    </retvals>
+    <chapter_context>
+      API-Helper functions
+      Various
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+    <tags>misc, get, random, string</tags>
+  </US_DocBloc>
+  ]]
+  local len=math.random(math.random(256))
+  local newstr=""
+  for i=0, len do
+    for i=0, 255 do
+      local a=math.random(256)
+      if (a>65 and a<91) or (a>96 and a<123) then newstr=newstr..string.char(a) break end
+    end
+  end
+  return newstr
 end

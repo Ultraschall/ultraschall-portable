@@ -41,6 +41,9 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+@init 
+ext_tail_size = -1;
+
 @slider
 mono = slider1;
 outgain = 10^(slider8/20);

@@ -30,6 +30,7 @@ out_pin:right output
 @init
 c_ampDB = 8.65617025;
 cDenorm=10^-30;
+ext_tail_size = -1;
 
 @slider
 clipBoost = exp(slider2/c_ampDB);

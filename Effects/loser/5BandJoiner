@@ -37,6 +37,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-2;
 c_ampdB = 8.65617025;
 
 @slider

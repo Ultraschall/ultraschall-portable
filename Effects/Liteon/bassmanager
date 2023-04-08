@@ -43,6 +43,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 lp_output = 0;
 nrml=nrml=onrml=onrml=nrmr=nrmr=onrmr=onrmr=0;
 

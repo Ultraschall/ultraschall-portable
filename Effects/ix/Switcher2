@@ -37,6 +37,7 @@ out_pin:output R
 @init
 gainMin = -60;
 gainMax = 30;
+ext_tail_size = -2;
 
 @slider
 

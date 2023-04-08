@@ -13,6 +13,7 @@ out_pin:right output
 
 @init
 itm1=itm2=otm1=otm2=0;
+ext_tail_size = -1;
 
 @sample
 otm1=0.999*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;

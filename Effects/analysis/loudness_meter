@@ -35,6 +35,26 @@ options:no_meter
 
 @init
 
+<?
+  nch = 64; // maximum channel count
+  sinc_sz = 16; // true peak interpolation size
+  use_mem_sinc = sinc_sz>32;
+
+  printf("sinc_sz = %d;\n",sinc_sz);
+
+ function do_all_channels(fmt) local(p x c) global(nch) (
+   p=x=0;
+   while (x < nch) (
+     p+=1;
+     x>0 ? printf("num_ch > %d ? ( ",x);
+     c = x>=24 ? 8 : x>=8 ? 4 : 2;
+     loop(c, printf(fmt,x,x); x+=1);
+     printf("\n");
+   );
+   loop(p-1,printf(")"));
+ );
+?>
+
 // rms-i, lufs-i, lra calculated 0=during playback only, 1=always
 WANT_INTEGRATED_ALWAYS=0;
 
@@ -69,23 +89,28 @@ NUM_BINS=1024;
 BINS_PER_DB=10;
 DB_PER_BIN=1/BINS_PER_DB;
 
-REAPER_MAX_CHANNELS=64;
-
+function alloc(sz) global()
+(
+  memset((this.top+=sz)-sz,0,sz);
+);
 
 // sinc filter for true peak
-function sinc_gen_val() global(srate) local(sincpos windowpos) instance(slice_pos) (
-  windowpos = (2.0 * $pi / 16/*SINC_FILTER_SIZE*/) * slice_pos;
-  sincpos = $pi * (slice_pos - 16/*SINC_FILTER_SIZE*/ * .5);
+function sinc_gen_val() global(srate sinc_sz) local(sincpos windowpos) instance(slice_pos) (
+  windowpos = (2.0 * $pi / sinc_sz) * slice_pos;
+  sincpos = $pi * (slice_pos - sinc_sz * .5);
   slice_pos += 1;
   (0.53836 - cos(windowpos)*0.46164) * sin(sincpos) / sincpos;
 );
 
-function sinc_gen_slice(cs, o*) instance(sinc_gen_val slice_pos) global() (
+function sinc_gen_slice(cs, o*) instance(sinc_gen_val slice_pos) local(x) global(sinc_sz) (
   slice_pos = cs;
-  o.v00 = sinc_gen_val(); o.v01 = sinc_gen_val(); o.v02 = sinc_gen_val(); o.v03 = sinc_gen_val();
-  o.v04 = sinc_gen_val(); o.v05 = sinc_gen_val(); o.v06 = sinc_gen_val(); o.v07 = sinc_gen_val();
-  o.v08 = sinc_gen_val(); o.v09 = sinc_gen_val(); o.v10 = sinc_gen_val(); o.v11 = sinc_gen_val();
-  o.v12 = sinc_gen_val(); o.v13 = sinc_gen_val(); o.v14 = sinc_gen_val(); o.v15 = sinc_gen_val();
+<? 
+  use_mem_sinc ? (
+    printf("o.v = alloc(sinc_sz);  loop(x=0;sinc_sz, o.v[x] = sinc_gen_val(); x+=1); ");
+  ) : (
+    loop(x=0;sinc_sz, printf("o.v%02d = sinc_gen_val();%s",x,(x&3)==3?"\n": " "); x += 1)
+  );
+?>
 );
 
 function sinc_init() global(srate) instance(sinc_gen_slice) (
@@ -96,19 +121,17 @@ function sinc_init() global(srate) instance(sinc_gen_slice) (
   );
 );
 
-function sinc_slice_abs(hist*) global() (
-  abs(
-    hist.h00 * this.v00 + hist.h01 * this.v01 + hist.h02 * this.v02 + hist.h03 * this.v03 +
-    hist.h04 * this.v04 + hist.h05 * this.v05 + hist.h06 * this.v06 + hist.h07 * this.v07 +
-    hist.h08 * this.v08 + hist.h09 * this.v09 + hist.h10 * this.v10 + hist.h11 * this.v11 +
-    hist.h12 * this.v12 + hist.h13 * this.v13 + hist.h14 * this.v14 + hist.h15 * this.v15
-  );
-);
-
-function alloc(sz) global()
-(
-  memset((this.top+=sz)-sz,0,sz);
-);
+<?
+ function emit_sinc(hist, t) (
+   use_mem_sinc ? (
+    printf("abs(mem_multiply_sum(%s.v,%s.h,sinc_sz))",t,hist);
+   ) : (
+     printf("abs(");
+     loop(x=0;sinc_sz, printf("%s.h%02d * %s.v%02d%s",hist,x,t,x,x==sinc_sz-1?"":(x&3)==3?" +\n":" + "); x+=1);
+     printf(")");
+   );
+ );
+?>
 
 function init(chidx)
 (
@@ -117,9 +140,13 @@ function init(chidx)
   this.f1p1=this.f1p2=this.f2p1=this.f2p2=0;
   this.pkval=this.hipkval=this.clips=0;
   this.ch_lufs_sum=this.ch_rms_sum=0;
-
-  this.h00 = this.h01 = this.h02 = this.h03 = this.h04 = this.h05 = this.h06 = this.h07 =
-  this.h08 = this.h09 = this.h10 = this.h11 = this.h12 = this.h13 = this.h14 = this.h15 = 0;
+  <? 
+    use_mem_sinc ? (
+      printf("this.h = alloc(sinc_sz);\n"); 
+    ) : ( 
+      loop(x=0;sinc_sz, printf("this.h%02d =%s",x,x==sinc_sz-1 ? " 0" : (x&7)==7 ? "\n" : " "); x+=1);
+    );
+  ?>
 );
 
 function decay()
@@ -140,19 +167,24 @@ function proc(lspl)
   global(f1a1 f1a2 f1b0 f1b1 f1b2
          f2a1 f2a2 f2b0 f2b1 f2b2
          srate cfg_peak
-         sinc.s1.sinc_slice_abs
-         sinc.s2.sinc_slice_abs
-         sinc.s3.sinc_slice_abs
-         lval rval win_pos global_peak)
+         lval rval win_pos global_peak sinc_sz
+         sinc.s1* sinc.s2* sinc.s3*
+         )
 (
   cfg_peak == 1 || cfg_peak == 2 ? (
-    this.h15 = this.h14; this.h14 = this.h13; this.h13 = this.h12; this.h12 = this.h11;
-    this.h11 = this.h10; this.h10 = this.h09; this.h09 = this.h08; this.h08 = this.h07;
-    this.h07 = this.h06; this.h06 = this.h05; this.h05 = this.h04; this.h04 = this.h03;
-    this.h03 = this.h02; this.h02 = this.h01; this.h01 = this.h00; this.h00 = lspl;
-  
-    pspl = max(abs(this.h08), sinc.s1.sinc_slice_abs(this));
-    srate < 96000 ? pspl = max(pspl,max(sinc.s2.sinc_slice_abs(this), sinc.s3.sinc_slice_abs(this)));
+    <?
+      use_mem_sinc ? (
+        printf("mem_insert_shuffle(this.h, sinc_sz, lspl);");
+      ) : (
+        loop(x=sinc_sz-1;sinc_sz-1, printf("this.h%02d = this.h%02d;%s",x,x-1, (x&3)==0 ? "\n" : " "); x-= 1; );
+        printf(" this.h00 = lspl;");
+      );
+    ?>
+    pspl = max(
+        abs(this.h<? printf(use_mem_sinc ? "[%d]" : "%02d",sinc_sz/2) ?> ),
+        <? emit_sinc("this","sinc.s1") ?>
+       );
+    srate < 96000 ? pspl = max(pspl,max( <? emit_sinc("this","sinc.s2") ?>,  <? emit_sinc("this","sinc.s3") ?>));
   ) : 
   cfg_peak == 3 || cfg_peak == 4 ? (
     pspl=abs(lspl);
@@ -219,13 +251,13 @@ function init_lufs_filters()
 
 function Reset()
 (
-  sinc.sinc_init();
   init_lufs_filters();
 
   alloc.top=0;
-  pk=alloc(REAPER_MAX_CHANNELS);
-  hipk=alloc(REAPER_MAX_CHANNELS);
-  clip_cnt=alloc(REAPER_MAX_CHANNELS);
+  pk=alloc(<?printf("%d",nch)?>);
+  hipk=alloc(<?printf("%d",nch)?>);
+  clip_cnt=alloc(<?printf("%d",nch)?>);
+  sinc.sinc_init();
 
   m_win_cnt=0.4/LOUD_METER_UPDATE;
   s_win_cnt=3/LOUD_METER_UPDATE;
@@ -271,20 +303,7 @@ function Reset()
 
   global_peak = 0;
 
-  ch0.init(0); ch1.init(1);
-  num_ch > 2 ? ( ch2.init(2); ch3.init(3);
-  num_ch > 4 ? ( ch4.init(4); ch5.init(5);
-  num_ch > 6 ? ( ch6.init(6); ch7.init(7);
-  num_ch > 8 ? ( ch8.init(8); ch9.init(9); ch10.init(10); ch11.init(11);
-  num_ch > 12 ? ( ch12.init(12); ch13.init(13); ch14.init(14); ch15.init(15);
-  num_ch > 16 ? ( ch16.init(16); ch17.init(17); ch18.init(18); ch19.init(19);
-  num_ch > 20 ? ( ch20.init(20); ch21.init(21); ch22.init(22); ch23.init(23);
-  num_ch > 24 ? ( ch24.init(24); ch25.init(25); ch26.init(26); ch27.init(27); ch28.init(28); ch29.init(29); ch30.init(30); ch31.init(31);
-  num_ch > 32 ? ( ch32.init(32); ch33.init(33); ch34.init(34); ch35.init(35); ch36.init(36); ch37.init(37); ch38.init(38); ch39.init(39);
-  num_ch > 40 ? ( ch40.init(40); ch41.init(41); ch42.init(42); ch43.init(43); ch44.init(44); ch45.init(45); ch46.init(46); ch47.init(47);
-  num_ch > 48 ? ( ch48.init(48); ch49.init(49); ch50.init(50); ch51.init(51); ch52.init(52); ch53.init(53); ch54.init(54); ch55.init(55);
-  num_ch > 56 ? ( ch56.init(56); ch57.init(57); ch58.init(58); ch59.init(59); ch60.init(60); ch61.init(61); ch62.init(62); ch63.init(63);
-  ))))))))))));
+  <? do_all_channels("ch%d.init(%d); "); ?>;
 );
 
 Reset();
@@ -307,20 +326,7 @@ want_reset ? Reset();
 
 pk_decay=pow(0.5, samplesblock/srate/PEAK_METER_DECAY);
 
-ch0.decay(); ch1.decay();
-num_ch > 2 ? ( ch2.decay(); ch3.decay();
-num_ch > 4 ? ( ch4.decay(); ch5.decay();
-num_ch > 6 ? ( ch6.decay(); ch7.decay();
-num_ch > 8 ? ( ch8.decay(); ch9.decay(); ch10.decay(); ch11.decay();
-num_ch > 12 ? ( ch12.decay(); ch13.decay(); ch14.decay(); ch15.decay();
-num_ch > 16 ? ( ch16.decay(); ch17.decay(); ch18.decay(); ch19.decay();
-num_ch > 20 ? ( ch20.decay(); ch21.decay(); ch22.decay(); ch23.decay();
-num_ch > 24 ? ( ch24.decay(); ch25.decay(); ch26.decay(); ch27.decay(); ch28.decay(); ch29.decay(); ch30.decay(); ch31.decay();
-num_ch > 32 ? ( ch32.decay(); ch33.decay(); ch34.decay(); ch35.decay(); ch36.decay(); ch37.decay(); ch38.decay(); ch39.decay();
-num_ch > 40 ? ( ch40.decay(); ch41.decay(); ch42.decay(); ch43.decay(); ch44.decay(); ch45.decay(); ch46.decay(); ch47.decay();
-num_ch > 48 ? ( ch48.decay(); ch49.decay(); ch50.decay(); ch51.decay(); ch52.decay(); ch53.decay(); ch54.decay(); ch55.decay();
-num_ch > 56 ? ( ch56.decay(); ch57.decay(); ch58.decay(); ch59.decay(); ch60.decay(); ch61.decay(); ch62.decay(); ch63.decay();
-))))))))))));
+<? do_all_channels("ch%d.decay(); "); ?>;
 
 function make_output_slider(b, base) ( cfg_out_auto>=2 && !(cfg_out_auto&1) ? base - b : b );
 outparm_lufs_m = make_output_slider(lufs_m_db + (cfg_mono ? -3 : 0),-100);
@@ -348,20 +354,7 @@ cfg_out_auto ? slider_automate(
 
 rval=lval=0;
 
-ch0.proc(spl0); ch1.proc(spl1);
-num_ch > 2 ? ( ch2.proc(spl2); ch3.proc(spl3);
-num_ch > 4 ? ( ch4.proc(spl4); ch5.proc(spl5);
-num_ch > 6 ? ( ch6.proc(spl6); ch7.proc(spl7);
-num_ch > 8 ? ( ch8.proc(spl8); ch9.proc(spl9); ch10.proc(spl10); ch11.proc(spl11);
-num_ch > 12 ? ( ch12.proc(spl12); ch13.proc(spl13); ch14.proc(spl14); ch15.proc(spl15);
-num_ch > 16 ? ( ch16.proc(spl16); ch17.proc(spl17); ch18.proc(spl18); ch19.proc(spl19);
-num_ch > 20 ? ( ch20.proc(spl20); ch21.proc(spl21); ch22.proc(spl22); ch23.proc(spl23);
-num_ch > 24 ? ( ch24.proc(spl24); ch25.proc(spl25); ch26.proc(spl26); ch27.proc(spl27); ch28.proc(spl28); ch29.proc(spl29); ch30.proc(spl30); ch31.proc(spl31);
-num_ch > 32 ? ( ch32.proc(spl32); ch33.proc(spl33); ch34.proc(spl34); ch35.proc(spl35); ch36.proc(spl36); ch37.proc(spl37); ch38.proc(spl38); ch39.proc(spl39);
-num_ch > 40 ? ( ch40.proc(spl40); ch41.proc(spl41); ch42.proc(spl42); ch43.proc(spl43); ch44.proc(spl44); ch45.proc(spl45); ch46.proc(spl46); ch47.proc(spl47);
-num_ch > 48 ? ( ch48.proc(spl48); ch49.proc(spl49); ch50.proc(spl50); ch51.proc(spl51); ch52.proc(spl52); ch53.proc(spl53); ch54.proc(spl54); ch55.proc(spl55);
-num_ch > 56 ? ( ch56.proc(spl56); ch57.proc(spl57); ch58.proc(spl58); ch59.proc(spl59); ch60.proc(spl60); ch61.proc(spl61); ch62.proc(spl62); ch63.proc(spl63);
-))))))))))));
+<? do_all_channels("ch%d.proc(spl%d); "); ?>;
 
 (win_pos += 1) >= win_len ? (
   win_pos=0;
@@ -478,20 +471,7 @@ num_ch > 56 ? ( ch56.proc(spl56); ch57.proc(spl57); ch58.proc(spl58); ch59.proc(
 
 @gfx 300 400
 
-ch0.copypks(); ch1.copypks();
-num_ch > 2 ? ( ch2.copypks(); ch3.copypks();
-num_ch > 4 ? ( ch4.copypks(); ch5.copypks();
-num_ch > 6 ? ( ch6.copypks(); ch7.copypks();
-num_ch > 8 ? ( ch8.copypks(); ch9.copypks(); ch10.copypks(); ch11.copypks();
-num_ch > 12 ? ( ch12.copypks(); ch13.copypks(); ch14.copypks(); ch15.copypks();
-num_ch > 16 ? ( ch16.copypks(); ch17.copypks(); ch18.copypks(); ch19.copypks();
-num_ch > 20 ? ( ch20.copypks(); ch21.copypks(); ch22.copypks(); ch23.copypks();
-num_ch > 24 ? ( ch24.copypks(); ch25.copypks(); ch26.copypks(); ch27.copypks(); ch28.copypks(); ch29.copypks(); ch30.copypks(); ch31.copypks();
-num_ch > 32 ? ( ch32.copypks(); ch33.copypks(); ch34.copypks(); ch35.copypks(); ch36.copypks(); ch37.copypks(); ch38.copypks(); ch39.copypks();
-num_ch > 40 ? ( ch40.copypks(); ch41.copypks(); ch42.copypks(); ch43.copypks(); ch44.copypks(); ch45.copypks(); ch46.copypks(); ch47.copypks();
-num_ch > 48 ? ( ch48.copypks(); ch49.copypks(); ch50.copypks(); ch51.copypks(); ch52.copypks(); ch53.copypks(); ch54.copypks(); ch55.copypks();
-num_ch > 56 ? ( ch56.copypks(); ch57.copypks(); ch58.copypks(); ch59.copypks(); ch60.copypks(); ch61.copypks(); ch62.copypks(); ch63.copypks();
-))))))))))));
+<? do_all_channels("ch%d.copypks(); ");?>;
 
 t=time_precise();
 speed = last_t ? 1.0-pow(0.5, (t-last_t)/LOUD_METER_SPEED) : 1;

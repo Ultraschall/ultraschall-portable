@@ -38,6 +38,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 //cDenorm = 10^-30;
 cDenorm = 0;
 mv=2^(-0.2/6);

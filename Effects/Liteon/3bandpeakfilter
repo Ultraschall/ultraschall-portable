@@ -53,6 +53,7 @@ out_pin:right output
 
 //=============================================================
 @init
+ext_tail_size = -1;
 //fir restoration
 fc1 = 1;
 fc2 = -0.75;

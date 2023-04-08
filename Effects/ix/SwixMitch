@@ -35,6 +35,9 @@ out_pin:output L
 out_pin:output R
 
 ////////////////////////////////////////////////////////////////////////////////
+@init
+ext_tail_size = -2;
+
 @slider
 dest12 = slider1;
 dest34 = slider2;

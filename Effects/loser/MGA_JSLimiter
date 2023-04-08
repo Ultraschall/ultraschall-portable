@@ -29,6 +29,7 @@ out_pin:right output
 
 @init
 HOLDTIME = srate/128;
+ext_tail_size = -1;
 
 r1Timer = 0;
 r2Timer = HOLDTIME/2;

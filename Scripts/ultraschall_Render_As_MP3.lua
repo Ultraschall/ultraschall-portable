@@ -52,7 +52,17 @@ if A == false then
   -- change render-preset to mp3 and open render-to-file-dialog
 
   RenderTable = ultraschall.GetRenderPreset_RenderTable("MP3", "MP3")
-  retval, RenderTable["RenderPattern"] = reaper.GetSetProjectInfo_String(0, "RENDER_PATTERN", "", false)
+  if RenderTable==nil then
+    RenderTable=ultraschall.CreateNewRenderTable()
+    RenderTable["RenderString"]="bDNwbYAAAAAAAAAABQAAAP////8EAAAAgAAAAAAAAAA="
+    RenderTable["TailFlag"]=0
+    RenderTable["OnlyMonoMedia"]=true
+    RenderTable["RenderPattern"]="$project"
+    RenderTable["Brickwall_Limiter_Target"]=1
+    RenderTable["Normalize_Target"]=-24
+    RenderTable["RenderResample"]=7
+  end
+
   retval, RenderTable["RenderFile"] = reaper.GetSetProjectInfo_String(0, "RENDER_FILE", "", false)
   RenderTable["SilentlyIncrementFilename"] = false
   RenderTable["OnlyMonoMedia"] = true
@@ -61,5 +71,4 @@ if A == false then
   retval = ultraschall.ApplyRenderTable_Project(RenderTable, true)
 
   reaper.Main_OnCommand(40015, 0)
-
 end

@@ -27,6 +27,7 @@ out_pin:right output
 
 @init
 cAmpDB_ = 8.65617025;
+ext_tail_size = -2;
 
 @slider
 treshDB = slider1;

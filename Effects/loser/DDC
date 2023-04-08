@@ -38,6 +38,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-1;
 gain = seekgain = 1;
 c_ampdB = 8.65617025;
 

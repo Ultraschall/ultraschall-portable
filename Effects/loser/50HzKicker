@@ -30,6 +30,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size=-1;
 b1Det = -exp(-300 / srate );
 a0Det = 1.0 + b1Det;
 

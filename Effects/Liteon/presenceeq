@@ -41,6 +41,7 @@ out_pin:left output
 out_pin:right output
 
 @init
+ext_tail_size = -1;
 
 yl=x1l=x2l=y1l=y2l=yr=x1r=x2r=y1r=y2r=SPN=0;
 

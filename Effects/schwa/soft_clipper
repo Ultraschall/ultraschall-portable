@@ -18,6 +18,8 @@ out_pin:right output
 
 @init
 
+ext_tail_size = -2;
+
 amp_dB = 8.6562;
 baseline_threshold_dB = -9.0;
 a = 1.017;

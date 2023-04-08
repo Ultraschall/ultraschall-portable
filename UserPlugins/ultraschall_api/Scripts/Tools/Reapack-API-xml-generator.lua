@@ -121,6 +121,7 @@ C3,C,C1,C2,C4,C5,C6,C7=ultraschall.GetApiVersion()
 versionnumber, version, date, beta, tagline = ultraschall.GetApiVersion()
 majorversion, subversion, bits, Os, portable = ultraschall.GetReaperAppVersion()
 
+--if lol==nil then return end
 --if beta~="" then beta="."..beta end
 
 
@@ -165,7 +166,7 @@ L=ultraschall.MakeCopyOfFile_Binary(SourceDir.."/ultraschall_api_readme.txt", Ta
 ReadMe_Reaper_Internals=[[
 compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
-Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api 4.3]]..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
+Documentation for Reaper-Internals ]]..majorversion.."."..subversion..[[ and Ultraschall Api ]]..C.." "..beta..[[, SWS ]]..SWS..[[, JS-extension-plugin ]]..JS..[[ and ReaPack
 
 Written and compiled by Meo-Ada Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license
