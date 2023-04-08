@@ -5237,6 +5237,22 @@ else
     ultraschall.LM(29)
     return ultraschall.GetRender_QueueDelay(table.unpack({...}))
   end
+  function ultraschall.StoreRenderTable_ProjExtState(...)
+    ultraschall.LM(29)
+    return ultraschall.StoreRenderTable_ProjExtState(table.unpack({...}))
+  end
+  function ultraschall.GetRenderTable_ProjExtState(...)
+    ultraschall.LM(29)
+    return ultraschall.GetRenderTable_ProjExtState(table.unpack({...}))
+  end
+  function ultraschall.StoreRenderTable_ExtState(...)
+    ultraschall.LM(29)
+    return ultraschall.StoreRenderTable_ExtState(table.unpack({...}))
+  end
+  function ultraschall.GetRenderTable_ExtState(...)
+    ultraschall.LM(29)
+    return ultraschall.GetRenderTable_ExtState(table.unpack({...}))
+  end
   function ultraschall.GetAllThemeLayoutNames(...)
     ultraschall.LM(30)
     return ultraschall.GetAllThemeLayoutNames(table.unpack({...}))

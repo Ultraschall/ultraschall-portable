@@ -5175,7 +5175,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     
     path, offset=B2:match("\"(.-)\"() ")    
     if path==nil then path, offset=B2:match("(.-)() ") end
-    Tail_MS=tonumber(B2:sub(offset, -1))
+    local Tail_MS=tonumber(B2:sub(offset, -1))
     --print2(path)
     
     if Presetname2:lower()==Bounds_Name:lower() then found=true break end
@@ -9742,4 +9742,172 @@ function ultraschall.GetRender_SaveRenderStats()
   end
   return state
 end
+
+
+function ultraschall.StoreRenderTable_ProjExtState(proj, section, RenderTable)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>StoreRenderTable_ProjExtState</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.StoreRenderTable_ProjExtState(ReaProject proj, string section, table RenderTable)</functioncall>
+  <description>
+    Stores the render-settings of a RenderTable into a project-extstate.
+  </description>
+  <parameters>
+    ReaProject proj - the project, into which you want to store the render-settings
+    string section - the section-name, into which you want to store the render-settings
+    table RenderTable - the RenderTable which holds all render-settings
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>render functions, store, render table, projextstate</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidReaProject(proj)==false then ultraschall.AddErrorMessage("StoreRenderTable_ProjExtState", "proj", "must be a valid ReaProject", -1) return end
+  if type(section)~="string" then ultraschall.AddErrorMessage("StoreRenderTable_ProjExtState", "section", "must be a string", -2) return end
+  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("StoreRenderTable_ProjExtState", "RenderTable", "must be a valid RenderTable", -3) return end
+  
+  for k, v in pairs(RenderTable) do
+    reaper.SetProjExtState(proj, section, k, tostring(v))
+  end
+end
+
+--ultraschall.StoreRenderTable_ProjExtState(0, "test", A)
+
+function ultraschall.GetRenderTable_ProjExtState(proj, section)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRenderTable_ProjExtState</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>table RenderTable = ultraschall.GetRenderTable_ProjExtState(ReaProject proj, string section)</functioncall>
+  <description>
+    Gets the render-settings of a RenderTable from a project-extstate, stored by SetRenderTable_ProjExtState.
+  </description>
+  <retvals>
+    table RenderTable - the stored render-settings as a RenderTable
+  </retvals>
+  <parameters>
+    ReaProject proj - the project, in which you stored the render-settings
+    string section - the section-name, in which you stored the render-settings
+  </parameters>  
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>render functions, get, render table, projextstate</tags>
+</US_DocBloc>
+--]]
+  if ultraschall.IsValidReaProject(proj)==false then ultraschall.AddErrorMessage("GetRenderTable_ProjExtState", "proj", "must be a valid ReaProject", -1) return end
+  if type(section)~="string" then ultraschall.AddErrorMessage("GetRenderTable_ProjExtState", "section", "must be a string", -2) return end
+  
+  local RenderTable=ultraschall.CreateNewRenderTable()
+  for k, v in pairs(RenderTable) do
+    local retval, val = reaper.GetProjExtState(proj, section, k)
+    if type(v)=="number" then val=tonumber(val)
+    elseif type(v)=="boolean" then val=toboolean(val)
+    elseif val=="" then val=v
+    end
+    RenderTable[k]=val
+  end
+  return RenderTable
+end
+
+--B=ultraschall.GetRenderTable_ProjExtState(0, "test")
+
+function ultraschall.StoreRenderTable_ExtState(section, RenderTable, persist)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>StoreRenderTable_ExtState</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.StoreRenderTable_ExtState(string section, table RenderTable, boolean persist)</functioncall>
+  <description>
+    Stores the render-settings of a RenderTable into an extstate.
+  </description>
+  <parameters>
+    string section - the section-name, into which you want to store the render-settings
+    table RenderTable - the RenderTable which holds all render-settings
+    boolean persist - true, the settings shall be stored long-term; false, the settings shall be stored until Reaper exits
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>render functions, store, render table, extstate</tags>
+</US_DocBloc>
+--]]
+  if type(section)~="string" then ultraschall.AddErrorMessage("StoreRenderTable_ExtState", "section", "must be a string", -1) return end
+  if ultraschall.IsValidRenderTable(RenderTable)==false then ultraschall.AddErrorMessage("StoreRenderTable_ExtState", "RenderTable", "must be a valid RenderTable", -2) return end
+  if type(persist)~="boolean" then ultraschall.AddErrorMessage("StoreRenderTable_ExtState", "persist", "must be a boolean", -3) return end
+  
+  for k, v in pairs(RenderTable) do
+    reaper.SetExtState(section, k, tostring(v), persist)
+  end
+end
+
+--ultraschall.StoreRenderTable_ExtState("test", A, false)
+
+function ultraschall.GetRenderTable_ExtState(section)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetRenderTable_ExtState</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>table RenderTable = ultraschall.GetRenderTable_ExtState(string section)</functioncall>
+  <description>
+    Gets the render-settings of a RenderTable from an extstate, stored by SetRenderTable_ExtState.
+  </description>
+  <retvals>
+    table RenderTable - the stored render-settings as a RenderTable
+  </retvals>
+  <parameters>
+    string section - the section-name, in which you stored the render-settings
+  </parameters>  
+  <chapter_context>
+    Rendering Projects
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>render functions, get, render table, extstate</tags>
+</US_DocBloc>
+--]]
+  if type(section)~="string" then ultraschall.AddErrorMessage("GetRenderTable_ExtState", "section", "must be a string", -1) return end
+  
+  local RenderTable=ultraschall.CreateNewRenderTable()
+  for k, v in pairs(RenderTable) do
+    local val = reaper.GetExtState(section, k)
+    if type(v)=="number" then val=tonumber(val)
+    elseif type(v)=="boolean" then val=toboolean(val)
+    elseif val=="" then val=v
+    end
+    RenderTable[k]=val
+  end
+  return RenderTable
+end
+
+--B=ultraschall.GetRenderTable_ExtState("test")
+--ultraschall.IsValidRenderTable(B)
 

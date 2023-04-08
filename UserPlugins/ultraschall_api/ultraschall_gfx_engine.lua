@@ -30,12 +30,6 @@
 
 if ultraschall.GFX_WindowHWND==nil then ultraschall.GFX_WindowHWND="Please, use ultraschall.GFX_Init() for window-creation, not gfx.init(!), to retrieve the HWND of the gfx-window." end
 
-ultraschall.gfx={}
-
-for k,v in pairs(gfx) do
-  ultraschall.gfx[k]=v
-end
-
 function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antialias)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -73,7 +67,7 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antial
   <tags>gfx, functions, gfx, draw, thickness, round rectangle</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.gfx.getchar()==-1 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "", "no gfx-window opened", -1) return false end
+  if gfx.getchar()==-1 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "", "no gfx-window opened", -1) return false end
   if ultraschall.type(x)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "x", "must be an integer", -2) return false end
   if ultraschall.type(y)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "y", "must be an integer", -3) return false end
   if ultraschall.type(w)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "w", "must be an integer", -4) return false end
@@ -87,11 +81,11 @@ function ultraschall.GFX_DrawThickRoundRect(x,y,w,h,thickness, roundness, antial
   if thickness<0 then ultraschall.AddErrorMessage("GFX_DrawThickRoundRect", "thickness", "must be bigger than 0", -11) return false end
   if antialias==true then antialias=1 else antialias=0 end
   for i=1, thickness, 0.5 do
-    ultraschall.gfx.roundrect(x+i,y+1+i,w-1-(i*2),h-(i*2),roundness, antialias)
+    gfx.roundrect(x+i,y+1+i,w-1-(i*2),h-(i*2),roundness, antialias)
     if thickness>1 then
-      ultraschall.gfx.roundrect(x+1+i,y+i,w-1-(i*2),h-(i*2),roundness, antialias)
-      ultraschall.gfx.roundrect(x+i,y+i,w+1-(i*2),h-(i*2),roundness, antialias)
-      ultraschall.gfx.roundrect(x+i,y+i,w+1-(i*2),h-1-(i*2),roundness, antialias)
+      gfx.roundrect(x+1+i,y+i,w-1-(i*2),h-(i*2),roundness, antialias)
+      gfx.roundrect(x+i,y+i,w+1-(i*2),h-(i*2),roundness, antialias)
+      gfx.roundrect(x+i,y+i,w+1-(i*2),h-1-(i*2),roundness, antialias)
     end
   end
   return true
@@ -99,7 +93,7 @@ end
 --gfx.init()
 --A=ultraschall.GFX_DrawThickRoundRect(1,2,300,140,5,40,true)
 
-function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx, destination)
+function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GFX_BlitFramebuffer</slug>
@@ -131,47 +125,35 @@ function ultraschall.GFX_BlitFramebuffer(framebufferidx, showidx, destination)
   <tags>gfx, functions, gfx, blit, framebuffer</tags>
 </US_DocBloc>
 ]]
---print2("")
   if math.type(framebufferidx)~="integer" then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "framebufferidx", "must be an integer", -1) return false end
   if framebufferidx<-1 or framebufferidx>1023 then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "framebufferidx", "must be between -1 and 1023", -1) return false end
   if showidx~=nil and type(showidx)~="boolean" then ultraschall.AddErrorMessage("GFX_BlitFramebuffer", "showidx", "must be a boolean", -3) return false end
-  local x,y=ultraschall.gfx.getimgdim(framebufferidx)
-  local ratiox, ratioy
-  local old_dest=ultraschall.gfx.dest
-  if destination==nil or destination==-1 then
-    ratiox=((100/x)*ultraschall.gfx.w)/100
-    ratioy=((100/y)*ultraschall.gfx.h)/100
-    ultraschall.gfx.dest=-1
-  else
-    local w,h=ultraschall.gfx.getimgdim(destination)
-    ratiox=((100/x)*w)/100
-    ratioy=((100/y)*h)/100
-    ultraschall.gfx.dest=destination
-  end
+  local x,y=gfx.getimgdim(framebufferidx)
+  local ratiox=((100/x)*gfx.w)/100
+  local ratioy=((100/y)*gfx.h)/100
   if ratiox<ratioy then ratio=ratiox else ratio=ratioy end
-  if x<ultraschall.gfx.w and y<ultraschall.gfx.h then ratio=1 end
-  local oldx=ultraschall.gfx.x
-  local oldy=ultraschall.gfx.y
-  ultraschall.gfx.x=0
-  ultraschall.gfx.y=0
-  A1,B,C,D,E=ultraschall.gfx.blit(framebufferidx,ratio,0)
+  if x<gfx.w and y<gfx.h then ratio=1 end
+  local oldx=gfx.x
+  local oldy=gfx.y
+  gfx.x=0
+  gfx.y=0
+  A1,B,C,D,E=gfx.blit(framebufferidx,ratio,0)
   if showidx==true then 
-    ultraschall.gfx.x=-1
-    ultraschall.gfx.y=0
-    ultraschall.gfx.set(0)
-    ultraschall.gfx.drawstr(framebufferidx) 
-    ultraschall.gfx.x=1
-    ultraschall.gfx.y=1
-    ultraschall.gfx.set(0)
-    ultraschall.gfx.drawstr(framebufferidx) 
-    ultraschall.gfx.x=0
-    ultraschall.gfx.y=0
-    ultraschall.gfx.set(1)
-    ultraschall.gfx.drawstr(framebufferidx) 
+    gfx.x=-1
+    gfx.y=0
+    gfx.set(0)
+    gfx.drawstr(framebufferidx) 
+    gfx.x=1
+    gfx.y=1
+    gfx.set(0)
+    gfx.drawstr(framebufferidx) 
+    gfx.x=0
+    gfx.y=0
+    gfx.set(1)
+    gfx.drawstr(framebufferidx) 
   end    
-  ultraschall.gfx.x=oldx
-  ultraschall.gfx.y=oldy
-  ultraschall.gfx.dest=old_dest
+  gfx.x=oldx
+  gfx.y=oldy
   return true
 end
 
@@ -205,15 +187,15 @@ function ultraschall.BlitFullVirtualFramebuffer(framebufferobj)
 --            start drawing from gfx.x and gfx.y or from a parameter? And how to calculate the offsets?
 --            blitting only partial virtualframebuffer
   for i=1, framebufferobj["count"] do
-      if framebufferobj[i]["tox"]==nil then tox=ultraschall.gfx.x else tox=framebufferobj[i]["tox"] end
-      if framebufferobj[i]["toy"]==nil then toy=ultraschall.gfx.y else toy=framebufferobj[i]["toy"] end
+      if framebufferobj[i]["tox"]==nil then tox=gfx.x else tox=framebufferobj[i]["tox"] end
+      if framebufferobj[i]["toy"]==nil then toy=gfx.y else toy=framebufferobj[i]["toy"] end
       framebuffer=framebufferobj[i]["framebuffer"]
       fromx=framebufferobj[i]["fromx"]
       fromy=framebufferobj[i]["fromy"]
       fromw=framebufferobj[i]["fromw"]
       fromh=framebufferobj[i]["fromh"]
 
-    ultraschall.gfx.blit(framebuffer,1,0,fromx,fromy,fromw,fromh,tox,toy)
+    gfx.blit(framebuffer,1,0,fromx,fromy,fromw,fromh,tox,toy)
   end
 end
 
@@ -225,7 +207,7 @@ end
 
 
 function ultraschall.GFX_CreateTextbuffer(inittext, singleline)
-  local count, split_string = ultraschall.SplitStringAtLineFeedToArray(inittext)
+  count, split_string = ultraschall.SplitStringAtLineFeedToArray(inittext)
   local textbuffer={}
   if type(inittext)~="string" then inittext="" end
   textbuffer["text"]={}
@@ -248,14 +230,14 @@ function ultraschall.GFX_CreateTextbuffer(inittext, singleline)
 end
 
 function ultraschall.GFX_GetKey(textbuffer)
-  local char=ultraschall.gfx.getchar()
+  local char, char_utf8=gfx.getchar()
   local alt, cmd, shift, altgr, win, _temp, character, maxlines, xoffs, yoffs, singletext
   local change=false
-  if ultraschall.gfx.mouse_cap&4==4 and ultraschall.gfx.mouse_cap&16==0 then cmd=true else cmd=false end
-  if ultraschall.gfx.mouse_cap&8==8 then shift=true else shift=false end
-  if ultraschall.gfx.mouse_cap&16==16 and ultraschall.gfx.mouse_cap&4==0 then alt=true else alt=false end
-  if ultraschall.gfx.mouse_cap&32==32 then win=true else win=false end
-  if ultraschall.gfx.mouse_cap&16==16 and ultraschall.gfx.mouse_cap&4==4 then altgr=true else altgr=false end
+  if gfx.mouse_cap&4==4 and gfx.mouse_cap&16==0 then cmd=true else cmd=false end
+  if gfx.mouse_cap&8==8 then shift=true else shift=false end
+  if gfx.mouse_cap&16==16 and gfx.mouse_cap&4==0 then alt=true else alt=false end
+  if gfx.mouse_cap&32==32 then win=true else win=false end
+  if gfx.mouse_cap&16==16 and gfx.mouse_cap&4==4 then altgr=true else altgr=false end
 
   -- if textbuffer~=nil, then edit the text in textbuffer
   if textbuffer~=nil and char>0 then
@@ -364,9 +346,16 @@ function ultraschall.GFX_GetKey(textbuffer)
     elseif char>31 and char<255 then -- add character to textfield
       textstart=textbuffer["text"][yoffs]:sub(1,xoffs)
       textend=textbuffer["text"][yoffs]:sub(xoffs+1,-1)
-      textbuffer["text"][yoffs]=textstart..string.char(char)..textend
+      textbuffer["text"][yoffs]=textstart..utf8.char(char)..textend
       xoffs=xoffs+1
       change=true
+    else
+      textstart=textbuffer["text"][yoffs]:sub(1,xoffs)
+      textend=textbuffer["text"][yoffs]:sub(xoffs+1,-1)
+      textbuffer["text"][yoffs]=textstart..utf8.char(char_utf8)..textend
+      xoffs=xoffs+1
+      change=true
+      
     end
     -- store current editingline into textbuffer
     if yoffs<1 then yoffs=1 end
@@ -504,19 +493,19 @@ function Editormain()
   text, maxlines, current_cursor_pos, length_of_text = ultraschall.GFX_GetTextbuffer_Text(buffer, true, true, counter, counter+ShownLines)
   
   -- update textview only, when Text has changed and/or window-size has been changed
-  if (text~=OldText) or ultraschall.gfx.h~=oldh or ultraschall.gfx.w~=oldw then
-    ultraschall.gfx.x=1
-    ultraschall.gfx.y=1
-    ultraschall.gfx.drawstr(text)
+  if (text~=OldText) or gfx.h~=oldh or gfx.w~=oldw then
+    gfx.x=1
+    gfx.y=1
+    gfx.drawstr(text)
   end
   
   -- store old text and old window-positions
   OldText=text
-  oldh=ultraschall.gfx.h
-  oldw=ultraschall.gfx.w
+  oldh=gfx.h
+  oldw=gfx.w
   
   -- update gfx-window and defer the whole stuff
-  ultraschall.gfx.update()
+  gfx.update()
   if KeyCode~=-1 then reaper.defer(Editormain) end
 end
 
@@ -555,7 +544,7 @@ function ultraschall.GFX_Init(...)
   <tags>gfx, functions, gfx, init, window, create, hwnd</tags>
 </US_DocBloc>
 ]]
-  local A=ultraschall.gfx.getchar(65536)
+  local A=gfx.getchar(65536)
   local HWND, retval
   if A&4==0 then
     local parms={...}
@@ -588,7 +577,7 @@ function ultraschall.GFX_Init(...)
     end
 
     -- open window  
-    retval=ultraschall.gfx.init(table.unpack(parms))
+    retval=gfx.init(table.unpack(parms))
     
     -- find the window with the temporary windowtitle and get its HWND
     HWND=reaper.JS_Window_Find(parms[1], true)
@@ -667,7 +656,7 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
   </requires>
   <functioncall>string clickstate, string specific_clickstate, integer mouse_cap, integer click_x, integer click_y, integer drag_x, integer drag_y, integer mouse_wheel, integer mouse_hwheel = ultraschall.GFX_GetMouseCap(optional integer doubleclick_wait, optional integer drag_wait)</functioncall>
   <description>
-    Checks mouseclick/wheel-behavior, since last time calling this function and returns it's state.
+    Checks clickstates and mouseclick/wheel-behavior, since last time calling this function and returns their states.
     Allows you to get click, doubleclick, dragging, including the appropriate coordinates and mousewheel-states.
 
     Much more convenient, than fiddling around with gfx.mouse_cap
@@ -722,21 +711,20 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
     ultraschall.mouse_last_hwheel=0           -- last horizontal mouse-wheel-state, the last time this function got called
     ultraschall.mouse_last_wheel=0            -- last mouse-wheel-state, the last time this function got called
   end
-  if math.type(doubleclick_wait)~="integer" then doubleclick_wait=15 end
-  if math.type(drag_wait)~="integer" then drag_wait=5 end
-  
+  if math.type(doubleclick_wait)~="integer" then doubleclick_wait=0 end
+  if math.type(drag_wait)~="integer" then drag_wait=15 end
   -- if mousewheels have been changed, store the new values and reset the gfx-variables
-  if ultraschall.mouse_last_hwheel~=ultraschall.gfx.mouse_hwheel or ultraschall.mouse_last_wheel~=gfx.mouse_wheel then
-    ultraschall.mouse_last_hwheel=math.floor(ultraschall.gfx.mouse_hwheel)
-    ultraschall.mouse_last_wheel=math.floor(ultraschall.gfx.mouse_wheel)
+  if ultraschall.mouse_last_hwheel~=gfx.mouse_hwheel or ultraschall.mouse_last_wheel~=gfx.mouse_wheel then
+    ultraschall.mouse_last_hwheel=math.floor(gfx.mouse_hwheel)
+    ultraschall.mouse_last_wheel=math.floor(gfx.mouse_wheel)
   end
-  ultraschall.gfx.mouse_hwheel=0
-  ultraschall.gfx.mouse_wheel=0
+  gfx.mouse_hwheel=0
+  gfx.mouse_wheel=0
   
   local newmouse_cap=0
-  if ultraschall.gfx.mouse_cap&1~=0 then newmouse_cap=newmouse_cap+1 end
-  if ultraschall.gfx.mouse_cap&2~=0 then newmouse_cap=newmouse_cap+2 end
-  if ultraschall.gfx.mouse_cap&64~=0 then newmouse_cap=newmouse_cap+64 end
+  if gfx.mouse_cap&1~=0 then newmouse_cap=newmouse_cap+1 end
+  if gfx.mouse_cap&2~=0 then newmouse_cap=newmouse_cap+2 end
+  if gfx.mouse_cap&64~=0 then newmouse_cap=newmouse_cap+64 end
   
   if newmouse_cap==0 then
   -- if no mouse_cap is set, reset all counting-variables and return just the basics
@@ -749,13 +737,13 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
       ultraschall.mouse_dblclick_counter=doubleclick_wait
     end
     ultraschall.mouse_clickblock=false
-    return "", "", ultraschall.gfx.mouse_cap, ultraschall.gfx.mouse_x, ultraschall.gfx.mouse_y, ultraschall.gfx.mouse_x, ultraschall.gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    return "", "", gfx.mouse_cap, gfx.mouse_x, gfx.mouse_y, gfx.mouse_x, gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
   end
   if ultraschall.mouse_clickblock==false then
     
     if newmouse_cap~=ultraschall.mouse_last_mousecap then
       -- first mouseclick
-      if ultraschall.mouse_dblclick~=1 or (ultraschall.mouse_lastx==ultraschall.gfx.mouse_x and ultraschall.mouse_lasty==ultraschall.gfx.mouse_y) then
+      if ultraschall.mouse_dblclick~=1 or (ultraschall.mouse_lastx==gfx.mouse_x and ultraschall.mouse_lasty==gfx.mouse_y) then
 
         -- double-click-checks
         if ultraschall.mouse_dblclick~=1 then
@@ -769,7 +757,7 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
           ultraschall.mouse_dblclick=2
           ultraschall.mouse_dblclick_counter=doubleclick_wait
           ultraschall.mouse_clickblock=true
-          return "CLK", "DBLCLK", ultraschall.gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+          return "CLK", "DBLCLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
         elseif ultraschall.mouse_dblclick_counter==doubleclick_wait then
           -- when doubleclick-timer is full, reset mouse_dblclick to 0, so the next mouseclick is 
           -- recognized as normal mouseclick
@@ -781,31 +769,31 @@ function ultraschall.GFX_GetMouseCap(doubleclick_wait, drag_wait)
       -- the first-click state and values
       ultraschall.mouse_last_mousecap=newmouse_cap
       ultraschall.mouse_last_clicked_mousecap=newmouse_cap
-      ultraschall.mouse_lastx=ultraschall.gfx.mouse_x
-      ultraschall.mouse_lasty=ultraschall.gfx.mouse_y
-      return "CLK", "FirstCLK", ultraschall.gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+      ultraschall.mouse_lastx=gfx.mouse_x
+      ultraschall.mouse_lasty=gfx.mouse_y
+      return "CLK", "FirstCLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
     elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter<drag_wait
-      and (ultraschall.gfx.mouse_x~=ultraschall.mouse_lastx or ultraschall.gfx.mouse_y~=ultraschall.mouse_lasty) then
+      and (gfx.mouse_x~=ultraschall.mouse_lastx or gfx.mouse_y~=ultraschall.mouse_lasty) then
       -- dragging when mouse moves, sets dragcounter to full waiting-period
-      ultraschall.mouse_endx=ultraschall.gfx.mouse_x
-      ultraschall.mouse_endy=ultraschall.gfx.mouse_y
+      ultraschall.mouse_endx=gfx.mouse_x
+      ultraschall.mouse_endy=gfx.mouse_y
       ultraschall.mouse_dragcounter=drag_wait
       ultraschall.mouse_dblclick=0
-      return "CLK", "DRAG", ultraschall.gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+      return "CLK", "DRAG", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
     elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter<drag_wait then
       -- when clicked but mouse doesn't move, count up, until we reach the countlimit for
       -- activating dragging
       ultraschall.mouse_dragcounter=ultraschall.mouse_dragcounter+1
-      return "CLK", "CLK", ultraschall.gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+      return "CLK", "CLK", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
     elseif newmouse_cap==ultraschall.mouse_last_mousecap and ultraschall.mouse_dragcounter==drag_wait then
       -- dragging, after drag-counter is set to full waiting-period
-      ultraschall.mouse_endx=ultraschall.gfx.mouse_x
-      ultraschall.mouse_endy=ultraschall.gfx.mouse_y
+      ultraschall.mouse_endx=gfx.mouse_x
+      ultraschall.mouse_endy=gfx.mouse_y
       ultraschall.mouse_dblclick=0
-      return "CLK", "DRAG", ultraschall.gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+      return "CLK", "DRAG", gfx.mouse_cap, ultraschall.mouse_lastx, ultraschall.mouse_lasty, ultraschall.mouse_endx, ultraschall.mouse_endy, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
     end
   else
-    return "", "", ultraschall.gfx.mouse_cap, ultraschall.gfx.mouse_x, ultraschall.gfx.mouse_y, ultraschall.gfx.mouse_x, ultraschall.gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
+    return "", "", gfx.mouse_cap, gfx.mouse_x, gfx.mouse_y, gfx.mouse_x, gfx.mouse_y, ultraschall.mouse_last_wheel, ultraschall.mouse_last_hwheel
   end
 end
 
@@ -844,7 +832,7 @@ function ultraschall.GFX_SetFont(fontindex, font, size, flagStr)
                    - v - inverse
   </parameters>
   <chapter_context>
-    Text
+    Font Handling
   </chapter_context>
   <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
@@ -872,7 +860,7 @@ function ultraschall.GFX_SetFont(fontindex, font, size, flagStr)
     end
   end
 
-  ultraschall.gfx.setfont(fontindex, font, size, flags)
+  gfx.setfont(fontindex, font, size, flags)
   return true
 end
                         
@@ -935,14 +923,14 @@ function ultraschall.GFX_BlitImageCentered(image, x, y, scale, rotate, ...)
   for i=1, #params do
     if type(params[i])~="number" then ultraschall.AddErrorMessage("GFX_BlitImageCentered", "parameter "..i+5, "must be a number or an integer", -7) return false end
   end
-  local oldx=ultraschall.gfx.x
-  local oldy=ultraschall.gfx.y
-  local X,Y=ultraschall.gfx.getimgdim(image)
-  ultraschall.gfx.x=x-((X*scale)/2)
-  ultraschall.gfx.y=y-((Y*scale)/2)
-  ultraschall.gfx.blit(image, scale, rotate, table.unpack(params))
-  ultraschall.gfx.x=oldx
-  ultraschall.gfx.y=oldy
+  local oldx=gfx.x
+  local oldy=gfx.y
+  local X,Y=gfx.getimgdim(image)
+  gfx.x=x-((X*scale)/2)
+  gfx.y=y-((Y*scale)/2)
+  gfx.blit(image, scale, rotate, table.unpack(params))
+  gfx.x=oldx
+  gfx.y=oldy
   return true
 end
 
@@ -994,7 +982,7 @@ function ultraschall.GFX_GetDropFile()
   local changed
   local FileList={}
   while A~=0 do
-    A,B=ultraschall.gfx.getdropfile(filecount)
+    A,B=gfx.getdropfile(filecount)
     filecount=filecount+1
     FileList[filecount]=B
   end
@@ -1006,10 +994,10 @@ function ultraschall.GFX_GetDropFile()
   if changed==true then
     ultraschall.GetDropFile_List=FileList
     ultraschall.GetDropFile_Filecount=filecount
-    ultraschall.GetDropFile_MouseX=ultraschall.gfx.mouse_x
-    ultraschall.GetDropFile_MouseY=ultraschall.gfx.mouse_y
+    ultraschall.GetDropFile_MouseX=gfx.mouse_x
+    ultraschall.GetDropFile_MouseY=gfx.mouse_y
   end
-  ultraschall.gfx.getdropfile(-1)
+  gfx.getdropfile(-1)
   return changed, ultraschall.GetDropFile_Filecount-1, ultraschall.GetDropFile_List, ultraschall.GetDropFile_MouseX, ultraschall.GetDropFile_MouseY
 end
 
@@ -1096,7 +1084,7 @@ function ultraschall.GFX_DrawEmbossedSquare(x, y, w, h, rbg, gbg, bbg, r, g, b)
   <tags>gfx, functions, gfx, draw, thickness, embossed rectangle</tags>
 </US_DocBloc>
 ]]
-  if ultraschall.gfx.getchar()==-1 then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "", "no gfx-window opened", -1) return false end
+  if gfx.getchar()==-1 then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "", "no gfx-window opened", -1) return false end
   if ultraschall.type(x)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "x", "must be an integer", -2) return false end
   if ultraschall.type(y)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "y", "must be an integer", -3) return false end
   if ultraschall.type(w)~="number: integer" then ultraschall.AddErrorMessage("GFX_DrawEmbossedSquare", "w", "must be an integer", -4) return false end
@@ -1122,23 +1110,23 @@ function ultraschall.GFX_DrawEmbossedSquare(x, y, w, h, rbg, gbg, bbg, r, g, b)
     gbg=rbg
   end
   if rbg~=nil and bbg~=nil and gbg~=nil then
-    ultraschall.gfx.set(rbg,gbg,bbg)
-    ultraschall.gfx.rect(x+1,y+1,w,h,1)
+    gfx.set(rbg,gbg,bbg)
+    gfx.rect(x+1,y+1,w,h,1)
   end
   
   -- darker-edges
-  ultraschall.gfx.set(0.5*r, 0.5*g, 0.5*b)
-  ultraschall.gfx.line(x+offsetx  , y+offsety,   x+w+offsetx, y+offsety  )
-  ultraschall.gfx.line(x+w+offsetx, y+offsety,   x+w+offsetx, y+h+offsety)
-  ultraschall.gfx.line(x+w+offsetx, y+h+offsety, x+offsetx  , y+h+offsety)
-  ultraschall.gfx.line(x+offsetx  , y+h+offsety, x+offsetx  , y+offsety  )
+  gfx.set(0.5*r, 0.5*g, 0.5*b)
+  gfx.line(x+offsetx  , y+offsety,   x+w+offsetx, y+offsety  )
+  gfx.line(x+w+offsetx, y+offsety,   x+w+offsetx, y+h+offsety)
+  gfx.line(x+w+offsetx, y+h+offsety, x+offsetx  , y+h+offsety)
+  gfx.line(x+offsetx  , y+h+offsety, x+offsetx  , y+offsety  )
 
   -- brighter-edges
-  ultraschall.gfx.set(r, g, b)
-  ultraschall.gfx.line(x,   y,   x+w, y  )
-  ultraschall.gfx.line(x+w, y,   x+w, y+h)
-  ultraschall.gfx.line(x+w, y+h, x  , y+h)
-  ultraschall.gfx.line(x  , y+h, x  , y  )
+  gfx.set(r, g, b)
+  gfx.line(x,   y,   x+w, y  )
+  gfx.line(x+w, y,   x+w, y+h)
+  gfx.line(x+w, y+h, x  , y+h)
+  gfx.line(x  , y+h, x  , y  )
   return true
 end 
 
@@ -1202,7 +1190,7 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
   local CharacterCount=0
   local first=-2
   while A>0 do
-    A=ultraschall.gfx.getchar(character)
+    A=gfx.getchar(character)
     if first==-2 then first=math.tointeger(A) end
     if A>0 then
       CharacterCount=CharacterCount+1
@@ -1210,7 +1198,7 @@ function ultraschall.GFX_GetChar(character, manage_clipboard, to_clipboard, read
       CharacterTable[CharacterCount]["Code"]=A
       if manage_clipboard==true and A==3 then
         ToClip(to_clipboard)
-      elseif manage_clipboard==true and A==22 and ultraschall.gfx.mouse_cap&4==4 then
+      elseif manage_clipboard==true and A==22 and gfx.mouse_cap&4==4 then
         CharacterTable[CharacterCount]["Ansi"]=FromClip()
       else
         if A>-1 and A<255 then
@@ -1319,7 +1307,7 @@ function ultraschall.GFX_GetTextLayout(bold, italic, underline, outline, nonalia
     integer font_layout - the returned value you can use for gfx.drawstr for its flags-parameter
   </retvals>
   <chapter_context>
-    Text
+    Blitting
   </chapter_context>
   <target_document>US_Api_GFX</target_document>
   <source_document>ultraschall_gfx_engine.lua</source_document>
@@ -1349,6 +1337,7 @@ function ultraschall.GFX_GetTextLayout(bold, italic, underline, outline, nonalia
   
   return Layout
 end
+
 
 function ultraschall.GFX_ResizeImageKeepAspectRatio(image, neww, newh, bg_r, bg_g, bg_b)
 --[[
@@ -1391,35 +1380,44 @@ function ultraschall.GFX_ResizeImageKeepAspectRatio(image, neww, newh, bg_r, bg_
   if math.type(newh)~="integer" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "newh", "must be an integer", -3) return false end
   
   if bg_r~=nil and type(bg_r)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_r", "must be a number", -4) return false end
+  if bg_r==nil then bg_r=0 end
   if bg_g~=nil and type(bg_g)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_g", "must be a number", -5) return false end
+  if bg_g==nil then bg_g=0 end
   if bg_b~=nil and type(bg_b)~="number" then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "bg_b", "must be a number", -6) return false end
+  if bg_b==nil then bg_b=0 end
   
   if image<0 or image>1022 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "image", "must be between 0 and 1022", -7) return false end
   if neww<0 or neww>8192 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "neww", "must be between 0 and 8192", -8) return false end
   if newh<0 or newh>8192 then ultraschall.AddErrorMessage("GFX_ResizeImageKeepAspectRatio", "newh", "must be between 0 and 8192", -9) return false end
   
-  local old_r, old_g, old_g=ultraschall.gfx.r, ultraschall.gfx.g, ultraschall.gfx.b  
-  local old_dest=ultraschall.gfx.dest
-  local oldx, oldy = ultraschall.gfx.x, ultraschall.gfx.y
-  local x,y=ultraschall.gfx.getimgdim(image)
+  local old_r, old_g, old_g=gfx.r, gfx.g, gfx.b  
+  local old_dest=gfx.dest
+  local oldx, oldy = gfx.x, gfx.y
+  
+  local x,y=gfx.getimgdim(image)
   local ratiox=((100/x)*neww)/100
   local ratioy=((100/y)*newh)/100
+  local ratio
   if ratiox<ratioy then ratio=ratiox else ratio=ratioy end
-  ultraschall.gfx.setimgdim(1023, neww, newh)
-  ultraschall.gfx.dest=1023
-  ultraschall.gfx.blit(image, ratio, 0)
+  gfx.setimgdim(1023, neww, newh)
+  gfx.dest=1023
+  gfx.set(bg_r, bg_g, bg_b)
+  gfx.rect(0,0,8192,8192,1)
+  gfx.x=0
+  gfx.y=0
+  gfx.blit(image, ratio, 0)
 
-  ultraschall.gfx.setimgdim(image, neww, newh)
-  ultraschall.gfx.dest=image
-  if bg_r~=nil then ultraschall.gfx.r=bg_r end
-  if bg_g~=nil then ultraschall.gfx.g=bg_g end
-  if bg_b~=nil then ultraschall.gfx.b=bg_b end
-  x,y=ultraschall.gfx.getimgdim(image)
-  ultraschall.gfx.rect(-1,-1,x+1,y+1,1)
-  ultraschall.gfx.set(old_r, old_g, old_g)
-  ultraschall.gfx.blit(1023, 1, 0)
-  ultraschall.gfx.dest=old_dest
-  ultraschall.gfx.x, ultraschall.gfx.y = oldx, oldy
+  gfx.setimgdim(image, neww, newh)
+  gfx.dest=image
+  if bg_r~=nil then gfx.r=bg_r end
+  if bg_g~=nil then gfx.g=bg_g end
+  if bg_b~=nil then gfx.b=bg_b end
+  x,y=gfx.getimgdim(image)
+  gfx.rect(-1,-1,x+1,y+1,1)
+  gfx.set(old_r, old_g, old_g)
+  gfx.blit(1023, 1, 0)
+  gfx.dest=old_dest
+  gfx.x, gfx.y = oldx, oldy
   return true
 end
 

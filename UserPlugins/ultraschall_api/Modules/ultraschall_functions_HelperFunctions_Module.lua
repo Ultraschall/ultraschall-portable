@@ -6883,7 +6883,7 @@ function ultraschall.IsValidReaProject(ReaProject)
 </US_DocBloc>
 ]]
   --if ReaProject==nil or type(ReaProject)~="number" then return false end
-  if ReaProject==nil then return false end
+  if ReaProject==nil then return true end
   if ReaProject==0 then return true end
   local count=0
   while reaper.EnumProjects(count,"")~=nil do
