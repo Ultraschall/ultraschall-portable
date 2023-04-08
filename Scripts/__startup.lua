@@ -76,9 +76,7 @@ if theme_version == "" then
 end
 
 if error_msg then
-    type = 0
-    title = "Ultraschall Configuration Problem"
-     result = reaper.ShowMessageBox( error_msg, title, type )
+     result = reaper.ShowMessageBox(error_msg, "Ultraschall Configuration Problem", 0)
 
 elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   start_id = reaper.NamedCommandLookup("_Ultraschall_StartScreen")
@@ -188,11 +186,10 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Settings",0.0, true)
 
 
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
-os = reaper.GetOS()
 
 --get the slot of the StudioLink effect.
 
-if string.match(os, "OS") then
+if string.match(reaper.GetOS(), "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
 else  -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
