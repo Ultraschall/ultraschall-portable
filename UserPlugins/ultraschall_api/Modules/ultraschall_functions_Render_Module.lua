@@ -5952,7 +5952,7 @@ end
 --ultraschall.SetRenderPreset("A04", "A04", L)
 
 
-function ultraschall.RenderProject_RenderTable(projectfilename_with_path, RenderTable, AddToProj, CloseAfterRender, SilentlyIncrementFilename)
+function ultraschall.RenderProject_RenderTable(projectfilename_with_path, RenderTable, AddToProj, CloseAfterRender, SilentlyIncrementFilename, ignore_if_cancelled)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RenderProject_RenderTable</slug>
@@ -6149,6 +6149,11 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- get the current settings as rendertable and apply the RenderTable the user passed to us
     local OldRenderTable=ultraschall.GetRenderTable_Project()
     
+    if ignore_if_cancelled~=nil then
+      oldadd=RenderTable["AddToProj"]
+      RenderTable["AddToProj"]=false
+    end
+    
     ultraschall.ApplyRenderTable_Project(RenderTable, true) -- here the bug happens(Which bug, Meo? Which Bug? Forgot about me, Meo? - Yours sincerely Meo)
     --ultraschall.ShowLastErrorMessage()
     
@@ -6171,6 +6176,10 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
     -- render
     reaper.Main_OnCommand(41824,0)    -- render using it with the last rendersettings(those, we inserted included)
     reaper.SNM_SetIntConfigVar("saveopts", oldSaveOpts) -- reset old bak-files-behavior    
+    
+    if ignore_if_cancelled~=nil then
+      RenderTable["AddToProj"]=oldadd
+    end
     
     -- reset old Save Copy of Project to outfile-checkbox setting
     ultraschall.SetRender_SaveCopyOfProject(oldCopyOfProject)

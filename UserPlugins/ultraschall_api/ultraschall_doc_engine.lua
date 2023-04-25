@@ -1941,7 +1941,7 @@ function ultraschall.Docs_LoadUltraschallAPIDocBlocs()
   ultraschall.Docs_US_Functions_USDocBlocs_Slug={}
   ultraschall.Docs_US_Functions_USDocBlocs_Titles={}
   for i=1, ultraschall.Docs_US_Functions_USDocBlocs_Count do 
-    ultraschall.Docs_US_Functions_USDocBlocs_Slug[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_US_Functions_USDocBlocs[i], 1)
+    ultraschall.Docs_US_Functions_USDocBlocs_Slug[i] = ultraschall.Docs_GetUSDocBloc_Slug(ultraschall.Docs_US_Functions_USDocBlocs[i], 1)
     ultraschall.Docs_US_Functions_USDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Slug(ultraschall.Docs_US_Functions_USDocBlocs[i], 1)
   end
 end
@@ -2245,7 +2245,7 @@ function ultraschall.Docs_GetUltraschallApiFunction_Retvals(functionname)
   local retvals2={}
   for i=1, retvalscount do
     retvals2[i]={}
-    retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.-) (.*)")
+    retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.*) (.*)")
     if retvals2[i]["name"]==nil then retvals2[i]["name"]="retval" end
     if retvals2[i]["datatype"]==nil then retvals2[i]["datatype"]=retvals[i][1] end
     retvals2[i]["description"]=retvals[i][2]
@@ -2301,13 +2301,13 @@ function ultraschall.Docs_GetUltraschallApiFunction_Params(functionname)
   end
   if found==-1 then ultraschall.AddErrorMessage("Docs_GetUltraschallApiFunction_Params", "functionname", "function not found", -4) return end
   
-  local parmcount, Params, markuptype, markupversion, prog_lang, spok_lang, indent = 
+  parmcount, Params, markuptype, markupversion, prog_lang, spok_lang, indent = 
   
   ultraschall.Docs_GetUSDocBloc_Params(ultraschall.Docs_US_Functions_USDocBlocs[found], true, 1)
   local Params2={}
   for i=1, parmcount do
     Params2[i]={}
-    Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.-) (.*)")
+    Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.*) (.*)")
     if Params2[i]["name"]==nil then Params2[i]["name"]="retval" end
     if Params2[i]["datatype"]==nil then Params2[i]["datatype"]=Params[i][1] end
     Params2[i]["description"]=Params[i][2]
