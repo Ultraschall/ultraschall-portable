@@ -404,16 +404,19 @@ function ultraschall.GetTrackIsBusState(tracknumber, str)
     
     It's the entry ISBUS
     
+    busstate1=0, busstate2=0 - track is no folder
+    - or
+    busstate1=1, busstate2=1 - track is a folder
+    - or
+    busstate1=1, busstate2=2 - track is a folder but view of all subtracks not compactible
+    - or
+    busstate1=2, busstate2=-1 - track is last track in folder(no tracks of subfolders follow)
+    
     returns nil in case of an error
   </description>
   <retvals>
-    integer busstate1=0, integer busstate2=0 - track is no folder
-    - or
-    integer busstate1=1, integer busstate2=1 - track is a folder
-    - or
-    integer busstate1=1, integer busstate2=2 - track is a folder but view of all subtracks not compactible
-    - or
-    integer busstate1=2, integer busstate2=-1 - track is last track in folder(no tracks of subfolders follow)
+    integer busstate1 - refer to description for details
+    integer busstate2 - refer to description for details
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
@@ -2420,18 +2423,21 @@ function ultraschall.SetTrackIsBusState(tracknumber, busstate1, busstate2, Track
   <description>
     Sets ISBUS-state of the track or a TrackStateChunk; if it's a folder track.
     
+    busstate1=0, busstate2=0 - track is no folder
+    busstate1=1, busstate2=1 - track is a folder
+    busstate1=1, busstate2=2 - track is a folder but view of all subtracks not compactible
+    busstate1=2, busstate2=-1 - track is last track in folder(no tracks of subfolders follow)
+    
     returns false in case of an error
   </description>
   <retvals>
     boolean retval  - true, if successful, false if unsuccessful
+    integer busstate1 - refer to description for details
+    integer busstate2 - refer to description for details
     string TrackStateChunk - the altered TrackStateChunk
   </retvals>
   <parameters>
     integer tracknumber - number of the track, beginning with 1; -1 if you want to use parameter TrackStateChunk
-    integer busstate1=0, integer busstate2=0 - track is no folder
-    integer busstate1=1, integer busstate2=1 - track is a folder
-    integer busstate1=1, integer busstate2=2 - track is a folder but view of all subtracks not compactible
-    integer busstate1=2, integer busstate2=-1 - track is last track in folder(no tracks of subfolders follow)
     optional string TrackStateChunk - use a trackstatechunk instead of a track; only used when tracknumber is -1
   </parameters>
   <chapter_context>

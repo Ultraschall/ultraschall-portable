@@ -488,6 +488,9 @@ function entries(start, stop)
       if requires_alt["ReaBlink"]~=nil then
         FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reablink"..requires_alt["ReaBlink"]..".png\" alt=\"ReaBlink version "..requires_alt["ReaBlink"].."\">"
       end
+      if requires_alt["ReaLlm"]~=nil then
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/llm"..requires_alt["ReaLlm"]..".png\" alt=\"ReaLlm version "..requires_alt["ReaLlm"].."\">"
+      end
       if requires_alt["Ultraschall"]~=nil then
         FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/ultraschall"..requires_alt["Ultraschall"]..".png\" alt=\"Ultraschall version "..requires_alt["Ultraschall"].."\">"
       end

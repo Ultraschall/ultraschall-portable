@@ -1616,7 +1616,7 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetFXStateChunk</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.8
     Reaper=5.979
     Lua=5.3
   </requires>
@@ -1664,8 +1664,15 @@ function ultraschall.SetFXStateChunk(StateChunk, FXStateChunk, TakeFXChain_id)
   
   
   local Start, Stop = string.find(StateChunk, OldFXStateChunk, 0, true)
-  StateChunk=StateChunk:sub(1,Start-1)..FXStateChunk:match("%s-(.*)")..StateChunk:sub(Stop+1,-1)
-  StateChunk=string.gsub(StateChunk, "\n%s*", "\n")
+  --print2(Start, Stop)
+  if Start==1 then
+    Start=StateChunk:match("MAINSEND.-\n()")
+    --print2(Start)
+    StateChunk=StateChunk:sub(1,Start-1)..""..FXStateChunk.."\n"..StateChunk:sub(Start,-1)
+  else
+    StateChunk=StateChunk:sub(1,Start-1)..FXStateChunk:match("%s-(.*)")..StateChunk:sub(Stop+1,-1)
+    StateChunk=string.gsub(StateChunk, "\n%s*", "\n")
+  end
   return true, StateChunk
 end
 

@@ -35,8 +35,69 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.8 - "Sparks - When do I get to sing my way" - 8th of April 2023</h3>
+<p>Has now 1652 functions, with 37 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Docs-Find-functions</strong><br />
+Added now a lot of functions to access the docs of a function directly via API.<br />
+You can also use the various Find-functions to search for functions matching certain words and slugs. With that, you can build your own API-search-tools. Oh: and you can search the Config-Vars too!</p></li>
+<li><p><strong>UTF8/string-functions for Lua</strong><br />
+Various helperfunctions for dealing with strings and utf8-encoded strings. They'll be added to the string-module of Lua.</p></li>
+<li><p><strong>Store RenderTable as extstate</strong><br />
+You can store and retrieve RenderTables from/to extstates and projextstates. So you can store multiple render-settings in a project.<br />
+So if you have different render-settings for different parts of your project, you can store and restore them now from extstates without having to spam the render-presets.</p></li>
+</ul>
+<h4>New features in 4.8</h4>
+<ul>
+<li>Debug: Debug_ShowCurrentContext - calling this function returns/shows the current sourcefile, linenumber and function-context(for debug)</li>
+<li>HelperFunctions: ConvertIniStringToTable - converts a loaded ini-file into a table<br />
+</li>
+<li>HelperFunctions: string.has_alphanumeric - returns if a string has a alphanumeric-character</li>
+<li>HelperFunctions: string.has_control - returns if a string has a control-character<br />
+</li>
+<li>HelperFunctions: string.has_digits - returns if a string has a digit-character</li>
+<li>HelperFunctions: string.has_hex - returns if a string has a hex-character</li>
+<li>HelperFunctions: string.has_letter - returns if a string has a letter-character</li>
+<li>HelperFunctions: string.has_lowercase - returns if a string has a lowercase-character</li>
+<li>HelperFunctions: string.has_printable - returns if a string has a printable-character</li>
+<li>HelperFunctions: string.has_space - returns if a string has a space-character</li>
+<li>HelperFunctions: string.has_uppercase - returns if a string has a uppercase-character</li>
+<li>HelperFunctions: string.utf8_len - returns the length of an utf8-encoded string; works like string.len</li>
+<li>HelperFunctions: string.utf8_sub - gets the substring of an utf8-encoded string; works like string.sub<br />
+</li>
+<li>Docs: Docs_FindReaperApiFunction_Pattern - searches for api-functions(including extensions) that follow a search pattern</li>
+<li>Docs: Docs_FindReaperConfigVar_Pattern - searches for configuration variables that follow a search pattern</li>
+<li>Docs: Docs_FindUltraschallApiFunction_Pattern - searches for Ultraschall Api-functions that follow a search pattern</li>
+<li>Docs: Docs_GetAllReaperApiFunctionnames - returns all reaper-API-functionnames existing in the docs(includes extensions)</li>
+<li>Docs: Docs_GetAllUltraschallApiFunctionnames - returns all Ultraschall-API-functionnames existing in the docs(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Call - returns the functioncall of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Description - returns the description of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Params - returns the parameters of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Retvals - returns the returnvalues of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Requires - returns the required dependencies of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetReaperApiFunction_Tags - returns the tags of a Reaper-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Call - returns the functioncall of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Description - returns the description of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Params - returns the parameters of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Retvals - returns the returnvalues of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Requires - returns the required dependencies of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_GetUltraschallApiFunction_Tags - returns the tags of a Ultraschall-API-function(includes extensions)</li>
+<li>Docs: Docs_LoadReaperApiDocBlocs - (re)loads the entries of the Reaper api-documentation</li>
+<li>Docs: Docs_LoadReaperConfigVarsDocBlocs - (re)loads the entries of the config-var-documentation</li>
+<li>Docs: Docs_LoadUltraschallApiDocBlocs - (re)loads the entries of the Ultraschall api-documentation</li>
+<li>Rendering: GetRenderTable_ExtState - gets a RenderTable stored in an extstate</li>
+<li>Rendering: GetRenderTable_ProjExtState - gets a RenderTable stored in a projextstate</li>
+<li>Rendering: SetRenderTable_ExtState - stores a RenderTable in an extstate</li>
+<li>Rendering: SetRenderTable_ProjExtState - stores a RenderTable in a projextstate</li>
+</ul>
+<h4>Changes from 4.75 to 4.8</h4>
+<ul>
+<li>Docs: Reaper Internals - updated docs to Reaper 6.78, SWS 2.13.2.0, ReaFab 0.3.10, ReaImGui 0.8.5, ReaLlm 0.4.1 and added PeloReaper 2023.02.19</li>
+<li><h2>FXManagement: SetFXStateChunk - didn't work properly on tracks without an existing FXChain -&gt; fixed now(thanks to tompad)</h2></li>
+</ul>
 <h3>4.75 - "Soundgarden - Black Hole Sun" - 19th of December 2022</h3>
-<p>Has now 1614 functions, with 24 new ones</p>
+<p>Has now 1615 functions, with 25 new ones</p>
 <p><strong>new in this release:</strong></p>
 <ul>
 <li><p><strong>AutoBypass settings</strong><br />
