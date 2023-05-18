@@ -51,23 +51,39 @@ if ultraschall.CountNormalMarkers()==0 then reaper.MB("Sorry, no chapter-markers
 
 if IsProjectSaved()==false then return end
 
-Exportfile=""
+Chapters={}
 
 for i=1, ultraschall.CountNormalMarkers() do
   retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(i)
-  retval, content = ultraschall.GetSetChapterMarker_Attributes(false, i, "chap_url", 2, false)
-  if content~="" then content=" <"..content..">" end
-  if retval~=6 then
-    if markertitle:match("<")~=nil or markertitle:match(">")~=nil then
-      retval=reaper.MB("Found < or > character in a markertitle, which can cause problems with PodLove. \n\nDo you want to continue anyways?", "Warning", 4)
-      if retval==7 then return end
-    end
-  end
+  retval, url= ultraschall.GetSetChapterMarker_Attributes(false, i, "chap_url", 2, false)
+  if url~="" then url=" <"..url..">" end
+  Chapters[i]={}
+  Chapters[i]["name"]=markertitle
+  Chapters[i]["url"]=url
+  if markertitle=="" then Chapters[i]["error"]=" has no title." error_found=true end
+  if markertitle:match("<") or markertitle:match(">") then Chapters[i]["error"]=" has < or > in its title; could cause problems with Podlove-Publisher." error_found=true end
+
   timestring_end=reaper.format_timestr_pos(position, "", 0):match(".*(%..*)")
   timestring=reaper.format_timestr_pos(position, "", 5):match("(.*):")
-  
-  Exportfile=Exportfile..timestring..timestring_end.." "..markertitle..content.."\n"
+  Chapters[i]["position"]=timestring..timestring_end
 end
+
+if error_found==true then
+  local FoundErrors=""
+  for i=1, #Chapters do
+    if Chapters[i]["error"]~=nil then
+      FoundErrors=FoundErrors.."Marker at "..Chapters[i]["position"]..": "..Chapters[i]["error"].."\n\n"
+    end
+  end
+  retval = reaper.MB("Do you want to continue with the errors in the following markers? \n\n"..FoundErrors, "Errors", 4)
+  if retval==7 then return end
+end
+
+Exportfile=""
+for i=1, #Chapters do  
+  Exportfile=Exportfile..Chapters[i]["position"].." "..Chapters[i]["name"]..Chapters[i]["url"].."\n"
+end
+
 
 retval = ultraschall.WriteValueToFile(dir.."/chapters.txt", Exportfile, false)
 if retval==-1 then reaper.MB("Couldn't write the file. Can the file/folder be accessed?", "Error", 0) end
