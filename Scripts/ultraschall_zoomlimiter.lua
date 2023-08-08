@@ -55,8 +55,7 @@ end
 
     steplength = 0.4 -- factor to adjust the steplength of the zoom
     sensitivity = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_Zoom_Sensitivity", "Value", "ultraschall-settings.ini"))
-    if sensitivity==nil then sensitivity = 4 end -- 0.4-4 are useful values
-    sensitivity=4
+    if sensitivity==nil then sensitivity = 5 end -- 0.4-4 are useful values
     length=0
     
     --get end of project or position of play/editcursor in the project, depending on what is the last
