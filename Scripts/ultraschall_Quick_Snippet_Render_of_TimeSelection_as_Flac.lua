@@ -83,7 +83,7 @@ RenderTable["RenderFile"]=project_path_name.."/RenderedSnippets/"
 
 oldstate_render_stats=ultraschall.GetRender_SaveRenderStats()
 ultraschall.SetRender_SaveRenderStats(false)
-ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false, 1)
+ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, true, 1)
 
 ultraschall.SetRender_SaveRenderStats(oldstate_render_stats)
 
