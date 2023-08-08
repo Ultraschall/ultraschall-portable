@@ -62,14 +62,18 @@ retval, project_path_name=IsProjectSaved()
 if retval~=true then return end
 
 Start, Stop=reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
-if Start==Stop then reaper.MB("No timeselection set!", "Nothing to render", 0) return end
+if Start==Stop then reaper.MB("You must set a time-selection first!", "Nothing to render", 0) return end
 
-retvals, Title=reaper.GetUserInputs("Enter a title", 1, "Title", "")
+retvals, Title=reaper.GetUserInputs("Enter a name for the quick-render-file", 1, "Name, extrawidth=200", reaper.GetExtState("ultraschall_Quick_Render", "Last_FileName"))
 if retvals==false then return end
+if Title=="" then reaper.MB("You must enter a filename.", "Nothing to render", 0) return end
+reaper.SetExtState("ultraschall_Quick_Render", "Last_FileName", Title, true)
+
 RenderTable=ultraschall.CreateNewRenderTable()
 RenderTable["RenderString"]=ultraschall.CreateRenderCFG_FLAC(0, 5)
 RenderTable["Startposition"]=Start
 RenderTable["Endposition"]=Stop
+RenderTable["SilentlyIncrementFilename"]=false
 Start_str=reaper.format_timestr_pos(Start, "", 5)
 Stop_str=reaper.format_timestr_pos(Stop-Start, "", 5)
 Hour, Minutes, Seconds = Stop_str:match("(.-):(.-):(.-):")
@@ -79,7 +83,7 @@ RenderTable["RenderFile"]=project_path_name.."/RenderedSnippets/"
 
 oldstate_render_stats=ultraschall.GetRender_SaveRenderStats()
 ultraschall.SetRender_SaveRenderStats(false)
-ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, true, 1)
+ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false, 1)
 
 ultraschall.SetRender_SaveRenderStats(oldstate_render_stats)
 
