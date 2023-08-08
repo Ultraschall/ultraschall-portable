@@ -79,12 +79,25 @@ Stop_str=reaper.format_timestr_pos(Stop-Start, "", 5)
 Hour, Minutes, Seconds = Stop_str:match("(.-):(.-):(.-):")
 RenderTable["RenderPattern"]=Hour.."h"..Minutes.."m"..Seconds.."s".."-"..Title
 RenderTable["Bounds"]=0
-RenderTable["RenderFile"]=project_path_name.."/RenderedSnippets/"
+RenderTable["RenderFile"]=project_path_name.."RenderedSnippets"
 
 oldstate_render_stats=ultraschall.GetRender_SaveRenderStats()
 ultraschall.SetRender_SaveRenderStats(false)
-ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, true, 1)
+ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false, 1)
 
 ultraschall.SetRender_SaveRenderStats(oldstate_render_stats)
+
+retval=reaper.MB("Rendered to file:\n\t"..RenderTable["RenderPattern"].."\nin folder:\n\t"..RenderTable["RenderFile"], "Render Successful", 0)
+
+--[[
+-- ask to show the file in explorer/finder
+
+retval=reaper.MB("Rendered to file:\n\t"..RenderTable["RenderPattern"].."\nin folder:\n\t"..RenderTable["RenderFile"], "Render Successful", 4)
+
+filename=RenderTable["RenderFile"].."/"..RenderTable["RenderPattern"]..".flac","\\", "/"
+filename=string.gsub(filename, "\\", ultraschall.Separator)
+filename=string.gsub(filename, "/", ultraschall.Separator)
+if retval==6 then reaper.CF_LocateInExplorer(filename) end
+--]]
 
 reaper.defer()
