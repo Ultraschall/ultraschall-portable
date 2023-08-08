@@ -48,6 +48,7 @@ function ultraschall.RazorEdit_ProjectHasRazorEdit()
   </retvals>
   <chapter_context>
     Razor Edit
+    Misc
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -76,7 +77,7 @@ function ultraschall.RazorEdit_GetAllRazorEdits(exclude_envelope, exclude_track)
     Lua=5.3
   </requires>
   <functioncall>integer number_razor_edits, table RazorEditTable = ultraschall.RazorEdit_GetAllRazorEdits(optional boolean exclude_envelope, optional boolean exclude_track)</functioncall>
-  <description markup_type="markdown" markup_version="1.0.1" indent="default">
+  <description>
     Returns the number of Razor Edits available and all its entries as a handy table.
     
     The table is of the following format(index is the index of all available razor-edits):        
@@ -102,6 +103,7 @@ function ultraschall.RazorEdit_GetAllRazorEdits(exclude_envelope, exclude_track)
   </parameters>
   <chapter_context>
     Razor Edit
+    Misc
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -193,6 +195,7 @@ function ultraschall.RazorEdit_GetRazorEdits_Track(track, exclude_envelope, excl
   </parameters>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -275,35 +278,26 @@ function ultraschall.RazorEdit_Nudge_Track(track, nudge_delta, index)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
-  <tags>razor edit, nudge, track, envelope</tags>
+  <tags>razor edit, nudge, track</tags>
 </US_DocBloc>
 ]]
   if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Track", "track", "must be a valid MediaTrack", -1) return false end
   if type(nudge_delta)~="number" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Track", "nudge_delta", "must be a number", -2) return false end
-  if exclude_track~=nil and type(exclude_track)~="boolean" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Track", "exclude_track", "must be nil or a boolean", -3) return false end
-  if exclude_envelope~=nil and type(exclude_envelope)~="boolean" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Track", "exclude_envelope", "must be nil or a boolean", -4) return false end
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Track", "index", "must be nil or an integer", -3) return false end
   local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
   local B=B.." "
   local newstring=""
   local count=0
   local exclude_envelope=true
   for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
-    count=count+1
     a=tonumber(a)
     b=tonumber(b)
-    C=c
-    if c~="\"\"" and exclude_envelope~=true then
-      if index~=nil and count==index then
-        a=a+nudge_delta
-        b=b+nudge_delta
-      elseif index==nil then
-        a=a+nudge_delta
-        b=b+nudge_delta
-      end
-    elseif c=="\"\"" and exclude_track~=true then
+    if c=="\"\"" and exclude_track~=true then
+      count=count+1
       if index~=nil and count==index then
         a=a+nudge_delta
         b=b+nudge_delta
@@ -344,8 +338,13 @@ function ultraschall.RazorEdit_Nudge_Envelope(TrackEnvelope, nudge_delta, index)
     number nudge_delta - the amount to nudge the razor-edit-areas, negative, left; positive, right
     optional integer index - allows to nudge only the n-th razor-edit-area in the envelope; nil, to nudge all in the envelope
   </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Nudge_Track
+             nudges the razor-edit areas of a specific Track only
+  </linked_to>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -354,7 +353,8 @@ function ultraschall.RazorEdit_Nudge_Envelope(TrackEnvelope, nudge_delta, index)
 ]]
   if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Envelope", "TrackEnvelope", "must be a valid TrackEnvelope", -1) return false end
   if type(nudge_delta)~="number" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Envelope", "nudge_delta", "must be a number", -2) return false end
-
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Nudge_Envelope", "index", "must be nil or an integer", -5) return false end
+  
   local track=reaper.Envelope_GetParentTrack(TrackEnvelope)
   local retval, Guid = reaper.GetSetEnvelopeInfo_String(TrackEnvelope, "GUID", "", false)
   local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
@@ -364,7 +364,6 @@ function ultraschall.RazorEdit_Nudge_Envelope(TrackEnvelope, nudge_delta, index)
   for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
     a=tonumber(a)
     b=tonumber(b)
-    C=c
     if c=="\""..Guid.."\"" then
       count=count+1
       if index~=nil and count==index then
@@ -409,6 +408,7 @@ function ultraschall.RazorEdit_RemoveAllFromTrack(track)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -463,6 +463,7 @@ function ultraschall.RazorEdit_RemoveAllFromEnvelope(TrackEnvelope)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -519,6 +520,7 @@ function ultraschall.RazorEdit_RemoveAllFromTrackAndEnvelope(track)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Misc
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -549,7 +551,7 @@ function ultraschall.RazorEdit_Add_Track(track, start_position, end_position)
   </description>
   <retvals>
     string altered_razor_edit_string - the altered razor-edit-areas that are now stored in the track, as used by GetSetMediaTrackInfo_String
-  </retvals>
+  </retvals>  
   <parameters>
     MediaTrack track - the track, to which you want to add razor-edits
     number start_position - the start-position, from which to add the razor-edit
@@ -561,6 +563,7 @@ function ultraschall.RazorEdit_Add_Track(track, start_position, end_position)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -611,6 +614,7 @@ function ultraschall.RazorEdit_Add_Envelope(envelope, start_position, end_positi
   </linked_to>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -662,6 +666,7 @@ function ultraschall.RazorEdit_Remove_Track(track, start_position, end_position)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -744,6 +749,7 @@ function ultraschall.RazorEdit_Remove_Envelope(envelope, start_position, end_pos
   </linked_to>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -820,6 +826,7 @@ function ultraschall.RazorEdit_CountAreas_Envelope(TrackEnvelope)
   </parameters>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -869,6 +876,7 @@ function ultraschall.RazorEdit_CountAreas_Track(track)
   </parameters>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -920,6 +928,7 @@ function ultraschall.RazorEdit_Remove(track)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Misc
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -960,6 +969,7 @@ function ultraschall.RazorEdit_GetFromPoint(x,y)
   </parameters>  
   <chapter_context>
     Razor Edit
+    Misc
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1015,6 +1025,7 @@ function ultraschall.RazorEdit_RemoveByIndex_Track(track, razor_edit_area_index)
   </linked_to>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1072,6 +1083,7 @@ function ultraschall.RazorEdit_RemoveByIndex_Envelope(envelope, razor_edit_area_
   </linked_to>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1112,7 +1124,7 @@ function ultraschall.RazorEdit_IsAtPosition_Track(track, position)
     Reaper=6.24
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional number start_pos, optional number end_pos, optional integer razor_area_index  = ultraschall.RazorEdit_IsAtPosition_Track(MediaTrack track, number position)</functioncall>
+  <functioncall>boolean retval, optional number start_pos, optional number end_pos, optional integer razor_area_index = ultraschall.RazorEdit_IsAtPosition_Track(MediaTrack track, number position)</functioncall>
   <description>
     returns, if there's a razor-edit in a track at a given position or if there's a gap.
     
@@ -1136,6 +1148,7 @@ function ultraschall.RazorEdit_IsAtPosition_Track(track, position)
   </parameters>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1216,6 +1229,7 @@ function ultraschall.RazorEdit_IsAtPosition_Envelope(envelope, position)
   </parameters>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1295,6 +1309,7 @@ function ultraschall.RazorEdit_CheckForPossibleOverlap_Track(track, startpositio
   </parameters>
   <chapter_context>
     Razor Edit
+    Tracks
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1367,6 +1382,7 @@ function ultraschall.RazorEdit_CheckForPossibleOverlap_Envelope(envelope, startp
   </parameters>
   <chapter_context>
     Razor Edit
+    Envelopes
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
@@ -1408,3 +1424,596 @@ function ultraschall.RazorEdit_CheckForPossibleOverlap_Envelope(envelope, startp
   end
   return found,pos, startposition, endposition
 end
+
+function ultraschall.RazorEdit_Set_Track(track, index, startposition, endposition)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_Set_Track</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_Set_Track(MediaTrack track, integer index, number startposition, number endposition)</functioncall>
+  <description>
+    Sets start and endposition of a razor-edit of a track, leaving the envelopes untouched.
+    
+    To set razor-edit-areas of a specific TrackEnvelope, use RazorEdit_Set_Envelope instead.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, in which the RazorEdit is located, that you wan to set
+    integer index - the RazorEdit to set the new start/endposition of
+    number startposition - the new startposition of the RazorEdit
+    number endposition - the new endposition of the RazorEdit
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Set_Envelope
+             sets a razor-edit area of a specific TrackEnvelope only
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Tracks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, set, track</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("RazorEdit_Set_Track", "track", "must be a valid MediaTrack", -1) return false end
+  if type(startposition)~="number" then ultraschall.AddErrorMessage("RazorEdit_Set_Track", "startposition", "must be a number", -2) return false end
+  if type(endposition)~="number" then ultraschall.AddErrorMessage("RazorEdit_Set_Track", "endposition", "must be a number", -3) return false end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Set_Track", "index", "must be an integer", -4) return false end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  local exclude_envelope=true
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\"\"" and exclude_track~=true then
+      count=count+1
+      if count==index then
+        a=startposition
+        b=endposition
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)  
+  return true
+end
+
+function ultraschall.RazorEdit_Set_Envelope(TrackEnvelope, index, startposition, endposition)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_Set_Envelope</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_Set_Envelope(TrackEnvelope TrackEnvelope, integer index, number startpostion, number endposition)</functioncall>
+  <description>
+    Sets a razor-edit of a specific TrackEnvelope
+    
+    To set razor-edit-areas of a specific TrackEnvelope, use RazorEdit_Set_Track instead.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, setting was successful; false, setting was unsuccessful
+  </retvals>
+  <parameters>
+    TrackEnvelope TrackEnvelope - the envelope, in which you want to set an already existing razor-edit
+    integer index - the razor-edit to set to a new start/endposition
+    number startpostion - the new startposition of the razor-edit
+    number endposition - the new endposition of the razor-edit
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Set_Track
+             sets a razor-edit area of a specific Track only
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, set, envelope</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("RazorEdit_Set_Envelope", "TrackEnvelope", "must be a valid TrackEnvelope", -1) return false end
+  if type(startposition)~="number" then ultraschall.AddErrorMessage("RazorEdit_Set_Envelope", "startposition", "must be a number", -2) return false end
+  if type(endposition)~="number" then ultraschall.AddErrorMessage("RazorEdit_Set_Envelope", "endposition", "must be a number", -3) return false end
+  if math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Set_Envelope", "index", "must be an integer", -4) return false end
+  
+  local track=reaper.Envelope_GetParentTrack(TrackEnvelope)
+  local retval, Guid = reaper.GetSetEnvelopeInfo_String(TrackEnvelope, "GUID", "", false)
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\""..Guid.."\"" then
+      count=count+1
+      if count==index then
+        a=startposition
+        b=endposition
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)
+  return true
+end
+
+
+function ultraschall.RazorEdit_Resize_Track(track, length, edge, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_Resize_Track</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_Resize_Track(MediaTrack track, number length, integer edge, optional integer index)</functioncall>
+  <description>
+    Resizes razor-edits of a track, leaving the envelopes untouched.
+    
+    To resize razor-edit-areas of a specific TrackEnvelope, use RazorEdit_Resize_Envelope instead.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose razor-edits you want to resize
+    number length - the length to resize the razor-edit-areas to
+    integer edge - 1, cut at the front, 2, cut at the back
+    optional integer index - allows to length only the n-th razor-edit-area in the track; nil, to length all in the track(except envelope)    
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Resize_Track
+             resizes the razor-edit area of a specific TrackEnvelope only
+      inline:RazorEdit_ResizeByFactor_Track
+             resizes the razor-edit area of a specific TrackEnvelope by a factor
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Tracks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, resize, track</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("RazorEdit_Resize_Track", "track", "must be a valid MediaTrack", -1) return false end
+  if type(length)~="number" then ultraschall.AddErrorMessage("RazorEdit_Resize_Track", "length", "must be a number", -2) return false end
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Resize_Track", "index", "must be nil or an integer", -3) return false end
+  if math.type(edge)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Resize_Track", "edge", "must be nil or an integer", -4) return false end
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  local exclude_envelope=true
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\"\"" then
+      count=count+1
+      if index~=nil and count==index then
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then
+          a=b-length
+        end
+      elseif index==nil then
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then
+          a=b-length
+        end
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)  
+
+  return true
+end
+
+function ultraschall.RazorEdit_Resize_Envelope(TrackEnvelope, length, edge, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_Resize_Envelope</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_Resize_Envelope(TrackEnvelope TrackEnvelope, number length, integer index, optional integer index)</functioncall>
+  <description>
+    Resizes razor-edits of a specific TrackEnvelope
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <parameters>
+    TrackEnvelope TrackEnvelope - the envelope, whose razor-edit-areas you want to nudge
+    number length - the new length of the razor-edit-areas
+    integer edge - 1, cut at the front, 2, cut at the back
+    optional integer index - allows to resize only the n-th razor-edit-area in the envelope; nil, to resize all in the envelope
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Resize_Track
+             resizes the razor-edit areas of a specific Track only
+      inline:RazorEdit_ResizeByFactor_Envelope
+             resizes the razor-edit area of a specific TrackEnvelope by a factor
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, resize, envelope</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("RazorEdit_Resize_Envelope", "TrackEnvelope", "must be a valid TrackEnvelope", -1) return false end
+  if type(length)~="number" then ultraschall.AddErrorMessage("RazorEdit_Resize_Envelope", "length", "must be a number", -2) return false end
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Resize_Envelope", "index", "must be nil or an integer", -5) return false end
+  if math.type(edge)~="integer" then ultraschall.AddErrorMessage("RazorEdit_Resize_Envelope", "edge", "must be nil or an integer", -4) return false end  
+  
+  local track=reaper.Envelope_GetParentTrack(TrackEnvelope)
+  local retval, Guid = reaper.GetSetEnvelopeInfo_String(TrackEnvelope, "GUID", "", false)
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\""..Guid.."\"" then
+      count=count+1
+      if index~=nil and count==index then
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then
+          a=b-length
+        end
+      elseif index==nil then
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then
+          a=b-length
+        end
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)
+  return true
+end
+
+function ultraschall.RazorEdit_ResizeByFactor_Track(track, factor, edge, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_ResizeByFactor_Track</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_ResizeByFactor_Track(MediaTrack track, number length, integer edge, optional integer index)</functioncall>
+  <description>
+    Resizes razor-edits of a track by a factor, leaving the envelopes untouched.
+    
+    To resize razor-edit-areas of a specific TrackEnvelope, use RazorEdit_Resize_Envelope instead.
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, whose razor-edits you want to resize
+    number factor - the factor to resize the razor-edit-areas to; 2=double the size, 0.5=half the size
+    integer edge - 1, cut at the front, 2, cut at the back
+    optional integer index - allows to length only the n-th razor-edit-area in the track; nil, to length all in the track(except envelope)
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Resize_Envelope
+             resizes the razor-edit areas of a specific Track only
+      inline:RazorEdit_ResizeByFactor_Envelope
+             resizes the razor-edit areas of a specific Track only by a factor
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Tracks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, resize, track</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Track", "track", "must be a valid MediaTrack", -1) return false end
+  if type(factor)~="number" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Track", "factor", "must be a number", -2) return false end
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Track", "index", "must be nil or an integer", -3) return false end
+  if math.type(edge)~="integer" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Track", "edge", "must be nil or an integer", -4) return false end  
+  
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  local exclude_envelope=true
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\"\"" then
+      count=count+1
+      if index~=nil and count==index then
+        local length=b-a
+        length=length*factor
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then          
+          a=b-length
+        end
+      elseif index==nil then
+        local length=b-a
+        length=length*factor
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then          
+          a=b-length
+        end
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)  
+  return true
+end
+
+function ultraschall.RazorEdit_ResizeByFactor_Envelope(TrackEnvelope, factor, edge, index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_ResizeByFactor_Envelope</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.RazorEdit_ResizeByFactor_Envelope(TrackEnvelope TrackEnvelope, number length, integer edge, optional integer index)</functioncall>
+  <description>
+    Resizes razor-edits of a specific TrackEnvelope by a factor
+    
+    returns false in case of an error
+  </description>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <parameters>
+    TrackEnvelope TrackEnvelope - the envelope, whose razor-edit-areas you want to nudge
+    number factor - the factor by whicht to resize; 2=double the size, 0.5=half the size
+    integer edge - 1, cut at the front, 2, cut at the back
+    optional integer index - allows to resize only the n-th razor-edit-area in the envelope; nil, to resize all in the envelope
+  </parameters>
+  <linked_to desc="see:">
+      inline:RazorEdit_Resize_Track
+             resizes the razor-edit areas of a specific Track only
+      inline:RazorEdit_ResizeByFactor_Track
+             resizes the razor-edit areas of a specific Track only by a factor
+  </linked_to>
+  <chapter_context>
+    Razor Edit
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, resize, envelope</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(TrackEnvelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Envelope", "TrackEnvelope", "must be a valid TrackEnvelope", -1) return false end
+  if type(factor)~="number" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Envelope", "factor", "must be a number", -2) return false end
+  if index~=nil and math.type(index)~="integer" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Envelope", "index", "must be nil or an integer", -3) return false end
+  if math.type(edge)~="integer" then ultraschall.AddErrorMessage("RazorEdit_ResizeByFactor_Track", "edge", "must be nil or an integer", -4) return false end  
+  
+  local track=reaper.Envelope_GetParentTrack(TrackEnvelope)
+  local retval, Guid = reaper.GetSetEnvelopeInfo_String(TrackEnvelope, "GUID", "", false)
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)  
+  local B=B.." "
+  local newstring=""
+  local count=0
+  for a,b,c in string.gmatch(B, "(.-) (.-) (\".-\") ") do
+    a=tonumber(a)
+    b=tonumber(b)
+    if c=="\""..Guid.."\"" then
+      count=count+1
+      if index~=nil and count==index then
+        local length=b-a
+        length=length*factor
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then          
+          a=b-length
+        end
+      elseif index==nil then
+        local length=b-a
+        length=length*factor
+        if edge==2 then
+          b=a+length
+        elseif edge==1 then          
+          a=b-length
+        end
+      end
+    end
+    newstring=newstring..a.." "..b.." "..c.." "
+  end
+
+  local A,B=reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", newstring, true)
+  return true
+end
+
+function ultraschall.RazorEdit_GetBetween_Envelope(envelope, start_position, end_position, inside)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_GetBetween_Envelope</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>integer found_razor_edits, table razor_edit_index = ultraschall.RazorEdit_GetBetween_Envelope(TrackEnvelope envelope, number start_position, number end_position, boolean inside)</functioncall>
+  <description>
+    returns the razor-edits between start and endposition within an envelope
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer found_razor_edits - the number of found razor edit-areas
+    table razor_edit_index - the found razor edit-areas
+  </retvals>
+  <parameters>
+    TrackEnvelope envelope - the envelope, from which to retrieve the razor-edit-areas
+    number start_position - the startposition in seconds
+    number end_position - the endposition in seconds
+    boolean inside - true, only razor edits that start and end within start/endposition; false, include partial razor-edits
+  </parameters>
+  <chapter_context>
+    Razor Edit
+    Envelopes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, get, between, envelope, razor edit areas</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(envelope)~="TrackEnvelope" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Envelope", "envelope", "must be a valid TrackEnvelope", -1) return -1 end
+  if type(start_position)~="number" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Envelope", "start_position", "must be a number", -2) return -1 end
+  if type(end_position)~="number" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Envelope", "end_position", "must be a number", -3) return -1 end
+  if type(inside)~="boolean" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Envelope", "inside", "must be a boolean", -4) return -1 end
+
+  local track=reaper.GetEnvelopeInfo_Value(envelope, "P_TRACK")
+  local retval, RazorEdits = reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)
+
+  local retval, GUID = reaper.GetSetEnvelopeInfo_String(envelope, "GUID", "", false)
+  local RazorEdits="0 0 \""..GUID.."\" "..RazorEdits.." "
+  local found=false
+  local tempstart=0
+  local tempend=reaper.GetProjectLength(0)
+  local count=-1
+  local found_razors={}
+  
+  for a,b,c in string.gmatch(RazorEdits, "(.-) (.-) (.-) ") do
+    if c:sub(2,-2)==GUID then
+      count=count+1
+      a=tonumber(a)
+      b=tonumber(b)
+      if count>0 then
+        if inside==true then
+          if a>=start_position and b<=end_position then
+            found_razors[#found_razors+1]=count
+          end
+        elseif inside==false then
+          if (a>=start_position and a<=end_position) or (b<=end_position and b>=start_position) then
+            found_razors[#found_razors+1]=count
+          end
+        end
+      end
+    end
+  end
+
+  return #found_razors, found_razors
+end
+
+function ultraschall.RazorEdit_GetBetween_Track(track, start_position, end_position, inside)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RazorEdit_GetBetween_Track</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=6.24
+    Lua=5.3
+  </requires>
+  <functioncall>integer found_razor_edits, table razor_edit_index = ultraschall.RazorEdit_GetBetween_Track(MediaTrack track, number start_position, number end_position, boolean inside)</functioncall>
+  <description>
+    returns the number of razor-edits between start- and end-position within a track.
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer found_razor_edits - the number of found razor edit-areas
+    table razor_edit_index - the found razor edit-areas
+  </retvals>
+  <parameters>
+    MediaTrack track - the track, from which you want to get the razor-edits
+    number start_position - the startposition in seconds
+    number end_position - the endposition in seconds
+    boolean inside - true, only razor edits that start and end within start/endposition; false, include partial razor-edits
+  </parameters>
+  <chapter_context>
+    Razor Edit
+    Tracks
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_RazorEdit_Module.lua</source_document>
+  <tags>razor edit, get, between, track, razor edit areas</tags>
+</US_DocBloc>
+]]
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Track", "track", "must be a valid MediaTrack", -1) return end
+  if type(start_position)~="number" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Track", "start_position", "must be a number", -2) return -1 end
+  if type(end_position)~="number" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Track", "end_position", "must be a number", -3) return -1 end
+  if type(inside)~="boolean" then ultraschall.AddErrorMessage("RazorEdit_GetBetween_Track", "inside", "must be a boolean", -4) return -1 end
+
+  --if position>reaper.GetProjectLength(0) then return false end
+  local retval, RazorEdits = reaper.GetSetMediaTrackInfo_String(track, "P_RAZOREDITS", "", false)
+  local GUID=""
+  local RazorEdits="0 0 \""..GUID.."\" "..RazorEdits.." "
+  
+  local found=false
+  local tempstart=0
+  local tempend=reaper.GetProjectLength(0)
+  local count=-1
+  local found_razors={}
+
+  for a,b,c in string.gmatch(RazorEdits, "(.-) (.-) (.-) ") do
+    if c:sub(2,-2)==GUID then
+      count=count+1
+      a=tonumber(a)
+      b=tonumber(b)
+      if count>0 then
+        if inside==true then
+          if a>=start_position and b<=end_position then
+            found_razors[#found_razors+1]=count
+          end
+        elseif inside==false then
+          if (a>=start_position and a<=end_position) or (b<=end_position and b>=start_position) then
+            found_razors[#found_razors+1]=count
+          end
+        end
+      end
+    end
+  end
+
+  return #found_razors, found_razors
+end  

@@ -1,0 +1,1171 @@
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc</slug>
+  <title>podc</title>
+  <description>
+    An array containing metadata for the podcast(not episodes!).
+    
+    There can only be one "podc":-array.
+      
+    "podc" is stored in the array "PodMetaContent": 
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_category</slug>
+  <title>podc_category</title>
+  <description>
+    The category of the podcast.
+    Multiple categories are separated by commas. Quotes " are stored as \" within the attribute. 
+    No newlines are allowed.
+    
+    Example:
+      "podc_category":"education,talk"
+      
+    "podc_category" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_contact_email</slug>
+  <title>podc_contact_email</title>
+  <description>
+    The contact-email of the podcast. 
+    Multiple adresses are supported as a comma-separated list. 
+    No newlines are allowed.
+    
+    Examples:
+      "podc_contact_email":"mail@cool_podcast.dd"      
+      "podc_contact_email":"mail@cool_podcast.dd,jill@cool_podcast.dd,jim@cool_podcast.dd"
+      
+    "podc_contact_email" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_description</slug>
+  <title>podc_description</title>
+  <description>
+    The description of the podcast. This describes, what the podcast is about.
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "podc_description":"We talk about cool things in our podcast. New shows every other thursday."
+      "podc_description":"We talk about cool things in our podcast.\nNew shows every other \"thursday\", where we talk about \\n-newlines."
+      
+    "podc_description" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_descriptive_tags</slug>
+  <title>podc_descriptive_tags</title>
+  <description>
+    A comma separated list of tags.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "podc_descriptive_tags":"tech,talk,opinionated"
+      
+    "podc_descriptive_tags" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_feed</slug>
+  <title>podc_feed</title>
+  <description>
+    The feed-address of the podcast.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "podc_feed":"https://www.cool_podcast.dd/feed"
+      
+    "podc_feed" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_tagline</slug>
+  <title>podc_tagline</title>
+  <description>
+    The tagline of the podcast.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "podc_tagline":"a podcast about cool techy and nerdy things"
+      
+    "podc_tagline" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_title</slug>
+  <title>podc_title</title>
+  <description>
+    The title of the podcast.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "podc_title":"Cool Podcast"
+      
+    "podc_title" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_website_X</slug>
+  <title>podc_website_X</title>
+  <description>
+    An array that stores attributes for a podcast's website. X is the number of the website, so you can have multiple ones.
+    
+    Example:
+      "podc_website_1":{
+				"podc_website_name":"Mastodon",
+				"podc_website_description":"Our Mastodon account",
+				"podc_website_url":"https://www.mastodon.social/@CoolPodcast"
+			},
+      "podc_website_2":{
+        "podc_website_name":"TikTok",
+        "podc_website_description":"Our Tik Tok account",
+        "podc_website_url":"https://www.tiktok.com/CoolPodcast"
+      }
+      
+    "podc_website_X" is stored in the array "PodMetaContent": -> "podc":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast Website
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_website_name</slug>
+  <title>podc_website_name</title>
+  <description>
+    Stores the name of a website within a podc_website_X-array.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+			"podc_website_name":"Mastodon",
+			
+    "podc_website_name" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast Website
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_website_description</slug>
+  <title>podc_website_description</title>
+  <description>
+    Stores the name of a website within a podc_website_X-array.
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+			"podc_website_description":"our presence on Mastodon",
+      
+      "podc_website_description":"Our account on Mastodon.\n\n managed by jill",
+      
+      "podc_website_description":"Our social media about \\n-newlines and their \"impact\" on the world.",
+			
+    "podc_website_description" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast Website
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>podc_website_url</slug>
+  <title>podc_website_url</title>
+  <description>
+    Stores the name of a website within a podc_website_X-array.
+    No Newlines are allowed
+    
+    Examples:
+			"podc_website_url":"https://www.cool_podcast.dd",
+
+    "podc_website_url" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Podcast Website
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd</slug>
+  <title>epsd</title>
+  <description>
+    An array containing metadata for the episode.
+    
+    There can only be one "epsd":-array.
+      
+    "epsd" is stored in the array "PodMetaContent": 
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_content_notification_tags</slug>
+  <title>epsd_content_notification_tags</title>
+  <description>
+    The content-notification/content warnings for the episode.
+    Multiple content notification-tags are separated by commas.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    It is meant to warn of potential harmful content, like suicide(see Werther-effect for more information), abuse, re-traumatizing content, etc
+    
+    Example:
+      "epsd_content_notification_tags":"abuse,selfharm"
+      
+    "epsd_content_notification_tags" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_cover</slug>
+  <title>epsd_cover</title>
+  <description>
+    The episode-cover image.
+    It must be either jpg or png, encoded as BASE64.
+    
+    Example:
+      "epsd_cover":"iVBORyAaIAAAAElIRFIAAAABAAAAAQgCAAAAkHdT3gAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAxJREFUeNpj+P//PwAF/gL+MxKVFAAAAABJRU5ErkJggg==",
+      
+    "epsd_cover" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_description</slug>
+  <title>epsd_description</title>
+  <description>
+    The content-notification/content warnings for the episode.    
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "epsd_description":"In this episode, we talk about the new Gringelbert movies."
+      
+      "epsd_description":"In this episode, we talk about the new \"Gringelbert\" movies.\nWe also talk about the implications of \\n in strings."
+      
+    "epsd_description" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_descriptive_tags</slug>
+  <title>epsd_descriptive_tags</title>
+  <description>
+    Descriptive tags for the episode.
+    Tags are separated by commas. Quotes " are stored as \" within the attribute. 
+    No newlines are allowed.
+    
+    They are to describe in single words the content of the episode.
+    
+    Example:
+      "epsd_descriptive_tags":"Gringelbert,movies,newlines"
+      
+    "epsd_descriptive_tags" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_explicit</slug>
+  <title>epsd_explicit</title>
+  <description>
+    This episode is explicit-attribute.
+    
+    This describes, if the episode uses explicit language. The attribute is only added, when the episode is explicit.
+    The only value supported is "yes"(see example)
+    
+    Example:
+      "epsd_explicit":"yes"
+      
+    "epsd_explicit" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_guid</slug>
+  <title>epsd_guid</title>
+  <description>
+    A guid for this episode.    
+    This is used as a unique identifier for this episode and contains three guids in a row.
+    
+    THIS ATTRIBUTE IS MANDATORY FOR EPISODES!
+    
+    This guid MUST be created at project creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports!
+    This is important, as this guid can be a internet-wide-reference to this exact episode and must never ever break!
+    
+    Example:
+      "epsd_guid":"{D29C5BC0-5142-4F68-AA25-F32D9B304278}{57396DED-68AB-464C-94A7-1C6075899081}{91F7A405-B05A-402C-929B-ECFB3DDB2F7F}"
+      
+    "epsd_guid" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_language</slug>
+  <title>epsd_language</title>
+  <description>
+    The language of the episode.
+    Use the languagecode according to ISO639-2/T.
+    If multiple languages are spoken, the language codes must be separated by newlines.
+
+    Example:
+      "epsd_language":"eng,deu,pan"
+      
+    "epsd_language" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_number</slug>
+  <title>epsd_number</title>
+  <description>
+    A number for this episode. This attribute is a string, so non-arabic numbers(like roman digits) are valid. 
+    Usually a number.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "epsd_number":"123"
+      
+      "epsd_number":"MCIX"
+      
+    "epsd_number" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_release_date</slug>
+  <title>epsd_release_date</title>
+  <description>
+    The release-date for this episode.
+    No newlines are allowed.
+    
+    The date is of the format XXXX-MM-DD
+    Only numbers are allowed between the -
+    
+    Examples:
+      "epsd_release_date":"2023-12-10"
+      
+      "epsd_release_date":"2006-06-10"
+      
+    "epsd_release_date" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_release_time</slug>
+  <title>epsd_release_time</title>
+  <description>
+    The release-time for this episode.
+    No newlines are allowed.
+    
+    The time is of the format hh:mm:ss
+    Only numbers are allowed between the :
+    
+    Examples:
+      "epsd_release_time":"23:10:23"
+      
+      "epsd_release_time":"01:02:00"
+      
+    "epsd_release_time" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_release_timezone</slug>
+  <title>epsd_release_timezone</title>
+  <description>
+    The timezone of the release for this episode.
+    No newlines are allowed.
+    
+    The timezone is in UTC with either +UTC or -UTC written as +hh:mm or -hh:mm
+    
+    Examples:
+      "epsd_release_timezone":"+6:00"
+      
+      "epsd_release_timezone":"-4:23"
+      
+      "epsd_release_timezone":"+0:00"
+      
+    "epsd_release_timezone" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_season</slug>
+  <title>epsd_season</title>
+  <description>
+    The season of the episode for this episode.
+    No newlines are allowed.
+    
+    Usually it's numbers, but it can contain characters as well. Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "epsd_season":"1"
+      
+      "epsd_season":"23"
+      
+      "epsd_season":"S10"
+      
+      "epsd_season":"Season10"
+      
+    "epsd_season" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_tagline</slug>
+  <title>epsd_tagline</title>
+  <description>
+    The tagline of the episode.    
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "epsd_tagline":"Today's all what's new in tech."
+      
+      "epsd_tagline":"The orange-juice dilemma."
+      
+    "epsd_tagline" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>epsd_title</slug>
+  <title>epsd_title</title>
+  <description>
+    The title of the episode. 
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "epsd_title":"Aloha in Balboa"
+      
+      "epsd_title":"Get rid of the monkey's grin!"
+      
+    "epsd_title" is stored in the array "PodMetaContent": -> "epsd":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Episode
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_X</slug>
+  <title>ctrb_X</title>
+  <description>
+    An array that stores attributes for a contributor of the episode. X is the number of the contributor, so you can have multiple ones.
+    
+    The numbering must be continuous, means: "ctrb_1": for the first contributor, "ctrb_2": for the second, "ctrb_23": for the 23rd contributor.
+    
+    Example for two contributors with websites:
+      "ctrb_1":{
+        "ctrb_guid":"{C1555DF4-F80F-4C6E-8DD0-E29D434DD442}"
+				"ctrb_name":"Jimmi Jim",
+				"ctrb_role":"host",
+				"ctrb_email":"Jim@cool_podcast.dd"
+        "ctrb_website_1":{
+          "ctrb_website_name":"Jimmy Jim's website",
+          "ctrb_website_description":"all activities of Jimmy Jim, including(but not exclusively) the podcast Cool Podcast",
+          "ctrb_website_url":"https://www.jimmy_jim.dd/home"
+        },
+        "ctrb_website_2":{
+          "ctrb_website_name":"Jimmy Jim's Social Media Site",
+          "ctrb_website_description":"the social media site, including a lot of private banter and movie nerdism",
+          "ctrb_website_url":"https://www.social_media.dd/JimmyJim"
+        }
+			},
+      "ctrb_2":{
+        "ctrb_guid":"{7D21A37C-D0DD-4747-9324-A3B169FEB6A9}"
+        "ctrb_name":"Anny Ann",
+        "ctrb_role":"guest",
+        "ctrb_email":"Anny_Ann@some_website.dd",
+        "ctrb_website_1":{
+          "ctrb_website_name":"Anny Ann's Website",
+          "ctrb_website_description":"containing a lot of their work of art and exhibitions",
+          "ctrb_website_url":"https://www.some_website.dd"
+        }
+      }
+      
+    "ctrb_X" is stored in the array "PodMetaContent": 
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_description</slug>
+  <title>ctrb_description</title>
+  <description>
+    A description for this contributor
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "ctrb_description":"tweaking the podcast"
+      
+      "ctrb_description":"providing the \"previously\"-audio snippets in the \n beginning of the episode"
+      
+    "ctrb_description" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_email</slug>
+  <title>ctrb_email</title>
+  <description>
+    The email for this contributor
+    No newlines are allowed.
+    
+    Examples:
+      "ctrb_email":"JimmyJim@cool_podcast.dd"
+      
+    "ctrb_email" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_guid</slug>
+  <title>ctrb_guid</title>
+  <description>
+    The guid for this contributor
+    
+    THIS ATTRIBUTE IS MANDATORY FOR CONTRIBUTORS!
+    
+    This guid MUST be created at contributor creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports if the contributor is still existing!
+    This is important, as this guid can be a internet-wide-reference to this exact episode's contributor and must never ever break!
+    
+    Examples:
+      "ctrb_guid":"{F7183EBF-AFB4-44D1-A21D-7F7B27FC5499}"
+      
+    "ctrb_guid" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_name</slug>
+  <title>ctrb_name</title>
+  <description>
+    The name of this contributor
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "ctrb_name":"Anny Ann"
+      
+      "ctrb_name":"TechCompExample Co.\nAn \"unlimited\" tech-company."
+      
+    "ctrb_name" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_role</slug>
+  <title>ctrb_role</title>
+  <description>
+    The name of this contributor
+    No newlines allowed.
+    
+    Accepted values are "host", "guest", "contributor"(production team, etc), "other"
+    
+    Examples:
+      "ctrb_role":"host"
+      
+      "ctrb_role":"guest"
+      
+    "ctrb_role" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_website_X</slug>
+  <title>ctrb_website_X</title>
+  <description>
+    An array that stores attributes for a contributor's website. X is the number of the website, so you can have multiple ones.
+
+    The numbering must be continuous, means: "ctrb_website_1": for the first website, "ctrb_website_2": for the second, "ctrb_website_23": for the 23rd website.
+    
+    Example:
+      "ctrb_website_1":{
+        "ctrb_website_name":"Jimmy Jim's website",
+        "ctrb_website_description":"all activities of Jimmy Jim, including(but not exclusively) the podcast Cool Podcast",
+        "ctrb_website_url":"https://www.jimmy_jim.dd/home"
+      },
+      "ctrb_website_2":{
+        "ctrb_website_name":"Jimmy Jim's Social Media Site",
+        "ctrb_website_description":"the social media site, including a lot of private banter and movie nerdism",
+        "ctrb_website_url":"https://www.social_media.dd/JimmyJim"
+      }
+      
+    "ctrb_website_X" is stored in the array "PodMetaContent": -> "ctrb_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_website_name</slug>
+  <title>ctrb_website_name</title>
+  <description>
+    The name of this website for the contributor
+    No newlines allowed. Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "ctrb_website_name":"Jimmy Jim's Social Media Site"
+      
+      "ctrb_website_name":"Anny Ann's Social Media Page"
+      
+    "ctrb_website_name" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_website_description</slug>
+  <title>ctrb_website_description</title>
+  <description>
+    A description of this website for the contributor
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Examples:
+      "ctrb_website_description":"Jimmy Jim's Social Media Site"
+      
+      "ctrb_website_description":"Anny Ann's Social Media Page"
+      
+    "ctrb_website_description" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ctrb_website_url</slug>
+  <title>ctrb_website_url</title>
+  <description>
+    The name of this website for the contributor
+    No newlines allowed.
+    
+    Examples:
+      "ctrb_website_url":"https://www.jimmy_jim.dd/home"
+      
+      "ctrb_website_url":"https://www.some_website.dd"
+      
+    "ctrb_website_url" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Contributors
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_X</slug>
+  <title>chap_X</title>
+  <description>
+    An array that stores attributes for a chapter of the episode. X is the number of the chapter, so you can have multiple ones.
+    
+    The numbering must be continuous, means: "chap_1": for the first chapter, "chap_2": for the second, "chap_23": for the 23rd chapter.
+    
+    Example for two simple chapters:
+    
+      "chap_1":{
+        "chap_title":"Intro",
+        "chap_position":"00:00:00.232",
+        "chap_guid":"{B8C24866-63F3-41B6-BB40-04FCAA84B23C}"
+      },
+      "chap_2":{
+        "chap_title":"Our guest Flippo",
+        "chap_position":"00:00:24.201",
+        "chap_description":"Who is he and what makes him so special?",
+        "chap_guid":"{84A329BA-C094-4861-84B5-BCE0CCD16954}"
+      }
+      
+    "chap_X" is stored in the array "PodMetaContent": 
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_content_notification_tags</slug>
+  <title>chap_content_notification_tags</title>
+  <description>
+    The content-notification/content warnings for the chapter.
+    Multiple content notification-tags are separated by commas.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    It is meant to warn of potential harmful content, like suicide(see Werther-effect for more information), abuse, re-traumatizing content, etc
+    
+    Example:
+      "chap_content_notification_tags":"abuse,selfharm"
+      
+    "chap_content_notification_tags" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_description</slug>
+  <title>chap_description</title>
+  <description>
+    The description of the chapter with a small summary of its contents. 
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_description":"We talk about the cool new things in our podcast. New shows every other thursday."
+      "chap_description":"This week in tech:\nNew shoes from \"The most boring Shoe Corp.\" claim to \"reinvent\" the conventional shoe."
+      
+    "chap_description" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_descriptive_tags</slug>
+  <title>chap_descriptive_tags</title>
+  <description>
+    Descriptive tags for the chapter.
+    Multiple descriptive-tags are separated by commas.
+    No newlines are allowed. Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_descriptive_tags":"tech,shoes,The most boring Shoe Corp.,\"inventiveness\",talk"
+      
+    "chap_descriptive_tags" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_guid</slug>
+  <title>chap_guid</title>
+  <description>
+    A guid for this chapter.
+    This is used as a unique identifier for this chapter and contains one guid.
+    
+    THIS ATTRIBUTE IS MANDATORY FOR CHAPTERS!
+    This guid MUST be created at chapter creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports, if the chapter still exists!
+    This is important, as this guid can be a internet-wide-reference to this exact episode's chapter and must never ever break!
+    
+    Example:
+      "chap_guid":"{A29C6BC0-7932-4F68-BA25-A98F9B304278}"
+      
+    "chap_guid" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_image</slug>
+  <title>chap_image</title>
+  <description>
+    The chapter-image.
+    It must be either jpg or png, encoded as BASE64.
+    
+    Example:
+      "chap_image":"iVBORyAaIAAAAElIRFIAAAABAAAAAQgCAAAAkHdT3gAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAxJREFUeNpj+P//PwAF/gL+MxKVFAAAAABJRU5ErkJggg==",
+      
+    "chap_image" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_image_description</slug>
+  <title>chap_image_description</title>
+  <description>
+    The description of the chapter-image. This is important for visually impaired podcast-listeners, who can't see 
+    the contents of the chapter-image and need a description to understand it.
+    
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_image_description":"A graph showing the downfall of \"The most boring Shoe Corp's.\" revenues. In 2021, the revenue was 23bn, in 2022, the revenue fell to 19 bn, in 2023, the revenue fell even further to 5bn."
+      
+      "chap_image_description":"A large tree in the backyard of our podcast headquarter's building. It's leaves are dark green with orange blossoms. Our headquarter is a small suburbian, two floor house with a garage."
+      
+    "chap_image_description" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_image_license</slug>
+  <title>chap_image_license</title>
+  <description>
+    The user-license of the chapter-image. Like creative-commons or similar.
+    This can also hold the entire license of the image, if needed.
+    
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_image_license":"creative commons 4.0 by-sa-nc"
+      
+      "chap_image_license":"This image shall not be used for anything else than by viewing through a podcast-client. Any other distribution or use is strictly forbidden.\n\nThe copyright for this image is by Jim Jimston(great_podcast.dd)"
+      
+    "chap_image_license" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_image_origin</slug>
+  <title>chap_image_origin</title>
+  <description>
+    The user-license of the chapter-image. Like creative-commons or similar.
+    This can also hold the entire license of the image, if needed.
+    
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_image_origin":"created by Annie Ann"
+      
+      "chap_image_origin":"A scan from an old handcopied version of the King James Bible from 1302 from the monastery of Lindisfarme Priory. The scan is done by the Royal Academy of Old Scholars."
+      
+    "chap_image_origin" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_image_url</slug>
+  <title>chap_image_url</title>
+  <description>
+    A url of the original location of the chapter-image, if one is existing.
+    No newlines allowed.
+    
+    Example:
+      "chap_image_url":"https://www.great_podcast.dd/images/2023/tree_in_front_of_our_hq.png"
+      
+      "chap_image_url":"https://www.royal_academy_of_old_scholars.dd/images/collection/scans/Lindisfarme_Priory/King_James_Bible/12th_Century/page43.png"
+      
+    "chap_image_url" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_is_advertisement</slug>
+  <title>chap_is_advertisement</title>
+  <description>
+    This chapter is an advertisement.
+    
+    Add this attribute, if the chapter is an advertisement/sponsored content.
+    The only value supported is "yes"(see example)
+    
+    Example:
+      "chap_is_advertisement":"yes"
+      
+    "chap_is_advertisement" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_next_chapter_numbers</slug>
+  <title>chap_next_chapter_numbers</title>
+  <description>
+    For non-linear podcast, this holds the possible next chapter-guids after the current chapter.
+    For podcasts like "choose your own adventure", where you can choose after each chapter between numerous options, that influence, how the story progresses.
+    Another example would be educational podcasts, where at the end of a chapter you can choose, whether to hear more about a subject or to move to the next chapter.
+    
+    Multiple guids are separated by commas. The guids can only be the chapter-guids from this episode, not any other!
+    No newlines are allowed.
+    
+    Example(for three chapters that could follow the current one):
+      "chap_next_chapter_numbers":"{F49E8E77-4579-4F3B-868B-C64F6D173C2B},{01B13A81-2749-4C8F-85DD-4E5A9632C197},{A4A5DBFC-DF78-4E50-9542-5C95BEA846A9}"
+      
+    "chap_next_chapter_numbers" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_position</slug>
+  <title>chap_position</title>
+  <description>
+    The position of the chapter-marker within the episode.
+    It's of the format hh:mm:ss.mss
+    The hour can have more than two digits, so for a podcast of thousand hours, the format would be hhhh:mm:ss.mss
+    
+    hh is hours and always between 00 and 2147483648
+    mm is minutes and always between 0 and 59
+    ss is seconds and always between 0 and 59
+    mss is milliseconds and always between 000 and 999
+    No newlines are allowed.
+    
+    Example(for three chapters that could follow the current one):
+      "chap_position":"00:00:00.232"
+      
+      "chap_position":"1001:22:45.000"
+      
+    "chap_position" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_previous_chapter_numbers</slug>
+  <title>chap_previous_chapter_numbers</title>
+  <description>
+    For non-linear podcast, this holds the possible previous chapter-guids before(!) the current chapter.
+    For podcasts like "choose your own adventure", where you can choose after each chapter between numerous options, that influence, how the story progresses.
+    Another example would be educational podcasts, where at the end of a chapter you can choose, whether to hear more about a subject or to move to the next chapter.
+    
+    Multiple guids are separated by commas. The guids can only be the chapter-guids from this episode, not any other!
+    No newlines are allowed.
+    
+    Example(for three chapters that could preceed the current one):
+      "chap_previous_chapter_numbers":"{F49E8E77-4579-4F3B-868B-C64F6D173C2B},{01B13A81-2749-4C8F-85DD-4E5A9632C197},{A4A5DBFC-DF78-4E50-9542-5C95BEA846A9}"
+      
+    "chap_previous_chapter_numbers" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_spoiler_alert</slug>
+  <title>chap_spoiler_alert</title>
+  <description>
+    This chapter contains spoilers.
+    
+    Add this attribute, if the chapter contains spoilers to movies, books, etc.
+    The only value supported is "yes"(see example)
+    
+    Example:
+      "chap_spoiler_alert":"yes"
+      
+    "chap_spoiler_alert" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_title</slug>
+  <title>chap_title</title>
+  <description>
+    The title of the chapter.
+    No newlines are allowed.
+    
+    Example:
+      "chap_title":"Announcement of \"The most boring Shoe Corp's\" reinvention"
+      
+    "chap_title" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_title</slug>
+  <title>chap_title</title>
+  <description>
+    The url of the chapter.    
+    No newlines are allowed.
+    
+    Example:
+      "chap_url":"https://www.the_most_boring_shoe_corp.dd/news/announcement_2023_12_12"
+      
+    "chap_url" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>
+
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>chap_url_description</slug>
+  <title>chap_url_description</title>
+  <description>
+    The description of the chapter-url. 
+    
+    Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).
+    Quotes " are stored as \" within the attribute. 
+    
+    Example:
+      "chap_url_description":"The Most Boring Shoe Corp's announcement"
+      
+    "chap_url_description" is stored in the array "PodMetaContent": -> "chap_X":
+  </description>
+  <chapter_context>
+    Podcast Metadata
+    Chapters
+  </chapter_context>
+</US_DocBloc>

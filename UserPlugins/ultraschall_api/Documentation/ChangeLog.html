@@ -35,6 +35,54 @@
       
           <div class="ch"><p></p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>4.9 - "Depeche Mode - Everything Counts" - 30th of June 2023</h3>
+<p>Has now 1663 functions, with 13 new ones and two fewer ones(!)</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>ReaSpaghetti</strong><br />
+Features bugfixes and additions that will make Ultraschall API compatible with Sexan's ReaSpaghetti coding-tool in the future.<br />
+Keep checking for ReaSpaghetti-updates for more details.</p></li>
+<li><p><strong>Razor Edit</strong><br />
+You can now set and resize RazorEdits. The resizing is possible by setting a new length or resizing by a factor, like 0.5 for half or 2 for double the size.</p></li>
+</ul>
+<h4>New features in 4.9</h4>
+<ul>
+<li>Docs: links and code-examples - added links to related functions as well as some first code-examples; can now add more very easily</li>
+<li>DocEngine: Docs_GetAllUSDocBlocsFromFile - loads all USDocBlocs from a file</li>
+<li>DocEngine: Docs_GetReaperApiFunction_Categories - returns the index-categories of a Reaper-function(including extensions)<br />
+</li>
+<li>DocEngine: Docs_GetUSDocBloc_Examples - retrieves the code-example-attributes stored in a USDocBloc</li>
+<li>DocEngine: Docs_GetUltraschallApiFunction_Categories - returns the index-categories of an Ultraschall-function</li>
+<li>Envelopes: DeleteTrackEnvelopePointsBetween - removes all envelope-points between start and endposition</li>
+<li>RazorEdit: RazorEdit_GetBetween_Envelope - get all razor-edits of an envelope between start and endposition one or all razor-edits in a track</li>
+<li>RazorEdit: RazorEdit_GetBetween_Track - get all razor-edits of a track between start and endposition</li>
+<li>RazorEdit: RazorEdit_Resize_Envelope - resizes one or all razor-edits in an envelope</li>
+<li>RazorEdit: RazorEdit_ResizeByFactor_Envelope - resizes one or all razor-edits in an envelope by a factor(requested by Daniel Lumertz)</li>
+<li>RazorEdit: RazorEdit_Resize_Track - resizes one or all razor-edits in a track</li>
+<li>RazorEdit: RazorEdit_ResizeByFactor_Track - resizes one or all razor-edits in a track by a factor(requested by Daniel Lumertz)</li>
+<li>RazorEdit: RazorEdit_Set_Envelope - sets start/endposition of a razor-edit in an envelope</li>
+<li>RazorEdit: RazorEdit_Set_Track - sets start/endposition of a razor-edit in a track</li>
+</ul>
+<h4>Changes from 4.8 to 4.9</h4>
+<ul>
+<li>Helper Functions: SFEM - crashed, when the occurred error happened not within a function -&gt; fixed now<br />
+</li>
+<li>DocEngine: Docs_GetAllUSDocBlocsFromString - returned nil in case of an error which was wrong; returns -1 now -&gt; fixed now</li>
+<li>Docs: Reaper Internals - updated to Reaper 6.80</li>
+<li>Envelopes: MoveTrackEnvelopePointsBy - didn't properly move and cut envelope-points -&gt; fixed</li>
+<li>MediaItems: RippleCut - didn't properly move and cut envelope-points; cut env-points in all tracks, not just the ones from trackstring -&gt; fixed</li>
+<li>MediaItems: RippleCut_Reverse - didn't properly move and cut envelope-points; cut env-points in all tracks, not just the ones from trackstring -&gt; fixed</li>
+<li>MediaItem_Takes: GetProjectPosByTakeSourcePos - removed from release, due a Reaper bug that might remove take-markers; will return when bug is fixed</li>
+<li>MediaItem_Takes: GetTakeSourcePosByProjectPos - removed from release, due a Reaper bug that might remove take-markers; will return when bug is fixed</li>
+<li>PodcastMetadata: GetPodcastContributorAttributesAsJSON - fix due fix in GetSetContributor_Attributes</li>
+<li>PodcastMetadata: GetSetContributor_Attributes - had wrong undocumented parameter in the function which is removed now; added "ctrb_role"</li>
+<li>PodcastMetadata: GetSetPodcastEpisode_Attributes - removed "epsd<em>tagline" and "epsd</em>author"</li>
+<li>PodcastMetadata: GetSetPodcast_Attributes - added "podc<em>tagline" and "podc</em>feed"</li>
+<li>PodcastMetadata: GetShownoteAttributesAsJSON - timestamp is now in hh:mm:ss:mss</li>
+<li>PodcastMetadata: PodcastMetadata_CreateJSON_Entry - did only do the first chapter, ignoring the rest; improved layout of JSON -&gt; fixed</li>
+<li>RazorEdit: RazorEdit_Nudge_Track - index didn't count properly, when envelopes had razor-edits -&gt; fixed now</li>
+</ul>
+<hr />
 <h3>4.8 - "Sparks - When do I get to sing my way" - 8th of April 2023</h3>
 <p>Has now 1652 functions, with 37 new ones</p>
 <p><strong>new in this release:</strong></p>

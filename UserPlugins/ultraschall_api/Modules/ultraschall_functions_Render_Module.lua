@@ -2356,7 +2356,7 @@ function ultraschall.CreateRenderCFG_MOVMAC_Video(VideoCodec, VIDKBPS, MJPEG_qua
                        - 1, Apple ProRes 4444
                        - 2, Apple ProRes 422
                        - 3, MJPEG
-    integer VIDKBPS -  the video-bitrate of the video in kbps
+    integer VIDKBPS - the video-bitrate of the video in kbps
     integer MJPEG_quality - when VideoCodec==3, then MJPEG is used; given in percent
     integer AudioCodec - the audiocodec used 
                        - 0, AAC
@@ -2364,10 +2364,10 @@ function ultraschall.CreateRenderCFG_MOVMAC_Video(VideoCodec, VIDKBPS, MJPEG_qua
                        - 2, 24-bit PCM
                        - 3, 32-bit FP PCM
     integer AUDKBPS -  the audio-bitrate of the video in kbps
-    integer WIDTH  - the width of the video in pixels
+    integer WIDTH - the width of the video in pixels
     integer HEIGHT -  the height of the video in pixels
-    number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
-    boolean AspectRatio  - the aspect-ratio; true, keep source aspect ratio; false, don't keep source aspect ratio 
+    number FPS - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
+    boolean AspectRatio - the aspect-ratio; true, keep source aspect ratio; false, don't keep source aspect ratio 
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -9717,7 +9717,7 @@ end
 function ultraschall.GetRender_SaveRenderStats()
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetRender_QueueDelay</slug>
+  <slug>GetRender_SaveRenderStats</slug>
   <requires>
     Ultraschall=4.75
     Reaper=6.71
@@ -9725,7 +9725,7 @@ function ultraschall.GetRender_SaveRenderStats()
     JS=0.972
     Lua=5.3
   </requires>
-  <functioncall>boolean retval = ultraschall.GetRender_QueueDelay()</functioncall>
+  <functioncall>boolean retval = ultraschall.GetRender_SaveRenderStats()</functioncall>
   <description>
     Sets the "Save outfile.render_stats.html"-checkboxstate of the Render to File-dialog.
   </description>
