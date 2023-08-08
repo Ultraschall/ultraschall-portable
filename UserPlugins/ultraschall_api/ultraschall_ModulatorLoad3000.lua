@@ -693,6 +693,10 @@ else
     ultraschall.LM(10)
     return ultraschall.IsEnvelopeTrackEnvelope(table.unpack({...}))
   end
+  function ultraschall.DeleteTrackEnvelopePointsBetween(...)
+    ultraschall.LM(10)
+    return ultraschall.DeleteTrackEnvelopePointsBetween(table.unpack({...}))
+  end
   function ultraschall.EventManager_EnumerateStartupEvents(...)
     ultraschall.LM(11)
     return ultraschall.EventManager_EnumerateStartupEvents(table.unpack({...}))
@@ -3393,14 +3397,6 @@ else
     ultraschall.LM(20)
     return ultraschall.ToggleCrossfadeStateForSplits(table.unpack({...}))
   end
-  function ultraschall.GetTakeSourcePosByProjectPos(...)
-    ultraschall.LM(20)
-    return ultraschall.GetTakeSourcePosByProjectPos(table.unpack({...}))
-  end
-  function ultraschall.GetProjectPosByTakeSourcePos(...)
-    ultraschall.LM(20)
-    return ultraschall.GetProjectPosByTakeSourcePos(table.unpack({...}))
-  end
   function ultraschall.DeleteProjExtState_Section(...)
     ultraschall.LM(21)
     return ultraschall.DeleteProjExtState_Section(table.unpack({...}))
@@ -4469,6 +4465,38 @@ else
     ultraschall.LM(26)
     return ultraschall.RazorEdit_CheckForPossibleOverlap_Envelope(table.unpack({...}))
   end
+  function ultraschall.RazorEdit_Set_Track(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_Set_Track(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_Set_Envelope(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_Set_Envelope(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_Resize_Track(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_Resize_Track(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_Resize_Envelope(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_Resize_Envelope(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_ResizeByFactor_Track(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_ResizeByFactor_Track(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_ResizeByFactor_Envelope(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_ResizeByFactor_Envelope(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_GetBetween_Envelope(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_GetBetween_Envelope(table.unpack({...}))
+  end
+  function ultraschall.RazorEdit_GetBetween_Track(...)
+    ultraschall.LM(26)
+    return ultraschall.RazorEdit_GetBetween_Track(table.unpack({...}))
+  end
   function ultraschall.AutoSearchReaMoteClients(...)
     ultraschall.LM(27)
     return ultraschall.AutoSearchReaMoteClients(table.unpack({...}))
@@ -5233,9 +5261,9 @@ else
     ultraschall.LM(29)
     return ultraschall.SetRender_SaveRenderStats(table.unpack({...}))
   end
-  function ultraschall.GetRender_QueueDelay(...)
+  function ultraschall.GetRender_SaveRenderStats(...)
     ultraschall.LM(29)
-    return ultraschall.GetRender_QueueDelay(table.unpack({...}))
+    return ultraschall.GetRender_SaveRenderStats(table.unpack({...}))
   end
   function ultraschall.StoreRenderTable_ProjExtState(...)
     ultraschall.LM(29)

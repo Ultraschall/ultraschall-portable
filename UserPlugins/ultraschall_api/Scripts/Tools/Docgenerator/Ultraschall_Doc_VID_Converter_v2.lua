@@ -33,10 +33,6 @@ end
 StartTime=reaper.time_precise()
 -- increment build-version-numbering
 local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
-string2=tonumber(string2)
-string2=string2+1
-
-reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
 
 -- init variables
 Tempfile=ultraschall.Api_Path.."/temp/"

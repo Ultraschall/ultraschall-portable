@@ -4378,7 +4378,7 @@ function ultraschall.SetProject_EnvAttach(projectfilename_with_path, env_attach,
   </description>
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
-    integer env_attach  - env_attach-state
+    integer env_attach - env_attach-state
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -4498,7 +4498,7 @@ function ultraschall.SetProject_PeakGain(projectfilename_with_path, peakgain_sta
   </description>
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
-    number peakgain_state  - peak-gain-state
+    number peakgain_state - peak-gain-state
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>

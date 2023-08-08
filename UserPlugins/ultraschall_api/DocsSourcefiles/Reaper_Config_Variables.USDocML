@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.78 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.79 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -289,7 +289,7 @@
       <description>  
           Some peak-settings, as set in the Waveform media peak caching settings in Preferences -> Media, as well as in Preferences -> Paths.  
           This is not(!) located in Preferences -> Appearance-Media!  
-          It is an integer-bitfield, preferences-variable.
+          It is an integer-bitfield, preferences variable.
 
            >&1=0, Store all peak caches (.reapeaks) in alternate path(Preferences -> Path)(off) - unchecked  
            >&1=1, Store all peak caches (.reapeaks) in alternate path(Preferences -> Path)(on) - checked  
@@ -505,7 +505,7 @@
       <title>audioclosestop</title>  
       <description>  
           Close audio device when stopped and active(less responsive)-checkbox, as set in Preferences -> Audio  
-          It's an integer, preferences-variable.
+          It's an integer, preferences variable.
           
            >0, don't close audio when stopped - unchecked  
            >1, close audio device when stopped - checked  
@@ -891,7 +891,7 @@
       <title>cpuallowed</title>  
       <description>  
           The Restrict REAPER to specific CPUs-inputbox, as set in Preferences -> General -> Advanced UI/system tweaks.  
-          It is an integer-bitfield, preferences-variable.  
+          It is an integer-bitfield, preferences variable.  
           
           Every bit represents a given cpu. Set it to 1 and Reaper uses the cpu, set it to 0, Reaper will not use the cpu.  
           There are 32 cpus supported (0 to 31)  
@@ -4411,6 +4411,22 @@
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>inprojmidi_wildcards</slug>  
+      <title>inprojmidi_wildcards</title>  
+      <description>  
+          In project MIDI item-inputbox as set in Preferences -> Recording
+          It is a string, preferences variable.
+           
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Misc
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>insertmtrack</slug>  
@@ -4953,7 +4969,7 @@
           Item volume control-dropdownlist, as set in Preferences -> Media  
           This is not(!) located in Preferences -> Appearance-Media!  
           When setting &16384 of config variable itemicons, you can set knob-representation  
-          It is an integer, preferences-variable.
+          It is an integer, preferences variable.
           
            >0, Handle: +0dB is top of item  
            >1, Handle: +0dB is center of item  
@@ -12813,6 +12829,36 @@
           Current state of the vertical zoom
           Can be set but will not update arrange view; even if you use UpdateArrange() !  
           It is an integer, project variable.
+          
+          NOTE: When setting vzoom2, you must also set vzoom3 to the same value, or it can cause issues!
+          Also note: vzoom3 allows the zoomfactor in smaller steps, due it being double, unlike vzoom2.
+          
+          Can be affected by the following actions:
+            View: Toggle track zoom to minimum height
+            View: Toggle track zoom to maximum height
+          
+           >0(minimum zoom) to 40(maximum zoom); defaults are: 2(Small), 6(Medium), 16(Large)  
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.
+      </description>  
+      <chapter_context>
+         Project Settings
+         Misc
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>vzoom3</slug>  
+      <title>vzoom3</title>  
+      <description>  
+          Current state of the vertical zoom
+          Can be set but will not update arrange view; even if you use UpdateArrange() !  
+          It is an double, project variable.
+          
+          NOTE: This must be set, when vzoom2 is set, or it can cause issues!
+          Also note: vzoom3 allows the zoomfactor in smaller steps, due it being double, unlike vzoom2.
           
           Can be affected by the following actions:
             View: Toggle track zoom to minimum height
