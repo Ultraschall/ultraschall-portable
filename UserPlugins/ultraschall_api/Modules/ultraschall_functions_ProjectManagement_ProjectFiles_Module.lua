@@ -11913,21 +11913,21 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
     optional number fadein_length - the length of the fade-in in seconds(use fractions for milliseconds)
     optional number fadeout_length - the length of the fade-out in seconds(use fractions for milliseconds)
     optional integer fadein_shape - the shape of the fade-in-curve
-                             0, linear fade-in
-                             1, inverted quadratic fade-in
-                             2, quadratic fade-in
-                             3, inverted quartic fade-in
-                             4, quartic fade-in
-                             5, Cosine S-curve fade-in
-                             6, Quartic S-curve fade-in
+                            - 0, linear fade-in
+                            - 1, inverted quadratic fade-in
+                            - 2, quadratic fade-in
+                            - 3, inverted quartic fade-in
+                            - 4, quartic fade-in
+                            - 5, Cosine S-curve fade-in
+                            - 6, Quartic S-curve fade-in
     optional integer fadeout_shape - the shape of the fade-out-curve
-                              0, linear fade-out
-                              1, inverted quadratic fade-out
-                              2, quadratic fade-out
-                              3, inverted quartic fade-out
-                              4, quartic fade-out
-                              5, Cosine S-curve fade-out
-                              6, Quartic S-curve fade-out
+                             - 0, linear fade-out
+                             - 1, inverted quadratic fade-out
+                             - 2, quadratic fade-out
+                             - 3, inverted quartic fade-out
+                             - 4, quartic fade-out
+                             - 5, Cosine S-curve fade-out
+                             - 6, Quartic S-curve fade-out
   </retvals>
   <chapter_context>
     Project-Management
@@ -11988,21 +11988,21 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
     optional number fadein_length - the length of the fade-in in seconds(use fractions for milliseconds)
     optional number fadeout_length - the length of the fade-out in seconds(use fractions for milliseconds)
     optional integer fadein_shape - the shape of the fade-in-curve
-                             0, linear fade-in
-                             1, inverted quadratic fade-in
-                             2, quadratic fade-in
-                             3, inverted quartic fade-in
-                             4, quartic fade-in
-                             5, Cosine S-curve fade-in
-                             6, Quartic S-curve fade-in
+                             - 0, linear fade-in
+                             - 1, inverted quadratic fade-in
+                             - 2, quadratic fade-in
+                             - 3, inverted quartic fade-in
+                             - 4, quartic fade-in
+                             - 5, Cosine S-curve fade-in
+                             - 6, Quartic S-curve fade-in
     optional integer fadeout_shape - the shape of the fade-out-curve
-                              0, linear fade-out
-                              1, inverted quadratic fade-out
-                              2, quadratic fade-out
-                              3, inverted quartic fade-out
-                              4, quartic fade-out
-                              5, Cosine S-curve fade-out
-                              6, Quartic S-curve fade-out
+                              - 0, linear fade-out
+                              - 1, inverted quadratic fade-out
+                              - 2, quadratic fade-out
+                              - 3, inverted quartic fade-out
+                              - 4, quartic fade-out
+                              - 5, Cosine S-curve fade-out
+                              - 6, Quartic S-curve fade-out
   </parameters>
   <retvals>
     integer retval - -1 in case of error, 1 in case of success

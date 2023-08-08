@@ -28,12 +28,13 @@
 -- for the ultraschall.fm-project
 -- MIT-licensed
 
--- puts the statechunk of the selected envelope into the clipboard
+-- puts the statechunk of the envelope under the mouse into the clipboard
 -- statechunk will be layouted, according to RPP-file-layouting-rules
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-Env, A=reaper.GetSelectedEnvelope(0,0)
+reaper.BR_GetMouseCursorContext()
+Env=reaper.BR_GetMouseCursorContext_Envelope()
 if Env==nil then return end
 retval, EnvStateChunk = reaper.SetEnvelopeStateChunk(Env, FromClip(), false)
 

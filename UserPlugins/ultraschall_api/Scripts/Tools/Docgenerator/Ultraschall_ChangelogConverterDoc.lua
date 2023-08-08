@@ -86,7 +86,7 @@ A,B,C=ultraschall.ReadFileAsLines_Array(ultraschall.Api_Path..ChangeLogFile,1,-1
 
 todo=nil
 offset=0
-string=""
+String=""
 
 for i=1, C do
     if i>C then break end
@@ -106,11 +106,11 @@ for i=1, C do
 end
 
 for i=1, C do
-  string=string..A[i].."\n"
+  String=String..A[i].."\n"
 end
   
 --os.remove(ultraschall.Api_Path.."/Documentation/ChangeLog.html")
-D=ultraschall.WriteValueToFile(Tempfile..ChangeLogFile, string)
+D=ultraschall.WriteValueToFile(Tempfile..ChangeLogFile, String)
 LLL,L=reaper.ExecProcess(Pandoc,0)
 
 L=ultraschall.ReadFullFile(ultraschall.Api_Path.."/Documentation/ChangeLog.html")

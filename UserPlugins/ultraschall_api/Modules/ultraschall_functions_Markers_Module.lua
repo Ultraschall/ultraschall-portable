@@ -8165,7 +8165,8 @@ ultraschall.EpisodeAttributes={
               "epsd_descriptive_tags",
               "epsd_content_notification_tags",
               "epsd_url",
-              "epsd_guid"
+              "epsd_guid",
+              "epsd_produced_by_software"
               }
 
 function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, additional_attribute, content, preset_slot)
@@ -8204,6 +8205,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
         "epsd_sponsor_url" - a link to the sponsor's website
         "epsd_content_notification_tags" - some tags, that warn of specific content; must be separated by commas
         "epsd_guid" - a unique identifier for this episode; contains three guids in a row; read-only; can't be stored in presets!
+        "epsd_produced_by_software" - an identifier of which software was produced for this podcast-episode like "Ultraschall"
     
     preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
     
