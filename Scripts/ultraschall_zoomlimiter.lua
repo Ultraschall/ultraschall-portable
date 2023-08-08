@@ -24,15 +24,38 @@
 ################################################################################
 ]]
 
+-- Adjusts zoom stepwise.
+-- Will limit the zoom out from 0 to projectlength+edit/play-cursor, depending on what is the last.
+
 -- Print Message to console (debugging)
 function Msg(val)
   reaper.ShowConsoleMsg(tostring(val).."\n")
 end
 
--- Adjusts zoom stepwise.
--- Will limit the zoom out from 0 to projectlength+edit/play-cursor, depending on what is the last.
+_,_,_,_,mode,res,val = reaper.get_action_context()
+
+ultraschall={}
+function ultraschall.GetIniFileValue(section, key, errval, inifile)
+-- returns the trackname as a string
+  if errval==nil then errval="" end
+  section=tostring(section)
+  key=tostring(key)
+
+  return reaper.BR_Win32_GetPrivateProfileString(section, key, errval, inifile)
+end
+
+function ultraschall.GetUSExternalState(section, key, filename)
+-- gets a value from ultraschall.ini
+-- returns length of entry(integer) and the entry itself(string)
+  -- get value
+  local A, B = ultraschall.GetIniFileValue(section, key, "", reaper.GetResourcePath().."/"..filename)
+  if A==-1 then B="" end
+  return B
+end
 
     steplength = 0.4 -- factor to adjust the steplength of the zoom
+    sensitivity = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_Zoom_Sensitivity", "Value", "ultraschall-settings.ini"))
+    if sensitivity==nil then sensitivity = 5 end -- 0.4-4 are useful values
     length=0
     
     --get end of project or position of play/editcursor in the project, depending on what is the last
@@ -43,16 +66,23 @@ end
     else
       length=reaper.GetProjectLength()
     end
-  
+
 if length<180 then length=180 end   -- zoomlimit does not apply under 3 minutes
-    
-    _,_,_,_,mode,res,val = reaper.get_action_context()
     if mode==-1 and res==-1 and val==-1 then val=0 end
     
-    val = val * steplength
-
+    
     start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        
+    
+    if end_time-start_time>1500 then
+      steplength=steplength/2^(sensitivity+1)
+    --elseif end_time-start_time<3600 and end_time-start_time>1500 then
+--      steplength=steplength/2^(sensitivity+1)
+    elseif end_time-start_time<1500 then
+      steplength=steplength/2^sensitivity
+    end
+    
+    val = val * steplength    
+    
     if val<0 and end_time-start_time-((end_time-start_time)/5)>length then
         -- reaper.Main_OnCommand(40295,0)
         reaper.SetExtState("ultraschall_follow", "started", "started", false)
