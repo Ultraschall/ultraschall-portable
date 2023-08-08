@@ -206,7 +206,7 @@ function ultraschall.Docs_GetAllUSDocBlocsFromString(String)
   <tags>doc engine, get, all, usdocbloc</tags>
 </US_DocBloc>
 ]]
-  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetAllUSDocBlocsFromString", "String", "must be a string ", -1) return nil end
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetAllUSDocBlocsFromString", "String", "must be a string ", -1) return -1 end
   local Array={}
   local count=0
   for k in string.gmatch(String, "<(US_DocBloc.-</US_DocBloc>)") do
@@ -630,8 +630,7 @@ function ultraschall.Docs_GetUSDocBloc_Params(String, unindent_description, inde
       Parmcount=Parmcount+1
       Params[Parmcount]={}
       Params[Parmcount][1], Params[Parmcount][2]=split_string[i]:match("(.-)%-(.*)")
-      Params[Parmcount][1]=Params[Parmcount][1].."\0"
-      Params[Parmcount][1]=Params[Parmcount][1]:match("(.*) %s*\0")
+      Params[Parmcount][1]=Params[Parmcount][1]:match("(.-)%s*$")
     else
       Params[Parmcount][2]=Params[Parmcount][2].."\n"..split_string[i]:sub(2,-1)
     end
@@ -730,8 +729,7 @@ function ultraschall.Docs_GetUSDocBloc_Retvals(String, unindent_description, ind
       Parmcount=Parmcount+1
       Params[Parmcount]={}
       Params[Parmcount][1], Params[Parmcount][2]=split_string[i]:match("(.-)%-(.*)")
-      Params[Parmcount][1]=Params[Parmcount][1].."\0"
-      Params[Parmcount][1]=Params[Parmcount][1]:match("(.*) %s*\0")
+      Params[Parmcount][1]=Params[Parmcount][1]:match("(.-)%s*$")
     else
       Params[Parmcount][2]=Params[Parmcount][2].."\n"..split_string[i]:sub(2,-1)
     end
@@ -2448,4 +2446,210 @@ function ultraschall.Docs_GetAllUltraschallApiFunctionnames()
   if ultraschall.Docs_US_Functions_USDocBlocs_Titles==nil then ultraschall.Docs_LoadUltraschallAPIDocBlocs() end
 
   return ultraschall.Docs_US_Functions_USDocBlocs_Slug
+end
+
+function ultraschall.Docs_GetReaperApiFunction_Categories(functionname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetReaperApiFunction_Categories</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer categories_count, table categories = ultraschall.Docs_GetReaperApiFunction_Categories(string functionname)</functioncall>
+  <description>
+    returns the categories of a function from the documentation
+    
+    Note: for gfx-functions, add gfx. before the functionname
+    
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    string functionname - the name of the function, whose categories you want to get
+  </parameters>
+  <retvals>
+    integer categories_count - the number of categories for this function
+    table categories - the categories of this function
+  </retvals>
+  <chapter_context>
+    Reaper Docs
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>Modules/ultraschall_doc_engine.lua</source_document>
+  <tags>documentation, get, docs, category, reaper</tags>
+</US_DocBloc>
+]]
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Categories", "functionname", "must be a string", -1) return -1 end
+  if ultraschall.Docs_ReaperApiDocBlocs_Titles==nil then ultraschall.Docs_LoadReaperApiDocBlocs() end
+  if ultraschall.Docs_ReaperApiDocBlocs==nil then
+    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
+    ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
+    ultraschall.Docs_ReaperApiDocBlocs_Titles={}
+    for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
+      ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
+    end
+  end
+
+  local found=-1
+  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
+    if ultraschall.Docs_ReaperApiDocBlocs_Titles[i]:lower()==functionname:lower() then
+      found=i
+    end
+  end
+  if found==-1 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Categories", "functionname", "function not found", -2) return -1 end
+  
+  local count, categories, spok_lang = ultraschall.Docs_GetUSDocBloc_ChapterContext(ultraschall.Docs_ReaperApiDocBlocs[found], 1)
+  
+  return count, categories
+end
+
+
+function ultraschall.Docs_GetUltraschallApiFunction_Categories(functionname)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetUltraschallApiFunction_Categories</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.02
+    Lua=5.3
+  </requires>
+  <functioncall>integer tags_count, table tags = ultraschall.Docs_GetUltraschallApiFunction_Categories(string functionname)</functioncall>
+  <description>
+    returns the categories of an Ultraschall-API function from the documentation
+
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    string functionname - the name of the function, whose categories you want to get
+  </parameters>
+  <retvals>
+    integer categories_count - the number of categories for this function
+    table categories - the categories of this function
+  </retvals>
+  <chapter_context>
+    Reaper Docs
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>Modules/ultraschall_doc_engine.lua</source_document>
+  <tags>documentation, get, docs, categories, ultraschall api</tags>
+</US_DocBloc>
+]]
+  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetUltraschallApiFunction_Categories", "functionname", "must be a string", -1) return nil end
+  if ultraschall.Docs_US_Functions_USDocBlocs_Titles==nil then ultraschall.Docs_LoadUltraschallAPIDocBlocs() end
+
+  local found=-1
+  for i=1, ultraschall.Docs_US_Functions_USDocBlocs_Count do
+    if ultraschall.Docs_US_Functions_USDocBlocs_Titles[i]:lower()==functionname:lower() then
+      found=i
+    end
+  end
+  if found==-1 then ultraschall.AddErrorMessage("Docs_GetUltraschallApiFunction_Categories", "functionname", "function not found", -4) return end
+  
+  local count, categories, spok_lang = ultraschall.Docs_GetUSDocBloc_ChapterContext(ultraschall.Docs_US_Functions_USDocBlocs[found], 1)
+  
+  return count, categories
+end
+
+function ultraschall.Docs_GetUSDocBloc_Examples(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetUSDocBloc_Examples</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=5.978
+    Lua=5.3
+  </requires>
+  <functioncall>integer num_code_examples, table code_examples = ultraschall.Docs_GetUSDocBloc_Examples(string String)</functioncall>
+  <description>
+    returns the code-examples from an US_DocBloc-element. The table 
+    
+    the returned table is of the following format:
+      code_examples[code_example_index]["name"] - the name of the example
+      code_examples[code_example_index]["description"] - a description of the example
+      code_examples[code_example_index]["url"] - the path to the code-example-file, usually based in the Documentation/Examples-folder
+      code_examples[code_example_index]["url_absolute"] - the absolute path to the code-example-file
+      code_examples[code_example_index]["author"] - the author of the example
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer num_code_examples - the number or available code-examples
+    table code_examples - a table with all the code-example-attributes; each index is a code-example
+  </retvals>
+  <parameters>
+    string String - a string which hold a US_DocBloc to retrieve the code-example-attributes from
+  </parameters>
+  <chapter_context>
+    Ultraschall DocML
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>ultraschall_doc_engine.lua</source_document>
+  <tags>doc engine, get, code example, usdocbloc</tags>
+</US_DocBloc>
+]]
+  if type(String)~="string" then ultraschall.AddErrorMessage("Docs_GetUSDocBloc_Examples", "String", "must be a string", -1) return nil end
+  local Examples={}
+  for k in string.gmatch(String, "%<example.-%>") do
+    Examples[#Examples+1]={}
+    name=k:match("name=\"(.-)\"")
+    if name==nil then name="" end
+    description=k:match("description=\"(.-)\"")
+    if description==nil then description="" end
+    author=k:match("author=\"(.-)\"")
+    if author==nil then author="" end
+    url=k:match("url=\"(.-)\"")
+    if url==nil then url="" end
+    Examples[#Examples]["name"]=name
+    Examples[#Examples]["url"] = url
+    Examples[#Examples]["url_absolute"] = ultraschall.Api_Path.."/Documentation/"..url
+    Examples[#Examples]["description"]=description
+    Examples[#Examples]["author"]=author
+  end
+  return #Examples, Examples
+end
+
+
+function ultraschall.Docs_GetAllUSDocBlocsFromFile(filename)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Docs_GetAllUSDocBlocsFromFile</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=5.978
+    Lua=5.3
+  </requires>
+  <functioncall>integer found_usdocblocs, array all_found_usdocblocs = ultraschall.Docs_GetAllUSDocBlocsFromString(string filename)</functioncall>
+  <description>
+    returns all US_DocBloc-elements from a file.
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    integer found_usdocblocs - the number of found US_DocBlocs in the file
+    array all_found_usdocblocs - the individual US_DocBlocs found in the file
+  </retvals>
+  <parameters>
+    string filename - the file, from which to get all US-docblocs
+  </parameters>
+  <chapter_context>
+    Ultraschall DocML
+  </chapter_context>
+  <target_document>US_Api_DOC</target_document>
+  <source_document>ultraschall_doc_engine.lua</source_document>
+  <tags>doc engine, get, all, usdocbloc, from file</tags>
+</US_DocBloc>
+]]
+  if type(filename)~="string" then ultraschall.AddErrorMessage("Docs_GetAllUSDocBlocsFromFile", "filename", "must be a string ", -1) return nil end
+  if reaper.file_exists(filename)==false then ultraschall.AddErrorMessage("Docs_GetAllUSDocBlocsFromFile", "filename", "file does not exist", -2) return nil end
+  local Array={}
+  local count=0
+  for k in io.lines(filename) do
+    if k:find("%<US%_DocBloc ") then readme=true count=count+1 Array[count]="" end
+    if readme==true then
+      Array[count]=Array[count]..k:match("%s*(.*)").."\n"
+    end
+    if k:find("%</US%_DocBloc>") then readme=false end
+  end
+  return count, Array
 end

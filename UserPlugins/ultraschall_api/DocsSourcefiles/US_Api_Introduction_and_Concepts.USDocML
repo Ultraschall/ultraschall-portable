@@ -107,7 +107,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall_api4.8.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.8.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api4.9.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api4.9.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.

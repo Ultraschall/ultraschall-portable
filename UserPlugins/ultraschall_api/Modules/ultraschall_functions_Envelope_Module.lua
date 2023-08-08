@@ -70,7 +70,7 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>MoveTrackEnvelopePointsBy</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=4.9
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -115,19 +115,38 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
     local TrackEnvelope=reaper.GetTrackEnvelope(MediaTrack, a)
     local EnvCount=reaper.CountEnvelopePoints(TrackEnvelope)
   
-    for i=EnvCount, 0, -1 do
-      local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
-      if time>=startposition and time<=endposition then
-        if time+moveby>=tonumber(startposition) and time+moveby<=tonumber(endposition) then
-          reaper.SetEnvelopePoint(TrackEnvelope, i, time+moveby,nil,nil,nil,nil,true)
-        elseif cut_at_border==true and (time+moveby<tonumber(startposition) or time+moveby>tonumber(endposition)) then
-          local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, time, time+0.0000000000001)
+    if moveby<0 then
+      --for i=0, EnvCount do
+      local i=0
+      while i<=EnvCount do
+        i=i+1
+        local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
+        if time>=startposition and time<=endposition then
+          --if time+moveby>=tonumber(startposition) and time+moveby<=tonumber(endposition) then
+          if cut_at_border==true and time+moveby<tonumber(startposition) then
+            local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, time, time+0.0000000000001)
+            i=i-1
+          else
+            reaper.SetEnvelopePoint(TrackEnvelope, i, time+moveby,nil,nil,nil,nil,true)
+          end
+        end
+      end
+    elseif moveby>0 then
+      for i=EnvCount, 0, -1 do
+        local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
+        if time>=startposition and time<=endposition then
+          --if time+moveby>=tonumber(startposition) and time+moveby<=tonumber(endposition) then
+          if cut_at_border==true and (time+moveby>tonumber(endposition)) then
+            local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, time, time+0.0000000000001)
+          else
+            reaper.SetEnvelopePoint(TrackEnvelope, i, time+moveby,nil,nil,nil,nil,true)
+          end
         end
       end
     end
     reaper.Envelope_SortPoints(TrackEnvelope)
   end
-  
+  return 0
 end
 
 
@@ -2979,3 +2998,57 @@ function ultraschall.IsEnvelopeTrackEnvelope(Envelope)
   end
   return false
 end
+
+function ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition, MediaTrack)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>DeleteTrackEnvelopePointsBetween</slug>
+  <requires>
+    Ultraschall=4.9
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.DeleteTrackEnvelopePointsBetween(number startposition, number endposition, MediaTrack MediaTrack)</functioncall>
+  <description>
+    Deletes all track-envelopepoints between startposition and endposition in MediaTrack. 
+    
+    Returns -1 in case of failure.
+  </description>
+  <retvals>
+    integer retval - -1 in case of failure
+  </retvals>
+  <parameters>
+    number startposition - the startposition in seconds
+    number endposition - the endposition in seconds
+    MediaTrack MediaTrack - the MediaTrack object of the track, where the EnvelopsPoints shall be moved
+  </parameters>
+  <chapter_context>
+    Envelope Management
+    Set Envelope
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
+  <tags>envelopemanagement, envelope, point, envelope point, delete, between</tags>
+</US_DocBloc>
+]]
+  if type(startposition)~="number" then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "startposition", "must be a number", -1) return -1 end
+  if type(endposition)~="number" then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "endposition", "must be a number", -2) return -1 end
+  if reaper.ValidatePtr2(0, MediaTrack, "MediaTrack*")==false then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "MediaTrack", "must be a valid MediaTrack", -4) return -1 end
+
+  local EnvTrackCount=reaper.CountTrackEnvelopes(MediaTrack)
+
+  for a=0, EnvTrackCount-1 do
+    local TrackEnvelope=reaper.GetTrackEnvelope(MediaTrack, a)
+    local EnvCount=reaper.CountEnvelopePoints(TrackEnvelope)
+  
+    for i=EnvCount, 0, -1 do
+      --local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
+      --if time>=startposition and time<=endposition then
+      local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, startposition, endposition)
+      --end
+    end
+    reaper.Envelope_SortPoints(TrackEnvelope)
+  end
+  return 0
+end
+
