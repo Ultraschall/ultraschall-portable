@@ -69,7 +69,7 @@ function GetPath(str,sep)
 end
 
 function GetFileName(url)
-	return url:match("^.+/(.+)$")
+  return url:match("^.+/(.+)$")
 end
 
 function GetFileExtension(url)
@@ -79,12 +79,12 @@ end
 
 function GetProjectPath()
 
-	retval, project_path_name = reaper.EnumProjects(-1, "")
-	if project_path_name ~= "" then
-		dir = GetPath(project_path_name, separator)
-		-- name = string.sub(project_path_name, string.len(dir) + 1)
-		-- name = string.sub(name, 1, -5)
-		-- name = name:gsub(dir, "")
+  retval, project_path_name = reaper.EnumProjects(-1, "")
+  if project_path_name ~= "" then
+    dir = GetPath(project_path_name, separator)
+    -- name = string.sub(project_path_name, string.len(dir) + 1)
+    -- name = string.sub(name, 1, -5)
+    -- name = name:gsub(dir, "")
     return dir
   end
 
@@ -126,7 +126,7 @@ end
 
 function exportChapters()
 
-  commandid = reaper.NamedCommandLookup("_ULTRASCHALL_SAVE_CHAPTERS")
+  commandid = reaper.NamedCommandLookup("_Ultraschall_SaveChapterMarkers")
   reaper.Main_OnCommand(commandid,0)
 
 end
