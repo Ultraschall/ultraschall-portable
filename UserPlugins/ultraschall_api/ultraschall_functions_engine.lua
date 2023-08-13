@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 475, "4.75","19th of December 2022", "",  "\"Soundgarden - Black Hole Sun\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 490, "4.9","30th of June 2023", "",  "\"Depeche Mode - Everything Counts\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -2807,6 +2807,7 @@ function SFEM(dunk, target, message_type)
         if parmname~="" then 
           -- if error-causing-parameter was given, display this message
           parmname="param: "..parmname 
+          if context_function==nil then context_function="" end
           reaper.MB(functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1),"Ultraschall Api Error Message", 0) 
         else
           -- if no error-causing-parameter was given, display that message
@@ -3097,7 +3098,485 @@ function ultraschall.Statechunk_ReplaceEntry(StateChunk, Entry, EntryPositionAbo
   end
 end
 
-ultraschall.WalterElements={"tcp.dragdropinfo",
+function string.has_control(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_control</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_control(string value)</functioncall>
+  <description>
+    returns, if a string has control-characters
+  </description>
+  <parameters>
+    string value - the value to check for control-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, control</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_control' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%c")~=nil
+end
+
+function string.has_alphanumeric(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_alphanumeric</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_alphanumeric(string value)</functioncall>
+  <description>
+    returns, if a string has alphanumeric-characters
+  </description>
+  <parameters>
+    string value - the value to check for alphanumeric-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, alphanumeric</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_alphanumeric' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%w")~=nil
+end
+
+function string.has_letter(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_letter</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_letter(string value)</functioncall>
+  <description>
+    returns, if a string has letter-characters
+  </description>
+  <parameters>
+    string value - the value to check for letter-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, letter</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_letter' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%a")~=nil
+end
+
+function string.has_digits(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_digits</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_digits(string value)</functioncall>
+  <description>
+    returns, if a string has digit-characters
+  </description>
+  <parameters>
+    string value - the value to check for digit-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, digit</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_digits' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%d")~=nil
+end
+
+function string.has_printables(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_printables</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_printables(string value)</functioncall>
+  <description>
+    returns, if a string has printable-characters
+  </description>
+  <parameters>
+    string value - the value to check for printable-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, printable</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_printables' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%g")~=nil
+end
+
+function string.has_uppercase(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_uppercase</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_uppercase(string value)</functioncall>
+  <description>
+    returns, if a string has uppercase-characters
+  </description>
+  <parameters>
+    string value - the value to check for uppercase-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, uppercase</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_uppercase' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%u")~=nil
+end
+
+function string.has_lowercase(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_lowercase</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_lowercase(string value)</functioncall>
+  <description>
+    returns, if a string has lowercase-characters
+  </description>
+  <parameters>
+    string value - the value to check for lowercase-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, lowercase</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_lowercase' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%l")~=nil
+end
+
+function string.has_space(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_space</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_space(string value)</functioncall>
+  <description>
+    returns, if a string has space-characters, like tab or space
+  </description>
+  <parameters>
+    string value - the value to check for space-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, space, tab</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_space' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%s")~=nil
+end
+
+function string.has_hex(String)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>has_hex</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = string.has_hex(string value)</functioncall>
+  <description>
+    returns, if a string has hex-characters
+  </description>
+  <parameters>
+    string value - the value to check for hex-characters
+  </parameters>
+  <retvals>
+    boolean retval - true, if yes; false, if not
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, has, hex</tags>
+</US_DocBloc>
+--]]
+  if type(String)~="string" then error("bad argument #1, to 'has_hex' (string expected, got "..type(source_string)..")", 2) end
+  return String:match("%x")~=nil
+end
+
+function string.utf8_sub(source_string, startoffset, endoffset)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>utf8_sub</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>string ret_string = string.utf8_sub(string source_string, integer startoffset, integer endoffset)</functioncall>
+  <description>
+    returns a subset of a utf8-encoded-string.
+    
+    if startoffset and/or endoffset are negative, it is counted from the end of the string.
+    
+    Works basically like string.sub()
+  </description>
+  <parameters>
+    string value - the value to get the utf8-substring from
+    integer startoffset - the startoffset, from which to return the substring; negative offset counts from the end of the string
+    integer endoffset - the endoffset, to which to return the substring; negative offset counts from the end of the string
+  </parameters>
+  <retvals>
+    string ret_string - the returned string
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, sub, utf8</tags>
+</US_DocBloc>
+--]]
+  -- written by CFillion for his Interactive ReaScript-Tool, available in the ReaTeam-repository(install via ReaPack)
+  -- thanks for allowing me to use it :)
+  if type(source_string)~="string" then error("bad argument #1, to 'source_string' (string expected, got "..type(source_string)..")", 2) end
+  if math.type(startoffset)~="integer" then error("bad argument #2, to 'startoffset' (integer expected, got "..type(source_string)..")", 2) end
+  if math.type(endoffset)~="integer" then error("bad argument #3, to 'endoffset' (integer expected, got "..type(source_string)..")", 2) end
+  startoffset = utf8.offset(source_string, startoffset)
+  if not startoffset then return '' end -- i is out of bounds
+
+  if endoffset and (endoffset > 0 or endoffset < -1) then
+    endoffset = utf8.offset(source_string, endoffset + 1)
+    if endoffset then endoffset = endoffset - 1 end
+  end
+
+  return string.sub(source_string, startoffset, endoffset)
+end
+
+function string.utf8_len(source_string)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>utf8_len</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=5.40
+    Lua=5.3
+  </requires>
+  <functioncall>integer length = string.utf8_len(string source_string)</functioncall>
+  <description>
+    returns the length of an utf8-encoded string
+
+    Works basically like string.len()
+  </description>
+  <parameters>
+    string value - the value to get the length of the utf8-encoded-string
+  </parameters>
+  <retvals>
+    integer length - the length of the utf8-encoded string
+  </retvals>
+  <chapter_context>
+    API-Helper functions
+    Datatype-related
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>ultraschall_functions_engine.lua</source_document>
+  <tags>helper functions, string, length, utf8</tags>
+</US_DocBloc>
+--]]
+  if type(source_string)~="string" then error("bad argument #1, to 'utf8_len' (string expected, got "..type(source_string)..")", 2) end
+  return utf8.len(source_string)
+end
+
+function ultraschall.Debug_ShowCurrentContext(show)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Debug_ShowCurrentContext</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string functionname, string sourcefilename_with_path, integer linenumber = ultraschall.GetReaperWindow_Position(integer show)</functioncall>
+  <description>
+    When called, this function returns, in which function, sourcefile and linenumber it was called.
+    Good for debugging purposes.
+  </description>
+  <retvals>
+    string functionname - the name of the function, in which Debug_ShowCurrentContext was called
+    integer linenumber - the linenumber, in which Debug_ShowCurrentContext was called
+    string sourcefilename_with_path - the filename, in which Debug_ShowCurrentContext was called
+    number timestamp - precise timestamp to differentiate between two Debug_ShowCurrentContext-calls
+  </retvals>
+  <parameters>
+    integer show - 0, don't show context; 1, show context as messagebox; 2, show context in console; 3, clear console and show context in console
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Various
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>user interface, window, arrange-view, position, hwnd, get</tags>
+</US_DocBloc>
+--]]
+  local context=debug.getinfo(2)
+  local timestamp=reaper.time_precise()
+  if context["name"]==nil then context["name"]="" end
+  if show==1 then
+    print2("Called in\n\nFunction     : "..context["name"], "\nLinenumber: "..context["currentline"], "\n\nSourceFileName:\n"..context["source"]:sub(2,-1))
+  elseif show==2 then
+    print_alt("\n>>Called in\n   Function  : "..context["name"], "\n   Linenumber: "..context["currentline"], "\n   SourceFileName: "..context["source"]:sub(2,-1).."\n   Timestamp: "..timestamp)
+  elseif show==3 then
+    print_update("\n>>Called in\n   Function  : "..context["name"], "   Linenumber: "..context["currentline"], "   SourceFileName: "..context["source"]:sub(2,-1).."\n   Timestamp: "..timestamp)
+  end
+  return context["name"], context["currentline"], context["source"]:sub(2,-1), timestamp
+end
+
+
+function ultraschall.ConvertIniStringToTable(ini_string, convert_numbers_to_numbers)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ConvertIniStringToTable</slug>
+  <requires>
+    Ultraschall=4.8
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>table ini_entries = ultraschall.ConvertIniStringToTable(string ini_string, boolean convert_numbers_to_numbers)</functioncall>
+  <description>
+    this converts a string in ini-format into a table
+    
+    the table is in the format:
+        ini_entries["sectionname"]["keyname"]=value
+    
+    returns nil in case of an error
+  </description>
+  <retvals>
+    table ini_entries - the entries of the ini-file as a table
+  </retvals>
+  <parameters>
+    string ini_string - the string that contains an ini-file-contents
+    boolean convert_numbers_to_numbers - true, convert values who are valid numbers to numbers; false or nil, keep all values as strings
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Various
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ReaperUserInterface_Module.lua</source_document>
+  <tags>helperfunctions, convert, ini file, table</tags>
+</US_DocBloc>
+--]]
+  if type(ini_string)~="string" then ultraschall.AddErrorMessage("ConvertIniStringToTable", "ini_string", "must be a string", -1) return end
+  if convert_numbers_to_numbers~=nil and type(convert_numbers_to_numbers)~="boolean" then ultraschall.AddErrorMessage("ConvertIniStringToTable", "convert_numbers_to_numbers", "must be either nil or boolean", -2) return end
+  local IniTable={}
+  local cur_entry=""
+  for k in string.gmatch(ini_string, "(.-)\n") do
+    if k:sub(1,1)=="[" and k:sub(-1,-1)=="]" then
+      cur_entry=k:sub(2,-2)
+      IniTable[cur_entry]={}
+    else
+      local key, value=k:match("(.-)=(.*)")
+      if key~=nil then 
+        if convert_numbers_to_numbers==true and tonumber(value)~=nil then 
+          IniTable[cur_entry][key]=tonumber(value)
+        else 
+          IniTable[cur_entry][key]=value
+        end
+      end
+    end
+  end
+  return IniTable
+end
+
+
+
+
+ultraschall.WalterElements={
+"tcp.dragdropinfo",
 "tcp.env",
 "tcp.folder",
 "tcp.foldercomp",
@@ -3385,9 +3864,6 @@ ultraschall.WalterElements={"tcp.dragdropinfo",
 "trans.status",
 "trans.status.margin",
 "trans.stop"}
-
-
-
 
 
 -- Load ModulatorLoad3000

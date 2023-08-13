@@ -24,22 +24,39 @@
 ################################################################################
 ]]  
 
--- written by Meo Mespotine mespotine.de 1st of May 2021
--- for the ultraschall.fm-project
--- MIT-licensed
+reaper.Main_OnCommand(41064,0)
 
--- puts the statechunk of the envelope under the mouse into the clipboard
--- statechunk will be layouted, according to RPP-file-layouting-rules
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-else
-  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+A=ultraschall.ReadFullFile(reaper.GetResourcePath().."/reaper_plugin_functions.h")
+B={}
+C={}
+D=""
+
+D=D.."missing:".."\n"
+for k in string.gmatch(A, "#if defined.-\n#endif.-\n") do
+  if k:match(".-\n.-\n(.-)\n")~=nil then
+    B[#B+1]=k:match(".-\n.-\n(.-)\n"):sub(4,-1)
+    C[k:match(".-\n.-\n(.-)\n"):sub(4,-1)]=k:match(".-\n.-\n(.-)\n"):sub(4,-1)
+  end
 end
 
-reaper.BR_GetMouseCursorContext()
-Env=reaper.BR_GetMouseCursorContext_Envelope()
-if Env==nil then return end
-retval, EnvStateChunk = reaper.GetEnvelopeStateChunk(Env, "", false)
+for i=1, #B do
+  A={ultraschall.Docs_FindReaperApiFunction_Pattern(B[i], false, false, false)}
+  A1=B[i]
+  if A[1]==0 then 
+    D=D.."  "..B[i].."\n"
+  end
+end
 
-print3(ultraschall.StateChunkLayouter(EnvStateChunk))
+D=D.."deprecated:".."\n"
+for i=1, #ultraschall.Docs_ReaperApiDocBlocs_Slug do
+  if C[ultraschall.Docs_ReaperApiDocBlocs_Slug[i]]==nil then
+    D=D.."  "..ultraschall.Docs_ReaperApiDocBlocs_Slug[i].."\n"
+  end
+end
+
+
+--A={ultraschall.Docs_FindReaperApiFunction_Pattern("ViewPrefs", false, false, false)}
+ToClip(D)
+print("done")

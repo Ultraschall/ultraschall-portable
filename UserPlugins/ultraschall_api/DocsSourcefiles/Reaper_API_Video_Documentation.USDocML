@@ -1448,6 +1448,8 @@
         <description prog_lang="*">
             Gets the value of a pixel from input at x,y. 
             
+            Unlike other gfx-functions, the values returned by this function are of the range of 0-255, NOT 0-1!
+            
             v1/v2/v3 will be YUV or RGB (v4 can be used to get Alphavalue), returns 1 on success
         </description>
         <retvals>

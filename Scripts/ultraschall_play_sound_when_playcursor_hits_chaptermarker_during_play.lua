@@ -52,60 +52,56 @@ logscale = {
 
 
 oldPosition=reaper.GetPlayPosition()
+curproject=reaper.EnumProjects(-1)
 
 function main()
-  newPosition=reaper.GetPlayPosition()
-  isRendering = ultraschall.IsReaperRendering()
-  if reaper.GetPlayState()==1 and isRendering ~= true then -- Play
-    if newPosition<oldPosition then
-      oldPosition=newPosition-0.2
-      if oldPosition<0 then
-        oldPosition=0
-      end
-    end
-    number_of_all_markers, allmarkersarray = ultraschall.GetAllMarkersBetween(oldPosition, newPosition)
-    if number_of_all_markers>0 then
 
-      if ultraschall.IsMarkerNormal(allmarkersarray[1][2]) == true then
-        if allmarkersarray[1][1] == "" then
-          Filename = Filename_empty
-        else
-          Filename = Filename_ok
-        end
-
-      else
-          Filename = Filename_edit
-      end
-
-
-      volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
-
-      volume = volume * 10
-
-      volume = logscale[volume]
-
-
-      if volume == nil then
-        volume = 0
-      end
-
-      --ultraschall.PreviewMediaFile(Filename, 1, false)
-      PCM_Source=reaper.PCM_Source_CreateFromFile(Filename)
-      P=reaper.Xen_StartSourcePreview(PCM_Source, volume, false)
-    end
-
-  else
-    newPosition=reaper.GetCursorPosition()
-  end
-
-  oldPosition=newPosition
-
-  if ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping", "Value" ,"ultraschall-settings.ini") == "0" then
-    return
-  else
+  if curproject~=reaper.EnumProjects(-1) then 
+    curproject=reaper.EnumProjects(-1)
+    oldPosition=reaper.GetPlayPosition()
     reaper.defer(main)
+  else
+    A=reaper.time_precise()
+    newPosition=reaper.GetPlayPosition()
+    isRendering = ultraschall.IsReaperRendering()
+    if reaper.GetPlayState()==1 and isRendering ~= true then -- Play
+      if newPosition<oldPosition then
+        oldPosition=newPosition-0.2
+        if oldPosition<0 then oldPosition=0 end
+      end
+      number_of_all_markers, allmarkersarray = ultraschall.GetAllMarkersBetween(oldPosition, newPosition)
+      if number_of_all_markers>0 then
+  
+        if ultraschall.IsMarkerNormal(allmarkersarray[1][2]) == true then
+          if allmarkersarray[1][1] == "" then Filename = Filename_empty else Filename = Filename_ok end
+        else 
+          Filename = Filename_edit 
+        end
+        volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
+        volume = volume * 10
+        volume = logscale[volume]
+  
+        if volume == nil then
+          volume = 0
+        end
+  
+        --ultraschall.PreviewMediaFile(Filename, 1, false)
+        PCM_Source=reaper.PCM_Source_CreateFromFile(Filename)
+        P=reaper.Xen_StartSourcePreview(PCM_Source, volume, false)
+      end
+  
+    else
+      newPosition=reaper.GetCursorPosition()
+    end
+  
+    oldPosition=newPosition
+  
+    if ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping", "Value" ,"ultraschall-settings.ini") == "0" then
+      return
+    else
+      reaper.defer(main)
+    end
   end
-
 end
 
 main()

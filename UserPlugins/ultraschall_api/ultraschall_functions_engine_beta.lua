@@ -1021,339 +1021,6 @@ function ultraschall.BubbleSortDocBlocTable_Slug(Table)
   end
 end
 
--- Need to be documented, but are finished
-
-
-
-function ultraschall.Docs_GetReaperApiFunction_Description(functionname)
-  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "must be a string", -1) return nil end
-  if ultraschall.Docs_ReaperApiDocBlocs==nil then
-    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
-    ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
-    ultraschall.Docs_ReaperApiDocBlocs_Titles={}
-    for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
-      ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
-    end
-  end
-
-  local found=-1
-  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
-    if ultraschall.Docs_ReaperApiDocBlocs_Titles[i]:lower()==functionname:lower() then
-      found=i
-    end
-  end
-  if found==-1 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "function not found", -2) return end
-
-  local Description, markup_type, markup_version
-
-  Description, markup_type, markup_version  = ultraschall.Docs_GetUSDocBloc_Description(ultraschall.Docs_ReaperApiDocBlocs[found], true, 1)
-  if Description==nil then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Description", "functionname", "no description existing", -3) return end
-
-  Description = string.gsub(Description, "&lt;", "<")
-  Description = string.gsub(Description, "&gt;", ">")
-  Description = string.gsub(Description, "&amp;", "&")
-  return Description, markup_type, markup_version
-end
-
-
-
-function ultraschall.Docs_GetReaperApiFunction_Call(functionname, proglang)
-  if type(functionname)~="string" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "must be a string", -1) return nil end
-  if math.type(proglang)~="integer" then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "must be an integer", -2) return nil end
-  if proglang<1 or proglang>4 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "proglang", "no such programming language available", -3) return nil end
-  if ultraschall.Docs_ReaperApiDocBlocs==nil then
-    ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
-    ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
-    ultraschall.Docs_ReaperApiDocBlocs_Titles={}
-    for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
-      ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
-    end
-  end
-
-  local found=-1
-  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
-    if ultraschall.Docs_ReaperApiDocBlocs_Titles[i]:lower()==functionname:lower() then
-      found=i
-    end
-  end
-  if found==-1 then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "function not found", -4) return end
-
-  local Call, prog_lang
-  Call, prog_lang  = ultraschall.Docs_GetUSDocBloc_Functioncall(ultraschall.Docs_ReaperApiDocBlocs[found], proglang)
-  if Call==nil then ultraschall.AddErrorMessage("Docs_GetReaperApiFunction_Call", "functionname", "no such programming language available", -5) return end
-  Call = string.gsub(Call, "&lt;", "<")
-  Call = string.gsub(Call, "&gt;", ">")
-  Call = string.gsub(Call, "&amp;", "&")
-  return Call, prog_lang
-end
-
-function ultraschall.Docs_LoadReaperApiDocBlocs()
-  ultraschall.Docs_ReaperApiDocBlocs=ultraschall.ReadFullFile(ultraschall.Api_Path.."DocsSourceFiles/Reaper_Api_Documentation.USDocML")
-  ultraschall.Docs_ReaperApiDocBlocs_Count, ultraschall.Docs_ReaperApiDocBlocs = ultraschall.Docs_GetAllUSDocBlocsFromString(ultraschall.Docs_ReaperApiDocBlocs)
-  ultraschall.Docs_ReaperApiDocBlocs_Titles={}
-  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do 
-    ultraschall.Docs_ReaperApiDocBlocs_Titles[i]= ultraschall.Docs_GetUSDocBloc_Title(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
-  end
-end
-
-function ultraschall.Docs_FindReaperApiFunction_Pattern(pattern, case_sensitive, include_descriptions, include_retvalnames, include_paramnames, include_tags)
-  -- unfinished:
-  -- include_retvalnames, include_paramnames not yet implemented
-  -- probably needs RetVal/Param-function that returns datatypes and name independently from each other
-  -- which also means: all functions must return values with a proper, descriptive name(or at least retval)
-  --                   or this breaks -> Doc-CleanUp-Work...Yeah!!! (looking forward to it, actually)
-  if desc_startoffset==nil then desc_startoffset=-10 end
-  if desc_endoffset==nil then desc_endoffset=-10 end
-  if case_sensitive==false then pattern=pattern:lower() end
-  local Found_count=0
-  local Found={}
-  local FoundInformation={}
-  if include_descriptions==false then FoundInformation=nil end
-  local found_this_time=false
-  for i=1, ultraschall.Docs_ReaperApiDocBlocs_Count do
-    -- search for titles
-    local Title=ultraschall.Docs_ReaperApiDocBlocs_Titles[i]
-    if case_sensitive==false then Title=Title:lower() end
-    if Title:match(pattern) then
-      found_this_time=true
-    end
-    
-    -- search within tags
-    if found_this_time==false and include_tags==true then
-      local count, tags = ultraschall.Docs_GetUSDocBloc_Tags(ultraschall.Docs_ReaperApiDocBlocs[i], 1)
-      for i=1, count do
-        if case_sensitive==false then tags[i]=tags[i]:lower() end
-        if tags[i]:match(pattern) then found_this_time=true break end
-      end
-    end
-    
-    -- search within descriptions
-    local _temp, Offset1, Offset2
-    if found_this_time==false and include_descriptions==true then
-      local Description, markup_type = ultraschall.Docs_GetUSDocBloc_Description(ultraschall.Docs_ReaperApiDocBlocs[i], true, 1)
-      Description = string.gsub(Description, "&lt;", "<")
-      Description = string.gsub(Description, "&gt;", ">")
-      Description = string.gsub(Description, "&amp;", "&")
-      if case_sensitive==false then Description=Description:lower() end
-      if Description:match(pattern) then
-        found_this_time=true
-      end
-      Offset1, _temp, Offset2=Description:match("()("..pattern..")()")
-      if Offset1~=nil then
-        if Offset1-desc_startoffset<0 then Offset1=0 else Offset1=Offset1-desc_startoffset end
-        FoundInformation[Found_count+1]={}
-        FoundInformation[Found_count+1][1]=Description:sub(Offset1, Offset2+desc_endoffset-1)
-        FoundInformation[Found_count+1][2]=Offset1 -- startoffset of found pattern, so this part can be highlighted
-                                                   -- when displaying somewhere later
-      end
-    end
-    
-    if found_this_time==true then
-      Found_count=Found_count+1
-      Found[Found_count]=ultraschall.Docs_ReaperApiDocBlocs_Titles[i]
-    end
-    
-    found_this_time=false
-  end
-  return Found_count, Found, FoundInformation
-end
-
---A,B,C=ultraschall.Docs_FindReaperApiFunction_Pattern("tudel", false, false, 10, 14, nil, nil, true)
-
-
-
-
-
-
-
-
-
-
-
-
-
-function ultraschall.GetSetPodcastExport_Attributes_String(is_set, attribute, value)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetSetPodcastExport_Attributes_String</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.20
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval, string content = ultraschall.GetSetPodcastExport_Attributes_String(boolean is_set, string attributename, string content)</functioncall>
-  <description>
-    Will get/set attributes for podcast-export.
-    
-    Unset-values will be returned as "" when is_set=false
-    
-    returns false in case of an error
-  </description>
-  <parameters>
-    boolean is_set - true, set the attribute; false, retrieve the current content
-    string attributename - the attributename you want to get/set
-                         - supported attributes are:
-                         - "output_mp3" - the renderstring of mp3
-                         - "output_opus" - the renderstring of opus
-                         - "output_ogg" - the renderstring of ogg
-                         - "output_wav" - the renderstring of wav
-                         - "output_wav_multitrack" - the renderstring of wav-multitrack
-                         - "output_flac" - the renderstring of flac
-                         - "output_flac_multitrack" - the renderstring of flac-multitrack
-                         - "path" - the render-output-path
-                         - "filename" - the filename of the rendered file
-    string content - the new contents to set the attribute with
-  </parameters>
-  <retvals>
-    boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
-    string content - the content of a specific attribute
-  </retvals>
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>render management, get, set, attribute, export, string</tags>
-</US_DocBloc>
-]]
-  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "is_set", "must be a boolean", -1) return false end  
-  if type(attribute)~="string" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "attributename", "must be a string", -2) return false end  
-  if is_set==true and type(value)~="string" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "must be a string", -3) return false end  
-  
-  local tags={"output_mp3",
-              "output_opus",
-              "output_ogg",
-              "output_wav",
-              "output_wav_multitrack",
-              "output_flac",
-              "output_flac_multitrack",
-              "path",
-              "filename"
-                          }
-  local found=false
-  for i=1, #tags do
-    if attributename==tags[i] then
-      found=true
-      break
-    end
-  end
-  
-  local _retval
-  
-  if is_set==false then
-    _retval, value=reaper.GetProjExtState(0, "Ultraschall_Podcast_Render_Attributes", attribute)
-  elseif is_set==true then
-    -- validation checks
-    if attribute=="path" and ultraschall.DirectoryExists2(value)==false then
-      ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "path: not a valid path", -4)
-    else
-      if value:sub(-1,-1)~=ultraschall.Separator then
-        value=value..ultraschall.Separator
-      end
-    end
-    if attribute=="output_mp3" and ultraschall.GetRenderCFG_Settings_MP3(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_mp3: not a valid mp3-renderstring", -20) return false end  
-    if attribute=="output_opus" and ultraschall.GetRenderCFG_Settings_OPUS(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_opus: not a valid opus-renderstring", -21) return false end  
-    if attribute=="output_ogg" and ultraschall.GetRenderCFG_Settings_OGG(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_ogg: not a valid ogg-renderstring", -22) return false end  
-    if attribute=="output_wav" and ultraschall.GetRenderCFG_Settings_WAV(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_wav: not a valid wav-renderstring", -23) return false end  
-    if attribute=="output_wav_multitrack" and ultraschall.GetRenderCFG_Settings_WAV(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_wav_multitrack: not a valid wav-renderstring", -23) return false end  
-    if attribute=="output_flac" and ultraschall.GetRenderCFG_Settings_FLAC(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_flac: not a valid flac-renderstring", -24) return false end  
-    if attribute=="output_flac_multitrack" and ultraschall.GetRenderCFG_Settings_FLAC(value)==-1 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_String", "value", "output_flac_multitrack: not a valid flac-renderstring", -24) return false end  
-    _retval=reaper.SetProjExtState(0, "Ultraschall_Podcast_Render_Attributes", attribute, value)
-  end
-  
-  return true, value
-end
-
-function ultraschall.GetSetPodcastExport_Attributes_Value(is_set, attribute, value)
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetSetPodcastExport_Attributes_Value</slug>
-  <requires>
-    Ultraschall=4.7
-    Reaper=6.20
-    Lua=5.3
-  </requires>
-  <functioncall>boolean retval, number content = ultraschall.GetSetPodcastExport_Attributes_Value(boolean is_set, string attributename, number content)</functioncall>
-  <description>
-    Will get/set attributes for podcast-export.
-    
-    Unset-values will be returned as -1 when is_set=false
-    
-    returns false in case of an error
-  </description>
-  <parameters>
-    boolean is_set - true, set the attribute; false, retrieve the current content
-    string attributename - the attributename you want to get/set
-                         - supported attributes are:
-                         - "mono_stereo" - 0, export as mono-file; 1, export as stereo-file
-                         - "add_rendered_files_to_tracks" - 0, don't add rendered files to project; 1, add rendered files to project
-                         - "start_time" - the start-time of the area to render
-                         - "end_time" - the end-time of the area to render
-    number content - the new contents to set the attribute with
-  </parameters>
-  <retvals>
-    boolean retval - true, if the attribute exists/could be set; false, if not or an error occurred
-    number content - the content of a specific attribute
-  </retvals>
-  <chapter_context>
-     Rendering Projects
-     Ultraschall
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
-  <tags>render management, get, set, attribute, export, value</tags>
-</US_DocBloc>
-]]
-  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "is_set", "must be a boolean", -1) return false end  
-  if type(attribute)~="string" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "attributename", "must be a string", -2) return false end  
-  if is_set==true and type(value)~="number" then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "must be a number", -3) return false end  
-  
-  local tags={"mono_stereo",
-              "add_rendered_files_to_tracks",
-              "start_time",
-              "end_time"
-                          }
-  local found=false
-  for i=1, #tags do
-    if attributename==tags[i] then
-      found=true
-      break
-    end
-  end
-  
-  local _retval
-  
-  if is_set==false then
-    _retval, value=reaper.GetProjExtState(0, "Ultraschall_Podcast_Render_Attributes", attribute)
-    value=tonumber(value)
-    if value==nil then value=-1 end
-  elseif is_set==true then
-    -- validation checks
-    if attribute=="mono_stereo" and math.tointeger(value)==nil then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "mono_stereo: must be an integer", -4) return false end  
-    if attribute=="mono_stereo" and (value<0 or value>1) then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "mono_stereo: must be between 0 and 1", -5) return false end  
-    if attribute=="add_rendered_files_to_tracks" and math.tointeger(value)==nil then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "add_rendered_files_to_tracks: must be an integer", -6) return false end  
-    if attribute=="add_rendered_files_to_tracks" and (value<0 or value>1) then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "add_rendered_files_to_tracks: must be between 0 and 1", -7) return false end  
-    if attribute=="start_time" and value<0 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "value", "start_time: must be bigger than 0", -8) return false end  
-
-    if attribute=="end_time" and value<0 then ultraschall.AddErrorMessage("GetSetPodcastExport_Attributes_Value", "end_time: value", "must be bigger than 0 and start_time", -9) return false end  
-    
-    _retval=reaper.SetProjExtState(0, "Ultraschall_Podcast_Render_Attributes", attribute, value)    
-  end
-  
-  return true, value
-end
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1627,11 +1294,6 @@ function ultraschall.GetReaperWindow_Position()
 end
 
 
-
-
-
-
-
 function ultraschall.EscapeCharactersForXMLText(String)
   -- control characters to numeric character references are still missing
   -- check these site:
@@ -1648,4 +1310,356 @@ function ultraschall.EscapeCharactersForXMLText(String)
 end
 
 --A=ultraschall.EscapeCharactersForXMLText("HULA&HO\"HooP\"Oh now that you 'mention' it OP&amp;")
+
+
+
+
+function ultraschall.TakeMarker_GetAllVisibleFromTake(take)
+  local TakeMarker={}
+  for i=0, reaper.GetNumTakeMarkers(take)-1 do
+    local position, name, color = reaper.GetTakeMarker(take, i)
+    TakeMarker[i+1]={}
+    TakeMarker[i+1]["position"]=position
+    TakeMarker[i+1]["name"]=name
+    TakeMarker[i+1]["color"]=color
+    TakeMarker[i+1]["project_pos"]=ultraschall.GetProjectPosByTakeSourcePos(TakeMarker[i+1]["position"], take)
+  end
+  local item=reaper.GetMediaItemTake_Item(take)
+  local item_start=reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_end=reaper.GetMediaItemInfo_Value(item, "D_LENGTH")+item_start
+  
+  local TakeMarker2={}
+  for i=1, #TakeMarker do
+    if TakeMarker[i]["project_pos"]>=item_start and TakeMarker[i]["project_pos"]<=item_end then
+      TakeMarker2[#TakeMarker2+1]={}
+      TakeMarker2[#TakeMarker2]["index"]=i
+      TakeMarker2[#TakeMarker2]["position"]=TakeMarker[i]["position"]
+      TakeMarker2[#TakeMarker2]["project_position"]=TakeMarker[i]["project_pos"]
+      TakeMarker2[#TakeMarker2]["name"]=TakeMarker[i]["name"]
+      TakeMarker2[#TakeMarker2]["color"]=TakeMarker[i]["color"]
+    end
+  end
+  return #TakeMarker2, TakeMarker2
+end
+
+function ultraschall.TakeMarker_GetAllTakeMarkers(take)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TakeMarker_GetAllTakeMarkers</slug>
+  <requires>
+    Ultraschall=5.0
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_takemarkers, table all_takemarkers = ultraschall.TakeMarker_GetAllTakeMarkers(MediaItem_Take take)</functioncall>
+  <description>
+    returns all take-markers of a MediaItem_Take, inclusing project-position.
+    Will obey time-stretch-markers, offsets, etc, as well.
+
+    Note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    Returned table is of the following format:
+      Takemarkers[index]["pos"] - position within take
+      Takemarkers[index]["project_pos"] - the project-position of the take-marker
+      Takemarkers[index]["name"] - name of the takemarker
+      Takemarkers[index]["color"] - color of the takemarker
+      Takemarkers[index]["visible"] - is the takemarker visible or not
+    
+    Returns nil in case of an error
+  </description>
+  <linked_to desc="see:">
+    inline:GetTakeSourcePosByProjectPos
+           gets the take-source-position by project position
+  </linked_to>
+  <retvals>
+    integer count_takemarkers - the number of available take-markers
+    table all_takemarkers - a table with all takemarkers of the take(see description for details)
+  </retvals>
+  <parameters>
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, all, takemarkers, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "take", "must be a valid MediaItem_Take", -2) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and remove them
+  local takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    local position, name, color = reaper.GetTakeMarker(take, i)
+    takemarkers[i+1]={}
+    takemarkers[i+1]["pos"]=position
+    takemarkers[i+1]["name"]=name
+    takemarkers[i+1]["color"]=color
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- set take-marker at source-position of take, select the take and use "next take marker"-action to go to it
+  -- then get the cursor position to get the project-position
+  -- and finally, delete the take marker reset the view and cursor-position
+  local starttime, endtime = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  takemarkers_visible={}
+  for i=1, #takemarkers do
+  --print2("")
+    reaper.SetTakeMarker(take, -1, "", takemarkers[i]["pos"])
+    reaper.SetEditCurPos(-20, false, false)
+    reaper.Main_OnCommand(42394, 0)
+    local projectpos=reaper.GetCursorPosition()
+    takemarkers[i]["project_pos"]=projectpos
+    takemarkers[i]["visible"]=projectpos>=item_pos and projectpos<=item_pos_end 
+    reaper.DeleteTakeMarker(take, 0)
+  end
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.SetEditCurPos(oldpos, false, false)
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, starttime, endtime)
+
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i]["name"], takemarkers[i]["pos"], takemarkers[i]["color"])
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+
+  return #takemarkers, takemarkers
+end
+
+function ultraschall.GetTakeSourcePosByProjectPos(project_pos, take)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTakeSourcePosByProjectPos</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>number source_pos = ultraschall.GetTakeSourcePosByProjectPos(number project_pos, MediaItem_Take take)</functioncall>
+  <description>
+    returns the source-position of a take at a certain project-position. Will obey time-stretch-markers, offsets, etc, as well.
+    
+    Note: works only within item-start and item-end.
+    
+    Also note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    This function is expensive, so don't use it permanently!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number source_pos - the position within the source of the take in seconds
+  </retvals>
+  <parameters>
+    number project_pos - the project-position, from which you want to get the take's source-position
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <linked_to desc="see:">
+    inline:GetProjectPosByTakeSourcePos
+           gets the project-position by of a take-source-position
+  </linked_to>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, source position, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if type(project_pos)~="number" then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "project_pos", "must be a number", -1) return end
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "take", "must be a valid MediaItem_Take", -2) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  if project_pos<item_pos or project_pos>item_pos_end then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "project_pos", "must be within itemstart and itemend", -3) return end
+  
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and rename them with TUDELU at the beginning
+  local takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    takemarkers[i+1]={reaper.GetTakeMarker(take, i)}
+    --reaper.SetTakeMarker(take, i, "TUDELU"..takemarkers[i+1][2])
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- add a new take-marker
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetEditCurPos(project_pos, false, false)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  reaper.Main_OnCommand(42390, 0)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.SetEditCurPos(oldpos, false, false)
+  
+  -- get the position and therefore source-position of the added take-marker, then remove it again
+  local found=nil
+  for i=0, reaper.GetNumTakeMarkers(take) do
+    local takemarker_pos, take_marker_name=reaper.GetTakeMarker(take, i)
+    if take_marker_name=="" and takemarker_pos~=-1 then    
+      reaper.DeleteTakeMarker(take, i)
+      found=takemarker_pos
+      break
+    end
+  end
+  
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i][2], takemarkers[i][1], takemarkers[i][3])
+    --)
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+  return found
+end
+
+
+function ultraschall.GetProjectPosByTakeSourcePos(source_pos, take)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProjectPosByTakeSourcePos</slug>
+  <requires>
+    Ultraschall=4.7
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>number project_pos = ultraschall.GetProjectPosByTakeSourcePos(number source_pos, MediaItem_Take take)</functioncall>
+  <description>
+    returns the project-position-representation of the source-position of a take. 
+    Will obey time-stretch-markers, offsets, etc, as well.
+    
+    Note: due API-limitations, you can only get the project position of take-source-positions 0 and higher, so no negative position is allowed.
+    
+    Also note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    This function is expensive, so don't use it permanently!
+    
+    Returns nil in case of an error
+  </description>
+  <linked_to desc="see:">
+    inline:GetTakeSourcePosByProjectPos
+           gets the take-source-position by project position
+  </linked_to>
+  <retvals>
+    number project_pos - the project-position, converted from the take's source-position
+  </retvals>
+  <parameters>
+    number source_pos - the position within the source of the take in seconds
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, source position, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if type(source_pos)~="number" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "source_pos", "must be a number", -1) return end
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "take", "must be a valid MediaItem_Take", -2) return end
+  if source_pos<0 then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "source_pos", "must be 0 or higher", -3) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and remove them
+  takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    takemarkers[i+1]={reaper.GetTakeMarker(take, i)}
+    --reaper.SetTakeMarker(take, i, "TUDELU"..takemarkers[i+1][2])
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- set take-marker at source-position of take, select the take and use "next take marker"-action to go to it
+  -- then get the cursor position to get the project-position
+  -- and finally, delete the take marker reset the view and cursor-position
+  local starttime, endtime = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+  reaper.SetTakeMarker(take, -1, "", source_pos)
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetEditCurPos(-20, false, false)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  reaper.Main_OnCommand(42394, 0)
+  local projectpos=reaper.GetCursorPosition()
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.DeleteTakeMarker(take, 0)
+  reaper.SetEditCurPos(oldpos, false, false)
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, starttime, endtime)
+
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i][2], takemarkers[i][1], takemarkers[i][3])
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+  if projectpos<item_pos then 
+    return -1
+  else
+    return projectpos
+  end
+end
 

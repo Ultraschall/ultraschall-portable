@@ -295,11 +295,138 @@ ToDo Marker Menu:
 
   moved
   - PodcastMetadata: GetSetTranscription\_Attributes  gets/sets transcriptions for the podcast(needs either srt or webvtt-files created externally...)
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_String - gets/sets string attributes for podcast-export in Ultraschall
-  - PodcastMetadata: GetSetPodcastExport\_Attributes\_Value - gets/sets number attributes for podcast-export in Ultraschall    
+  
+  Debug:
+    SLEM shows the position in the code of the error-message; try to see, whether this can be used to write a function, that
+    returns the current position within the code:
+      Debug_CurrentPosition
+      
+      returning function, source-filename and lineposition of the current code.
+      That way, you can do stuff like:
+        old=gfx.getchar
+        function gfx.getchar(...)
+          print(ultraschall.Debug_CurrentPosition)
+          old(...)
+        end
+        
+      to see, where in Lokasenna's ui-Lib gfx.getchar is used to debug it with the new UTF8-fixes.
+      
+      todo: vzoom3 (double) missing in configvar-docs - vzoom2 is math.floor(vzoom3). When settin, vzoom2 and vzoom3 must be set or it can cause issues.
 </TODO>
 
 ## Ultraschall Framework - Changelog
+
+### 4.9 - "Depeche Mode - Everything Counts" - 30th of June 2023
+
+Has now 1663 functions, with 13 new ones and two fewer ones(!)
+
+**new in this release:**  
+
+  - **ReaSpaghetti**  
+  Features bugfixes and additions that will make Ultraschall API compatible with Sexan's ReaSpaghetti coding-tool in the future.  
+  Keep checking for ReaSpaghetti-updates for more details.  
+  
+  - **Razor Edit**  
+  You can now set and resize RazorEdits. The resizing is possible by setting a new length or resizing by a factor, like 0.5 for half or 2 for double the size.  
+    
+#### New features in 4.9  
+  - Docs: links and code-examples - added links to related functions as well as some first code-examples; can now add more very easily
+  - DocEngine: Docs\_GetAllUSDocBlocsFromFile - loads all USDocBlocs from a file
+  - DocEngine: Docs\_GetReaperApiFunction\_Categories - returns the index-categories of a Reaper-function(including extensions)  
+  - DocEngine: Docs\_GetUSDocBloc\_Examples - retrieves the code-example-attributes stored in a USDocBloc
+  - DocEngine: Docs\_GetUltraschallApiFunction\_Categories - returns the index-categories of an Ultraschall-function
+  - Envelopes: DeleteTrackEnvelopePointsBetween - removes all envelope-points between start and endposition
+  - RazorEdit: RazorEdit\_GetBetween\_Envelope - get all razor-edits of an envelope between start and endposition one or all razor-edits in a track
+  - RazorEdit: RazorEdit\_GetBetween\_Track - get all razor-edits of a track between start and endposition
+  - RazorEdit: RazorEdit\_Resize\_Envelope - resizes one or all razor-edits in an envelope
+  - RazorEdit: RazorEdit\_ResizeByFactor_Envelope - resizes one or all razor-edits in an envelope by a factor(requested by Daniel Lumertz)
+  - RazorEdit: RazorEdit\_Resize\_Track - resizes one or all razor-edits in a track
+  - RazorEdit: RazorEdit\_ResizeByFactor_Track - resizes one or all razor-edits in a track by a factor(requested by Daniel Lumertz)
+  - RazorEdit: RazorEdit\_Set\_Envelope - sets start/endposition of a razor-edit in an envelope
+  - RazorEdit: RazorEdit\_Set\_Track - sets start/endposition of a razor-edit in a track
+
+#### Changes from 4.8 to 4.9  
+  - Helper Functions: SFEM - crashed, when the occurred error happened not within a function -> fixed now  
+  - DocEngine: Docs_GetAllUSDocBlocsFromString - returned nil in case of an error which was wrong; returns -1 now -> fixed now
+  - Docs: Reaper Internals - updated to Reaper 6.80
+  - Envelopes: MoveTrackEnvelopePointsBy - didn't properly move and cut envelope-points -> fixed
+  - MediaItems: RippleCut - didn't properly move and cut envelope-points; cut env-points in all tracks, not just the ones from trackstring -> fixed
+  - MediaItems: RippleCut\_Reverse - didn't properly move and cut envelope-points; cut env-points in all tracks, not just the ones from trackstring -> fixed
+  - MediaItem\_Takes: GetProjectPosByTakeSourcePos - removed from release, due a Reaper bug that might remove take-markers; will return when bug is fixed
+  - MediaItem\_Takes: GetTakeSourcePosByProjectPos - removed from release, due a Reaper bug that might remove take-markers; will return when bug is fixed
+  - PodcastMetadata: GetPodcastContributorAttributesAsJSON - fix due fix in GetSetContributor_Attributes 
+  - PodcastMetadata: GetSetContributor\_Attributes - had wrong undocumented parameter in the function which is removed now; added "ctrb_role"
+  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - removed "epsd_tagline" and "epsd_author"
+  - PodcastMetadata: GetSetPodcast\_Attributes - added "podc_tagline" and "podc_feed"
+  - PodcastMetadata: GetShownoteAttributesAsJSON - timestamp is now in hh:mm:ss:mss
+  - PodcastMetadata: PodcastMetadata\_CreateJSON_Entry - did only do the first chapter, ignoring the rest; improved layout of JSON -> fixed
+  - RazorEdit: RazorEdit\_Nudge\_Track - index didn't count properly, when envelopes had razor-edits -> fixed now
+
+
+---
+
+### 4.8 - "Sparks - When do I get to sing my way" - 8th of April 2023
+
+Has now 1652 functions, with 37 new ones
+
+**new in this release:**  
+
+  - **Docs-Find-functions**  
+  Added now a lot of functions to access the docs of a function directly via API.  
+  You can also use the various Find-functions to search for functions matching certain words and slugs.
+  With that, you can build your own API-search-tools.
+  Oh: and you can search the Config-Vars too!
+  
+  - **UTF8/string-functions for Lua**  
+  Various helperfunctions for dealing with strings and utf8-encoded strings. They'll be added to the string-module of Lua.  
+  
+  - **Store RenderTable as extstate**  
+  You can store and retrieve RenderTables from/to extstates and projextstates. So you can store multiple render-settings in a project.  
+  So if you have different render-settings for different parts of your project, you can store and restore them now from extstates without having to spam the render-presets.
+
+#### New features in 4.8  
+  - Debug: Debug\_ShowCurrentContext - calling this function returns/shows the current sourcefile, linenumber and function-context(for debug)
+  - HelperFunctions: ConvertIniStringToTable - converts a loaded ini-file into a table  
+  - HelperFunctions: string.has\_alphanumeric - returns if a string has a alphanumeric-character
+  - HelperFunctions: string.has\_control - returns if a string has a control-character  
+  - HelperFunctions: string.has\_digits - returns if a string has a digit-character
+  - HelperFunctions: string.has\_hex - returns if a string has a hex-character
+  - HelperFunctions: string.has\_letter - returns if a string has a letter-character
+  - HelperFunctions: string.has\_lowercase - returns if a string has a lowercase-character
+  - HelperFunctions: string.has\_printable - returns if a string has a printable-character
+  - HelperFunctions: string.has\_space - returns if a string has a space-character
+  - HelperFunctions: string.has\_uppercase - returns if a string has a uppercase-character
+  - HelperFunctions: string.utf8\_len - returns the length of an utf8-encoded string; works like string.len
+  - HelperFunctions: string.utf8\_sub - gets the substring of an utf8-encoded string; works like string.sub  
+  - Docs: Docs\_FindReaperApiFunction\_Pattern - searches for api-functions(including extensions) that follow a search pattern
+  - Docs: Docs\_FindReaperConfigVar\_Pattern - searches for configuration variables that follow a search pattern
+  - Docs: Docs\_FindUltraschallApiFunction\_Pattern - searches for Ultraschall Api-functions that follow a search pattern
+  - Docs: Docs\_GetAllReaperApiFunctionnames - returns all reaper-API-functionnames existing in the docs(includes extensions)
+  - Docs: Docs\_GetAllUltraschallApiFunctionnames - returns all Ultraschall-API-functionnames existing in the docs(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Call - returns the functioncall of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Description - returns the description of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Params - returns the parameters of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Retvals - returns the returnvalues of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Requires - returns the required dependencies of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetReaperApiFunction\_Tags - returns the tags of a Reaper-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Call - returns the functioncall of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Description - returns the description of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Params - returns the parameters of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Retvals - returns the returnvalues of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Requires - returns the required dependencies of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_GetUltraschallApiFunction\_Tags - returns the tags of a Ultraschall-API-function(includes extensions)
+  - Docs: Docs\_LoadReaperApiDocBlocs - (re)loads the entries of the Reaper api-documentation
+  - Docs: Docs\_LoadReaperConfigVarsDocBlocs - (re)loads the entries of the config-var-documentation
+  - Docs: Docs\_LoadUltraschallApiDocBlocs - (re)loads the entries of the Ultraschall api-documentation
+  - Rendering: GetRenderTable\_ExtState - gets a RenderTable stored in an extstate
+  - Rendering: GetRenderTable\_ProjExtState - gets a RenderTable stored in a projextstate
+  - Rendering: SetRenderTable\_ExtState - stores a RenderTable in an extstate
+  - Rendering: SetRenderTable\_ProjExtState - stores a RenderTable in a projextstate
+  
+#### Changes from 4.75 to 4.8  
+  - Docs: Reaper Internals - updated docs to Reaper 6.78, SWS 2.13.2.0, ReaFab 0.3.10, ReaImGui 0.8.5, ReaLlm 0.4.1 and added PeloReaper 2023.02.19
+  - FXManagement: SetFXStateChunk - didn't work properly on tracks without an existing FXChain -> fixed now(thanks to tompad)
+---
 
 ### 4.75 - "Soundgarden - Black Hole Sun" - 19th of December 2022
 

@@ -488,6 +488,9 @@ function entries(start, stop)
       if requires_alt["ReaBlink"]~=nil then
         FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reablink"..requires_alt["ReaBlink"]..".png\" alt=\"ReaBlink version "..requires_alt["ReaBlink"].."\">"
       end
+      if requires_alt["ReaLlm"]~=nil then
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/llm"..requires_alt["ReaLlm"]..".png\" alt=\"ReaLlm version "..requires_alt["ReaLlm"].."\">"
+      end
       if requires_alt["Ultraschall"]~=nil then
         FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/ultraschall"..requires_alt["Ultraschall"]..".png\" alt=\"Ultraschall version "..requires_alt["Ultraschall"].."\">"
       end
@@ -574,7 +577,35 @@ function entries(start, stop)
         end 
         FunctionList=FunctionList.."          <br>\n"
       end
+      
+      local count_examples, examples=ultraschall.Docs_GetUSDocBloc_Examples(AllUSDocBloc_Header[FunctionsLister[EntryCount]][2])
+
+      local Examples=""
+      if count_examples>0 then 
+        Examples="<u>Code-Examples:</u><br><table class=\"ch\">\n"
+        for i=1, #examples do
+          Examples=Examples.."<tr><td><a href=\""..examples[i]["url"].."\">"..examples[i]["name"].."</a> - "..examples[i]["description"].."("..examples[i]["author"]..")</td></tr>\n"
+        end
+        Examples=Examples.."</table><br>\n"
+      end
+      
+      FunctionList=FunctionList..Examples.."\n"
+      
+      local linked_to_count, links, description = ultraschall.Docs_GetUSDocBloc_LinkedTo(AllUSDocBloc_Header[FunctionsLister[EntryCount]][2], true, 1)
+
+      local Links=""
+      if linked_to_count>0 then
+        Links=Links.."<u>"..description.."</u><br><table class=\"ch\">\n"
+        
+        for i=1, #links do
+          Links=Links.."<tr><td><li><a target=\"_blank\" href=\"#"..links[i].link.."\">"..links[i].link.."</a> - "..links[i].description.."</td></tr>\n"
+        end
+        Links=Links.."</table><br>"
+      end
+      
           -- Closing Tags
+        FunctionList=FunctionList..Links.."\n"
+        
         FunctionList=FunctionList..[[
 
         </div>

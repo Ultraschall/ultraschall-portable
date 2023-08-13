@@ -29,6 +29,13 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+-- increment version number
+local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
+string2=tonumber(string2)
+string2=string2+1
+reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
+
+
 ultraschall.BringReaScriptConsoleToFront()
 
 FileA={}

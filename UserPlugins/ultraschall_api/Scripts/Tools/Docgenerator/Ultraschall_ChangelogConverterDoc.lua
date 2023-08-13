@@ -36,10 +36,6 @@ ChangeLogFile="Changelog-Api.txt"
 Pandoc="c:\\Program Files\\pandoc\\pandoc -f markdown_strict -t html \""..Tempfile..ChangeLogFile.."\" -o \""..ultraschall.Api_Path.."/Documentation/ChangeLog.html\""
 
   local retval, string2 = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
-  string2=tonumber(string2)
-  string2=string2+1
- 
-  reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", string2, ultraschall.Api_Path.."/IniFiles/ultraschall_api.ini")
 
 T=[[
 <html>
@@ -86,7 +82,7 @@ A,B,C=ultraschall.ReadFileAsLines_Array(ultraschall.Api_Path..ChangeLogFile,1,-1
 
 todo=nil
 offset=0
-string=""
+String=""
 
 for i=1, C do
     if i>C then break end
@@ -106,11 +102,11 @@ for i=1, C do
 end
 
 for i=1, C do
-  string=string..A[i].."\n"
+  String=String..A[i].."\n"
 end
   
 --os.remove(ultraschall.Api_Path.."/Documentation/ChangeLog.html")
-D=ultraschall.WriteValueToFile(Tempfile..ChangeLogFile, string)
+D=ultraschall.WriteValueToFile(Tempfile..ChangeLogFile, String)
 LLL,L=reaper.ExecProcess(Pandoc,0)
 
 L=ultraschall.ReadFullFile(ultraschall.Api_Path.."/Documentation/ChangeLog.html")

@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 # 
-# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2023 Ultraschall (http://ultraschall.fm)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -12,7 +12,7 @@
 # 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+# s
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,23 +22,24 @@
 # THE SOFTWARE.
 # 
 ################################################################################
-]]  
+]]
 
--- written by Meo Mespotine mespotine.de 1st of May 2021
--- for the ultraschall.fm-project
--- MIT-licensed
 
--- puts the statechunk of the selected envelope into the clipboard
--- statechunk will be layouted, according to RPP-file-layouting-rules
+followmode_cmdid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+followmode_togglestate = reaper.GetToggleCommandState(followmode_cmdid)
+ar_start, ar_end = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+timesel_start, timesel_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
-if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-else
-  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
+if timesel_start==0 and timesel_end==0 then return end
+
+reaper.PreventUIRefresh(1)
+reaper.MoveEditCursor(-reaper.GetCursorPosition()+timesel_start, false)
+reaper.Main_OnCommand(41666, 0)
+reaper.Main_OnCommand(41666, 0)
+reaper.Main_OnCommand(41666, 0)
+reaper.Main_OnCommand(41666, 0)
+reaper.Main_OnCommand(40317, 0)
+if followmode_togglestate==0 then
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, ar_start, ar_end)
 end
-
-Env, A=reaper.GetSelectedEnvelope(0,0)
-if Env==nil then return end
-retval, EnvStateChunk = reaper.GetEnvelopeStateChunk(Env, "", false)
-
-print3(ultraschall.StateChunkLayouter(EnvStateChunk))
+reaper.PreventUIRefresh(-1)

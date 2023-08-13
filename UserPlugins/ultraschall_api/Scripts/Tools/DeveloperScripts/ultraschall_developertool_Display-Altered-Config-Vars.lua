@@ -1,7 +1,7 @@
   --[[
   ################################################################################
   # 
-  # Copyright (c) 2014-2022 Ultraschall (http://ultraschall.fm)
+  # Copyright (c) 2014-2023 Ultraschall (http://ultraschall.fm)
   # 
   # Permission is hereby granted, free of charge, to any person obtaining a copy
   # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
   ################################################################################
   --]]
 
--- written by Meo-Ada Mespotine mespotine.de 28th of March 2022
+-- written by Meo-Ada Mespotine mespotine.de 5th of May 2023
 -- for the ultraschall.fm-project
 
 -- This script shows altered integer and double-float-settings for all config-variables available in Reaper, that can be used by
@@ -63,7 +63,7 @@ A,B,C,D=ultraschall.ReadFullFile(ultraschall.Api_Path.."/DocsSourcefiles/Reaper_
 
 ConfigVars={}
 ConfigVars_Counter=0
-MaxEntries=100
+MaxEntries=100000
 ConsoleToggle=true
 ShowString=""
 OldShowString=""
@@ -92,12 +92,13 @@ Pudel=""
 -- get the difs from them
 -- also get their current int, double and string values
 for w in string.gmatch(A, "<slug>(.-)</slug>") do
-  
   if (reaper.SNM_GetIntConfigVar(w, -9987)~=-9987 or
      reaper.SNM_GetIntConfigVar(w, -9988)~=-9988) ==true
      or 
      (reaper.SNM_GetDoubleConfigVar(w, -9987)~=-9987 or
      reaper.SNM_GetDoubleConfigVar(w, -9988)~=-9988)==true
+     or
+     reaper.get_config_var_string(w)==true
      then
     ConfigVars[ConfigVars_Counter]={}
     ConfigVars[ConfigVars_Counter]["configvar"]=w
@@ -109,6 +110,7 @@ for w in string.gmatch(A, "<slug>(.-)</slug>") do
     ConfigVars_Counter=ConfigVars_Counter+1
   end
 end
+
 
 
 function Update_ConfigVars()
@@ -146,7 +148,7 @@ function Update_ConfigVars()
          print(ConfigVars[i]["configvar"])
          print(INT)
          print(DOUBLE)
-         print("       strings\t: \""..C.."\"")
+         print("       string\t: \""..C.."\"")
        end
        ConfigVarsInt[i]=A
        if tonumber(B)==nil then
@@ -297,3 +299,4 @@ function main()
 end
 
 main()
+
