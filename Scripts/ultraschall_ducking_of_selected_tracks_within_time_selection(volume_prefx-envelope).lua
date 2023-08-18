@@ -31,25 +31,25 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- lowers the volume of selected tracks within time-selection by adding envelope-points into the volume(pre fx)-envelope
 -- Good for ducking underlying music under spoken words.
 
--- following settings in ultraschall.ini -> [ultraschall_manual_track_ducking]
+-- following settings in ultraschall-settings.ini -> [ultraschall_manual_track_ducking]
 -- FadeInLength -- fade-in length in seconds
 -- FadeOutLength -- fade-out length in seconds
 -- LowerBydB - the dB to lower by(negative values will make volume louder instead of more silent)
 -- Tension - the tension of the envelope-shape(0-1 are useful values)
 -- Shape - the shape of the envelope-points(0-5)
-FadeInLength=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "FadeInLength", "ultraschall.ini"))
+FadeInLength=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "FadeInLength", "ultraschall-settings.ini"))
 if FadeInLength==nil then FadeInLength=0.5 end
 
-FadeOutLength=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "FadeOutLength", "ultraschall.ini"))
+FadeOutLength=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "FadeOutLength", "ultraschall-settings.ini"))
 if FadeOutLength==nil then FadeOutLength=0.5 end
 
-LowerBydB=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "LowerBydB", "ultraschall.ini"))
+LowerBydB=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "LowerBydB", "ultraschall-settings.ini"))
 if LowerBydB==nil then LowerBydB=8 end
 
-Tension=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "Tension", "ultraschall.ini"))
+Tension=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "Tension", "ultraschall-settings.ini"))
 if Tension==nil then Tension=0 end
 
-Shape=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "Shape", "ultraschall.ini"))
+Shape=tonumber(ultraschall.GetUSExternalState("ultraschall_manual_track_ducking", "Shape", "ultraschall-settings.ini"))
 if Shape==nil then Shape=0 end
 
 --if lol==nil then return end
