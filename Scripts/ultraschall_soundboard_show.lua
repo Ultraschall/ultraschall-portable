@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2021 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-present Ultraschall(http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
