@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-present Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -124,7 +124,7 @@ end
 ]]
 
 --------------------------
--- Restore / set GUI states
+-- Restore / set GUI/toggle states
 --------------------------
 
 mouse_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Mouse_Selection")
@@ -167,6 +167,23 @@ on_air_button_id = reaper.NamedCommandLookup("_Ultraschall_OnAir")
 reaper.SetToggleCommandState(0, on_air_button_id, 0)
 reaper.RefreshToolbar2(0, on_air_button_id)
 
+
+--[[ set current toggling-action-states that have no toolbar-button ]]
+
+-- get command_ids
+ripple_cut_ignore_locked_tracks=reaper.NamedCommandLookup("_Ultraschall_Ripple_Cut_Ignore_Locked_Tracks")
+ripple_cut_obey_crossfade=reaper.NamedCommandLookup("_Ultraschall_Ripple_Cut_Obey_Crossfade")
+ripple_cut_review_edits=reaper.NamedCommandLookup("_Ultraschall_Ripple_Cut_Review_Toggle")
+
+-- get their current toggle-settings
+ripple_cut_review_edits2 = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle","ultraschall-settings.ini")
+ripple_cut_ignore_locked_tracks2 = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle","ultraschall-settings.ini")
+ripple_cut_obey_crossfade2 = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_crossfade_toggle","ultraschall-settings.ini")
+
+-- set toggle-states
+if ripple_cut_review_edits2=="true" then reaper.SetToggleCommandState(0, ripple_cut_review_edits, 1) else reaper.SetToggleCommandState(0, ripple_cut_review_edits, 0) end
+if ripple_cut_ignore_locked_tracks2=="true" then reaper.SetToggleCommandState(0, ripple_cut_ignore_locked_tracks, 1) else reaper.SetToggleCommandState(0, ripple_cut_ignore_locked_tracks, 0) end
+if ripple_cut_obey_crossfade2=="true" then reaper.SetToggleCommandState(0, ripple_cut_obey_crossfade, 1) else reaper.SetToggleCommandState(0, ripple_cut_obey_crossfade, 0) end
 
 --------------------------
 -- Restore opened/closed Windows
