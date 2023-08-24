@@ -53,10 +53,14 @@ review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut",
 obey_locked = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle","ultraschall-settings.ini")
 obey_crossfade = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_crossfade_toggle","ultraschall-settings.ini")
 if obey_crossfade~="true" then obey_crossfade=false else obey_crossfade=true end
+ar_start, ar_end = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+
 
 -------------------------------------
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
 -------------------------------------
+
+reaper.PreventUIRefresh(1)
 
 if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
   if obey_locked~="true" then
@@ -148,6 +152,12 @@ else                           -- no time selection or items selected
    result = reaper.ShowMessageBox( "You need to make a time selection to ripple-cut.", "Ultraschall Ripple Cut", 0 )  -- Info window
 end
 reaper.GetSet_LoopTimeRange(true, 0, 0, 0, 0)
+
+if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==0 then
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, ar_start, ar_end)
+end
+reaper.PreventUIRefresh(-1)
+
 reaper.Undo_EndBlock("Ultraschall Ripple Cut", -1) -- End of the undo block. Leave it at the bottom of your main function.
 
 reaper.UpdateArrange()
