@@ -106,7 +106,7 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>PutMediaItemsToClipboard_MediaItemArray</slug>
   <requires>
-    Ultraschall=4.6
+    Ultraschall=4.95
     Reaper=5.95
     Lua=5.3
   </requires>
