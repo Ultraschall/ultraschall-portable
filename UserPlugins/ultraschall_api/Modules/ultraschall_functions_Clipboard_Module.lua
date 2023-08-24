@@ -133,8 +133,8 @@ function ultraschall.PutMediaItemsToClipboard_MediaItemArray(MediaItemArray)
   if ultraschall.IsValidMediaItemArray(MediaItemArray)==false then ultraschall.AddErrorMessage("PutMediaItemsToClipboard_MediaItemArray", "MediaItemArray", "must be a valid MediaItemArray", -1) return false end
   reaper.PreventUIRefresh(1)
   local count, MediaItemArray_selected = ultraschall.GetAllSelectedMediaItems() -- get old selection
-  for i=1, reaper.CountMediaItems(0)-1 do
-    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)
+  for i=0, reaper.CountMediaItems(0)-1 do    
+    reaper.SetMediaItemInfo_Value(reaper.GetMediaItem(0,i), "B_UISEL", 0)    
   end
   local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray) -- select to-be-cut-MediaItems
   reaper.Main_OnCommand(40057,0) -- copy them into clipboard
