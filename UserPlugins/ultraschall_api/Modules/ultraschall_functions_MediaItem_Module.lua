@@ -1274,7 +1274,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut</slug>
   <requires>
-    Ultraschall=4.9
+    Ultraschall=4.95
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -1335,17 +1335,14 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     --print2(crossfade_value&1)
     --print2(reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1))
   --end
-  
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
   local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)
   local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition, endposition,trackstring,true)
-  
---if lol==nil then return end
+  --if lol==nil then return end
   
   -- put the items into the clipboard  
   if add_to_clipboard==true then ultraschall.PutMediaItemsToClipboard_MediaItemArray(CC) end
-  
-  local D=ultraschall.DeleteMediaItemsFromArray(CC)   
+  local D=ultraschall.DeleteMediaItemsFromArray(CC)  
   if moveenvelopepoints==true then
     for i=1, #individual_tracks do
       local MediaTrack=reaper.GetTrack(0,individual_tracks[i]-1)
@@ -1353,12 +1350,11 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
       ultraschall.MoveTrackEnvelopePointsBy(endposition, reaper.GetProjectLength(), -delta, MediaTrack, false) 
     end
   end
-  
   if movemarkers==true then
     ultraschall.MoveMarkersBy(endposition, reaper.GetProjectLength(), -delta, true)
   end
-  ultraschall.MoveMediaItemsAfter_By(endposition, -delta, trackstring)
-  
+  ultraschall.MoveMediaItemsAfter_By(endposition-0.00000000001, -delta, trackstring)
+
   --if crossfade_value&1==1 then
     --reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value)
   --end
@@ -1375,7 +1371,7 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut_Reverse</slug>
   <requires>
-    Ultraschall=4.9
+    Ultraschall=4.95
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -1439,7 +1435,7 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
     ultraschall.MoveMarkersBy(0, startposition, delta, true)
   end
 
-  ultraschall.MoveMediaItemsBefore_By(endposition, delta, trackstring)  
+  ultraschall.MoveMediaItemsBefore_By(endposition-0.00000000001, delta, trackstring)  
   return C,CCC
 end
 
