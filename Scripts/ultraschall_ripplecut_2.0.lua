@@ -51,6 +51,8 @@ init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(false, 0, 0, 
 preroll = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preroll", "value","ultraschall-settings.ini"))
 review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle","ultraschall-settings.ini")
 obey_locked = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle","ultraschall-settings.ini")
+obey_crossfade = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_crossfade_toggle","ultraschall-settings.ini")
+if obey_crossfade~="true" then obey_crossfade=false else obey_crossfade=true end
 
 -------------------------------------
 reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of your main function.
@@ -69,7 +71,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
                                                                  true, -- moveenvelopepoints, 
                                                                  true, -- add_to_clipboard, 
                                                                  true, -- movemarkers, 
-                                                                 nil)-- obey_crossfade)
+                                                                 obey_crossfade)-- obey_crossfade)
   AddMuteEnvelopePoint_IfNecessary(init_start_timesel, init_end_timesel)
   -- Store Outtakes
   
