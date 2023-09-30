@@ -199,7 +199,7 @@ function createAudigramTrack(trackTemplateName)
 				-- Get the time selection bounds (you've done this previously in the checkTimeSelection function, so it might be more efficient to return these values from there)
 				local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 				local newTrack = reaper.GetTrack(0, reaper.CountTracks(0) - 1)  -- Get the last track, which should be the newly created one
-				insertImageToTimeline(img_location, newTrack, startTime, endTime)
+				insertImageToTimeline(img_location, newTrack, startTime-1, endTime) -- 1 second offset to prevent a dark screen at the beginning
 		end
 	end
 end
@@ -282,6 +282,132 @@ function renderAudiogram()
 	SFEM()
 end
 
+
+function setVideoFXonMaster()
+	-- get the FXStateChunk
+	retval, TrackStateChunk = ultraschall.GetTrackStateChunk_Tracknumber(0)
+	if retval==false then 
+			print2("An error has happened: No track available") 
+			return 
+	end
+	FXStateChunk = ultraschall.GetFXStateChunk(TrackStateChunk)
+	FXStateChunkChain = ultraschall.LoadFXStateChunkFromRFXChainFile("Ultraschall_Audiogram_Master.RfxChain", 0)
+	
+	retval, alteredStateChunk = ultraschall.SetFXStateChunk(TrackStateChunk, FXStateChunkChain)
+	
+	print (alteredStateChunk)
+	
+	retval = ultraschall.SetTrackStateChunk_Tracknumber(0, alteredStateChunk, true)
+
+end
+
+
+function setAudiogramFX()
+
+	VideoCode1=[[//Ultraschall Audiogram Waveform
+//@gmem=jsfx_to_video
+//@param 1:mode "mode" 0 0 2 0 1
+//@param 2:dotcount "point count" 2390 10 5000 400 10
+//@param 3:dotsize "point size" 5 2 40 20 1
+//@param 4:gain_db "gain (dB)" -34 -80 12 -12 1
+//@param 5:zoom_amt "blitter zoom" -.01 -.5 1 .1 0.01
+//@param 6:fadespeed "blitter persist" .81 0 1 .1 0.01
+//@param 7:filter "blitter filter" 0 0 1 0 1
+//@param 8:fg_r "foreground R" 1 0 1 .5 .02
+//@param 9:fg_g "foreground G" 1 0 1 .5 .02
+//@param 10:fg_b "foreground B" 1 0 1 .5 .02
+//@param 11:bg_r "background R" 0 0 1 .5 .02
+//@param 12:bg_g "background G" 0 0 1 .5 .02
+//@param 13:bg_b "background B" 0 0 1 .5 .02
+//@param 14:cx "center X" .5 0 1 .5 .01
+//@param 15:cy "center Y" .89 0 1 .5 .01
+
+last_frame && fadespeed > 0 ? (
+  xo = project_w*zoom_amt*.25;
+  yo = project_h*zoom_amt*.25;
+  gfx_mode=filter>0?0x100:0;
+  xo < 0 ? gfx_blit(last_frame,0);
+  gfx_blit(last_frame,0,0,0,project_w,project_h,xo,yo,project_w-xo*2,project_h-yo*2);
+);
+gfx_set(bg_r,bg_g,bg_b,last_frame ? (1-fadespeed) : 1);
+gfx_a>.001 ? gfx_fillrect(0,0,project_w,project_h);
+
+bufplaypos = gmem[0];
+bufwritecursor = gmem[1];
+bufsrate = gmem[2];
+bufstart = gmem[3];
+bufend = gmem[4];
+nch = gmem[5];
+gain = 10^(gain_db*(1/20));
+
+dt=max(bufplaypos - project_time,0);
+dt*bufsrate < dotcount ? underrun_cnt+=1;
+rdpos = bufwritecursor - ((dt*bufsrate - dotcount)|0)*nch;
+rdpos < bufstart ? rdpos += bufend-bufstart;
+
+gfx_set(fg_r,fg_g,fg_b,1);
+
+function getpt()
+(
+  l = gmem[rdpos]; r = gmem[rdpos+1];
+  (rdpos += nch)>=bufend ? rdpos=bufstart;
+);
+i=0;
+
+mode==2 ? (
+  loop(dotcount,
+    getpt();
+    ang = atan2(l,r); dist = sqrt(sqr(l)+sqr(r));
+    xp = cx*project_w + ((cos(ang)*dist*gain)*project_h-dotsize)*.5;
+    yp = ((cy*2+sin(ang)*dist*gain)*project_h-dotsize)*.5;
+    gfx_fillrect(xp,yp, dotsize,dotsize);
+  );
+) : mode == 1 ? (
+  loop(dotcount,
+    getpt();
+    yp = project_h * (cy - .5 + i / dotcount);
+    xp = project_w * (cx + (l+r)*.25*gain);
+    gfx_fillrect(xp-dotsize*.5,yp-dotsize*.5, dotsize,dotsize);
+    i+=1;
+  );
+
+) : (
+  loop(dotcount,
+    getpt();
+    xp = project_w * (cx - 0.5 + i / dotcount);
+    yp = project_h * (cy + (l+r)*.25*gain);
+    gfx_fillrect(xp-dotsize*.5,yp-r*200-dotsize*.5, dotsize, r*400+dotsize*0.5);
+    i+=1;
+  );
+);
+
+gfx_img_free(last_frame);
+last_frame=gfx_img_hold(-1);]]
+
+VideoCode2=[[// Remove Black
+// black is removed. use after inverting color
+img1=0;
+img2=input_track(0);
+gfx_blit(img2);
+gfx_mode = 1;
+gfx_blit(img1,0);]]
+
+	
+	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "video sample peeker", false, -1)
+	
+	master_fx_count=reaper.TrackFX_GetCount(reaper.GetMasterTrack(0))
+	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "Video processor", false, -1)
+	reaper.TrackFX_SetNamedConfigParm(reaper.GetMasterTrack(0), master_fx_count, "VIDEO_CODE", VideoCode1)
+
+	master_fx_count=reaper.TrackFX_GetCount(reaper.GetMasterTrack(0))
+	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "Video processor", false, -1)
+	reaper.TrackFX_SetNamedConfigParm(reaper.GetMasterTrack(0), master_fx_count, "VIDEO_CODE", VideoCode2)
+	
+
+end
+
+
+
 -- Main
 
 -- Start the Undo Block
@@ -298,15 +424,18 @@ enableResize = reaper.SNM_SetIntConfigVar("projvidflags", reaper.SNM_GetIntConfi
 
 ProjectStateChunk = ultraschall.GetProjectStateChunk()
 
+-- set Video resolution to 1024x1024
+
 local retval = ultraschall.SetProject_VideoConfig(nil, 1024, 1024, 0, ProjectStateChunk)
 
   -- Check the return value and notify the user
 if retval == -1 then
 		reaper.ShowMessageBox("Failed to set the preferred video size. Please ensure you have the latest Ultraschall API installed.", "Error", 0)
-else
-		reaper.ShowMessageBox("Preferred video size set successfully!", "Success", 0)
 end
 
+-- setVideoFXonMaster()
+
+setAudiogramFX()
 
 if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "\\" else separator = "/" end
 
@@ -325,4 +454,5 @@ reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 -- undo everything: an easy way to reset, leaving just the rendered video
 
-reaper.Main_OnCommand(40029, 0)
+-- reaper.Main_OnCommand(40029, 0)
+-- SFEM() 
