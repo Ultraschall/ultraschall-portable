@@ -701,7 +701,7 @@ if windowcounter<1 then -- you can choose how many GUI.name-windows are allowed 
 					   -- 1 means 1 window, 2 means 2 windows, 3 means 3 etc
 
 	GUI.func = buildGUI
-	GUI.freq = 0.5     -- How often in seconds to run the function, so we can avoid clogging up the CPU.
+	GUI.freq = 1     -- How often in seconds to run the function, so we can avoid clogging up the CPU.
 
 	 buildGUI()
 	 GUI.Init()
