@@ -40,6 +40,25 @@ function GetFileExtension(url)
 	return url:match("^.+(%..+)$")
 end
 
+function GetProjectPath()
+  if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then
+  -- user_folder = buf --"C:\\Users\\[username]" -- need to be test
+    separator = "\\"
+  else
+  -- user_folder = "/USERS/[username]" -- Mac OS. Not tested on Linux.
+    separator = "/"
+  end
+  retval, project_path_name = reaper.EnumProjects(-1, "")
+  
+  if project_path_name ~= "" then
+    dir = project_path_name:match("(.*"..separator..")")
+    name = string.sub(project_path_name, string.len(dir) + 1)
+    name = string.sub(name, 1, -5)
+    name = name:gsub(dir, "")
+  end
+  return dir
+end
+
 function checkImage()
 
 	retval, project_path_name = reaper.EnumProjects(-1, "")
@@ -231,8 +250,8 @@ function renderAudiogramMac()
 	if height == 0 then height = 1024 end -- default height
 	fps=20
 	aspect_ratio = true
---	VideoCodec = 1 -- VP8
---	AudioCodec = 1 -- Vorbis
+--       VideoCodec = 1 -- VP8
+--       AudioCodec = 1 -- Vorbis
 
 	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_MP4MAC_Video(true, vid_kbps, aud_kbps, width, height, fps, aspect_ratio)
 
@@ -256,14 +275,14 @@ function renderAudiogramPC()
 	RenderTable["Bounds"]=2
 
 	-- setz Path und Filename
-	RenderTable["RenderFile"]=reaper.GetProjectPath()
+	RenderTable["RenderFile"]=GetProjectPath()
 	RenderTable["RenderPattern"]="Audiogram"
 	-- print (RenderTable["FadeOut_Shape"])
 
 	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
 	-- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
 	-- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
-	vid_kbps=512
+	vid_kbps=1300
 	aud_kbps=128
 	width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
 	if width==0 then width=1920 end -- default width
@@ -430,7 +449,7 @@ enableResize = reaper.SNM_SetIntConfigVar("projvidflags", reaper.SNM_GetIntConfi
 
   -- Check the return value and notify the user
 -- if retval == -1 then
---		reaper.ShowMessageBox("Failed to set the preferred video size. Please ensure you have the latest Ultraschall API installed.", "Error", 0)
+--              reaper.ShowMessageBox("Failed to set the preferred video size. Please ensure you have the latest Ultraschall API installed.", "Error", 0)
 -- end
 
 -- setVideoFXonMaster()
@@ -457,7 +476,10 @@ reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 
 -- undo everything: an easy way to reset, leaving just the rendered video
-
+state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
+if state==6 then
+  ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
+end
 reaper.Main_OnCommand(40029, 0)
 -- reaper.Main_OnCommand(40029, 0)
 -- SFEM() 
