@@ -120,8 +120,7 @@ function createTrackNamedAfterID3Title(templateName)
   local retval, ID3Title = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
   
   if not retval or ID3Title == "" then
-      reaper.ShowMessageBox("Could not fetch the project's ID3 Title or it's empty.", "Error", 0)
-      return
+      ID3Title = " " -- Title is optional
   end
 
   -- Determine the number of tracks in the project
@@ -246,7 +245,7 @@ function renderAudiogramMac()
 
 end
 
-function renderAudiogram()
+function renderAudiogramPC()
 
 	-- 1) RenderTable für die Render Settings erzeugen
 	RenderTable=ultraschall.CreateNewRenderTable()
@@ -264,7 +263,7 @@ function renderAudiogram()
 	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
 	-- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
 	-- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
-	vid_kbps=1024
+	vid_kbps=512
 	aud_kbps=128
 	width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
 	if width==0 then width=1920 end -- default width
@@ -272,10 +271,12 @@ function renderAudiogram()
 	if height==0 then height=1080 end -- default height
 	fps=20.00
 	aspect_ratio=true
-	VideoCodec=1 -- VP8
-	AudioCodec=1 -- Vorbis
+	VideoCodec=0 -- MP4
+	AudioCodec=0 -- 
 
-	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
+	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
+	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
+
 
 	-- 3) Render the File
 	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
@@ -422,16 +423,16 @@ enableResize = reaper.SNM_SetIntConfigVar("projvidflags", reaper.SNM_GetIntConfi
 -- print (width)
 
 
-ProjectStateChunk = ultraschall.GetProjectStateChunk()
+-- ProjectStateChunk = ultraschall.GetProjectStateChunk()
 
 -- set Video resolution to 1024x1024
 
-local retval = ultraschall.SetProject_VideoConfig(nil, 1024, 1024, 0, ProjectStateChunk)
+-- local retval = ultraschall.SetProject_VideoConfig(nil, 1024, 1024, 0, ProjectStateChunk)
 
   -- Check the return value and notify the user
-if retval == -1 then
-		reaper.ShowMessageBox("Failed to set the preferred video size. Please ensure you have the latest Ultraschall API installed.", "Error", 0)
-end
+-- if retval == -1 then
+--		reaper.ShowMessageBox("Failed to set the preferred video size. Please ensure you have the latest Ultraschall API installed.", "Error", 0)
+-- end
 
 -- setVideoFXonMaster()
 
@@ -445,7 +446,11 @@ createAudigramTrack("Insert AudiogramBG track.RTrackTemplate")
 -- Duplicate the track using REAPER's action: "Track: Duplicate tracks"
 -- reaper.Main_OnCommand(40062, 0)
 
-renderAudiogramMac()
+if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     
+	renderAudiogramPC()
+else 
+	renderAudiogramMac()
+end -- Todo: Linux
 
 -- End the Undo Block with a description
 
@@ -454,5 +459,6 @@ reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 -- undo everything: an easy way to reset, leaving just the rendered video
 
+reaper.Main_OnCommand(40029, 0)
 -- reaper.Main_OnCommand(40029, 0)
 -- SFEM() 

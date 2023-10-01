@@ -1,7 +1,7 @@
 --[[
 ################################################################################
 #
-# Copyright (c) 2014-present Ultraschall (http://ultraschall.fm)
+# Copyright (c) 2014-2017 Ultraschall (http://ultraschall.fm)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -94,7 +94,7 @@ end
 
 function buildExportStep()
 
-	local infotable = wrap(StepDescription,60) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
+	local infotable = wrap(StepDescription,70) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
 	local light = GUI.Area:new(48 ,position-5,10,21,3,1,1,state_color)
 	table.insert(GUI.elms, light)
@@ -273,6 +273,8 @@ function CheckMetadata()
 
 	end
 
+	if Title ~= "" then audiogramTitle = true else audiogramTitle = false end 
+
 	return state_color, status_txt
 
 end
@@ -350,7 +352,7 @@ x_offset = -40
 header_height = 42
 header_y_offset = 90 - header_height
 GUI.name = "Ultraschall 5 - Export Assistant"
-GUI.w, GUI.h = 960, 685 - header_y_offset
+GUI.w, GUI.h = 960, 750 - header_y_offset
 
 
 -- position always in the centre of the screen
@@ -363,19 +365,21 @@ y_offset = -30  -- move all content up/down
 
 -- dropzones
 
+dropzone_ypos = 372
+
 dropzone = {}
 dropzone[1] = {}
 dropzone[1]["x"] = 870 + x_offset
-dropzone[1]["y"] = 391
+dropzone[1]["y"] = dropzone_ypos
 dropzone[2] = {}
 dropzone[2]["x"] = 870 + x_offset
-dropzone[2]["y"] = 432
+dropzone[2]["y"] = dropzone_ypos + 41
 dropzone[3] = {}
 dropzone[3]["x"] = 911 + x_offset
-dropzone[3]["y"] = 391
+dropzone[3]["y"] = dropzone_ypos
 dropzone[4] = {}
 dropzone[4]["x"] = 911 + x_offset
-dropzone[4]["y"] = 432
+dropzone[4]["y"] = dropzone_ypos + 41
 
 -- OS BASED SEPARATOR
 
@@ -454,7 +458,7 @@ function buildGUI()
 	-- 2. Chapter Markers
 
 
-	areaHeight = 90
+	areaHeight = 80
 	position = 190 + y_offset
 	StepNameDisplay = "2. Chapter Markers"
 
@@ -471,8 +475,8 @@ function buildGUI()
 
 	-- 3. ID3 Metadata
 
-	areaHeight = 70
-	position = 300 + y_offset
+	areaHeight = 62
+	position = 290 + y_offset
 	StepNameDisplay = "3. ID3 Metadata"
 
 	state_color, status_txt = CheckMetadata()
@@ -532,6 +536,7 @@ function buildGUI()
 		status_txt = " OK"
 		state_color = "txt_green"
 		no_button = true
+		audiogramImage = true
 
 	else
 		status_txt = " Missing"
@@ -542,7 +547,7 @@ function buildGUI()
 	MetadataCompletedStatus = MetadataCompletedStatus .. " -" ..status_txt
 
 	areaHeight = 100
-	position = 390 + y_offset
+	position = 371 + y_offset
 	StepNameDisplay = "4. Podcast Episode Image"
 
 
@@ -561,17 +566,17 @@ function buildGUI()
 
 	-- print(logo_path)
 
-	logo = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, img_ratio, logo_path, runcommand, "")
+	logo = GUI.Pic:new(784 + x_offset + images_offset, position, 80, 80, img_ratio, logo_path, runcommand, "")
 	table.insert (GUI.elms, logo)
 
 	if found then
 		logo_hover_path = header_path .. "dropzone_large_hover.png"
 		trash = header_path .. "trash.png"
 
-		logo2 = GUI.Pic:new(784 + x_offset + images_offset, 390+y_offset, 80, 80, 1, logo_hover_path, runcommand, "")
+		logo2 = GUI.Pic:new(784 + x_offset + images_offset, position, 80, 80, 1, logo_hover_path, runcommand, "")
 		table.insert (GUI.elms, logo2)
 
-		trashbin = GUI.Pic:new(740 + x_offset, 449+y_offset, 25, 25, 1, trash, DeleteLogo, img_adress)
+		trashbin = GUI.Pic:new(740 + x_offset, position+59, 25, 25, 1, trash, DeleteLogo, img_adress)
 		table.insert(GUI.elms, trashbin)
 
 	end
@@ -603,8 +608,8 @@ function buildGUI()
 
 	-- 5. Finalize
 
-	areaHeight = 100
-	position = 510 + y_offset
+	areaHeight = 83
+	position = 490 + y_offset
 	StepNameDisplay = "5. Finalize MP3"
 
 	if string.find(MetadataCompletedStatus, "Incomplete") or string.find(MetadataCompletedStatus, "Edit") then
@@ -629,6 +634,58 @@ function buildGUI()
 	button_action = "_Ultraschall_ConvertOldMetadata_To_Ultraschall4_1_format"
 
 	buildExportStep()
+
+	-- 6. Export video audiogram
+
+	areaHeight = 83
+	position = 593 + y_offset
+	StepNameDisplay = "6. Export Video Audiogram"
+
+	
+	-- check for Episode Title (optional)
+	checkState = 0
+
+	if audiogramTitle == true then 
+		checkState = checkState + 1 
+	end
+
+	-- check for time selection
+	startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
+  	-- If there's no time selection, the start and end times will be the same
+	if startTime < endTime then 
+		checkState = checkState + 1
+	else
+		no_button = true
+	end
+
+	-- check for episode image
+	
+	if audiogramImage == true then 
+		checkState = checkState + 1
+	else
+		no_button = true
+	end
+	
+
+	if checkState == 0 then
+		status_txt = " Missing"
+		state_color = "txt_red"
+	elseif checkState == 1 or checkState == 2 then
+		status_txt = " Incomplete"
+		state_color = "txt_yellow"
+	else
+		status_txt = " OK"
+		state_color = "txt_green"	
+	end
+	
+
+	StepDescription = "Promote your show on social media: 1. Choose a time selection. 2. Set Episode Title (ID3 Metadata) 3. Provide an Episode Image."
+	warnings_position = position+30
+	button_txt = "Export MP4 Audiogram"
+	button_action = "_Ultraschall_Export_Audiogram"
+
+	buildExportStep()
+
 
 end
 
