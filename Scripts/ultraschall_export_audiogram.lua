@@ -282,7 +282,7 @@ function renderAudiogramPC()
 	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
 	-- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
 	-- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
-	vid_kbps=1300
+	vid_kbps=1024
 	aud_kbps=128
 	width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
 	if width==0 then width=1920 end -- default width
