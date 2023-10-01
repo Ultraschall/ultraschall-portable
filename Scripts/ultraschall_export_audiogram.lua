@@ -280,7 +280,6 @@ function renderAudiogramPC()
 
 	-- 3) Render the File
 	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
-	SFEM()
 end
 
 

@@ -5,7 +5,7 @@ desc: Channel Mapper-Downmixer (Cockos)
 //tags: utility channel mapper downmix
 //author: Cockos
 
-<? nch = 64 ?>
+<? nch = max(max_nch,64) ?>
 
 <? loop(x=1;nch, printf("slider%d:1<0,1>-Volume %d\n",x,x); x+=1); ?>
 
@@ -395,16 +395,7 @@ function hit_box(tx ty)
         cy=mouse_y;
       );
     ) :
-    hit_button(rx,ry,btw,bth) ? (
-      i=0;
-      loop(64,
-        c = i < 32 ? 0 : 32;
-        set_pin_mapping(1,i,c,-1,1<<(i&31));
-        slider(i+1)=1;
-        i += 1;
-      );
-    ) :
-    hit_button(zx,zy,btw,bth) ? (
+    (do_reset = hit_button(rx,ry,btw,bth)) || hit_button(zx,zy,btw,bth) ? (
       mask=1<<min(nch,32)-1;
       mask2 = nch >= 32 ? 1<<(nch-32)-1 : 0;
       i=0;
@@ -413,6 +404,7 @@ function hit_box(tx ty)
           set_pin_mapping(1,i,0,mask,0);
           mask2 ? set_pin_mapping(1,i,32,mask2,0);
         );
+        do_reset ? set_pin_mapping(1,i,i&32,-1,1<<(i&31));
         slider(i+1)=1;
         i += 1;
       );
