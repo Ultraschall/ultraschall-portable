@@ -235,14 +235,14 @@ function renderAudiogramMac()
 	RenderTable["Source"] = 0 -- Master mix; 
 
 	-- setz Path und Filename
-	RenderTable["RenderFile"] = reaper.GetProjectPath()
+	RenderTable["RenderFile"] = GetProjectPath()
 	RenderTable["RenderPattern"] = "Audiogram"
 
 	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
 	-- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
 	-- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
 
-	vid_kbps = 512
+	vid_kbps = 1024
 	aud_kbps = 128
 	width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
 	if width == 0 then width = 1024 end -- default width
@@ -275,8 +275,8 @@ function renderAudiogramPC()
 	RenderTable["Bounds"]=2
 
 	-- setz Path und Filename
-	RenderTable["RenderFile"]=GetProjectPath()
-	RenderTable["RenderPattern"]="Audiogram"
+	RenderTable["RenderFile"] = GetProjectPath()
+	RenderTable["RenderPattern"] = "Audiogram"
 	-- print (RenderTable["FadeOut_Shape"])
 
 	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
@@ -475,11 +475,13 @@ end -- Todo: Linux
 reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 
--- undo everything: an easy way to reset, leaving just the rendered video
 state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
 if state==6 then
   ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
 end
+
+-- undo everything: an easy way to reset, leaving just the rendered video:
+
 reaper.Main_OnCommand(40029, 0)
 -- reaper.Main_OnCommand(40029, 0)
 -- SFEM() 
