@@ -145,7 +145,7 @@ End of Header
 <a class="anch" id="Introduction"></a>
 <a href="#Introduction"> ^</a> <u><b>Introduction to Config Variables</b></u><br>			<p>
 <div class="ch">
-<p>List of all Config Variables as of Reaper 6.79 and probably are missing some, but should be fairly complete anyway.<br />
+<p>List of all Config Variables as of Reaper 6.82 and probably are missing some, but should be fairly complete anyway.<br />
 These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.<br />
 To change them, you can use the following ReaScript API-functions(requires SWS being installed):</p>
 <blockquote>
@@ -4383,15 +4383,6 @@ Can be affected by the following actions:<br>
 &nbsp;&nbsp;Options: Chase non-FX envelopes to automation items when underlying envelope is bypassed<br>
 &nbsp;&nbsp;Options: Razor edits affect all track envelopes<br>
 <br>
-Can be affected by the following actions:<br>
-&nbsp;&nbsp;Options: Move envelope points with media items<br>
-&nbsp;&nbsp;Options: Automation items do not connect to the underlying envelope<br>
-&nbsp;&nbsp;Options: Automation items connect to the underlying envelope on the right side<br>
-&nbsp;&nbsp;Options: Automation items connect to the underlying envelope on both sides<br>
-&nbsp;&nbsp;Options: Bypass underlying envelopes outside of automation items<br>
-&nbsp;&nbsp;Options: Chase non-FX envelopes to automation items when underlying envelope is bypassed<br>
-&nbsp;&nbsp;Options: Razor edits affect all track envelopes<br>
-<br>
 >&1=0, don't move points with item(off) - unchecked&nbsp;&nbsp;<br>
 >&1=1, move points with item(on) - checked&nbsp;&nbsp;<br>
 <br>
@@ -6432,6 +6423,9 @@ It is an integer-bitfield, preferences variable.<br>
 <br>
 >&1024=0, Disable high-resolution peaks for video items - unchecked&nbsp;&nbsp;<br>
 >&1024=1, Disable high-resolution peaks for video items - checked&nbsp;&nbsp;<br>
+<br>
+>&2048=0, Use standard edit control for video code editor (for accessibility, lacks many features) - unchecked<br>
+>&2048=0, Use standard edit control for video code editor (for accessibility, lacks many features) - checked<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
