@@ -1435,7 +1435,7 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
     ultraschall.MoveMarkersBy(0, startposition, delta, true)
   end
 
-  ultraschall.MoveMediaItemsBefore_By(endposition-0.00000000001, delta, trackstring)  
+  ultraschall.MoveMediaItemsBefore_By(endposition+0.00000000001, delta, trackstring)  
   return C,CCC
 end
 

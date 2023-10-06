@@ -1548,7 +1548,7 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebM_Video(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebM_Video(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, integer AudioCodec, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the WebM-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1566,13 +1566,11 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
     integer HEIGHT - the height of the video in pixels; 1 to 2147483647; only even values(2,4,6,etc) will be accepted by Reaper, uneven will be rounded up!
     number FPS - the fps of the video; must be a double-precision-float value (e.g. 9.09 or 25.00); 0.01 to 2000.00
     boolean AspectRatio - the aspect-ratio; true, keep source aspect ratio; false, don't keep source aspect ratio
-    optional integer VideoCodec - the videocodec used for the video;
-                       - nil, VP8
+    integer VideoCodec - the videocodec used for the video;
                        - 1, VP8
                        - 2, VP9(needs FFMPEG 4.1.3 to be installed)
                        - 3, NONE
-    optional integer AudioCodec - the audiocodec to use for the video
-                       - nil, VORBIS
+    integer AudioCodec - the audiocodec to use for the video
                        - 1, VORBIS
                        - 2, OPUS(needs FFMPEG 4.1.3 to be installed)
                        - 3, NONE
@@ -1605,8 +1603,8 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
   if HEIGHT<1 or HEIGHT>2147483647 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "HEIGHT", "Must be between 1 and 2147483647.", -11) return nil end
   if FPS<0.01 or FPS>2000.00 then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "FPS", "Ultraschall-API supports only fps-values between 0.01 and 2000.00, sorry.", -12) return nil end
   
-  if VideoOptions~=nil and type(VideoOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VideoOptions", "Must be a string with maximum length of 255 characters!", -14) return nil end
-  if AudioOptions~=nil and type(AudioOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AudioOptions", "Must be a string with maximum length of 255 characters!", -15) return nil end
+  if VideoOptions~=nil and type(VideoOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "VideoOptions", "Must be a string with maximum length of 255 characters!", -17) return nil end
+  if AudioOptions~=nil and type(AudioOptions)~="string" then ultraschall.AddErrorMessage("CreateRenderCFG_WebM_Video", "AudioOptions", "Must be a string with maximum length of 255 characters!", -18) return nil end
   if VideoOptions==nil then VideoOptions="" end
   if AudioOptions==nil then AudioOptions="" end
   
@@ -2853,7 +2851,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
 
   local resample_mode, playback_resample_mode, project_smplrate4mix_and_fx = ultraschall.GetProject_RenderResample(projectfilename_with_path, ProjectStateChunk)
   
-  local RenderTable={}
+  local RenderTable=ultraschall.CreateNewRenderTable()
   RenderTable["RenderTable"]=true
   RenderTable["Source"]=render_stems
   if render_stems&256~=0 then RenderTable["EmbedStretchMarkers"]=true RenderTable["Source"]=RenderTable["Source"]-256 else RenderTable["EmbedStretchMarkers"]=false end
@@ -2917,6 +2915,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
     RenderTable["Normalize_Target"]=-24
     RenderTable["Normalize_Enabled"]=false
     RenderTable["Normalize_Stems_to_Master_Target"]=false
+    RenderTable["Normalize_Only_Files_Too_Loud"]=false
     
     RenderTable["Brickwall_Limiter_Target"]=0.99999648310761
     RenderTable["Brickwall_Limiter_Method"]=1
@@ -2940,7 +2939,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
       RenderTable["FadeIn_Enabled"]=true
       RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-512
     end
-    
+        
     if RenderTable["Normalize_Method"]&256==0 then     
       RenderTable["Normalize_Only_Files_Too_Loud"]=false
     elseif RenderTable["Normalize_Method"]&256==256 then
@@ -3748,6 +3747,13 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   if RenderTable["FadeIn_Enabled"]==true and normalize_method&512==0 then normalize_method=normalize_method+512 end
   if RenderTable["FadeOut_Enabled"]==true and normalize_method&1024==0 then normalize_method=normalize_method+1024 end
   
+  reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FILE", RenderTable["RenderFile"], true)
+  reaper.GetSetProjectInfo_String(ReaProject, "RENDER_PATTERN", RenderTable["RenderPattern"], true)
+  if apply_rendercfg_string~=false then
+    reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FORMAT", RenderTable["RenderString"], true)
+    reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FORMAT2", RenderTable["RenderString2"], true)
+  end
+  
   reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEIN", RenderTable["FadeIn"], true)
   reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEOUT", RenderTable["FadeOut"], true)
   reaper.GetSetProjectInfo(ReaProject, "RENDER_FADEINSHAPE", RenderTable["FadeIn_Shape"], true)
@@ -3792,12 +3798,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
       RenderTable["RenderFile"]=string.gsub(path,"\\\\", "\\")
     end
   end
-  reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FILE", RenderTable["RenderFile"], true)
-  reaper.GetSetProjectInfo_String(ReaProject, "RENDER_PATTERN", RenderTable["RenderPattern"], true)
-  if apply_rendercfg_string~=false then
-    reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FORMAT", RenderTable["RenderString"], true)
-    reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FORMAT2", RenderTable["RenderString2"], true)
-  end
+  
   
   if RenderTable["SaveCopyOfProject"]==true then SaveCopyOfProject=1 else SaveCopyOfProject=0 end
   hwnd = ultraschall.GetRenderToFileHWND()
