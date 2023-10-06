@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 6.79 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 6.82 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -3601,15 +3601,6 @@
       <description>  
           Move envelope points with media items-menu entry, as set in Options -> Envelope points or settings in the Project Settings -> Advanced 
           It is an integer, options variable.
-          
-          Can be affected by the following actions:
-            Options: Move envelope points with media items
-            Options: Automation items do not connect to the underlying envelope
-            Options: Automation items connect to the underlying envelope on the right side
-            Options: Automation items connect to the underlying envelope on both sides
-            Options: Bypass underlying envelopes outside of automation items
-            Options: Chase non-FX envelopes to automation items when underlying envelope is bypassed
-            Options: Razor edits affect all track envelopes
           
           Can be affected by the following actions:
             Options: Move envelope points with media items
@@ -12453,6 +12444,9 @@
            
            >&1024=0, Disable high-resolution peaks for video items - unchecked  
            >&1024=1, Disable high-resolution peaks for video items - checked  
+           
+           >&2048=0, Use standard edit control for video code editor (for accessibility, lacks many features) - unchecked
+           >&2048=0, Use standard edit control for video code editor (for accessibility, lacks many features) - checked
 
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  

@@ -1511,7 +1511,11 @@ function ultraschall.Docs_GetReaperApiFunction_Retvals(functionname)
   local retvals2={}
   for i=1, retvalscount do
     retvals2[i]={}
-    retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.-) (.*)")
+    if retvals[i][1]:match("optional")~=nil then 
+      retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.- .-) (.*)")
+    else
+      retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.-) (.*)")
+    end
     if retvals2[i]["name"]==nil then retvals2[i]["name"]="retval" end
     if retvals2[i]["datatype"]==nil then retvals2[i]["datatype"]=retvals[i][1] end
     retvals2[i]["description"]=retvals[i][2]
@@ -1584,7 +1588,11 @@ function ultraschall.Docs_GetReaperApiFunction_Params(functionname)
   local Params2={}
   for i=1, parmcount do
     Params2[i]={}
-    Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.-) (.*)")
+    if Params[i][1]:match("optional")~=nil then 
+      Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.- .-) (.*)")
+    else
+      Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.-) (.*)")
+    end
     if Params2[i]["name"]==nil then Params2[i]["name"]="retval" end
     if Params2[i]["datatype"]==nil then Params2[i]["datatype"]=Params[i][1] end
     Params2[i]["description"]=Params[i][2]
@@ -2243,7 +2251,11 @@ function ultraschall.Docs_GetUltraschallApiFunction_Retvals(functionname)
   local retvals2={}
   for i=1, retvalscount do
     retvals2[i]={}
-    retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.*) (.*)")
+    if retvals[i][1]:match("optional")~=nil then 
+      retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.- .-) (.*)")
+    else
+      retvals2[i]["datatype"], retvals2[i]["name"] = retvals[i][1]:match("(.-) (.*)")
+    end
     if retvals2[i]["name"]==nil then retvals2[i]["name"]="retval" end
     if retvals2[i]["datatype"]==nil then retvals2[i]["datatype"]=retvals[i][1] end
     retvals2[i]["description"]=retvals[i][2]
@@ -2299,13 +2311,17 @@ function ultraschall.Docs_GetUltraschallApiFunction_Params(functionname)
   end
   if found==-1 then ultraschall.AddErrorMessage("Docs_GetUltraschallApiFunction_Params", "functionname", "function not found", -4) return end
   
-  parmcount, Params, markuptype, markupversion, prog_lang, spok_lang, indent = 
+  local parmcount, Params, markuptype, markupversion, prog_lang, spok_lang, indent = 
   
   ultraschall.Docs_GetUSDocBloc_Params(ultraschall.Docs_US_Functions_USDocBlocs[found], true, 1)
   local Params2={}
   for i=1, parmcount do
     Params2[i]={}
-    Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.*) (.*)")
+    if Params[i][1]:match("optional")~=nil then
+      Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.- .-) (.*)")
+    else
+      Params2[i]["datatype"], Params2[i]["name"] = Params[i][1]:match("(.-) (.*)")
+    end
     if Params2[i]["name"]==nil then Params2[i]["name"]="retval" end
     if Params2[i]["datatype"]==nil then Params2[i]["datatype"]=Params[i][1] end
     Params2[i]["description"]=Params[i][2]
