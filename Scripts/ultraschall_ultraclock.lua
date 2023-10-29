@@ -491,15 +491,15 @@ function drawClock()
     --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
     -- end
 
-    date = tostring(LUFS_integral).." LUFS"
+    Date = tostring(LUFS_integral).." LUFS"
     if FX_active == 0 then 
-      date = "? LUFS" 
+      Date = "? LUFS" 
       date_color = 0x777777
     end
     
 
   else
-    date=""
+    Date=""
   end
 
   -- RealTime
@@ -509,9 +509,9 @@ function drawClock()
     time=""
   end
 
-  if date~="" then
+  if Date~="" then
     date_position_y = txt_line[2].y*height+border
-    WriteAlignedText(" "..date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1) -- print realtime hh:mm:ss
+    WriteAlignedText(" "..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1) -- print realtime hh:mm:ss
   end
   if time~="" then
     WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
