@@ -295,12 +295,48 @@ function renderAudiogramPC()
 
 	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
 	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
-
+	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
 
 	-- 3) Render the File
 	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
 end
 
+function renderAudiogramLinux()
+
+	-- 1) RenderTable für die Render Settings erzeugen
+	RenderTable=ultraschall.CreateNewRenderTable()
+
+	-- 2) RenderTable anpassen
+
+	-- setz bounds auf time-selection
+	RenderTable["Bounds"]=2
+
+	-- setz Path und Filename
+	RenderTable["RenderFile"] = GetProjectPath()
+	RenderTable["RenderPattern"] = "Audiogram"
+	-- print (RenderTable["FadeOut_Shape"])
+
+	-- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
+	-- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
+	-- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
+	vid_kbps=1024
+	aud_kbps=128
+	width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
+	if width==0 then width=1920 end -- default width
+	height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
+	if height==0 then height=1080 end -- default height
+	fps=20.00
+	aspect_ratio=true
+	VideoCodec=0 -- MP4
+	AudioCodec=0 -- 
+
+	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
+	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
+	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
+
+	-- 3) Render the File
+	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
+end
 
 function setVideoFXonMaster()
 	-- get the FXStateChunk
@@ -464,20 +500,23 @@ createAudigramTrack("Insert AudiogramBG track.RTrackTemplate")
 -- Duplicate the track using REAPER's action: "Track: Duplicate tracks"
 -- reaper.Main_OnCommand(40062, 0)
 
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     
+if ultraschall.IsOS_Windows()==true then
 	renderAudiogramPC()
-else 
+elseif ultraschall.IsOS_Mac()==true then
 	renderAudiogramMac()
-end -- Todo: Linux
+else
+	renderAudiogramLinux()
+end 
 
 -- End the Undo Block with a description
 
 reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
-
-state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
-if state==6 then
-  ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
+if count>0 then
+	state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
+	if state==6 then
+	    ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
+	end
 end
 
 -- undo everything: an easy way to reset, leaving just the rendered video:
