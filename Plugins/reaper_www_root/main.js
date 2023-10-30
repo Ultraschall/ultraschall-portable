@@ -277,7 +277,7 @@ CMDSTATE \t command_id \t state
 state>0 for on, 0=off, -1=no state
 
 
-* OSC/oscstring[:value]
+* OSC/oscstring[:floatValue|:sStringValue]
 
 Sends an OSC message through the default processing (Default.ReaperOSC) and MIDI-learn/action mappings. oscstring:value will be urldecoded.
 

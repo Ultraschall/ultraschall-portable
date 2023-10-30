@@ -1,7 +1,9 @@
 <!doctype html>
 <html><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <title>REAPER Web Control - Fancier</title>
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
 <script src="main.js"></script>
@@ -880,10 +882,7 @@ function wwr_onreply(results) {
 } 
     
 function on_record_button(e) {
-  var x;
-  last_track_cnt = nTrack;    
-  for (x = 1; x < last_track_cnt && 0==(recarmCount); x ++);
-  if (x < last_track_cnt || confirm("no tracks are armed, start record?")) wwr_req(1013);
+  if (recarmCount > 0 || confirm("no tracks are armed, start record?")) wwr_req(1013);
   return false;
 }     
 

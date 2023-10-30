@@ -184,6 +184,20 @@ def RPR_BypassFxAllTracks(p0):
   t=(c_int(p0),)
   f(t[0])
 
+def RPR_CalcMediaSrcLoudness(p0):
+  a=_ft['CalcMediaSrcLoudness']
+  f=CFUNCTYPE(c_int,c_uint64)(a)
+  t=(rpr_packp('PCM_source*',p0),)
+  r=f(t[0])
+  return r
+
+def RPR_CalculateNormalization(p0,p1,p2,p3,p4):
+  a=_ft['CalculateNormalization']
+  f=CFUNCTYPE(c_double,c_uint64,c_int,c_double,c_double,c_double)(a)
+  t=(rpr_packp('PCM_source*',p0),c_int(p1),c_double(p2),c_double(p3),c_double(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return r
+
 def RPR_ClearAllRecArmed():
   a=_ft['ClearAllRecArmed']
   f=CFUNCTYPE(None)(a)
@@ -211,6 +225,13 @@ def RPR_ColorToNative(p0,p1,p2):
   f=CFUNCTYPE(c_int,c_int,c_int,c_int)(a)
   t=(c_int(p0),c_int(p1),c_int(p2))
   r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_CountActionShortcuts(p0,p1):
+  a=_ft['CountActionShortcuts']
+  f=CFUNCTYPE(c_int,c_uint64,c_int)(a)
+  t=(rpr_packp('KbdSectionInfo*',p0),c_int(p1))
+  r=f(t[0],t[1])
   return r
 
 def RPR_CountAutomationItems(p0):
@@ -681,6 +702,13 @@ def RPR_DB2SLIDER(p0):
   r=f(t[0])
   return r
 
+def RPR_DeleteActionShortcut(p0,p1,p2):
+  a=_ft['DeleteActionShortcut']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('KbdSectionInfo*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
 def RPR_DeleteEnvelopePointEx(p0,p1,p2):
   a=_ft['DeleteEnvelopePointEx']
   f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int)(a)
@@ -761,6 +789,13 @@ def RPR_DestroyAudioAccessor(p0):
   f=CFUNCTYPE(None,c_uint64)(a)
   t=(rpr_packp('AudioAccessor*',p0),)
   f(t[0])
+
+def RPR_DoActionShortcutDialog(p0,p1,p2,p3):
+  a=_ft['DoActionShortcutDialog']
+  f=CFUNCTYPE(c_byte,c_uint64,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('HWND',p0),rpr_packp('KbdSectionInfo*',p1),c_int(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return r
 
 def RPR_Dock_UpdateDockID(p0,p1):
   a=_ft['Dock_UpdateDockID']
@@ -1017,6 +1052,13 @@ def RPR_get_ini_file():
   r=f()
   return str(r.decode())
 
+def RPR_GetActionShortcutDesc(p0,p1,p2,p3,p4):
+  a=_ft['GetActionShortcutDesc']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_char_p,c_int)(a)
+  t=(rpr_packp('KbdSectionInfo*',p0),c_int(p1),c_int(p2),rpr_packs(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return (r,p0,p1,p2,rpr_unpacks(t[3]),p4)
+
 def RPR_GetActiveTake(p0):
   a=_ft['GetActiveTake']
   f=CFUNCTYPE(c_uint64,c_uint64)(a)
@@ -1181,6 +1223,13 @@ def RPR_GetEnvelopeStateChunk(p0,p1,p2,p3):
   r=f(t[0],t[1],t[2],t[3])
   return (r,p0,rpr_unpacks(t[1]),p2,p3)
 
+def RPR_GetEnvelopeUIState(p0):
+  a=_ft['GetEnvelopeUIState']
+  f=CFUNCTYPE(c_int,c_uint64)(a)
+  t=(rpr_packp('TrackEnvelope*',p0),)
+  r=f(t[0])
+  return r
+
 def RPR_GetExePath():
   a=_ft['GetExePath']
   f=CFUNCTYPE(c_char_p)(a)
@@ -1232,6 +1281,13 @@ def RPR_GetHZoomLevel():
   a=_ft['GetHZoomLevel']
   f=CFUNCTYPE(c_double)(a)
   r=f()
+  return r
+
+def RPR_GetInputActivityLevel(p0):
+  a=_ft['GetInputActivityLevel']
+  f=CFUNCTYPE(c_double,c_int)(a)
+  t=(c_int(p0),)
+  r=f(t[0])
   return r
 
 def RPR_GetInputChannelName(p0):
@@ -2006,6 +2062,13 @@ def RPR_GetThemeColor(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_GetThingFromPoint(p0,p1,p2,p3):
+  a=_ft['GetThingFromPoint']
+  f=CFUNCTYPE(c_uint64,c_int,c_int,c_char_p,c_int)(a)
+  t=(c_int(p0),c_int(p1),rpr_packs(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (rpr_unpackp('MediaTrack*',r),p0,p1,rpr_unpacks(t[2]),p3)
+
 def RPR_GetToggleCommandState(p0):
   a=_ft['GetToggleCommandState']
   f=CFUNCTYPE(c_int,c_int)(a)
@@ -2448,6 +2511,20 @@ def RPR_joystick_update(p0):
   r=f(t[0])
   return r
 
+def RPR_kbd_enumerateActions(p0,p1,p2):
+  a=_ft['kbd_enumerateActions']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_uint64)(a)
+  t=(rpr_packp('KbdSectionInfo*',p0),c_int(p1),rpr_packp('char**',p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_kbd_getTextFromCmd(p0,p1):
+  a=_ft['kbd_getTextFromCmd']
+  f=CFUNCTYPE(c_char_p,c_int,c_uint64)(a)
+  t=(c_int(p0),rpr_packp('KbdSectionInfo*',p1))
+  r=f(t[0],t[1])
+  return str(r.decode())
+
 def RPR_LICE_ClipLine(p0,p1,p2,p3,p4,p5,p6,p7):
   a=_ft['LICE_ClipLine']
   f=CFUNCTYPE(c_byte,c_void_p,c_void_p,c_void_p,c_void_p,c_int,c_int,c_int,c_int)(a)
@@ -2492,6 +2569,12 @@ def RPR_Main_SaveProject(p0,p1):
   f=CFUNCTYPE(None,c_uint64,c_byte)(a)
   t=(rpr_packp('ReaProject*',p0),c_byte(p1))
   f(t[0],t[1])
+
+def RPR_Main_SaveProjectEx(p0,p1,p2):
+  a=_ft['Main_SaveProjectEx']
+  f=CFUNCTYPE(None,c_uint64,c_char_p,c_int)(a)
+  t=(rpr_packp('ReaProject*',p0),rpr_packsc(p1),c_int(p2))
+  f(t[0],t[1],t[2])
 
 def RPR_Main_UpdateLoopInfo(p0):
   a=_ft['Main_UpdateLoopInfo']
@@ -2719,6 +2802,13 @@ def RPR_MIDI_GetProjTimeFromPPQPos(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_MIDI_GetRecentInputEvent(p0,p1,p2,p3,p4,p5,p6):
+  a=_ft['MIDI_GetRecentInputEvent']
+  f=CFUNCTYPE(c_int,c_int,c_char_p,c_void_p,c_void_p,c_void_p,c_void_p,c_void_p)(a)
+  t=(c_int(p0),rpr_packs(p1),c_int(p2),c_int(p3),c_int(p4),c_double(p5),c_int(p6))
+  r=f(t[0],t[1],byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]),byref(t[6]))
+  return (r,p0,rpr_unpacks(t[1]),int(t[2].value),int(t[3].value),int(t[4].value),float(t[5].value),int(t[6].value))
+
 def RPR_MIDI_GetScale(p0,p1,p2,p3,p4):
   a=_ft['MIDI_GetScale']
   f=CFUNCTYPE(c_byte,c_uint64,c_void_p,c_void_p,c_char_p,c_int)(a)
@@ -2739,6 +2829,12 @@ def RPR_MIDI_GetTrackHash(p0,p1,p2,p3):
   t=(rpr_packp('MediaTrack*',p0),c_byte(p1),rpr_packs(p2),c_int(p3))
   r=f(t[0],t[1],t[2],t[3])
   return (r,p0,p1,rpr_unpacks(t[2]),p3)
+
+def RPR_midi_init(p0,p1):
+  a=_ft['midi_init']
+  f=CFUNCTYPE(None,c_int,c_int)(a)
+  t=(c_int(p0),c_int(p1))
+  f(t[0],t[1])
 
 def RPR_MIDI_InsertCC(p0,p1,p2,p3,p4,p5,p6,p7):
   a=_ft['MIDI_InsertCC']
@@ -2833,6 +2929,13 @@ def RPR_MIDI_Sort(p0):
   f=CFUNCTYPE(None,c_uint64)(a)
   t=(rpr_packp('MediaItem_Take*',p0),)
   f(t[0])
+
+def RPR_MIDIEditor_EnumTakes(p0,p1,p2):
+  a=_ft['MIDIEditor_EnumTakes']
+  f=CFUNCTYPE(c_uint64,c_uint64,c_int,c_byte)(a)
+  t=(rpr_packp('HWND',p0),c_int(p1),c_byte(p2))
+  r=f(t[0],t[1],t[2])
+  return rpr_unpackp('MediaItem_Take*',r)
 
 def RPR_MIDIEditor_GetActive():
   a=_ft['MIDIEditor_GetActive']
@@ -3045,6 +3148,13 @@ def RPR_PCM_Sink_ShowConfig(p0,p1,p2):
   r=f(t[0],t[1],t[2])
   return rpr_unpackp('HWND',r)
 
+def RPR_PCM_Source_BuildPeaks(p0,p1):
+  a=_ft['PCM_Source_BuildPeaks']
+  f=CFUNCTYPE(c_int,c_uint64,c_int)(a)
+  t=(rpr_packp('PCM_source*',p0),c_int(p1))
+  r=f(t[0],t[1])
+  return r
+
 def RPR_PCM_Source_CreateFromFile(p0):
   a=_ft['PCM_Source_CreateFromFile']
   f=CFUNCTYPE(c_uint64,c_char_p)(a)
@@ -3207,6 +3317,13 @@ def RPR_ScaleToEnvelopeMode(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_SectionFromUniqueID(p0):
+  a=_ft['SectionFromUniqueID']
+  f=CFUNCTYPE(c_uint64,c_int)(a)
+  t=(c_int(p0),)
+  r=f(t[0])
+  return rpr_unpackp('KbdSectionInfo*',r)
+
 def RPR_SelectAllMediaItems(p0,p1):
   a=_ft['SelectAllMediaItems']
   f=CFUNCTYPE(None,c_uint64,c_byte)(a)
@@ -3218,6 +3335,12 @@ def RPR_SelectProjectInstance(p0):
   f=CFUNCTYPE(None,c_uint64)(a)
   t=(rpr_packp('ReaProject*',p0),)
   f(t[0])
+
+def RPR_SendMIDIMessageToHardware(p0,p1,p2):
+  a=_ft['SendMIDIMessageToHardware']
+  f=CFUNCTYPE(None,c_int,c_char_p,c_int)(a)
+  t=(c_int(p0),rpr_packsc(p1),c_int(p2))
+  f(t[0],t[1],t[2])
 
 def RPR_SetActiveTake(p0):
   a=_ft['SetActiveTake']
@@ -3545,6 +3668,62 @@ def RPR_SetTrackStateChunk(p0,p1,p2):
   r=f(t[0],t[1],t[2])
   return r
 
+def RPR_SetTrackUIInputMonitor(p0,p1,p2):
+  a=_ft['SetTrackUIInputMonitor']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_SetTrackUIMute(p0,p1,p2):
+  a=_ft['SetTrackUIMute']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_SetTrackUIPan(p0,p1,p2,p3,p4):
+  a=_ft['SetTrackUIPan']
+  f=CFUNCTYPE(c_double,c_uint64,c_double,c_byte,c_byte,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_double(p1),c_byte(p2),c_byte(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return r
+
+def RPR_SetTrackUIPolarity(p0,p1,p2):
+  a=_ft['SetTrackUIPolarity']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_SetTrackUIRecArm(p0,p1,p2):
+  a=_ft['SetTrackUIRecArm']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_SetTrackUISolo(p0,p1,p2):
+  a=_ft['SetTrackUISolo']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_SetTrackUIVolume(p0,p1,p2,p3,p4):
+  a=_ft['SetTrackUIVolume']
+  f=CFUNCTYPE(c_double,c_uint64,c_double,c_byte,c_byte,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_double(p1),c_byte(p2),c_byte(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return r
+
+def RPR_SetTrackUIWidth(p0,p1,p2,p3,p4):
+  a=_ft['SetTrackUIWidth']
+  f=CFUNCTYPE(c_double,c_uint64,c_double,c_byte,c_byte,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_double(p1),c_byte(p2),c_byte(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return r
+
 def RPR_ShowActionList(p0,p1):
   a=_ft['ShowActionList']
   f=CFUNCTYPE(None,c_uint64,c_uint64)(a)
@@ -3773,6 +3952,20 @@ def RPR_TakeFX_GetParamEx(p0,p1,p2,p3,p4,p5):
   t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_int(p2),c_double(p3),c_double(p4),c_double(p5))
   r=f(t[0],t[1],t[2],byref(t[3]),byref(t[4]),byref(t[5]))
   return (r,p0,p1,p2,float(t[3].value),float(t[4].value),float(t[5].value))
+
+def RPR_TakeFX_GetParamFromIdent(p0,p1,p2):
+  a=_ft['TakeFX_GetParamFromIdent']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_char_p)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),rpr_packsc(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_TakeFX_GetParamIdent(p0,p1,p2,p3,p4):
+  a=_ft['TakeFX_GetParamIdent']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_char_p,c_int)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),c_int(p1),c_int(p2),rpr_packs(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return (r,p0,p1,p2,rpr_unpacks(t[3]),p4)
 
 def RPR_TakeFX_GetParamName(p0,p1,p2,p3,p4):
   a=_ft['TakeFX_GetParamName']
@@ -4260,6 +4453,20 @@ def RPR_TrackFX_GetParamEx(p0,p1,p2,p3,p4,p5):
   t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2),c_double(p3),c_double(p4),c_double(p5))
   r=f(t[0],t[1],t[2],byref(t[3]),byref(t[4]),byref(t[5]))
   return (r,p0,p1,p2,float(t[3].value),float(t[4].value),float(t[5].value))
+
+def RPR_TrackFX_GetParamFromIdent(p0,p1,p2):
+  a=_ft['TrackFX_GetParamFromIdent']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_char_p)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),rpr_packsc(p2))
+  r=f(t[0],t[1],t[2])
+  return r
+
+def RPR_TrackFX_GetParamIdent(p0,p1,p2,p3,p4):
+  a=_ft['TrackFX_GetParamIdent']
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_char_p,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2),rpr_packs(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
+  return (r,p0,p1,p2,rpr_unpacks(t[3]),p4)
 
 def RPR_TrackFX_GetParamName(p0,p1,p2,p3,p4):
   a=_ft['TrackFX_GetParamName']

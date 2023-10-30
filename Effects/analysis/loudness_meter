@@ -36,7 +36,7 @@ options:no_meter
 @init
 
 <?
-  nch = 64; // maximum channel count
+  nch = max(max_nch,64); // maximum channel count
   sinc_sz = 16; // true peak interpolation size
   use_mem_sinc = sinc_sz>32;
 
