@@ -523,27 +523,28 @@ function SettingsPageSettings()
     -- Suche die Sections der ultraschall-settings.ini heraus, die in der Settings-GUI angezeigt werden sollen
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
-
-      position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 30) -- Feintuning notwendig
-      settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
-
-      if settings_Type == "checkbox" then
-        id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
-        table.insert(GUI.elms, id)
-
-        -- Info-Button
-        info = GUI.Btn:new(440+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
-        table.insert(GUI.elms, info)
-
-      elseif settings_Type == "slider" then
-        position = position+8
-        id = GUI.Sldr:new(325+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
-        table.insert(GUI.elms, id)
-
-        -- Info-Button
-        info = GUI.Btn:new(440+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
-        table.insert(GUI.elms, info)
-
+      if tonumber(ultraschall.GetUSExternalState(sectionName, "position", "ultraschall-settings.ini"))~=nil then
+        position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 27) -- Feintuning notwendig
+        settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
+  
+        if settings_Type == "checkbox" then
+          id = GUI.Checklist:new(20+x_offset, position, 240, 30,         "", ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), 4, tonumber(ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini")), sectionName)
+          table.insert(GUI.elms, id)
+  
+          -- Info-Button
+          info = GUI.Btn:new(440+x_offset, position+3, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+          table.insert(GUI.elms, info)
+  
+        elseif settings_Type == "slider" then
+          position = position+8
+          id = GUI.Sldr:new(325+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
+          table.insert(GUI.elms, id)
+  
+          -- Info-Button
+          info = GUI.Btn:new(440+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))
+          table.insert(GUI.elms, info)
+  
+        end
       end
     end
   end
@@ -640,14 +641,14 @@ function SettingsPageDevices()
   infoposition = position + 280
 
 
-	for k, warningtextline in pairs(infotable) do
+  for k, warningtextline in pairs(infotable) do
 
-		local infotext = GUI.Lbl:new(85, infoposition, warningtextline, 0, "txt_grey")
-		table.insert(GUI.elms, infotext)
-		infoposition = infoposition +20
+    local infotext = GUI.Lbl:new(85, infoposition, warningtextline, 0, "txt_grey")
+    table.insert(GUI.elms, infotext)
+    infoposition = infoposition +20
 
-		-- print(k, v)
-	end
+    -- print(k, v)
+  end
 
 
   -- info_device = GUI.Btn:new(568, 119, 20, 20,         " ?", show_menu, devicetext)

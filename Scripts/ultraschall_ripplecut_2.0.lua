@@ -49,10 +49,10 @@ playpos=reaper.GetPlayPosition()
 if playstate&4==4 then return end -- quit if recording
 init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(false, 0, 0, 0, 0)
 preroll = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preroll", "value","ultraschall-settings.ini"))
-review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle","ultraschall-settings.ini")
-obey_locked = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle","ultraschall-settings.ini")
-obey_crossfade = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_crossfade_toggle","ultraschall-settings.ini")
-if obey_crossfade~="true" then obey_crossfade=false else obey_crossfade=true end
+review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_review_edit", "value","ultraschall-settings.ini")
+obey_locked = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_obey_locked", "value","ultraschall-settings.ini")
+obey_crossfade = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_obey_crossfade", "value","ultraschall-settings.ini")
+if obey_crossfade~="1" then obey_crossfade=false else obey_crossfade=true end
 ar_start, ar_end = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
 
 
@@ -63,19 +63,22 @@ reaper.Undo_BeginBlock() -- Beginning of the undo block. Leave it at the top of 
 reaper.PreventUIRefresh(1)
 
 if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
-  if obey_locked~="true" then
+  if obey_locked~="1" then
     unlocked_trackstring = ultraschall.CreateTrackString_AllTracks()
   else
     locked_trackstring, unlocked_trackstring = ultraschall.GetAllLockedTracks()
   end
+  
   -- Ripple Cut
   number_items, MediaItemStateChunkArray = ultraschall.RippleCut(init_start_timesel, 
                                                                  init_end_timesel, 
                                                                  unlocked_trackstring, 
                                                                  true, -- moveenvelopepoints, 
                                                                  true, -- add_to_clipboard, 
-                                                                 true, -- movemarkers, 
-                                                                 obey_crossfade)-- obey_crossfade)
+                                                                 true -- movemarkers, 
+                                                                 )
+--SLEM()                                                                   
+
   AddMuteEnvelopePoint_IfNecessary(init_start_timesel, init_end_timesel)
   -- Store Outtakes
   
@@ -118,7 +121,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
   else
     if (playpos>=init_start_timesel and playpos<init_end_timesel) then -- playpos is inside the selection -> jump to start of selection (we have o use pause/setpos/play)
       reaper.OnPauseButton() --pause
-      if review_toggle~="true" then
+      if review_toggle~="1" then
         reaper.MoveEditCursor(init_start_timesel-reaper.GetPlayPosition(), 0)
       else
         reaper.MoveEditCursor(init_start_timesel-reaper.GetPlayPosition()-preroll, 0)
@@ -127,7 +130,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
       
     elseif (playpos>init_end_timesel) then -- if playpos is right from selection move cursor to the left to keep relative playpos
       reaper.OnPauseButton() --pause
-      if review_toggle~="true" then
+      if review_toggle~="1" then
         reaper.MoveEditCursor(-(init_end_timesel-init_start_timesel), 0)
       else
         reaper.MoveEditCursor(-(reaper.GetProjectLength(0)), 0)
@@ -135,7 +138,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
       end
       reaper.OnPlayButton() --play
     elseif (playpos<init_start_timesel) then
-      if review_toggle=="true" then
+      if review_toggle=="1" then
         reaper.OnPauseButton() --pause
         reaper.MoveEditCursor(-(reaper.GetProjectLength(0)), 0)
         reaper.MoveEditCursor(init_start_timesel-preroll, 0)
