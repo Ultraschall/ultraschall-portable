@@ -655,7 +655,6 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
     local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
       if pos>cursortime and pos<retposition then
-        print2(i)
         retposition=pos
         retindexnumber=markrgnindexnumber
         retmarkername=name
@@ -667,7 +666,7 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
   end
   -- return found marker
   if retindexnumber==-1 then retposition=-1 end
-  return retindexnumber, retposition, retmarkername, retindexnumber
+  return retindex, retposition, retmarkername, retindexnumber
 end
 
 function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)
