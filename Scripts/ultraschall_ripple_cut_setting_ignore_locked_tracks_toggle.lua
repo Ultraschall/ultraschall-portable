@@ -26,11 +26,11 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 _,_,secID,cmdID = reaper.get_action_context()
 
-obey_locked_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle","ultraschall-settings.ini")
-if obey_locked_toggle=="true" then 
-  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle", "false", "ultraschall-settings.ini") 
+obey_locked_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_obey_locked", "value","ultraschall-settings.ini")
+if obey_locked_toggle=="1" then 
+  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut_obey_locked", "value", "0", "ultraschall-settings.ini") 
   reaper.SetToggleCommandState(secID, cmdID, 0)
 else 
-  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut", "obey_locked_toggle", "true", "ultraschall-settings.ini") 
+  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut_obey_locked", "value", "1", "ultraschall-settings.ini") 
   reaper.SetToggleCommandState(secID, cmdID, 1)
 end

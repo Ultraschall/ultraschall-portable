@@ -26,11 +26,11 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 _,_,secID,cmdID = reaper.get_action_context()
 
-review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle","ultraschall-settings.ini")
-if review_toggle=="true" then 
-  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle", "false", "ultraschall-settings.ini") 
+review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_review_edit", "value","ultraschall-settings.ini")
+if review_toggle=="1" then 
+  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut_review_edit", "value", "0", "ultraschall-settings.ini") 
   reaper.SetToggleCommandState(secID, cmdID, 0)
 else 
-  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut", "review_edit_toggle", "true", "ultraschall-settings.ini") 
+  ultraschall.SetUSExternalState("ultraschall_settings_ripplecut_review_edit", "value", "1", "ultraschall-settings.ini") 
   reaper.SetToggleCommandState(secID, cmdID, 1)
 end
