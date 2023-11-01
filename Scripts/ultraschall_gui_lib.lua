@@ -427,8 +427,12 @@ GUI.Init = Init
 
 
 function Main()
-
-
+  if GUI.OldWindowW~=gfx.w or GUI.OldWindowH~=gfx.h then
+    rebuild_gui=true
+  end
+  GUI.OldWindowW=gfx.w
+  GUI.OldWindowH=gfx.h
+  
   -- Update mouse and keyboard state
   GUI.mouse.x, GUI.mouse.y = gfx.mouse_x, gfx.mouse_y
   GUI.mouse.cap = gfx.mouse_cap
