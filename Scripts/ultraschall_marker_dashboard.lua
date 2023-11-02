@@ -112,11 +112,11 @@ function ResizeJPG(filename_with_path, outputfilename_with_path, aspectratio, wi
       NewWidth=math.floor(squaresize*NewWidth)
     --end
   else
-    NewHeight=height
-    NewWidth=width
+    NewHeight=math.floor(height)
+    NewWidth=math.floor(width)
   end
 
-  Identifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+  Identifier2=reaper.JS_LICE_CreateBitmap(true, math.floor(NewWidth), math.floor(NewHeight))
   reaper.JS_LICE_ScaledBlit(Identifier2, 0, 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, 1, "COPY")
   Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, Identifier2, quality)
   reaper.JS_LICE_DestroyBitmap(Identifier)
