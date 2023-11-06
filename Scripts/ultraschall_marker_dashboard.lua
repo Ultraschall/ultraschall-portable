@@ -336,7 +336,7 @@ end
 function addImage(cursor_position)
 
   moveArrangeview(cursor_position)
-  show_menu("Drag and Drop an image on an empty track at this position")
+  show_menu("Drag and Drop an image on an empty track at this position into the project")
 
 end
 
