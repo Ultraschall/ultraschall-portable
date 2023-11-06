@@ -95,10 +95,13 @@ function ResizeJPG(filename_with_path, outputfilename_with_path, aspectratio, wi
 
   local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval, filetype
   filetype = GetFileExtension(filename_with_path)
+  filetype = GetFileExtension(filename_with_path)
   if filetype == ".png" then
     Identifier=reaper.JS_LICE_LoadPNG(filename_with_path)
-  else
+  elseif filetype==".jpg" then
     Identifier=reaper.JS_LICE_LoadJPG(filename_with_path)
+  else
+    return false
   end
   Width=reaper.JS_LICE_GetWidth(Identifier)
   Height=reaper.JS_LICE_GetHeight(Identifier)
@@ -333,7 +336,7 @@ end
 function addImage(cursor_position)
 
   moveArrangeview(cursor_position)
-  show_menu("Drag and Drop an image on an empty track at this position")
+  show_menu("Drag and Drop an image on an empty track at this position into the project")
 
 end
 
