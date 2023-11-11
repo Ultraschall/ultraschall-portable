@@ -176,7 +176,7 @@ id = GUI.Btn:new(487, 663, 175, 40, "QUICK TUTORIAL >", startTutorial, "1")
 
 link_url = GUI.Pic:new(350, 265, 300, 60, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us5releasenotes")
   table.insert(GUI.elms, link_url) 
-link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-twitter")
+link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-mastodon")
   table.insert(GUI.elms, link_url)
 link_url = GUI.Pic:new(223, 593, 88, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-forum")
   table.insert(GUI.elms, link_url)
