@@ -37,7 +37,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/ColorPicker/"
   ---- Window settings and user functions ----
 
 
-GUI.name = "Ultraschall Color Picker"
+GUI.name = "Ultraschall - Color Picker"
 GUI.x, GUI.y, GUI.w, GUI.h = 100, 200, 235, 175
 
 

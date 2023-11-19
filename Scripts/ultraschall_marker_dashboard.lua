@@ -507,7 +507,7 @@ GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 5 - Marker Dashboard"
+GUI.name = "Ultraschall - Marker Dashboard"
 GUI.w, GUI.h = 820, WindowHeight   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 

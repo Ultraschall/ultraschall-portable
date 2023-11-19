@@ -406,7 +406,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 5 - Settings"
+GUI.name = "Ultraschall - Settings"
 GUI.w, GUI.h = 820, 657   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------

@@ -27,7 +27,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- get filename and source
-retval, filename = reaper.GetUserFileNameForRead(reaper.GetExtState("Ultraschall_Import_Chapter_Markers", "MP3_Path"), "Choose file(MP3, Wav, OPUS, etc) to import chapters from...", "*.*")
+retval, filename = reaper.GetUserFileNameForRead(reaper.GetExtState("Ultraschall_Import_Chapter_Markers", "MP3_Path"), "Choose file(MP3, Wav, OPUS, etc) to import edit-markers from...", "*.*")
 if retval==false then return end
 filename=string.gsub(filename, "\\", "/")
 src=reaper.PCM_Source_CreateFromFile(filename)
@@ -49,12 +49,12 @@ for i=0, 65500 do
 end
 
 -- when no chapters, show error-message
-if #Chaps==0 then reaper.MB("No Chapter markers available.", "No chapter markers", 0) return end
+if #Chaps==0 then reaper.MB("No Edit markers available.", "No edit markers", 0) return end
 
 -- insert chapters and renumerate the marker-numbers
 for i=0, #Chaps do
-  marker_number, guid, normal_marker_idx = ultraschall.AddNormalMarker(Chaps[i][3], 0, Chaps[i][5])
+  marker_number, guid, normal_marker_idx = ultraschall.AddEditMarker(Chaps[i][3], 0, Chaps[i][5])
 end
-ultraschall.RenumerateNormalMarkers()
+--ultraschall.RenumerateNormalMarkers()
 
 reaper.UpdateArrange()
