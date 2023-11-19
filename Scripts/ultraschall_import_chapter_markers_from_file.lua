@@ -27,7 +27,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- get filename and source
-retval, filename = reaper.GetUserFileNameForRead(reaper.GetExtState("Ultraschall_Import_Chapter_Markers", "MP3_Path"), "Choose file MP3-file to import chapters from...", "*.mp3")
+retval, filename = reaper.GetUserFileNameForRead(reaper.GetExtState("Ultraschall_Import_Chapter_Markers", "MP3_Path"), "Choose file(MP3, Wav, OPUS, etc) to import chapters from...", "*.*")
 if retval==false then return end
 filename=string.gsub(filename, "\\", "/")
 src=reaper.PCM_Source_CreateFromFile(filename)
