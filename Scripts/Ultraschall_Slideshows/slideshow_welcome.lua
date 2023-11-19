@@ -84,7 +84,7 @@ end
 
 
 
-GUI.name = "Ultraschall 5 - Tutorial"
+GUI.name = "Ultraschall 5.1 - Tutorial"
 GUI.w, GUI.h = 680, 700
 
 ------------------------------------------------------
