@@ -138,6 +138,4 @@ Lets' begin.
     Note, how you cannot send MIDI-notes with mode_destination=1. If you want to send MIDI-notes to the add-shortcuts-dialog,
     you need to use another mode_destination-mode.
     BTW: if have set mode_destination=1 and you you use MIDI-messages as shortcut, you can even start actions by them, as long 
-    as the action isn't started yet. This seems to be not that stable from ReaScript though,
-    
-        
+    as the action isn't started yet. This seems to be not that stable from ReaScript though.
