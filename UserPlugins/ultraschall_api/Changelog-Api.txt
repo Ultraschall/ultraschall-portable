@@ -104,7 +104,10 @@
       TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
       TODO!!  - Envelope-StateChunk-functions
 
-		
+		  TODO!! - preview/send midi-note through track
+                - temporarily set track-input to midi-virtual midi keyboard
+                - send the midi-note via StuffMidiMessage
+                - reset input
 		
 #### readded from earlier development-builds
    - Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole

@@ -32,7 +32,7 @@ end
 
 local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-url = "http://url.ultraschall-podcast.de/keymap5-1"
+url = "http://url.ultraschall-podcast.de/keymap51"
 
 local operationSystem = reaper.GetOS()
 if string.match(operationSystem, "OS") then
