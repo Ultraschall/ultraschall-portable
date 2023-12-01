@@ -330,12 +330,13 @@ function renderAudiogramLinux()
 	VideoCodec=0 -- MP4
 	AudioCodec=0 -- 
 
-	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
-	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
-	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
+	
+	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
+	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_QTMOVMP4_Video(2, 100, 5, width, height, fps, aspect_ratio, vid_kbps, aud_kpbs, "crf=23", "")
 
-	-- 3) Render the File
+	-- 3) Render the File       
 	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
+	
 end
 
 function setVideoFXonMaster()

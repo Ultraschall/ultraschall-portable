@@ -1304,7 +1304,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
       Reaper=6.62
       Lua=5.3
     </requires>
-    <functioncall>integer MJPEG_quality, integer AUDIO_CODEC, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, string VideoExportOptions, string AudioExportOptions = ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(string rendercfg)</functioncall>
+    <functioncall>integer MJPEG_quality, integer AUDIO_CODEC, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, string VideoExportOptions, string AudioExportOptions = ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(string rendercfg)</functioncall>
     <description>
       Returns the settings stored in a render-cfg-string for QT/MOV/MP4-video.
       
