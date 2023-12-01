@@ -28,15 +28,9 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 if ultraschall.AnyTrackMute(true) == true then
   Retval=reaper.MB("There are muted tracks. Do you want to continue rendering?", "Warning: muted tracks!", 4)
-  if Retval==7 then
-    A=false
-    -- print (Retval)
-  end
-else
-  A=false
+  if Retval==7 then return end
 end
 
-if A == false then return end
 
 menu={}
 menu[#menu+1]={"Render using last used settings", ""}
