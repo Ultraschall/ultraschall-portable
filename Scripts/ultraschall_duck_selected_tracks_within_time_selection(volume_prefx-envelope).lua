@@ -55,7 +55,7 @@ if Shape==nil then Shape=0 end
 --if lol==nil then return end
 start_time, end_time = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 if FadeInLength+FadeOutLength>end_time-start_time then
-  reaper.MB("Time-Selection must be at least "..FadeInLength+FadeOutLength.." seconds long for the fade in+out to happen(you can change this in the settings)", "Time selection too short", 0)
+  reaper.MB("Time-Selection must be at least "..FadeInLength+FadeOutLength.." seconds long for the fade in+out to happen.", "Time selection too short", 0)
   return
 end
 
