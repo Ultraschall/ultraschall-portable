@@ -293,8 +293,8 @@ function renderAudiogramPC()
 	fps=20.00
 	aspect_ratio=true
 	VideoCodec=0 -- MP4
-	AudioCodec=0 -- 
-
+	AudioCodec=0 -- AAC
+ 
 	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
 	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
 	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
@@ -493,7 +493,7 @@ enableResize = reaper.SNM_SetIntConfigVar("projvidflags", reaper.SNM_GetIntConfi
 -- end
 
 -- setVideoFXonMaster()
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "\\" else separator = "/" end
+if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then separator = "\\" else separator = "/" end
 
 if createAudigramTrack("Insert AudiogramFG track.RTrackTemplate")==false then return end
 setAudiogramFX()
