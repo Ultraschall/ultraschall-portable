@@ -219,6 +219,8 @@ function createAudigramTrack(trackTemplateName)
 				local newTrack = reaper.GetTrack(0, reaper.CountTracks(0) - 1)  -- Get the last track, which should be the newly created one
 				insertImageToTimeline(img_location, newTrack, startTime-1, endTime) -- 1 second offset to prevent a dark screen at the beginning
 		end
+	else
+		return false
 	end
 end
 
@@ -291,13 +293,14 @@ function renderAudiogramPC()
 	fps=20.00
 	aspect_ratio=true
 	VideoCodec=0 -- MP4
-	AudioCodec=0 -- 
-
+	AudioCodec=0 -- AAC
+ 
 	RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF (0, 0, vid_kbps, 0, aud_kbps, width, height, fps, aspect_ratio)
 	-- RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WMF(vid_kbps, aud_kbps, width, height, 60, aspect_ratio, VideoCodec, AudioCodec)
 	--RenderTable["RenderString"] = ultraschall.CreateRenderCFG_WebM_Video(vid_kbps, aud_kbps, width, height, fps, true, 1, 1, "crf=23", "")
 
 	-- 3) Render the File
+	
 	count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
 end
 
@@ -449,7 +452,7 @@ gfx_mode = 1;
 gfx_blit(img1,0);]]
 
 	
-	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "video sample peeker", false, -1)
+	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "video_sample_peeker", false, -1)
 	
 	master_fx_count=reaper.TrackFX_GetCount(reaper.GetMasterTrack(0))
 	reaper.TrackFX_AddByName(reaper.GetMasterTrack(0), "Video processor", false, -1)
@@ -490,13 +493,13 @@ enableResize = reaper.SNM_SetIntConfigVar("projvidflags", reaper.SNM_GetIntConfi
 -- end
 
 -- setVideoFXonMaster()
+if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then separator = "\\" else separator = "/" end
 
+if createAudigramTrack("Insert AudiogramFG track.RTrackTemplate")==false then return end
 setAudiogramFX()
 
-if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "\\" else separator = "/" end
-
-createAudigramTrack("Insert AudiogramFG track.RTrackTemplate")
 createAudigramTrack("Insert AudiogramBG track.RTrackTemplate")
+
 	
 -- Duplicate the track using REAPER's action: "Track: Duplicate tracks"
 -- reaper.Main_OnCommand(40062, 0)
