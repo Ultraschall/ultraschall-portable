@@ -1159,10 +1159,13 @@ function Sldr:draw()
   gfx.x = x - 95 * dpi_scale
   gfx.y = y -2 * dpi_scale
 
-  if tonumber(self.max) > 1 then
+  if tonumber(self.max) > 1 and self.nothing~=true then
 
     value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval).." Seconds"
-
+    
+  elseif self.nothing==true then
+    value_truncated = string.format("%." .. (1 or 0) .. "f", self.retval)
+    
   else
 
     value_truncated = tonumber(self.retval)
