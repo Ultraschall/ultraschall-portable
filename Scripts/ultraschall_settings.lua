@@ -538,7 +538,12 @@ function SettingsPageSettings()
         elseif settings_Type == "slider" then
           position = position+8
           id = GUI.Sldr:new(325+x_offset, position, 80, ultraschall.GetUSExternalState(sectionName,"name","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"minimum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"maximum","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"steps","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"Value","ultraschall-settings.ini"), ultraschall.GetUSExternalState(sectionName,"actualstep","ultraschall-settings.ini"), sectionName)
+          if ultraschall.GetUSExternalState(sectionName,"nothing","ultraschall-settings.ini")=="true" then
+            id.nothing=true
+          end
+          
           table.insert(GUI.elms, id)
+          
   
           -- Info-Button
           info = GUI.Btn:new(440+x_offset, position-6, 20, 20,         " ?", show_menu, ultraschall.GetUSExternalState(sectionName,"description","ultraschall-settings.ini"))

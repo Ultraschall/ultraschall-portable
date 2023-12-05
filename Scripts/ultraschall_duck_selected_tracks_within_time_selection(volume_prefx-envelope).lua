@@ -68,9 +68,9 @@ end
 
 for i=0, #Selected_Tracks do
   track_nr=reaper.GetMediaTrackInfo_Value(Selected_Tracks[i], "IP_TRACKNUMBER")
-  retval = ultraschall.ActivateTrackPreFXVolumeEnv(math.tointeger(track_nr))
+  retval = ultraschall.ActivateTrackVolumeEnv(math.tointeger(track_nr))
 
-  local A=reaper.GetTrackEnvelopeByName(Selected_Tracks[i], "Volume (Pre-FX)")
+  local A=reaper.GetTrackEnvelopeByName(Selected_Tracks[i], "Volume")
 
   -- delete already existing envelope-points
   reaper.DeleteEnvelopePointRange(A, start_time, end_time+0.0000000001)
