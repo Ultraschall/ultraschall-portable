@@ -281,7 +281,7 @@ end
 
 
 ------------------------------------------------------
---  Show the GUI menu item. Wird verwendet, um Info-Texte hinter den Buttins anzuzeigen.
+--  Show the GUI menu item. Wird verwendet, um Info-Texte hinter den Buttons anzuzeigen.
 ------------------------------------------------------
 
 function show_menu(str)
@@ -424,7 +424,7 @@ GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
 
 
 ------------------------------------------------------
---  Aufbau der nicht interkativen GUI-Elemente wie Logos etc.
+--  Aufbau der nicht interaktiven GUI-Elemente wie Logos etc.
 ------------------------------------------------------
 
 
@@ -524,7 +524,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
       if tonumber(ultraschall.GetUSExternalState(sectionName, "position", "ultraschall-settings.ini"))~=nil then
-        position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 27) -- Feintuning notwendig
+        position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25.5) -- Feintuning notwendig
         settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
   
         if settings_Type == "checkbox" then
