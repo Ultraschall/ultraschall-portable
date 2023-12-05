@@ -136,8 +136,8 @@ end
 
 function createTrackNamedAfterID3Title(templateName)
   local retval, ID3Title
-  if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")=="1" then
-	ID3Title=""
+  if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")~="1" then
+	ID3Title=" "
   else
   -- Fetch the project's ID3 Title
 	retval, ID3Title = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
@@ -509,7 +509,7 @@ createAudigramTrack("Insert AudiogramBG track.RTrackTemplate")
 -- Duplicate the track using REAPER's action: "Track: Duplicate tracks"
 -- reaper.Main_OnCommand(40062, 0)
 
-if lol==nil then return end
+--if lol==nil then return end
 
 if ultraschall.IsOS_Windows()==true then
 	renderAudiogramPC()
