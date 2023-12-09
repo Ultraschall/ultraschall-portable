@@ -34,12 +34,12 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 start_sel, end_sel = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
 reaper.Undo_BeginBlock()
-for i=0, reaper.CountSelectedTracks(0)-1 do
-  track = reaper.GetTrackFromPoint(reaper.GetMousePosition())
-  ultraschall.ActivateMute_TrackObject(track, true)
-  ultraschall.ToggleMute_TrackObject(track, start_sel, 0)
-  ultraschall.ToggleMute_TrackObject(track, end_sel, 1)
-end
+
+track = reaper.GetTrackFromPoint(reaper.GetMousePosition())
+ultraschall.ActivateMute_TrackObject(track, true)
+ultraschall.ToggleMute_TrackObject(track, start_sel, 0)
+ultraschall.ToggleMute_TrackObject(track, end_sel, 1)
+
 reaper.Undo_EndBlock("Muting mute-envelope of track under mouse", -1)
 
 
