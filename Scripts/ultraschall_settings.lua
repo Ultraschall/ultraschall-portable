@@ -637,7 +637,7 @@ function SettingsPageDevices()
    --   table.insert(GUI.elms, label_table2)
 
 
-  devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make shure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices."
+  devicetext = "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make sure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices."
 
   infotable = wrap(devicetext,100) -- Zeilenumbruch 80 Zeichen für Warnungsbeschreibung
 
