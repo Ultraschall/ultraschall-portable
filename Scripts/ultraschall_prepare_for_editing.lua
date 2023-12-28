@@ -38,7 +38,7 @@ end
 
 if numberOfSLTracks > 0 then
 	if numberOfSLTracks > 1 then addon = "s" else addon = "" end
-	result = reaper.ShowMessageBox( "Please make shure to end all calls in the StudioLink webbrowser interface BEFORE you proceed!", "Warning: "..numberOfSLTracks.." StudioLink Track"..addon, 1 )
+	result = reaper.ShowMessageBox( "Please make sure to end all calls in the StudioLink webbrowser interface BEFORE you proceed!", "Warning: "..numberOfSLTracks.." StudioLink Track"..addon, 1 )
 	if result == 2 then
 		goto ending
 	end  -- Info window
