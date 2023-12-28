@@ -59,7 +59,7 @@ local GUI = {}
 
 
 retval, dpi = reaper.ThemeLayout_GetLayout("tcp", -3)
-if dpi == "512" then
+if tonumber(dpi) >= 512 then
   dpi_scale = 2
   gfx.ext_retina = 1
 else
@@ -95,10 +95,10 @@ end
 
 GUI.fonts = {
 
-  {font_face, font_size},  -- 1. Title
+  {font_face, font_size},   -- 1. Title
   {font_face, font_size2},  -- 2. Header
-  {font_face, font_size},  -- 3. Label
-  {font_face, font_size}  -- 4. Value
+  {font_face, font_size},   -- 3. Label
+  {font_face, font_size}    -- 4. Value
 
 }
 
