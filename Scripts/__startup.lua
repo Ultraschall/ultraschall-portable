@@ -191,11 +191,13 @@ reaper.SetExtState("Ultraschall_Windows","Ultraschall 5 - Settings",0.0, true)
 m = reaper.GetMasterTrack(0)                                                  --streaming is always on the master track
 
 --get the slot of the StudioLink effect.
-
-if string.match(reaper.GetOS(), "OS") then
+operationSystem = reaper.GetOS()
+if string.match(operationSystem, "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
-else  -- Windows
+elseif string.match(operationSystem, "Win") then
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
+elseif string.match(operationSystem, "Other") then
+  fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir", false, 0)
 end
 
 if fx_slot ~= -1 then

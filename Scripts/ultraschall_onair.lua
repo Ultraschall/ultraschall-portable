@@ -84,6 +84,7 @@ else
 
 
 	os = reaper.GetOS()
+	-- TODO: add linux if ONAir works
 	if string.match(os, "OS") then
 		--		fx_slot = reaper.TrackFX_GetByName(m, "ITSR: StudioLinkOnAir", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
 		-- fx_slot = reaper.TrackFX_GetByName(m, "2StudioLinkOnAir (ITSR)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
@@ -93,12 +94,15 @@ else
 		onair_name = "ITSR: StudioLinkOnAir"
 		onair_name_remove = "StudioLinkOnAir (ITSR)"
 
-	else	-- Windows
+	elseif string.match(os, "Win") then -- Windows
 
 		onair_name = "StudioLinkOnAir (IT-Service Sebastian Reimers)"
 		onair_name_remove = "StudioLinkOnAir (IT-Service Sebastian Reimers)"
 
 		-- fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
+	elseif string.match(os, "Other") then -- Linux
+		onair_name = "StudioLinkOnAir"
+		onair_name_remove = "StudioLinkOnAir"
 	end
 
 	-- fx_slot = reaper.TrackFX_GetByName(m, onair_name, 1)

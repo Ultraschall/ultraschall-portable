@@ -35,8 +35,10 @@ end
 menu={}
 menu[#menu+1]={"Render using last used settings", ""}
 menu[#menu+1]={"Render as MP3", "MP3"}
+-- TODO: add linux preset
 if reaper.GetOS():match("OS")~=nil then menu[#menu+1]={"Render as M4A", "m4a_Mac"}
 elseif reaper.GetOS():match("Win") then menu[#menu+1]={"Render as M4A", "m4a_Windows"}
+elseif reaper.GetOS():match("Other") then menu[#menu+1]={"Render as M4A", "m4a_Linux"}
 end
 menu[#menu+1]={"Render as Auphonic Multichannel", "Auphonic Multichannel"}
 

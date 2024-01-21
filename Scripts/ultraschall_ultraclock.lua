@@ -255,10 +255,11 @@ function Init()
   if string.match(operationSystem, "OS") then -- es ist ein Mac System
     clockfont="Helvetica" clockfont_bold="Helvetica"
     font_divisor=3.2 --window height / font_divisor = fontsize
-  elseif reaper.GetOS()=="Win64" or reaper.GetOS()=="Win32" then
+  elseif string.match(operationSystem, "Win") then
     clockfont="Arial" clockfont_bold="Arial"
     font_divisor=2.8 --window height / font_divisor = fontsize
-  else clockfont="Arial" clockfont_bold="Arial"
+  elseif string.match(operationSystem, "Other") then
+    clockfont="LiberationSans" clockfont_bold="LiberationSans"
     font_divisor=3.2
   end
 

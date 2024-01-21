@@ -102,8 +102,10 @@ sec=tonumber(sec)
 
 if string.match(os, "OS") then
   fx_slot = reaper.TrackFX_AddByName(m, "StudioLinkOnAir (ITSR)", false, 0)
-else  -- Windows
+elseif string.match(os, "Win") then -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
+elseif string.match(os, "Other") then -- Linux
+  fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir", 0)
 end
 
 if fx_slot ~= -1 then
