@@ -35,7 +35,7 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 url = "https://ultraschall.github.io/ultraschall-manual/en/docs/introduction"
 
 local operationSystem = reaper.GetOS()
-if string.match(operationSystem, "OS") then
+if string.match(operationSystem, "OS") or string.match(operationSystem, "Other") then
   os.execute("open ".. url)
 else
   os.execute("start ".. url)

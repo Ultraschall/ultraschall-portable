@@ -198,7 +198,8 @@ function ultraschall.IsTrackStudioLinkOnAir(tracknumber)
   if tracknumber==0 then track=reaper.GetMasterTrack(0) else track=reaper.GetTrack(0,tracknumber-1) end
   if track~=nil then
     if reaper.TrackFX_GetByName(track, "StudioLinkOnAir (IT-Service Sebastian Reimers)", false)~=-1 or
-      reaper.TrackFX_GetByName(track, "StudioLinkOnAir (ITSR)", false)~=-1 then
+      reaper.TrackFX_GetByName(track, "StudioLinkOnAir (ITSR)", false)~=-1 or
+      reaper.TrackFX_GetByName(track, "StudioLinkOnAir", false)~=-1 then
       return true
     else
       return false

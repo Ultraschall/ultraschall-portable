@@ -58,9 +58,12 @@ if string.match(operationSystem, "OS") then
 
   font_size = 14
   font_face = "Helvetica"
-else
+elseif string.match(operationSystem, "Win") then
   font_size = 16
   font_face = "Arial"
+elseif string.match(operationSystem, "Other") then
+  font_size = 16
+  font_face = "LiberationSans"
 end
 
 --retval, measures, cml, fullbeats, cdenom = reaper.TimeMap2_timeToBeats(0, 10)

@@ -33,7 +33,7 @@ end
 
 function rgb_swap (color)
   os = reaper.GetOS()
-  if string.match(os, "OS") then
+  if string.match(os, "OS") or string.match(os, "Other") then
     r, g, b = reaper.ColorFromNative(color)
     -- Msg(r .."-".. g .."-".. b.."-" ..color)
     color = reaper.ColorToNative(b, g, r) -- swap r and b for Mac
@@ -71,7 +71,7 @@ for line in file:lines() do
     if index then
       if index < max_color then
       color_int = string.match(line, "=(%d+)")  -- get the color value
-        if string.match(os, "OS") then
+        if string.match(os, "OS") or string.match(os, "Other") then
           r, g, b = reaper.ColorFromNative(color_int)
           color_int = reaper.ColorToNative(b, g, r) -- swap r and b for Mac
         end

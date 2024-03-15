@@ -1421,8 +1421,8 @@ GUI.OS_fonts = {
     },
 
     Linux = {
-        sans = "Arial",
-        mono = "DejaVuSansMono"
+        sans = "LiberationSans",
+        mono = "LiberationMono"
     }
 
 }

@@ -41,8 +41,8 @@ end
 gfx.init("Duration since last timemarker", 286*scale, 95*scale, 0, 900, 0)
 
 if reaper.GetOS():match("Other")~=nil then 
-  gfx.setfont(1,"Arial",100,0)
-  gfx.setfont(2,"Arial",13,66)
+  gfx.setfont(1,"LiberationSans",100,0)
+  gfx.setfont(2,"LiberationSans",13,66)
 elseif reaper.GetOS():match("Win")~=nil then
   gfx.setfont(1,"Arial",110,0)
   gfx.setfont(2,"Arial",16,66)
