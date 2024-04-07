@@ -101,7 +101,7 @@ function checkImage()
     end
   end
 
-  return found, img_location, img_ratio
+  return found, img_location, img_ratio, w, h
 end
 
 function checkTimeSelection()
@@ -596,7 +596,7 @@ retval, startTime, endTime = checkTimeSelection()
 if retval==false then return end
 
 -- check, if cover image exists and is a valid format
-found, img_location, img_ratio = checkImage()
+found, img_location, img_ratio, img_w, img_h = checkImage()
 if found==false then reaper.MB("Please add a cover-image", "No cover image found", 0) return end
 
 -- get old project's video-dimensions
