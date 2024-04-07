@@ -127,8 +127,8 @@ function checkTimeSelection()
 end
 
 
-function insertImageToTimeline(track, startTime, endTime)
-  if not img_location or not track or not startTime or not endTime then
+function insertImageToTimeline(track, startTime, endTime, cover)
+  if not cover or not track or not startTime or not endTime then
       reaper.ShowMessageBox("Missing data to insert the image to timeline.", "Error", 0)
       return
   end
@@ -140,7 +140,7 @@ function insertImageToTimeline(track, startTime, endTime)
   reaper.SetOnlyTrackSelected(track)
 
   -- Insert the media (image) at the edit cursor position on the selected track
-  local retval = reaper.InsertMedia(img_location, 0) -- 0 means "Add the media to the current track"
+  local retval = reaper.InsertMedia(cover, 0) -- 0 means "Add the media to the current track"
   
   if retval and retval ~= 0 then
       local itemIndex = reaper.GetTrackNumMediaItems(track) - 1 -- zero-based index
@@ -164,7 +164,7 @@ function insertImageToTimeline(track, startTime, endTime)
   end
 end
 
-function InsertForegroundTrack(startTime, endTime)
+function InsertForegroundTrack(startTime, endTime, cover)
   -- inserts the foreground-cover-image track, including all of its fx
   local retval, ID3Title
   if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")~="1" then
@@ -262,10 +262,10 @@ gfx_str_draw(#text,xp,yt+b);]]
   reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
   reaper.TrackFX_SetNamedConfigParm(newTrack, master_fx_count, "VIDEO_CODE", VideoCode2)
   
-  insertImageToTimeline(newTrack, startTime, endTime)
+  insertImageToTimeline(newTrack, startTime, endTime, cover)
 end
 
-function InsertBackgroundTrack(startTime, endTime)
+function InsertBackgroundTrack(startTime, endTime, cover)
   -- inserts the background-cover-image track, including all of its fx
   local retval, ID3Title
   if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")~="1" then
@@ -359,7 +359,7 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
   reaper.TrackFX_SetNamedConfigParm(newTrack, master_fx_count, "VIDEO_CODE", VideoCode2)
   
-  insertImageToTimeline(newTrack, startTime, endTime)
+  insertImageToTimeline(newTrack, startTime, endTime, cover)
 end
 
 function renderAudiogramMac()
@@ -387,6 +387,9 @@ function renderAudiogramMac()
   if width == 0 then width = 1024 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height == 0 then height = 1024 end -- default height
+  
+  width=1024
+  height=1024
   fps=20
   aspect_ratio = true
 --       VideoCodec = 1 -- VP8
@@ -427,6 +430,8 @@ function renderAudiogramPC()
   if width==0 then width=1920 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height==0 then height=1080 end -- default height
+  width=1024
+  height=1024
   fps=20.00
   aspect_ratio=true
   VideoCodec=0 -- MP4
@@ -465,6 +470,9 @@ function renderAudiogramLinux()
   if width==0 then width=1920 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height==0 then height=1080 end -- default height
+  
+  width=1024
+  height=1024
   fps=20.00
   aspect_ratio=true
   VideoCodec=0 -- MP4
@@ -596,18 +604,20 @@ oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024)
 oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
 
 -- set video-dimensions to square of 1024x1024 pixels
-reaper.SNM_SetIntConfigVar("projvidw", 1024) 
-reaper.SNM_SetIntConfigVar("projvidh", 1024) 
+reaper.SNM_SetIntConfigVar("projvidw", img_w) 
+reaper.SNM_SetIntConfigVar("projvidh", img_h) 
 
 -- Start the Undo Block
 reaper.Undo_BeginBlock()
 
 -- setup tracks for cover-images shown in the audiogram
-InsertForegroundTrack(startTime, endTime)
-InsertBackgroundTrack(startTime, endTime)
+InsertForegroundTrack(startTime, endTime, img_location)
+InsertBackgroundTrack(startTime, endTime, img_location)
 
 -- setup fx on master-track needed for audiogram
 setAudiogramFX()
+
+reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
 
 -- render audiogram
 if ultraschall.IsOS_Windows()==true then
@@ -628,6 +638,14 @@ reaper.Main_OnCommand(40029, 0)
 
 -- as if the user wants to open up the folder, where the audiogram got rendered to
 if count>0 then
+  -- play render-finished notification sound, if toggled on by the user
+  volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
+  play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
+  if play_sound=="1" then
+    ultraschall.PreviewMediaFile(reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Render-Finished-Sound.flac", tonumber(volume), false, 0)
+  end
+  
+  -- ask user, if the project-folder shall be opened
   state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
   if state==6 then
       ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
