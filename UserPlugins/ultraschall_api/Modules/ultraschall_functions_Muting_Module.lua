@@ -725,7 +725,7 @@ function ultraschall.ActivateMute_TrackObject(track, visible)
   return retval
 end
 
-SLEM()
+--SLEM()
 
 function ultraschall.DeactivateMute_TrackObject(track)
   --[[

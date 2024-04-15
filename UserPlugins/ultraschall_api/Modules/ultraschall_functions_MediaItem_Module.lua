@@ -1329,13 +1329,18 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     --print2(reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1))
     reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1)
   end
+  
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
+  
   local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)  
+  
   local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition, endposition,trackstring,true)
 
   -- put the items into the clipboard  
-  if add_to_clipboard==true then ultraschall.PutMediaItemsToClipboard_MediaItemArray(CC) end
-  local D=ultraschall.DeleteMediaItemsFromArray(CC)  
+  if #CC>0 then
+    if add_to_clipboard==true then ultraschall.PutMediaItemsToClipboard_MediaItemArray(CC) end  
+    ultraschall.DeleteMediaItemsFromArray(CC)  
+  end
   if moveenvelopepoints==true then
     for i=1, #individual_tracks do
       local MediaTrack=reaper.GetTrack(0,individual_tracks[i]-1)
@@ -1343,9 +1348,11 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
       ultraschall.MoveTrackEnvelopePointsBy(endposition, reaper.GetProjectLength(), -delta, MediaTrack, false) 
     end
   end
+  
   if movemarkers==true then
     ultraschall.MoveMarkersBy(endposition, reaper.GetProjectLength(), -delta, true)
   end
+  
   ultraschall.MoveMediaItemsAfter_By(endposition-0.00000000001, -delta, trackstring)
 
   --if crossfade_value&1==1 then
@@ -3629,7 +3636,6 @@ function ultraschall.GetAllSelectedMediaItems()
     selitemarray[i+1]=reaper.GetSelectedMediaItem(0, i)
     temp, selitemarraystatechunk[i+1]=reaper.GetItemStateChunk(selitemarray[i+1],"",false)
     selitemarraystatechunk[i+1] = ultraschall.SetItemUSTrackNumber_StateChunk(selitemarraystatechunk[i+1], ultraschall.GetParentTrack_MediaItem(selitemarray[i+1]))
-    SLEM()
   end
   return selitemcount, selitemarray, selitemarraystatechunk
 end
