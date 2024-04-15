@@ -368,7 +368,6 @@ function ultraschall.GetProjectStateChunk(projectfilename_with_path, keepqrender
     reaper.GetSetProjectInfo(0, "RENDER_SETTINGS", oldsource, true)  
     retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, math.floor(oldbounds), math.floor(oldstartpos), math.floor(oldendpos), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILFLAG", 0, false)), math.floor(reaper.GetSetProjectInfo(0, "RENDER_TAILMS", 0, false)), ProjectStateChunk)
     retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, math.floor(oldsource), ProjectStateChunk)
-    SLEM()
   end
      
   -- remove QUEUED_RENDER_ORIGINAL_FILENAME and QUEUED_RENDER_OUTFILE-entries, if keepqrender==true

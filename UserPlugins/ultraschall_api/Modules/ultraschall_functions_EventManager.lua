@@ -1218,8 +1218,7 @@ function ultraschall.EventManager_SetStartupEvent(EventIdentifier, EventName, Ch
   --StartActionsOnceDuringTrue2, EventPaused2, CheckFunction2, NumberOfActions2, Actions2 
   local index2, EventIdentifier2, EventName2, CallerScriptIdentifier2, CheckAllXSeconds2, CheckForXSeconds2, 
   StartActionsOnceDuringTrue2, EventPaused2, CheckFunction2, NumberOfActions2, Actions2
-                                            = ultraschall.EventManager_EnumerateStartupEvents2(EventIdentifier)
-  SLEM()
+                                            = ultraschall.EventManager_EnumerateStartupEvents2(EventIdentifier)  
     LOL=type(CheckFunction2)
   
   if EventName==nil then EventName=EventName2 end
