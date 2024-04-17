@@ -164,17 +164,8 @@ function insertImageToTimeline(track, startTime, endTime, cover)
   end
 end
 
-function InsertForegroundTrack(startTime, endTime, cover)
+function InsertForegroundTrack(startTime, endTime, cover, trackname)
   -- inserts the foreground-cover-image track, including all of its fx
-  local retval, ID3Title
-  if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")~="1" then
-       ID3Title=" "
-  else
-  -- Fetch the project's ID3 Title
-       retval, ID3Title = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
-  end
-  
-  if not retval or ID3Title == "" then ID3Title = " "  end
   
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
@@ -252,7 +243,7 @@ gfx_str_draw(#text,xp,yt+b);]]
   -- insert new track and name it after ID3Title
   reaper.InsertTrackAtIndex(numTracks, false)
   newTrack = reaper.GetTrack(0, numTracks)
-  reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", ID3Title, true)
+  reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", trackname, true)
 
   master_fx_count=reaper.TrackFX_GetCount(newTrack)
   reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
@@ -265,17 +256,8 @@ gfx_str_draw(#text,xp,yt+b);]]
   insertImageToTimeline(newTrack, startTime, endTime, cover)
 end
 
-function InsertBackgroundTrack(startTime, endTime, cover)
+function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   -- inserts the background-cover-image track, including all of its fx
-  local retval, ID3Title
-  if ultraschall.GetUSExternalState("ultraschall_settings_Title_In_AudioGram", "Value", "ultraschall-settings.ini")~="1" then
-       ID3Title=" "
-  else
-  -- Fetch the project's ID3 Title
-       retval, ID3Title = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
-  end
-  
-  if not retval or ID3Title == "" then ID3Title = " "  end
   
   VideoCode1=[[// Blur (low quality)
   //@param1:weight_parm 'blur amount' 0.715 0 .99 0.5 0.001
@@ -349,7 +331,7 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   -- insert new track and name it after ID3Title
   reaper.InsertTrackAtIndex(numTracks, false)
   newTrack = reaper.GetTrack(0, numTracks)
-  reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", ID3Title, true)
+  reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", trackname, true)
 
   master_fx_count=reaper.TrackFX_GetCount(newTrack)
   reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
@@ -362,7 +344,7 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   insertImageToTimeline(newTrack, startTime, endTime, cover)
 end
 
-function renderAudiogramMac()
+function renderAudiogramMac(Audiogram_Title)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable = ultraschall.CreateNewRenderTable()
@@ -375,7 +357,7 @@ function renderAudiogramMac()
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = "Audiogram"
+  RenderTable["RenderPattern"] = Audiogram_Title
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
   -- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
@@ -406,7 +388,7 @@ function renderAudiogramMac()
 
 end
 
-function renderAudiogramPC()
+function renderAudiogramPC(Audiogram_Title)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable=ultraschall.CreateNewRenderTable()
@@ -418,7 +400,7 @@ function renderAudiogramPC()
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = "Audiogram"
+  RenderTable["RenderPattern"] = Audiogram_Title
   -- print (RenderTable["FadeOut_Shape"])
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
@@ -446,7 +428,7 @@ function renderAudiogramPC()
   count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
 end
 
-function renderAudiogramLinux()
+function renderAudiogramLinux(Audiogram_Title)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable=ultraschall.CreateNewRenderTable()
@@ -458,7 +440,7 @@ function renderAudiogramLinux()
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = "Audiogram"
+  RenderTable["RenderPattern"] = Audiogram_Title
   -- print (RenderTable["FadeOut_Shape"])
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
@@ -593,6 +575,15 @@ end
 
 -- check, if time-selection is existing
 retval, startTime, endTime = checkTimeSelection()
+
+startTime_format=reaper.format_timestr(startTime, "")
+startTime_format=string.gsub(startTime_format, ":", "_")
+startTime_format=startTime_format:match("(.*)%.")
+
+endTime_format=reaper.format_timestr(endTime, "")
+endTime_format=string.gsub(endTime_format, ":", "_")
+endTime_format=endTime_format:match("(.*)%.")
+
 if retval==false then return end
 
 -- check, if cover image exists and is a valid format
@@ -610,9 +601,21 @@ reaper.SNM_SetIntConfigVar("projvidh", img_h)
 -- Start the Undo Block
 reaper.Undo_BeginBlock()
 
+retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", "")
+if retval==false then trackname="" end
+
+if trackname~="" then
+  trackname_format=string.gsub(trackname, "[%/%:%\\%s]", "_").."_-_"
+else
+  trackname_format=""
+end
+Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
+
+--if lol==nil then return end
+
 -- setup tracks for cover-images shown in the audiogram
-InsertForegroundTrack(startTime, endTime, img_location)
-InsertBackgroundTrack(startTime, endTime, img_location)
+InsertForegroundTrack(startTime, endTime, img_location, trackname)
+InsertBackgroundTrack(startTime, endTime, img_location, trackname)
 
 -- setup fx on master-track needed for audiogram
 setAudiogramFX()
@@ -621,11 +624,11 @@ reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
 
 -- render audiogram
 if ultraschall.IsOS_Windows()==true then
-  renderAudiogramPC()
+  renderAudiogramPC(Audiogram_Title)
 elseif ultraschall.IsOS_Mac()==true then
-  renderAudiogramMac()
+  renderAudiogramMac(Audiogram_Title)
 else
-  renderAudiogramLinux()
+  renderAudiogramLinux(Audiogram_Title)
 end 
 
 -- reset video-dimensions for this project
