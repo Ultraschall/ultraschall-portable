@@ -601,8 +601,13 @@ reaper.SNM_SetIntConfigVar("projvidh", img_h)
 -- Start the Undo Block
 reaper.Undo_BeginBlock()
 
-retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", "")
-if retval==false then trackname="" end
+trackname="                                    "
+default=""
+while trackname:len()>35 do
+  retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=300", default)
+  if retval==false then trackname="" end
+  if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
+end
 
 if trackname~="" then
   trackname_format=string.gsub(trackname, "[%/%:%\\%s]", "_").."_-_"
