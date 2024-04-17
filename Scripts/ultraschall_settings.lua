@@ -524,7 +524,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
       if tonumber(ultraschall.GetUSExternalState(sectionName, "position", "ultraschall-settings.ini"))~=nil then
-        position = header_height + 68 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25) -- Feintuning notwendig
+        position = header_height + 78 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25) -- Feintuning notwendig
         settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
   
         if settings_Type == "checkbox" then
