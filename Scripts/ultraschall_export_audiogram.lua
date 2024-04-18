@@ -577,12 +577,14 @@ end
 retval, startTime, endTime = checkTimeSelection()
 
 startTime_format=reaper.format_timestr(startTime, "")
-startTime_format=string.gsub(startTime_format, ":", "_")
-startTime_format=startTime_format:match("(.*)%.")
+startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
+startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+startTime_format=startTime_format:match("(.*)%.").."s"
 
 endTime_format=reaper.format_timestr(endTime, "")
-endTime_format=string.gsub(endTime_format, ":", "_")
-endTime_format=endTime_format:match("(.*)%.")
+endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
+endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+endTime_format=endTime_format:match("(.*)%.").."s"
 
 if retval==false then return end
 
@@ -605,18 +607,19 @@ trackname="                                    "
 default=""
 while trackname:len()>35 do
   retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=300", default)
-  if retval==false then trackname="" end
+  if retval==false then trackname=" " end
+  if trackname=="" then trackname=" " end
   if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
 end
 
+
 if trackname~="" then
-  trackname_format=string.gsub(trackname, "[%/%:%\\%s]", "_").."_-_"
+  trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
 else
   trackname_format=""
 end
-Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
 
---if lol==nil then return end
+Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
 
 -- setup tracks for cover-images shown in the audiogram
 InsertForegroundTrack(startTime, endTime, img_location, trackname)
@@ -656,7 +659,7 @@ if count>0 then
   -- ask user, if the project-folder shall be opened
   state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
   if state==6 then
-      ultraschall.RunCommand("_Ultraschall_Open_Project_Folder")
+      reaper.CF_LocateInExplorer(Filearray[1])
   end
 end
 
