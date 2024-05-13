@@ -681,7 +681,7 @@ function buildGUI()
 
   StepDescription = "Promote your show on social media: 1. Choose a time selection. 2. Set Episode Title (ID3 Metadata) 3. Provide an Episode Image."
   warnings_position = position+30
-  button_txt = "Export MP4 Audiogram"
+  button_txt = "Export Audiogram Video"
   button_action = "_Ultraschall_Export_Audiogram"
 
   buildExportStep()

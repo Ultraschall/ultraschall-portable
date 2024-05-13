@@ -53,7 +53,7 @@ else
 end
 
 retval, filename = reaper.JS_Dialog_BrowseForSaveFile("Save chapters into...", dir, "chapters.txt", "")
-if retval==false then return end
+if retval==0 then return end
 
 Chapters={}
 
