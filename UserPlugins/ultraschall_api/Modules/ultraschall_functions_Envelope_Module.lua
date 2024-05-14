@@ -3037,15 +3037,33 @@ function ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition
 
   local EnvTrackCount=reaper.CountTrackEnvelopes(MediaTrack)
 
-  for a=0, EnvTrackCount-1 do
+  for a=0, EnvTrackCount-1 do    
     local TrackEnvelope=reaper.GetTrackEnvelope(MediaTrack, a)
+    --print2(reaper.GetEnvelopeName(TrackEnvelope))
     local EnvCount=reaper.CountEnvelopePoints(TrackEnvelope)
+    local retval, name=reaper.GetEnvelopeName(TrackEnvelope)
   
-    for i=EnvCount, 0, -1 do
+    for i=EnvCount-1, 0, -1 do
       --local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
       --if time>=startposition and time<=endposition then
+      local Aretval, value, dVdS, ddVdS, dddVdS = reaper.Envelope_Evaluate(TrackEnvelope, startposition-0.0000001, 0, 0)
+      local shape=0
+      if name=="Mute" then 
+        if value<1 then value=0 end
+        shape=1
+      end
+      reaper.InsertEnvelopePoint(TrackEnvelope, startposition-0.0000001, value, 0, 0, false, false)
+      
+      local Aretval, value, dVdS, ddVdS, dddVdS = reaper.Envelope_Evaluate(TrackEnvelope, endposition+0.0000001, 0, 0)
+      local shape=0
+     
+      if name=="Mute" then 
+        if value<1 then value=0 end
+        shape=1
+      end
+      reaper.InsertEnvelopePoint(TrackEnvelope, endposition+0.0000001, value, shape, 0, false, false)
+      
       local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, startposition, endposition)
-      --end
     end
     reaper.Envelope_SortPoints(TrackEnvelope)
   end

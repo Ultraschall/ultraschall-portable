@@ -64,6 +64,7 @@ retval = ultraschall.ShowMenu("Render to File", menu_entries, X+15, Y)
 
 
 if retval==-1 then return end
+if retval==4 then reaper.Main_OnCommand(40296, 0) end
 
 if retval>1 then
   RenderTable = ultraschall.GetRenderPreset_RenderTable(menu[retval][2], menu[retval][2])
