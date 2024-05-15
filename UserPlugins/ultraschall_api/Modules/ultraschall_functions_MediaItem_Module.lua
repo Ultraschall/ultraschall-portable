@@ -1312,7 +1312,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
 
   if type(startposition)~="number" then ultraschall.AddErrorMessage("RippleCut", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("RippleCut", "endposition", "must be a number", -2) return -1 end
-  if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -3) return -1 end
+  if trackstring~="" and ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -3) return -1 end
   if type(add_to_clipboard)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "add_to_clipboard", "must be a boolean", -4) return -1 end  
   if type(moveenvelopepoints)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "moveenvelopepoints", "must be a boolean", -5) return -1 end
   if movemarkers~=nil and type(movemarkers)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "movemarkers", "must be a boolean", -7) return -1 end
@@ -1341,6 +1341,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     if add_to_clipboard==true then ultraschall.PutMediaItemsToClipboard_MediaItemArray(CC) end  
     ultraschall.DeleteMediaItemsFromArray(CC)  
   end
+  
   if moveenvelopepoints==true then
     for i=1, #individual_tracks do
       local MediaTrack=reaper.GetTrack(0,individual_tracks[i]-1)
@@ -1350,7 +1351,23 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   end
   
   if movemarkers==true then
-    ultraschall.MoveMarkersBy(endposition, reaper.GetProjectLength(), -delta, true)
+    -- move markers
+    for i=reaper.CountProjectMarkers(0)-1, 0, -1 do
+      local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
+      if pos>=startposition and pos-delta<endposition and isrgn==false then 
+        reaper.DeleteProjectMarkerByIndex(0, i) 
+      end
+    end
+    for i=0, reaper.CountProjectMarkers(0) do
+      local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
+      if pos>endposition then
+        if isrgn==false then
+          reaper.SetProjectMarkerByIndex2(0, i, isrgn, pos-delta, rgnend, shownmarker, name, color, 0)
+        end
+      end
+    end
+    -- move regions
+    local were_regions_altered, number_of_altered_regions, altered_regions = ultraschall.RippleCut_Regions(startposition, endposition)
   end
   
   ultraschall.MoveMediaItemsAfter_By(endposition-0.00000000001, -delta, trackstring)
