@@ -699,6 +699,7 @@ function ultraschall.GetAllMediaItemsBetween(startposition, endposition, trackst
 ]]
   if type(startposition)~="number" then ultraschall.AddErrorMessage("GetAllMediaItemsBetween", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("GetAllMediaItemsBetween", "endposition", "must be a number", -2) return -1 end
+  
   if startposition>endposition then ultraschall.AddErrorMessage("GetAllMediaItemsBetween", "endposition", "must be bigger than startposition", -3) return -1 end
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("GetAllMediaItemsBetween", "trackstring", "must be a valid trackstring", -4) return -1 end
   if type(inside)~="boolean" then ultraschall.AddErrorMessage("GetAllMediaItemsBetween", "inside", "must be a boolean", -5) return -1 end
@@ -1329,12 +1330,21 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     --print2(reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1))
     reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1)
   end
+  local oldvalcrossfade=reaper.SNM_GetDoubleConfigVar("defsplitxfadelen", -100000)
+  local deffadelen=reaper.SNM_GetDoubleConfigVar("defsplitxfadelen", -100000)
+  
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0)
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0.1)
   
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
   
   local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)  
   
-  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition, endposition,trackstring,true)
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", oldvalcrossfade)
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", deffadelen)
+
+  --print2(startposition, endposition)
+  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition, endposition, trackstring,true)
 
   -- put the items into the clipboard  
   if #CC>0 then
@@ -1421,7 +1431,7 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
   <tags>mediaitemmanagement, tracks, media, item, edit, ripple, reverse, clipboard</tags>
 </US_DocBloc>
 ]]
-
+-- might be buggy with markers
   if type(startposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Reverse", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Reverse", "endposition", "must be a number", -2) return -1 end
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut_Reverse", "trackstring", "must be a valid trackstring", -3) return -1 end
@@ -7023,4 +7033,456 @@ function ultraschall.ToggleCrossfadeStateForSplits(toggle)
   return true, retval2
 end
 
+
+function ultraschall.GetTakeSourcePosByProjectPos(project_pos, take)
+-- check with Reaper 7
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTakeSourcePosByProjectPos</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.03
+    Lua=5.3
+  </requires>
+  <functioncall>number source_pos = ultraschall.GetTakeSourcePosByProjectPos(number project_pos, MediaItem_Take take)</functioncall>
+  <description>
+    returns the source-position of a take at a certain project-position. Will obey time-stretch-markers, offsets, etc, as well.
+    
+    Note: works only within item-start and item-end.
+    
+    Also note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    This function is expensive, so don't use it permanently!
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    number source_pos - the position within the source of the take in seconds
+  </retvals>
+  <parameters>
+    number project_pos - the project-position, from which you want to get the take's source-position
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <linked_to desc="see:">
+    inline:GetProjectPosByTakeSourcePos
+           gets the project-position by of a take-source-position
+  </linked_to>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, source position, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if type(project_pos)~="number" then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "project_pos", "must be a number", -1) return end
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "take", "must be a valid MediaItem_Take", -2) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  if project_pos<item_pos or project_pos>item_pos_end then ultraschall.AddErrorMessage("GetTakeSourcePosByProjectPos", "project_pos", "must be within itemstart and itemend", -3) return end
+  
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and rename them with TUDELU at the beginning
+  local takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    takemarkers[i+1]={reaper.GetTakeMarker(take, i)}
+    --reaper.SetTakeMarker(take, i, "TUDELU"..takemarkers[i+1][2])
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- add a new take-marker
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetEditCurPos(project_pos, false, false)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  reaper.Main_OnCommand(42390, 0)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.SetEditCurPos(oldpos, false, false)
+  
+  -- get the position and therefore source-position of the added take-marker, then remove it again
+  local found=nil
+  for i=0, reaper.GetNumTakeMarkers(take) do
+    local takemarker_pos, take_marker_name=reaper.GetTakeMarker(take, i)
+    if take_marker_name=="" and takemarker_pos~=-1 then    
+      reaper.DeleteTakeMarker(take, i)
+      found=takemarker_pos
+      break
+    end
+  end
+  
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i][2], takemarkers[i][1], takemarkers[i][3])
+    --)
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+  return found
+end
+
+
+function ultraschall.GetProjectPosByTakeSourcePos(source_pos, take)
+-- check with Reaper 7
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProjectPosByTakeSourcePos</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.03
+    Lua=5.3
+  </requires>
+  <functioncall>number project_pos = ultraschall.GetProjectPosByTakeSourcePos(number source_pos, MediaItem_Take take)</functioncall>
+  <description>
+    returns the project-position-representation of the source-position of a take. 
+    Will obey time-stretch-markers, offsets, etc, as well.
+    
+    Note: due API-limitations, you can only get the project position of take-source-positions 0 and higher, so no negative position is allowed.
+    
+    Also note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    This function is expensive, so don't use it permanently!
+    
+    Returns nil in case of an error
+  </description>
+  <linked_to desc="see:">
+    inline:GetTakeSourcePosByProjectPos
+           gets the take-source-position by project position
+  </linked_to>
+  <retvals>
+    number project_pos - the project-position, converted from the take's source-position
+  </retvals>
+  <parameters>
+    number source_pos - the position within the source of the take in seconds
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, source position, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if type(source_pos)~="number" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "source_pos", "must be a number", -1) return end
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "take", "must be a valid MediaItem_Take", -2) return end
+  if source_pos<0 then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "source_pos", "must be 0 or higher", -3) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and remove them
+  takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    takemarkers[i+1]={reaper.GetTakeMarker(take, i)}
+    --reaper.SetTakeMarker(take, i, "TUDELU"..takemarkers[i+1][2])
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- set take-marker at source-position of take, select the take and use "next take marker"-action to go to it
+  -- then get the cursor position to get the project-position
+  -- and finally, delete the take marker reset the view and cursor-position
+  local starttime, endtime = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+  reaper.SetTakeMarker(take, -1, "", source_pos)
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetEditCurPos(-20, false, false)
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  reaper.Main_OnCommand(42394, 0)
+  local projectpos=reaper.GetCursorPosition()
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.DeleteTakeMarker(take, 0)
+  reaper.SetEditCurPos(oldpos, false, false)
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, starttime, endtime)
+
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i][2], takemarkers[i][1], takemarkers[i][3])
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+  if projectpos<item_pos then 
+    return -1
+  else
+    return projectpos
+  end
+end
+
+function ultraschall.MediaItem_GetAllVisibleTransients_ActiveTake(item)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>MediaItem_GetAllVisibleTransients_ActiveTake</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_of_transients, table transient_positions = ultraschall.MediaItem_GetAllVisibleTransients_ActiveTake(MediaItem item)</functioncall>
+  <description>
+    returns the number and positions of visible transients of the active take of a MediaItem.
+
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    MediaItem item - the item, whose visible active-take transients you want to get
+  </parameters>
+  <retvals>
+    integer count_of_transients - the number of found transients
+    table transient_positions - a table with all project positions of the transients
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Assistance functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>misc/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem management, get, transients, active take, project position</tags>
+</US_DocBloc>
+]]  
+  if ultraschall.type(item)~="MediaItem" then ultraschall.AddErrorMessage("MediaItem_GetAllVisibleTransients", "item", "must be a MediaItem", -1) return -1 end
+  reaper.PreventUIRefresh(1)
+  local editcursor=reaper.GetCursorPosition()
+  local Transients={}
+  start=reaper.GetMediaItemInfo_Value(item, "D_POSITION")  
+  reaper.SetEditCurPos(start-0.00001, false, false)
+  local lastpos=start
+  local newpos
+  while lastpos~=newpos do
+    lastpos=newpos
+    reaper.Main_OnCommand(40375, 0)
+    newpos=reaper.GetCursorPosition()
+    Transients[#Transients+1]=newpos
+  end
+  table.remove(Transients, #Transients)
+  reaper.MoveEditCursor(-reaper.GetCursorPosition()+Transients[1], false)
+  firstpos=reaper.GetCursorPosition()
+  reaper.Main_OnCommand(40376, 0)
+  secondpos=reaper.GetCursorPosition()
+  if secondpos~=firstpos then
+    table.insert(Transients, 1, secondpos)
+  end
+  --reaper.MoveEditCursor(-reaper.GetCursorPosition()+editcursor, false)
+  reaper.SetEditCurPos(editcursor, false, false)
+  reaper.PreventUIRefresh(-1)
+  return #Transients, Transients
+end
+
+function ultraschall.ItemLane_Count(track)
+-- CHECK THIS FIRST, if the bug in Reaper is fixed, that might show a regular track as containing 2 lanes instead of 1!!
+
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ItemLane_Count</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>integer count_of_lanes = ultraschall.ItemLane_Count(MediaTrack track)</functioncall>
+  <description>
+    returns the number of item-lanes in a track
+
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    MediaTrack track - the track, whose number of lanes you want to know
+  </parameters>
+  <retvals>
+    integer count_of_lanes - the number of item-lanes
+  </retvals>
+  <chapter_context>
+    Track Management
+    Item Lanes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>misc/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>track management, count, item lanes, fixed lanes</tags>
+</US_DocBloc>
+]] 
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ItemLane_Count", "track", "must be a MediaTrack", -1) return -1 end
+  local val=reaper.GetMediaTrackInfo_Value(track, "I_FREEMODE")
+  if val==2 then
+    return math.tointeger(reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES"))
+  else
+    return 0
+  end
+end
+--A=ultraschall.ItemLane_Count(reaper.GetTrack(0,0))
+
+
+function ultraschall.ItemLane_GetFromPoint(x, y)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ItemLane_GetFromPoint</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>MediaTrack track, integer item_lane_index = ultraschall.ItemLane_GetFromPoint(integer x, integer y)</functioncall>
+  <description>
+    returns the MediaTrack and the item-lane at a screen-coordinate
+
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer item_lane_index - the index of the item-lane at coordinate; 0, if no lane is existing at coordinates
+    MediaTrack track - the track, whose lane is at coordinate
+  </retvals>
+  <parameters>
+    integer x - the x-position of where you want to check for item-lane
+    integer y - the y-position of where you want to check for item-lane
+  </parameters>
+  <chapter_context>
+    Track Management
+    Item Lanes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>misc/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>track management, from point, get, lane at position, item lanes, fixed lanes</tags>
+</US_DocBloc>
+]]
+  if math.type(x)~="integer" then ultraschall.AddErrorMessage("ItemLane_GetFromPoint", "x", "must be an integer", -1) return -1 end
+  if math.type(y)~="integer" then ultraschall.AddErrorMessage("ItemLane_GetFromPoint", "y", "must be an integer", -2) return -1 end
+  local AAA,BBB = reaper.GetTrackFromPoint(x, y)
+  if AAA==nil then return 0, nil end
+  return (BBB>>8)+1, AAA
+end
+--AAAAA=ultraschall.ItemLane_GetFromPoint()
+
+function ultraschall.ItemLane_GetPositionAndHeight(track, lane_index)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ItemLane_GetPositionAndHeight</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>number y_position, number height = ultraschall.ItemLane_GetPositionAndHeight(MediaTrack track, integer lane_index)</functioncall>
+  <description>
+    returns the position and height of an item-lanes in a track
+
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    MediaTrack track - the track, whose lanes-height you want to know
+    integer lane_index - the lane, whose y-position and height you want to know
+  </parameters>
+  <retvals>
+    number y_position - the y-position of the lane in the fixed lanes
+    number height - the height of the lane in the fixed lanes
+  </retvals>
+  <chapter_context>
+    Track Management
+    Item Lanes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>misc/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>track management, get, item lanes, fixed lanes, height, position</tags>
+</US_DocBloc>
+]] 
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ItemLane_GetPositionAndHeight", "track", "must be a MediaTrack", -1) return -1 end  
+  if math.type(lane_index)~="integer" then ultraschall.AddErrorMessage("ItemLane_GetPositionAndHeight", "lane_index", "must be an integer", -2) return -1 end  
+  local val=reaper.GetMediaTrackInfo_Value(track, "I_FREEMODE")
+  if val==2 then
+    return (1/ultraschall.ItemLane_Count(track))*(lane_index-1), (1/ultraschall.ItemLane_Count(track))
+  else
+    return -1
+  end
+end
+
+function ultraschall.ItemLane_GetAllMediaItems(track, lane_idx, start_position, end_position)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ItemLane_GetAllMediaItems</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>integer count_MediaItems, table MediaItems = ultraschall.ItemLane_GetAllMediaItems(MediaTrack track, integer lane_index, optional number start_position, optional number end_position)</functioncall>
+  <description>
+    returns the MediaItems from an item-lanes in a track between start_position and end_position
+
+    returns -1 in case of an error
+  </description>
+  <parameters>
+    MediaTrack track - the track, whose MediaItems you want to get
+    integer lane_index - the lane, whose MediaItems you want to get
+    optional number start_position - the earliest position a MediaItem in a tracklane must have
+    optional number end_position - the latest position a MediaItem in a tracklane must have
+  </parameters>
+  <retvals>
+    integer count_MediaItems - the number of items in a lane
+    table MediaItems - the found items from a lane
+  </retvals>
+  <chapter_context>
+    Track Management
+    Item Lanes
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>misc/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>track management, get, item lanes, mediaitems, startposition, endposition</tags>
+</US_DocBloc>
+]] 
+  if start_position==nil then start_position=0 end
+  if end_position==nil then end_position=reaper.GetProjectLength(0) end
+  if ultraschall.type(track)~="MediaTrack" then ultraschall.AddErrorMessage("ItemLane_GetAllMediaItems", "track", "must be a MediaTrack", -1) return -1 end
+  if math.type(lane_idx)~="integer" then ultraschall.AddErrorMessage("ItemLane_GetAllMediaItems", "lane_idx", "must be an integer", -2) return -1 end
+  if type(start_position)~="number" then ultraschall.AddErrorMessage("ItemLane_GetAllMediaItems", "start_position", "must be either nil or a number", -3) return -1 end
+  if type(end_position)~="number" then ultraschall.AddErrorMessage("ItemLane_GetAllMediaItems", "end_position", "must be either nil or a number", -4) return -1 end
+  lane_idx=lane_idx-1
+  local MediaItemArray={}
+  for i=0, reaper.CountTrackMediaItems(track)-1 do
+    local item=reaper.GetTrackMediaItem(track, i)
+    local lane=reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE")
+    if lane==lane_idx then
+      local start=reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+      local stop=start+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+      if start>=start_position and stop<=end_position then
+        MediaItemArray[#MediaItemArray+1]=item
+      end
+    end
+  end
+  return #MediaItemArray, MediaItemArray
+end
 

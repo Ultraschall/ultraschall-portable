@@ -117,7 +117,7 @@ function ultraschall.MoveTrackEnvelopePointsBy(startposition, endposition, moveb
   
     if moveby<0 then
       --for i=0, EnvCount do
-      local i=0
+      local i=-1
       while i<=EnvCount do
         i=i+1
         local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
@@ -883,71 +883,6 @@ function ultraschall.SetEnvelopeHeight(Height, Compacted, TrackEnvelope, TrackEn
     retval, str2 = reaper.SetEnvelopeStateChunk(TrackEnvelope, newstr, false) 
   end
   return true, newstr
-end
-
-
-
-function ultraschall.GetAllTrackEnvelopes()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>GetAllTrackEnvelopes</slug>
-  <requires>
-    Ultraschall=4.00
-    Reaper=5.52
-    Lua=5.3
-  </requires>
-  <functioncall>array TrackEnvelopeArray, integer number_of_tracks, integer FirstEnvelopeTrackNumber, integer FirstEnvelopeMaster = ultraschall.GetAllTrackEnvelopes()</functioncall>
-  <description>
-    returns all TrackEnvelopes of the current project as a table, number of tracks, the first track that has an envelope, if the master track has an envelope(0) or not (-1)
-  </description>
-  <retvals>
-    array TrackEnvelopeArray - a table with all envelopes of the current project
-    -the table works as follows:
-    -TrackEnvelopeArray[Tracknumber][0] - number of envelopes for track Tracknumber
-    -TrackEnvelopeArray[Tracknumber][1][Envelopenumber] - the envelope Envelopenumber of track Tracknumber
-    -
-    -tracknumber of 0 is for the master track
-    integer number_of_tracks - the number of tracks, covered in the TrackEnvelopeArray
-    integer FirstEnvelopeTrackNumber - the number of the first track to have an envelope; -1 if theres none
-    integer FirstEnvelopeMaster - 0, if the master-track has an envelope, -1 if not.
-  </retvals>
-  <chapter_context>
-    Envelope Management
-    Get Envelope
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>Modules/ultraschall_functions_Envelope_Module.lua</source_document>
-  <tags>trackmanagement, trackenvelope, get, envelope</tags>
-</US_DocBloc>
-]]
-
-  local TrackEnvelopeArray={}
-  local FirstEnvelopeTrackNumber=-1
-  local FirstEnvelopeMaster=-1
-  local trackcount=1
-  
-  for i=0, reaper.CountTracks(0)-1 do
-    local MediaTrack=reaper.GetTrack(0,i)
-    TrackEnvelopeArray[i+1]={}
-    TrackEnvelopeArray[i+1][1]={}
-    
-    for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
-      TrackEnvelopeArray[i+1][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
-      if FirstEnvelopeTrackNumber==-1 then FirstEnvelopeTrackNumber=i+1 end
-    end
-    TrackEnvelopeArray[i+1][0]=reaper.CountTrackEnvelopes(MediaTrack)-1
-  end
-
-  local MediaTrack=reaper.GetMasterTrack(0)
-  TrackEnvelopeArray[0]={}
-  TrackEnvelopeArray[0][1]={}
-  for a=0, reaper.CountTrackEnvelopes(MediaTrack)-1 do
-    TrackEnvelopeArray[0][1][a]=reaper.GetTrackEnvelope(MediaTrack, a)
-    FirstEnvelopeMaster=0
-  end
-  TrackEnvelopeArray[0][0]=reaper.CountTrackEnvelopes(MediaTrack)-1
-
-  return TrackEnvelopeArray, reaper.CountTracks(0), FirstEnvelopeTrackNumber, FirstEnvelopeMaster
 end
 
 
@@ -3031,6 +2966,7 @@ function ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition
   <tags>envelopemanagement, envelope, point, envelope point, delete, between</tags>
 </US_DocBloc>
 ]]
+-- To Do: Only insert mute envelope point, when mute would change
   if type(startposition)~="number" then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "endposition", "must be a number", -2) return -1 end
   if reaper.ValidatePtr2(0, MediaTrack, "MediaTrack*")==false then ultraschall.AddErrorMessage("DeleteTrackEnvelopePointsBetween", "MediaTrack", "must be a valid MediaTrack", -4) return -1 end
@@ -3043,28 +2979,38 @@ function ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition
     local EnvCount=reaper.CountEnvelopePoints(TrackEnvelope)
     local retval, name=reaper.GetEnvelopeName(TrackEnvelope)
   
-    for i=EnvCount-1, 0, -1 do
+    --for i=EnvCount-1, 0, -1 do
       --local retval, time, value, shape, tension, selected = reaper.GetEnvelopePoint(TrackEnvelope, i)
       --if time>=startposition and time<=endposition then
       local Aretval, value, dVdS, ddVdS, dddVdS = reaper.Envelope_Evaluate(TrackEnvelope, startposition-0.0000001, 0, 0)
       local shape=0
+      --[[
       if name=="Mute" then 
         if value<1 then value=0 end
         shape=1
+        --reaper.InsertEnvelopePoint(TrackEnvelope, startposition-0.0000001, value, 0, 0, false, false)
       end
-      reaper.InsertEnvelopePoint(TrackEnvelope, startposition-0.0000001, value, 0, 0, false, false)
+      --]]
       
       local Aretval, value, dVdS, ddVdS, dddVdS = reaper.Envelope_Evaluate(TrackEnvelope, endposition+0.0000001, 0, 0)
-      local shape=0
      
-      if name=="Mute" then 
+      if name=="Mute" then -- and reaper.CountEnvelopePoints(TrackEnvelope)>0 then
+        --[[
+        local oldval=0
+        for i=reaper.CountEnvelopePoints(TrackEnvelope)-1, 0, -1 do
+          local retval, time, value = reaper.GetEnvelopePoint(TrackEnvelope, i)
+          if time<=endposition then oldval=value break end
+        end
+        
+        if oldvalue~=value then
+        end
+        --]]
         if value<1 then value=0 end
-        shape=1
+        reaper.InsertEnvelopePoint(TrackEnvelope, endposition+0.0000001, value, 1, 0, false, false)
       end
-      reaper.InsertEnvelopePoint(TrackEnvelope, endposition+0.0000001, value, shape, 0, false, false)
       
       local boolean=reaper.DeleteEnvelopePointRange(TrackEnvelope, startposition, endposition)
-    end
+    --end
     reaper.Envelope_SortPoints(TrackEnvelope)
   end
   return 0
