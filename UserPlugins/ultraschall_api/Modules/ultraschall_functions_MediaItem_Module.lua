@@ -1354,7 +1354,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
     -- move markers
     for i=reaper.CountProjectMarkers(0)-1, 0, -1 do
       local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
-      if pos>=startposition and pos-delta<endposition and isrgn==false then 
+      if pos>=startposition and pos<endposition and isrgn==false then 
         reaper.DeleteProjectMarkerByIndex(0, i) 
       end
     end
