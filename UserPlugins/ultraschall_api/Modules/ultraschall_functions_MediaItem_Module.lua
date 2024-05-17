@@ -1251,9 +1251,9 @@ function ultraschall.SectionCut_Inverse(startposition, endposition, trackstring,
   
   -- do the splitting, selection of all mediaitems before first and after last split and delete them
   local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring, false)
-  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false) -- Buggy: needs to take care of autocrossfade!!
-  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(0,startposition,trackstring,true)
-  local C2,CC2,CCC2=ultraschall.GetAllMediaItemsBetween(endposition,reaper.GetProjectLength(),trackstring,true)
+  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring, false) -- Buggy: needs to take care of autocrossfade!!
+  local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(0,startposition,trackstring, true)
+  local C2,CC2,CCC2=ultraschall.GetAllMediaItemsBetween(endposition,reaper.GetProjectLength(),trackstring, true)
   
   -- put the items into the clipboard  
   
@@ -1275,11 +1275,11 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut</slug>
   <requires>
-    Ultraschall=4.95
+    Ultraschall=5.00
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, boolean movemarkers)</functioncall>
+  <functioncall>integer number_items, array MediaItemArray_StateChunk, array altered_markers, array altered_regions = ultraschall.RippleCut(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, boolean movemarkers)</functioncall>
   <description>
     Cuts out all items between startposition and endposition in the tracks given by trackstring. After cut, it moves the remaining items after(!) endposition toward projectstart, by the difference between start and endposition.
     
@@ -1298,6 +1298,23 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   <retvals>
     integer number_items - the number of cut items
     array MediaItemArray_StateChunk - an array with the mediaitem-states of the cut items
+    array altered_markers - an array with all moved and deleted markers
+                           - affected_markers[1]="deleted" or "moved"
+                           - affected_markers[2]=index
+                           - affected_markers[3]=old_position
+                           - affected_markers[4]=name
+                           - affected_markers[5]=shownmarker
+                           - affected_markers[6]=color
+    array altered_regions - the regions that were altered:
+                          -   altered_regions_array[index_of_region][0] - old startposition
+                          -   altered_regions_array[index_of_region][1] - old endposition
+                          -   altered_regions_array[index_of_region][2] - name
+                          -   altered_regions_array[index_of_region][3] - old indexnumber of the region within all markers in the project
+                          -   altered_regions_array[index_of_region][4] - the shown index-number
+                          -   altered_regions_array[index_of_region][5] - the color of the region
+                          -   altered_regions_array[index_of_region][6] - the change that was applied to this region
+                          -   altered_regions_array[index_of_region][7] - the new startposition
+                          -   altered_regions_array[index_of_region][8] - the new endposition
   </retvals>
   <chapter_context>
     MediaItem Management
@@ -1323,7 +1340,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   if trackstring==-1 or trackstring=="" then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -6) return -1 end
 
   local delta=endposition-startposition
-  crossfade_value=reaper.SNM_GetIntConfigVar("splitautoxfade", -99)
+  local crossfade_value=reaper.SNM_GetIntConfigVar("splitautoxfade", -99)
   
   if crossfade_value&1==1 then
     --print2(crossfade_value&1)
@@ -1336,9 +1353,9 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0)
   reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0.1)
   
-  local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
+  local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring, false)
   
-  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)  
+  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring, false)  
   
   reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", oldvalcrossfade)
   reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", deffadelen)
@@ -1359,6 +1376,8 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
       ultraschall.MoveTrackEnvelopePointsBy(endposition, reaper.GetProjectLength(), -delta, MediaTrack, false) 
     end
   end
+  local markers={}
+  local regions={}
   
   if movemarkers==true then
     -- move markers
@@ -1366,6 +1385,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
       local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
       if pos>=startposition and pos<endposition and isrgn==false then 
         reaper.DeleteProjectMarkerByIndex(0, i) 
+        markers[#markers+1]={"deleted", retval, pos, name, shownmarker, color}
       end
     end
     for i=0, reaper.CountProjectMarkers(0) do
@@ -1373,11 +1393,13 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
       if pos>endposition then
         if isrgn==false then
           reaper.SetProjectMarkerByIndex2(0, i, isrgn, pos-delta, rgnend, shownmarker, name, color, 0)
+          markers[#markers+1]={"moved", retval, pos, name, shownmarker, color}
         end
       end
     end
     -- move regions
     local were_regions_altered, number_of_altered_regions, altered_regions = ultraschall.RippleCut_Regions(startposition, endposition)
+    regions=altered_regions
   end
   
   ultraschall.MoveMediaItemsAfter_By(endposition-0.00000000001, -delta, trackstring)
@@ -1385,24 +1407,24 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   --if crossfade_value&1==1 then
   reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value)
   --end
-  return C,CCC
+  return C,CCC, markers, regions
 end
 
 --A,B=ultraschall.RippleCut(1,2,"1,2,3",true,true)
 
 
-function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard)
+function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, moveenvelopepoints, add_to_clipboard, movemarkers)
   --trackstring=ultraschall.CreateTrackString(1,reaper.CountTracks(),1)
   --returns the number of deleted items as well as a table with the ItemStateChunks of all deleted Items  
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>RippleCut_Reverse</slug>
   <requires>
-    Ultraschall=4.95
+    Ultraschall=5.00
     Reaper=5.40
     Lua=5.3
   </requires>
-  <functioncall>integer number_items, array MediaItemArray_StateChunk = ultraschall.RippleCut_Reverse(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard)</functioncall>
+  <functioncall>integer number_items, array MediaItemArray_StateChunk, array altered_markers, array altered_regions = ultraschall.RippleCut_Reverse(number startposition, number endposition, string trackstring, boolean moveenvelopepoints, boolean add_to_clipboard, optional boolean movemarkers)</functioncall>
   <description>
     Cuts out all items between startposition and endposition in the tracks given by trackstring. 
     After cut, it moves the remaining items before(!) startposition toward projectend, by the difference between start and endposition.
@@ -1417,10 +1439,28 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
     string trackstring - the tracknumbers, separated by ,
     boolean moveenvelopepoints - moves envelopepoints, if existing, as well
     boolean add_to_clipboard - true, puts the cut items into the clipboard; false, don't put into the clipboard
+    optional boolean movemarkers - true or nil, moves markers from before start-position towards end-position; false, don't move markers
   </parameters>
   <retvals>
     integer number_items - the number of cut items
     array MediaItemArray_StateChunk - an array with the mediaitem-states of the cut items
+    array altered_markers - an array with all moved and deleted markers
+                           - affected_markers[1]="deleted" or "moved"
+                           - affected_markers[2]=index
+                           - affected_markers[3]=old_position
+                           - affected_markers[4]=name
+                           - affected_markers[5]=shownmarker
+                           - affected_markers[6]=color
+    array altered_regions - the regions that were altered:
+                          -   altered_regions_array[index_of_region][0] - old startposition
+                          -   altered_regions_array[index_of_region][1] - old endposition
+                          -   altered_regions_array[index_of_region][2] - name
+                          -   altered_regions_array[index_of_region][3] - old indexnumber of the region within all markers in the project
+                          -   altered_regions_array[index_of_region][4] - the shown index-number
+                          -   altered_regions_array[index_of_region][5] - the color of the region
+                          -   altered_regions_array[index_of_region][6] - the change that was applied to this region
+                          -   altered_regions_array[index_of_region][7] - the new startposition
+                          -   altered_regions_array[index_of_region][8] - the new endposition
   </retvals>
   <chapter_context>
     MediaItem Management
@@ -1437,13 +1477,33 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
   if ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut_Reverse", "trackstring", "must be a valid trackstring", -3) return -1 end
   if type(add_to_clipboard)~="boolean" then ultraschall.AddErrorMessage("RippleCut_Reverse", "add_to_clipboard", "must be a boolean", -4) return -1 end
   if type(moveenvelopepoints)~="boolean" then ultraschall.AddErrorMessage("RippleCut_Reverse", "moveenvelopepoints", "must be a boolean", -5) return -1 end
+  if movemarkers~=nil and type(movemarkers)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "movemarkers", "must be a boolean", -7) return -1 end
+  if movemarkers==nil then movemarkers=true end
   
   local L,trackstring,A2,A3=ultraschall.RemoveDuplicateTracksInTrackstring(trackstring)
   local count, individual_tracks = ultraschall.CSV2IndividualLinesAsArray(trackstring)
   if trackstring==-1 or trackstring==""  then return -1 end
   local delta=endposition-startposition
-  local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring,false)
-  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring,false)
+  
+  local crossfade_value=reaper.SNM_GetIntConfigVar("splitautoxfade", -99)
+  
+  if crossfade_value&1==1 then
+    --print2(crossfade_value&1)
+    --print2(reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1))
+    reaper.SNM_SetIntConfigVar("splitautoxfade", crossfade_value-1)
+  end
+  local oldvalcrossfade=reaper.SNM_GetDoubleConfigVar("defsplitxfadelen", -100000)
+  local deffadelen=reaper.SNM_GetDoubleConfigVar("defsplitxfadelen", -100000)
+  
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0)
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", 0.1)
+  
+  local A,AA=ultraschall.SplitMediaItems_Position(startposition,trackstring, false)
+  local B,BB=ultraschall.SplitMediaItems_Position(endposition,trackstring, false)
+  
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", oldvalcrossfade)
+  reaper.SNM_SetDoubleConfigVar("defsplitxfadelen", deffadelen)  
+  
   local C,CC,CCC=ultraschall.GetAllMediaItemsBetween(startposition,endposition,trackstring,true)
 
   -- put the items into the clipboard  
@@ -1458,12 +1518,38 @@ function ultraschall.RippleCut_Reverse(startposition, endposition, trackstring, 
     end
   end
   
+  --[[
   if movemarkers==true then
-    ultraschall.MoveMarkersBy(0, startposition, delta, true)
+    ultraschall.MoveMarkersBy(0, endposition, delta, true)
+  end
+  --]]
+  local markers={}
+  local regions={}
+  if movemarkers==true then    
+    -- move markers
+    for i=reaper.CountProjectMarkers(0)-1, 0, -1 do
+      local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
+      if pos>=startposition and pos<endposition and isrgn==false then 
+        reaper.DeleteProjectMarkerByIndex(0, i) 
+        markers[#markers+1]={"deleted", retval, pos, name, shownmarker, color}
+      end
+    end
+    for i=0, reaper.CountProjectMarkers(0) do
+      local retval, isrgn, pos, rgnend, name, shownmarker, color = reaper.EnumProjectMarkers3(0, i)
+      if pos<startposition then
+        if isrgn==false then
+          reaper.SetProjectMarkerByIndex2(0, i, isrgn, pos+delta, rgnend, shownmarker, name, color, 0)
+          markers[#markers+1]={"moved", retval, pos, name, shownmarker, color}
+        end
+      end
+    end
+    -- move regions
+    local were_regions_altered, number_of_altered_regions, altered_regions = ultraschall.RippleCut_Regions_Reverse(startposition, endposition)
+    regions=altered_regions
   end
 
   ultraschall.MoveMediaItemsBefore_By(endposition+0.00000000001, delta, trackstring)  
-  return C,CCC
+  return C,CCC, markers, regions
 end
 
 
