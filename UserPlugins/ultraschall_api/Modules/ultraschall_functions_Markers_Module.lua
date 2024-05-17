@@ -3704,6 +3704,134 @@ end
 --  number_of_all_regions, allregionsarray = ultraschall.GetAllRegionsBetween(A,B, true)
 
 
+function ultraschall.RippleCut_Regions_Reverse(startposition, endposition)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>RippleCut_Regions_Reverse</slug>
+  <requires>
+    Ultraschall=5.00
+    Reaper=5.965
+    Lua=5.3
+  </requires>
+  <functioncall>boolean were_regions_altered, integer number_of_altered_regions, array altered_regions  = ultraschall.RippleCut_Regions_Reverse(number startposition, number endposition)</functioncall>
+  <description>
+    Ripplecuts regions, where applicable.
+    It cuts all (parts of) regions between startposition and endposition and moves remaining parts plus all regions before startposition by endposition-startposition toward projectend(!)
+    
+    Returns false in case of an error.
+  </description>
+  <parameters>
+    number startposition - the startposition from where regions shall be cut from; all regions/parts of regions before that will be moved toward projectend
+    number endposition - the endposition to which regions shall be cut from
+  </parameters>
+  <retvals>
+    boolean were_regions_altered - true, if regions were cut/altered; false, if not
+    integer number_of_altered_regions - the number of regions that were altered/cut/moved
+    array altered_regions - the regions that were altered:
+                          -   altered_regions_array[index_of_region][0] - old startposition
+                          -   altered_regions_array[index_of_region][1] - old endposition
+                          -   altered_regions_array[index_of_region][2] - name
+                          -   altered_regions_array[index_of_region][3] - old indexnumber of the region within all markers in the project
+                          -   altered_regions_array[index_of_region][4] - the shown index-number
+                          -   altered_regions_array[index_of_region][5] - the color of the region
+                          -   altered_regions_array[index_of_region][6] - the change that was applied to this region
+                          -   altered_regions_array[index_of_region][7] - the new startposition
+                          -   altered_regions_array[index_of_region][8] - the new endposition
+  </retvals>
+  <chapter_context>
+    Markers
+    General Markers and Regions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>marker management, ripple, cut, regions, reverse</tags>
+</US_DocBloc>
+]]
+  if type(startposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Regions_Reverse", "startposition", "must be a number", -1) return false end
+  if type(endposition)~="number" then ultraschall.AddErrorMessage("RippleCut_Regions_Reverse", "endposition", "must be a number", -2) return false end
+  local dif=endposition-startposition
+  
+  -- get all regions, that are candidates for a ripplecut
+  local number_of_all_regions, allregionsarray = ultraschall.GetAllRegionsBetween(0, endposition, true)  
+  if number_of_all_regions==0 then ultraschall.AddErrorMessage("RippleCut_Regions_Reverse", "", "no regions found within start and endit", -3) return false, regioncount, regionfound end
+  
+  -- make startposition and endposition with less precision, or we can't check, if startposition=pos
+  -- Reaper seems to work with greater precision for floats than shown
+  local start = ultraschall.LimitFractionOfFloat(startposition, 10, true)
+  local endit = ultraschall.LimitFractionOfFloat(endposition, 10, true)
+  
+  -- some more preparation for variables, including localizing them
+  local pos, rgnend, name, retval, markrgnindexnumber, color  
+  local regionfound={}
+  
+  -- here comes the magic
+  for i=number_of_all_regions, 1, -1 do
+    -- get regionattributes from the allregionsarray we got before
+     pos=allregionsarray[i][0]
+     rgnend=allregionsarray[i][1]
+     name=allregionsarray[i][2]
+     retval=allregionsarray[i][3]
+     markrgnindexnumber=allregionsarray[i][4]
+     color = allregionsarray[i][5]
+    -- make pos and rgnend with less precision, or we can't check, if startposition=pos
+    -- Reaper seems to work with greater precision for floats than shown
+    local pos1 = ultraschall.LimitFractionOfFloat(pos, 10, true)
+    local rgnend1 = ultraschall.LimitFractionOfFloat(rgnend, 10, true)
+
+    regionfound[i]={}
+    regionfound[i][0]=allregionsarray[i][0]
+    regionfound[i][1]=allregionsarray[i][1]
+    regionfound[i][2]=allregionsarray[i][2]
+    regionfound[i][3]=allregionsarray[i][3]
+    regionfound[i][4]=allregionsarray[i][4]
+    regionfound[i][5]=allregionsarray[i][5]
+
+    -- let's do the checking and manipulation. We also create an array with all entries manipulated
+    -- and in which way manipulated
+    
+    if pos1>=start and rgnend1<=endit then
+--print2("0")
+      -- if region is fully within start and endit, cut it completely
+      regionfound[i][6]="CUT COMPLETELY"
+      reaper.DeleteProjectMarker(0, markrgnindexnumber, true)
+elseif pos1<=start and pos1<endit and rgnend1<endit and rgnend1+dif>endit then --and rgnend1<=endit then
+      -- if regionend is within start and endit, move the start toward the end
+--print2("A")
+      regionfound[i][6]="CUT AT THE END"
+      regionfound[i][7]=pos+dif
+      regionfound[i][8]=endit
+      reaper.SetProjectMarker4(proj, markrgnindexnumber, true, pos+dif, endit, name, color, 0)
+--]]
+    elseif pos1>=start and pos1<=endit and rgnend1>endit then
+      -- if regionstart is within start and endit, shorten the region and move it by difference of start and endit
+      --    toward projectend
+--print2("B")
+      regionfound[i][6]="CUT AT THE BEGINNING"
+      regionfound[i][7]=endit
+      regionfound[i][8]=rgnend
+      reaper.SetProjectMarker4(proj, markrgnindexnumber, true, endit, rgnend, name, color, 0)
+    elseif pos1<=start and rgnend1<=start then 
+--print2("C")
+      -- if region is before start, just move the region by difference of start and endit toward projectend
+      regionfound[i][6]="MOVED TOWARD PROJECTEND"
+      regionfound[i][7]=pos+dif
+      regionfound[i][8]=rgnend+dif
+      reaper.SetProjectMarker4(proj, markrgnindexnumber, true, pos+dif, rgnend+dif, name, color, 0)
+    elseif start>=pos1 and endit<=rgnend then
+      -- if start and endit is fully within a region, cut at the start of the region the difference of start and endit
+--print2("D")
+      regionfound[i][6]="CUT IN THE MIDDLE"
+      regionfound[i][7]=pos+dif
+      regionfound[i][8]=rgnend
+      reaper.SetProjectMarker4(proj, markrgnindexnumber, true, pos+dif, rgnend, name, color, 0)
+    else
+      --print2("E")
+    end
+  end
+  -- sort the table of found regions
+  return true, regioncount, regionfound
+end
+
 function ultraschall.GetAllCustomMarkers(custom_marker_name)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -7944,7 +8072,7 @@ function ultraschall.GetSetChapterMarker_Attributes(is_set, idx, attributename, 
   
   if attributename=="chap_url" then attributename="url" end
   
-  if found==false then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "attributename not supported", -7) return false end
+  if found==false then ultraschall.AddErrorMessage("GetSetChapterMarker_Attributes", "attributename", "attributename "..attributename.." not supported", -7) return false end
   if planned~=true then
     idx=ultraschall.EnumerateNormalMarkers(idx)
   else
@@ -8028,7 +8156,6 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, content, pr
          "podc_title" - the title of the podcast
          "podc_tagline" - a tagline for this episode
          "podc_description" - a description for your podcast
-         "podc_website" - either one url or a list of website-urls of the podcast,separated by newlines
          "podc_contact_email" - an email-address that can be used to contact the podcasters                  
          "podc_feed" - the url of the podcast-feed
          "podc_descriptive_tags" - some tags, who describe the podcast, must be separated by commas
@@ -8038,7 +8165,7 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, content, pr
     
     preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
     
-    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+    You can either set the current project's attributes(preset\_slot=nil) or a preset(preset\_slot=1 and higher)
         
     returns false in case of an error
   </description>
@@ -8117,7 +8244,7 @@ function ultraschall.GetSetPodcast_Attributes(is_set, attributename, content, pr
     additional_attribute=""
   end
   
-  if found==false then ultraschall.AddErrorMessage("GetSetPodcast_Attributes", "attributename", "attributename not supported", -7) return false end
+  if found==false then ultraschall.AddErrorMessage("GetSetPodcast_Attributes", "attributename", "attributename "..attributename.." not supported", -7) return false end
   local presetcontent, _
   
   if is_set==true then
@@ -8166,7 +8293,7 @@ ultraschall.EpisodeAttributes={
               "epsd_guid"
               }
 
-function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, additional_attribute, content, preset_slot)
+function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, content, preset_slot)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetSetPodcastEpisode_Attributes</slug>
@@ -8177,7 +8304,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string content = ultraschall.GetSetPodcastEpisode_Attributes(boolean is_set, string attributename, string content, optional integer preset_slot)</functioncall>
-  <description>
+  <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Will get/set metadata-attributes for a podcast-episode.
     
     This is about the individual podcast-episode, NOT the global podcast itself..
@@ -8201,14 +8328,13 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
     
     preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
     
-    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+    You can either set the current project's attributes(preset\_slot=nil) or a preset(preset\_slot=1 and higher)
         
     returns false in case of an error
   </description>
   <parameters>
     boolean is_set - true, set the attribute; false, retrieve the current content
     string attributename - the attributename you want to get/set
-    string additional_attribute - some attributes allow additional attributes to be set; in all other cases set to ""
     string content - the new contents to set the attribute
     optional integer preset_slot - the slot in the podcast-presets to get/set the value from/to; nil, no preset used
   </parameters>
@@ -8231,7 +8357,7 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
   if preset~=nil and preset<=0 then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "preset", "must be higher than 0", -3) return false end 
   if type(attributename)~="string" then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "attributename", "must be a string", -4) return false end  
   if is_set==true and type(content)~="string" then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "content", "must be a string", -5) return false end  
-  if type(additional_attribute)~="string" then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "additional_attribute", "must be a string", -6) return false end
+  local additional_attribute=""
   
   -- check, if passed attributes are supported
   local tags=ultraschall.EpisodeAttributes
@@ -8246,13 +8372,13 @@ function ultraschall.GetSetPodcastEpisode_Attributes(is_set, attributename, addi
   
   local retval
   
-  if found==false then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "attributename", "attributename not supported", -7) return false end
+  if found==false then ultraschall.AddErrorMessage("GetSetPodcastEpisode_Attributes", "attributename", "attributename "..attributename.." not supported", -7) return false end
   local presetcontent, _
   
   if attributename=="epsd_guid" then
     local _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
     if content=="" then
-      reaper.SetProjExtState(0, "EpisodeMetaData", attributename, reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")) 
+      reaper.SetProjExtState(0, "EpisodeMetaData", attributename, reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")..reaper.genGuid("")) 
     end
     local _, content=reaper.GetProjExtState(0, "EpisodeMetaData", attributename)
     return true, content
@@ -8293,28 +8419,23 @@ ultraschall.ShowNoteAttributes={
               "shwn_position", -- position of the shownote in seconds
               "shwn_language",           -- check for validity ISO639
               "shwn_description",
-              "shwn_location_gps",       -- check for validity
-              "shwn_location_google_maps",-- check for validity
-              "shwn_location_open_street_map",-- check for validity
-              "shwn_location_apple_maps",-- check for validity
+              "shwn_location",       -- check for validity
+              "shwn_location_name",       -- check for validity
               "shwn_date",       -- check for validity
               "shwn_time",       -- check for validity
               "shwn_timezone",   -- check for validity
-              "shwn_event_date_start",   -- check for validity
+              "shwn_event_date_beginning",   -- check for validity
               "shwn_event_date_end",     -- check for validity
-              "shwn_event_time_start",   -- check for validity
+              "shwn_event_time_beginning",   -- check for validity
               "shwn_event_time_end",     -- check for validity
               "shwn_event_timezone",     -- check for validity
               "shwn_event_name",
               "shwn_event_description",
               "shwn_event_url", 
-              "shwn_event_location_gps",       -- check for validity
-              "shwn_event_location_google_maps",-- check for validity
-              "shwn_event_location_open_street_map",-- check for validity
-              "shwn_event_location_apple_maps",-- check for validity
+              "shwn_event_location",       -- check for validity              
+              "shwn_event_location_name",       -- check for validity              
               "shwn_event_ics_data",
-              "shwn_quote_cite_source", 
-              "shwn_quote", 
+              "shwn_bibliographical_source", 
               --"image_uri",
               --"image_content",      -- check for validity
               --"image_description",
@@ -8364,34 +8485,29 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
            "shwn_url_archived_copy_of_original_url" - if you have an archived copy of the url(from archive.org, etc), you can place the link here
            "shwn_is_advertisement" - yes, if the shownote is an ad; "", to unset it
            "shwn_language" - the language of the content; Languagecode according to ISO639
-           "shwn_location_gps" - the gps-coordinates of the location
-           "shwn_location_google_maps" - the coordinates as used in Google Maps
-           "shwn_location_open_street_map" - the coordinates as used in Open Street Maps
-           "shwn_location_apple_maps" - the coordinates as used in Apple Maps                         
+           "shwn_location" - the coordinates of the location of this shownote; must be in decimal degrees "XX.xxxxxx,YY.yyyyyy" 
+           "shwn_location_name" - the name of the location of this shownote
            "shwn_date" - the date of the content of the shownote(when talking about events, etc); yyyy...yyy-mm-dd; 
                        - use XX or XXXX, for when day/month/year is unknown or irrelevant; 
                        - add minus - in front of the yyyy for years BC; like -0999
                        - years can be more than 4 digits, so -10021 (for -10021BC) is valid
            "shwn_time" - the time of the content of the shownote(when talking about events, etc); hh:mm:ss; use XX for when hour/minute/second is unknown or irrelevant
            "shwn_timezone" - the timezone of the content of the shownote(when talking about events, etc); UTC-format; +hh:mm or -hh:mm
-           "shwn_event_date_start" - the startdate of an event associated with the show; yyyy-mm-dd
+           "shwn_event_date_beginning" - the startdate of an event associated with the show; yyyy-mm-dd
            "shwn_event_date_end" - the enddate of an event associated with the show; yyyy-mm-dd
-           "shwn_event_time_start" - the starttime of an event associated with the show; hh:mm:ss
+           "shwn_event_time_beginning" - the starttime of an event associated with the show; hh:mm:ss
            "shwn_event_time_end" - the endtime of an event associated with the show; hh:mm:ss
            "shwn_event_timezone" - the timezone of the event assocated with the show; UTC-format; +hh:mm or -hh:mm
            "shwn_event_name" - a name for the event
            "shwn_event_description" - a description for the event
            "shwn_event_url" - an url of the event(for ticket sale or the general url for the event)
-           "shwn_event_location_gps" - the gps-coordinates of the event-location
-           "shwn_event_location_google_maps" - the google-maps-coordinates of the event-location
-           "shwn_event_location_open_street_map" - the open-streetmap-coordinates of the event-location
-           "shwn_event_location_apple_maps" - the apple-maps-coordinates of the event-location
+           "shwn_event_location" - the coordinates of the location of the event; must be in decimal degrees "XX.xxxxxx,YY.yyyyyy" 
+           "shwn_event_location_name" - the name of the location of the event
            "shwn_event_ics_data" - the event as ics-data-format; will NOT set other event-attributes; will not be checked for validity!
-           "shwn_quote_cite_source" - a specific place you want to cite, like bookname + page + paragraph + line or something via webcite
-           "shwn_quote" - a quote from the cite_source
+           "shwn_bibliographical_source" - a specific place you want to cite, like bookname + page + paragraph + line or something via webcite
            "shwn_wikidata_uri" - the uri to an entry to wikidata
            "shwn_guid" - a unique identifier for this shownote; read-only
-           "shwn_linked_audiovideomedia" - a link to a mediafile like a podcast-episode; the additional attribute is the time-position in seconds
+           "shwn_linked_audiovideomedia" - a link to a mediafile like a podcast-episode
         
     returns false in case of an error
   </description>
@@ -8459,11 +8575,9 @@ function ultraschall.GetSetShownoteMarker_Attributes(is_set, idx, attributename,
       ultraschall.SetShownoteMarker(marker_index, tonumber(content), name, shown_number)
       return true, content
     elseif attributename=="shwn_linked_audiovideomedia" then
-      if tonumber(additional_content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "the content for shwn_linked_media must be a number as a string", -9) return false end
-      C=additional_content
-      B=content
+      --if tonumber(additional_content)==nil then ultraschall.AddErrorMessage("GetSetShownoteMarker_Attributes", "additional_content", "the content for shwn_linked_media must be a number as a string", -9) return false end
       Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename, content2)
-      Retval = ultraschall.SetMarkerExtState(A[2]+1, attributename.."_time", additional_content)
+      
     end
     if attributename=="shwn_event_ics_data" then 
       content2=ultraschall.Base64_Encoder(content)     
@@ -8996,7 +9110,7 @@ function ultraschall.GetSetPodcastWebsite(is_set, index, name, description, url,
     
     preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
         
-    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+    You can either set the current project's attributes(preset\_slot=nil) or a preset(preset\_slot=1 and higher)
         
     returns false in case of an error
   </description>
@@ -9091,7 +9205,8 @@ ultraschall.PodcastContributorAttributes = {
   "ctrb_name",
   "ctrb_description",
   "ctrb_email",
-  "ctrb_role"
+  "ctrb_role",
+  "ctrb_guid"
   --"ctrb_website_name",
   --"ctrb_website_description",
   --"ctrb_website_url"
@@ -9122,7 +9237,7 @@ function ultraschall.GetSetContributor_Attributes(is_set, index, attributename, 
       
     preset-values will be stored into resourcepath/ultraschall\_podcast\_presets.ini
     
-    You can either set the current project's attributes(preset_slot=nil) or a preset(preset_slot=1 and higher)
+    You can either set the current project's attributes(preset\_slot=nil) or a preset(preset\_slot=1 and higher)
     
     returns false in case of an error
   </description>
@@ -9171,8 +9286,8 @@ function ultraschall.GetSetContributor_Attributes(is_set, index, attributename, 
       break
     end
   end
-  if found==false then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "attributename", "attributename not supported", -7) return false end
-  if is_set==true then
+  if found==false then ultraschall.AddErrorMessage("GetSetContributor_Attributes", "attributename", "attributename "..attributename.." not supported", -7) return false end
+  if is_set==true then    
     if preset_slot~=nil then
       content=string.gsub(content, "\r", "")
       retval = ultraschall.SetUSExternalState("ContributorsMetaData_"..preset_slot, attributename.."_"..index..additional_attribute, string.gsub(content, "\n", "\\n"), "ultraschall_podcast_presets.ini")
@@ -9183,6 +9298,16 @@ function ultraschall.GetSetContributor_Attributes(is_set, index, attributename, 
       presetcontent=nil
     end
     
+    local retval, guid = reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_guid"..index, content)
+    
+    if guid=="" then    
+      local newguid=reaper.genGuid()
+      _=reaper.SetProjExtState(0, "ContributorsMetaData_", "ctrb_guid"..index, reaper.genGuid(""))        
+    end
+    if attributename=="ctrb_guid" then
+      local _, guid = reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_guid"..index, content)
+      return _>0, guid
+    end
     local _,A1=reaper.GetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex")
     if A1=="" or index>tonumber(A1) then
       reaper.SetProjExtState(0, "ContributorsMetaData_", "ctrb_contributors_maxindex", index)
@@ -9585,4 +9710,115 @@ function ultraschall.GetPodcastEpisodeAttributesPreset_Name(preset_slot)
 end
 
 --A,B=ultraschall.GetPodcastEpisodeAttributesPreset_Name(1)
+
+function ultraschall.TakeMarker_GetAllTakeMarkers(take)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>TakeMarker_GetAllTakeMarkers</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.03
+    Lua=5.3
+  </requires>
+  <functioncall>integer count_takemarkers, table all_takemarkers = ultraschall.TakeMarker_GetAllTakeMarkers(MediaItem_Take take)</functioncall>
+  <description>
+    returns all take-markers of a MediaItem_Take, inclusing project-position.
+    Will obey time-stretch-markers, offsets, etc, as well.
+
+    Note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    Returned table is of the following format:
+      Takemarkers[index]["pos"] - position within take
+      Takemarkers[index]["project_pos"] - the project-position of the take-marker
+      Takemarkers[index]["name"] - name of the takemarker
+      Takemarkers[index]["color"] - color of the takemarker
+      Takemarkers[index]["visible"] - is the takemarker visible or not
+    
+    Returns nil in case of an error
+  </description>
+  <linked_to desc="see:">
+    inline:GetTakeSourcePosByProjectPos
+           gets the take-source-position by project position
+  </linked_to>
+  <retvals>
+    integer count_takemarkers - the number of available take-markers
+    table all_takemarkers - a table with all takemarkers of the take(see description for details)
+  </retvals>
+  <parameters>
+    MediaItem_Take take - the take, whose source-position you want to retrieve
+  </parameters>
+  <chapter_context>
+    Mediaitem Take Management
+    Misc
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_Module.lua</source_document>
+  <tags>mediaitem takes, get, all, takemarkers, project position</tags>
+</US_DocBloc>
+]]
+-- TODO:
+-- Rename AND Move(!) Take markers by a huge number of seconds instead of deleting them. 
+-- Then add new temporary take-marker, get its position and then remove it again.
+-- After that, move them back. That way, you could retain potential future guids in take-markers.
+-- Needed workaround, as Reaper, also here, doesn't allow adding a take-marker using an action, when a marker already exists at the position...for whatever reason...
+
+  -- check parameters
+  if ultraschall.type(take)~="MediaItem_Take" then ultraschall.AddErrorMessage("GetProjectPosByTakeSourcePos", "take", "must be a valid MediaItem_Take", -2) return end
+  local item = reaper.GetMediaItemTakeInfo_Value(take, "P_ITEM")
+  local item_pos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+  local item_pos_end = item_pos+reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+  reaper.PreventUIRefresh(1)
+  
+  -- store item-selection and deselect all
+  local count, MediaItemArray = ultraschall.GetAllSelectedMediaItemsBetween(0, reaper.GetProjectLength(0),  ultraschall.CreateTrackString_AllTracks(), false)
+  local retval = ultraschall.DeselectMediaItems_MediaItemArray(MediaItemArray)
+  
+  -- get current take-markers and remove them
+  local takemarkers={}
+  for i=reaper.GetNumTakeMarkers(take)-1, 0, -1 do
+    local position, name, color = reaper.GetTakeMarker(take, i)
+    takemarkers[i+1]={}
+    takemarkers[i+1]["pos"]=position
+    takemarkers[i+1]["name"]=name
+    takemarkers[i+1]["color"]=color
+    reaper.DeleteTakeMarker(take, i)
+  end
+  
+  -- set take-marker at source-position of take, select the take and use "next take marker"-action to go to it
+  -- then get the cursor position to get the project-position
+  -- and finally, delete the take marker reset the view and cursor-position
+  local starttime, endtime = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
+  local oldpos=reaper.GetCursorPosition()
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 1)
+  local active_take=reaper.GetActiveTake(item)
+  reaper.SetActiveTake(take)
+  takemarkers_visible={}
+  for i=1, #takemarkers do
+  --print2("")
+    reaper.SetTakeMarker(take, -1, "", takemarkers[i]["pos"])
+    reaper.SetEditCurPos(-20, false, false)
+    reaper.Main_OnCommand(42394, 0)
+    local projectpos=reaper.GetCursorPosition()
+    takemarkers[i]["project_pos"]=projectpos
+    takemarkers[i]["visible"]=projectpos>=item_pos and projectpos<=item_pos_end 
+    reaper.DeleteTakeMarker(take, 0)
+  end
+  reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
+  reaper.SetActiveTake(active_take)
+  reaper.SetEditCurPos(oldpos, false, false)
+  reaper.GetSet_ArrangeView2(0, true, 0, 0, starttime, endtime)
+
+  -- rename take-markers back to their old name
+  for i=1, #takemarkers do
+    reaper.SetTakeMarker(take, i-1, takemarkers[i]["name"], takemarkers[i]["pos"], takemarkers[i]["color"])
+  end
+  
+  -- reselect old item-selection
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  
+  reaper.PreventUIRefresh(-1)
+
+  return #takemarkers, takemarkers
+end
 
