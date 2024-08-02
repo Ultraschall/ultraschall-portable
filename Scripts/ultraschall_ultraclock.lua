@@ -367,6 +367,7 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 t
   end
   gfx.y=y
   gfx.drawstr(text)
+  return x, y, w, h
 end
 
 function get_position(integer)
@@ -417,6 +418,8 @@ end
 
 
 function drawClock()
+  if drawn_already_in_this_loop==true then return end
+  drawn_already_in_this_loop=true
   gfx.x=zahnradbutton_posx
   gfx.y=zahnradbutton_posy
   gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
@@ -623,8 +626,8 @@ function drawClock()
     if uc_menu[4].checked==true and reaper.GetProjectLength()<get_position() then plus="+" else plus="" end
     checkpos=pos:match("(.-):")
     if checkpos:len()==1 then addzero="0" else addzero="" end
-    WriteAlignedText(""..status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border) -- print Status (Pause/Play...)
-    WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border) --print timecode in h:mm:ss format
+    WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border) -- print Status (Pause/Play...)
+    time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border) --print timecode in h:mm:ss format
   end
 
   -- Time Selection
@@ -708,7 +711,11 @@ function MainLoop()
     elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
-    
+    elseif (gfx.mouse_cap &1 ==1) and gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h and Triggered2==nil then
+      Triggered2=true
+      if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
+      gfx.update()
+      drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
       if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(120*retina_mod) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
@@ -716,6 +723,9 @@ function MainLoop()
     end
   else
     Triggered=nil
+  end
+  if gfx.mouse_cap==0 then
+    Triggered2=nil
   end
 
 --  view = ultraschall.GetUSExternalState("ultraschall_gui", "view") -- get the actual view
@@ -730,6 +740,7 @@ function MainLoop()
     end
     gfx.update()
     --ALABAMASONG=GetProjectLength()
+    drawn_already_in_this_loop=false
     reaper.defer(MainLoop)
   end
 end
