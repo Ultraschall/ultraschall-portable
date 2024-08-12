@@ -576,14 +576,20 @@ end
 -- check, if time-selection is existing
 retval, startTime, endTime = checkTimeSelection()
 
+if retval==false then return end
+
 startTime_format=reaper.format_timestr(startTime, "")
 startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
-startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+if startTime_format:match("(.*):")~=nil then
+  startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+end
 startTime_format=startTime_format:match("(.*)%.").."s"
 
 endTime_format=reaper.format_timestr(endTime, "")
 endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
-endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+if endTime_format:match("(.*):")~=nil then
+  endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+end
 endTime_format=endTime_format:match("(.*)%.").."s"
 
 if retval==false then return end
