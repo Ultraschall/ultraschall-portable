@@ -27,6 +27,81 @@
 -- Initialize Ultraschall-API
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
+length=endTime-startTime
+
+-- low
+low_w=1024
+low_h=1024
+low_vid_kbps=1024
+low_aud_kbps=128
+low_fps=20
+low_mb=tostring((((length*low_vid_kbps+length*low_aud_kbps)/1024/8)*1.0318)+0.00001):match("(.*%...)")
+low="-low"
+
+-- medium
+med_w=1024
+med_h=1024
+med_vid_kbps=2048
+med_aud_kbps=192
+med_fps=30
+med_mb=tostring((((length*med_vid_kbps+length*med_aud_kbps)/1024/8)*0.98)+0.00001):match("(.*%...)")
+med="-med"
+
+-- high
+high_w=1024
+high_h=1024
+high_vid_kbps=3500
+high_aud_kbps=192
+high_fps=30
+high_mb=tostring((((length*high_vid_kbps+length*high_aud_kbps)/1024/8)*0.97)+0.00001):match("(.*%...)")
+high="-high"
+
+-- super high
+super_high_w=1024
+super_high_h=1024
+super_high_vid_kbps=5500
+super_high_aud_kbps=360
+super_high_fps=60
+super_high_mb=tostring((((length*super_high_vid_kbps+length*super_high_aud_kbps)/1024/8)*1.068)+0.00001):match("(.*%...)")
+super_high="-super_high"
+
+xx, yy=reaper.GetMousePosition()
+retval = ultraschall.ShowMenu("Choose quality", "low(Mastodon) - ca."..low_mb.."MB|medium(TikTok/Instagram) - ca."..med_mb.."MB|high(Youtube Shorts) - ca. "..high_mb.."MB|super high(Youtube HQ) - ca."..super_high_mb.."MB", xx, yy-50)
+if retval==-1 then return end
+
+if retval==1 then
+  vidkbps=low_vid_kbps
+  audkbps=low_aud_kbps
+  fps_def=low_fps
+  quality=low
+  width_def=low_w
+  height_def=low_h
+elseif retval==2 then
+  vidkbps=med_vid_kbps
+  audkbps=med_aud_kbps
+  fps_def=med_fps
+  quality=med
+  width_def=med_w
+  height_def=med_h
+elseif retval==3 then
+  vidkbps=high_vid_kbps
+  audkbps=high_aud_kbps
+  fps_def=high_fps
+  quality=high
+  width_def=high_w
+  height_def=high_h
+elseif retval==4 then
+  vidkbps=super_high_vid_kbps
+  audkbps=super_high_aud_kbps
+  fps_def=super_high_fps
+  quality=super_high
+  width_def=super_high_w
+  height_def=super_high_h
+end
+
+--if lol==nil then return end
+
 function GetPath(str,sep)
   return str:match("(.*"..sep..")")
 end
@@ -357,22 +432,22 @@ function renderAudiogramMac(Audiogram_Title)
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = Audiogram_Title
+  RenderTable["RenderPattern"] = Audiogram_Title..quality
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
   -- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
   -- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
 
-  vid_kbps = 1024
-  aud_kbps = 128
+  vid_kbps = vidkbps
+  aud_kbps = audkbps
   width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
   if width == 0 then width = 1024 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height == 0 then height = 1024 end -- default height
   
-  width=1024
-  height=1024
-  fps=20
+  width=width_def
+  height=height_def
+  fps=fps_def
   aspect_ratio = true
 --       VideoCodec = 1 -- VP8
 --       AudioCodec = 1 -- Vorbis
@@ -400,21 +475,21 @@ function renderAudiogramPC(Audiogram_Title)
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = Audiogram_Title
+  RenderTable["RenderPattern"] = Audiogram_Title..quality
   -- print (RenderTable["FadeOut_Shape"])
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
   -- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
   -- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
-  vid_kbps=1024
-  aud_kbps=128
+  vid_kbps=vidkbps
+  aud_kbps=audkbps
   width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
   if width==0 then width=1920 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height==0 then height=1080 end -- default height
-  width=1024
-  height=1024
-  fps=20.00
+  width=width_def
+  height=height_def
+  fps=fps_def
   aspect_ratio=true
   VideoCodec=0 -- MP4
   AudioCodec=0 -- AAC
@@ -440,22 +515,22 @@ function renderAudiogramLinux(Audiogram_Title)
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
-  RenderTable["RenderPattern"] = Audiogram_Title
+  RenderTable["RenderPattern"] = Audiogram_Title..quality
   -- print (RenderTable["FadeOut_Shape"])
 
   -- setz video-format-settings für webm-video(all platforms) und erstelle renderformat-string
   -- (für Windows mp4 gibts auch noch CreateRenderCFG_WMF() )
   -- (für Mac mp4 gibts auch noch CreateRenderCFG_MP4MAC_Video)
-  vid_kbps=1024
-  aud_kbps=128
+  vid_kbps=vidkbps
+  aud_kbps=audkbps
   width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
   if width==0 then width=1920 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
   if height==0 then height=1080 end -- default height
   
-  width=1024
-  height=1024
-  fps=20.00
+  width=width_def
+  height=height_def
+  fps=fps_def
   aspect_ratio=true
   VideoCodec=0 -- MP4
   AudioCodec=0 -- 
@@ -576,14 +651,20 @@ end
 -- check, if time-selection is existing
 retval, startTime, endTime = checkTimeSelection()
 
+if retval==false then return end
+
 startTime_format=reaper.format_timestr(startTime, "")
 startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
-startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+if startTime_format:match("(.*):")~=nil then
+  startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+end
 startTime_format=startTime_format:match("(.*)%.").."s"
 
 endTime_format=reaper.format_timestr(endTime, "")
 endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
-endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+if endTime_format:match("(.*):")~=nil then
+  endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+end
 endTime_format=endTime_format:match("(.*)%.").."s"
 
 if retval==false then return end
@@ -613,7 +694,7 @@ while trackname:len()>35 do
 end
 
 
-if trackname~="" then
+if trackname~=" " then
   trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
 else
   trackname_format=""

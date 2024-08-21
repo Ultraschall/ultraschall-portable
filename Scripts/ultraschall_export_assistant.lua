@@ -447,7 +447,7 @@ function buildGUI()
   areaHeight = 80
   position = 90 + y_offset
   StepNameDisplay = "1. Export MP3"
-  StepDescription = "Render your podcast to a MP3 file. Make use of our presets in the top right corner of the render-dialog."
+  StepDescription = "Render your podcast to an MP3 file. Make use of our presets in the top right corner of the render-dialog."
   warnings_position = position+30
   button_txt = "Export MP3"
   button_action = "_Ultraschall_RenderProject_As_MP3"
@@ -679,7 +679,7 @@ function buildGUI()
   end
   
 
-  StepDescription = "Promote your show on social media: 1. Choose a time selection. 2. Set Episode Title (ID3 Metadata) 3. Provide an Episode Image."
+  StepDescription = "Promote your show on social media: 1. Make a time selection. 2. Add an Episode Image. 3. Hit the Export Audiogram Video-Button"
   warnings_position = position+30
   button_txt = "Export Audiogram Video"
   button_action = "_Ultraschall_Export_Audiogram"
