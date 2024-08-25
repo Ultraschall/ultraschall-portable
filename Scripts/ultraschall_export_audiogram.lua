@@ -30,75 +30,37 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 length=endTime-startTime
 
--- low
-low_w=1024
-low_h=1024
-low_vid_kbps=1024
-low_aud_kbps=128
-low_fps=20
-low_mb=tostring((((length*low_vid_kbps+length*low_aud_kbps)/1024/8)*1.0318)+0.00001):match("(.*%...)")
-low="-low"
+-- Quality presets
+local qualities = {
+    {label = "low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
+    {label = "medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
+    {label = "high (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
+    {label = "super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
+}
 
--- medium
-med_w=1024
-med_h=1024
-med_vid_kbps=2048
-med_aud_kbps=192
-med_fps=30
-med_mb=tostring((((length*med_vid_kbps+length*med_aud_kbps)/1024/8)*0.98)+0.00001):match("(.*%...)")
-med="-med"
-
--- high
-high_w=1024
-high_h=1024
-high_vid_kbps=3500
-high_aud_kbps=192
-high_fps=30
-high_mb=tostring((((length*high_vid_kbps+length*high_aud_kbps)/1024/8)*0.97)+0.00001):match("(.*%...)")
-high="-high"
-
--- super high
-super_high_w=1024
-super_high_h=1024
-super_high_vid_kbps=5500
-super_high_aud_kbps=360
-super_high_fps=60
-super_high_mb=tostring((((length*super_high_vid_kbps+length*super_high_aud_kbps)/1024/8)*1.068)+0.00001):match("(.*%...)")
-super_high="-super_high"
-
-xx, yy=reaper.GetMousePosition()
-retval = ultraschall.ShowMenu("Choose quality", "low(Mastodon) - ca."..low_mb.."MB|medium(TikTok/Instagram) - ca."..med_mb.."MB|high(Youtube Shorts) - ca. "..high_mb.."MB|super high(Youtube HQ) - ca."..super_high_mb.."MB", xx, yy-50)
-if retval==-1 then return end
-
-if retval==1 then
-  vidkbps=low_vid_kbps
-  audkbps=low_aud_kbps
-  fps_def=low_fps
-  quality=low
-  width_def=low_w
-  height_def=low_h
-elseif retval==2 then
-  vidkbps=med_vid_kbps
-  audkbps=med_aud_kbps
-  fps_def=med_fps
-  quality=med
-  width_def=med_w
-  height_def=med_h
-elseif retval==3 then
-  vidkbps=high_vid_kbps
-  audkbps=high_aud_kbps
-  fps_def=high_fps
-  quality=high
-  width_def=high_w
-  height_def=high_h
-elseif retval==4 then
-  vidkbps=super_high_vid_kbps
-  audkbps=super_high_aud_kbps
-  fps_def=super_high_fps
-  quality=super_high
-  width_def=super_high_w
-  height_def=super_high_h
+-- Calculate MB for each quality
+for _, quality in ipairs(qualities) do
+    local total_kbps = quality.vid_kbps + quality.aud_kbps
+    quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
 end
+
+-- Show menu and get user selection
+local xx, yy = reaper.GetMousePosition()
+local menu = ""
+for i, quality in ipairs(qualities) do
+    menu = menu .. quality.label .. " - ca." .. quality.mb .. "MB|"
+end
+local retval = ultraschall.ShowMenu("Choose quality", menu, xx, yy - 50)
+if retval == -1 or retval < 1 or retval > #qualities then return end
+
+-- Set selected quality
+local selected_quality = qualities[retval]
+local vidkbps = selected_quality.vid_kbps
+local audkbps = selected_quality.aud_kbps
+local fps_def = selected_quality.fps
+local quality = selected_quality.suffix
+local width_def = 1024
+local height_def = 1024
 
 --if lol==nil then return end
 
