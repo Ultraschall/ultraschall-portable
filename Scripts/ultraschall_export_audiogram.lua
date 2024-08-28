@@ -35,7 +35,7 @@ local qualities = {
     {label = "low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
     {label = "medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
     {label = "high (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
-    {label = "super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
+    {label = "super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 320, fps = 60, mult = 1.068}
 }
 
 -- Calculate MB for each quality
