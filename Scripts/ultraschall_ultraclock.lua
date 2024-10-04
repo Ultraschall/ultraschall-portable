@@ -745,7 +745,7 @@ function MainLoop()
       gfx.update()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]*retina_mod*2) then -- Linksklick auf LUFS-Bereich
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
