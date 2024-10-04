@@ -62,6 +62,8 @@ script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
 
+Date_Length={0,0,0,0} -- initialize variable
+
 function setColor (r,g,b)
   gfx.set(r,g,b)
 end
@@ -525,7 +527,9 @@ function drawClock()
   else
     Date=""
   end
-
+  
+  --Date_Length=gfx.measurestr(Date)
+  
   -- RealTime
   if uc_menu[2].checked then
     time=os.date("%H:%M:%S")
@@ -537,7 +541,9 @@ function drawClock()
     local offset=0
     if Date:match("measure")~=nil then offset=10 end
     date_position_y = txt_line[2].y*height+border-offset
-    WriteAlignedText(" "..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1) -- print realtime hh:mm:ss
+    gfx.setfont(1, "Arial", txt_line[2].size,0)
+    Date_Length={WriteAlignedText(" "..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1)} -- print realtime hh:mm:ss
+    
   end
   if time~="" then
     WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2) -- print realtime hh:mm:ss
@@ -739,7 +745,7 @@ function MainLoop()
       gfx.update()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(220*retina_mod) then -- Linksklick auf LUFS-Bereich
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]*retina_mod*2) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
