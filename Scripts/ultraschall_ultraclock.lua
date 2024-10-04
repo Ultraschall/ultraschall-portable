@@ -519,7 +519,7 @@ function drawClock()
       end
     end
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
-      Date = "Click to\nmeasure LUFS" 
+      Date = "Click to measure\n LUFS" 
       date_color = 0x777777
     end
   else
@@ -717,7 +717,7 @@ function MainLoop()
     if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
 
     AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked
-    ultraschall.ShowErrorMessagesInReascriptConsole()
+    --ultraschall.ShowErrorMessagesInReascriptConsole()
   end
 
   if Triggered==nil then
@@ -739,7 +739,7 @@ function MainLoop()
       gfx.update()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(120*retina_mod) then -- Linksklick auf LUFS-Bereich
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(220*retina_mod) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
