@@ -408,11 +408,23 @@ function openWindowLUFS()
   end
 
   if lufs_count == 0 then -- es gibt noch keinen LUFS-Effekt auf dem Master, also hinzufügen. 
-    added = ultraschall.LUFS_Metering_AddEffect(false)
+    added = ultraschall.LUFS_Metering_AddEffect(true)
 
   end
 
-  ultraschall.LUFS_Metering_ShowEffect() -- zeige den Effek
+  ultraschall.LUFS_Metering_ShowEffect() -- zeige den Effekt
+  local tr = reaper.GetMasterTrack(0)
+  local index=-1
+  for i=0, reaper.TrackFX_GetCount(tr)-1 do
+    local retval, fx=reaper.TrackFX_GetFXName(tr, i)
+    if fx:match("LUFS Loudness Metering") then
+      index=i
+    end
+  end
+  if index~=-1 then
+    --local retval = reaper.TrackFX_GetEnabled(tr, index)
+    reaper.TrackFX_SetEnabled(tr, index, true)
+  end
     
 end
 
@@ -494,14 +506,22 @@ function drawClock()
     -- if retina_mod == 0.5 then
     --   roundrect(19*retina_mod, txt_line[2].y*height+border-2, 10*retina_mod, 26*retina_mod, 0, 0, 1)
     -- end
-
+    
+    
     Date = tostring(LUFS_integral).." LUFS"
-    if FX_active == 0 then 
-      Date = "? LUFS" 
+    --print_update(Date, FX_active, LUFS_integral, ultraschall.LUFS_Metering_GetValues())
+    local tr = reaper.GetMasterTrack(0)
+    local index=-1
+    for i=0, reaper.TrackFX_GetCount(tr)-1 do
+      local retval, fx=reaper.TrackFX_GetFXName(tr, i)
+      if fx:match("LUFS Loudness Metering") then
+        index=i
+      end
+    end
+    if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
+      Date = "Click to\nmeasure LUFS" 
       date_color = 0x777777
     end
-    
-
   else
     Date=""
   end
@@ -514,7 +534,9 @@ function drawClock()
   end
 
   if Date~="" then
-    date_position_y = txt_line[2].y*height+border
+    local offset=0
+    if Date:match("measure")~=nil then offset=10 end
+    date_position_y = txt_line[2].y*height+border-offset
     WriteAlignedText(" "..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1) -- print realtime hh:mm:ss
   end
   if time~="" then
