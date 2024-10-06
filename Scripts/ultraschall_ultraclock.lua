@@ -404,7 +404,7 @@ function openWindowLUFS()
 
   for i = 0, reaper.TrackFX_GetCount(mastertrack) do
     retval, fxName = reaper.TrackFX_GetFXName(mastertrack, i, "")
-    if string.find(fxName, "LUFS") then
+    if fxName:match("LUFS.*Loudness.*Meter.*") then
       lufs_count = lufs_count +1
     end
   end
@@ -419,7 +419,7 @@ function openWindowLUFS()
   local index=-1
   for i=0, reaper.TrackFX_GetCount(tr)-1 do
     local retval, fx=reaper.TrackFX_GetFXName(tr, i)
-    if fx:match("LUFS Loudness Metering") then
+    if fx:match("LUFS.*Loudness.*Meter.*") then
       index=i
     end
   end
@@ -516,7 +516,7 @@ function drawClock()
     local index=-1
     for i=0, reaper.TrackFX_GetCount(tr)-1 do
       local retval, fx=reaper.TrackFX_GetFXName(tr, i)
-      if fx:match("LUFS Loudness Metering") then
+      if fx:match("LUFS.*Loudness.*Meter.*") then
         index=i
       end
     end
