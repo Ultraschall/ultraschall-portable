@@ -340,7 +340,7 @@ function showmenu(trigger)
   return ret
 end
 
-function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 then center horizontally
+function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, style1, style2, style3) -- if y<0 then center horizontally
   -- text - the text to display
   -- color - the color in which to display
   -- font - the font-style in which to display
@@ -352,13 +352,35 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 t
   --          2, aligned right
   --          3, aligned right of center
   --          4, aligned left of center
-
+  -- style1, style2 and style3:         
+  -- 0, no style
+  -- 1, bold
+  -- 2, italic
+  -- 3, non anti-alias
+  -- 4, outline
+  -- 5, drop-shadow
+  -- 6, underline
+  -- 7, negative
+  -- 8, 90Â° counter-clockwise
+  -- 9, 90Â° clockwise
   fontsize_fixed = fixed or 0
   if type(offset)~="number" then offset=0 end
   gfx.r=(color & 0xff0000) / 0xffffff
   gfx.g=(color & 0x00ff00) / 0xffff
   gfx.b=(color & 0x0000ff) / 0xff
-  gfx.setfont(1, font, size, 98) -- it's all bold, anyway
+  if x_offset==nil then x_offset=0 end
+  if style1==nil then style1=0 end
+  if style2==nil then style2=0 end
+  if style3==nil then style3=0 end
+  local styles={66,73,77,79,83,85,86,89,90}
+  styles[0]=98
+  
+  local style=styles[style1]<<8
+  style=style+styles[style2]<<8
+  style=style+styles[style3]<<8
+  
+  gfx.setfont(1, font, size, style) -- it's all bold, anyway
+  
   local w, h=gfx.measurestr(text)
   if y<0 then y=(gfx.h-h)/2 end -- center if y<0
   if offset==nil or offset==0 then gfx.x=(gfx.w-w)/2+offset
@@ -367,6 +389,8 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed) -- if y<0 t
   elseif offset==3 then gfx.x=gfx.w/2
   elseif offset==4 then gfx.x=(gfx.w/2)-gfx.measurestr(text)
   end
+  
+  gfx.x=gfx.x+x_offset*gfx.measurechar(32)
   gfx.y=y
   gfx.drawstr(text)
   return x, y, w, h
@@ -521,7 +545,7 @@ function drawClock()
       end
     end
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
-      Date = "Click to measure\n LUFS" 
+      Date = "Measure LUFS" 
       date_color = 0x777777
     end
   else
@@ -538,11 +562,13 @@ function drawClock()
   end
 
   if Date~="" then
-    local offset=0
-    if Date:match("measure")~=nil then offset=10 end
-    date_position_y = txt_line[2].y*height+border-offset
+    local style=0
+    local offset=" "
+    local x_offset=0
+    if Date:match("Measure")~=nil then style=6 offset="" date_color=reaper.ColorToNative(255, 150, 0) x_offset=1 end
+    date_position_y = txt_line[2].y*height+border---offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
-    Date_Length={WriteAlignedText(" "..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1)} -- print realtime hh:mm:ss
+    Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize, date_position_y,1,0, x_offset, style)} -- print realtime hh:mm:ss
     
   end
   if time~="" then
