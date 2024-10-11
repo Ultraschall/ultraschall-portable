@@ -57,7 +57,8 @@ first_start = ultraschall.GetUSExternalState("ultraschall_start", "firststart")
 startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value","ultraschall-settings.ini")
 -- follow = ultraschall.GetUSExternalState("ultraschall_follow", "state")
 -- follow_id = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
--- magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
+magicrouting_always_on = ultraschall.GetUSExternalState("ultraschall_settings_magic_routing_always_on", "Value","ultraschall-settings.ini")
+magicrouting_state = ultraschall.GetUSExternalState("ultraschall_magicrouting", "state")
 
 if theme_version ~= tostring(theme_version_now) then
   error_msg = "Your ULTRASCHALL THEME is out of date. \n\nULTRASCHALL wil NOT work properly until you fix this. \n\nPlease get the latest release on http://ultraschall.fm/install/"
@@ -140,11 +141,15 @@ reaper.SetToggleCommandState(0, label_id, 0)
 reaper.RefreshToolbar2(0, label_id)
 
 cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
-retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting")
-if project_state ~= "0" then
-  reaper.Main_OnCommand(cmd,0) -- starte MagicRouting
-else
-  reaper.SetToggleCommandState(0, cmd, 0)
+
+if magicrouting_always_on=="1" or magicrouting_state=="1" then
+  retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_Toggle_Magicrouting")
+  if project_state ~= "0" then
+    reaper.Main_OnCommand(cmd,0) -- starte MagicRouting
+  else
+    reaper.SetToggleCommandState(0, cmd, 0)
+    reaper.RefreshToolbar(cmd)
+  end
 end
 
 retval, project_state = reaper.GetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Recording")
