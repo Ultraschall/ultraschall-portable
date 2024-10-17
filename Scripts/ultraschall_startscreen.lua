@@ -188,22 +188,27 @@ link_url = GUI.Pic:new(435, 305, 84, 30, 1, blankimg, ultraschall.OpenURL, "http
 
 -- Links zu Tutorial-Seiten
 
-link_url = GUI.Pic:new(20, 365, 300, 60, 1, blankimg, startTutorial, "2") -- Routing
+-- Spalte 1
+
+link_url = GUI.Pic:new(20, 365, 300, 60, 1, blankimg, startTutorial, "2") -- Linux
   table.insert(GUI.elms, link_url)
 
--- link_url = GUI.Pic:new(20, 440, 300, 60, 1, blankimg, startTutorial, "3") -- Soundcheck
---  table.insert(GUI.elms, link_url)
+link_url = GUI.Pic:new(20, 440, 300, 60, 1, blankimg, startTutorial, "3") -- Help
+  table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(20, 515, 300, 60, 1, blankimg, startTutorial, "11")
+link_url = GUI.Pic:new(20, 515, 300, 60, 1, blankimg, startTutorial, "4") -- Audiogram
  table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(350, 365, 300, 60, 1, blankimg, startTutorial, "9") -- Settings
+
+-- Spalte 2
+
+ link_url = GUI.Pic:new(350, 365, 300, 60, 1, blankimg, startTutorial, "9") -- AMP
   table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(350, 440, 300, 60, 1, blankimg, startTutorial, "10") -- Editing
+link_url = GUI.Pic:new(350, 440, 300, 60, 1, blankimg, startTutorial, "15") -- Editing
   table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(350, 515, 300, 60, 1, blankimg, startTutorial, "12") -- Export
+link_url = GUI.Pic:new(350, 515, 300, 60, 1, blankimg, startTutorial, "11") -- Streamdeck
   table.insert(GUI.elms, link_url)
 
 
