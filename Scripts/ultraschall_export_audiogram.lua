@@ -32,10 +32,10 @@ length=endTime-startTime
 
 -- Quality presets
 local qualities = {
-    {label = "Low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
-    {label = "Medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
-    {label = "High (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
-    {label = "Super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 320, fps = 60, mult = 1.068}
+    {label = "low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
+    {label = "medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
+    {label = "high (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
+    {label = "super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
 }
 
 -- Calculate MB for each quality
@@ -66,6 +66,219 @@ local height_def = 1024
 
 function GetPath(str,sep)
   return str:match("(.*"..sep..")")
+end
+
+function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectratio, width, height, blurradius, blurstepsize, blurdirection)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ResizeAndBlurPNG</slug>
+  <requires>
+    Ultraschall=5.1
+    Reaper=7.02
+    JS=0.998
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.ResizeAndBlurPNG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height, integer blurradius)</functioncall>
+  <description>
+    resizes a png-file and optionally blurs it. It will stretch/shrink the picture by that. That means you can't crop or enhance pngs with this function.
+    
+    If you set aspectratio=true, then the image will be resized with correct aspect-ratio. However, it will use the value from parameter width as maximum size for each side of the picture.
+    So if the height of the png is bigger than the width, the height will get the size and width will be shrinked accordingly.
+    
+    When making pngs bigger, pixelation will occur. No pixel-filtering within this function!
+    
+    The blurring will happen after a resize!
+    
+    returns false in case of an error 
+  </description>
+  <parameters>
+    string filename_with_path - the png-file, that you want to resize
+    string outputfilename_with_path - the output-file, where to store the resized png
+    boolean aspectratio - true, keep aspect-ratio(use size of param width as base); false, don't keep aspect-ratio
+    integer width - the width of the newly created png in pixels
+    integer height - the height of the newly created png in pixels
+    integer blurradius - the radius of the blur(1-100); keep in mind that higher values take longer to process and block Reaper!
+    integer blurdirection - 0, side and up; 1, sideways; 2, upwards
+  </parameters>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <chapter_context>
+    Image File Handling
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Imagefile_Module.lua</source_document>
+  <tags>image file handling, resize, png, image, graphics, blur</tags>
+</US_DocBloc>
+]]
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "filename_with_path", "must be a string", -1) return false end
+  if type(outputfilename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "outputfilename_with_path", "must be a string", -2) return false end
+  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "filename_with_path", "file can not be opened", -3) return false end
+  if type(aspectratio)~="boolean" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "aspectratio", "must be a boolean", -4) return false end
+  if width~=nil and math.type(width)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "width", "must be an integer", -5) return false end
+  if height==nil or (aspectratio==false and math.type(height)~="integer") then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "height", "must be an integer, when aspectratio==false", -6) return false end
+  if math.type(blurradius)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "blurradius", "must be an integer", -7) return false end
+  if blurradius<0 or blurradius>10000 then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "blurradius", "must be between 1 and 100", -8) return false end
+  if math.type(blurstepsize)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "blurstepsize", "must be an integer", -9) return false end
+  if math.type(blurdirection)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurPNG", "blurdirection", "must be an integer", -10) return false end
+  if blurstepsize==nil then blurstepsize=1 end
+
+  local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
+  Identifier=reaper.JS_LICE_LoadPNG(filename_with_path)
+  Width=reaper.JS_LICE_GetWidth(Identifier)
+  Height=reaper.JS_LICE_GetHeight(Identifier)
+  if aspectratio==true then
+    squaresize=width
+    if Width>Height then 
+      NewWidth=squaresize
+      NewHeight=((100/Width)*Height)
+      NewHeight=NewHeight/100
+      NewHeight=math.floor(squaresize*NewHeight)
+    else
+      NewHeight=squaresize
+      NewWidth=((100/Height)*Width)
+      NewWidth=NewWidth/100
+      NewWidth=math.floor(squaresize*NewWidth)
+    end
+  else
+    NewHeight=height
+    NewWidth=width
+  end
+  
+  local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+  local alpha1=1/((blurradius))
+  local alpha=1
+  local y=0
+  offset=math.floor(blurradius)
+  if blurdirection==1 then
+    for x=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x-offset, y, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  elseif blurdirection==2 then
+    local x=10
+    local alpha=1
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  elseif blurdirection==0 then 
+    for i=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, i-offset, i-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  end
+
+  local Retval=reaper.JS_LICE_WritePNG(outputfilename_with_path, BlurIdentifier3, true)
+  reaper.JS_LICE_DestroyBitmap(Identifier)
+  reaper.JS_LICE_DestroyBitmap(BlurIdentifier3)
+  if Retval==false then ultraschall.AddErrorMessage("ResizePNG", "outputfilename_with_path", "Can't write outputfile", -7) return false end
+end
+
+function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectratio, width, height, blurradius, blurstepsize, blurdirection)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ResizeAndBlurJPG</slug>
+  <requires>
+    Ultraschall=5.1
+    Reaper=7.02
+    JS=0.998
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval = ultraschall.ResizeAndBlurJPG(string filename_with_path, string outputfilename_with_path, boolean aspectratio, integer width, integer height, integer blurradius)</functioncall>
+  <description>
+    resizes a jpg-file and optionally blurs it. It will stretch/shrink the picture by that. That means you can't crop or enhance jpgs with this function.
+    
+    If you set aspectratio=true, then the image will be resized with correct aspect-ratio. However, it will use the value from parameter width as maximum size for each side of the picture.
+    So if the height of the jpg is bigger than the width, the height will get the size and width will be shrinked accordingly.
+    
+    When making jpgs bigger, pixelation will occur. No pixel-filtering within this function!
+    
+    The blurring will happen after a resize!
+    
+    returns false in case of an error 
+  </description>
+  <parameters>
+    string filename_with_path - the jpg-file, that you want to resize
+    string outputfilename_with_path - the output-file, where to store the resized jpg
+    boolean aspectratio - true, keep aspect-ratio(use size of param width as base); false, don't keep aspect-ratio
+    integer width - the width of the newly created jpg in pixels
+    integer height - the height of the newly created jpg in pixels
+    integer blurradius - the radius of the blur(1-100); keep in mind that higher values take longer to process and block Reaper!
+    integer blurdirection - 0, side and up; 1, sideways; 2, upwards
+  </parameters>
+  <retvals>
+    boolean retval - true, resizing was successful; false, resizing was unsuccessful
+  </retvals>
+  <chapter_context>
+    Image File Handling
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Imagefile_Module.lua</source_document>
+  <tags>image file handling, resize, jpg, image, graphics, blur</tags>
+</US_DocBloc>
+]]
+  if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "filename_with_path", "must be a string", -1) return false end
+  if type(outputfilename_with_path)~="string" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "outputfilename_with_path", "must be a string", -2) return false end
+  if reaper.file_exists(filename_with_path)==false then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "filename_with_path", "file can not be opened", -3) return false end
+  if type(aspectratio)~="boolean" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "aspectratio", "must be a boolean", -4) return false end
+  if math.type(width)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "width", "must be an integer", -5) return false end
+  if aspectratio==false and math.type(height)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "height", "must be an integer, when aspectratio==false", -6) return false end
+  if math.type(blurradius)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "blurradius", "must be an integer", -7) return false end
+  if blurradius<0 or blurradius>10000 then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "blurradius", "must be between 1 and 100", -8) return false end
+  if math.type(blurstepsize)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "blurstepsize", "must be an integer", -9) return false end
+  if math.type(blurdirection)~="integer" then ultraschall.AddErrorMessage("ResizeAndBlurJPG", "blurdirection", "must be an integer", -10) return false end
+  if blurstepsize==nil then blurstepsize=1 end
+  local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
+  Identifier=reaper.JS_LICE_LoadJPG(filename_with_path)
+  Width=reaper.JS_LICE_GetWidth(Identifier)
+  Height=reaper.JS_LICE_GetHeight(Identifier)
+  if aspectratio==true then
+    squaresize=width
+    if Width>Height then 
+      NewWidth=squaresize
+      NewHeight=((100/Width)*Height)
+      NewHeight=NewHeight/100
+      NewHeight=math.floor(squaresize*NewHeight)
+    else
+      NewHeight=squaresize
+      NewWidth=((100/Height)*Width)
+      NewWidth=NewWidth/100
+      NewWidth=math.floor(squaresize*NewWidth)
+    end
+  else
+    NewHeight=height
+    NewWidth=width
+  end
+
+  local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+
+  local alpha1=1/((blurradius))
+  local alpha=1
+  local y=0
+  if blurdirection==1 then
+    for x=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x-blurradius, y, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  elseif blurdirection==2 then
+    local x=10
+    local alpha=1
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-blurradius, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  elseif blurdirection==0 then 
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, y-blurradius, y-blurradius, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  end
+
+  local Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, BlurIdentifier3, 100)
+  reaper.JS_LICE_DestroyBitmap(Identifier)
+  reaper.JS_LICE_DestroyBitmap(BlurIdentifier3)
+  if Retval==false then ultraschall.AddErrorMessage("ResizePNG", "outputfilename_with_path", "Can't write outputfile", -7) return false end
 end
 
 function GetProjectPath()
@@ -203,7 +416,14 @@ end
 
 function InsertForegroundTrack(startTime, endTime, cover, trackname)
   -- inserts the foreground-cover-image track, including all of its fx
-  
+  if cover:sub(-4,-1)==".png" then
+    ultraschall.ResizePNG(cover, cover.."-audiogram.png", true, width_def, height_def, 100, 1, 1)
+    cover=cover.."-audiogram.png"
+  else
+    ultraschall.ResizeJPG(cover, cover.."-audiogram.jpg", true, width_def, height_def, 100, 1, 1)
+    cover=cover.."-audiogram.jpg"
+  end
+  COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
 //@param2:zoom 'zoom' -1.35 -15 15 0
@@ -295,9 +515,16 @@ end
 
 function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   -- inserts the background-cover-image track, including all of its fx
-  
+  if cover:sub(-4,-1)==".png" then
+    ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 130, 1, 1)
+    cover=cover.."-audiogram-blurred.png"
+  else
+    ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 130, 1, 1)
+    cover=cover.."-audiogram-blurred.jpg"
+  end
+  COVER2=cover
   VideoCode1=[[// Blur (low quality)
-  //@param1:weight_parm 'blur amount' 0.715 0 .99 0.5 0.001
+  //@param1:weight_parm 'blur amount' 0 0 .99 0.5 0.001
   //@param2:weight_mod 'Y modifier' 1 .8 1.2 1.0 0.001
   //@param4:want_l 'leftward' 1 0 1 .5 1
   //@param5:want_r 'rightward' 1 0 1 .5 1
@@ -370,9 +597,9 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   newTrack = reaper.GetTrack(0, numTracks)
   reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", trackname, true)
 
-  master_fx_count=reaper.TrackFX_GetCount(newTrack)
-  reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
-  reaper.TrackFX_SetNamedConfigParm(newTrack, master_fx_count, "VIDEO_CODE", VideoCode1)
+  --master_fx_count=reaper.TrackFX_GetCount(newTrack)
+  --reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
+  --reaper.TrackFX_SetNamedConfigParm(newTrack, master_fx_count, "VIDEO_CODE", VideoCode1)
 
   master_fx_count=reaper.TrackFX_GetCount(newTrack)
   reaper.TrackFX_AddByName(newTrack, "Video processor", false, -1)
@@ -640,8 +867,8 @@ oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024)
 oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
 
 -- set video-dimensions to square of 1024x1024 pixels
-reaper.SNM_SetIntConfigVar("projvidw", img_w) 
-reaper.SNM_SetIntConfigVar("projvidh", img_h) 
+reaper.SNM_SetIntConfigVar("projvidw", 1024) 
+reaper.SNM_SetIntConfigVar("projvidh", 1024) 
 
 -- Start the Undo Block
 reaper.Undo_BeginBlock()
@@ -670,7 +897,7 @@ InsertBackgroundTrack(startTime, endTime, img_location, trackname)
 
 -- setup fx on master-track needed for audiogram
 setAudiogramFX()
-
+--if lol==nil then return end
 reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
 
 -- render audiogram
@@ -689,7 +916,8 @@ reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 -- undo everything: an easy way to reset, leaving just the rendered video:
 reaper.Main_OnCommand(40029, 0)
-
+os.remove(COVER1)
+os.remove(COVER2)
 -- as if the user wants to open up the folder, where the audiogram got rendered to
 if count>0 then
   -- play render-finished notification sound, if toggled on by the user
