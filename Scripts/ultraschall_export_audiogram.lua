@@ -29,6 +29,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 length=endTime-startTime
+if length==0 then reaper.MB("Please make a time-selection first!", "No time selection", 0) return end
 
 -- Quality presets
 local qualities = {
@@ -98,7 +99,7 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
     integer width - the width of the newly created png in pixels
     integer height - the height of the newly created png in pixels
     integer blurradius - the radius of the blur(1-100); keep in mind that higher values take longer to process and block Reaper!
-    integer blurdirection - 0, side and up; 1, sideways; 2, upwards
+    integer blurdirection - 0, side plus up; 1, sideways; 2, upwards; 3, upwards, downwards, left and right
   </parameters>
   <retvals>
     boolean retval - true, resizing was successful; false, resizing was unsuccessful
@@ -149,7 +150,8 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
   local alpha1=1/((blurradius))
   local alpha=1
   local y=0
-  offset=math.floor(blurradius)
+  local offset=math.floor(blurradius)
+
   if blurdirection==1 then
     for x=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x-offset, y, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
@@ -160,6 +162,14 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
     local alpha=1
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+  elseif blurdirection==3 then
+    local x=10
+    local alpha=1
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, -y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
     end
   elseif blurdirection==0 then 
@@ -256,6 +266,8 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
   local alpha1=1/((blurradius))
   local alpha=1
   local y=0
+  local offset=math.floor(blurradius)
+  
   if blurdirection==1 then
     for x=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x-blurradius, y, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
@@ -268,6 +280,22 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-blurradius, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
     end
+  elseif blurdirection==3 then
+    local BlurIdentifier1=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+    local BlurIdentifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
+    local x=10
+    local alpha=1
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier1, 0, y-math.floor(offset/2), NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+    local alpha=1
+    for y=0, blurradius, blurstepsize do
+      reaper.JS_LICE_ScaledBlit(BlurIdentifier2, y-math.floor(offset/2), 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
+      alpha=alpha-alpha1
+    end
+    reaper.JS_LICE_ScaledBlit(BlurIdentifier3, 0, -1000, NewWidth, NewHeight, BlurIdentifier1, 0, 0, NewWidth, NewHeight, 0.5, "ADD")
+    reaper.JS_LICE_ScaledBlit(BlurIdentifier3, -30, 0, NewWidth, NewHeight, BlurIdentifier2, 0, 0, NewWidth, NewHeight, 0.5, "ADD")
   elseif blurdirection==0 then 
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, y-blurradius, y-blurradius, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
@@ -516,12 +544,13 @@ end
 function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   -- inserts the background-cover-image track, including all of its fx
   if cover:sub(-4,-1)==".png" then
-    ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 130, 1, 1)
+    ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.png"
   else
-    ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 130, 1, 1)
+    ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.jpg"
   end
+
   COVER2=cover
   VideoCode1=[[// Blur (low quality)
   //@param1:weight_parm 'blur amount' 0 0 .99 0.5 0.001
@@ -564,7 +593,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
 VideoCode2=[[//Image overlay
 //@param1:opacity 'opacity' 0.465
 //@param2:zoom 'zoom' 2.4 -15 15 0
-//@param3:xoffs 'X offset' 0 -1 1 0
+//@param3:xoffs 'X offset' 0.0716 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
 //@param7:use_srca 'alpha channel' 1 0 1 0.5 1
