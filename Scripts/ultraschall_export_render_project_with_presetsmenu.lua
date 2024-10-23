@@ -33,14 +33,14 @@ end
 
 
 menu={}
-menu[#menu+1]={"Render using last used settings ...", ""}
-menu[#menu+1]={"Render as MP3 ...", "MP3"}
+menu[#menu+1]={"Render using last used settings …", ""}
+menu[#menu+1]={"Render as MP3 …", "MP3"}
 -- TODO: add linux preset
-if reaper.GetOS():match("OS")~=nil then menu[#menu+1]={"Render as M4A ...", "m4a_Mac"}
-elseif reaper.GetOS():match("Win") then menu[#menu+1]={"Render as M4A ...", "m4a_Windows"}
-elseif reaper.GetOS():match("Other") then menu[#menu+1]={"Render as M4A ...", "m4a_Linux"}
+if reaper.GetOS():match("OS")~=nil then menu[#menu+1]={"Render as M4A …", "m4a_Mac"}
+elseif reaper.GetOS():match("Win") then menu[#menu+1]={"Render as M4A …", "m4a_Windows"}
+elseif reaper.GetOS():match("Other") then menu[#menu+1]={"Render as M4A …", "m4a_Linux"}
 end
-menu[#menu+1]={"Render as Auphonic Multichannel ... ", "Auphonic Multichannel"}
+menu[#menu+1]={"Render as Auphonic Multichannel … ", "Auphonic Multichannel"}
 
 menu_entries=""
 
@@ -51,7 +51,7 @@ for i=1, #both_names do
 end
 
 for i=1, #menu do
-  if i==4 then insert=">Render using preset ... |" else insert="" end
+  if i==4 then insert=">Render using preset … |" else insert="" end
   menu_entries=menu_entries..menu[i][1].."|"..insert
 end
 
