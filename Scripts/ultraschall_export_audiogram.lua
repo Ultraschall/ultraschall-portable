@@ -520,6 +520,8 @@ yt = ((project_h - txth - b*2)*ypos)|0;
 xp = (xpos * (project_w-txtw))|0;
 gfx_set(bgc,bgc,bgc,bga);
 bga>0?gfx_fillrect(bgfit?xp-b:0, yt, bgfit?txtw+b*2:project_w, txth+b*2);
+gfx_set(0,0,0,1);
+gfx_str_draw(#text,xp+1,yt+b+1);
 gfx_set(fgc,fgc,fgc,fga);
 gfx_str_draw(#text,xp,yt+b);]]
 
@@ -905,7 +907,7 @@ reaper.Undo_BeginBlock()
 trackname="                                    "
 default=""
 while trackname:len()>35 do
-  retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=300", default)
+  retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram, max 35 characters. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", default)
   if retval==false then trackname=" " end
   if trackname=="" then trackname=" " end
   if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
