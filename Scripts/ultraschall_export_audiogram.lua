@@ -901,6 +901,12 @@ oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024)
 reaper.SNM_SetIntConfigVar("projvidw", 1024) 
 reaper.SNM_SetIntConfigVar("projvidh", 1024) 
 
+-- set correct track-order for rendering the audiogram
+projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
+if projvidflags&256==0 then
+  reaper.SNM_SetIntConfigVar("projvidflags", projvidflags+256)
+end
+
 -- Start the Undo Block
 reaper.Undo_BeginBlock()
 
@@ -942,6 +948,7 @@ end
 -- reset video-dimensions for this project
 reaper.SNM_SetIntConfigVar("projvidw", oldvidw) 
 reaper.SNM_SetIntConfigVar("projvidh", oldvidh) 
+reaper.SNM_SetIntConfigVar("projvidflags", projvidflags)
 reaper.Undo_EndBlock("Added and configured track with episode image", -1)
 
 -- undo everything: an easy way to reset, leaving just the rendered video:
