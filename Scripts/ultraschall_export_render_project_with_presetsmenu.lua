@@ -33,14 +33,14 @@ end
 
 
 menu={}
-menu[#menu+1]={"Render using last used settings", ""}
-menu[#menu+1]={"Render as MP3", "MP3"}
+menu[#menu+1]={"Render using last used settings ...", ""}
+menu[#menu+1]={"Render as MP3 ...", "MP3"}
 -- TODO: add linux preset
-if reaper.GetOS():match("OS")~=nil then menu[#menu+1]={"Render as M4A", "m4a_Mac"}
-elseif reaper.GetOS():match("Win") then menu[#menu+1]={"Render as M4A", "m4a_Windows"}
-elseif reaper.GetOS():match("Other") then menu[#menu+1]={"Render as M4A", "m4a_Linux"}
+if reaper.GetOS():match("OS")~=nil then menu[#menu+1]={"Render as M4A ...", "m4a_Mac"}
+elseif reaper.GetOS():match("Win") then menu[#menu+1]={"Render as M4A ...", "m4a_Windows"}
+elseif reaper.GetOS():match("Other") then menu[#menu+1]={"Render as M4A ...", "m4a_Linux"}
 end
-menu[#menu+1]={"Render as Auphonic Multichannel", "Auphonic Multichannel"}
+menu[#menu+1]={"Render as Auphonic Multichannel ... ", "Auphonic Multichannel"}
 
 menu_entries=""
 
@@ -51,7 +51,7 @@ for i=1, #both_names do
 end
 
 for i=1, #menu do
-  if i==4 then insert=">Render using preset|" else insert="" end
+  if i==4 then insert=">Render using preset ... |" else insert="" end
   menu_entries=menu_entries..menu[i][1].."|"..insert
 end
 
@@ -60,7 +60,7 @@ menu_entries=menu_entries:sub(1,-2)
 X,Y=reaper.GetMousePosition()
 _,_,X2,Y2=reaper.my_getViewport(0,0,0,0,0,0,0,0,true)
 if Y>Y2-150 then Y=Y2-150 end
-retval = ultraschall.ShowMenu("Render to File", menu_entries, X+15, Y)
+retval = ultraschall.ShowMenu("Open Render to File-dialog to:", menu_entries, X+15, Y)
 
 
 if retval==-1 then return end

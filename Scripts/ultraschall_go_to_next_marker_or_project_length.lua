@@ -37,7 +37,11 @@ if position2~=-1 and position2<position then position=position2 end
 
 if position~=-1 then
   ultraschall.StoreTemporaryMarker(-2)
-  reaper.MoveEditCursor(-reaper.GetCursorPosition()+position, false)
+  if reaper.GetPlayState()&1==1 then
+    reaper.SetEditCurPos(position, true, true)
+  else
+    reaper.MoveEditCursor(-reaper.GetCursorPosition()+position, false)
+  end
 elseif position==-1 and reaper.GetProjectLength(0)>=reaper.GetCursorPosition() then 
   reaper.MoveEditCursor(-reaper.GetCursorPosition()+reaper.GetProjectLength(0), false)
 end
