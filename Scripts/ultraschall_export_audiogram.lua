@@ -528,8 +528,8 @@ gfx_str_draw(#text,xp,yt+b);]]
   local numTracks = reaper.CountTracks(0)
   
   -- insert new track and name it after ID3Title
-  reaper.InsertTrackAtIndex(numTracks, false)
-  newTrack = reaper.GetTrack(0, numTracks)
+  reaper.InsertTrackAtIndex(0, false)
+  newTrack = reaper.GetTrack(0, 0)
   reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", trackname, true)
 
   master_fx_count=reaper.TrackFX_GetCount(newTrack)
@@ -595,7 +595,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
 VideoCode2=[[//Image overlay
 //@param1:opacity 'opacity' 1
 //@param2:zoom 'zoom' 2.4 -15 15 0
-//@param3:xoffs 'X offset' 0.0716 -1 1 0
+//@param3:xoffs 'X offset' 0.0816 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
 //@param7:use_srca 'alpha channel' 1 0 1 0.5 1
@@ -624,8 +624,8 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   local numTracks = reaper.CountTracks(0)
   
   -- insert new track and name it after ID3Title
-  reaper.InsertTrackAtIndex(numTracks, false)
-  newTrack = reaper.GetTrack(0, numTracks)
+  reaper.InsertTrackAtIndex(0, false)
+  newTrack = reaper.GetTrack(0, 0)
   reaper.GetSetMediaTrackInfo_String(newTrack, "P_NAME", trackname, true)
 
   --master_fx_count=reaper.TrackFX_GetCount(newTrack)
@@ -923,9 +923,8 @@ end
 Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
 
 -- setup tracks for cover-images shown in the audiogram
-InsertForegroundTrack(startTime, endTime, img_location, trackname)
 InsertBackgroundTrack(startTime, endTime, img_location, trackname)
-
+InsertForegroundTrack(startTime, endTime, img_location, trackname)
 -- setup fx on master-track needed for audiogram
 setAudiogramFX()
 --if lol==nil then return end
