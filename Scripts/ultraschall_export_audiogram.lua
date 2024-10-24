@@ -147,8 +147,8 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
   end
   
   local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
-  local alpha1=1/((blurradius))
-  local alpha=1
+  local alpha1=0.5/((blurradius))
+  local alpha=0.5
   local y=0
   local offset=math.floor(blurradius)
 
@@ -159,14 +159,14 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
     end
   elseif blurdirection==2 then
     local x=10
-    local alpha=1
+    local alpha=0.5
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
     end
   elseif blurdirection==3 then
     local x=10
-    local alpha=1
+    local alpha=0.5
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, -y-offset, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
@@ -263,8 +263,8 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
 
   local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
 
-  local alpha1=1/((blurradius))
-  local alpha=1
+  local alpha1=0.5/((blurradius))
+  local alpha=0.5
   local y=0
   local offset=math.floor(blurradius)
   
@@ -275,7 +275,7 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
     end
   elseif blurdirection==2 then
     local x=10
-    local alpha=1
+    local alpha=0.5
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier3, x, y-blurradius, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
@@ -284,12 +284,12 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
     local BlurIdentifier1=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
     local BlurIdentifier2=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
     local x=10
-    local alpha=1
+    local alpha=0.5
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier1, 0, y-math.floor(offset/2), NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
     end
-    local alpha=1
+    local alpha=0.5
     for y=0, blurradius, blurstepsize do
       reaper.JS_LICE_ScaledBlit(BlurIdentifier2, y-math.floor(offset/2), 0, NewWidth, NewHeight, Identifier, 0, 0, Width, Height, alpha, "BLUR")
       alpha=alpha-alpha1
@@ -302,7 +302,7 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
       alpha=alpha-alpha1
     end
   end
-
+   reaper.JS_LICE_FillRect(BlurIdentifier3, 0, 0, NewWidth, NewHeight, 0, 0.5, "COPY")
   local Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, BlurIdentifier3, 100)
   reaper.JS_LICE_DestroyBitmap(Identifier)
   reaper.JS_LICE_DestroyBitmap(BlurIdentifier3)
@@ -591,7 +591,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   );]]
 
 VideoCode2=[[//Image overlay
-//@param1:opacity 'opacity' 0.465
+//@param1:opacity 'opacity' 1
 //@param2:zoom 'zoom' 2.4 -15 15 0
 //@param3:xoffs 'X offset' 0.0716 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
