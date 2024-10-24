@@ -88,7 +88,7 @@ end
 
 
 
-function debug()
+function debug1()
   gfx.set(1, 0.5, 0.5, 1)
   gfx.circle(10, 10, 20, 1)
 end
