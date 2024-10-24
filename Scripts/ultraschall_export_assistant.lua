@@ -645,9 +645,14 @@ function buildGUI()
   -- check for Episode Title (optional)
   checkState = 0
 
+
+
+  -- uneccessary step - the title is asked after hitting the putton
+  --[[
   if audiogramTitle == true then 
     checkState = checkState + 1 
   end
+--]]
 
   -- check for time selection
   startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
@@ -670,7 +675,7 @@ function buildGUI()
   if checkState == 0 then
     status_txt = " Missing"
     state_color = "txt_red"
-  elseif checkState == 1 or checkState == 2 then
+  elseif checkState == 1 then
     status_txt = " Incomplete"
     state_color = "txt_yellow"
   else
