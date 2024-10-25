@@ -934,7 +934,7 @@ InsertForegroundTrack(startTime, endTime, img_location, trackname)
 -- setup fx on master-track needed for audiogram
 setAudiogramFX()
 --if lol==nil then return end
-reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
+--reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
 
 -- render audiogram
 if ultraschall.IsOS_Windows()==true then
