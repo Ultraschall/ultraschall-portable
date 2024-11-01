@@ -105,3 +105,5 @@ if reaper.GetExtState("ultraschall_api", "debug_extstate")=="true" then
     end
 end
 -- end of debugging of functions
+
+ultraschall.Lua_Debug=debug

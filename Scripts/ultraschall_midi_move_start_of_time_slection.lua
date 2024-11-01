@@ -25,8 +25,8 @@
 ]]
 
 function dbg(text)
-    debug=true
-    if debug then reaper.ShowConsoleMsg(tostring(text).."\n") end
+    debug1=true
+    if debug1 then reaper.ShowConsoleMsg(tostring(text).."\n") end
 end
 
 function get_last_timecode()
