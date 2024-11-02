@@ -105,7 +105,7 @@ if string.match(os, "OS") then
 elseif string.match(os, "Win") then -- Windows
   fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 0)
 elseif string.match(os, "Other") then -- Linux
-  fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir", 0)
+  fx_slot = reaper.TrackFX_GetByName(m, "Studio Link on Air", 0)
 end
 
 if fx_slot ~= -1 then
