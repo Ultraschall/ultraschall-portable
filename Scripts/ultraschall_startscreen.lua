@@ -131,7 +131,7 @@ gfx_path=script_path.."/Ultraschall_Gfx/Startscreen/"
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 5.1 - Welcome!"
+GUI.name = "Ultraschall 5.1.1 - Welcome!"
 GUI.w, GUI.h = 680, 700
 
 ------------------------------------------------------
@@ -174,7 +174,7 @@ checkers = GUI.Checklist:new(20, 665, 240, 30,"","Show this Screen on Start", 4,
 id = GUI.Btn:new(487, 663, 175, 40, "QUICK TUTORIAL >", startTutorial, "1")
   table.insert(GUI.elms, id)
 
-link_url = GUI.Pic:new(350, 265, 300, 60, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us5releasenotes")
+link_url = GUI.Pic:new(350, 265, 300, 60, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us51releasenotes")
   table.insert(GUI.elms, link_url) 
 link_url = GUI.Pic:new(133, 593, 86, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-mastodon")
   table.insert(GUI.elms, link_url)
@@ -183,7 +183,7 @@ link_url = GUI.Pic:new(223, 593, 88, 28, 1, blankimg, ultraschall.OpenURL, "http
 link_url = GUI.Pic:new(30, 593, 100, 28, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-tutorials")
   table.insert(GUI.elms, link_url)
 
-link_url = GUI.Pic:new(435, 305, 84, 30, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us-changelog")
+link_url = GUI.Pic:new(435, 305, 84, 30, 1, blankimg, ultraschall.OpenURL, "http://url.ultraschall-podcast.de/us51releasenotes")
   table.insert(GUI.elms, link_url)
 
 -- Links zu Tutorial-Seiten
