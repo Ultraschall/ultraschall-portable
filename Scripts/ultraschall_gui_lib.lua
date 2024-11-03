@@ -92,8 +92,8 @@ elseif string.match(operationSystem, "Win") then
   font_size2 = 22 * dpi_scale
   font_face = "Arial"
 elseif string.match(operationSystem, "Other") then
-  font_size = 16 * dpi_scale
-  font_size2 = 22 * dpi_scale
+  font_size = 14 * dpi_scale
+  font_size2 = 20 * dpi_scale
   font_face = "LiberationSans"
 end
 

@@ -101,8 +101,8 @@ else
 
     -- fx_slot = reaper.TrackFX_GetByName(m, "StudioLinkOnAir (IT-Service Sebastian Reimers)", 1)      --get the slot of the StudioLink effect. If there is none: initiate one.
   elseif string.match(os, "Other") then -- Linux
-    onair_name = "Studio Link on Air"
-    onair_name_remove = "Studio Link on Air"
+    onair_name = "Studio Link onAir"
+    onair_name_remove = "Studio Link onAir"
   end
 
   -- fx_slot = reaper.TrackFX_GetByName(m, onair_name, 1)
