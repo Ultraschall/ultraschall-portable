@@ -407,7 +407,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall - Settings"
-GUI.w, GUI.h = 820, 657   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 659   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
