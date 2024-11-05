@@ -407,7 +407,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall - Settings"
-GUI.w, GUI.h = 820, 659   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 675   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -512,7 +512,7 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45, header_height + 92,730, 480,5,1,1,"section_bg")
+  block = GUI.Area:new(45, header_height + 92,730, 500,5,1,1,"section_bg")
     table.insert(GUI.elms, block)
 
 
@@ -524,7 +524,7 @@ function SettingsPageSettings()
 
     if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
       if tonumber(ultraschall.GetUSExternalState(sectionName, "position", "ultraschall-settings.ini"))~=nil then
-        position = header_height + 70 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25) -- Feintuning notwendig
+        position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25) -- Feintuning notwendig
         settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
   
         if settings_Type == "checkbox" then
