@@ -51,7 +51,7 @@ for i=1, #both_names do
 end
 
 for i=1, #menu do
-  if i==4 then insert=">Render using preset ... |" else insert="" end
+  if i==4 then insert="|#Open Render to file-dialog using render-preset: ||" else insert="" end
   menu_entries=menu_entries..menu[i][1].."|"..insert
 end
 
@@ -65,7 +65,7 @@ retval = ultraschall.ShowMenu("Open Render to File-dialog to:", menu_entries, X+
 
 if retval==-1 then return end
 if retval==4 then reaper.Main_OnCommand(40296, 0) end
-
+if retval>4 then retval=retval-1 end
 if retval>1 then
   RenderTable = ultraschall.GetRenderPreset_RenderTable(menu[retval][2], menu[retval][2])
   if RenderTable==nil then return end
