@@ -60,8 +60,8 @@ local vidkbps = selected_quality.vid_kbps
 local audkbps = selected_quality.aud_kbps
 local fps_def = selected_quality.fps
 local quality = selected_quality.suffix
-local width_def = 1024
-local height_def = 1024
+local width_def = 1224
+local height_def = 1224
 
 --if lol==nil then return end
 
@@ -868,106 +868,113 @@ gfx_blit(img1,0);]]
 
 end
 
--- check, if time-selection is existing
-retval, startTime, endTime = checkTimeSelection()
-
-if retval==false then return end
-
-startTime_format=reaper.format_timestr(startTime, "")
-startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
-if startTime_format:match("(.*):")~=nil then
-  startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
-end
-startTime_format=startTime_format:match("(.*)%.").."s"
-
-endTime_format=reaper.format_timestr(endTime, "")
-endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
-if endTime_format:match("(.*):")~=nil then
-  endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
-end
-endTime_format=endTime_format:match("(.*)%.").."s"
-
-if retval==false then return end
-
--- check, if cover image exists and is a valid format
-found, img_location, img_ratio, img_w, img_h = checkImage()
-if found==false then reaper.MB("Please add a cover-image", "No cover image found", 0) return end
-
--- get old project's video-dimensions
-oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024) 
-oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
-
--- set video-dimensions to square of 1024x1024 pixels
-reaper.SNM_SetIntConfigVar("projvidw", 1024) 
-reaper.SNM_SetIntConfigVar("projvidh", 1024) 
-
--- set correct track-order for rendering the audiogram
-projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
-if projvidflags&256==0 then
-  reaper.SNM_SetIntConfigVar("projvidflags", projvidflags+256)
-end
-
--- Start the Undo Block
-reaper.Undo_BeginBlock()
-
-trackname="                                    "
-default=""
-while trackname:len()>35 do
-  retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram, max 35 characters. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", default)
-  if retval==false then trackname=" " end
-  if trackname=="" then trackname=" " end
-  if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
-end
-
-
-if trackname~=" " then
-  trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
-else
-  trackname_format=""
-end
-
-Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
-
--- setup tracks for cover-images shown in the audiogram
-InsertBackgroundTrack(startTime, endTime, img_location, trackname)
-InsertForegroundTrack(startTime, endTime, img_location, trackname)
--- setup fx on master-track needed for audiogram
-setAudiogramFX()
---if lol==nil then return end
---reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
-
--- render audiogram
-if ultraschall.IsOS_Windows()==true then
-  renderAudiogramPC(Audiogram_Title)
-elseif ultraschall.IsOS_Mac()==true then
-  renderAudiogramMac(Audiogram_Title)
-else
-  renderAudiogramLinux(Audiogram_Title)
-end 
-
--- reset video-dimensions for this project
-reaper.SNM_SetIntConfigVar("projvidw", oldvidw) 
-reaper.SNM_SetIntConfigVar("projvidh", oldvidh) 
-reaper.SNM_SetIntConfigVar("projvidflags", projvidflags)
-reaper.Undo_EndBlock("Added and configured track with episode image", -1)
-
--- undo everything: an easy way to reset, leaving just the rendered video:
-reaper.Main_OnCommand(40029, 0)
-os.remove(COVER1)
-os.remove(COVER2)
--- as if the user wants to open up the folder, where the audiogram got rendered to
-if count>0 then
-  -- play render-finished notification sound, if toggled on by the user
-  volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
-  play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
-  if play_sound=="1" then
-    ultraschall.PreviewMediaFile(reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Render-Finished-Sound.flac", tonumber(volume), false, 0)
+function main2()
+  -- check, if time-selection is existing
+  retval, startTime, endTime = checkTimeSelection()
+  
+  if retval==false then return end
+  
+  startTime_format=reaper.format_timestr(startTime, "")
+  startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
+  if startTime_format:match("(.*):")~=nil then
+    startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+  end
+  startTime_format=startTime_format:match("(.*)%.").."s"
+  
+  endTime_format=reaper.format_timestr(endTime, "")
+  endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
+  if endTime_format:match("(.*):")~=nil then
+    endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+  end
+  endTime_format=endTime_format:match("(.*)%.").."s"
+  
+  if retval==false then return end
+  
+  -- check, if cover image exists and is a valid format
+  found, img_location, img_ratio, img_w, img_h = checkImage()
+  if found==false then reaper.MB("Please add a cover-image", "No cover image found", 0) return end
+  
+  -- get old project's video-dimensions
+  oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024) 
+  oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
+  
+  -- set video-dimensions to square of 1024x1024 pixels
+  reaper.SNM_SetIntConfigVar("projvidw", 1024) 
+  reaper.SNM_SetIntConfigVar("projvidh", 1024) 
+  
+  -- set correct track-order for rendering the audiogram
+  projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
+  if projvidflags&256==0 then
+    reaper.SNM_SetIntConfigVar("projvidflags", projvidflags+256)
   end
   
-  -- ask user, if the project-folder shall be opened
-  state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
-  if state==6 then
-      reaper.CF_LocateInExplorer(Filearray[1])
+  -- Start the Undo Block
+  reaper.Undo_BeginBlock()
+  
+  trackname="                                    "
+  default=""
+  while trackname:len()>35 do
+    retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram, max 35 characters. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", default)
+    if retval==false then trackname=" " end
+    if trackname=="" then trackname=" " end
+    if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
+  end
+  
+  
+  if trackname~=" " then
+    trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
+  else
+    trackname_format=""
+  end
+  
+  Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
+  
+  -- setup tracks for cover-images shown in the audiogram
+  InsertBackgroundTrack(startTime, endTime, img_location, trackname)
+  InsertForegroundTrack(startTime, endTime, img_location, trackname)
+  -- setup fx on master-track needed for audiogram
+  setAudiogramFX()
+  --if lol==nil then return end
+  --reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
+  
+  -- render audiogram
+  if ultraschall.IsOS_Windows()==true then
+    renderAudiogramPC(Audiogram_Title)
+  elseif ultraschall.IsOS_Mac()==true then
+    renderAudiogramMac(Audiogram_Title)
+  else
+    renderAudiogramLinux(Audiogram_Title)
+  end 
+  
+  -- reset video-dimensions for this project
+  reaper.SNM_SetIntConfigVar("projvidw", oldvidw) 
+  reaper.SNM_SetIntConfigVar("projvidh", oldvidh) 
+  reaper.SNM_SetIntConfigVar("projvidflags", projvidflags)
+  reaper.Undo_EndBlock("Added and configured track with episode image", -1)
+  
+  -- undo everything: an easy way to reset, leaving just the rendered video:
+  reaper.Main_OnCommand(40029, 0)
+  os.remove(COVER1)
+  os.remove(COVER2)
+  -- as if the user wants to open up the folder, where the audiogram got rendered to
+  if count>0 then
+    -- play render-finished notification sound, if toggled on by the user
+    volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
+    play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
+    if play_sound=="1" then
+      ultraschall.PreviewMediaFile(reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Render-Finished-Sound.flac", tonumber(volume), false, 0)
+    end
+    
+    -- ask user, if the project-folder shall be opened
+    state=reaper.MB("Do you want to open up the project-folder, that holds the Audiogram?", "Audiogram", 4)
+    if state==6 then
+        reaper.CF_LocateInExplorer(Filearray[1])
+    end
   end
 end
 
+function main()
+  reaper.defer(main2)
+end
+
+reaper.defer(main)
