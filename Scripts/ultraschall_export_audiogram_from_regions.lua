@@ -27,6 +27,17 @@
 -- Initialize Ultraschall-API
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+local found=false
+for i=0, reaper.CountProjectMarkers(0) do
+  local index, isrgn, _, _, name, markernumber = reaper.EnumProjectMarkers3(0, i)
+  if isrgn==true then found=true end
+end
+
+if found==false then
+  reaper.MB("No regions found in project.", "No regions", 0)
+  return
+end
+
 
 -- Quality presets
 local qualities = {
@@ -63,6 +74,25 @@ local quality = selected_quality.suffix
 local width_def = 1224
 local height_def = 1224
 
+retval_audiogram_title=reaper.MB("Do you want to add the region-text as title to the top of the audiogram?", "Regiontext as Audiogramtitle?", 4)
+
+if retval_audiogram_title==6 then
+  local found_markers={}
+  for i=0, reaper.CountProjectMarkers(0) do
+    local index, isrgn, _, _, name, markernumber = reaper.EnumProjectMarkers3(0, i)
+    if name:len()>35 then
+      found_markers[#found_markers+1]=markernumber..": "..name:sub(1,35).."..."
+    end
+  end
+  if #found_markers>0 then
+    local text=""
+    for i=1, #found_markers do
+      text=text.."\n"..found_markers[i]
+    end
+    reaper.MB("The following regions have a length greater than 35 characters and wouldn't fit the audiogram:\n"..text, "Regiontext too long...", 0)
+    return
+  end
+end
 --if lol==nil then return end
 
 function GetPath(str,sep)
@@ -901,6 +931,7 @@ function Audiogram_Main()
   count=0
   for i=0, reaper.CountProjectMarkers(0)-1 do
     retval, isrgn, startTime, endTime, trackname, index_number = reaper.EnumProjectMarkers3(0, i)
+    if retval_audiogram_title==7 then trackname2=" " else trackname2=trackname end
     if isrgn==true then
       startTime_format=reaper.format_timestr(startTime, "")
       startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
@@ -948,8 +979,8 @@ function Audiogram_Main()
       Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
       
       -- setup tracks for cover-images shown in the audiogram
-      InsertBackgroundTrack(startTime, endTime, img_location, trackname)
-      InsertForegroundTrack(startTime, endTime, img_location, trackname)
+      InsertBackgroundTrack(startTime, endTime, img_location, trackname2)
+      InsertForegroundTrack(startTime, endTime, img_location, trackname2)
       
       -- setup fx on master-track needed for audiogram
       setAudiogramFX()
