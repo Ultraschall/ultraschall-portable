@@ -451,6 +451,8 @@ function InsertForegroundTrack(startTime, endTime, cover, trackname)
     ultraschall.ResizeJPG(cover, cover.."-audiogram.jpg", true, width_def, height_def, 100, 1, 1)
     cover=cover.."-audiogram.jpg"
   end
+  startTime=startTime-1
+  endTime=endTime+1
   COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
@@ -552,7 +554,9 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
     ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.jpg"
   end
-
+  startTime=startTime-1
+  endTime=endTime+1
+  
   COVER2=cover
   VideoCode1=[[// Blur (low quality)
   //@param1:weight_parm 'blur amount' 0 0 .99 0.5 0.001
