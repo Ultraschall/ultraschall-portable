@@ -27,33 +27,44 @@
 -- Initialize Ultraschall-API
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
-length=endTime-startTime
-if length==0 then reaper.MB("Please make a time-selection first!", "No time selection", 0) return end
+local found=false
+for i=0, reaper.CountProjectMarkers(0) do
+  local index, isrgn, _, _, name, markernumber = reaper.EnumProjectMarkers3(0, i)
+  if isrgn==true then found=true end
+end
+
+if found==false then
+  reaper.MB("No regions found in project.", "No regions", 0)
+  return
+end
+
 
 -- Quality presets
 local qualities = {
-    {label = "Low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
-    {label = "Medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
-    {label = "High (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
-    {label = "Super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
+    {label = "Low quality(Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
+    {label = "Medium quality(TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
+    {label = "High quality(Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
+    {label = "Super quality(high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
 }
 
 -- Calculate MB for each quality
 for _, quality in ipairs(qualities) do
     local total_kbps = quality.vid_kbps + quality.aud_kbps
-    quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    quality.mb = ""--tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
 end
 
 -- Show menu and get user selection
 local xx, yy = reaper.GetMousePosition()
 local menu = ""
 for i, quality in ipairs(qualities) do
-    menu = menu .. quality.label .. " - ca." .. quality.mb .. "MB|"
+    menu = menu .. "   "..quality.label.."|"
 end
-local retval = ultraschall.ShowMenu("Choose quality", menu, xx, yy - 50)
-if retval == -1 or retval < 1 or retval > #qualities then return end
 
+local retval = ultraschall.ShowMenu("Render Regions as Audiogram in", menu, xx, yy - 50)
+menu_retval=retval
+if retval>5 then retval=retval-5 end
+--print2(retval)
+if retval == -1 or retval < 1 or retval > #qualities then return end
 -- Set selected quality
 local selected_quality = qualities[retval]
 local vidkbps = selected_quality.vid_kbps
@@ -63,6 +74,25 @@ local quality = selected_quality.suffix
 local width_def = 1224
 local height_def = 1224
 
+retval_audiogram_title=reaper.MB("Do you want to add the region-text as title to the top of the audiogram?", "Regiontext as Audiogramtitle?", 4)
+
+if retval_audiogram_title==6 then
+  local found_markers={}
+  for i=0, reaper.CountProjectMarkers(0) do
+    local index, isrgn, _, _, name, markernumber = reaper.EnumProjectMarkers3(0, i)
+    if name:len()>35 then
+      found_markers[#found_markers+1]=markernumber..": "..name:sub(1,35).."..."
+    end
+  end
+  if #found_markers>0 then
+    local text=""
+    for i=1, #found_markers do
+      text=text.."\n"..found_markers[i]
+    end
+    reaper.MB("The following regions have a length greater than 35 characters and wouldn't fit the audiogram:\n"..text, "Regiontext too long...", 0)
+    return
+  end
+end
 --if lol==nil then return end
 
 function GetPath(str,sep)
@@ -302,7 +332,8 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
       alpha=alpha-alpha1
     end
   end
-   reaper.JS_LICE_FillRect(BlurIdentifier3, 0, 0, NewWidth, NewHeight, 0, 0.5, "COPY")
+   
+  reaper.JS_LICE_FillRect(BlurIdentifier3, 0, 0, NewWidth, NewHeight, 0, 0.5, "COPY")
   local Retval=reaper.JS_LICE_WriteJPG(outputfilename_with_path, BlurIdentifier3, 100)
   reaper.JS_LICE_DestroyBitmap(Identifier)
   reaper.JS_LICE_DestroyBitmap(BlurIdentifier3)
@@ -410,6 +441,9 @@ function insertImageToTimeline(track, startTime, endTime, cover)
       reaper.ShowMessageBox("Missing data to insert the image to timeline.", "Error", 0)
       return
   end
+  
+  startTime=startTime-1
+  endTime=endTime+1
 
   -- Move edit cursor to the start of the time selection
   reaper.SetEditCurPos(startTime, false, false)
@@ -451,8 +485,6 @@ function InsertForegroundTrack(startTime, endTime, cover, trackname)
     ultraschall.ResizeJPG(cover, cover.."-audiogram.jpg", true, width_def, height_def, 100, 1, 1)
     cover=cover.."-audiogram.jpg"
   end
-  startTime=startTime-1
-  endTime=endTime+1
   COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
@@ -554,9 +586,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
     ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.jpg"
   end
-  startTime=startTime-1
-  endTime=endTime+1
-  
+
   COVER2=cover
   VideoCode1=[[// Blur (low quality)
   //@param1:weight_parm 'blur amount' 0 0 .99 0.5 0.001
@@ -643,7 +673,7 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   insertImageToTimeline(newTrack, startTime, endTime, cover)
 end
 
-function renderAudiogramMac(Audiogram_Title)
+function renderAudiogramMac(Audiogram_Title, start, stop)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable = ultraschall.CreateNewRenderTable()
@@ -651,7 +681,15 @@ function renderAudiogramMac(Audiogram_Title)
   -- 2) RenderTable anpassen
 
   -- setzt bounds auf time-selection
-  RenderTable["Bounds"] = 2
+  -- setz bounds auf time-selection
+  if start==nil then
+    RenderTable["Bounds"]=2
+  else
+    RenderTable["Bounds"]=0
+    RenderTable["Startposition"]=start
+    RenderTable["Endposition"]=stop
+  end
+  
   RenderTable["Source"] = 0 -- Master mix; 
 
   -- setz Path und Filename
@@ -681,13 +719,13 @@ function renderAudiogramMac(Audiogram_Title)
   -- 3) Render the File
 
 
-  count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, true)
+  return ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, true)
 
   -- print (count)
 
 end
 
-function renderAudiogramPC(Audiogram_Title)
+function renderAudiogramPC(Audiogram_Title, start, stop)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable=ultraschall.CreateNewRenderTable()
@@ -695,7 +733,15 @@ function renderAudiogramPC(Audiogram_Title)
   -- 2) RenderTable anpassen
 
   -- setz bounds auf time-selection
-  RenderTable["Bounds"]=2
+  if start==nil then
+    RenderTable["Bounds"]=2
+  else
+    RenderTable["Bounds"]=0
+    RenderTable["Startposition"]=start
+    RenderTable["Endposition"]=stop
+  end
+  
+  RenderTable["Source"] = 0 -- Master mix; 
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
@@ -724,10 +770,10 @@ function renderAudiogramPC(Audiogram_Title)
 
   -- 3) Render the File
   
-  count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
+  return ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
 end
 
-function renderAudiogramLinux(Audiogram_Title)
+function renderAudiogramLinux(Audiogram_Title, start, stop)
 
   -- 1) RenderTable für die Render Settings erzeugen
   RenderTable=ultraschall.CreateNewRenderTable()
@@ -735,7 +781,15 @@ function renderAudiogramLinux(Audiogram_Title)
   -- 2) RenderTable anpassen
 
   -- setz bounds auf time-selection
-  RenderTable["Bounds"]=2
+  if start==nil then
+    RenderTable["Bounds"]=2
+  else
+    RenderTable["Bounds"]=0
+    RenderTable["Startposition"]=start
+    RenderTable["Endposition"]=stop
+  end
+  
+  RenderTable["Source"] = 0 -- Master mix; 
 
   -- setz Path und Filename
   RenderTable["RenderFile"] = GetProjectPath()
@@ -764,7 +818,7 @@ function renderAudiogramLinux(Audiogram_Title)
   RenderTable["RenderString"] = ultraschall.CreateRenderCFG_QTMOVMP4_Video(2, 100, 5, width, height, fps, aspect_ratio, vid_kbps, aud_kpbs, "crf=23", "")
 
   -- 3) Render the File       
-  count, MediaItemStateChunkArray, Filearray = ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
+  return ultraschall.RenderProject_RenderTable(nil, RenderTable, false, true, false)
   
 end
 
@@ -872,96 +926,94 @@ gfx_blit(img1,0);]]
 
 end
 
-function main2()
-  -- check, if time-selection is existing
-  retval, startTime, endTime = checkTimeSelection()
-  
-  if retval==false then return end
-  
-  startTime_format=reaper.format_timestr(startTime, "")
-  startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
-  if startTime_format:match("(.*):")~=nil then
-    startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+
+function Audiogram_Main()
+  count=0
+  for i=0, reaper.CountProjectMarkers(0)-1 do
+    retval, isrgn, startTime, endTime, trackname, index_number = reaper.EnumProjectMarkers3(0, i)
+    if retval_audiogram_title==7 then trackname2=" " else trackname2=trackname end
+    if isrgn==true then
+      startTime_format=reaper.format_timestr(startTime, "")
+      startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
+      if startTime_format:match("(.*):")~=nil then
+        startTime_format=startTime_format:match("(.*):").."h"..startTime_format:match(".*:(.*)")
+      end
+      startTime_format=startTime_format:match("(.*)%.").."s"
+      
+      endTime_format=reaper.format_timestr(endTime, "")
+      endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
+      if endTime_format:match("(.*):")~=nil then
+        endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
+      end
+      endTime_format=endTime_format:match("(.*)%.").."s"
+      
+      if retval==false then return end
+      
+      -- check, if cover image exists and is a valid format
+      found, img_location, img_ratio, img_w, img_h = checkImage()
+      if found==false then reaper.MB("Please add a cover-image", "No cover image found", 0) return end
+      
+      -- get old project's video-dimensions
+      oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024) 
+      oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
+      
+      -- set video-dimensions to square of 1024x1024 pixels
+      reaper.SNM_SetIntConfigVar("projvidw", 1024) 
+      reaper.SNM_SetIntConfigVar("projvidh", 1024) 
+      
+      -- set correct track-order for rendering the audiogram
+      projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
+      if projvidflags&256==0 then
+        reaper.SNM_SetIntConfigVar("projvidflags", projvidflags+256)
+      end
+      
+      -- Start the Undo Block
+      reaper.Undo_BeginBlock()
+      
+      if trackname~="" then
+        trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
+      else
+        trackname_format=""
+      end
+      
+      Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
+      
+      -- setup tracks for cover-images shown in the audiogram
+      InsertBackgroundTrack(startTime, endTime, img_location, trackname2)
+      InsertForegroundTrack(startTime, endTime, img_location, trackname2)
+      
+      -- setup fx on master-track needed for audiogram
+      setAudiogramFX()
+      --if lol==nil then return end
+      --reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
+      
+      -- render audiogram
+      if ultraschall.IsOS_Windows()==true then
+        count2=renderAudiogramPC(Audiogram_Title, startTime, endTime)
+      elseif ultraschall.IsOS_Mac()==true then
+        count2=renderAudiogramMac(Audiogram_Title, startTime, endTime)
+      else
+        count2=renderAudiogramLinux(Audiogram_Title, startTime, endTime)
+      end 
+      
+      count=count+count2
+      
+      -- reset video-dimensions for this project
+      reaper.SNM_SetIntConfigVar("projvidw", oldvidw) 
+      reaper.SNM_SetIntConfigVar("projvidh", oldvidh) 
+      reaper.SNM_SetIntConfigVar("projvidflags", projvidflags)
+      reaper.Undo_EndBlock("Added and configured track with episode image", -1)
+      
+      -- undo everything: an easy way to reset, leaving just the rendered video:
+      reaper.Main_OnCommand(40029, 0)
+      os.remove(COVER1)
+      os.remove(COVER2)
+      if count2<1 then break end
+    end
   end
-  startTime_format=startTime_format:match("(.*)%.").."s"
   
-  endTime_format=reaper.format_timestr(endTime, "")
-  endTime_format=endTime_format:match("(.*):").."m"..endTime_format:match(".*:(.*)")
-  if endTime_format:match("(.*):")~=nil then
-    endTime_format=endTime_format:match("(.*):").."h"..endTime_format:match(".*:(.*)")
-  end
-  endTime_format=endTime_format:match("(.*)%.").."s"
-  
-  if retval==false then return end
-  
-  -- check, if cover image exists and is a valid format
-  found, img_location, img_ratio, img_w, img_h = checkImage()
-  if found==false then reaper.MB("Please add a cover-image", "No cover image found", 0) return end
-  
-  -- get old project's video-dimensions
-  oldvidw=reaper.SNM_GetIntConfigVar("projvidw", 1024) 
-  oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
-  
-  -- set video-dimensions to square of 1024x1024 pixels
-  reaper.SNM_SetIntConfigVar("projvidw", 1024) 
-  reaper.SNM_SetIntConfigVar("projvidh", 1024) 
-  
-  -- set correct track-order for rendering the audiogram
-  projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
-  if projvidflags&256==0 then
-    reaper.SNM_SetIntConfigVar("projvidflags", projvidflags+256)
-  end
-  
-  -- Start the Undo Block
-  reaper.Undo_BeginBlock()
-  
-  trackname="                                    "
-  default=""
-  while trackname:len()>35 do
-    retval, trackname = reaper.GetUserInputs("Enter a description that is shown at the top of the Audiogram, max 35 characters. Keep empty if not needed.", 1, "Shown text(optional), extrawidth=400", default)
-    if retval==false then trackname=" " end
-    if trackname=="" then trackname=" " end
-    if trackname:len()>35 then reaper.MB("Text can only be up to 35 characters to fit the Audiogram", "Description to long", 0) default=trackname end
-  end
-  
-  
-  if trackname~=" " then
-    trackname_format=string.gsub(trackname, "[%/%\\]","_").."_-_"
-  else
-    trackname_format=""
-  end
-  
-  Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
-  
-  -- setup tracks for cover-images shown in the audiogram
-  InsertBackgroundTrack(startTime, endTime, img_location, trackname)
-  InsertForegroundTrack(startTime, endTime, img_location, trackname)
-  -- setup fx on master-track needed for audiogram
-  setAudiogramFX()
-  --if lol==nil then return end
-  --reaper.Main_SaveProjectEx(0, GetProjectPath().."/mespotine.rpp",0)
-  
-  -- render audiogram
-  if ultraschall.IsOS_Windows()==true then
-    renderAudiogramPC(Audiogram_Title)
-  elseif ultraschall.IsOS_Mac()==true then
-    renderAudiogramMac(Audiogram_Title)
-  else
-    renderAudiogramLinux(Audiogram_Title)
-  end 
-  
-  -- reset video-dimensions for this project
-  reaper.SNM_SetIntConfigVar("projvidw", oldvidw) 
-  reaper.SNM_SetIntConfigVar("projvidh", oldvidh) 
-  reaper.SNM_SetIntConfigVar("projvidflags", projvidflags)
-  reaper.Undo_EndBlock("Added and configured track with episode image", -1)
-  
-  -- undo everything: an easy way to reset, leaving just the rendered video:
-  reaper.Main_OnCommand(40029, 0)
-  os.remove(COVER1)
-  os.remove(COVER2)
-  -- as if the user wants to open up the folder, where the audiogram got rendered to
   if count>0 then
+    -- as if the user wants to open up the folder, where the audiogram got rendered to
     -- play render-finished notification sound, if toggled on by the user
     volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
     play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
@@ -978,7 +1030,7 @@ function main2()
 end
 
 function main()
-  reaper.defer(main2)
+  reaper.defer(Audiogram_Main())
 end
 
 reaper.defer(main)
