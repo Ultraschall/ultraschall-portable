@@ -488,7 +488,7 @@ function InsertForegroundTrack(startTime, endTime, cover, trackname)
   COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
-//@param2:zoom 'zoom' -1.35 -15 15 0
+//@param2:zoom 'zoom' -2.16 -15 15 0
 //@param3:xoffs 'X offset' 0 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
@@ -555,7 +555,7 @@ xp = (xpos * (project_w-txtw))|0;
 gfx_set(bgc,bgc,bgc,bga);
 bga>0?gfx_fillrect(bgfit?xp-b:0, yt, bgfit?txtw+b*2:project_w, txth+b*2);
 gfx_set(0,0,0,1);
-gfx_str_draw(#text,xp+1,yt+b+1);
+gfx_str_draw(#text,xp+2,yt+b+2);
 gfx_set(fgc,fgc,fgc,fga);
 gfx_str_draw(#text,xp,yt+b);]]
 
