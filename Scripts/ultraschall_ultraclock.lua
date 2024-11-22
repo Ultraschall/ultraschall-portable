@@ -545,7 +545,7 @@ function drawClock()
       end
     end
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
-      Date = "Analyse LUFS" 
+      Date = "Analyze LUFS" 
       date_color = 0x777777
     end
   else
@@ -567,7 +567,7 @@ function drawClock()
     local y_offset=0
     local x_offset=0
     local resizer=0
-    if Date:match("Analyse")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
+    if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
     Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style)} -- print realtime hh:mm:ss
