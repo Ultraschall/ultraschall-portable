@@ -24,11 +24,16 @@
 ################################################################################
 ]]
 
+reaper.Undo_BeginBlock()
 reaper.InsertTrackAtIndex(1, true)
 
 retval, val = reaper.GetProjExtState(0, "Ultraschall", "PrepareAllTracksForEditingPerformed")
 
+arm=""
 if val=="" then
   tr=reaper.GetTrack(0, reaper.CountTracks(0)-1)
   reaper.SetTrackUIRecArm(tr, 1, 0)
+  arm="armed "
 end
+
+reaper.Undo_EndBlock("Insert "..arm.."new track", 0)
