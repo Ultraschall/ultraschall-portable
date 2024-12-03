@@ -195,6 +195,11 @@ title = "OK! Your project is now ready for editing:"
 result = reaper.ShowMessageBox( txt, title, 0 )
 
 -----------------------------
+-- store in projext extstate, that prepare all tracks for editing has been performed
+-----------------------------
+
+reaper.SetProjExtState(0, "Ultraschall", "PrepareAllTracksForEditingPerformed", "true")
+
 
 reaper.Undo_EndBlock("Prepare all tracks for editing", -1) -- End of the undo block. Leave it at the bottom of your main function.
 
