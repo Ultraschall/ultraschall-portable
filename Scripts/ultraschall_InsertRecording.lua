@@ -24,8 +24,6 @@
 ################################################################################
 ]]
 
-reaper.SetExtState("Ultraschall", "Ripple Insert Recording", "", false)
-
 if reaper.GetExtState("Ultraschall", "Ripple Insert Recording")~="" then
   return
 else
