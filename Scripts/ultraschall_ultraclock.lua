@@ -503,7 +503,7 @@ function drawClock()
     end
   end
   if preset~=oldpreset then
-    --AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
+    AAA=ultraschall.SetUSExternalState("ultraschall_clock", "preset", preset)     --save state preset
   end
 
   oldpreset=preset
