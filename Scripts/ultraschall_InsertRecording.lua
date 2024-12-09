@@ -29,8 +29,8 @@ if reaper.GetExtState("Ultraschall", "Ripple Insert Recording")~="" then
 else
   reaper.SetExtState("Ultraschall", "Ripple Insert Recording", "running", false)
 end
-
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 
 function MoveUntilStop()
   -- moves items, track-envelope-points, regions and markers after current recording-position to be always at least
@@ -50,14 +50,19 @@ function MoveUntilStop()
     -- if recording stops, move items, trackenvelope-points, regions and markers after current recording-position
     -- back to close the 4+ second gap
     stopposition=reaper.GetPlayPosition()
+    reaper.SetExtState("Ultraschall_RippleInsertRecording", "position", position, false)
+    reaper.SetExtState("Ultraschall_RippleInsertRecording", "stopposition", stopposition, false)
+    --[[
     marker_number = ultraschall.AddEditMarker(stopposition, -1, "")
     marker_number = ultraschall.AddEditMarker(firststartposition, -1, "")
-    Aretval = ultraschall.MoveMediaItemsAfter_By(position, -(position-stopposition), trackstring)
-    retval = ultraschall.MoveMarkersBy(position, reaper.GetProjectLength()+1, -(position-stopposition), false)
-    retval = ultraschall.MoveRegionsBy(position, reaper.GetProjectLength()+1, -(position-stopposition), false)
+    --]]
+    Aretval = ultraschall.MoveMediaItemsAfter_By(position, -(position-stopposition)+0.001, trackstring)
+    retval = ultraschall.MoveMarkersBy(position, reaper.GetProjectLength()+1, -(position-stopposition)+0.001, false)
+    retval = ultraschall.MoveRegionsBy(position, reaper.GetProjectLength()+1, -(position-stopposition)+0.001, false)
     for i=0, reaper.CountTracks(0)-1 do
       ultraschall.MoveTrackEnvelopePointsBy(position, reaper.GetProjectLength()+1, -(position-stopposition), reaper.GetTrack(0,i), false)
     end
+    --]]
     reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "0", false) -- aktiviere wieder den OverDub Soundcheck
     reaper.UpdateArrange()
   end
@@ -78,7 +83,7 @@ function main()
   for i=0, reaper.CountTracks(0)-1 do
     ultraschall.MoveTrackEnvelopePointsBy(position, reaper.GetProjectLength()+1, 4, reaper.GetTrack(0,i), false)
   end
-
+  
   position=position+4
   reaper.CSurf_OnRecord()
   MoveUntilStop()
@@ -92,12 +97,14 @@ end
 
 
 function atexit()
+  ultraschall.RunCommand("_Ultraschall_CleanUp_RippleInsertRecording")
   reaper.DeleteExtState("Ultraschall", "Ripple Insert Recording", false)
 end
 reaper.atexit(atexit)
 
 reaper.SetExtState("ultraschall_PreviewRecording", "Dialog", "1", false) -- deaktiviere OverDub Soundcheck
 firststartposition=reaper.GetCursorPosition()
+reaper.SetExtState("Ultraschall_RippleInsertRecording", "firststartposition", firststartposition, false)
 
 main()
 
