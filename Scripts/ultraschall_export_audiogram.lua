@@ -597,7 +597,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   );]]
 
 VideoCode2=[[//Image overlay
-//@param1:opacity 'opacity' 1
+//@param1:opacity 'opacity' 0.5
 //@param2:zoom 'zoom' 2.4 -15 15 0
 //@param3:xoffs 'X offset' 0.0816 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
