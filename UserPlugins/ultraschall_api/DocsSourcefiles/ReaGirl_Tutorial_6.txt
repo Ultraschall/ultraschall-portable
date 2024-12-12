@@ -1,0 +1,164 @@
+Tutorial for Enter/ESC-Key/AtExit
+
+In ReaGirl, you can set a run-function for when the gui-window is closed using esc and closing via the close-button.
+You can also set a run-function to the enter-key, so you can have a "Apply settings and close window via Enter-key"-feature.
+In this tutorial, we'l look at how to do them.
+
+Let's start with a basic gui.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction()
+    -- this function will be run when the button is pressed
+    
+    -- It stores the setting and keeps the dialog open
+    reaper.SetExtState("My_Setting", "My_Key", reagirl.Slider_GetValue(slider_percentage), true)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- Add a slider and a button to the gui.
+  -- First: get old stored value of the slider
+  old_slider_value=reaper.GetExtState("My_Setting", "My_Key") 
+  -- Second: if there isn't a slider-value stored yet, use a default of 0
+  if old_slider_value=="" then old_slider_value=0 else old_slider_value=tonumber(old_slider_value) end 
+  -- add the slider with the slider-value stored in old_slider_value
+  slider_percentage = reagirl.Slider_Add(4, 4, 250, "Percentage", 140, "Set the percentage.", nil, 0, 8, 1, old_slider_value, 0, nil)
+  -- add a store button
+  button = reagirl.Button_Add(260, 4, 0, 0, "Store", "Store percentage setting.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 325, 40)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When you run the script, you get a script with one slider and a button to store the value of the slider in an extstate.
+You can close it via the close-button of the window and the esc-key.
+In the next step, we want to show a dialog that tells the user that the slider-value wasn't stored when closing via esc-key or the close-button.
+For this we add a new run-function AtExit\_RunFunction and also add the function reagirl.Gui\_AtExit() to tell ReaGirl, which run-function to use when the gui is closed.
+This is how it looks like, now.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction()
+    -- this function will be run when the button is pressed
+    
+    -- It stores the setting and keeps the dialog open
+    reaper.SetExtState("My_Setting", "My_Key", reagirl.Slider_GetValue(slider_percentage), true)
+  end
+  
+  function AtExit_RunFunction()
+    -- this function is run when the window is closed by either esc-key or the x-button of the window
+    
+    -- it will show an aborted dialog
+    reaper.MB("Aborted setting the percentage.\n\nPercentage is not stored.", "Abort", 0)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- Add a slider and a button to the gui.
+  -- First: get old stored value of the slider
+  old_slider_value=reaper.GetExtState("My_Setting", "My_Key") 
+  -- Second: if there isn't a slider-value stored yet, use a default of 0
+  if old_slider_value=="" then old_slider_value=0 else old_slider_value=tonumber(old_slider_value) end 
+  -- add the slider with the slider-value stored in old_slider_value
+  slider_percentage = reagirl.Slider_Add(4, 4, 250, "Percentage", 140, "Set the percentage.", nil, 0, 8, 1, old_slider_value, 0, nil)
+  -- add a store button
+  button = reagirl.Button_Add(260, 4, 0, 0, "Store", "Store percentage setting.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 325, 40)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When you run this script, you can close the window via esc-key and the close-button and if you do, a dialog opens up that tells the user that storing the setting was aborted.
+We made this possible with the function AtExit\_RunFunction(), which opens a dialog using reaper.MB(). And we used reagirl.Gui\_AtExit(AtExit\_RunFunction) to tell Reaper to run the run-function AtExit\_RunFunction everytime the window is closes using the close-button or the esc-key.
+Great.
+In the next step, we add that hitting enter stores the slider-value and closes the window. For this, we add another run-function AtEnter\_RunFunction() and the function reagirl.Gui_AtEnter(AtEnter_RunFunction) to tell ReaGirl to run the run-function everytime the user hits enter in the dialog.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction()
+    -- this function will be run when the button is pressed
+    
+    -- It stores the setting and keeps the dialog open
+    reaper.SetExtState("My_Setting", "My_Key", reagirl.Slider_GetValue(slider_percentage), true)
+  end
+  
+  function AtEnter_RunFunction()
+    -- this function is run, when the enter-key is hit
+    
+    -- it stores the setting, shows a success-message and closes the gui
+    reaper.SetExtState("My_Setting", "My_Key", reagirl.Slider_GetValue(slider_percentage), true)
+    reaper.MB("Entered new percentage", "Success", 0)
+    reagirl.Gui_Close()
+  end
+  
+  function AtExit_RunFunction()
+    -- this function is run when the window is closed by either esc-key or the x-button of the window
+    
+    -- it will show an aborted dialog
+    reaper.MB("Aborted setting the percentage.\n\nPercentage is not stored.", "Abort", 0)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- Add a slider and a button to the gui.
+  -- First: get old stored value of the slider
+  old_slider_value=reaper.GetExtState("My_Setting", "My_Key") 
+  -- Second: if there isn't a slider-value stored yet, use a default of 0
+  if old_slider_value=="" then old_slider_value=0 else old_slider_value=tonumber(old_slider_value) end 
+  -- add the slider with the slider-value stored in old_slider_value
+  slider_percentage = reagirl.Slider_Add(4, 4, 250, "Percentage", 140, "Set the percentage.", nil, 0, 8, 1, old_slider_value, 0, nil)
+  -- add a store button
+  button = reagirl.Button_Add(260, 4, 0, 0, "Store", "Store percentage setting.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 325, 40)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+You'll notice, that the run-function AtEnter\_RunFunction() stores the slider-value into an extstate. It also closes the gui using Gui\_Close() and shows a dialog using reaper.MB() that tells the user that the slider-value is stored.
+And when you run this script, you can change the slider, hit enter and when you rerun the script, the stored slider-value is restored.
+
+With that, you have a dialog that reacts to closing via close-button, the esc-key and the enter key.
+
+One thing to notice: the run-function for enter isn't run when the an inputbox is currently selected, which uses a run-function for the enter-key! It's also not run when the inputbox is currently selected and the user is a screenreader-user. 
+So you might need to add a run-function for inputboxes that does the same as the enter-run-function used by reagirl.Gui\_AtEnter()

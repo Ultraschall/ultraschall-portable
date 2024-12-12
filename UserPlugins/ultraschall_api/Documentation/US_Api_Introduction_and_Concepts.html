@@ -10,11 +10,7 @@ Ultraschall API Introduction/Concepts
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
-<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
 <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
@@ -136,7 +132,7 @@ Ultraschall API Introduction/Concepts
 <a href="#Introduction_002_How_to_Install"> ^</a> <u><b>How to install Ultraschall API</b></u><br>			<p>
 <div class="ch">
 <p>Installing Ultraschall-API is quite easy.</p>
-<p>First make sure, you use the right versions of Reaper, SWS and JS-extension: <a href="https://www.reaper.fm">Reaper 6.02 and higher</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1 and higher</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 1.215 and higher.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
+<p>First make sure, you use the right versions of Reaper, SWS and JS-extension: <a href="https://www.reaper.fm">Reaper 7.03 and higher</a>, <a href="https://www.sws-extension.org">SWS 2.10.0.1 and higher</a> and <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">Julian Sader's plugin 1.215 and higher.</a> You can download them at <a href="http://www.reaper.fm">reaper.fm</a> and <a href="http://www.sws-extension.org">sws-extension.org</a> respectively. Julian Sader's plugin can be installed using ReaPack or gotten from <a href="https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/">his own github-site</a></p>
 <p>To install the Ultraschall-API, just follow the following steps:</p>
 <p><strong>Installation via ReaPack</strong>:</p>
 <p>The easiest way is to install the Ultraschall-API using ReaPack. ReaPack is a package-manager for extensions and helper-stuff for Reaper, which allows you to easily install and update content done by the Reaper community. Many Scripts, Themes, JSFX-FX, etc are available through that.</p>
@@ -146,7 +142,7 @@ Copy the downloaded dll(Windows), dylib(Mac) or so(Linux)-file into the UserPlug
 </p></li>
 <li><p>(Re-)Start Reaper<br />
 </p></li>
-<li><p>Go into the Menu Extensions -&gt; ReaPack -&gt; manage Repositories<br />
+<li><p>Go into the Menu Extensions -&gt; ReaPack -&gt; Manage Repositories<br />
 </p></li>
 <li><p>Click on Import/export...-button and choose Import repositories<br />
 </p></li>
@@ -482,12 +478,125 @@ This is mostly because, there are so many.</p>
 <p>A Rendertable is a table, which stores all rendersettings you can set in Reaper. And with all, I mean all!</p>
 <p>Important: You should never create RenderTables "by hand" but rather use my functions for that. That way your RenderTables will stay valid when I add new features to them in the future. You can, however, alter them, after you've created them with my functions.</p>
 <p>Structure:</p>
-<pre><code>    RenderTable[&quot;AddToProj&quot;] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked</code></pre>
-<p>RenderTable["Brickwall<em>Limiter</em>Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled<br />
-RenderTable["Brickwall<em>Limiter</em>Method"] - brickwall-limiting-mode; 1, peak; 2, true peak RenderTable["Brickwall<em>Limiter</em>Target"] - the volume of the brickwall-limit RenderTable["Bounds"] - 0, Custom time range; 1, Entire project; 2, Time selection; 3, Project regions; 4, Selected Media Items(in combination with Source 32); 5, Selected regions 6, Razor edit areas 7, All project markers 8, Selected markers RenderTable["Channels"] - the number of channels in the rendered file; 1, mono; 2, stereo; higher, the number of channels RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it RenderTable["Dither"] - &amp;1, dither master mix; &amp;2, noise shaping master mix; &amp;4, dither stems; &amp;8, dither noise shaping stems RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked<br />
-RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled RenderTable["Endposition"] - the endposition of the rendering selection in seconds<br />
-RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled RenderTable["FadeIn"] - the fade-in-time in seconds RenderTable["FadeIn_Shape"] - the fade-in-shape - 0, Linear fade in - 1, Inverted quadratic fade in - 2, Quadratic fade in - 3, Inverted quartic fade in - 4, Quartic fade in - 5, Cosine S-curve fade in - 6, Quartic S-curve fade in RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled RenderTable["FadeOut"] - the fade-out time in seconds RenderTable["FadeOut_Shape"] - the fade-out-shape - 0, Linear fade in - 1, Inverted quadratic fade in - 2, Quadratic fade in - 3, Inverted quartic fade in - 4, Quartic fade in - 5, Cosine S-curve fade in - 6, Quartic S-curve fade in RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked<br />
-RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled RenderTable["Normalize_Method"] - the normalize-method-dropdownlist 0, LUFS-I 1, RMS-I 2, Peak 3, True Peak 4, LUFS-M max 5, LUFS-S max RenderTable["Normalize<em>Only</em>Files<em>Too</em>Loud"] - Only normalize files that are too loud,checkbox - true, checkbox checked - false, checkbox unchecked RenderTable["Normalize<em>Stems</em>to<em>Master</em>Target"] - true, normalize-stems to master target(common gain to stems) false, normalize each file individually RenderTable["Normalize_Target"] - the normalize-target as dB-value RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 0, Full-speed Offline 1, 1x Offline 2, Online Render 3, Online Render(Idle) 4, Offline Render(Idle) RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay RenderTable["RenderResample"] - Resample mode-dropdownlist; 0, Sinc Interpolation: 64pt (medium quality) 1, Linear Interpolation: (low quality) 2, Point Sampling (lowest quality, retro) 3, Sinc Interpolation: 192pt 4, Sinc Interpolation: 384pt 5, Linear Interpolation + IIR 6, Linear Interpolation + IIRx2 7, Sinc Interpolation: 16pt 8, Sinc Interpolation: 512pt(slow) 9, Sinc Interpolation: 768pt(very slow) 10, r8brain free (highest quality, fast) RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string RenderTable["RenderTable"]=true - signals, this is a valid render-table RenderTable["SampleRate"] - the samplerate of the rendered file(s) RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked RenderTable["Source"] - 0, Master mix; 1, Master mix + stems; 3, Stems (selected tracks); 8, Region render matrix; 16, Tracks with only Mono-Media to Mono Files; 32, Selected media items; 64, selected media items via master; 128, selected tracks via master 4096, Razor edit areas 4224, Razor edit areas via master RenderTable["Startposition"] - the startposition of the rendering selection in seconds RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked &amp;1, custom time bounds; &amp;2, entire project; &amp;4, time selection; &amp;8, all project regions; &amp;16, selected media items; &amp;32, selected project regions &amp;64, razor edit areas RenderTable["TailMS"] - the amount of milliseconds of the tail</p>
+<pre><code>  RenderTable[&quot;AddToProj&quot;] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;Brickwall_Limiter_Enabled&quot;] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
+  RenderTable[&quot;Brickwall_Limiter_Method&quot;] - brickwall-limiting-mode; 1, peak; 2, true peak
+  RenderTable[&quot;Brickwall_Limiter_Target&quot;] - the volume of the brickwall-limit
+  RenderTable[&quot;Bounds&quot;] - 0, Custom time range; 
+                          1, Entire project; 
+                          2, Time selection; 
+                          3, Project regions; 
+                          4, Selected Media Items(in combination with Source 32); 
+                          5, Selected regions
+                          6, Razor edit areas
+                          7, All project markers
+                          8, Selected markers
+  RenderTable[&quot;Channels&quot;] - the number of channels in the rendered file; 
+                            1, mono; 
+                            2, stereo; 
+                            higher, the number of channels
+  RenderTable[&quot;CloseAfterRender&quot;] - true, closes rendering to file-dialog after render; false, doesn&#39;t close it
+  RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
+                          &amp;2, noise shaping master mix; 
+                          &amp;4, dither stems; 
+                          &amp;8, dither noise shaping stems
+  RenderTable[&quot;EmbedMetaData&quot;] - Embed metadata; true, checked; false, unchecked
+  RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
+  RenderTable[&quot;EmbedTakeMarkers&quot;] - Embed Take markers; true, checked; false, unchecked                        
+  RenderTable[&quot;Enable2ndPassRender&quot;] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+  RenderTable[&quot;Endposition&quot;] - the endposition of the rendering selection in seconds            
+  RenderTable[&quot;FadeIn_Enabled&quot;] - true, fade-in is enabled; false, fade-in is disabled
+  RenderTable[&quot;FadeIn&quot;] - the fade-in-time in seconds
+  RenderTable[&quot;FadeIn_Shape&quot;] - the fade-in-shape
+                         - 0, Linear fade in
+                         - 1, Inverted quadratic fade in
+                         - 2, Quadratic fade in
+                         - 3, Inverted quartic fade in
+                         - 4, Quartic fade in
+                         - 5, Cosine S-curve fade in
+                         - 6, Quartic S-curve fade in
+  RenderTable[&quot;FadeOut_Enabled&quot;] - true, fade-out is enabled; false, fade-out is disabled
+  RenderTable[&quot;FadeOut&quot;] - the fade-out time in seconds
+  RenderTable[&quot;FadeOut_Shape&quot;] - the fade-out-shape
+                         - 0, Linear fade in
+                         - 1, Inverted quadratic fade in
+                         - 2, Quadratic fade in
+                         - 3, Inverted quartic fade in
+                         - 4, Quartic fade in
+                         - 5, Cosine S-curve fade in
+                         - 6, Quartic S-curve fade in
+  RenderTable[&quot;MultiChannelFiles&quot;] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+  RenderTable[&quot;Normalize_Enabled&quot;] - true, normalization enabled; false, normalization not enabled
+  RenderTable[&quot;Normalize_Method&quot;] - the normalize-method-dropdownlist
+                 0, LUFS-I
+                 1, RMS-I
+                 2, Peak
+                 3, True Peak
+                 4, LUFS-M max
+                 5, LUFS-S max
+  RenderTable[&quot;Normalize_Only_Files_Too_Loud&quot;] - Only normalize files that are too loud,checkbox
+                                               - true, checkbox checked
+                                               - false, checkbox unchecked
+  RenderTable[&quot;Normalize_Stems_to_Master_Target&quot;] - true, normalize-stems to master target(common gain to stems)
+                                                    false, normalize each file individually
+  RenderTable[&quot;Normalize_Target&quot;] - the normalize-target as dB-value
+  RenderTable[&quot;NoSilentRender&quot;] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;OfflineOnlineRendering&quot;] - Offline/Online rendering-dropdownlist; 
+                                          0, Full-speed Offline
+                                          1, 1x Offline
+                                          2, Online Render
+                                          3, Online Render(Idle)
+                                          4, Offline Render(Idle)
+  RenderTable[&quot;OnlyMonoMedia&quot;] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;OnlyChannelsSentToParent&quot;] - true, option is checked; false, option is unchecked
+  RenderTable[&quot;ProjectSampleRateFXProcessing&quot;] - Use project sample rate for mixing and FX/synth processing-checkbox; 
+                                                 true, checked; false, unchecked
+  RenderTable[&quot;RenderFile&quot;] - the contents of the Directory-inputbox of the Render to File-dialog
+  RenderTable[&quot;RenderPattern&quot;] - the render pattern as input into the File name-inputbox of the Render to File-dialog
+  RenderTable[&quot;RenderQueueDelay&quot;] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;RenderQueueDelaySeconds&quot;] - the amount of seconds for the render-queue-delay
+  RenderTable[&quot;RenderResample&quot;] - Resample mode-dropdownlist; 
+                                      0, Sinc Interpolation: 64pt (medium quality)
+                                      1, Linear Interpolation: (low quality)
+                                      2, Point Sampling (lowest quality, retro)
+                                      3, Sinc Interpolation: 192pt
+                                      4, Sinc Interpolation: 384pt
+                                      5, Linear Interpolation + IIR
+                                      6, Linear Interpolation + IIRx2
+                                      7, Sinc Interpolation: 16pt
+                                      8, Sinc Interpolation: 512pt(slow)
+                                      9, Sinc Interpolation: 768pt(very slow)
+                                      10, r8brain free (highest quality, fast)
+  RenderTable[&quot;RenderStems_Prefader&quot;] - true, option is checked; false, option is unchecked
+  RenderTable[&quot;RenderString&quot;] -  the render-cfg-string, that holds all settings of the currently set render-output-format 
+                                 as BASE64 string
+  RenderTable[&quot;RenderString2&quot;] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format 
+                                 as BASE64 string
+  RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+  RenderTable[&quot;SampleRate&quot;] - the samplerate of the rendered file(s)
+  RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
+  RenderTable[&quot;Source&quot;] - 0, Master mix
+                          1, Master mix + stems; 
+                          3, Stems (selected tracks); 
+                          8, Region render matrix; 
+                          32, Selected media items; 
+                          64, selected media items via master; 
+                          128, selected tracks via master
+                          136, Region render matrix via master
+                          4096, Razor edit areas
+                          4224, Razor edit areas via master
+  RenderTable[&quot;Startposition&quot;] - the startposition of the rendering selection in seconds
+  RenderTable[&quot;TailFlag&quot;] - in which bounds is the Tail-checkbox checked
+                            &amp;1, custom time bounds; 
+                            &amp;2, entire project; 
+                            &amp;4, time selection; 
+                            &amp;8, all project regions; 
+                            &amp;16, selected media items; 
+                            &amp;32, selected project regions
+                            &amp;64, razor edit areas
+  RenderTable[&quot;TailMS&quot;] - the amount of milliseconds of the tail
+    </code></pre>
 <p>This rendertable can be used by, e.g. <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></p>
 <ul>
 <li>You can create Rendertables using: <a href="US_Api_Functions.html#CreateNewRenderTable">CreateNewRenderTable</a>(new rendertable), <a href="US_Api_Functions.html#GetRenderTable_Project">GetRenderTable_Project</a>(create from the current project), <a href="US_Api_Functions.html#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a>(create from an rpp-projectfile), <a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a>(create from render-preset)</li>
@@ -583,7 +692,7 @@ So I added some API-variables, like:</p>
 <p>The easy way:</p>
 <ol>
 <li><p>creating a renderstring with all format-specific-settings, using the accompanying functions:<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a>, <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, [CreateRenderCFG_FLV_Video(US_Api_Functions.html#CreateRenderCFG<em>FLV</em>Video)], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p></li>
+<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a>, <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_FLV_Video">CreateRenderCFG_FLV_Video</a>], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p></li>
 <li><p>passing the render-string to one of the Render-functions<br />
 <a href="US_Api_Functions.html#RenderProject">RenderProject</a>, <a href="US_Api_Functions.html#RenderProject_Regions">RenderProject_Regions</a></p></li>
 </ol>
@@ -599,7 +708,7 @@ So I added some API-variables, like:</p>
 <li><p>creating a <a href="#Datatypes_008_RenderTable">RenderTable</a>, which holds all settings you can set for the rendering-process, using one of the following functions:<br />
 <a href="US_Api_Functions.html#CreateNewRenderTable">CreateNewRenderTable</a>(new rendertable), <a href="US_Api_Functions.html#GetRenderTable_Project">GetRenderTable_Project</a>(create from the current project), <a href="US_Api_Functions.html#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a>(create from an rpp-projectfile), <a href="US_Api_Functions.html#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a>(create from render-preset)</p></li>
 <li><p>optionally exchanging the renderstring(which holds all format-specific-settings) in the RenderTable, using the accompanying functions:<br />
-<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a>, <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, [CreateRenderCFG_FLV_Video(US_Api_Functions.html#CreateRenderCFG<em>FLV</em>Video)], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p></li>
+<a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a> <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a>, <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_FLV_Video">CreateRenderCFG_FLV_Video</a>], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p></li>
 <li><p>Render the project, using the function:<br />
 <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a></p></li>
 </ol>
@@ -635,7 +744,7 @@ Have a look into the functions-reference to get the possible values for these pa
 <p>This renderstring can then be passed over to <a href="US_Api_Functions.html#SetProject_RenderCFG">SetProject_RenderCFG</a> to set it into a project-file, or to <a href="US_Api_Functions.html#RenderProject">RenderProject</a> to render a projectfile using the format-settings in the Render-string or put into <a href="#Datatypes_008_RenderTable">RenderTables</a>, that can be used for the rendering function <a href="US_Api_Functions.html#RenderProject_RenderTable">RenderProject_RenderTable</a>.</p>
 <p>The following render-string-functions are available in Ultraschall-API:</p>
 <blockquote>
-<p><a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a> <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, [CreateRenderCFG_FLV_Video(US_Api_Functions.html#CreateRenderCFG<em>FLV</em>Video)], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p>
+<p><a href="US_Api_Functions.html#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a>, <a href="US_Api_Functions.html#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a> ,<a href="US_Api_Functions.html#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a>,<a href="US_Api_Functions.html#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a>, <a href="US_Api_Functions.html#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a>, <a href="US_Api_Functions.html#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a>, <a href="US_Api_Functions.html#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_WebMVideo">CreateRenderCFG_WebMVideo</a> <a href="US_Api_Functions.html#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a>, <a href="US_Api_Functions.html#CreateRenderCFG_FLV_Video">CreateRenderCFG_FLV_Video</a>], <a href="US_Api_Functions.html#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></p>
 </blockquote>
 <p>If you have already a Base64-encoded-renderstring but would love to know, which settings it holds, you can analyze them as well. First, you need to determine, which format is stored in this render-string, using:</p>
 <p><strong><a href="US_Api_Functions.html#GetOutputFormat_RenderCfg">GetOutputFormat_RenderCfg</a></strong></p>
@@ -654,7 +763,7 @@ To make life easier, it also returns the analysed render-string. So if you want 
 </blockquote>
 <p>The following functions are available for analysing the render-strings in all kinds of formats:</p>
 <blockquote>
-<p><a href="US_Api_Functions.html#GetRenderCFG_Settings_AIFF">GetRenderCFG_Settings_AIFF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AudioCD">GetRenderCFG_Settings_AudioCD</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_DDP">GetRenderCFG_Settings_DDP</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_M4AMac">GetRenderCFG_Settings_M4AMac</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3">GetRenderCFG_Settings_MP3</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3ABR">GetRenderCFG_Settings_MP3ABR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3CBR">GetRenderCFG_Settings_MP3CBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3MaxQuality">GetRenderCFG_Settings_MP3MaxQuality</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3VBR">GetRenderCFG_Settings_MP3VBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OGG">GetRenderCFG_Settings_OGG</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OPUS">GetRenderCFG_Settings_OPUS</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAV">GetRenderCFG_Settings_WAV</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAVPACK">GetRenderCFG_Settings_WAVPACK</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AVI_Video">GetRenderCFG_Settings_AVI_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_GIF">GetRenderCFG_Settings_GIF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_LCF">GetRenderCFG_Settings_LCF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MKV_Video">GetRenderCFG_Settings_MKV_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MOVMac_Video">GetRenderCFG_Settings_MOVMac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP4Mac_Video">GetRenderCFG_Settings_MP4Mac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_QTMOVMP4_Video">GetRenderCFG_Settings_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WebMVideo">GetRenderCFG_Settings_WebMVideo</a> <a href="US_Api_Functions.html#GetRenderCFG_CAF">GetRenderCFG_CAF</a>, [GetRenderCFG_FLV_Video(US_Api_Functions.html#GetRenderCFG<em>FLV</em>Video)], <a href="US_Api_Functions.html#GetRenderCFG_MPEG1_Video">GetRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_MPEG2_Video">GetRenderCFG_MPEG2_Video</a></p>
+<p><a href="US_Api_Functions.html#GetRenderCFG_Settings_AIFF">GetRenderCFG_Settings_AIFF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AudioCD">GetRenderCFG_Settings_AudioCD</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_DDP">GetRenderCFG_Settings_DDP</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_M4AMac">GetRenderCFG_Settings_M4AMac</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3">GetRenderCFG_Settings_MP3</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3ABR">GetRenderCFG_Settings_MP3ABR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3CBR">GetRenderCFG_Settings_MP3CBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3MaxQuality">GetRenderCFG_Settings_MP3MaxQuality</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP3VBR">GetRenderCFG_Settings_MP3VBR</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OGG">GetRenderCFG_Settings_OGG</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_OPUS">GetRenderCFG_Settings_OPUS</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAV">GetRenderCFG_Settings_WAV</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WAVPACK">GetRenderCFG_Settings_WAVPACK</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_AVI_Video">GetRenderCFG_Settings_AVI_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_GIF">GetRenderCFG_Settings_GIF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_LCF">GetRenderCFG_Settings_LCF</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MKV_Video">GetRenderCFG_Settings_MKV_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MOVMac_Video">GetRenderCFG_Settings_MOVMac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_MP4Mac_Video">GetRenderCFG_Settings_MP4Mac_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_QTMOVMP4_Video">GetRenderCFG_Settings_QTMOVMP4_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_Settings_WebMVideo">GetRenderCFG_Settings_WebMVideo</a> <a href="US_Api_Functions.html#GetRenderCFG_CAF">GetRenderCFG_CAF</a>, <a href="US_Api_Functions.html#GetRenderCFG_FLV_Video">GetRenderCFG_FLV_Video</a>], <a href="US_Api_Functions.html#GetRenderCFG_MPEG1_Video">GetRenderCFG_MPEG1_Video</a>, <a href="US_Api_Functions.html#GetRenderCFG_MPEG2_Video">GetRenderCFG_MPEG2_Video</a></p>
 </blockquote>
 </div><br>
 </div>
@@ -5510,7 +5619,7 @@ Though, after not having seen the lights of the days for months now, I'm not sur
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.9  - 121 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.1  - 121 elements available <br></td></table>
         <hr>
       </div>
       <br>

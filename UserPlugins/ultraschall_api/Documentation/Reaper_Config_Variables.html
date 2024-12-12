@@ -12,11 +12,7 @@ REAPER Config Variables
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
-<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
 <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
@@ -61,36 +57,41 @@ End of Header
 <script src="./scripts/clipboard.min.js.Download"></script>
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
-<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="A little Introduction"><a href="#A little Introduction">^</a></a><strong> <u>A little Introduction</u></strong><br><br>
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id=""><a href="#">^</a></a><strong> <u></u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#smmaxsz">smmaxsz</a></td><td class="tdsm"><a href="#smmaxsz_pct">smmaxsz_pct</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="A little Introduction"><a href="#A little Introduction">^</a></a><strong> <u>A little Introduction</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#Introduction">Introduction to Config Variables</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Actions"><a href="#Actions">^</a></a><strong> <u>Actions</u></strong><br><br>
-</td></tr><tr><td class="tdsm"><a href="#cueitems">cueitems</a></td><td class="tdsm"><a href="#itemtexthide">itemtexthide</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Help Menu"><a href="#Help Menu">^</a></a><strong> <u>Help Menu</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#cueitems">cueitems</a></td><td class="tdsm"><a href="#itemtexthide">itemtexthide</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Envelope Manager"><a href="#Envelope Manager">^</a></a><strong> <u>Envelope Manager</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#envmgropts">envmgropts</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Help Menu"><a href="#Help Menu">^</a></a><strong> <u>Help Menu</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#help">help</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Misc"><a href="#Misc">^</a></a><strong> <u>Misc</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#edit_fontsize">edit_fontsize</a></td><td class="tdsm"><a href="#g_config_project">g_config_project</a></td><td class="tdsm"><a href="#g_markerlist_updcnt">g_markerlist_updcnt</a></td></tr><td class="tdsm"><a href="#ide_colors">ide_colors</a></td><td class="tdsm"><a href="#ide_font_face">ide_font_face</a></td><td class="tdsm"><a href="#inprojmidi_wildcards">inprojmidi_wildcards</a></td></tr><td class="tdsm"><a href="#itemnotes">itemnotes</a></td><td class="tdsm"><a href="#lastthemefn5">lastthemefn5</a></td><td class="tdsm"><a href="#maxspeakgain">maxspeakgain</a></td></tr><td class="tdsm"><a href="#metronome_flags">metronome_flags</a></td><td class="tdsm"><a href="#mvu_rmsgain">mvu_rmsgain</a></td><td class="tdsm"><a href="#mvu_rmsmode">mvu_rmsmode</a></td></tr><td class="tdsm"><a href="#mvu_rmsoffs2">mvu_rmsoffs2</a></td><td class="tdsm"><a href="#mvu_rmsred">mvu_rmsred</a></td><td class="tdsm"><a href="#mvu_rmssize">mvu_rmssize</a></td></tr><td class="tdsm"><a href="#preroll">preroll</a></td><td class="tdsm"><a href="#prerollmeas">prerollmeas</a></td><td class="tdsm"><a href="#quantflag">quantflag</a></td></tr><td class="tdsm"><a href="#quantolms">quantolms</a></td><td class="tdsm"><a href="#quantolms2">quantolms2</a></td><td class="tdsm"><a href="#quantsize2">quantsize2</a></td></tr><td class="tdsm"><a href="#screenset_as_views">screenset_as_views</a></td><td class="tdsm"><a href="#screenset_as_win">screenset_as_win</a></td><td class="tdsm"><a href="#screenset_autosave">screenset_autosave</a></td></tr><td class="tdsm"><a href="#showctinmix">showctinmix</a></td><td class="tdsm"><a href="#showmaintrack">showmaintrack</a></td><td class="tdsm"><a href="#specpeak_alpha">specpeak_alpha</a></td></tr><td class="tdsm"><a href="#specpeak_bv">specpeak_bv</a></td><td class="tdsm"><a href="#specpeak_ftp">specpeak_ftp</a></td><td class="tdsm"><a href="#specpeak_hueh">specpeak_hueh</a></td></tr><td class="tdsm"><a href="#specpeak_huel">specpeak_huel</a></td><td class="tdsm"><a href="#specpeak_lo">specpeak_lo</a></td><td class="tdsm"><a href="#specpeak_na">specpeak_na</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Midi"><a href="#Midi">^</a></a> Midi</b>
 </td></tr><tr><td class="tdsm"><a href="#scnotes">scnotes</a></td><td class="tdsm"><a href="#scoreminnotelen">scoreminnotelen</a></td><td class="tdsm"><a href="#scorequant">scorequant</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Preferences"><a href="#Preferences">^</a></a><strong> <u>Preferences</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Appearance"><a href="#Appearance">^</a></a> Appearance</b>
-</td></tr><tr><td class="tdsm"><a href="#custommenu">custommenu</a></td><td class="tdsm"><a href="#envlanes">envlanes</a></td><td class="tdsm"><a href="#griddot">griddot</a></td></tr><td class="tdsm"><a href="#gridinbg">gridinbg</a></td><td class="tdsm"><a href="#gridinbg2">gridinbg2</a></td><td class="tdsm"><a href="#guidelines2">guidelines2</a></td></tr><td class="tdsm"><a href="#itemvolmode">itemvolmode</a></td><td class="tdsm"><a href="#maxitemlanes">maxitemlanes</a></td><td class="tdsm"><a href="#nativedrawtext">nativedrawtext</a></td></tr><td class="tdsm"><a href="#peaks_minheight">peaks_minheight</a></td><td class="tdsm"><a href="#playcursormode">playcursormode</a></td><td class="tdsm"><a href="#rulerlabelspacing">rulerlabelspacing</a></td></tr><td class="tdsm"><a href="#rulerlayout">rulerlayout</a></td><td class="tdsm"><a href="#showlastundo">showlastundo</a></td><td class="tdsm"><a href="#showpeaksbuild">showpeaksbuild</a></td></tr><td class="tdsm"><a href="#textflags">textflags</a></td><td class="tdsm"><a href="#timeseledge">timeseledge</a></td><td class="tdsm"><a href="#tooltipdelay">tooltipdelay</a></td></tr><td class="tdsm"><a href="#tooltips">tooltips</a></td><td class="tdsm"><a href="#trackitemgap">trackitemgap</a></td><td class="tdsm"><a href="#vgrid">vgrid</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Appearance-Media"><a href="#Appearance-Media">^</a></a> Appearance-Media</b>
+</td></tr><tr><td class="tdsm"><a href="#custommenu">custommenu</a></td><td class="tdsm"><a href="#envlanes">envlanes</a></td><td class="tdsm"><a href="#griddot">griddot</a></td></tr><td class="tdsm"><a href="#gridinbg">gridinbg</a></td><td class="tdsm"><a href="#gridinbg2">gridinbg2</a></td><td class="tdsm"><a href="#guidelines2">guidelines2</a></td></tr><td class="tdsm"><a href="#itemvolmode">itemvolmode</a></td><td class="tdsm"><a href="#maxitemlanes">maxitemlanes</a></td><td class="tdsm"><a href="#nativedrawtext">nativedrawtext</a></td></tr><td class="tdsm"><a href="#peaks_minheight">peaks_minheight</a></td><td class="tdsm"><a href="#playcursormode">playcursormode</a></td><td class="tdsm"><a href="#rulerlabelspacing">rulerlabelspacing</a></td></tr><td class="tdsm"><a href="#rulerlayout">rulerlayout</a></td><td class="tdsm"><a href="#showlastundo">showlastundo</a></td><td class="tdsm"><a href="#showpeaksbuild">showpeaksbuild</a></td></tr><td class="tdsm"><a href="#textflags">textflags</a></td><td class="tdsm"><a href="#timeseledge">timeseledge</a></td><td class="tdsm"><a href="#tooltipdelay">tooltipdelay</a></td></tr><td class="tdsm"><a href="#tooltips">tooltips</a></td><td class="tdsm"><a href="#trackgapmax">trackgapmax</a></td><td class="tdsm"><a href="#trackitemgap">trackitemgap</a></td></tr><td class="tdsm"><a href="#vgrid">vgrid</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Appearance-Media"><a href="#Appearance-Media">^</a></a> Appearance-Media</b>
 </td></tr><tr><td class="tdsm"><a href="#applyfxtail">applyfxtail</a></td><td class="tdsm"><a href="#copyimpmedia">copyimpmedia</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Audio"><a href="#Audio">^</a></a> Audio</b>
 </td></tr><tr><td class="tdsm"><a href="#allstereopairs">allstereopairs</a></td><td class="tdsm"><a href="#audiocloseinactive">audiocloseinactive</a></td><td class="tdsm"><a href="#audioclosestop">audioclosestop</a></td></tr><td class="tdsm"><a href="#errnowarn">errnowarn</a></td><td class="tdsm"><a href="#hwfadex">hwfadex</a></td><td class="tdsm"><a href="#metronome_defout">metronome_defout</a></td></tr><td class="tdsm"><a href="#optimizesilence">optimizesilence</a></td><td class="tdsm"><a href="#useinnc">useinnc</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Automation"><a href="#Automation">^</a></a> Automation</b>
-</td></tr><tr><td class="tdsm"><a href="#autoreturntime">autoreturntime</a></td><td class="tdsm"><a href="#autoreturntime_action">autoreturntime_action</a></td><td class="tdsm"><a href="#env_autoadd">env_autoadd</a></td></tr><td class="tdsm"><a href="#env_options">env_options</a></td><td class="tdsm"><a href="#envtrimadjmode">envtrimadjmode</a></td><td class="tdsm"><a href="#envwritepasschg">envwritepasschg</a></td></tr><td class="tdsm"><a href="#pooledenvtranstime">pooledenvtranstime</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Buffering"><a href="#Buffering">^</a></a> Buffering</b>
+</td></tr><tr><td class="tdsm"><a href="#autoreturntime">autoreturntime</a></td><td class="tdsm"><a href="#autoreturntime_action">autoreturntime_action</a></td><td class="tdsm"><a href="#env_autoadd">env_autoadd</a></td></tr><td class="tdsm"><a href="#env_options">env_options</a></td><td class="tdsm"><a href="#envtrimadjmode">envtrimadjmode</a></td><td class="tdsm"><a href="#envwritepasschg">envwritepasschg</a></td></tr><td class="tdsm"><a href="#pooledenvtranstime">pooledenvtranstime</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Backups"><a href="#Backups">^</a></a> Backups</b>
+</td></tr><tr><td class="tdsm"><a href="#autosavebackuplimit">autosavebackuplimit</a></td><td class="tdsm"><a href="#autosaveint">autosaveint</a></td><td class="tdsm"><a href="#autosavemode">autosavemode</a></td></tr><td class="tdsm"><a href="#savebackuplimit">savebackuplimit</a></td><td class="tdsm"><a href="#saveopts">saveopts</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Buffering"><a href="#Buffering">^</a></a> Buffering</b>
 </td></tr><tr><td class="tdsm"><a href="#audioasync">audioasync</a></td><td class="tdsm"><a href="#autonbworkerthreads">autonbworkerthreads</a></td><td class="tdsm"><a href="#disk_peakmmap2">disk_peakmmap2</a></td></tr><td class="tdsm"><a href="#disk_peaks_mmapkb">disk_peaks_mmapkb</a></td><td class="tdsm"><a href="#disk_peaks_ramkb">disk_peaks_ramkb</a></td><td class="tdsm"><a href="#disk_rdblksex">disk_rdblksex</a></td></tr><td class="tdsm"><a href="#disk_rdmodeex">disk_rdmodeex</a></td><td class="tdsm"><a href="#disk_rdsizeex">disk_rdsizeex</a></td><td class="tdsm"><a href="#disk_wrblks">disk_wrblks</a></td></tr><td class="tdsm"><a href="#disk_wrblks2">disk_wrblks2</a></td><td class="tdsm"><a href="#disk_wrmode">disk_wrmode</a></td><td class="tdsm"><a href="#disk_wrsize">disk_wrsize</a></td></tr><td class="tdsm"><a href="#prebufperb">prebufperb</a></td><td class="tdsm"><a href="#renderaheadlen">renderaheadlen</a></td><td class="tdsm"><a href="#renderaheadlen2">renderaheadlen2</a></td></tr><td class="tdsm"><a href="#syncsmpmax2">syncsmpmax2</a></td><td class="tdsm"><a href="#syncsmpuse">syncsmpuse</a></td><td class="tdsm"><a href="#threadpr">threadpr</a></td></tr><td class="tdsm"><a href="#workbehvr">workbehvr</a></td><td class="tdsm"><a href="#workbuffxuims">workbuffxuims</a></td><td class="tdsm"><a href="#workbufmsex">workbufmsex</a></td></tr><td class="tdsm"><a href="#workrender">workrender</a></td><td class="tdsm"><a href="#workthreads">workthreads</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Compatibility"><a href="#Compatibility">^</a></a> Compatibility</b>
-</td></tr><tr><td class="tdsm"><a href="#fxdenorm">fxdenorm</a></td><td class="tdsm"><a href="#vstbr64">vstbr64</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Context Menu"><a href="#Context Menu">^</a></a> Context Menu</b>
+</td></tr><tr><td class="tdsm"><a href="#fxdenorm">fxdenorm</a></td><td class="tdsm"><a href="#fxenvinterp">fxenvinterp</a></td><td class="tdsm"><a href="#vstbr64">vstbr64</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Context Menu"><a href="#Context Menu">^</a></a> Context Menu</b>
 </td></tr><tr><td class="tdsm"><a href="#mixerflag">mixerflag</a></td><td class="tdsm"><a href="#mixeruiflag">mixeruiflag</a></td><td class="tdsm"><a href="#multiprojopt">multiprojopt</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Control/OSC/web"><a href="#Control/OSC/web">^</a></a> Control/OSC/web</b>
 </td></tr><tr><td class="tdsm"><a href="#csurfrate">csurfrate</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Device"><a href="#Device">^</a></a> Device</b>
 </td></tr><tr><td class="tdsm"><a href="#audiothreadpr">audiothreadpr</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Editing Behavior"><a href="#Editing Behavior">^</a></a> Editing Behavior</b>
-</td></tr><tr><td class="tdsm"><a href="#areasel">areasel</a></td><td class="tdsm"><a href="#itemclickmovecurs">itemclickmovecurs</a></td><td class="tdsm"><a href="#maxvzoom">maxvzoom</a></td></tr><td class="tdsm"><a href="#ripplelockmode">ripplelockmode</a></td><td class="tdsm"><a href="#tabtotransflag">tabtotransflag</a></td><td class="tdsm"><a href="#transientsensitivity">transientsensitivity</a></td></tr><td class="tdsm"><a href="#transientthreshold">transientthreshold</a></td><td class="tdsm"><a href="#vzoommode">vzoommode</a></td><td class="tdsm"><a href="#zoommode">zoommode</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Edting Behavior"><a href="#Edting Behavior">^</a></a> Edting Behavior</b>
+</td></tr><tr><td class="tdsm"><a href="#areasel">areasel</a></td><td class="tdsm"><a href="#itemclickmovecurs">itemclickmovecurs</a></td><td class="tdsm"><a href="#ripplelockmode">ripplelockmode</a></td></tr><td class="tdsm"><a href="#tabtotransflag">tabtotransflag</a></td><td class="tdsm"><a href="#transientsensitivity">transientsensitivity</a></td><td class="tdsm"><a href="#transientthreshold">transientthreshold</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Edting Behavior"><a href="#Edting Behavior">^</a></a> Edting Behavior</b>
 </td></tr><tr><td class="tdsm"><a href="#locklooptotime">locklooptotime</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Envelope Display"><a href="#Envelope Display">^</a></a> Envelope Display</b>
 </td></tr><tr><td class="tdsm"><a href="#env_deffoc">env_deffoc</a></td><td class="tdsm"><a href="#env_ol_minh">env_ol_minh</a></td><td class="tdsm"><a href="#env_reduce">env_reduce</a></td></tr><td class="tdsm"><a href="#envclicksegmode">envclicksegmode</a></td><td class="tdsm"><a href="#envtranstime">envtranstime</a></td><td class="tdsm"><a href="#pitchenvrange">pitchenvrange</a></td></tr><td class="tdsm"><a href="#pooledenvs">pooledenvs</a></td><td class="tdsm"><a href="#tempoenvmax">tempoenvmax</a></td><td class="tdsm"><a href="#tempoenvmin">tempoenvmin</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Fades/Crossfades"><a href="#Fades/Crossfades">^</a></a> Fades/Crossfades</b>
 </td></tr><tr><td class="tdsm"><a href="#itemfade_minheight">itemfade_minheight</a></td><td class="tdsm"><a href="#itemfade_minwidth">itemfade_minwidth</a></td><td class="tdsm"><a href="#itemfadehandle_maxwidth">itemfadehandle_maxwidth</a></td></tr><td class="tdsm"><a href="#itemicons">itemicons</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="General"><a href="#General">^</a></a> General</b>
-</td></tr><tr><td class="tdsm"><a href="#actionmenu">actionmenu</a></td><td class="tdsm"><a href="#alwaysallowkb">alwaysallowkb</a></td><td class="tdsm"><a href="#autoclosetrackwnds">autoclosetrackwnds</a></td></tr><td class="tdsm"><a href="#bigwndframes">bigwndframes</a></td><td class="tdsm"><a href="#cpuallowed">cpuallowed</a></td><td class="tdsm"><a href="#loadlastproj">loadlastproj</a></td></tr><td class="tdsm"><a href="#maxrecent">maxrecent</a></td><td class="tdsm"><a href="#restrictcpu">restrictcpu</a></td><td class="tdsm"><a href="#saveundostatesproj">saveundostatesproj</a></td></tr><td class="tdsm"><a href="#uiscale">uiscale</a></td><td class="tdsm"><a href="#undomask">undomask</a></td><td class="tdsm"><a href="#undomaxmem">undomaxmem</a></td></tr><td class="tdsm"><a href="#verchk">verchk</a></td><td class="tdsm"><a href="#warnmaxram64">warnmaxram64</a></td><td class="tdsm"><a href="#windowflags">windowflags</a></td></tr><td class="tdsm"><a href="#workset_max">workset_max</a></td><td class="tdsm"><a href="#workset_min">workset_min</a></td><td class="tdsm"><a href="#workset_use">workset_use</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Keyboard/Multitouch"><a href="#Keyboard/Multitouch">^</a></a> Keyboard/Multitouch</b>
-</td></tr><tr><td class="tdsm"><a href="#kbd_usealt">kbd_usealt</a></td><td class="tdsm"><a href="#multitouch">multitouch</a></td><td class="tdsm"><a href="#multitouch_ignore_ms">multitouch_ignore_ms</a></td></tr><td class="tdsm"><a href="#multitouch_ignorewheel_ms">multitouch_ignorewheel_ms</a></td><td class="tdsm"><a href="#multitouch_rotate_gear">multitouch_rotate_gear</a></td><td class="tdsm"><a href="#multitouch_swipe_gear">multitouch_swipe_gear</a></td></tr><td class="tdsm"><a href="#multitouch_zoom_gear">multitouch_zoom_gear</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LV2"><a href="#LV2">^</a></a> LV2</b>
+</td></tr><tr><td class="tdsm"><a href="#actionmenu">actionmenu</a></td><td class="tdsm"><a href="#alwaysallowkb">alwaysallowkb</a></td><td class="tdsm"><a href="#autoclosetrackwnds">autoclosetrackwnds</a></td></tr><td class="tdsm"><a href="#bigwndframes">bigwndframes</a></td><td class="tdsm"><a href="#cpuallowed">cpuallowed</a></td><td class="tdsm"><a href="#loadlastproj">loadlastproj</a></td></tr><td class="tdsm"><a href="#maxrecent">maxrecent</a></td><td class="tdsm"><a href="#restrictcpu">restrictcpu</a></td><td class="tdsm"><a href="#saveundostatesproj">saveundostatesproj</a></td></tr><td class="tdsm"><a href="#uiscale">uiscale</a></td><td class="tdsm"><a href="#undomask">undomask</a></td><td class="tdsm"><a href="#undomaxmem">undomaxmem</a></td></tr><td class="tdsm"><a href="#verchk">verchk</a></td><td class="tdsm"><a href="#warnmaxram64">warnmaxram64</a></td><td class="tdsm"><a href="#windowflags">windowflags</a></td></tr><td class="tdsm"><a href="#workset_max">workset_max</a></td><td class="tdsm"><a href="#workset_min">workset_min</a></td><td class="tdsm"><a href="#workset_use">workset_use</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Import"><a href="#Import">^</a></a> Import</b>
+</td></tr><tr><td class="tdsm"><a href="#bpmprojadj">bpmprojadj</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Item Fade Defaults"><a href="#Item Fade Defaults">^</a></a> Item Fade Defaults</b>
+</td></tr><tr><td class="tdsm"><a href="#deffadelen">deffadelen</a></td><td class="tdsm"><a href="#deffadeshape">deffadeshape</a></td><td class="tdsm"><a href="#defsplitxfadelen">defsplitxfadelen</a></td></tr><td class="tdsm"><a href="#defxfadeshape">defxfadeshape</a></td><td class="tdsm"><a href="#splitautoxfade">splitautoxfade</a></td><td class="tdsm"><a href="#splitmaxpix">splitmaxpix</a></td></tr><td class="tdsm"><a href="#stretchmarkerfade">stretchmarkerfade</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Item Loop Defaults"><a href="#Item Loop Defaults">^</a></a> Item Loop Defaults</b>
+</td></tr><tr><td class="tdsm"><a href="#loopnewitems">loopnewitems</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Keyboard/Multitouch"><a href="#Keyboard/Multitouch">^</a></a> Keyboard/Multitouch</b>
+</td></tr><tr><td class="tdsm"><a href="#kbd_override_len">kbd_override_len</a></td><td class="tdsm"><a href="#kbd_usealt">kbd_usealt</a></td><td class="tdsm"><a href="#multitouch">multitouch</a></td></tr><td class="tdsm"><a href="#multitouch_ignore_ms">multitouch_ignore_ms</a></td><td class="tdsm"><a href="#multitouch_ignorewheel_ms">multitouch_ignorewheel_ms</a></td><td class="tdsm"><a href="#multitouch_rotate_gear">multitouch_rotate_gear</a></td></tr><td class="tdsm"><a href="#multitouch_swipe_gear">multitouch_swipe_gear</a></td><td class="tdsm"><a href="#multitouch_zoom_gear">multitouch_zoom_gear</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LV2"><a href="#LV2">^</a></a> LV2</b>
 </td></tr><tr><td class="tdsm"><a href="#lv2_opts">lv2_opts</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Loop Recording"><a href="#Loop Recording">^</a></a> Loop Recording</b>
 </td></tr><tr><td class="tdsm"><a href="#recaddatloop">recaddatloop</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="MIDI Devices"><a href="#MIDI Devices">^</a></a> MIDI Devices</b>
 </td></tr><tr><td class="tdsm"><a href="#midiins">midiins</a></td><td class="tdsm"><a href="#midiins_cs">midiins_cs</a></td><td class="tdsm"><a href="#midiouts">midiouts</a></td></tr><td class="tdsm"><a href="#midiouts_clock">midiouts_clock</a></td><td class="tdsm"><a href="#midiouts_clock_nospp">midiouts_clock_nospp</a></td><td class="tdsm"><a href="#midiouts_llmode">midiouts_llmode</a></td></tr><td class="tdsm"><a href="#midiouts_noreset">midiouts_noreset</a></td><td class="tdsm"><a href="#midioutthread">midioutthread</a></td><td class="tdsm"><a href="#midisendflags">midisendflags</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="MIDI Editor"><a href="#MIDI Editor">^</a></a> MIDI Editor</b>
 </td></tr><tr><td class="tdsm"><a href="#midiccdensity">midiccdensity</a></td><td class="tdsm"><a href="#midiccdensity">midiccdensity</a></td><td class="tdsm"><a href="#midiccenv">midiccenv</a></td></tr><td class="tdsm"><a href="#midiccinterp">midiccinterp</a></td><td class="tdsm"><a href="#mididefcolormap">mididefcolormap</a></td><td class="tdsm"><a href="#midieditor">midieditor</a></td></tr><td class="tdsm"><a href="#midivu">midivu</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="MIDI Settings"><a href="#MIDI Settings">^</a></a> MIDI Settings</b>
 </td></tr><tr><td class="tdsm"><a href="#midicctouchtimeout">midicctouchtimeout</a></td><td class="tdsm"><a href="#rbn">rbn</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="MIDI"><a href="#MIDI">^</a></a> MIDI</b>
-</td></tr><tr><td class="tdsm"><a href="#midioctoffs">midioctoffs</a></td><td class="tdsm"><a href="#miditicksperbeat">miditicksperbeat</a></td><td class="tdsm"><a href="#opencopyprompt">opencopyprompt</a></td></tr><td class="tdsm"><a href="#trimmidionsplit">trimmidionsplit</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media Item Defaults"><a href="#Media Item Defaults">^</a></a> Media Item Defaults</b>
-</td></tr><tr><td class="tdsm"><a href="#deffadelen">deffadelen</a></td><td class="tdsm"><a href="#deffadeshape">deffadeshape</a></td><td class="tdsm"><a href="#defsplitxfadelen">defsplitxfadelen</a></td></tr><td class="tdsm"><a href="#defxfadeshape">defxfadeshape</a></td><td class="tdsm"><a href="#loopnewitems">loopnewitems</a></td><td class="tdsm"><a href="#splitautoxfade">splitautoxfade</a></td></tr><td class="tdsm"><a href="#splitmaxpix">splitmaxpix</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media Item Positioning"><a href="#Media Item Positioning">^</a></a> Media Item Positioning</b>
-</td></tr><tr><td class="tdsm"><a href="#itemlane_minheight">itemlane_minheight</a></td><td class="tdsm"><a href="#itemoverlap_offspct">itemoverlap_offspct</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media"><a href="#Media">^</a></a> Media</b>
+</td></tr><tr><td class="tdsm"><a href="#midioctoffs">midioctoffs</a></td><td class="tdsm"><a href="#miditicksperbeat">miditicksperbeat</a></td><td class="tdsm"><a href="#opencopyprompt">opencopyprompt</a></td></tr><td class="tdsm"><a href="#trimmidionsplit">trimmidionsplit</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media Item Positioning"><a href="#Media Item Positioning">^</a></a> Media Item Positioning</b>
+</td></tr><tr><td class="tdsm"><a href="#itemlane_minheight">itemlane_minheight</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media"><a href="#Media">^</a></a> Media</b>
 </td></tr><tr><td class="tdsm"><a href="#altpeaks">altpeaks</a></td><td class="tdsm"><a href="#insertmtrack">insertmtrack</a></td><td class="tdsm"><a href="#itemfxtail">itemfxtail</a></td></tr><td class="tdsm"><a href="#itemicons_minheight">itemicons_minheight</a></td><td class="tdsm"><a href="#itemlabel_hideheight">itemlabel_hideheight</a></td><td class="tdsm"><a href="#itemlabel_minheight">itemlabel_minheight</a></td></tr><td class="tdsm"><a href="#labelitems2">labelitems2</a></td><td class="tdsm"><a href="#miscopts">miscopts</a></td><td class="tdsm"><a href="#offlineinact">offlineinact</a></td></tr><td class="tdsm"><a href="#peakcachegenmode">peakcachegenmode</a></td><td class="tdsm"><a href="#peakcachegenrs">peakcachegenrs</a></td><td class="tdsm"><a href="#reccfg">reccfg</a></td></tr><td class="tdsm"><a href="#relativeedges">relativeedges</a></td><td class="tdsm"><a href="#showpeaks">showpeaks</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Misc"><a href="#Misc">^</a></a> Misc</b>
 </td></tr><tr><td class="tdsm"><a href="#bouncecfg">bouncecfg</a></td><td class="tdsm"><a href="#templateditcursor">templateditcursor</a></td><td class="tdsm"><a href="#wiring_options">wiring_options</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Mouse Modifiers"><a href="#Mouse Modifiers">^</a></a> Mouse Modifiers</b>
 </td></tr><tr><td class="tdsm"><a href="#handzoom">handzoom</a></td><td class="tdsm"><a href="#itemlowerhalf_minheight">itemlowerhalf_minheight</a></td><td class="tdsm"><a href="#loopclickmode">loopclickmode</a></td></tr><td class="tdsm"><a href="#mousewheelmode">mousewheelmode</a></td><td class="tdsm"><a href="#scnameedit">scnameedit</a></td><td class="tdsm"><a href="#trackselonmouse">trackselonmouse</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Mute/Solo"><a href="#Mute/Solo">^</a></a> Mute/Solo</b>
@@ -98,10 +99,10 @@ End of Header
 </td></tr><tr><td class="tdsm"><a href="#aot">aot</a></td><td class="tdsm"><a href="#envattach">envattach</a></td><td class="tdsm"><a href="#itemsnap">itemsnap</a></td></tr><td class="tdsm"><a href="#maxsnaptrack">maxsnaptrack</a></td><td class="tdsm"><a href="#snapextrad">snapextrad</a></td><td class="tdsm"><a href="#snapextraden">snapextraden</a></td></tr><td class="tdsm"><a href="#solodimen">solodimen</a></td><td class="tdsm"><a href="#takelanes">takelanes</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Paths"><a href="#Paths">^</a></a> Paths</b>
 </td></tr><tr><td class="tdsm"><a href="#altpeaksopathlist">altpeaksopathlist</a></td><td class="tdsm"><a href="#altpeakspath">altpeakspath</a></td><td class="tdsm"><a href="#defrenderpath">defrenderpath</a></td></tr><td class="tdsm"><a href="#defsavepath">defsavepath</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Peaks/Waveforms"><a href="#Peaks/Waveforms">^</a></a> Peaks/Waveforms</b>
 </td></tr><tr><td class="tdsm"><a href="#midipeaks">midipeaks</a></td><td class="tdsm"><a href="#peaksedges">peaksedges</a></td><td class="tdsm"><a href="#sampleedges">sampleedges</a></td></tr><td class="tdsm"><a href="#selitem_tintalpha">selitem_tintalpha</a></td><td class="tdsm"><a href="#unselitem_tintalpha">unselitem_tintalpha</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Playback"><a href="#Playback">^</a></a> Playback</b>
-</td></tr><tr><td class="tdsm"><a href="#loopstopfx">loopstopfx</a></td><td class="tdsm"><a href="#maxplayoffsrate">maxplayoffsrate</a></td><td class="tdsm"><a href="#runafterstop">runafterstop</a></td></tr><td class="tdsm"><a href="#runallonstop">runallonstop</a></td><td class="tdsm"><a href="#scrubloopend">scrubloopend</a></td><td class="tdsm"><a href="#scrubloopstart">scrubloopstart</a></td></tr><td class="tdsm"><a href="#scrubmode">scrubmode</a></td><td class="tdsm"><a href="#scrubrelgain">scrubrelgain</a></td><td class="tdsm"><a href="#stopendofloop">stopendofloop</a></td></tr><td class="tdsm"><a href="#stopprojlen">stopprojlen</a></td><td class="tdsm"><a href="#viewadvance">viewadvance</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Plug-Ins"><a href="#Plug-Ins">^</a></a> Plug-Ins</b>
+</td></tr><tr><td class="tdsm"><a href="#loopstopfx">loopstopfx</a></td><td class="tdsm"><a href="#loudpeak_alpha">loudpeak_alpha</a></td><td class="tdsm"><a href="#maxplayoffsrate">maxplayoffsrate</a></td></tr><td class="tdsm"><a href="#runafterstop">runafterstop</a></td><td class="tdsm"><a href="#runallonstop">runallonstop</a></td><td class="tdsm"><a href="#stopendofloop">stopendofloop</a></td></tr><td class="tdsm"><a href="#stopprojlen">stopprojlen</a></td><td class="tdsm"><a href="#viewadvance">viewadvance</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Plug-Ins"><a href="#Plug-Ins">^</a></a> Plug-Ins</b>
 </td></tr><tr><td class="tdsm"><a href="#fxfloat_focus">fxfloat_focus</a></td><td class="tdsm"><a href="#fxresize">fxresize</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Plug-ins"><a href="#Plug-ins">^</a></a> Plug-ins</b>
 </td></tr><tr><td class="tdsm"><a href="#maxrecentfx">maxrecentfx</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Project"><a href="#Project">^</a></a> Project</b>
-</td></tr><tr><td class="tdsm"><a href="#autosaveint">autosaveint</a></td><td class="tdsm"><a href="#autosavemode">autosavemode</a></td><td class="tdsm"><a href="#newprojdo">newprojdo</a></td></tr><td class="tdsm"><a href="#pmfol">pmfol</a></td><td class="tdsm"><a href="#rfprojfirst">rfprojfirst</a></td><td class="tdsm"><a href="#saveopts">saveopts</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ReWire/DX"><a href="#ReWire/DX">^</a></a> ReWire/DX</b>
+</td></tr><tr><td class="tdsm"><a href="#newprojdo">newprojdo</a></td><td class="tdsm"><a href="#pmfol">pmfol</a></td><td class="tdsm"><a href="#rfprojfirst">rfprojfirst</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ReWire/DX"><a href="#ReWire/DX">^</a></a> ReWire/DX</b>
 </td></tr><tr><td class="tdsm"><a href="#rewireslave">rewireslave</a></td><td class="tdsm"><a href="#rewireslavedelay">rewireslavedelay</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ReaMote"><a href="#ReaMote">^</a></a> ReaMote</b>
 </td></tr><tr><td class="tdsm"><a href="#reamote_maxblock">reamote_maxblock</a></td><td class="tdsm"><a href="#reamote_maxlat_render">reamote_maxlat_render</a></td><td class="tdsm"><a href="#reamote_maxpkt">reamote_maxpkt</a></td></tr><td class="tdsm"><a href="#reamote_smplfmt">reamote_smplfmt</a></td><td class="tdsm"><a href="#use_reamote">use_reamote</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ReaScript"><a href="#ReaScript">^</a></a> ReaScript</b>
 </td></tr><tr><td class="tdsm"><a href="#edit_flags">edit_flags</a></td><td class="tdsm"><a href="#edit_sug">edit_sug</a></td><td class="tdsm"><a href="#reascript">reascript</a></td></tr><td class="tdsm"><a href="#reascripttimeout">reascripttimeout</a></td><td class="tdsm"><a href="#reascriptwatchms">reascriptwatchms</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Recording "><a href="#Recording ">^</a></a> Recording </b>
@@ -109,21 +110,25 @@ End of Header
 </td></tr><tr><td class="tdsm"><a href="#adjreclat">adjreclat</a></td><td class="tdsm"><a href="#adjrecmanlatin">adjrecmanlatin</a></td><td class="tdsm"><a href="#diskcheck">diskcheck</a></td></tr><td class="tdsm"><a href="#diskcheckmb">diskcheckmb</a></td><td class="tdsm"><a href="#manuallat">manuallat</a></td><td class="tdsm"><a href="#manuallatin">manuallatin</a></td></tr><td class="tdsm"><a href="#maxrecsize">maxrecsize</a></td><td class="tdsm"><a href="#maxrecsize_use">maxrecsize_use</a></td><td class="tdsm"><a href="#peakrecbm">peakrecbm</a></td></tr><td class="tdsm"><a href="#promptendrec">promptendrec</a></td><td class="tdsm"><a href="#recfile_wildcards">recfile_wildcards</a></td><td class="tdsm"><a href="#recopts">recopts</a></td></tr><td class="tdsm"><a href="#recupdatems">recupdatems</a></td><td class="tdsm"><a href="#showrecitems">showrecitems</a></td><td class="tdsm"><a href="#zoomshowarm">zoomshowarm</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Render to File"><a href="#Render to File">^</a></a> Render to File</b>
 </td></tr><tr><td class="tdsm"><a href="#rendermetadataflags">rendermetadataflags</a></td><td class="tdsm"><a href="#renderqdelay">renderqdelay</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Rendering"><a href="#Rendering">^</a></a> Rendering</b>
 </td></tr><tr><td class="tdsm"><a href="#renderbsnew">renderbsnew</a></td><td class="tdsm"><a href="#rendertail">rendertail</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Rewire/DX"><a href="#Rewire/DX">^</a></a> Rewire/DX</b>
-</td></tr><tr><td class="tdsm"><a href="#disabledxscan">disabledxscan</a></td><td class="tdsm"><a href="#usedxplugs">usedxplugs</a></td><td class="tdsm"><a href="#userewire">userewire</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Seeking"><a href="#Seeking">^</a></a> Seeking</b>
+</td></tr><tr><td class="tdsm"><a href="#disabledxscan">disabledxscan</a></td><td class="tdsm"><a href="#usedxplugs">usedxplugs</a></td><td class="tdsm"><a href="#userewire">userewire</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Scrub/Jog"><a href="#Scrub/Jog">^</a></a> Scrub/Jog</b>
+</td></tr><tr><td class="tdsm"><a href="#scrubloopend">scrubloopend</a></td><td class="tdsm"><a href="#scrubloopstart">scrubloopstart</a></td><td class="tdsm"><a href="#scrubmode">scrubmode</a></td></tr><td class="tdsm"><a href="#scrubrelgain">scrubrelgain</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Scrubg/Jog"><a href="#Scrubg/Jog">^</a></a> Scrubg/Jog</b>
+</td></tr><tr><td class="tdsm"><a href="#scrubgain">scrubgain</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Seeking"><a href="#Seeking">^</a></a> Seeking</b>
 </td></tr><tr><td class="tdsm"><a href="#itemeditpr">itemeditpr</a></td><td class="tdsm"><a href="#loopselpr">loopselpr</a></td><td class="tdsm"><a href="#seekmodes">seekmodes</a></td></tr><td class="tdsm"><a href="#smoothseek">smoothseek</a></td><td class="tdsm"><a href="#smoothseekmeas">smoothseekmeas</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Snap/grid"><a href="#Snap/grid">^</a></a> Snap/grid</b>
 </td></tr><tr><td class="tdsm"><a href="#relsnap">relsnap</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="System"><a href="#System">^</a></a> System</b>
-</td></tr><tr><td class="tdsm"><a href="#__numcpu">__numcpu</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track Control Panels"><a href="#Track Control Panels">^</a></a> Track Control Panels</b>
-</td></tr><tr><td class="tdsm"><a href="#groupdispmode">groupdispmode</a></td><td class="tdsm"><a href="#nometers">nometers</a></td><td class="tdsm"><a href="#pandispmode">pandispmode</a></td></tr><td class="tdsm"><a href="#resetvuplay">resetvuplay</a></td><td class="tdsm"><a href="#slidermaxv">slidermaxv</a></td><td class="tdsm"><a href="#sliderminv">sliderminv</a></td></tr><td class="tdsm"><a href="#slidershex">slidershex</a></td><td class="tdsm"><a href="#tcpalign">tcpalign</a></td><td class="tdsm"><a href="#tinttcp">tinttcp</a></td></tr><td class="tdsm"><a href="#vuclipstick">vuclipstick</a></td><td class="tdsm"><a href="#vudecay">vudecay</a></td><td class="tdsm"><a href="#vumaxvol">vumaxvol</a></td></tr><td class="tdsm"><a href="#vuminvol">vuminvol</a></td><td class="tdsm"><a href="#vuupdfreq">vuupdfreq</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track/Send Defaults"><a href="#Track/Send Defaults">^</a></a> Track/Send Defaults</b>
+</td></tr><tr><td class="tdsm"><a href="#__fx_loadstate_ctx">__fx_loadstate_ctx</a></td><td class="tdsm"><a href="#__metronome_ptr">__metronome_ptr</a></td><td class="tdsm"><a href="#__numcpu">__numcpu</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track Control Panels"><a href="#Track Control Panels">^</a></a> Track Control Panels</b>
+</td></tr><tr><td class="tdsm"><a href="#groupdispmode">groupdispmode</a></td><td class="tdsm"><a href="#pandispmode">pandispmode</a></td><td class="tdsm"><a href="#slidermaxv">slidermaxv</a></td></tr><td class="tdsm"><a href="#sliderminv">sliderminv</a></td><td class="tdsm"><a href="#slidershex">slidershex</a></td><td class="tdsm"><a href="#tcpalign">tcpalign</a></td></tr><td class="tdsm"><a href="#tinttcp">tinttcp</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track Meters"><a href="#Track Meters">^</a></a> Track Meters</b>
+</td></tr><tr><td class="tdsm"><a href="#grvuscale">grvuscale</a></td><td class="tdsm"><a href="#nometers">nometers</a></td><td class="tdsm"><a href="#resetvuplay">resetvuplay</a></td></tr><td class="tdsm"><a href="#vuclipstick">vuclipstick</a></td><td class="tdsm"><a href="#vudecay">vudecay</a></td><td class="tdsm"><a href="#vumaxvol">vumaxvol</a></td></tr><td class="tdsm"><a href="#vuminvol">vuminvol</a></td><td class="tdsm"><a href="#vuupdfreq">vuupdfreq</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track/Send Defaults"><a href="#Track/Send Defaults">^</a></a> Track/Send Defaults</b>
 </td></tr><tr><td class="tdsm"><a href="#defautomode">defautomode</a></td><td class="tdsm"><a href="#defenvs">defenvs</a></td><td class="tdsm"><a href="#defhwvol">defhwvol</a></td></tr><td class="tdsm"><a href="#defsendflag">defsendflag</a></td><td class="tdsm"><a href="#defsendvol">defsendvol</a></td><td class="tdsm"><a href="#deftrackrecflags">deftrackrecflags</a></td></tr><td class="tdsm"><a href="#deftrackrecinput">deftrackrecinput</a></td><td class="tdsm"><a href="#deftrackvol">deftrackvol</a></td><td class="tdsm"><a href="#defvzoom">defvzoom</a></td></tr><td class="tdsm"><a href="#newtflag">newtflag</a></td><td class="tdsm"><a href="#volenvrange">volenvrange</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Transport"><a href="#Transport">^</a></a> Transport</b>
 </td></tr><tr><td class="tdsm"><a href="#transflags">transflags</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="VST"><a href="#VST">^</a></a> VST</b>
 </td></tr><tr><td class="tdsm"><a href="#ara">ara</a></td><td class="tdsm"><a href="#vst_scan">vst_scan</a></td><td class="tdsm"><a href="#vstfullstate">vstfullstate</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Video"><a href="#Video">^</a></a> Video</b>
 </td></tr><tr><td class="tdsm"><a href="#bpminfnimport">bpminfnimport</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Video/REX/Misc"><a href="#Video/REX/Misc">^</a></a> Video/REX/Misc</b>
 </td></tr><tr><td class="tdsm"><a href="#acidimport">acidimport</a></td><td class="tdsm"><a href="#reximport">reximport</a></td><td class="tdsm"><a href="#video_colorspace">video_colorspace</a></td></tr><td class="tdsm"><a href="#video_decprio">video_decprio</a></td><td class="tdsm"><a href="#video_defimglen">video_defimglen</a></td><td class="tdsm"><a href="#video_delayms">video_delayms</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="View Menu"><a href="#View Menu">^</a></a> View Menu</b>
-</td></tr><tr><td class="tdsm"><a href="#fadeeditflags">fadeeditflags</a></td><td class="tdsm"><a href="#fadeeditlink">fadeeditlink</a></td><td class="tdsm"><a href="#fadeeditpostsel">fadeeditpostsel</a></td></tr><td class="tdsm"><a href="#fadeeditpresel">fadeeditpresel</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a><strong> <u>Project Settings</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#fadeeditflags">fadeeditflags</a></td><td class="tdsm"><a href="#fadeeditlink">fadeeditlink</a></td><td class="tdsm"><a href="#fadeeditpostsel">fadeeditpostsel</a></td></tr><td class="tdsm"><a href="#fadeeditpresel">fadeeditpresel</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Zoom/Scroll/Offset"><a href="#Zoom/Scroll/Offset">^</a></a> Zoom/Scroll/Offset</b>
+</td></tr><tr><td class="tdsm"><a href="#envvzoomscale">envvzoomscale</a></td><td class="tdsm"><a href="#itemoverlap_offspct">itemoverlap_offspct</a></td><td class="tdsm"><a href="#maxvzoom">maxvzoom</a></td></tr><td class="tdsm"><a href="#vscrollflag">vscrollflag</a></td><td class="tdsm"><a href="#vscrollstep">vscrollstep</a></td><td class="tdsm"><a href="#vscrollstep2">vscrollstep2</a></td></tr><td class="tdsm"><a href="#vzoommode">vzoommode</a></td><td class="tdsm"><a href="#zoommode">zoommode</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a><strong> <u>Project Settings</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Advanced"><a href="#Advanced">^</a></a> Advanced</b>
 </td></tr><tr><td class="tdsm"><a href="#feedbackmode">feedbackmode</a></td><td class="tdsm"><a href="#itemmixflag">itemmixflag</a></td><td class="tdsm"><a href="#panlaw">panlaw</a></td></tr><td class="tdsm"><a href="#panlawflags">panlawflags</a></td><td class="tdsm"><a href="#panmode">panmode</a></td><td class="tdsm"><a href="#projmaxlen">projmaxlen</a></td></tr><td class="tdsm"><a href="#projmaxlenuse">projmaxlenuse</a></td><td class="tdsm"><a href="#projsmpteahead">projsmpteahead</a></td><td class="tdsm"><a href="#projsmptefw_rec">projsmptefw_rec</a></td></tr><td class="tdsm"><a href="#projsmpteinput">projsmpteinput</a></td><td class="tdsm"><a href="#projsmptemaxfree">projsmptemaxfree</a></td><td class="tdsm"><a href="#projsmpteoffs">projsmpteoffs</a></td></tr><td class="tdsm"><a href="#projsmpterate">projsmpterate</a></td><td class="tdsm"><a href="#projsmpterateuseproj">projsmpterateuseproj</a></td><td class="tdsm"><a href="#projsmpteresync">projsmpteresync</a></td></tr><td class="tdsm"><a href="#projsmpteresync_rec">projsmpteresync_rec</a></td><td class="tdsm"><a href="#projsmpteskip">projsmpteskip</a></td><td class="tdsm"><a href="#projsmptesync">projsmptesync</a></td></tr><td class="tdsm"><a href="#silenceflags">silenceflags</a></td><td class="tdsm"><a href="#silencethreshdb">silencethreshdb</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Context Menu"><a href="#Context Menu">^</a></a> Context Menu</b>
 </td></tr><tr><td class="tdsm"><a href="#mixrowflags">mixrowflags</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Media"><a href="#Media">^</a></a> Media</b>
-</td></tr><tr><td class="tdsm"><a href="#afxcfg">afxcfg</a></td><td class="tdsm"><a href="#projrecforopencopy">projrecforopencopy</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Misc"><a href="#Misc">^</a></a> Misc</b>
+</td></tr><tr><td class="tdsm"><a href="#afxcfg">afxcfg</a></td><td class="tdsm"><a href="#projdefrecpath">projdefrecpath</a></td><td class="tdsm"><a href="#projrecforopencopy">projrecforopencopy</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Misc"><a href="#Misc">^</a></a> Misc</b>
 </td></tr><tr><td class="tdsm"><a href="#vzoom2">vzoom2</a></td><td class="tdsm"><a href="#vzoom3">vzoom3</a></td><td class="tdsm"><a href="#zoom">zoom</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Notes"><a href="#Notes">^</a></a> Notes</b>
 </td></tr><tr><td class="tdsm"><a href="#opennotes">opennotes</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Options Menu"><a href="#Options Menu">^</a></a> Options Menu</b>
 </td></tr><tr><td class="tdsm"><a href="#autoxfade">autoxfade</a></td><td class="tdsm"><a href="#loopgran">loopgran</a></td><td class="tdsm"><a href="#loopgranlen">loopgranlen</a></td></tr><td class="tdsm"><a href="#pooledenvattach">pooledenvattach</a></td><td class="tdsm"><a href="#projgriddiv">projgriddiv</a></td><td class="tdsm"><a href="#projgriddivsnap">projgriddivsnap</a></td></tr><td class="tdsm"><a href="#projgridframe">projgridframe</a></td><td class="tdsm"><a href="#projgridmin">projgridmin</a></td><td class="tdsm"><a href="#projgridsnapmin">projgridsnapmin</a></td></tr><td class="tdsm"><a href="#projgridswing">projgridswing</a></td><td class="tdsm"><a href="#projgroupover">projgroupover</a></td><td class="tdsm"><a href="#projtakelane">projtakelane</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Project Settings"><a href="#Project Settings">^</a></a> Project Settings</b>
@@ -134,7 +139,7 @@ End of Header
 </td></tr><tr><td class="tdsm"><a href="#projtrackgroupdisabled">projtrackgroupdisabled</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Transport"><a href="#Transport">^</a></a> Transport</b>
 </td></tr><tr><td class="tdsm"><a href="#playrate">playrate</a></td><td class="tdsm"><a href="#projtimemode2">projtimemode2</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Video"><a href="#Video">^</a></a> Video</b>
 </td></tr><tr><td class="tdsm"><a href="#projfrbase">projfrbase</a></td><td class="tdsm"><a href="#projfrdrop">projfrdrop</a></td><td class="tdsm"><a href="#projvidflags">projvidflags</a></td></tr><td class="tdsm"><a href="#projvidh">projvidh</a></td><td class="tdsm"><a href="#projvidw">projvidw</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="misc"><a href="#misc">^</a></a> misc</b>
-</td></tr><tr><td class="tdsm"><a href="#audioprshift">audioprshift</a></td><td class="tdsm"><a href="#loop">loop</a></td><td class="tdsm"><a href="#mastermutesolo">mastermutesolo</a></td></tr><td class="tdsm"><a href="#projgroupsel">projgroupsel</a></td><td class="tdsm"><a href="#projmasterpanlaw">projmasterpanlaw</a></td><td class="tdsm"><a href="#projmasterpanlawflags">projmasterpanlawflags</a></td></tr><td class="tdsm"><a href="#projmasterpanmode">projmasterpanmode</a></td><td class="tdsm"><a href="#projmastervuflags">projmastervuflags</a></td><td class="tdsm"><a href="#projmetrobeatlen">projmetrobeatlen</a></td></tr><td class="tdsm"><a href="#projmetroclick">projmetroclick</a></td><td class="tdsm"><a href="#projmetrocountin">projmetrocountin</a></td><td class="tdsm"><a href="#projmetroen">projmetroen</a></td></tr><td class="tdsm"><a href="#projmetrof1">projmetrof1</a></td><td class="tdsm"><a href="#projmetrof2">projmetrof2</a></td><td class="tdsm"><a href="#projmetrov1">projmetrov1</a></td></tr><td class="tdsm"><a href="#projmetrov2">projmetrov2</a></td><td class="tdsm"><a href="#projpeaksgain">projpeaksgain</a></td><td class="tdsm"><a href="#projrecmode">projrecmode</a></td></tr><td class="tdsm"><a href="#projripedit">projripedit</a></td><td class="tdsm"><a href="#projsellock">projsellock</a></td><td class="tdsm"><a href="#projshowgrid">projshowgrid</a></td></tr><td class="tdsm"><a href="#psmaxv">psmaxv</a></td><td class="tdsm"><a href="#psminv">psminv</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Reaper Ini-Only"><a href="#Reaper Ini-Only">^</a></a><strong> <u>Reaper Ini-Only</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#audioprshift">audioprshift</a></td><td class="tdsm"><a href="#loop">loop</a></td><td class="tdsm"><a href="#mastermutesolo">mastermutesolo</a></td></tr><td class="tdsm"><a href="#projgroupsel">projgroupsel</a></td><td class="tdsm"><a href="#projmasterpanlaw">projmasterpanlaw</a></td><td class="tdsm"><a href="#projmasterpanlawflags">projmasterpanlawflags</a></td></tr><td class="tdsm"><a href="#projmasterpanmode">projmasterpanmode</a></td><td class="tdsm"><a href="#projmastervuflags">projmastervuflags</a></td><td class="tdsm"><a href="#projmetrobeatlen">projmetrobeatlen</a></td></tr><td class="tdsm"><a href="#projmetroclick">projmetroclick</a></td><td class="tdsm"><a href="#projmetrocountin">projmetrocountin</a></td><td class="tdsm"><a href="#projmetroen">projmetroen</a></td></tr><td class="tdsm"><a href="#projmetrof1">projmetrof1</a></td><td class="tdsm"><a href="#projmetrof2">projmetrof2</a></td><td class="tdsm"><a href="#projmetropattern">projmetropattern</a></td></tr><td class="tdsm"><a href="#projmetrov1">projmetrov1</a></td><td class="tdsm"><a href="#projmetrov2">projmetrov2</a></td><td class="tdsm"><a href="#projpeaksgain">projpeaksgain</a></td></tr><td class="tdsm"><a href="#projrecmode">projrecmode</a></td><td class="tdsm"><a href="#projripedit">projripedit</a></td><td class="tdsm"><a href="#projsellock">projsellock</a></td></tr><td class="tdsm"><a href="#projshowgrid">projshowgrid</a></td><td class="tdsm"><a href="#psmaxv">psmaxv</a></td><td class="tdsm"><a href="#psminv">psminv</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Reaper Ini-Only"><a href="#Reaper Ini-Only">^</a></a><strong> <u>Reaper Ini-Only</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="REAPER"><a href="#REAPER">^</a></a> REAPER</b>
 </td></tr><tr><td class="tdsm"><a href="#REAPER->autoclosekeymap">REAPER->autoclosekeymap</a></td><td class="tdsm"><a href="#REAPER->pspage_last">REAPER->pspage_last</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="reaper_video"><a href="#reaper_video">^</a></a> reaper_video</b>
 </td></tr><tr><td class="tdsm"><a href="#reaper_video->fx_mode">reaper_video->fx_mode</a></td><td class="tdsm"><a href="#reaper_video->misc_flags">reaper_video->misc_flags</a></td><td class="tdsm"><a href="#reaper_video->playback_cache">reaper_video->playback_cache</a></td></tr><td class="tdsm"><a href="#reaper_video->smp">reaper_video->smp</a></td><td class="tdsm"><a href="#reaper_video->vdprefetch_srcs">reaper_video->vdprefetch_srcs</a></td><td class="tdsm"><a href="#reaper_video->vdprefetch_threads">reaper_video->vdprefetch_threads</a></td></tr><td class="tdsm"><a href="#reaper_video->visible">reaper_video->visible</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Transport"><a href="#Transport">^</a></a><strong> <u>Transport</u></strong><br><br>
@@ -142,10 +147,36 @@ End of Header
 </td></tr><tr><td class="tdsm"><a href="#ctrlcopyitem">ctrlcopyitem</a></td><td class="tdsm"><a href="#disk_rdmodeexmac">disk_rdmodeexmac</a></td><td class="tdsm"><a href="#itemdblclk">itemdblclk</a></td></tr><td class="tdsm"><a href="#itemprops">itemprops</a></td><td class="tdsm"><a href="#itemprops_timemode">itemprops_timemode</a></td><td class="tdsm"><a href="#mousemovemod">mousemovemod</a></td></tr><td class="tdsm"><a href="#nativedrawtext2">nativedrawtext2</a></td><td class="tdsm"><a href="#newfnopt">newfnopt</a></td><td class="tdsm"><a href="#osxnomiddlemancocoa">osxnomiddlemancocoa</a></td></tr><td class="tdsm"><a href="#projmidieditor">projmidieditor</a></td><td class="tdsm"><a href="#rendermastertracksub">rendermastertracksub</a></td><td class="tdsm"><a href="#rightclickemulate">rightclickemulate</a></td></tr><td class="tdsm"><a href="#selitemtop">selitemtop</a></td><td class="tdsm"><a href="#titlebarreghide">titlebarreghide</a></td><td class="tdsm"><a href="#tsmarker">tsmarker</a></td></tr><td class="tdsm"><a href="#vstbr32">vstbr32</a></td><td class="tdsm"><a href="#vstfolder_settings">vstfolder_settings</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="User Interface"><a href="#User Interface">^</a></a><strong> <u>User Interface</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#fullscreenrectb">fullscreenrectb</a></td><td class="tdsm"><a href="#fullscreenrectl">fullscreenrectl</a></td><td class="tdsm"><a href="#fullscreenrectr">fullscreenrectr</a></td></tr><td class="tdsm"><a href="#fullscreenrectt">fullscreenrectt</a></td><td class="tdsm"><a href="#isfullscreen">isfullscreen</a></td><td class="inds">&nbsp;</td></tr></table><br></div><div class="ch">
 <hr>
+<a class="anch" id="smmaxsz"></a>
+<a href="#smmaxsz"> ^</a> <u><b>smmaxsz</b></u><br>			<p>
+<div class="ch">
+Maximum stretch marker handle size-inputbox(the first one in the line), as set in Preferences -> Appearance-Media<br>
+It is an integer, preferences variable.<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>1 to 100, in pixels<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="smmaxsz_pct"></a>
+<a href="#smmaxsz_pct"> ^</a> <u><b>smmaxsz_pct</b></u><br>			<p>
+<div class="ch">
+Maximum stretch marker handle size ... or % of take-height-inputbox(the second one in the line), as set in Preferences -> Appearance-Media<br>
+It is an integer, preferences variable.<br>
+<br>
+&nbsp;&nbsp;>1-30 in percents<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="Introduction"></a>
 <a href="#Introduction"> ^</a> <u><b>Introduction to Config Variables</b></u><br>			<p>
 <div class="ch">
-<p>List of all Config Variables as of Reaper 6.82 and probably are missing some, but should be fairly complete anyway.<br />
+<p>List of all Config Variables as of Reaper 7.16 and probably are missing some, but should be fairly complete anyway.<br />
 These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.<br />
 To change them, you can use the following ReaScript API-functions(requires SWS being installed):</p>
 <blockquote>
@@ -246,6 +277,20 @@ Can be affected by the following actions:<br>
 >1, action is toggled off&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="envmgropts"></a>
+<a href="#envmgropts"> ^</a> <u><b>envmgropts</b></u><br>			<p>
+<div class="ch">
+Several settings, as set in the context-menu of the envelope manager&nbsp;&nbsp;<br>
+It is an integer, project variable. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+>&1=0, Target Envelope manager when clicking track/take envelope buttons(shift+click to override) - unchecked<br>
+>&1=1, Target Envelope manager when clicking track/take envelope buttons(shift+click to override) - checked<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
 </div>
 <div class="ch">
@@ -1200,6 +1245,19 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="trackgapmax"></a>
+<a href="#trackgapmax"> ^</a> <u><b>trackgapmax</b></u><br>			<p>
+<div class="ch">
+Visual track spacer size-inputbox, as set in Preferences -> Appearance<br>
+It is an integer, preferences variable.<br>
+<br>
+>0-2147483647<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="trackitemgap"></a>
 <a href="#trackitemgap"> ^</a> <u><b>trackitemgap</b></u><br>			<p>
 <div class="ch">
@@ -1483,11 +1541,14 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="env_options"></a>
 <a href="#env_options"> ^</a> <u><b>env_options</b></u><br>			<p>
 <div class="ch">
-Several settings from the Automation-section, as set in Preferences -> Automation.&nbsp;&nbsp;<br>
+Several settings from the Automation-section, as set in Preferences -> Automation as well as the Envelope Manager-context menu.<br>
 It is an integer-bitfield, preferences variable.<br>
 <br>
 >&1=0, Reset latch state when looping(on) - checked&nbsp;&nbsp;<br>
 >&1=1, Reset latch state when looping(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&2=0, Default: All FX parameters expanded<br>
+>&2=1, Default: All FX parameters collapsed<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -1537,6 +1598,114 @@ It is a double, preferences variable.<br>
 &nbsp;&nbsp;0 to 200(though higher values can be set)<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER, but with higher precision.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="autosavebackuplimit"></a>
+<a href="#autosavebackuplimit"> ^</a> <u><b>autosavebackuplimit</b></u><br>			<p>
+<div class="ch">
+Limit auto-saved backups to most recent-inputbox, as set in Preferences -> Backups&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>0 - 2147483647 days<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="autosaveint"></a>
+<a href="#autosaveint"> ^</a> <u><b>autosaveint</b></u><br>			<p>
+<div class="ch">
+Auto-save interval-inputbox from the Auto save-section, as set in Preferences -> Backups.&nbsp;&nbsp;<br>
+It is an integer preferences variable.<br>
+<br>
+>0 to 2147483647; in seconds; higher values become negative&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="autosavemode"></a>
+<a href="#autosavemode"> ^</a> <u><b>autosavemode</b></u><br>			<p>
+<div class="ch">
+Auto-save interval-dropdownlist from the Project saving-section, as set in Preferences -> Backups.&nbsp;&nbsp;<br>
+It is an integer preferences variable.<br>
+<br>
+>0, when not recording&nbsp;&nbsp;<br>
+>1, when stopped&nbsp;&nbsp;<br>
+>2, any time&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="savebackuplimit"></a>
+<a href="#savebackuplimit"> ^</a> <u><b>savebackuplimit</b></u><br>			<p>
+<div class="ch">
+Limit backups to most recent-inputbox, as set in Preferences -> Backups&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>0 - 2147483647 days<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="saveopts"></a>
+<a href="#saveopts"> ^</a> <u><b>saveopts</b></u><br>			<p>
+<div class="ch">
+Several settings from the Project saving-section, as set in Preferences -> Backups.&nbsp;&nbsp;<br>
+It is an integer-bitfield, preferences variable.<br>
+<br>
+>&1=0, Preserve previously-saved version of project as <project>.rpp-back - unchecked&nbsp;&nbsp;<br>
+>&1=1, Preserve previously-saved version of project as <project>.rpp-back - checked&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<br>
+>&2=0, Auto-save to project file(not recommended)(off) - unchecked&nbsp;&nbsp;<br>
+>&2=1, Auto-save to project file(not recommended)(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&4=0, Auto-save to timestamped file in project directory(off) - unchecked&nbsp;&nbsp;<br>
+>&4=1, Auto-save to timestamped file in project directory(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&8=0, Auto-save to timestamped file in additional directory(off) - unchecked&nbsp;&nbsp;<br>
+>&8=1, Auto-save to timestamped file in additional directory(on) - checked&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+>&16=0, Preserve previously-saved versions of projact as <project>-[timestamp].rpp-bak(off) - unchecked&nbsp;&nbsp;<br>
+>&16=1, Preserve previously-saved versions of projact as <project>-[timestamp].rpp-bak(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&32=0, Limit backups to most recent-checkbox - unchecked<br>
+<br>
+>&64, Limit backups to most recent-dropdownmenu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0 - copies<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1 - unique days<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+>&128=0, Limit auto-saved backups to most recent-checkbox - unchecked<br>
+>&128=1, Limit auto-saved backups to most recent-checkbox - checked<br>
+<br>
+>&256, Limit auto-saved backups to most recent-dropdownlist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0, copies<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1, unique days<br>
+<br>
+>&512=0, Limit backups to most recent-checkbox - unchecked<br>
+>&512=1, Limit backups to most recent-checkbox - checked<br>
+<br>
+>&1024 &2048, Limit backups to most recent-dropdownlist<br>
+&nbsp;&nbsp;>>0 0, copies for current project<br>
+&nbsp;&nbsp;>>0 1, copies for all projects<br>
+&nbsp;&nbsp;>>1 0, unique days for current project<br>
+&nbsp;&nbsp;>>1 1, unique days for all projects<br>
+<br>
+>&4096=0, Save timestamped backups to Backups project subdirectory-checkbox - unchecked<br>
+>&4096=1, Save timestamped backups to Backups project subdirectory-checkbox - checked<br>
+<br>
+>&8192=0, Save auto-saved project backups to AutoSaves project subdirectory - unchecked<br>
+>&8192=1, Save auto-saved project backups to AutoSaves project subdirectory - checked<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
 </div>
 <div class="ch">
@@ -1930,6 +2099,19 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="fxenvinterp"></a>
+<a href="#fxenvinterp"> ^</a> <u><b>fxenvinterp</b></u><br>			<p>
+<div class="ch">
+Automation rate when interpolating between points-inputbox, as set in Preferences -> Plug-In compatibility<br>
+This in an double-float-variable, preferences variable.&nbsp;&nbsp;<br>
+<br>
+&nbsp;&nbsp;>0 to 1000 in milliseconds(0=once per buffer block)<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="vstbr64"></a>
 <a href="#vstbr64"> ^</a> <u><b>vstbr64</b></u><br>			<p>
 <div class="ch">
@@ -2174,20 +2356,9 @@ Can be affected by the following actions:<br>
 >&512=0, Move edit cursor on razor edit change -> unchecked<br>
 >&512=1, Move edit cursor on razor edit change -> checked<br>
 <br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="maxvzoom"></a>
-<a href="#maxvzoom"> ^</a> <u><b>maxvzoom</b></u><br>			<p>
-<div class="ch">
-Maximum vertical zoom-inputbox as set in Preferences -> Editing Behavior<br>
-Note: unlike the inputbox, this value is not in percentage but in doubles with 1.00 being 100%, 0.5 being 50%, etc<br>
-It is a double-float, preferences variable. <br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;>0.125-8.00; default is 1.0<br>
-&nbsp;&nbsp;<br>
+>&1024=0, Clicking fixed lane comp area -> unchecked<br>
+>&1024=1, Clicking fixed lane comp area -> checked<br>
+<br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
 </div>
@@ -2264,38 +2435,6 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="vzoommode"></a>
-<a href="#vzoommode"> ^</a> <u><b>vzoommode</b></u><br>			<p>
-<div class="ch">
-The vertical zoom center, as set in the Preferences -> Editing Behavior&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->0, Track at center of view&nbsp;&nbsp;<br>
->1, Top visible track&nbsp;&nbsp;<br>
->2, Last selected track&nbsp;&nbsp;<br>
->3, Track under mouse cursor&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="zoommode"></a>
-<a href="#zoommode"> ^</a> <u><b>zoommode</b></u><br>			<p>
-<div class="ch">
-The horizontal zoom center, as set in Preferences -> Editing Behavior&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->0, Edit cursor or play cursor(default)&nbsp;&nbsp;<br>
->1, Edit cursor&nbsp;&nbsp;<br>
->2, Center of view&nbsp;&nbsp;<br>
->3, Mouse cursor&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
 <a class="anch" id="locklooptotime"></a>
 <a href="#locklooptotime"> ^</a> <u><b>locklooptotime</b></u><br>			<p>
 <div class="ch">
@@ -2366,9 +2505,9 @@ Can be affected by the following actions:<br>
 >&4=1, Add edge points when ripple editing or inserting time(Options -> Envelope points)(on) - checked&nbsp;&nbsp;<br>
 <br>
 >&8 and &16, When recording automation and stopped-dropdownlist&nbsp;&nbsp;<br>
-&nbsp;&nbsp; 0 0, Add additional point before edit position&nbsp;&nbsp;<br>
-&nbsp;&nbsp; 0 1, Do not add additional points&nbsp;&nbsp;<br>
-&nbsp;&nbsp; 1 0, Add points before and after edit position&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>>0 0, Add additional point before edit position&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>>0 1, Do not add additional points&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>>1 0, Add points before and after edit position&nbsp;&nbsp;<br>
 <br>
 >&32=0, fader scaled volume envelopes-checkbox(Preferences -> Envelope Display)(on) - checked&nbsp;&nbsp;<br>
 >&32=1, fader scaled volume envelopes-checkbox(Preferences -> Envelope Display)(off) - unchecked&nbsp;&nbsp;<br>
@@ -2779,8 +2918,8 @@ It is an integer-bitfield, preferences variable.<br>
 >&1=0, Save undo history with project files (in .RPP-UNDO file) - unchecked&nbsp;&nbsp;<br>
 >&1=1, Save undo history with project files (in .RPP-UNDO file) - checked&nbsp;&nbsp;<br>
 <br>
->&2=0, Save undo history (RPP-UNDO)(if enabled in general prefs)(off) - unchecked&nbsp;&nbsp;<br>
->&2=1, Save undo history (RPP-UNDO)(if enabled in general prefs)(on) - checked&nbsp;&nbsp;<br>
+>&2=0, Save undo history (RPP-UNDO)(if enabled in general prefs)(off) set in Preferences -> Backups - unchecked&nbsp;&nbsp;<br>
+>&2=1, Save undo history (RPP-UNDO)(if enabled in general prefs)(on) set in Preferences -> Backups - checked&nbsp;&nbsp;<br>
 &nbsp;&nbsp;<br>
 >&4=0, Allow load of undo history - checked&nbsp;&nbsp;<br>
 >&4=1, Allow load of undo history - unchecked&nbsp;&nbsp;<br>
@@ -2794,8 +2933,8 @@ It is an integer-bitfield, preferences variable.<br>
 >&256=0, Store multiple redo paths when possible (can use a lot of RAM) - unchecked&nbsp;&nbsp;<br>
 >&256=1, Store multiple redo paths when possible (can use a lot of RAM) - unchecked&nbsp;&nbsp;<br>
 <br>
->&512=0, Keep multiple versions(Preferences -> Project - autosave settings)(either &512=1 or &16=1!)(off) - unchecked&nbsp;&nbsp;<br>
->&512=1, Keep multiple versions(Preferences -> Project - autosave settings)(either &512=1 or &16=1!)(on) - checked&nbsp;&nbsp;<br>
+>&512=0, Preserve all previously-saved versionso of project in one (large) <project>.rpp-bak(Preferences -> Project - Backups)(either &512=1 or &16=1!)(off) - unchecked&nbsp;&nbsp;<br>
+>&512=1, Preserve all previously-saved versionso of project in one (large) <project>.rpp-bak(Preferences -> Project - Backups)(either &512=1 or &16=1!)(on) - checked&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -2937,6 +3076,209 @@ It is an integer, preferences variable.<br>
 >0, no process working set size(off) - unchecked&nbsp;&nbsp;<br>
 >1, process working set size(on) - checked&nbsp;&nbsp;<br>
 &nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="bpmprojadj"></a>
+<a href="#bpmprojadj"> ^</a> <u><b>bpmprojadj</b></u><br>			<p>
+<div class="ch">
+Media with tempo information in metadata or file name, if project is empty-dropdownlist, as set in Preferences-> Media Import<br>
+It is an integer, preferences variable.<br>
+<br>
+>0, Prompt to adjust project to media tempo<br>
+>2, Do nothing<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="deffadelen"></a>
+<a href="#deffadelen"> ^</a> <u><b>deffadelen</b></u><br>			<p>
+<div class="ch">
+Create automatic fade-in/fade-out for new items, length-inputbox, as set in Preferences -> Item Fade Defaults<br>
+It is a double-float, preferences variable.&nbsp;&nbsp;<br>
+<br>
+>Fadelength in seconds; negative values are allowed.&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="deffadeshape"></a>
+<a href="#deffadeshape"> ^</a> <u><b>deffadeshape</b></u><br>			<p>
+<div class="ch">
+The Default fade-in/fade-out-shape-button, as set in Preferences -> Item Fade Defaults<br>
+It is an integer, preferences variable. <br>
+<br>
+>0 to 6, the individual shapes selectable through the button.&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="defsplitxfadelen"></a>
+<a href="#defsplitxfadelen"> ^</a> <u><b>defsplitxfadelen</b></u><br>			<p>
+<div class="ch">
+Overlap and crossfade items when splitting length-inputbox, as set in Preferences -> Item Fade Defaults&nbsp;&nbsp;<br>
+It is a double-float, preferences variable. <br>
+<br>
+>overlap/crossfade-length in seconds; negative values are allowed.&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="defxfadeshape"></a>
+<a href="#defxfadeshape"> ^</a> <u><b>defxfadeshape</b></u><br>			<p>
+<div class="ch">
+The Default crossfade-shape-button, as set in Preferences -> Item Fade Defaults <br>
+It is an integer, preferences variable.<br>
+<br>
+>0 to 6, the individual shapes selectable through the button.&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="splitautoxfade"></a>
+<a href="#splitautoxfade"> ^</a> <u><b>splitautoxfade</b></u><br>			<p>
+<div class="ch">
+Several checkboxes, as set in Preferences -> Media Item Defaults as well as Preferences -> Item Fade Defaults<br>
+&1 can be influenced by defenvs(&32768) as well!&nbsp;&nbsp;<br>
+It is an integer-bitfield, preferences variable.<br>
+<br>
+Can be affected by the following actions:<br>
+&nbsp;&nbsp;Options: Toggle auto-crossfade on split<br>
+&nbsp;&nbsp;Item: Toggle enable/disable default fadein/fadeout<br>
+<br>
+Can be affected by the following actions:<br>
+&nbsp;&nbsp;Options: Toggle auto-crossfade on/off<br>
+&nbsp;&nbsp;Options: Loop recording always adds takes to newly recorded items (except in track free item positioning mode)<br>
+&nbsp;&nbsp;Options: Toggle auto-crossfade on split<br>
+&nbsp;&nbsp;Options: Toggle trim content behind media items when editing<br>
+&nbsp;&nbsp;Item: Toggle enable/disable default fadein/fadeout<br>
+&nbsp;&nbsp;Options: New recording creates new media items in separate lanes (layers)<br>
+&nbsp;&nbsp;Options: New recording splits existing items and creates new takes (default)<br>
+&nbsp;&nbsp;Options: Always trim content behind razor edits (otherwise, follow media item editing preferences)<br>
+&nbsp;&nbsp;Options: Toggle auto-crossfade on/off<br>
+<br>
+>&1 &512, Split media items-dropdownlist<br>
+&nbsp;&nbsp;>>0 0, No crossfade<br>
+&nbsp;&nbsp;>>1 0, Overlap and crossfade<br>
+&nbsp;&nbsp;>>0 1, Respect toolbar auto-crossfade button<br>
+<br>
+>&2=0, Apply fade-in/fade-out/crossfade preferences to MIDI items - unchecked&nbsp;&nbsp;<br>
+>&2=1, Apply fade-in/fade-out/crossfade preferences to MIDI items - checked&nbsp;&nbsp;<br>
+<br>
+>&4=0, Crossfades stay together during fade edits when trim content behind media items is enabled(Preferences -> Editing Behavior)(off) - unchecked&nbsp;&nbsp;<br>
+>&4=1, Crossfades stay together during fade edits when trim content behind media items is enabled(Preferences -> Editing Behavior)(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&8=0, Split media items-Fade In/fade-out-checkbox - checked&nbsp;&nbsp;<br>
+>&8=1, Split media items-Fade In/fade-out-checkbox - unchecked&nbsp;&nbsp;<br>
+<br>
+>&16=0, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(off) - unchecked&nbsp;&nbsp;<br>
+>&16=1, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&32 &65536, Imported media items-checkbox<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1 0, checkbox unchecked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0 1, checkbox checked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+>&64 &32768, 'Trim contents behind razor edits' enabled-dropdownlist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 0, No crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>1 0, Overlap and crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 1, Respect toolbar auto-crossfade button<br>
+<br>
+>&128=0, Fixed lane comp areas-Fade In/fade-out-checkbox - checked<br>
+>&128=1, Fixed lane comp areas-Fade In/fade-out-checkbox - unchecked<br>
+<br>
+>&256=0, Limit split-created fade/crossfade to-checkbox(Preferences -> Item Fade Defaults) - unchecked<br>
+>&256=1, Limit split-created fade/crossfade to-checkbox(Preferences -> Item Fade Defaults) - checked<br>
+<br>
+>&1024 &2048, Recorded media items-dropdownlist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 0, No crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>1 0, Overlap and crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 1, Respect toolbar auto-crossfade button<br>
+<br>
+>&4096 &8192, 'Trim contents behind media edits' enabled-dropdownlist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 1, No crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>1 0, Overlap and crossfade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;>>0 0, Respect toolbar auto-crossfade button<br>
+<br>
+>&16384=0, Recorded media items-checkbox - checked<br>
+>&16384=1, Recorded media items-checkbox - unchecked<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="splitmaxpix"></a>
+<a href="#splitmaxpix"> ^</a> <u><b>splitmaxpix</b></u><br>			<p>
+<div class="ch">
+Limit split-created fade/crosfade to-inputbox, as set in Preferences -> Item Fade Defaults<br>
+It is an integer, preferences variable.<br>
+<br>
+>0 to 999999 pixels; default is 50<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="stretchmarkerfade"></a>
+<a href="#stretchmarkerfade"> ^</a> <u><b>stretchmarkerfade</b></u><br>			<p>
+<div class="ch">
+Default stretch marker fade size for new items-inputbox, as set in Preferences -> Item Fade Defaults<br>
+It is a double-float, preferences variable.<br>
+<br>
+>in seconds<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="loopnewitems"></a>
+<a href="#loopnewitems"> ^</a> <u><b>loopnewitems</b></u><br>			<p>
+<div class="ch">
+Loop-checkboxes, as set in Preferences -> Item Loop Defaults&nbsp;&nbsp;<br>
+It is an integer-bitfield, preferences variable.<br>
+<br>
+>&2=0, MIDI items-checkbox - unchecked&nbsp;&nbsp;<br>
+>&2=1, MIDI items-checkbox - checked&nbsp;&nbsp;<br>
+<br>
+>&4=0, Imported items-checkbox - unchecked&nbsp;&nbsp;<br>
+>&4=1, Imported items-checkbox - checked&nbsp;&nbsp;<br>
+<br>
+>&8=0, Recorded items-checkbox - checked&nbsp;&nbsp;<br>
+>&8=1, Recorded items-checkbox - unchecked&nbsp;&nbsp;<br>
+<br>
+>&16=0, Time selection auto-punch audio recording creates loopable section-checkbox - unchecked&nbsp;&nbsp;<br>
+>&16=1, Time selection auto-punch audio recording creates loopable section-checkbox - checked&nbsp;&nbsp;<br>
+<br>
+>&32=0, Glued items-checkbox - checked&nbsp;&nbsp;<br>
+>&32=1, Glued items-checkbox - unchecked&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="kbd_override_len"></a>
+<a href="#kbd_override_len"> ^</a> <u><b>kbd_override_len</b></u><br>			<p>
+<div class="ch">
+Timeout for momentary keyboard sections override-inputbox, as set in Preferences -> Keyboard/Multitouch<br>
+It is an integer, preferences variable.<br>
+<br>
+&nbsp;&nbsp;>1-2147483647 ms<br>
+<br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
 </div>
@@ -3358,8 +3700,8 @@ It is an integer-bitfield, preferences variable.<br>
 >&1 and &2, One MIDI editor per&nbsp;&nbsp;<br>
 <br>
 &nbsp;&nbsp;>> 0 0, media item&nbsp;&nbsp;<br>
-&nbsp;&nbsp;>> 0 1, track&nbsp;&nbsp;<br>
-&nbsp;&nbsp;>> 1 0, project&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>> 0 1, project&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>> 1 0, track&nbsp;&nbsp;<br>
 &nbsp;&nbsp;<br>
 >&4 and &16, Behavior for "open items in built-in MIDI editor&nbsp;&nbsp;<br>
 <br>
@@ -3572,145 +3914,6 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="deffadelen"></a>
-<a href="#deffadelen"> ^</a> <u><b>deffadelen</b></u><br>			<p>
-<div class="ch">
-Create automatic fade-in/fade-out for new items, length-inputbox, as set in Preferences -> Media Item Defaults&nbsp;&nbsp;<br>
-It is a double-float, preferences variable.&nbsp;&nbsp;<br>
-<br>
->Fadelength in seconds; negative values are allowed.&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="deffadeshape"></a>
-<a href="#deffadeshape"> ^</a> <u><b>deffadeshape</b></u><br>			<p>
-<div class="ch">
-The Default fade-in/fade-out-shape-button, as set in Preferences -> Media Item Defaults&nbsp;&nbsp;<br>
-It is an integer, preferences variable. <br>
-<br>
->0 to 6, the individual shapes selectable through the button.&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="defsplitxfadelen"></a>
-<a href="#defsplitxfadelen"> ^</a> <u><b>defsplitxfadelen</b></u><br>			<p>
-<div class="ch">
-Overlap and crossfade items when splitting length-inputbox, as set in Preferences -> Media Item Defaults&nbsp;&nbsp;<br>
-It is a double-float, preferences variable. <br>
-<br>
->overlap/crossfade-length in seconds; negative values are allowed.&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="defxfadeshape"></a>
-<a href="#defxfadeshape"> ^</a> <u><b>defxfadeshape</b></u><br>			<p>
-<div class="ch">
-The Default crossfade-shape-button, as set in Preferences -> Media Item Defaults&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->0 to 6, the individual shapes selectable through the button.&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="loopnewitems"></a>
-<a href="#loopnewitems"> ^</a> <u><b>loopnewitems</b></u><br>			<p>
-<div class="ch">
-Loop-checkboxes, as set in Preferences -> Media Item Defaults&nbsp;&nbsp;<br>
-It is an integer-bitfield, preferences variable.<br>
-<br>
->&2=0, Loop source for new MIDI items(off) - unchecked&nbsp;&nbsp;<br>
->&2=1, Loop source for new MIDI items(on) - checked&nbsp;&nbsp;<br>
-<br>
->&4=0, Loop source for imported items(off) - unchecked&nbsp;&nbsp;<br>
->&4=1, Loop source for imported items(on) - checked&nbsp;&nbsp;<br>
-<br>
->&8=0, Loop source for recorded items(off) - checked&nbsp;&nbsp;<br>
->&8=1, Loop source for recorded items(on) - unchecked&nbsp;&nbsp;<br>
-<br>
->&16=0, Time selection auto-punch audio recording creates loopable section(only clickable when &8=1)(off) - unchecked&nbsp;&nbsp;<br>
->&16=1, Time selection auto-punch audio recording creates loopable section(only clickable when &8=1)(on) - checked&nbsp;&nbsp;<br>
-<br>
->&32=0, Loop source for glued items(on) - checked&nbsp;&nbsp;<br>
->&32=1, Loop source for glued items(off) - unchecked&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="splitautoxfade"></a>
-<a href="#splitautoxfade"> ^</a> <u><b>splitautoxfade</b></u><br>			<p>
-<div class="ch">
-Several checkboxes, as set in Preferences -> Media Item Defaults as well as Preferences -> Editing Behavior&nbsp;&nbsp;<br>
-&1 can be influenced by defenvs(&32768) as well!&nbsp;&nbsp;<br>
-It is an integer-bitfield, preferences variable.<br>
-<br>
-Can be affected by the following actions:<br>
-&nbsp;&nbsp;Options: Toggle auto-crossfade on split<br>
-&nbsp;&nbsp;Item: Toggle enable/disable default fadein/fadeout<br>
-<br>
-Can be affected by the following actions:<br>
-&nbsp;&nbsp;Options: Toggle auto-crossfade on/off<br>
-&nbsp;&nbsp;Options: Loop recording always adds takes to newly recorded items (except in track free item positioning mode)<br>
-&nbsp;&nbsp;Options: Toggle auto-crossfade on split<br>
-&nbsp;&nbsp;Options: Toggle trim content behind media items when editing<br>
-&nbsp;&nbsp;Item: Toggle enable/disable default fadein/fadeout<br>
-&nbsp;&nbsp;Options: New recording creates new media items in separate lanes (layers)<br>
-&nbsp;&nbsp;Options: New recording splits existing items and creates new takes (default)<br>
-&nbsp;&nbsp;Options: Always trim content behind razor edits (otherwise, follow media item editing preferences)<br>
-&nbsp;&nbsp;Options: Toggle auto-crossfade on/off<br>
-<br>
->&1=0, Overlap and crossfade items when splitting-length-checkbox(off) - unchecked&nbsp;&nbsp;<br>
->&1=1, Overlap and crossfade items when splitting-length-checkbox(on) - checked&nbsp;&nbsp;<br>
-<br>
->&2=0, Enable automatic fade-in/fade-out and autocrossfade for MIDI note velocity(off) - unchecked&nbsp;&nbsp;<br>
->&2=1, Enable automatic fade-in/fade-out and autocrossfade for MIDI note velocity(on) - checked&nbsp;&nbsp;<br>
-<br>
->&4=0, Crossfades stay together during fade edits when trim content behind media items is enabled(Preferences -> Editing Behavior)(off) - unchecked&nbsp;&nbsp;<br>
->&4=1, Crossfades stay together during fade edits when trim content behind media items is enabled(Preferences -> Editing Behavior)(on) - checked&nbsp;&nbsp;<br>
-<br>
->&8=0, Create automatic fade-in/fade-out for new items, length-checkbox(on) - checked&nbsp;&nbsp;<br>
->&8=1, Create automatic fade-in/fade-out for new items, length-checkbox(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&16=0, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(off) - unchecked&nbsp;&nbsp;<br>
->&16=1, Right click on crossfade sets fade shape for only one side of the crossfade(shift toggles)(on) - checked&nbsp;&nbsp;<br>
-<br>
->&64=0, Use fade names instead of images for fade menus - unchecked<br>
->&64=1, Use fade names instead of images for fade menus - checked<br>
-<br>
->&256=0 Limit split-created fade/crossfade to-checkbox(Preferences -> Media Item Defaults) - unchecked<br>
->&256=1 Limit split-created fade/crossfade to-checkbox(Preferences -> Media Item Defaults) - checked<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="splitmaxpix"></a>
-<a href="#splitmaxpix"> ^</a> <u><b>splitmaxpix</b></u><br>			<p>
-<div class="ch">
-Limit split-created fade/crosfade to-inputbox, as set in Preferences -> Media Item Defaults<br>
-It is an integer, preferences variable.<br>
-<br>
->0 to 999999 pixels; default is 50<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
 <a class="anch" id="itemlane_minheight"></a>
 <a href="#itemlane_minheight"> ^</a> <u><b>itemlane_minheight</b></u><br>			<p>
 <div class="ch">
@@ -3720,19 +3923,6 @@ It is an integer, preferences variable.<br>
 &nbsp;&nbsp;>0 to 2147483647; in pixels<br>
 &nbsp;&nbsp;<br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="itemoverlap_offspct"></a>
-<a href="#itemoverlap_offspct"> ^</a> <u><b>itemoverlap_offspct</b></u><br>			<p>
-<div class="ch">
-Offset by xx precentage of item height and Draw as opaque-checkbox, as set in Preferences -> Media Item Positioning&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-&nbsp;&nbsp;<br>
-&nbsp;&nbsp;>0 to 255; add 256 to set the Draw as opaque-checkbox<br>
-&nbsp;&nbsp;<br>
-Stored in reaper.ini under the same name in the section REAPER.<br>
 </div><br>
 </div>
 <div class="ch">
@@ -3864,6 +4054,9 @@ Can be affected by the following actions:<br>
 >>1 0 0, Full height&nbsp;&nbsp;<br>
 >>0 0 1, Stretch image&nbsp;&nbsp;<br>
 for more image-settings, see config variable video_defimglen<br>
+<br>
+>&1024=0, Draw selection indicator on items(on) - checked<br>
+>&1024=1, Draw selection indicator on items(off) - checked<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -4655,6 +4848,18 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="loudpeak_alpha"></a>
+<a href="#loudpeak_alpha"> ^</a> <u><b>loudpeak_alpha</b></u><br>			<p>
+<div class="ch">
+It is an integer, preferences variable.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REAPER7<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="maxplayoffsrate"></a>
 <a href="#maxplayoffsrate"> ^</a> <u><b>maxplayoffsrate</b></u><br>			<p>
 <div class="ch">
@@ -4695,77 +4900,6 @@ It is an integer-bitfield, preferences variable.<br>
 <br>
 >&8=0, Flush FX on stop(Preferences -> Playback)(off) - unchecked&nbsp;&nbsp;<br>
 >&8=1, Flush FX on stop(Preferences -> Playback)(on) - checked&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="scrubloopend"></a>
-<a href="#scrubloopend"> ^</a> <u><b>scrubloopend</b></u><br>			<p>
-<div class="ch">
-Looped-segment mode to:-inputbox in section Scrub/jog settings, as set in Preferences -> Playback&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->-2147483647 to 2147483647; in milliseconds&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="scrubloopstart"></a>
-<a href="#scrubloopstart"> ^</a> <u><b>scrubloopstart</b></u><br>			<p>
-<div class="ch">
-Looped-segment mode in section Scrub/jog settings, as set in Preferences -> Playback&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->-2147483647 to 2147483647; in milliseconds&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="scrubmode"></a>
-<a href="#scrubmode"> ^</a> <u><b>scrubmode</b></u><br>			<p>
-<div class="ch">
-Several setting-checkboxes/dropdownlist in section Scrub/jog settings, as set in Preferences -> Playback&nbsp;&nbsp;<br>
-It is an integer-bitfield, preferences variable.<br>
-<br>
->&1=0, When moving edit cursor via action or control surface-dropdownlist -> Do not scrub&nbsp;&nbsp;<br>
->&1=1, When moving edit cursor via action or control surface-dropdownlist -> Scrub&nbsp;&nbsp;<br>
-<br>
->&2=0, Only play selected track when scrubbing/jogging-checkbox(off) - unchecked&nbsp;&nbsp;<br>
->&2=1, Only play selected track when scrubbing/jogging-checkbox(on) - checked&nbsp;&nbsp;<br>
-<br>
->&4=0, Limit scrub rate to 1.0x(on) - checked&nbsp;&nbsp;<br>
->&4=1, Limit scrub rate to 1.0x(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&16=0, Limit jog rate to 1.0x-checkbox(off) - unchecked&nbsp;&nbsp;<br>
->&16=1, Limit jog rate to 1.0x-checkbox(on) - checked&nbsp;&nbsp;<br>
-<br>
->&64=0, Faster responding jog-checkbox(off) - unchecked&nbsp;&nbsp;<br>
->&64=1, Faster responding jog-checkbox(on) - checked&nbsp;&nbsp;<br>
-<br>
->&256=0, Limit jog rate when near cursor-checkbox(off) - unchecked&nbsp;&nbsp;<br>
->&256=1, Limit jog rate when near cursor-checkbox(on) - checked&nbsp;&nbsp;<br>
-<br>
->&512=0, Engage scrub when playing (stopping playback)(off) - unchecked&nbsp;&nbsp;<br>
->&512=1, Engage scrub when playing (stopping playback)(on) - checked&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="scrubrelgain"></a>
-<a href="#scrubrelgain"> ^</a> <u><b>scrubrelgain</b></u><br>			<p>
-<div class="ch">
-Scrub-mode controller sensitivity in section Scrub/jog settings, as set in Preferences -> Playback&nbsp;&nbsp;<br>
-It is a double-float, preferences variable.<br>
-<br>
->0.001 and higher&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -4927,34 +5061,6 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="autosaveint"></a>
-<a href="#autosaveint"> ^</a> <u><b>autosaveint</b></u><br>			<p>
-<div class="ch">
-Every x minutes-inputbox from the Project saving-section, as set in Preferences -> Project.&nbsp;&nbsp;<br>
-It is an integer preferences variable.<br>
-<br>
->0 to 2147483647; in seconds; higher values become negative&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="autosavemode"></a>
-<a href="#autosavemode"> ^</a> <u><b>autosavemode</b></u><br>			<p>
-<div class="ch">
-Every x minutes-dropdownlist from the Project saving-section, as set in Preferences -> Project.&nbsp;&nbsp;<br>
-It is an integer preferences variable.<br>
-<br>
->0, when not recording&nbsp;&nbsp;<br>
->1, when stopped&nbsp;&nbsp;<br>
->2, any time&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
 <a class="anch" id="newprojdo"></a>
 <a href="#newprojdo"> ^</a> <u><b>newprojdo</b></u><br>			<p>
 <div class="ch">
@@ -4994,36 +5100,6 @@ It is an integer, preferences variable.<br>
 <br>
 >0, Look for project media items in project directory before qualified path(off) - unchecked&nbsp;&nbsp;<br>
 >1, Look for project media items in project directory before qualified path(on) - checked&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="saveopts"></a>
-<a href="#saveopts"> ^</a> <u><b>saveopts</b></u><br>			<p>
-<div class="ch">
-Several settings from the Project saving-section, as set in Preferences -> Project.&nbsp;&nbsp;<br>
-It is an integer-bitfield, preferences variable.<br>
-<br>
->&1=0, When overwriting project file, rename old project to .rpp-bak(off) - unchecked&nbsp;&nbsp;<br>
->&1=1, When overwriting project file, rename old project to .rpp-bak(on) - checked&nbsp;&nbsp;<br>
-<br>
-&nbsp;&nbsp;The next options are for auto-save&nbsp;&nbsp;<br>
-&nbsp;&nbsp;<br>
->&2=0, Save to project(off) - unchecked&nbsp;&nbsp;<br>
->&2=1, Save to project(on) - checked&nbsp;&nbsp;<br>
-<br>
->&4=0, Save to timestamped file in project directory(off) - unchecked&nbsp;&nbsp;<br>
->&4=1, Save to timestamped file in project directory(on) - checked&nbsp;&nbsp;<br>
-<br>
->&8=0, Save to timestamped file in additional directory(off) - unchecked&nbsp;&nbsp;<br>
->&8=1, Save to timestamped file in additional directory(on) - checked&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;The next option is only for Project Saving<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
->&16=0, Timestamp backup(off) - unchecked&nbsp;&nbsp;<br>
->&16=1, Timestamp backup(on) - checked&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -5554,6 +5630,95 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="scrubloopend"></a>
+<a href="#scrubloopend"> ^</a> <u><b>scrubloopend</b></u><br>			<p>
+<div class="ch">
+Looped-segment mode to:-inputbox in section Scrub/jog settings, as set in Preferences -> Scrub/Jog&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>-2147483647 to 2147483647; in milliseconds&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="scrubloopstart"></a>
+<a href="#scrubloopstart"> ^</a> <u><b>scrubloopstart</b></u><br>			<p>
+<div class="ch">
+Looped-segment mode in section Scrub/jog settings, as set in Preferences -> Scrub/Jog&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>-2147483647 to 2147483647; in milliseconds&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="scrubmode"></a>
+<a href="#scrubmode"> ^</a> <u><b>scrubmode</b></u><br>			<p>
+<div class="ch">
+Several setting-checkboxes/dropdownlist in section Scrub/jog settings, as set in Preferences -> Scrub/Jog&nbsp;&nbsp;<br>
+It is an integer-bitfield, preferences variable.<br>
+<br>
+>&1=0, Scrub/jog when moving edit cursor via action or control surface-checkbox -> unchecked<br>
+>&1=1, Scrub/jog when moving edit cursor via action or control surface-checkbox -> checked<br>
+<br>
+>&2=0, Only play selected track when scrubbing/jogging-checkbox(off) - unchecked&nbsp;&nbsp;<br>
+>&2=1, Only play selected track when scrubbing/jogging-checkbox(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&4=0, Limit scrub rate to 1.0x(on) - checked&nbsp;&nbsp;<br>
+>&4=1, Limit scrub rate to 1.0x(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&16 &8192, Max jog rate-dropdownlist<br>
+>>1 0 - 1x<br>
+>>0 0 - 2x<br>
+>>0 1 - 4x<br>
+>>1 1 - 8x<br>
+<br>
+>&64=0, Faster responding jog-checkbox(off) - unchecked&nbsp;&nbsp;<br>
+>&64=1, Faster responding jog-checkbox(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&256=0, Limit jog rate when near cursor-checkbox(off) - unchecked&nbsp;&nbsp;<br>
+>&256=1, Limit jog rate when near cursor-checkbox(on) - checked&nbsp;&nbsp;<br>
+<br>
+>&512=0, Engage scrub when playing (stopping playback)(off) - unchecked&nbsp;&nbsp;<br>
+>&512=1, Engage scrub when playing (stopping playback)(on) - checked&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="scrubrelgain"></a>
+<a href="#scrubrelgain"> ^</a> <u><b>scrubrelgain</b></u><br>			<p>
+<div class="ch">
+Scrub-mode controller sensitivity in section Scrub/jog settings, as set in Preferences -> Scrub/Jog&nbsp;&nbsp;<br>
+It is a double-float, preferences variable.<br>
+<br>
+>0.001 and higher&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="scrubgain"></a>
+<a href="#scrubgain"> ^</a> <u><b>scrubgain</b></u><br>			<p>
+<div class="ch">
+Scrub/jog volume gain-inputbox, as set in Preferences -> Scrub/Jog<br>
+It is an double-float, preferences variable.<br>
+<br>
+Note: use ultraschall.DB2MKVOL() and ultraschall.MKVOL2DB() to convert the value from/to db.<br>
+<br>
+>1.122018454302e-005 - 8.9125093813374e+049<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="itemeditpr"></a>
 <a href="#itemeditpr"> ^</a> <u><b>itemeditpr</b></u><br>			<p>
 <div class="ch">
@@ -5657,6 +5822,24 @@ It is an integer, preferences variable.<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="__fx_loadstate_ctx"></a>
+<a href="#__fx_loadstate_ctx"> ^</a> <u><b>__fx_loadstate_ctx</b></u><br>			<p>
+<div class="ch">
+0 if unknown, or during FX state loading: 'u' (instantiating via undo), 'U' (updating via undo), 'P' (loading preset).&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+It is an integer, global variable.<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="__metronome_ptr"></a>
+<a href="#__metronome_ptr"> ^</a> <u><b>__metronome_ptr</b></u><br>			<p>
+<div class="ch">
+query project metronome PCM_source** offset<br>
+It is a double-float-variable.<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="__numcpu"></a>
 <a href="#__numcpu"> ^</a> <u><b>__numcpu</b></u><br>			<p>
 <div class="ch">
@@ -5684,35 +5867,6 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
-<a class="anch" id="nometers"></a>
-<a href="#nometers"> ^</a> <u><b>nometers</b></u><br>			<p>
-<div class="ch">
-Pre-fader metering, as set in the menu Options as well as in section VU meters in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
-It is an integer-bitfield, preferences variable.<br>
-<br>
-Can be affected by the following actions:<br>
-&nbsp;&nbsp;Options: Pre-fader track metering<br>
-<br>
->&2=0, Show track input when rec-armed(on) - checked&nbsp;&nbsp;<br>
->&2=0, Show track input when rec-armed(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&4=0, Make obvious that track input is clickable(on) - checked&nbsp;&nbsp;<br>
->&4=1, Make obvious that track input is clickable(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&8=0, Show dB scales on track meters(on) - checked&nbsp;&nbsp;<br>
->&8=1, Show dB scales on track meters(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&16=0, Show dB scales on rec armed track meters(on) - checked&nbsp;&nbsp;<br>
->&16=0, Show dB scales on rec armed track meters(off) - unchecked&nbsp;&nbsp;<br>
-<br>
->&1024=0, Track meters display pre-fader levels(Pre-fader metering in the menu options)(off) - unchecked&nbsp;&nbsp;<br>
->&1024=1, Track meters display pre-fader levels(Pre-fader metering in the menu options)(on) - checked&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
 <a class="anch" id="pandispmode"></a>
 <a href="#pandispmode"> ^</a> <u><b>pandispmode</b></u><br>			<p>
 <div class="ch">
@@ -5721,20 +5875,6 @@ It is an integer, preferences variable.<br>
 <br>
 >0, 100%L.. 100%R&nbsp;&nbsp;<br>
 >1, -90%L.. +90%R&nbsp;&nbsp;<br>
-<br>
-Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
-</div><br>
-</div>
-<div class="ch">
-<hr>
-<a class="anch" id="resetvuplay"></a>
-<a href="#resetvuplay"> ^</a> <u><b>resetvuplay</b></u><br>			<p>
-<div class="ch">
-Reset meter peak indicators on play/seek-checkbox, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
-It is an integer, preferences variable.<br>
-<br>
->0, don't reset meter peak indicators(off) - unchecked&nbsp;&nbsp;<br>
->1, reset meter peak indicators(on) - checked&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
@@ -5845,13 +5985,72 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="grvuscale"></a>
+<a href="#grvuscale"> ^</a> <u><b>grvuscale</b></u><br>			<p>
+<div class="ch">
+Scale gain reduction from plug-ins by-inputbox, as set in Preferences -> Track Meters<br>
+It is an integer, preferences variable.<br>
+<br>
+>1-2147483647<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="nometers"></a>
+<a href="#nometers"> ^</a> <u><b>nometers</b></u><br>			<p>
+<div class="ch">
+Pre-fader metering, as set in the menu Options as well as in section VU meters in Preferences -> Track Meters&nbsp;&nbsp;<br>
+It is an integer-bitfield, preferences variable.<br>
+<br>
+Can be affected by the following actions:<br>
+&nbsp;&nbsp;Options: Pre-fader track metering<br>
+<br>
+>&1=0, Show MIDI velocity on track meter - checked<br>
+>&1=1, Show MIDI velocity on track meter - unchecked<br>
+<br>
+>&2=0, Show track input when rec-armed(on) - checked&nbsp;&nbsp;<br>
+>&2=1, Show track input when rec-armed(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&4=0, Make obvious that track input is clickable(on) - checked&nbsp;&nbsp;<br>
+>&4=1, Make obvious that track input is clickable(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&8=0, Show dB scales on track meters(on) - checked&nbsp;&nbsp;<br>
+>&8=1, Show dB scales on track meters(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&16=0, Show dB scales on rec armed track meters(on) - checked&nbsp;&nbsp;<br>
+>&16=1, Show dB scales on rec armed track meters(off) - unchecked&nbsp;&nbsp;<br>
+<br>
+>&1024=0, Track meters display pre-fader levels(Pre-fader metering in the menu options)(off) - unchecked&nbsp;&nbsp;<br>
+>&1024=1, Track meters display pre-fader levels(Pre-fader metering in the menu options)(on) - checked&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="resetvuplay"></a>
+<a href="#resetvuplay"> ^</a> <u><b>resetvuplay</b></u><br>			<p>
+<div class="ch">
+Reset meter peak indicators on play/seek-checkbox, as set in Preferences -> Track Meters<br>
+It is an integer, preferences variable.<br>
+<br>
+>0, Reset meter peak indicators on play/seek(off) - unchecked&nbsp;&nbsp;<br>
+>1, Reset meter peak indicators on play/seek(on) - checked&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="vuclipstick"></a>
 <a href="#vuclipstick"> ^</a> <u><b>vuclipstick</b></u><br>			<p>
 <div class="ch">
-Sticky clip indicators, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
+Sticky clip indicators, as set in Preferences -> Track Meters&nbsp;&nbsp;<br>
 It is an integer, preferences variable.<br>
 <br>
->0, No sticky clip indicators(off) - unchecked&nbsp;&nbsp;<br>
+>0, Sticky clip indicators(off) - unchecked&nbsp;&nbsp;<br>
 >1, Sticky clip indicators(on) - checked&nbsp;&nbsp;<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
@@ -5862,7 +6061,7 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="vudecay"></a>
 <a href="#vudecay"> ^</a> <u><b>vudecay</b></u><br>			<p>
 <div class="ch">
-Meter decay-inputbox in section VU meters, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
+Meter decay-inputbox in section VU meters, as set in Preferences -> Track Meters<br>
 It is an integer, preferences variable.<br>
 <br>
 >1 to 2147483647; in dB/sec&nbsp;&nbsp;<br>
@@ -5875,7 +6074,7 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="vumaxvol"></a>
 <a href="#vumaxvol"> ^</a> <u><b>vumaxvol</b></u><br>			<p>
 <div class="ch">
-Max value(dB)-inputbox in section VU meters, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
+Max value(dB)-inputbox in section VU meters, as set in Preferences -> Track Meters<br>
 It is an integer, preferences variable.<br>
 <br>
 >-2147483647 to 2147483647; in dB&nbsp;&nbsp;<br>
@@ -5888,7 +6087,7 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="vuminvol"></a>
 <a href="#vuminvol"> ^</a> <u><b>vuminvol</b></u><br>			<p>
 <div class="ch">
-Meter minimum value(dB)-inputbox in section VU meters, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
+Meter minimum value(dB)-inputbox in section VU meters, as set in Preferences -> Track Meters<br>
 It is an integer, preferences variable.<br>
 <br>
 >-2147483647 to -1; in dB&nbsp;&nbsp;<br>
@@ -5901,7 +6100,7 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="vuupdfreq"></a>
 <a href="#vuupdfreq"> ^</a> <u><b>vuupdfreq</b></u><br>			<p>
 <div class="ch">
-Meter update frequency(Hz)-inputbox in section VU meters, as set in Preferences -> Track Control Panels&nbsp;&nbsp;<br>
+Meter update frequency(Hz)-inputbox in section VU meters, as set in Preferences -> Track Meters<br>
 It is an integer, preferences variable.<br>
 <br>
 >1 to 2147483647; in Hz&nbsp;&nbsp;<br>
@@ -6185,6 +6384,21 @@ It is an integer-bitfield, preferences variable.<br>
 >&4=0, Free item positioning(off) - unchecked&nbsp;&nbsp;<br>
 >&4=1, Free item positioning(on) - checked&nbsp;&nbsp;<br>
 <br>
+>&128 &1024 &2048, &4096 Track meter display-dropdownlist (&8192=ignore sidechain-toggle)<br>
+&nbsp;&nbsp;>>1 0 0 0, Stereo peaks<br>
+&nbsp;&nbsp;>>0 0 0 0, Multichannel peaks<br>
+&nbsp;&nbsp;>>1 1 0 0, Stereo RMS<br>
+&nbsp;&nbsp;>>1 0 1 0, Combined RMS<br>
+&nbsp;&nbsp;>>1 1 1 0, LUFS-M<br>
+&nbsp;&nbsp;>>1 0 0 1, LUFS-S(readout=max)<br>
+&nbsp;&nbsp;>>1 1 0 1, LUFS-S(readout=current)<br>
+>&8192=0, ignore sidechain unchecked<br>
+>&8192=1, ignore sidechain checked<br>
+>&16384=0, display gain reduction(for plug-ins that support it) - unchecked<br>
+>&16384=1, display gain reduction(for plug-ins that support it) - checked<br>
+&nbsp;&nbsp;<br>
+<br>
+<br>
 Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
 </div>
@@ -6338,8 +6552,11 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 <a class="anch" id="bpminfnimport"></a>
 <a href="#bpminfnimport"> ^</a> <u><b>bpminfnimport</b></u><br>			<p>
 <div class="ch">
-Some settings as set in Preferences -> Video<br>
+Some settings as set in Preferences -> Video as well as Preferences -> Media Import<br>
 It is an integer, preferences variable.<br>
+<br>
+&nbsp;&nbsp;>&1=0, If tempo is reliable -> Do nothing<br>
+&nbsp;&nbsp;>&1=1, If tempo is reliable -> Prompt to adjust media to project tempo<br>
 <br>
 &nbsp;&nbsp;>&2=0, Ignore tempo suggested by media -> When media suggests bpm-dropdownlist<br>
 &nbsp;&nbsp;>&2=1, Always prompt -> When media suggests bpm-dropdownlist<br>
@@ -6576,6 +6793,124 @@ Pre-roll-inputbox, as set in Menu View -> Crossfade Editor&nbsp;&nbsp;<br>
 It is a double-float, view variable.&nbsp;&nbsp;<br>
 <br>
 >0 to 1e+308(308 consecutive 9)&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="envvzoomscale"></a>
+<a href="#envvzoomscale"> ^</a> <u><b>envvzoomscale</b></u><br>			<p>
+<div class="ch">
+Envelope lane vertical zoom, as set in the Preferences -> Zoom/Scroll/Offset&nbsp;&nbsp;<br>
+It is a double-float, preferences variable.<br>
+<br>
+This is stored as 1 for 100%, 0.5 for 50%, 1.25 for 125%, etc<br>
+<br>
+&nbsp;&nbsp;>0-1000<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="itemoverlap_offspct"></a>
+<a href="#itemoverlap_offspct"> ^</a> <u><b>itemoverlap_offspct</b></u><br>			<p>
+<div class="ch">
+Offset by xx precentage of item height-inputbox, Draw as opaque-checkbox and Arrange overlapping media items in the order they were created-checkbox as set in Preferences -> Zoom/Scroll/Offset<br>
+It is an integer, preferences variable.<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>0 to 255; add 256 to set the Draw as opaque-checkbox; add 512 to set the Arrange overlapping media items in the order they were created-checkbox<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="maxvzoom"></a>
+<a href="#maxvzoom"> ^</a> <u><b>maxvzoom</b></u><br>			<p>
+<div class="ch">
+Maximum vertical zoom-inputbox as set in Preferences -> Zoom/Scroll/Offset<br>
+Note: unlike the inputbox, this value is not in percentage but in doubles with 1.00 being 100%, 0.5 being 50%, etc<br>
+It is a double-float, preferences variable. <br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;>0.125-8.00; default is 1.0<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="vscrollflag"></a>
+<a href="#vscrollflag"> ^</a> <u><b>vscrollflag</b></u><br>			<p>
+<div class="ch">
+The Vertical scroll step-radiobuttons, as set in Preferences -> Zoom/Scroll/Offset<br>
+It is an integer-bitfield, ?? variable.<br>
+<br>
+> 0, % of track height (default 50%)<br>
+> 1, % of arrange view height<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="vscrollstep"></a>
+<a href="#vscrollstep"> ^</a> <u><b>vscrollstep</b></u><br>			<p>
+<div class="ch">
+The Vertical scroll step "% of track height (default 50%)"-inputbox, as set int Zoom/Scroll/Offset<br>
+It is a double-float, preferences variable.<br>
+<br>
+It is stored as 0.5=50%, 1.0=100%, 0.25=25%<br>
+<br>
+&nbsp;&nbsp;>0.01-1.0<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="vscrollstep2"></a>
+<a href="#vscrollstep2"> ^</a> <u><b>vscrollstep2</b></u><br>			<p>
+<div class="ch">
+The Vertical scroll step "% of arrange view height"-inputbox, as set int Zoom/Scroll/Offset<br>
+It is a double-float, preferences variable.<br>
+<br>
+It is stored as 0.5=50%, 1.0=100%, 0.25=25%<br>
+<br>
+&nbsp;&nbsp;>0.01-1.0<br>
+&nbsp;&nbsp;<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="vzoommode"></a>
+<a href="#vzoommode"> ^</a> <u><b>vzoommode</b></u><br>			<p>
+<div class="ch">
+Maximum vertical zoom, as set in the Preferences -> Zoom/Scroll/Offset&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>0, Track at view center(default)<br>
+>1, Top of view<br>
+>2, Last selected track&nbsp;&nbsp;<br>
+>3, Track under mouse&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="zoommode"></a>
+<a href="#zoommode"> ^</a> <u><b>zoommode</b></u><br>			<p>
+<div class="ch">
+The horizontal zoom center, as set in Preferences -> Zoom/Scroll/Offset&nbsp;&nbsp;<br>
+It is an integer, preferences variable.<br>
+<br>
+>0, Edit cursor or play cursor(default)&nbsp;&nbsp;<br>
+>1, Edit cursor&nbsp;&nbsp;<br>
+>2, Center of view&nbsp;&nbsp;<br>
+>3, Mouse cursor&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
 </div><br>
 </div>
 <div class="ch">
@@ -6960,6 +7295,17 @@ It is an integer, project variable.<br>
 Note: doesn't seem to work anymore as of Reaper 6.xx<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked..&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="projdefrecpath"></a>
+<a href="#projdefrecpath"> ^</a> <u><b>projdefrecpath</b></u><br>			<p>
+<div class="ch">
+The recordings-path, as set in Project Settings -> Media-tab<br>
+It is an string, project variable.<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
 </div>
 <div class="ch">
@@ -8977,6 +9323,139 @@ It is an integer, project variable.<br>
 >853262 - Mid/Side, Independent Phase, Time Domain Smoothing&nbsp;&nbsp;<br>
 >853263 - Preserve Formants, Mid/Side, Independent Phase, Time Domain Smoothing&nbsp;&nbsp;<br>
 <br>
+>RRREEEAAA:<br>
+>917504 - default FFT 32768 analysis: 1/2 synthesis: 4x<br>
+>add the following values to influence it:<br>
+>0 - FFT: 32768; analysis: 1/2; synthesis: 4x; synthesis-window: blackman-harris<br>
+>1 - synthesis: 5x<br>
+>2 - synthesis: 6x<br>
+>3 - synthesis: 7x<br>
+>4 - synthesis: 8x<br>
+>5 - synthesis: 9x<br>
+>6 - synthesis: 10x<br>
+>7 - synthesis: 3x [a bit pulsing]<br>
+>8 - analysis 1/4<br>
+>16 - analysis 1/6<br>
+>24 - analysis 1/8<br>
+>32 - FFT: 16384<br>
+>64 - FFT: 8192<br>
+>96 - FFT: 4096<br>
+>512 - synthesis-window: hamming<br>
+>1024 - synthesis-window: blackman<br>
+>1536 - triangular<br>
+<br>
+>ReaReaRea:<br>
+>983040 - default Fade: 48ms, Randomize: 0%, Shape sin()<br>
+>add the following values to influence it:<br>
+>0 - Randomize: 0%<br>
+>1 - Randomize: 6%<br>
+>2 - Randomize: 12%<br>
+>3 - Randomize: 18%<br>
+>4 - Randomize: 25%<br>
+>5 - Randomize: 31%<br>
+>6 - Randomize: 37%<br>
+>7 - Randomize: 43%<br>
+>8 - Randomize: 50%<br>
+>9 - Randomize: 56%<br>
+>10 - Randomize: 62%<br>
+>11 - Randomize: 68%<br>
+>12 - Randomize: 75%<br>
+>13 - Randomize: 81%<br>
+>14 - Randomize: 87%<br>
+>15 - Randomize: 93%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+>0 - Fade: 0ms<br>
+>16 - Fade: 60ms<br>
+>32 - Fade: 72ms<br>
+>48 - Fade: 84ms<br>
+>64 - Fade: 96ms<br>
+>80 - Fade: 108ms<br>
+>96 - Fade: 120ms<br>
+>112 - Fade: 132ms<br>
+>128 - Fade: 144ms<br>
+>144 - Fade: 156ms<br>
+>160 - Fade: 168ms<br>
+>176 - Fade: 180ms<br>
+>192 - Fade: 192ms<br>
+<br>
+>208 - Fade: 204ms<br>
+>224 - Fade: 216ms<br>
+>240 - Fade: 228ms<br>
+>256 - Fade: 240ms<br>
+>272 - Fade: 252ms<br>
+>288 - Fade: 264ms<br>
+>304 - Fade: 276ms<br>
+>320 - Fade: 288ms<br>
+>336 - Fade: 300ms<br>
+>352 - Fade: 312ms<br>
+>368 - Fade: 324ms<br>
+>384 - Fade: 336ms<br>
+>400 - Fade: 348ms<br>
+>416 - Fade: 360ms<br>
+>432 - Fade: 372ms<br>
+>448 - Fade: 384ms<br>
+>464 - Fade: 396ms<br>
+>480 - Fade: 408ms<br>
+>496 - Fade: 420ms<br>
+>512 - Fade: 432ms<br>
+>528 - Fade: 448ms<br>
+>544 - Fade: 472ms<br>
+>560 - Fade: 496ms<br>
+>576 - Fade: 520ms<br>
+>592 - Fade: 544ms<br>
+>608 - Fade: 568ms<br>
+>624 - Fade: 592ms<br>
+>640 - Fade: 616ms<br>
+>656 - Fade: 640ms<br>
+>672 - Fade: 664ms<br>
+>688 - Fade: 688ms<br>
+>704 - Fade: 712ms<br>
+>720 - Fade: 736ms<br>
+>736 - Fade: 760ms<br>
+>752 - Fade: 784ms<br>
+>768 - Fade: 808ms<br>
+>784 - Fade: 832ms<br>
+>800 - Fade: 856ms<br>
+>816 - Fade: 880ms<br>
+>832 - Fade: 904ms<br>
+>848 - Fade: 928ms<br>
+>864 - Fade: 952ms<br>
+>880 - Fade: 976ms<br>
+>896 - Fade: 1000ms<br>
+>912 - Fade: 2ms<br>
+>928 - Fade: 4ms<br>
+>944 - Fade: 6ms<br>
+>960 - Fade: 8ms<br>
+>976 - Fade: 12ms<br>
+>992 - Fade: 24ms<br>
+>1008 - Fade: 36ms<br>
+>0 - Shape: sin()<br>
+>1024 - Shape: linear<br>
+>2048 - Shape: rectangular<br>
+>8192 - Fade: 1/128 note<br>
+>8208 - Fade: 1/64 note<br>
+>8320 - Fade: 1/128 note triplet<br>
+>8448 - Fade: 1/128 note dotted<br>
+>8336 - Fade: 1/64 note triplet<br>
+>8192 - Fade: 1/64 note dotted<br>
+>8224 - Fade: 1/32 note<br>
+>8352 - Fade: 1/32 note triplet<br>
+>8480 - Fade: 1/32 note dotted<br>
+>8240 - Fade: 1/16 note<br>
+>8368 - Fade: 1/16 note triplet<br>
+>8496 - Fade: 1/16 note dotted<br>
+>8256 - Fade: 1/8 note<br>
+>8384 - Fade: 1/8 note triplet<br>
+>8512 - Fade: 1/8 note dotted<br>
+>8272 - Fade: 1/4 note<br>
+>8400 - Fade: 1/4 note triplet<br>
+>8528 - Fade: 1/4 note dotted<br>
+>8288 - Fade: 1/2 note<br>
+>8416 - Fade: 1/2 note triplet<br>
+>8544 - Fade: 1/2 note dotted<br>
+>8304 - Fade: whole note<br>
+>8432 - Fade: whole note triplet<br>
+>8560 - Fade: whole note dotted<br>
+<br>
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
 </div>
@@ -9519,6 +9998,8 @@ It is an integer, project variable.<br>
 >4224, Razor edit areas via master<br>
 >&8192, Render stems pre-fader; 0, unchecked; 1, checked<br>
 >&16384, Only render channels that are sent to parent<br>
+>&32768, (Preserve) Metadata-checkbox<br>
+>&65536, (Preserve) Start offset-checkbox(only with Selected media items as source)<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
@@ -9809,6 +10290,11 @@ It is an integer-bitfield, project variable.<br>
 >&32768 = 0, Video processor automation-dropdownlist -> Evaluate at middle of frame<br>
 >&32768 = 1, Video processor automation-dropdownlist -> Evaluate at start of frame<br>
 <br>
+>&65536 &131328 - Gamut<br>
+&nbsp;&nbsp;0 0 - BT.601 (SDTV)<br>
+&nbsp;&nbsp;1 0 - BT.701 (HDTV)<br>
+&nbsp;&nbsp;0 1 - BT.2020 (UHDTV)<br>
+&nbsp;&nbsp;<br>
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
 </div>
@@ -10077,6 +10563,19 @@ Sets frequency of the secondary beat in Hz, as set in the "Metronome and pre-rol
 Only integer allowed, project variable.&nbsp;&nbsp;<br>
 <br>
 >0 to 2147483647; higher values lead to negative values&nbsp;&nbsp;<br>
+<br>
+Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="projmetropattern"></a>
+<a href="#projmetropattern"> ^</a> <u><b>projmetropattern</b></u><br>			<p>
+<div class="ch">
+Stores the breat pattern, as set in Metronome and Pre-roll settings-dialog.<br>
+It is a string allowed, project variable.&nbsp;&nbsp;<br>
+<br>
+It is unknown, how it is encoded.<br>
 <br>
 Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.&nbsp;&nbsp;<br>
 </div><br>
@@ -10750,7 +11249,7 @@ Stored in reaper.ini under the same name in the section REAPER.&nbsp;&nbsp;<br>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.9  - 478 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.1  - 499 elements available <br></td></table>
         <hr>
       </div>
       <br>

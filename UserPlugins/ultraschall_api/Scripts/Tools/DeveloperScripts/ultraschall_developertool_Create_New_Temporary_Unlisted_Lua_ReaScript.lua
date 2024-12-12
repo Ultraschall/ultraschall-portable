@@ -2,6 +2,8 @@
 -- Creates new temporary Lua-script using filename Resourcefolder/Scripts/Ultraschall_TempScripts/temporary_[$date].lua
 -- the script will NOT be added to the actionlist, but can be edited and run anyway.
 
+ultraschall_override=true
+
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 else

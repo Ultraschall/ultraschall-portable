@@ -1,0 +1,312 @@
+## Tutorial #4: Disabled ui-elements
+
+You may have seen it in certain guis, that sometimes gui-elements are disabled. You can do this too in ReaGirl.
+In this tutorial, I will show you, how.
+
+First things first: not all ui-elements can be set to disabled, but those who can have a \_SetDisabled-function.
+Like reagirl.Button\_SetDisabled() or reagirl.Checkbox\_SetDisabled, etc.
+So let's dive into it.
+
+In this tutorial I want to introduce you to two new gui-elements not yet covered in the other ones: Sliders and Drop Down Menus.
+Our final gui will have one slider and one drop down menu plus checkboxes who disable/enable them.
+
+First, let's create our basic gui without any gui-element in it as a base, that just opens a window.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+Now, let's add first ui-elements: a checkbox and a slider. I will also add two run-functions, one for the checkboxes and one for the slider.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Slider_RunFunction(used_slider_id, current_value)
+    -- this function is run, when the slider is moved
+    reaper.ClearConsole()
+    reaper.ShowConsoleMsg("The current value is: "..current_value)
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_disableSlider_id then
+      reaper.ClearConsole()
+      reaper.ShowConsoleMsg("Checkbox is "..tostring(checkstate), "", 0)
+    end
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a checkbox and a slider to the gui
+  checkbox_disableSlider_id = reagirl.Checkbox_Add(30, 50, "Activated", "Check to activate slider.", true, Checkbox_RunFunction)
+  slider_id = reagirl.Slider_Add(200, 50, -20, "I am a slider", nil, "A slider to set a value.", "%", 20, 200, 1, 25, 100, Slider_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When you run this code, you see a checkbox and a slider. When you click on the checkbox or move the slider, you will see the current value in the ReaScript console window.
+Now, let's make the checkbox disable the slider. For this, we use the function reagirl.Slider\_SetDisabled() in the run-function Checkbox_RunFunction.
+We will use the element\_id of the slider called slider\_id to adress it in reagirl.Slider\_SetDisabled().
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Slider_RunFunction(used_slider_id, current_value)
+    -- this function is run, when the slider is moved
+    reaper.ClearConsole()
+    reaper.ShowConsoleMsg("The current value is: "..current_value)
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    
+    if checked_checkbox_id==checkbox_disableSlider_id then
+      -- if the first checkbox's checkstate is changed to true
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.Slider_SetDisabled(slider_id, false) -- set the slider enabled
+      else -- otherwise
+        reagirl.Slider_SetDisabled(slider_id, true)  -- set the slider disabled
+      end
+    end
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a checkbox and a slider to the gui
+  checkbox_disableSlider_id = reagirl.Checkbox_Add(30, 50, "Activated", "Check to activate slider.", true, Checkbox_RunFunction)
+  slider_id = reagirl.Slider_Add(200, 50, -20, "I am a slider", nil, "A slider to set a value.", "%", 20, 200, 1, 25, 100, Slider_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+When running this script, clicking the checkbox will change the slider to disabled/enabled, depending on the checkbox-state.
+Now, let's do this for another ui-element. But this time with a drop down menu. And we want it to set disabled at script startup.
+
+To do this, we add another checkbox and a drop down menu(using reagirl.DropDownMenu\_Add()). 
+And as usual: we add a run-function called DropDownMenu\_RunFunction() for the drop down menu.
+For the second checkbox, we use again the Checkbox\_RunFunction(), but we'll modify it in a later step.
+
+Let's see, how the gui looks now.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Slider_RunFunction(used_slider_id, current_value)
+    -- this function is run, when the slider is moved
+    reaper.ClearConsole()
+    reaper.ShowConsoleMsg("The current value is: "..current_value)
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    
+    if checked_checkbox_id==checkbox_disableSlider_id then
+      -- if the first checkbox's checkstate is changed to true
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.Slider_SetDisabled(slider_id, false) -- set the slider enabled
+      else -- otherwise
+        reagirl.Slider_SetDisabled(slider_id, true)  -- set the slider disabled
+      end
+    end
+  end
+
+  function DropDownMenu_RunFunction(used_dropdownmenu_id, selected_menuitem, selected_name)
+    -- this function is run, when the user selects a menu-entry
+    reaper.MB("Dropdownmenu entry #"..selected_menuitem.." - "..selected_name, "", 0)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a checkbox and a slider to the gui
+  checkbox_disableSlider_id = reagirl.Checkbox_Add(30, 50, "Activated", "Check to activate slider.", true, Checkbox_RunFunction)
+  slider_id = reagirl.Slider_Add(200, 50, -20, "I am a slider", nil, "A slider to set a value.", "%", 20, 200, 1, 25, 100, Slider_RunFunction)
+
+  -- add a checkbox and a drop-down-menu to the gui
+  checkbox_disableDropDownMenu_id = reagirl.Checkbox_Add(30, 72, "Activated", "Check to activate drop-down-menu.", false, Checkbox_RunFunction)
+  dropdownmenu_id = reagirl.DropDownMenu_Add(200, 72, -20, "I am a dropdownmenu", nil, "A Drop Down Menu to choose from.", {"Entry 1 - The first entry", "Entry 2 - The second entry", "Entry 3 - The third entry"}, 2, DropDownMenu_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+This code shows now additionally a checkbox and a drop down menu. You can select menu-entries by clicking into it and when you do, the run-function of the drop down menu will show a messagebox with the selected menu-entry.
+The checkbox isn't doing anything yet, so clicking has no effect. Let's change this, by altering the run-function Checkbox\_RunFunction().
+It's basically done the same way, as we did for the slider. However, we use now reagirl.DropDownMenu\_SetDisabled() to disable the drop down menu.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Slider_RunFunction(used_slider_id, current_value)
+    -- this function is run, when the slider is moved
+    reaper.ClearConsole()
+    reaper.ShowConsoleMsg("The current value is: "..current_value)
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    
+    if checked_checkbox_id==checkbox_disableSlider_id then
+      -- if the first checkbox's checkstate is changed to true
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.Slider_SetDisabled(slider_id, false) -- set the slider enabled
+      else -- otherwise
+        reagirl.Slider_SetDisabled(slider_id, true)  -- set the slider disabled
+      end
+      -- if the second checkbox's checkstate is changed to true
+    elseif checked_checkbox_id==checkbox_disableDropDownMenu_id then
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.DropDownMenu_SetDisabled(dropdownmenu_id, false) -- set the drop down menu to enabled
+      else -- otherwise
+        reagirl.DropDownMenu_SetDisabled(dropdownmenu_id, true)  -- set the drop down menu to disabled
+      end
+    end
+  end
+
+  function DropDownMenu_RunFunction(used_dropdownmenu_id, selected_menuitem, selected_name)
+    -- this function is run, when the user selects a menu-entry
+    reaper.MB("Dropdownmenu entry #"..selected_menuitem.." - "..selected_name, "", 0)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a checkbox and a slider to the gui
+  checkbox_disableSlider_id = reagirl.Checkbox_Add(30, 50, "Activated", "Check to activate slider.", true, Checkbox_RunFunction)
+  slider_id = reagirl.Slider_Add(200, 50, -20, "I am a slider", nil, "A slider to set a value.", "%", 20, 200, 1, 25, 100, Slider_RunFunction)
+
+  -- add a checkbox and a drop-down-menu to the gui
+  checkbox_disableDropDownMenu_id = reagirl.Checkbox_Add(30, 72, "Activated", "Check to activate drop-down-menu.", false, Checkbox_RunFunction)
+  dropdownmenu_id = reagirl.DropDownMenu_Add(200, 72, -20, "I am a dropdownmenu", nil, "A Drop Down Menu to choose from.", {"Entry 1 - The first entry", "Entry 2 - The second entry", "Entry 3 - The third entry"}, 2, DropDownMenu_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+This will set the drop down menu to disabled, when you set the checkbox to unchecked and enabled when you set it to checked.
+However, you have probably noticed when starting up the script, the checkbox is unchecked but the drop down menu is still enabled. Only checking the checkbox on and off will make it disabled.
+To solve this, we add one last reagirl.DropDownMenu\_SetDisabled(), this time right after the reagirl.DropDownMenu\_Add-functioncall, using the element\_id of the drop down list.
+And we set it to disable the drop down menu(true).
+
+Here's how the code looks like now.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Slider_RunFunction(used_slider_id, current_value)
+    -- this function is run, when the slider is moved
+    reaper.ClearConsole()
+    reaper.ShowConsoleMsg("The current value is: "..current_value)
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    
+    if checked_checkbox_id==checkbox_disableSlider_id then
+      -- if the first checkbox's checkstate is changed to true
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.Slider_SetDisabled(slider_id, false) -- set the slider enabled
+      else -- otherwise
+        reagirl.Slider_SetDisabled(slider_id, true)  -- set the slider disabled
+      end
+      -- if the second checkbox's checkstate is changed to true
+    elseif checked_checkbox_id==checkbox_disableDropDownMenu_id then
+      if reagirl.Checkbox_GetCheckState(checked_checkbox_id)==true then
+        reagirl.DropDownMenu_SetDisabled(dropdownmenu_id, false) -- set the drop down menu to enabled
+      else -- otherwise
+        reagirl.DropDownMenu_SetDisabled(dropdownmenu_id, true)  -- set the drop down menu to disabled
+      end
+    end
+  end
+
+  function DropDownMenu_RunFunction(used_dropdownmenu_id, selected_menuitem, selected_name)
+    -- this function is run, when the user selects a menu-entry
+    reaper.MB("Dropdownmenu entry #"..selected_menuitem.." - "..selected_name, "", 0)
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a checkbox and a slider to the gui
+  checkbox_disableSlider_id = reagirl.Checkbox_Add(30, 50, "Activated", "Check to activate slider.", true, Checkbox_RunFunction)
+  slider_id = reagirl.Slider_Add(200, 50, -20, "I am a slider", nil, "A slider to set a value.", "%", 20, 200, 1, 25, 100, Slider_RunFunction)
+
+  -- add a checkbox and a drop-down-menu to the gui
+  checkbox_disableDropDownMenu_id = reagirl.Checkbox_Add(30, 72, "Activated", "Check to activate drop-down-menu.", false, Checkbox_RunFunction)
+  dropdownmenu_id = reagirl.DropDownMenu_Add(200, 72, -20, "I am a dropdownmenu", nil, "A Drop Down Menu to choose from.", {"Entry 1 - The first entry", "Entry 2 - The second entry", "Entry 3 - The third entry"}, 2, DropDownMenu_RunFunction)
+  reagirl.DropDownMenu_SetDisabled(dropdownmenu_id, true) -- set drop-down-menu to disabled
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 120)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+And there we are: the finished gui that enables/disables the slider and the drop down menu according to the states of the checkboxes.

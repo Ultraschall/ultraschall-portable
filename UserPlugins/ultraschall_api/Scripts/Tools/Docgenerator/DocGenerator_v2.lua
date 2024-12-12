@@ -471,28 +471,32 @@ function entries(start, stop)
       
       -- requires
       if requires_alt["Reaper"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reaper"..requires_alt["Reaper"]..".png\" alt=\"Reaper version "..requires_alt["Reaper"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reaper"..requires_alt["Reaper"]..".png\" alt=\"requires Reaper version "..requires_alt["Reaper"].."\">"
       end
       if requires_alt["SWS"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/sws"..requires_alt["SWS"]..".png\" alt=\"SWS version "..requires_alt["SWS"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/sws"..requires_alt["SWS"]..".png\" alt=\"requires SWS version "..requires_alt["SWS"].."\">"
       end
       if requires_alt["JS"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/js_"..requires_alt["JS"]..".png\" alt=\"JS version "..requires_alt["JS"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/js_"..requires_alt["JS"]..".png\" alt=\"requires JS version "..requires_alt["JS"].."\">"
       end
       if requires_alt["Osara"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/Osara"..requires_alt["Osara"]..".png\" alt=\"Osara version "..requires_alt["Osara"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/Osara"..requires_alt["Osara"]..".png\" alt=\"requires Osara version "..requires_alt["Osara"].."\">"
       end
       if requires_alt["ReaImGui"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reaimgui"..requires_alt["ReaImGui"]..".png\" alt=\"ReaImGui version "..requires_alt["ReaImGui"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reaimgui"..requires_alt["ReaImGui"]..".png\" alt=\"requires ReaImGui version "..requires_alt["ReaImGui"].."\">"
       end
       if requires_alt["ReaBlink"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reablink"..requires_alt["ReaBlink"]..".png\" alt=\"ReaBlink version "..requires_alt["ReaBlink"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reablink"..requires_alt["ReaBlink"]..".png\" alt=\"requires ReaBlink version "..requires_alt["ReaBlink"].."\">"
       end
       if requires_alt["ReaLlm"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/llm"..requires_alt["ReaLlm"]..".png\" alt=\"ReaLlm version "..requires_alt["ReaLlm"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/llm"..requires_alt["ReaLlm"]..".png\" alt=\"requires ReaLlm version "..requires_alt["ReaLlm"].."\">"
       end
       if requires_alt["Ultraschall"]~=nil then
-        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/ultraschall"..requires_alt["Ultraschall"]..".png\" alt=\"Ultraschall version "..requires_alt["Ultraschall"].."\">"
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/ultraschall"..requires_alt["Ultraschall"]..".png\" alt=\"requires Ultraschall version "..requires_alt["Ultraschall"].."\">"
+      end
+      
+      if requires_alt["ReaGirl"]~=nil then
+        FunctionList=FunctionList.."\n          <img width=\"3%\" src=\"gfx/reagirl"..requires_alt["ReaGirl"]..".png\" alt=\"requires ReaGirl version "..requires_alt["ReaGirl"].."\">"
       end
       
       -- Title
@@ -598,7 +602,7 @@ function entries(start, stop)
         Links=Links.."<u>"..description.."</u><br><table class=\"ch\">\n"
         
         for i=1, #links do
-          Links=Links.."<tr><td><li><a target=\"_blank\" href=\"#"..links[i].link.."\">"..links[i].link.."</a> - "..links[i].description.."</td></tr>\n"
+          Links=Links.."<tr><td><li><a href=\"#"..links[i].link.."\">"..links[i].link.."</a> - "..links[i].description.."</td></tr>\n"
         end
         Links=Links.."</table><br>"
       end

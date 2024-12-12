@@ -43,6 +43,8 @@
 
 --TODO: uncomment gfx.init("Show Config Vars",900,187) and finish other features
 
+ultraschall_override=true
+
 A=reaper.GetAppVersion()
 B=tonumber(A:match("(.-)/"))
 if B==nil then

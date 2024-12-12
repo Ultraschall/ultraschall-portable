@@ -511,3 +511,198 @@ function ultraschall.MidiEditor_GetFixOverlapState()
   local retval, value = reaper.BR_Win32_GetPrivateProfileString("midiedit", "fixnoteoverlaps", "", reaper.get_ini_file())
   if value=="0" then return false else return true end
 end
+
+function ultraschall.PreviewMidiPitchInTrack(track, pitch)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PreviewMidiPitchInTrack</slug>
+    <requires>
+      Ultraschall=5
+      Reaper=5.965
+      Lua=5.4
+    </requires>
+    <functioncall>ultraschall.PreviewMidiPitchInTrack(integer track, integer pitch)</functioncall>
+    <description>
+      Sends a MIDI-pitch to a specific track with a specific velocity.
+      
+      The track must be rec-armed!
+      
+      returns false in case of an error
+    </description>
+    <parameters>
+      integer track - the number of the track, in which you want to preview the midi-note
+      integer pitch - the pitch to be played; 0-127
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
+    <tags>midi management, send, note, preview, pitch</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "track", "no such track", -2) return false end
+  if math.type(pitch)~="integer" then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "pitch", "must be an integer", -3) return false end
+  if pitch<0 or pitch>127 then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "pitch", "must be between 0 and 127", -5) return false end
+  
+  local old_recarm=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECARM")
+  if old_recarm==0 then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "velocity", "track must be armed for this function to work", -6) return false end
+
+  local old_input=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECINPUT")
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", 6080)
+  ultraschall.MIDI_SendMidiPitch(1, pitch, velocity, 0)
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", old_input)
+  return true
+end
+
+--ultraschall.PreviewMidiPitchInTrack(1, 12, 1)
+
+function ultraschall.PreviewMidiPCInTrack(track, pc, velocity)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PreviewMidiPCInTrack</slug>
+    <requires>
+      Ultraschall=5
+      Reaper=5.965
+      Lua=5.4
+    </requires>
+    <functioncall>ultraschall.PreviewMidiPCInTrack(integer track, integer pc, integer Velocity)</functioncall>
+    <description>
+      Sends a MIDI-pc to a specific track with a specific velocity.
+      
+      The track must be rec-armed!
+      
+      returns false in case of an error
+    </description>
+    <parameters>
+      integer track - the number of the track, in which you want to preview the midi-note
+      integer pc - the pc to be played; 0-127
+      integer velocity - the velocity of the note; 0-255
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
+    <tags>midi management, send, note, preview, pc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "track", "no such track", -2) return false end
+  if math.type(pc)~="integer" then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "pc", "must be an integer", -3) return false end
+  if math.type(velocity)~="integer" then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "velocity", "must be an integer", -4) return false end
+  if pc<0 or pc>127 then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "pc", "must be between 0 and 127", -5) return false end
+  if velocity<0 or velocity>255 then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "velocity", "must be between 0 and 255", -6) return false end
+  
+  local old_recarm=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECARM")
+  if old_recarm==0 then ultraschall.AddErrorMessage("PreviewMidiPCInTrack", "velocity", "track must be armed for this function to work", -6) return false end
+
+  local old_input=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECINPUT")
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", 6080)
+  ultraschall.MIDI_SendMidiPC(1, pc, velocity, 0)
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", old_input)
+  return true
+end
+
+--ultraschall.PreviewMidiPCInTrack(1, 12, 1)
+
+function ultraschall.PreviewMidiCCInTrack(track, cc, velocity)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PreviewMidiCCInTrack</slug>
+    <requires>
+      Ultraschall=5
+      Reaper=5.965
+      Lua=5.4
+    </requires>
+    <functioncall>ultraschall.PreviewMidiCCInTrack(integer track, integer cc, integer Velocity)</functioncall>
+    <description>
+      Sends a MIDI-cc to a specific track with a specific velocity.
+      
+      The track must be rec-armed!
+      
+      returns false in case of an error
+    </description>
+    <parameters>
+      integer track - the number of the track, in which you want to preview the midi-note
+      integer cc - the cc to be played; 0-127
+      integer velocity - the velocity of the note; 0-255
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
+    <tags>midi management, send, note, preview, cc</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "track", "no such track", -2) return false end
+  if math.type(cc)~="integer" then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "cc", "must be an integer", -3) return false end
+  if math.type(velocity)~="integer" then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "velocity", "must be an integer", -4) return false end
+  if cc<0 or cc>127 then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "cc", "must be between 0 and 127", -5) return false end
+  if velocity<0 or velocity>255 then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "velocity", "must be between 0 and 255", -6) return false end
+  
+  local old_recarm=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECARM")
+  if old_recarm==0 then ultraschall.AddErrorMessage("PreviewMidiCCInTrack", "velocity", "track must be armed for this function to work", -6) return false end
+
+  local old_input=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECINPUT")
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", 6080)
+  ultraschall.MIDI_SendMidiCC(1, cc, velocity, 0)
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", old_input)
+  return true
+end
+
+--ultraschall.PreviewMidiCCInTrack(1, 12, 1)
+
+function ultraschall.PreviewMidiNoteInTrack(track, note, velocity)
+--[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>PreviewMidiNoteInTrack</slug>
+    <requires>
+      Ultraschall=5
+      Reaper=5.965
+      Lua=5.4
+    </requires>
+    <functioncall>ultraschall.PreviewMidiNoteInTrack(integer track, integer note, integer Velocity)</functioncall>
+    <description>
+      Sends a MIDI-note to a specific track with a specific velocity.
+      
+      The track must be rec-armed!
+      
+      returns false in case of an error
+    </description>
+    <parameters>
+      integer track - the number of the track, in which you want to preview the midi-note
+      integer note - the note to be played; 0-127
+      integer velocity - the velocity of the note; 0-255
+    </parameters>
+    <chapter_context>
+      MIDI Management
+      Notes
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_MIDIManagement_Module.lua</source_document>
+    <tags>midi management, send, note, preview</tags>
+  </US_DocBloc>
+  ]]  
+  if math.type(track)~="integer" then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "track", "must be an integer", -1) return false end
+  if track<1 or track>reaper.CountTracks(0) then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "track", "no such track", -2) return false end
+  if math.type(note)~="integer" then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "note", "must be an integer", -3) return false end
+  if math.type(velocity)~="integer" then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "velocity", "must be an integer", -4) return false end
+  if note<0 or note>127 then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "note", "must be between 0 and 127", -5) return false end
+  if velocity<0 or velocity>255 then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "velocity", "must be between 0 and 255", -6) return false end
+  
+  local old_recarm=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECARM")
+  if old_recarm==0 then ultraschall.AddErrorMessage("PreviewMidiNoteInTrack", "velocity", "track must be armed for this function to work", -6) return false end
+
+  local old_input=reaper.GetMediaTrackInfo_Value(reaper.GetTrack(0, track-1), "I_RECINPUT")
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", 6080)
+  ultraschall.MIDI_SendMidiNote(1, note, velocity, 0)
+  reaper.SetMediaTrackInfo_Value(reaper.GetTrack(0,0), "I_RECINPUT", old_input)
+  return true
+end

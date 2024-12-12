@@ -2214,7 +2214,7 @@ end
 
 function ultraschall.ScanVSTPlugins(clear_cache)
 --[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+<removed US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ScanVSTPlugins</slug>
   <requires>
     Ultraschall=4.00
@@ -2237,7 +2237,7 @@ function ultraschall.ScanVSTPlugins(clear_cache)
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_FXManagement_Module.lua</source_document>
   <tags>fx-management, scan, plugins, vst</tags>
-</US_DocBloc>
+<removed /US_DocBloc>
 --]]
   local hwnd, hwnd1, hwnd2, retval, prefspage, reopen, id
   local use_prefspage=210

@@ -4644,13 +4644,13 @@ end
 function ultraschall.DeleteMediaItemsBetween(startposition, endposition,  trackstring, inside)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>DeleteMediaItems_Position</slug>
+  <slug>DeleteMediaItemsBetween</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, array MediaItemStateChunkArray = ultraschall.DeleteMediaItems_Between(number startposition, number endposition, string trackstring, boolean inside)</functioncall>
+  <functioncall>boolean retval, array MediaItemStateChunkArray = ultraschall.DeleteMediaItemsBetween(number startposition, number endposition, string trackstring, boolean inside)</functioncall>
   <description>
     Delete the MediaItems between start- and endposition, from the tracks as given by trackstring.
     Returns also a MediaItemStateChunkArray, that contains the statechunks of all deleted MediaItem

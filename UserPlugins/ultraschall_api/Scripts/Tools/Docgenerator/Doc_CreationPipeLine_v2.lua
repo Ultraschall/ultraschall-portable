@@ -23,6 +23,9 @@
   # 
   ################################################################################
   --]]
+
+ultraschall_override=true
+
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 else
@@ -39,6 +42,8 @@ reaper.BR_Win32_WritePrivateProfileString("Ultraschall-Api-Build", "API-Build", 
 ultraschall.BringReaScriptConsoleToFront()
 
 FileA={}
+FileA[#FileA+1]="ReaGirl_Doc_Concepts_Converter_v2.lua"
+FileA[#FileA+1]="ReaGirl_Doc_Functions_Converter_v2.lua"
 FileA[#FileA+1]="Ultraschall_Doc_Func_Converter_v2.lua"
 FileA[#FileA+1]="Ultraschall_Doc_VID_Converter_v2.lua"
 FileA[#FileA+1]="Reaper_ConfigVarDocConverter_v2.lua"
@@ -52,6 +57,7 @@ FileA[#FileA+1]="Ultraschall_ApiDownloads_Generator.lua"
 FileA[#FileA+1]="Ultraschall_ConceptsDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_VideoProcessorDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_ReaScriptConverter_v2.lua"
+
 --FileA[#FileA+1]="Reaper_FileTypeDocConverter_v2.lua"
 dofile(ultraschall.Api_Path.."/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")
 

@@ -1,0 +1,1960 @@
+<html><head><title>
+Ultraschall API Video-Concepts
+</title>
+<link href="style.css" rel="stylesheet">
+<link href="custom.css" rel="stylesheet">
+</head>
+<body>    
+<a class="anch" id="This-is-the-TopOfTheWorld"></a>
+<div style="position: sticky; top:0; padding-left:4%; z-index:100;">
+<div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
+<a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
+<a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
+<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
+<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+<a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+<a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+<div style="padding-top:2.5%">
+<table border="0" style="color:#aaaaaa; width:101%;">
+<tr>
+<td style="width:27.2%; padding-top:2; ">
+<a href="http://www.ultraschall.fm"><img style="width:118%;" src="gfx/US-header.png" alt="Ultraschall-logo"></a>
+</td>
+<td style="position: absolute; padding-top:5; width:10%;"><u>Functions Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>GFX Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>Doc Engine</u></td>
+<td style="padding-top:5; width:10%;"><u>Video Engine</u></td>
+<td width="10%;">&nbsp;<u></u></td>
+<td width="10%;">&nbsp;<u></u></td>
+<td width="10%;">&nbsp;<u></u></td>
+</tr>
+<tr>
+<td></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Introduction_and_Concepts.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;Introduction/Concepts&nbsp;&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+<td style="background-color:#777777; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Concepts_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concepts</a></td>
+</tr>
+<tr>
+<td></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_Functions.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_GFX.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_DOC.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+<td style="background-color:#555555; color:#BBBBBB; border: 1px solid #333333; border-radius:5%/5%;"><a href="US_Api_VID.html" style="color:#BBBBBB; text-decoration: none; justify-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Functions&nbsp;</a></td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</table><hr color="#444444">
+<div style="position:absolute; right:6%; top:80%;"><a style="color:#CCCCCC;" href="#This-is-the-TopOfTheWorld">Jump to Index</a></div>
+</div>
+</div>
+</div>
+<div class="ch"><p></p>
+<!-- Clipboard Button -->
+<script src="./scripts/clipboard.min.js.Download"></script>
+<!-- External Script -->
+<script src="./scripts/scripts.js.Download"></script>
+<table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Chapters"><a href="#Chapters">^</a></a><strong> <u>Chapters</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#chap_X">chap_X</a></td></tr><td class="tdsm"><a href="#chap_content_notification_tags">chap_content_notification_tags</a></td></tr><td class="tdsm"><a href="#chap_description">chap_description</a></td></tr><td class="tdsm"><a href="#chap_descriptive_tags">chap_descriptive_tags</a></td></tr><td class="tdsm"><a href="#chap_guid">chap_guid</a></td></tr><td class="tdsm"><a href="#chap_image">chap_image</a></td></tr><td class="tdsm"><a href="#chap_image_description">chap_image_description</a></td></tr><td class="tdsm"><a href="#chap_image_license">chap_image_license</a></td></tr><td class="tdsm"><a href="#chap_image_origin">chap_image_origin</a></td></tr><td class="tdsm"><a href="#chap_image_url">chap_image_url</a></td></tr><td class="tdsm"><a href="#chap_is_advertisement">chap_is_advertisement</a></td></tr><td class="tdsm"><a href="#chap_next_chapter_numbers">chap_next_chapter_numbers</a></td></tr><td class="tdsm"><a href="#chap_position">chap_position</a></td></tr><td class="tdsm"><a href="#chap_previous_chapter_numbers">chap_previous_chapter_numbers</a></td></tr><td class="tdsm"><a href="#chap_spoiler_alert">chap_spoiler_alert</a></td></tr><td class="tdsm"><a href="#chap_title">chap_title</a></td></tr><td class="tdsm"><a href="#chap_url">chap_url</a></td></tr><td class="tdsm"><a href="#chap_url_description">chap_url_description</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Contributors"><a href="#Contributors">^</a></a><strong> <u>Contributors</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#ctrb_X">ctrb_X</a></td></tr><td class="tdsm"><a href="#ctrb_description">ctrb_description</a></td></tr><td class="tdsm"><a href="#ctrb_email">ctrb_email</a></td></tr><td class="tdsm"><a href="#ctrb_guid">ctrb_guid</a></td></tr><td class="tdsm"><a href="#ctrb_name">ctrb_name</a></td></tr><td class="tdsm"><a href="#ctrb_role">ctrb_role</a></td></tr><td class="tdsm"><a href="#ctrb_website_X">ctrb_website_X</a></td></tr><td class="tdsm"><a href="#ctrb_website_description">ctrb_website_description</a></td></tr><td class="tdsm"><a href="#ctrb_website_name">ctrb_website_name</a></td></tr><td class="tdsm"><a href="#ctrb_website_url">ctrb_website_url</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Episode"><a href="#Episode">^</a></a><strong> <u>Episode</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#epsd">epsd</a></td></tr><td class="tdsm"><a href="#epsd_content_notification_tags">epsd_content_notification_tags</a></td></tr><td class="tdsm"><a href="#epsd_cover">epsd_cover</a></td></tr><td class="tdsm"><a href="#epsd_description">epsd_description</a></td></tr><td class="tdsm"><a href="#epsd_descriptive_tags">epsd_descriptive_tags</a></td></tr><td class="tdsm"><a href="#epsd_explicit">epsd_explicit</a></td></tr><td class="tdsm"><a href="#epsd_guid">epsd_guid</a></td></tr><td class="tdsm"><a href="#epsd_language">epsd_language</a></td></tr><td class="tdsm"><a href="#epsd_number">epsd_number</a></td></tr><td class="tdsm"><a href="#epsd_release_date">epsd_release_date</a></td></tr><td class="tdsm"><a href="#epsd_release_time">epsd_release_time</a></td></tr><td class="tdsm"><a href="#epsd_release_timezone">epsd_release_timezone</a></td></tr><td class="tdsm"><a href="#epsd_season">epsd_season</a></td></tr><td class="tdsm"><a href="#epsd_tagline">epsd_tagline</a></td></tr><td class="tdsm"><a href="#epsd_title">epsd_title</a></td></tr><td class="tdsm"><a href="#shwn_event_date_beginning">shwn_event_date_beginning</a></td></tr><td class="tdsm"><a href="#shwn_event_date_end">shwn_event_date_end</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Introduction"><a href="#Introduction">^</a></a><strong> <u>Introduction</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#1.1 What is PodMeta">What is PodMeta?</a></td></tr><td class="tdsm"><a href="#1.2 The Structure">The Structure</a></td></tr><td class="tdsm"><a href="#1.3 custom objects and arrays">Custom Objects and Arrays</a></td></tr><td class="tdsm"><a href="#1.3 the objects">The Objects</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Podcast Website"><a href="#Podcast Website">^</a></a><strong> <u>Podcast Website</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#podc_website_X">podc_website_X</a></td></tr><td class="tdsm"><a href="#podc_website_description">podc_website_description</a></td></tr><td class="tdsm"><a href="#podc_website_name">podc_website_name</a></td></tr><td class="tdsm"><a href="#podc_website_url">podc_website_url</a></td></tr><td class="tdsm"><a href="#shwn_event_url">shwn_event_url</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Podcast"><a href="#Podcast">^</a></a><strong> <u>Podcast</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#podc">podc</a></td></tr><td class="tdsm"><a href="#podc_category">podc_category</a></td></tr><td class="tdsm"><a href="#podc_contact_email">podc_contact_email</a></td></tr><td class="tdsm"><a href="#podc_description">podc_description</a></td></tr><td class="tdsm"><a href="#podc_descriptive_tags">podc_descriptive_tags</a></td></tr><td class="tdsm"><a href="#podc_feed">podc_feed</a></td></tr><td class="tdsm"><a href="#podc_tagline">podc_tagline</a></td></tr><td class="tdsm"><a href="#podc_title">podc_title</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Shownotes"><a href="#Shownotes">^</a></a><strong> <u>Shownotes</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#shwn_X">shwn_X</a></td></tr><td class="tdsm"><a href="#shwn_bibliographical_source">shwn_bibliographical_source</a></td></tr><td class="tdsm"><a href="#shwn_date">shwn_date</a></td></tr><td class="tdsm"><a href="#shwn_description">shwn_description</a></td></tr><td class="tdsm"><a href="#shwn_descriptive_tags">shwn_descriptive_tags</a></td></tr><td class="tdsm"><a href="#shwn_event_description">shwn_event_description</a></td></tr><td class="tdsm"><a href="#shwn_event_ics_data">shwn_event_ics_data</a></td></tr><td class="tdsm"><a href="#shwn_event_location">shwn_event_location</a></td></tr><td class="tdsm"><a href="#shwn_event_location_name">shwn_event_location_name</a></td></tr><td class="tdsm"><a href="#shwn_event_name">shwn_event_name</a></td></tr><td class="tdsm"><a href="#shwn_event_time_beginning">shwn_event_time_beginning</a></td></tr><td class="tdsm"><a href="#shwn_event_time_end">shwn_event_time_end</a></td></tr><td class="tdsm"><a href="#shwn_event_timezone">shwn_event_timezone</a></td></tr><td class="tdsm"><a href="#shwn_guid">shwn_guid</a></td></tr><td class="tdsm"><a href="#shwn_is_advertisement">shwn_is_advertisement</a></td></tr><td class="tdsm"><a href="#shwn_language">shwn_language</a></td></tr><td class="tdsm"><a href="#shwn_linked_audiovideomedia">shwn_linked_audiovideomedia</a></td></tr><td class="tdsm"><a href="#shwn_location">shwn_location</a></td></tr><td class="tdsm"><a href="#shwn_location_name">shwn_location_name</a></td></tr><td class="tdsm"><a href="#shwn_position">shwn_position</a></td></tr><td class="tdsm"><a href="#shwn_time">shwn_time</a></td></tr><td class="tdsm"><a href="#shwn_timezone">shwn_timezone</a></td></tr><td class="tdsm"><a href="#shwn_title">shwn_title</a></td></tr><td class="tdsm"><a href="#shwn_url">shwn_url</a></td></tr><td class="tdsm"><a href="#shwn_url">shwn_url</a></td></tr><td class="tdsm"><a href="#shwn_url_archived_copy_of_original_url">shwn_url_archived_copy_of_original_url</a></td></tr><td class="tdsm"><a href="#shwn_url_description">shwn_url_description</a></td></tr><td class="tdsm"><a href="#shwn_url_retrieval_date">shwn_url_retrieval_date</a></td></tr><td class="tdsm"><a href="#shwn_url_retrieval_time">shwn_url_retrieval_time</a></td></tr><td class="tdsm"><a href="#shwn_url_retrieval_timezone_utc">shwn_url_retrieval_timezone_utc</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Transcripts"><a href="#Transcripts">^</a></a><strong> <u>Transcripts</u></strong><br><br>
+</td></tr><tr><td class="tdsm"><a href="#trsc_X">trsc_X</a></td></tr><td class="tdsm"><a href="#trsc_contributors_guid">trsc_contributors_guid</a></td></tr><td class="tdsm"><a href="#trsc_description">trsc_description</a></td></tr><td class="tdsm"><a href="#trsc_guid">trsc_guid</a></td></tr><td class="tdsm"><a href="#trsc_name">trsc_name</a></td></tr><td class="tdsm"><a href="#trsc_transcript_webvtt">trsc_transcript_webvtt</a></td></tr></table><br></div><div class="ch">
+<hr>
+<a class="anch" id="chap_X"></a>
+<a href="#chap_X"> ^</a> <u><b>chap_X</b></u><br>			<p>
+<div class="ch">
+The array(s) "chap_X": store attributes for a chapter of the episode. X is the number of the chapter, so you can have multiple ones.<br>
+<br>
+The numbering must be continuous, means: "chap_1": for the first chapter, "chap_2": for the second, "chap_23": for the 23rd chapter.<br>
+<br>
+Example for two simple chapters:<br>
+<br>
+&nbsp;&nbsp;"chap_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_title":"Intro",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_position":"00:00:00.232",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_guid":"{B8C24866-63F3-41B6-BB40-04FCAA84B23C}"<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"chap_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_title":"Our guest Flippo",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_position":"00:00:24.201",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_description":"Who is he and what makes him so special?",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_guid":"{84A329BA-C094-4861-84B5-BCE0CCD16954}"<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+"chap_X" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_content_notification_tags"></a>
+<a href="#chap_content_notification_tags"> ^</a> <u><b>chap_content_notification_tags</b></u><br>			<p>
+<div class="ch">
+The content-notification/content warnings for the chapter.<br>
+Multiple content notification-tags are separated by commas.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+It is meant to warn of potential harmful content, like suicide(see Werther-effect for more information), abuse, re-traumatizing content, etc<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_content_notification_tags":"abuse,selfharm"<br>
+&nbsp;&nbsp;<br>
+"chap_content_notification_tags" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_description"></a>
+<a href="#chap_description"> ^</a> <u><b>chap_description</b></u><br>			<p>
+<div class="ch">
+The description of the chapter with a small summary of its contents. <br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_description":"We talk about the cool new things in our podcast. New shows every other thursday."<br>
+&nbsp;&nbsp;"chap_description":"This week in tech:\nNew shoes from \"The most boring Shoe Corp.\" claim to \"reinvent\" the conventional shoe."<br>
+&nbsp;&nbsp;<br>
+"chap_description" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_descriptive_tags"></a>
+<a href="#chap_descriptive_tags"> ^</a> <u><b>chap_descriptive_tags</b></u><br>			<p>
+<div class="ch">
+Descriptive tags for the chapter.<br>
+Multiple descriptive-tags are separated by commas.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_descriptive_tags":"tech,shoes,The most boring Shoe Corp.,\"inventiveness\",talk"<br>
+&nbsp;&nbsp;<br>
+"chap_descriptive_tags" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_guid"></a>
+<a href="#chap_guid"> ^</a> <u><b>chap_guid</b></u><br>			<p>
+<div class="ch">
+A guid for this chapter.<br>
+This is used as a unique identifier for this chapter and contains one guid.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR CHAPTERS!<br>
+This guid MUST be created at chapter creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports, if the chapter still exists!<br>
+This is important, as this guid can be a internet-wide-reference to this exact episode's chapter and must never ever break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_guid":"{A29C6BC0-7932-4F68-BA25-A98F9B304278}"<br>
+&nbsp;&nbsp;<br>
+"chap_guid" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_image"></a>
+<a href="#chap_image"> ^</a> <u><b>chap_image</b></u><br>			<p>
+<div class="ch">
+The chapter-image.<br>
+It must be either jpg or png, encoded into BASE64.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_image":"iVBORyAaIAAAAElIRFIAAAABAAAAAQgCAAAAkHdT3gAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAxJREFUeNpj+P//PwAF/gL+MxKVFAAAAABJRU5ErkJggg==",<br>
+&nbsp;&nbsp;<br>
+"chap_image" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_image_description"></a>
+<a href="#chap_image_description"> ^</a> <u><b>chap_image_description</b></u><br>			<p>
+<div class="ch">
+The description of the chapter-image. This is important for visually impaired podcast-listeners, who can't see <br>
+the contents of the chapter-image and need a description to understand it.<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+THIS ATTRIBUTE IS MANDATORY, WHEN CHAPTER HAS A CHAPTER-IMAGE!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_image_description":"A graph showing the downfall of \"The most boring Shoe Corp's.\" revenues. In 2021, the revenue was 23bn, in 2022, the revenue fell to 19 bn, in 2023, the revenue fell even further to 5bn."<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"chap_image_description":"A large tree in the backyard of our podcast headquarter's building. It's leaves are dark green with orange blossoms. Our headquarter is a small suburbian, two floor house with a garage."<br>
+&nbsp;&nbsp;<br>
+"chap_image_description" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_image_license"></a>
+<a href="#chap_image_license"> ^</a> <u><b>chap_image_license</b></u><br>			<p>
+<div class="ch">
+The user-license of the chapter-image. Like creative-commons or similar.<br>
+This can also hold the entire license of the image, if needed.<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+THIS ATTRIBUTE IS MANDATORY, WHEN CHAPTER HAS A CHAPTER-IMAGE!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_image_license":"creative commons 4.0 by-sa-nc"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"chap_image_license":"This image shall not be used for anything else than by viewing through a podcast-client. Any other distribution or use is strictly forbidden.\n\nThe copyright for this image is by Jim Jimston(great_podcast.dd)"<br>
+&nbsp;&nbsp;<br>
+"chap_image_license" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_image_origin"></a>
+<a href="#chap_image_origin"> ^</a> <u><b>chap_image_origin</b></u><br>			<p>
+<div class="ch">
+The user-license of the chapter-image. Like creative-commons or similar.<br>
+This can also hold the entire license of the image, if needed.<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_image_origin":"created by Annie Ann"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"chap_image_origin":"A scan from an old handcopied version of the King James Bible from 1302 from the monastery of Lindisfarme Priory. The scan is done by the Royal Academy of Old Scholars."<br>
+&nbsp;&nbsp;<br>
+"chap_image_origin" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_image_url"></a>
+<a href="#chap_image_url"> ^</a> <u><b>chap_image_url</b></u><br>			<p>
+<div class="ch">
+A url of the original location of the chapter-image, if one is existing.<br>
+No newlines allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_image_url":"https://www.great_podcast.dd/images/2023/tree_in_front_of_our_hq.png"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"chap_image_url":"https://www.royal_academy_of_old_scholars.dd/images/collection/scans/Lindisfarme_Priory/King_James_Bible/12th_Century/page43.png"<br>
+&nbsp;&nbsp;<br>
+"chap_image_url" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_is_advertisement"></a>
+<a href="#chap_is_advertisement"> ^</a> <u><b>chap_is_advertisement</b></u><br>			<p>
+<div class="ch">
+This chapter is an advertisement.<br>
+<br>
+Add this attribute, if the chapter is an advertisement/sponsored content.<br>
+The only value supported is "yes"(see example)<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_is_advertisement":"yes"<br>
+&nbsp;&nbsp;<br>
+"chap_is_advertisement" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_next_chapter_numbers"></a>
+<a href="#chap_next_chapter_numbers"> ^</a> <u><b>chap_next_chapter_numbers</b></u><br>			<p>
+<div class="ch">
+For non-linear podcast, this holds the possible next chapter-guids after the current chapter.<br>
+For podcasts like "choose your own adventure", where you can choose after each chapter between numerous options, that influence, how the story progresses.<br>
+Another example would be educational podcasts, where at the end of a chapter you can choose, whether to hear more about a subject or to move to the next chapter.<br>
+<br>
+Multiple guids are separated by commas. The guids can only be the chapter-guids from this episode, not any other!<br>
+No newlines are allowed.<br>
+<br>
+Example(for three chapters that could follow the current one):<br>
+&nbsp;&nbsp;"chap_next_chapter_numbers":"{F49E8E77-4579-4F3B-868B-C64F6D173C2B},{01B13A81-2749-4C8F-85DD-4E5A9632C197},{A4A5DBFC-DF78-4E50-9542-5C95BEA846A9}"<br>
+&nbsp;&nbsp;<br>
+"chap_next_chapter_numbers" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_position"></a>
+<a href="#chap_position"> ^</a> <u><b>chap_position</b></u><br>			<p>
+<div class="ch">
+The position of the chapter-marker within the episode.<br>
+It's of the format hh:mm:ss.mss<br>
+The hour can have more than two digits, so for a podcast of thousand hours, the format would be hhhh:mm:ss.mss<br>
+<br>
+hh is hours and always between 00 and 2147483648<br>
+mm is minutes and always between 0 and 59<br>
+ss is seconds and always between 0 and 59<br>
+mss is milliseconds and always between 000 and 999<br>
+<br>
+No newlines are allowed.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR CHAPTERS<br>
+<br>
+IMPORTANT: when altering the position of a chapter(for instance, when auto-embedding ads into an episode), you must retain the guid of the chapter, as otherwise links to this chapter might break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_position":"00:00:00.232"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"chap_position":"1001:22:45.000"<br>
+&nbsp;&nbsp;<br>
+"chap_position" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_previous_chapter_numbers"></a>
+<a href="#chap_previous_chapter_numbers"> ^</a> <u><b>chap_previous_chapter_numbers</b></u><br>			<p>
+<div class="ch">
+For non-linear podcast, this holds the possible previous chapter-guids before(!) the current chapter.<br>
+For podcasts like "choose your own adventure", where you can choose after each chapter between numerous options, that influence, how the story progresses.<br>
+Another example would be educational podcasts, where at the end of a chapter you can choose, whether to hear more about a subject or to move to the next chapter.<br>
+<br>
+Multiple guids are separated by commas. The guids can only be the chapter-guids from this episode, not any other!<br>
+No newlines are allowed.<br>
+<br>
+Example(for three chapters that could preceed the current one):<br>
+&nbsp;&nbsp;"chap_previous_chapter_numbers":"{F49E8E77-4579-4F3B-868B-C64F6D173C2B},{01B13A81-2749-4C8F-85DD-4E5A9632C197},{A4A5DBFC-DF78-4E50-9542-5C95BEA846A9}"<br>
+&nbsp;&nbsp;<br>
+"chap_previous_chapter_numbers" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_spoiler_alert"></a>
+<a href="#chap_spoiler_alert"> ^</a> <u><b>chap_spoiler_alert</b></u><br>			<p>
+<div class="ch">
+This chapter contains spoilers.<br>
+<br>
+Add this attribute, if the chapter contains spoilers to movies, books, etc.<br>
+The only value supported is "yes"(see example)<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_spoiler_alert":"yes"<br>
+&nbsp;&nbsp;<br>
+"chap_spoiler_alert" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_title"></a>
+<a href="#chap_title"> ^</a> <u><b>chap_title</b></u><br>			<p>
+<div class="ch">
+The title of the chapter.<br>
+No newlines are allowed.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR CHAPTERS!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_title":"Announcement of \"The most boring Shoe Corp's\" reinvention"<br>
+&nbsp;&nbsp;<br>
+"chap_title" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_url"></a>
+<a href="#chap_url"> ^</a> <u><b>chap_url</b></u><br>			<p>
+<div class="ch">
+The url of the chapter.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_url":"https://www.the_most_boring_shoe_corp.dd/news/announcement_2023_12_12"<br>
+&nbsp;&nbsp;<br>
+"chap_url" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="chap_url_description"></a>
+<a href="#chap_url_description"> ^</a> <u><b>chap_url_description</b></u><br>			<p>
+<div class="ch">
+The description of the chapter-url. <br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"chap_url_description":"The Most Boring Shoe Corp's announcement"<br>
+&nbsp;&nbsp;<br>
+"chap_url_description" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_X"></a>
+<a href="#ctrb_X"> ^</a> <u><b>ctrb_X</b></u><br>			<p>
+<div class="ch">
+The array "ctrb_X": stores attributes for a contributor of the episode. X is the number of the contributor, so you can have multiple ones.<br>
+<br>
+The numbering must be continuous, means: "ctrb_1": for the first contributor, "ctrb_2": for the second, "ctrb_23": for the 23rd contributor.<br>
+<br>
+Example for two contributors with websites:<br>
+&nbsp;&nbsp;"ctrb_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_guid":"{C1555DF4-F80F-4C6E-8DD0-E29D434DD442}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_name":"Jimmi Jim",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_role":"host",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_email":"Jim@cool_podcast.dd"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_name":"Jimmy Jim's website",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_description":"all activities of Jimmy Jim, including(but not exclusively) the podcast Cool Podcast",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_url":"https://www.jimmy_jim.dd/home"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_name":"Jimmy Jim's Social Media Site",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_description":"the social media site, including a lot of private banter and movie nerdism",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_url":"https://www.social_media.dd/JimmyJim"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"ctrb_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_guid":"{7D21A37C-D0DD-4747-9324-A3B169FEB6A9}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_name":"Anny Ann",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_role":"guest",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_email":"Anny_Ann@some_website.dd",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_name":"Anny Ann's Website",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_description":"containing a lot of their work of art and exhibitions",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_url":"https://www.some_website.dd"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+"ctrb_X" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_description"></a>
+<a href="#ctrb_description"> ^</a> <u><b>ctrb_description</b></u><br>			<p>
+<div class="ch">
+A description for this contributor<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_description":"tweaking the podcast"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_description":"providing the \"previously\"-audio snippets in the \n beginning of the episode"<br>
+&nbsp;&nbsp;<br>
+"ctrb_description" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_email"></a>
+<a href="#ctrb_email"> ^</a> <u><b>ctrb_email</b></u><br>			<p>
+<div class="ch">
+The email for this contributor<br>
+No newlines are allowed.<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_email":"JimmyJim@cool_podcast.dd"<br>
+&nbsp;&nbsp;<br>
+"ctrb_email" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_guid"></a>
+<a href="#ctrb_guid"> ^</a> <u><b>ctrb_guid</b></u><br>			<p>
+<div class="ch">
+The guid for this contributor<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR CONTRIBUTORS!<br>
+<br>
+This guid MUST be created at contributor creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports if the contributor is still existing!<br>
+This is important, as this guid can be a internet-wide-reference to this exact episode's contributor and must never ever break!<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_guid":"{F7183EBF-AFB4-44D1-A21D-7F7B27FC5499}"<br>
+&nbsp;&nbsp;<br>
+"ctrb_guid" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_name"></a>
+<a href="#ctrb_name"> ^</a> <u><b>ctrb_name</b></u><br>			<p>
+<div class="ch">
+The name of this contributor<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_name":"Anny Ann"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_name":"TechCompExample Co.\nAn \"unlimited\" tech-company."<br>
+&nbsp;&nbsp;<br>
+"ctrb_name" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_role"></a>
+<a href="#ctrb_role"> ^</a> <u><b>ctrb_role</b></u><br>			<p>
+<div class="ch">
+The name of this contributor<br>
+No newlines allowed.<br>
+<br>
+Accepted values are "host", "guest", "contributor"(production team, etc), "other"<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_role":"host"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_role":"guest"<br>
+&nbsp;&nbsp;<br>
+"ctrb_role" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_website_X"></a>
+<a href="#ctrb_website_X"> ^</a> <u><b>ctrb_website_X</b></u><br>			<p>
+<div class="ch">
+An array that stores attributes for a contributor's website. X is the number of the website, so you can have multiple ones.<br>
+<br>
+The numbering must be continuous, means: "ctrb_website_1": for the first website, "ctrb_website_2": for the second, "ctrb_website_23": for the 23rd website.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"ctrb_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_name":"Jimmy Jim's website",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_description":"all activities of Jimmy Jim, including(but not exclusively) the podcast Cool Podcast",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_url":"https://www.jimmy_jim.dd/home"<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"ctrb_website_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_name":"Jimmy Jim's Social Media Site",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_description":"the social media site, including a lot of private banter and movie nerdism",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_url":"https://www.social_media.dd/JimmyJim"<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+"ctrb_website_X" is stored in the array "PodMetaContent": -> "ctrb_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_website_description"></a>
+<a href="#ctrb_website_description"> ^</a> <u><b>ctrb_website_description</b></u><br>			<p>
+<div class="ch">
+A description of this website for the contributor<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_website_description":"Jimmy Jim's Social Media Site"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_website_description":"Anny Ann's Social Media Page"<br>
+&nbsp;&nbsp;<br>
+"ctrb_website_description" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_website_name"></a>
+<a href="#ctrb_website_name"> ^</a> <u><b>ctrb_website_name</b></u><br>			<p>
+<div class="ch">
+The name of this website for the contributor<br>
+No newlines allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_website_name":"Jimmy Jim's Social Media Site"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_website_name":"Anny Ann's Social Media Page"<br>
+&nbsp;&nbsp;<br>
+"ctrb_website_name" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ctrb_website_url"></a>
+<a href="#ctrb_website_url"> ^</a> <u><b>ctrb_website_url</b></u><br>			<p>
+<div class="ch">
+The url of this website for the contributor<br>
+No newlines allowed.<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"ctrb_website_url":"https://www.jimmy_jim.dd/home"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"ctrb_website_url":"https://www.some_website.dd"<br>
+&nbsp;&nbsp;<br>
+"ctrb_website_url" is stored in the array "PodMetaContent": -> "ctrb_X": -> "ctrb_website_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd"></a>
+<a href="#epsd"> ^</a> <u><b>epsd</b></u><br>			<p>
+<div class="ch">
+The array "epsd": contains metadata for the episode.<br>
+<br>
+There can only be one "epsd":-array.<br>
+&nbsp;&nbsp;<br>
+"epsd" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_content_notification_tags"></a>
+<a href="#epsd_content_notification_tags"> ^</a> <u><b>epsd_content_notification_tags</b></u><br>			<p>
+<div class="ch">
+The content-notification/content warnings for the episode.<br>
+Multiple content notification-tags are separated by commas.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+It is meant to warn of potential harmful content, like suicide(see Werther-effect for more information), abuse, re-traumatizing content, etc<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_content_notification_tags":"abuse,selfharm"<br>
+&nbsp;&nbsp;<br>
+"epsd_content_notification_tags" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_cover"></a>
+<a href="#epsd_cover"> ^</a> <u><b>epsd_cover</b></u><br>			<p>
+<div class="ch">
+The episode-cover image.<br>
+It must be either jpg or png, encoded into BASE64.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_cover":"iVBORyAaIAAAAElIRFIAAAABAAAAAQgCAAAAkHdT3gAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAxJREFUeNpj+P//PwAF/gL+MxKVFAAAAABJRU5ErkJggg==",<br>
+&nbsp;&nbsp;<br>
+"epsd_cover" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_description"></a>
+<a href="#epsd_description"> ^</a> <u><b>epsd_description</b></u><br>			<p>
+<div class="ch">
+The content-notification/content warnings for the episode.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_description":"In this episode, we talk about the new Gringelbert movies."<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_description":"In this episode, we talk about the new \"Gringelbert\" movies.\nWe also talk about the implications of \\n in strings."<br>
+&nbsp;&nbsp;<br>
+"epsd_description" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_descriptive_tags"></a>
+<a href="#epsd_descriptive_tags"> ^</a> <u><b>epsd_descriptive_tags</b></u><br>			<p>
+<div class="ch">
+Descriptive tags for the episode.<br>
+Tags are separated by commas. Quotes " are stored as \" within the attribute. <br>
+No newlines are allowed.<br>
+<br>
+They are to describe in single words the content of the episode.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_descriptive_tags":"Gringelbert,movies,newlines"<br>
+&nbsp;&nbsp;<br>
+"epsd_descriptive_tags" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_explicit"></a>
+<a href="#epsd_explicit"> ^</a> <u><b>epsd_explicit</b></u><br>			<p>
+<div class="ch">
+This episode is explicit-attribute.<br>
+<br>
+This describes, if the episode uses explicit language. The attribute is only added, when the episode is explicit.<br>
+The only value supported is "yes"(see example)<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_explicit":"yes"<br>
+&nbsp;&nbsp;<br>
+"epsd_explicit" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_guid"></a>
+<a href="#epsd_guid"> ^</a> <u><b>epsd_guid</b></u><br>			<p>
+<div class="ch">
+A guid for this episode.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+This is used as a unique identifier for this episode and contains three guids in a row.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR EPISODES!<br>
+<br>
+This guid MUST be created at project creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports!<br>
+This is important, as this guid can be a internet-wide-reference to this exact episode and must never ever break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_guid":"{D29C5BC0-5142-4F68-AA25-F32D9B304278}{57396DED-68AB-464C-94A7-1C6075899081}{91F7A405-B05A-402C-929B-ECFB3DDB2F7F}"<br>
+&nbsp;&nbsp;<br>
+"epsd_guid" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_language"></a>
+<a href="#epsd_language"> ^</a> <u><b>epsd_language</b></u><br>			<p>
+<div class="ch">
+The language of the episode.<br>
+Use the languagecode according to ISO639-2/T.<br>
+If multiple languages are spoken, the language codes must be separated by newlines.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"epsd_language":"eng,deu,pan"<br>
+&nbsp;&nbsp;<br>
+"epsd_language" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_number"></a>
+<a href="#epsd_number"> ^</a> <u><b>epsd_number</b></u><br>			<p>
+<div class="ch">
+A number for this episode. This attribute is a string, so non-arabic numbers(like roman digits) are valid. <br>
+Usually a number.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_number":"123"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_number":"MCIX"<br>
+&nbsp;&nbsp;<br>
+"epsd_number" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_release_date"></a>
+<a href="#epsd_release_date"> ^</a> <u><b>epsd_release_date</b></u><br>			<p>
+<div class="ch">
+The release-date for this episode.<br>
+No newlines are allowed.<br>
+<br>
+The date is of the format XXXX-MM-DD<br>
+Only numbers are allowed between the -<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_release_date":"2023-12-10"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_release_date":"2006-06-10"<br>
+&nbsp;&nbsp;<br>
+"epsd_release_date" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_release_time"></a>
+<a href="#epsd_release_time"> ^</a> <u><b>epsd_release_time</b></u><br>			<p>
+<div class="ch">
+The release-time for this episode.<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_release_time":"23:10:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_release_time":"01:02:00"<br>
+&nbsp;&nbsp;<br>
+"epsd_release_time" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_release_timezone"></a>
+<a href="#epsd_release_timezone"> ^</a> <u><b>epsd_release_timezone</b></u><br>			<p>
+<div class="ch">
+The timezone of the release for this episode.<br>
+No newlines are allowed.<br>
+<br>
+The timezone is in UTC with either +UTC or -UTC written as +hh:mm or -hh:mm<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_release_timezone":"+6:00"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_release_timezone":"-4:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_release_timezone":"+0:00"<br>
+&nbsp;&nbsp;<br>
+"epsd_release_timezone" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_season"></a>
+<a href="#epsd_season"> ^</a> <u><b>epsd_season</b></u><br>			<p>
+<div class="ch">
+The season of the episode for this episode.<br>
+No newlines are allowed.<br>
+<br>
+Usually it's numbers, but it can contain characters as well. Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_season":"1"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_season":"23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_season":"S10"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_season":"Season10"<br>
+&nbsp;&nbsp;<br>
+"epsd_season" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_tagline"></a>
+<a href="#epsd_tagline"> ^</a> <u><b>epsd_tagline</b></u><br>			<p>
+<div class="ch">
+The tagline of the episode.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_tagline":"Today's all what's new in tech."<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_tagline":"The orange-juice dilemma."<br>
+&nbsp;&nbsp;<br>
+"epsd_tagline" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="epsd_title"></a>
+<a href="#epsd_title"> ^</a> <u><b>epsd_title</b></u><br>			<p>
+<div class="ch">
+The title of the episode. <br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"epsd_title":"Aloha in Balboa"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"epsd_title":"Get rid of the monkey's grin!"<br>
+&nbsp;&nbsp;<br>
+"epsd_title" is stored in the array "PodMetaContent": -> "epsd":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_date_beginning"></a>
+<a href="#shwn_event_date_beginning"> ^</a> <u><b>shwn_event_date_beginning</b></u><br>			<p>
+<div class="ch">
+If the shownote is an event, this is the date of the beginning of the event.<br>
+No newlines are allowed.<br>
+<br>
+The date is of the format XXXX-MM-DD<br>
+Only numbers are allowed between the -<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_event_date_beginning":"2023-12-09"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_date_beginning":"2006-06-08"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_date_beginning" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_date_end"></a>
+<a href="#shwn_event_date_end"> ^</a> <u><b>shwn_event_date_end</b></u><br>			<p>
+<div class="ch">
+If the shownote is an event, this is the date of the end of the event.<br>
+No newlines are allowed.<br>
+<br>
+The date is of the format XXXX-MM-DD<br>
+Only numbers are allowed between the -<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_event_date_end":"2023-12-10"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_date_end":"2006-06-10"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_date_end" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="1.1 What is PodMeta"></a>
+<a href="#1.1 What is PodMeta"> ^</a> <u><b>What is PodMeta?</b></u><br>			<p>
+<div class="ch">
+PodMeta is a standard for exchanging podcast-metadata between different entities, like the podcast producing software, podcast publishers, podcast clients, podcast search-engines and directories and more. <br>
+<br>
+It allows storing metadata of the podcast in general, the episode, contributors of the episode, chapters, shownotes and transcripts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+It is a JSON-datastructure that can either be stored in the USER-frame of ID3/VorbisComment-tags or used as a standalone-file with the extension .PodMeta<br>
+<br>
+It then can be read out from the file/mediafile and transformed into feed-standards(podcasting 2.0) or used to generate ui-elements(chapter/shownote-lists).<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="1.2 The Structure"></a>
+<a href="#1.2 The Structure"> ^</a> <u><b>The Structure</b></u><br>			<p>
+<div class="ch">
+The datastructure is a standard JSON, which features several objects and arrays for each metadata.<br>
+<br>
+It basically is structured like this:<br>
+{<br>
+&nbsp;&nbsp;"PodMeta":"version 1.0",<br>
+&nbsp;&nbsp;"PodMetaContent":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"podc":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores podcast metadata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the first website of the podcast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the second website of the podcast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the third website of the podcast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"epsd":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the episode's metadata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of contributor 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the first website of this contributor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the second website of this contributor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the third website of this contributor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of contributor 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of contributor 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the first website of this contributor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ctrb_website_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of the second website of this contributor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of chapter 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of chapter 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"chap_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of chapter 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"shwn_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of shownote 1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"shwn_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of shownote 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"shwn_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of shownote 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of transcript for a contributor A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_2":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of transcript for a contributor B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_3":{ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... stores the metadata of transcript for a contributor C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}<br>
+<br>
+Each array contains numerous objects that describe further this array's content. For instance, a chapter can contain the object "chap_spoiler_alert" which marks this chapter as containing spoilers, whereas chapters not containing "chap_spoiler_alert" do not contain spoilers.<br>
+<br>
+You also noticed, that some arrays appear multiple times, like "chap_", "shwn_", "trsc_", "podc_website_". These indicate, that you can have multiple ones of them.<br>
+For instance, each chapter in a podcast has its own "chap_"-array indexed with a number, like "chap_1" for the first, "chap_2" or the second, etc.<br>
+Same goes for the others: each shownote has its own "shwn_"-array, each transcript has its own "trsc_"-array, each podcast website has its own "podc_website_"-array.<br>
+<br>
+Also notice, that the array "podc_website_" is nested within the "podc"-array and the array "ctrb_website_" is nested within the "ctrb_X"-array!<br>
+<br>
+Important:<br>
+Most objects in the arrays are optional while some objects are mandatory. For instance, chapters and shownotes contain a guid, a name and a time-position.<br>
+<br>
+The arrays for podcast-, episode-, chapter-, shownote- and transcript-metadata are nested within the array "PodMetaContent".<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="1.3 custom objects and arrays"></a>
+<a href="#1.3 custom objects and arrays"> ^</a> <u><b>Custom Objects and Arrays</b></u><br>			<p>
+<div class="ch">
+There might be situations, when PodMeta's objects and arrays are not enough to store metadata and custom objects and arrays are needed.<br>
+Simply adding a new one isn't neccessarily a good idea, as there might be name-conflicts with objects added in the future to PodMeta.<br>
+In that case, we have a simple mechanism to store custom arrays and objects: namespaces!<br>
+<br>
+A namespace is simply a unique name, followed by a : and the object or array name, like "namespace:objectname":"value" or "namespace:arrayname":{...}<br>
+<br>
+Example for an array:<br>
+&nbsp;&nbsp;"The Most Boring Shoe Corp:shoe sizes":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+Example for an object:<br>
+&nbsp;&nbsp;"The Most Boring Shoe Corp:available in the us":"true"<br>
+&nbsp;&nbsp;<br>
+PodMeta-standardized arrays and objects will never contain an : in their name in a future update. So if you stick to this naming-scheme, the name of your custom arrays/objects will never collide with names of the official PodMeta-standard arrays/objects.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="1.3 the objects"></a>
+<a href="#1.3 the objects"> ^</a> <u><b>The Objects</b></u><br>			<p>
+<div class="ch">
+Objects contain the actual metadata for an array. The value is always a string, even if the value is a number or a boolean!<br>
+<br>
+Some objects are multiline while others are single-line only.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Newlines in multiline-objects are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n".<br>
+Example: <br>
+&nbsp;&nbsp;"I am<br>
+&nbsp;&nbsp;newline."<br>
+gets stored as<br>
+&nbsp;&nbsp;"I am\nnewline"<br>
+with a literal \n at the position, where the newline-character would be.<br>
+<br>
+Single-line objects do not support newlines at all. They must be treated as invalid when a newline appears anyways!<br>
+<br>
+Quotes " are stored as \" within the attribute, like:<br>
+Example: <br>
+&nbsp;&nbsp;"I am\"in quotes\" while I am not"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_website_X"></a>
+<a href="#podc_website_X"> ^</a> <u><b>podc_website_X</b></u><br>			<p>
+<div class="ch">
+The array "podc_website_X" stores attributes for a podcast's website. X is the number of the website, so you can have multiple ones.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_website_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_name":"Mastodon",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_description":"Our Mastodon account",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_url":"https://www.mastodon.social/@CoolPodcast"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"podc_website_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_name":"TikTok",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_description":"Our Tik Tok account",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_url":"https://www.tiktok.com/CoolPodcast"<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+"podc_website_X" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_website_description"></a>
+<a href="#podc_website_description"> ^</a> <u><b>podc_website_description</b></u><br>			<p>
+<div class="ch">
+Stores the name of a website within a podc_website_X-array.<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_description":"our presence on Mastodon",<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"podc_website_description":"Our account on Mastodon.\n\n managed by jill",<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"podc_website_description":"Our social media about \\n-newlines and their \"impact\" on the world.",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+"podc_website_description" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_website_name"></a>
+<a href="#podc_website_name"> ^</a> <u><b>podc_website_name</b></u><br>			<p>
+<div class="ch">
+Stores the name of a website within a podc_website_X-array.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_name":"Mastodon",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+"podc_website_name" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_website_url"></a>
+<a href="#podc_website_url"> ^</a> <u><b>podc_website_url</b></u><br>			<p>
+<div class="ch">
+Stores the url of a website within a podc_website_X-array.<br>
+No Newlines are allowed<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"podc_website_url":"https://www.cool_podcast.dd",<br>
+<br>
+"podc_website_url" is stored in the array "PodMetaContent": -> "podc": -> "podc_website_X": (where X is the number of the stored website)<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_url"></a>
+<a href="#shwn_event_url"> ^</a> <u><b>shwn_event_url</b></u><br>			<p>
+<div class="ch">
+The url of a shownote's event.<br>
+No Newlines are allowed<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_event_url":"https://www.cool_podcast.dd/event/2023-12-03-meetup",<br>
+<br>
+"shwn_event_url" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc"></a>
+<a href="#podc"> ^</a> <u><b>podc</b></u><br>			<p>
+<div class="ch">
+The array "podc": stores the metadata related to the podcast itself.<br>
+&nbsp;&nbsp;<br>
+This includes the title, feed, website(s), category, description, a tagline.<br>
+<br>
+The websites are stored in their own array called "podc_website_X" where X is an numbered index with 1 for the first website, 2 for the second.<br>
+<br>
+There can only be one "podc":-array.<br>
+&nbsp;&nbsp;<br>
+"podc" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_category"></a>
+<a href="#podc_category"> ^</a> <u><b>podc_category</b></u><br>			<p>
+<div class="ch">
+The category of the podcast.<br>
+Multiple categories are separated by commas. Quotes " are stored as \" within the attribute. <br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_category":"education,talk"<br>
+&nbsp;&nbsp;<br>
+"podc_category" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_contact_email"></a>
+<a href="#podc_contact_email"> ^</a> <u><b>podc_contact_email</b></u><br>			<p>
+<div class="ch">
+The contact-email of the podcast. <br>
+Multiple adresses are supported as a comma-separated list. <br>
+No newlines are allowed.<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"podc_contact_email":"mail@cool_podcast.dd"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"podc_contact_email":"mail@cool_podcast.dd,jill@cool_podcast.dd,jim@cool_podcast.dd"<br>
+&nbsp;&nbsp;<br>
+"podc_contact_email" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_description"></a>
+<a href="#podc_description"> ^</a> <u><b>podc_description</b></u><br>			<p>
+<div class="ch">
+The description of the podcast. This describes, what the podcast is about.<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_description":"We talk about cool things in our podcast. New shows every other thursday."<br>
+&nbsp;&nbsp;"podc_description":"We talk about cool things in our podcast.\nNew shows every other \"thursday\", where we talk about \\n-newlines."<br>
+&nbsp;&nbsp;<br>
+"podc_description" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_descriptive_tags"></a>
+<a href="#podc_descriptive_tags"> ^</a> <u><b>podc_descriptive_tags</b></u><br>			<p>
+<div class="ch">
+A comma separated list of tags.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_descriptive_tags":"tech,talk,opinionated"<br>
+&nbsp;&nbsp;<br>
+"podc_descriptive_tags" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_feed"></a>
+<a href="#podc_feed"> ^</a> <u><b>podc_feed</b></u><br>			<p>
+<div class="ch">
+The feed-address of the podcast.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_feed":"https://www.cool_podcast.dd/feed"<br>
+&nbsp;&nbsp;<br>
+"podc_feed" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_tagline"></a>
+<a href="#podc_tagline"> ^</a> <u><b>podc_tagline</b></u><br>			<p>
+<div class="ch">
+The tagline of the podcast.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_tagline":"a podcast about cool techy and nerdy things"<br>
+&nbsp;&nbsp;<br>
+"podc_tagline" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="podc_title"></a>
+<a href="#podc_title"> ^</a> <u><b>podc_title</b></u><br>			<p>
+<div class="ch">
+The title of the podcast.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"podc_title":"Cool Podcast"<br>
+&nbsp;&nbsp;<br>
+"podc_title" is stored in the array "PodMetaContent": -> "podc":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_X"></a>
+<a href="#shwn_X"> ^</a> <u><b>shwn_X</b></u><br>			<p>
+<div class="ch">
+The array(s) "shwn_X": store attributes for a shownote of the episode. X is the number of the shownote, so you can have multiple ones.<br>
+<br>
+The numbering must be continuous, means: "shwn_1": for the first shownote, "shwn_2": for the second, "shwn_23": for the 23rd shownote.<br>
+<br>
+Example for two shownotes:<br>
+<br>
+"shwn_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_title":"Flippo on the internet",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_position":"00:00:29.187",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_description":"all about Flippo",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url":"https://www.flippilino.dd",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url_description":"Flippo's website for all his music and computer-geek-stuff.",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url_retrieval_date":"2024-12-01",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_descriptive_tags":"flippo, tech, music, keyboard, synclavier",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_guid":"{45D6DCF3-FAFE-4D04-95FA-9F1B020C354D}"&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_title":"Return of tech-giant",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_position":"00:00:49.084",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_description":"Formerly big tech-giant makes big return a huge, announced by newspaper without disclosing, which one it is, yet.",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url":"tech-news.dd/businessworl-shocked-techgiant-returning-after-35-years-of-absence",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url_description":"Article that explains more about the coming impact of the giant's return, but keeping vague, which tech-giant it is.",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_url_retrieval_date":"2023-11-30",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_descriptive_tags":"tech, giant, retro, return",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"shwn_guid":"{B027E03E-BFF1-4A7E-9920-279256A8934C}"&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<br>
+"shwn_X" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_bibliographical_source"></a>
+<a href="#shwn_bibliographical_source"> ^</a> <u><b>shwn_bibliographical_source</b></u><br>			<p>
+<div class="ch">
+A source that is not an internet link, like a book+page+paragraph+line<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_bibliographical_source":"King James Bible, Luke 6:42"<br>
+&nbsp;&nbsp;<br>
+"shwn_bibliographical_source" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_date"></a>
+<a href="#shwn_date"> ^</a> <u><b>shwn_date</b></u><br>			<p>
+<div class="ch">
+The date of the content of the shownote.<br>
+No newlines are allowed.<br>
+<br>
+The date is of the format XXXX-MM-DD<br>
+Only numbers are allowed between the -<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_date":"2023-12-10"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_date":"2006-06-10"<br>
+&nbsp;&nbsp;<br>
+"shwn_date" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_description"></a>
+<a href="#shwn_description"> ^</a> <u><b>shwn_description</b></u><br>			<p>
+<div class="ch">
+The description of the shownote with a small summary of its contents. <br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_description":"The Most Boring Shoe Corp.'s press-announcement"<br>
+&nbsp;&nbsp;"shwn_description":"Flippo's blogpost about the dancing-habits of guinea pigs."<br>
+&nbsp;&nbsp;<br>
+"shwn_description" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_descriptive_tags"></a>
+<a href="#shwn_descriptive_tags"> ^</a> <u><b>shwn_descriptive_tags</b></u><br>			<p>
+<div class="ch">
+Descriptive tags for the shownote.<br>
+Multiple descriptive-tags are separated by commas.<br>
+No newlines are allowed. Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_descriptive_tags":"tech,shoes,The most boring Shoe Corp.,\"inventiveness\",press release"<br>
+&nbsp;&nbsp;<br>
+"shwn_descriptive_tags" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_description"></a>
+<a href="#shwn_event_description"> ^</a> <u><b>shwn_event_description</b></u><br>			<p>
+<div class="ch">
+The description of this shownote's event with a small summary. <br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_event_description":"Our monthly meetup at \"Bierkrug\" in Bielefeld, Germany."<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_description":"Bollywood Fever-convention in New Delhi, India."<br>
+&nbsp;&nbsp;<br>
+"shwn_event_description" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_ics_data"></a>
+<a href="#shwn_event_ics_data"> ^</a> <u><b>shwn_event_ics_data</b></u><br>			<p>
+<div class="ch">
+The ics-data of this shownote's event. <br>
+Must be encoded into BASE64!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_event_ics_data":"QkVHSU46VkNBTEVOREFSClZFUlNJT046Mi4wClBST0RJRDpVbHRyYXNjaGFsbApNRVRIT0Q6UkVRVUVTVApCRUdJTjpWRVZFTlQKVUlEOntEMjlDNUJDMC01MTQyLTRGNjgtQUEyNS1GMzJEOUIzMDQyNzh9CkxPQ0FUSU9OOkJvbGx5d29vZCBGZXZlciBDb252ZW50aW9uClNVTU1BUlk6TWVldCB5b3VyIG1vc3QgZmF2b3JpdGUgQm9sbHl3b29kIHN0YXJzCkRFU0NSSVBUSU9OOkEgbG90IG9mIEJvbGx5d29vZC1zdGFycyB3aWxsIGF0dGVuZCBmb3IgbWVldCduJ2dyZWV0cywgdGFsa3MgYW5kIGludHJvZHVjdGlvbiBvZiBuZXcgbW92aWVzLgpDTEFTUzpQVUJMSUMKRFRTVEFSVDoyMDIzMTIwNFQxMDAwMDBaCkRURU5EOjIwMjMxMjA0VDIzMzAwMFoKRFRTVEFNUDoyMDIzMDgyMlQyMjIzNDJaCkVORDpWRVZFTlQKRU5EOlZDQUxFTkRBUg"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_ics_data" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_location"></a>
+<a href="#shwn_event_location"> ^</a> <u><b>shwn_event_location</b></u><br>			<p>
+<div class="ch">
+The location of the event for this shownote.<br>
+Must be in decimal degrees "XXX.xxxxxx,YYY.yyyyyy".<br>
+XX and YY can be negative and be up to three digits.<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_event_location":"-81.035718,34.060320"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_location":"74.454680,-131.651457"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_location" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_location_name"></a>
+<a href="#shwn_event_location_name"> ^</a> <u><b>shwn_event_location_name</b></u><br>			<p>
+<div class="ch">
+The name of the location of the event for this shownote.<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_event_location_name":"\"Bierkrug\""<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_location_name":"Bollywood Fever-convention"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_location_name" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_name"></a>
+<a href="#shwn_event_name"> ^</a> <u><b>shwn_event_name</b></u><br>			<p>
+<div class="ch">
+The name of the event for this shownote.<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_event_name":"Monthly Podcast Meetup"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_name" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_time_beginning"></a>
+<a href="#shwn_event_time_beginning"> ^</a> <u><b>shwn_event_time_beginning</b></u><br>			<p>
+<div class="ch">
+The time of the beginning of this shownote's event.<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_event_time_beginning":"23:10:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_time_beginning":"01:02:00"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_time_beginning" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_time_end"></a>
+<a href="#shwn_event_time_end"> ^</a> <u><b>shwn_event_time_end</b></u><br>			<p>
+<div class="ch">
+The time of the end of this shownote's event.<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_event_time_end":"23:10:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_time_end":"01:02:00"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_time_end" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_event_timezone"></a>
+<a href="#shwn_event_timezone"> ^</a> <u><b>shwn_event_timezone</b></u><br>			<p>
+<div class="ch">
+The timezone, in which the event takes place as UTC.<br>
+Format is +hh:mm or -hh:mm<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_event_timezone":"+06:00"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_event_timezone":"-23:45"<br>
+&nbsp;&nbsp;<br>
+"shwn_event_timezone" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_guid"></a>
+<a href="#shwn_guid"> ^</a> <u><b>shwn_guid</b></u><br>			<p>
+<div class="ch">
+A guid for this shownote.<br>
+This is used as a unique identifier for this shownote and contains one guid.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR SHOWNOTES!<br>
+This guid MUST be created at shownote creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports, if the shownote still exists!<br>
+This is important, as this guid can be a internet-wide-reference to this exact episode's chapter and must never ever break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_guid":"{A29C6BC0-7932-4F68-BA25-A98F9B304278}"<br>
+&nbsp;&nbsp;<br>
+"shwn_guid" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_is_advertisement"></a>
+<a href="#shwn_is_advertisement"> ^</a> <u><b>shwn_is_advertisement</b></u><br>			<p>
+<div class="ch">
+This shownote is an advertisement.<br>
+<br>
+Add this attribute, if this shownote is an advertisement-link.<br>
+The only value supported is "yes"(see example)<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_is_advertisement":"yes"<br>
+&nbsp;&nbsp;<br>
+"shwn_is_advertisement" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_language"></a>
+<a href="#shwn_language"> ^</a> <u><b>shwn_language</b></u><br>			<p>
+<div class="ch">
+The language of the shownote.<br>
+Use the languagecode according to ISO639-2/T.<br>
+If multiple languages are used, the language codes must be separated by newlines.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_language":"eng,deu,pan"<br>
+&nbsp;&nbsp;<br>
+"shwn_language" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_linked_audiovideomedia"></a>
+<a href="#shwn_linked_audiovideomedia"> ^</a> <u><b>shwn_linked_audiovideomedia</b></u><br>			<p>
+<div class="ch">
+A linked audio/media-file.<br>
+<br>
+The link can be a normal url, like a youtube-url with time-stamp. <br>
+<br>
+for YouTube:<br>
+&nbsp;&nbsp;youtube.com/watch?v=odX81LsE5RY?t=0m56s<br>
+&nbsp;&nbsp;<br>
+or an url for an episode hosted with Podlove Publisher:<br>
+&nbsp;&nbsp;https://great_podcast.dd/01_The_first_episode?t=06%3A39<br>
+&nbsp;&nbsp;<br>
+etc.<br>
+<br>
+In addition to that: if you link to a podcast-mediafile like mp3, you can either link the mediafile or the mediafile and a specific time-position/chapter/shownote.<br>
+<br>
+For instance:<br>
+<br>
+#podmeta_chap={F7183EBF-AFB4-44D1-A21D-7F7B27FC5499}<br>
+&nbsp;&nbsp;links to a specific chaptermarker by its guid.<br>
+&nbsp;&nbsp;For this, the target episode must contain PodMeta-encoded-metadata, otherwise it ignores the chap and starts at the beginning of the podcast-episode.<br>
+<br>
+#podmeta_shwn={A29C6BC0-7932-4F68-BA25-A98F9B304278}<br>
+&nbsp;&nbsp;links to a specific shownote by its guid.<br>
+&nbsp;&nbsp;For this, the target episode must contain PodMeta-encoded-metadata, otherwise it ignores the shwn and starts at the beginning of the podcast-episode.<br>
+&nbsp;&nbsp;<br>
+#podmeta_time=01h23m59s<br>
+&nbsp;&nbsp;links a spedific time-position as HHhMMmSSs. Hour can be 2 or more digits, minutes and seconds are always two digits between 0 and 59.<br>
+&nbsp;&nbsp;This can be used on any mediafile, even if it does NOT contain PodMeta-encoded-metadata.<br>
+<br>
+Examples:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;link to an episode:<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://www.great_podcast.dd/media/01_The_first_episode.mp3"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;link to a chapter via guid:<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://www.great_podcast.dd/media/01_The_first_episode.mp3#podmeta_chap={F7183EBF-AFB4-44D1-A21D-7F7B27FC5499}"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;link to a shownote via guid:<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://www.great_podcast.dd/media/01_The_first_episode.mp3#podmeta_shwn={A29C6BC0-7932-4F68-BA25-A98F9B304278}"<br>
+<br>
+&nbsp;&nbsp;link to a time-position via time(hh mm ss):<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://www.great_podcast.dd/media/01_The_first_episode.mp3#podmeta_time=01h23m59s"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;link to a youtube-video:<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://www.youtube.com/watch?v=odX81LsE5RY?t=0m02s"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;link to an episode published with Podlove-Publisher:<br>
+&nbsp;&nbsp;"shwn_linked_audiovideomedia":"https://great_podcast.dd/01_The_first_episode?t=06%3A39"<br>
+&nbsp;&nbsp;<br>
+"shwn_linked_audiovideomedia" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_location"></a>
+<a href="#shwn_location"> ^</a> <u><b>shwn_location</b></u><br>			<p>
+<div class="ch">
+The location of this shownote, if the shownote refers to a specific location on earth.<br>
+Must be in decimal degrees "XXX.xxxxxx,YYY.yyyyyy".<br>
+XX and YY can be negative and be up to three digits.<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_location":"-81.035718,34.060320"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_location":"74.454680,-131.651457"<br>
+&nbsp;&nbsp;<br>
+"shwn_location" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_location_name"></a>
+<a href="#shwn_location_name"> ^</a> <u><b>shwn_location_name</b></u><br>			<p>
+<div class="ch">
+The name of the location of this shownote, if the shownote refers to a specific location on earth.<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_location_name":"\"Bierkrug\""<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_location_name":"Bollywood Fever-convention"<br>
+&nbsp;&nbsp;<br>
+"shwn_location_name" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_position"></a>
+<a href="#shwn_position"> ^</a> <u><b>shwn_position</b></u><br>			<p>
+<div class="ch">
+The position of the shownote within the episode.<br>
+It's of the format hh:mm:ss.mss<br>
+The hour can have more than two digits, so for a podcast of thousand hours, the format would be hhhh:mm:ss.mss<br>
+<br>
+hh is hours and always between 00 and 2147483648<br>
+mm is minutes and always between 0 and 59<br>
+ss is seconds and always between 0 and 59<br>
+mss is milliseconds and always between 000 and 999<br>
+<br>
+No newlines are allowed.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR SHOWNOTES<br>
+<br>
+IMPORTANT: when altering the position of a shownote(for instance, when auto-embedding ads into an episode), you must retain the guid of the shownote, as otherwise links to this shownote might break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_position":"00:00:00.232"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_position":"1001:22:45.000"<br>
+&nbsp;&nbsp;<br>
+"shwn_position" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_time"></a>
+<a href="#shwn_time"> ^</a> <u><b>shwn_time</b></u><br>			<p>
+<div class="ch">
+A time for this shownote.<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_time":"23:10:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_time":"01:02:00"<br>
+&nbsp;&nbsp;<br>
+"shwn_time" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_timezone"></a>
+<a href="#shwn_timezone"> ^</a> <u><b>shwn_timezone</b></u><br>			<p>
+<div class="ch">
+The timezone, in which the shownote takes place as UTC.<br>
+Format is +hh:mm or -hh:mm<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_timezone":"+06:00"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_timezone":"-23:45"<br>
+&nbsp;&nbsp;<br>
+"shwn_timezone" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_title"></a>
+<a href="#shwn_title"> ^</a> <u><b>shwn_title</b></u><br>			<p>
+<div class="ch">
+The title of the shownote.<br>
+No newlines are allowed.<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR SHOWNOTES!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_title":"Announcement of \"The most boring Shoe Corp's\" reinvention"<br>
+&nbsp;&nbsp;<br>
+"shwn_title" is stored in the array "PodMetaContent": -> "chap_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url"></a>
+<a href="#shwn_url"> ^</a> <u><b>shwn_url</b></u><br>			<p>
+<div class="ch">
+The url of the shownote.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_url":"https://www.the_most_boring_shoe_corp.dd/news/announcement_2023_12_12"<br>
+&nbsp;&nbsp;<br>
+"shwn_url" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url"></a>
+<a href="#shwn_url"> ^</a> <u><b>shwn_url</b></u><br>			<p>
+<div class="ch">
+The url of the shownote.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_url":"https://www.the_most_boring_shoe_corp.dd/news/announcement_2023_12_12"<br>
+&nbsp;&nbsp;<br>
+"shwn_url" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url_archived_copy_of_original_url"></a>
+<a href="#shwn_url_archived_copy_of_original_url"> ^</a> <u><b>shwn_url_archived_copy_of_original_url</b></u><br>			<p>
+<div class="ch">
+An archived copy of the url of the shownote.<br>
+This is helpful for journalistic situations, where you want to prove, that a content behind the shownote-url actually existed at the time of research.<br>
+An archived version of the url still contains the content, that might have been removed in the original url.<br>
+Such urls might be created using the Wayback Machine of archive.org.<br>
+<br>
+No newlines are allowed.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_url_archived_copy_of_original_url":"https://web.archive.org/web/20230213040641*/https://mespotin.uber.space/Ultraschall/Reaper_Api_Documentation.html"<br>
+&nbsp;&nbsp;<br>
+"shwn_url_archived_copy_of_original_url" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url_description"></a>
+<a href="#shwn_url_description"> ^</a> <u><b>shwn_url_description</b></u><br>			<p>
+<div class="ch">
+The description of the shownote with a small summary of its contents. <br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"shwn_url_description":"The announcement of Boring Shoes Corp for new shoes in their product line.\nOr well, what they claim to be \"new\"."<br>
+&nbsp;&nbsp;<br>
+"shwn_url_description" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url_retrieval_date"></a>
+<a href="#shwn_url_retrieval_date"> ^</a> <u><b>shwn_url_retrieval_date</b></u><br>			<p>
+<div class="ch">
+The retrieval-date of the url for the shownote.<br>
+No newlines are allowed.<br>
+<br>
+The date is of the format XXXX-MM-DD<br>
+Only numbers are allowed between the -<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_url_retrieval_date":"2023-12-10"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_url_retrieval_date":"2006-06-10"<br>
+&nbsp;&nbsp;<br>
+"shwn_url_retrieval_date" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url_retrieval_time"></a>
+<a href="#shwn_url_retrieval_time"> ^</a> <u><b>shwn_url_retrieval_time</b></u><br>			<p>
+<div class="ch">
+A retrieval time for the url of this shownote.<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_url_retrieval_time":"23:10:23"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_url_retrieval_time":"01:02:00"<br>
+&nbsp;&nbsp;<br>
+"shwn_url_retrieval_time" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="shwn_url_retrieval_timezone_utc"></a>
+<a href="#shwn_url_retrieval_timezone_utc"> ^</a> <u><b>shwn_url_retrieval_timezone_utc</b></u><br>			<p>
+<div class="ch">
+The retrieval-timezone of the url for this shownote in UTC.<br>
+Format is +hh:mm or -hh:mm<br>
+No newlines are allowed.<br>
+<br>
+The time is of the format hh:mm:ss<br>
+Only numbers are allowed between the :<br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"shwn_url_retrieval_timezone_utc":"+06:00"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"shwn_url_retrieval_timezone_utc":"-23:45"<br>
+&nbsp;&nbsp;<br>
+"shwn_url_retrieval_timezone_utc" is stored in the array "PodMetaContent": -> "shwn_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_X"></a>
+<a href="#trsc_X"> ^</a> <u><b>trsc_X</b></u><br>			<p>
+<div class="ch">
+The array(s) "trsc_X": store attributes for a transcript of the episode. X is the number of the ranscript, so you can have multiple ones.<br>
+<br>
+The numbering must be continuous, means: "trsc_1": for the first transcript, "trsc_2": for the second, "trsc_23": for the 23rd chapter.<br>
+<br>
+"trsc_0" is special: it contains a "full transcript", means, all speakers in the podcast are included in this one transcript, whereas "trsc_1" and higher are for one speaker only.<br>
+<br>
+Example for two simple chapters:<br>
+<br>
+&nbsp;&nbsp;"trsc_0":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_guid":"{A9AA87E8-855D-4282-A660-8CC06D66DFED}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_name":"Full Transcript",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_transcript_webvtt":"V0VCVlRUCgowMDowMS4wMDAgLS0+IDAwOjA0LjAwMAotIDxJbnRybz4KLSBKaW1teSBKaW06IFdlbGNvbWUgdG8gR3JlYXRlc3QgUG9kY2FzdC4KCjAwOjA1LjAwMCAtLT4gMDA6MDkuMDAwCi0gSmltbXkgSmltOiBJJ20geW91ciBob3N0IEppbW15IEppbSBhbmQgd2l0aCBtZSBpcyBGbGlwcG8uCi0gRmxpcHBvOiBIZWxsbywgSSdtIEZsaXBwby4",<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"trsc_1":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_contributors_guid":"{C1555DF4-F80F-4C6E-8DD0-E29D434DD442}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_guid":"{C5000D3F-AFA6-4BCC-A4BD-E5B1B010EAD8}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_name":"Jimmy Jim",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_description":"the host of the podcast",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_transcript_webvtt":"V0VCVlRUCgowMDowMS4wMDAgLS0+IDAwOjA0LjAwMAotIFdlbGNvbWUgdG8gR3JlYXRlc3QgUG9kY2FzdC4KCjAwOjA1LjAwMCAtLT4gMDA6MDkuMDAwCi0gSSdtIHlvdXIgaG9zdCBKaW1teSBKaW0gYW5kIHdpdGggbWUgaXMgRmxpcHBvLg",<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"trsc_2":{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_contributors_guid":"{B10189F6-2855-4174-916E-58D43EE76430}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_guid":"{C5000D3F-AFA6-4BCC-A4BD-E5B1B010EAD8}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_name":"Flippo",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_description":"our guest in this episode",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"trsc_transcript_webvtt":"V0VCVlRUCgowMDowOC4wMDAgLS0+IDAwOjA5LjAwMAotIEhlbGxvLCBJJ20gRmxpcHBvLg",<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<br>
+"trsc_X" is stored in the array "PodMetaContent": <br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_contributors_guid"></a>
+<a href="#trsc_contributors_guid"> ^</a> <u><b>trsc_contributors_guid</b></u><br>			<p>
+<div class="ch">
+The guid of the contributor of this transcript.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+This is the same guid as given in the "ctrb_X"-array for this contributor. <br>
+For instance: if you have a host called Jimmy Jim, look up his guid in the ctrb_x-section and include it here.<br>
+<br>
+This guid MUST be created at project creation in the audio-software used and never changed again. So even if you export the podcast twice, this guid MUST stay the same in all exports!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"trsc_contributors_guid":"{C1555DF4-F80F-4C6E-8DD0-E29D434DD442}"<br>
+&nbsp;&nbsp;<br>
+"trsc_contributors_guid" is stored in the array "PodMetaContent": -> "trsc_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_description"></a>
+<a href="#trsc_description"> ^</a> <u><b>trsc_description</b></u><br>			<p>
+<div class="ch">
+The description of the transcript. This describes, what the transcript is about, usually a description of the role of the transcript's- contributor.<br>
+For "trsc_0", it is "Full transcript".<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"trsc_description":"The host of the podcast."<br>
+&nbsp;&nbsp;"trsc_description":"Guest on the show."<br>
+&nbsp;&nbsp;<br>
+"trsc_description" is stored in the array "PodMetaContent": -> "trsc_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_guid"></a>
+<a href="#trsc_guid"> ^</a> <u><b>trsc_guid</b></u><br>			<p>
+<div class="ch">
+The guid of this transcript.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<br>
+THIS ATTRIBUTE IS MANDATORY FOR TRANSCRIPTS!<br>
+<br>
+This guid MUST be created at project creation in the audio-software used and never changed again. So even if you update the transcript, this guid MUST stay the same in all exports!<br>
+This is important, as this guid can be a internet-wide-reference to this exact transcript and must never ever break!<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"trsc_guid":"{A40CC190-DBA9-4976-9501-4A0DB0F5BDA7}"<br>
+&nbsp;&nbsp;<br>
+"trsc_guid" is stored in the array "PodMetaContent": -> "trsc_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_name"></a>
+<a href="#trsc_name"> ^</a> <u><b>trsc_name</b></u><br>			<p>
+<div class="ch">
+The name of the contributor in this transcript.<br>
+For "trsc_0", this must be "Full Transcript".<br>
+<br>
+Newlines are stored with a literal "\n". If "\n" is part of the text, it shall be escaped to "\\n"(see examples).<br>
+Quotes " are stored as \" within the attribute. <br>
+<br>
+Examples:<br>
+&nbsp;&nbsp;"trsc_name":"Anny Ann"<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;"trsc_name":"Lili Lauradottir, CEO of TechCompExample Co.\nAn \"unlimited\" tech-company."<br>
+&nbsp;&nbsp;<br>
+"trsc_name" is stored in the array "PodMetaContent": -> "trsc_X":<br>
+</div><br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="trsc_transcript_webvtt"></a>
+<a href="#trsc_transcript_webvtt"> ^</a> <u><b>trsc_transcript_webvtt</b></u><br>			<p>
+<div class="ch">
+The actual transcript as WebVTT.<br>
+It must be encoded into BASE64.<br>
+<br>
+Example:<br>
+&nbsp;&nbsp;"trsc_transcript_webvtt":"V0VCVlRUCgowMDowMS4wMDAgLS0+IDAwOjA0LjAwMAotIFdlbGNvbWUgdG8gR3JlYXRlc3QgUG9kY2FzdC4KCjAwOjA1LjAwMCAtLT4gMDA6MDkuMDAwCi0gSSdtIHlvdXIgaG9zdCBKaW1teSBKaW0gYW5kIHdpdGggbWUgaXMgRmxpcHBvLg",<br>
+&nbsp;&nbsp;<br>
+"trsc_transcript_webvtt" is stored in the array "PodMetaContent": -> "trsc_X":<br>
+</div><br>
+</div>
+      <div class="ch">
+        <hr>
+                     
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.9  - 98 elements available <br></td></table>
+        <hr>
+      </div>
+      <br>
+      </body>
+  </html>
+  
