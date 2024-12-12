@@ -47,6 +47,6 @@ Sep=package.config:sub(1,1)
 
 filename=filename:match("(.*)[\\/]"):sub(1,-2)
 filename=filename:match("(.*)[\\/]")..Sep.."Documentation"..Sep.."Reaper_API_Web_Documentation.html"
-
+filename=reaper.GetResourcePath()..Sep.."UserPlugins"..Sep.."ultraschall_api"..Sep.."Documentation"..Sep.."Reaper_API_Web_Documentation.html"
 
 OpenURL("file:///"..string.gsub(filename, "\\", "/"))

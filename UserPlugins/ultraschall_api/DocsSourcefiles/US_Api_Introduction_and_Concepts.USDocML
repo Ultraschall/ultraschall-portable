@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <USDocML>
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Introduction_001_Api</slug>
@@ -71,7 +70,7 @@
             Installing Ultraschall-API is quite easy.
             
             First make sure, you use the right versions of Reaper, SWS and JS-extension:
-               [Reaper 6.02 and higher](https://www.reaper.fm), [SWS 2.10.0.1 and higher](https://www.sws-extension.org) and [Julian Sader's plugin 1.215 and higher.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
+               [Reaper 7.03 and higher](https://www.reaper.fm), [SWS 2.10.0.1 and higher](https://www.sws-extension.org) and [Julian Sader's plugin 1.215 and higher.](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             You can download them at [reaper.fm](http://www.reaper.fm) and [sws-extension.org](http://www.sws-extension.org) respectively.
             Julian Sader's plugin can be installed using ReaPack or gotten from [his own github-site](https://github.com/juliansader/ReaExtensions/tree/master/js_ReaScriptAPI/)
             
@@ -86,7 +85,7 @@
                Copy the downloaded dll(Windows), dylib(Mac) or so(Linux)-file into the UserPlugins-folder in the Resources-folder of Reaper. 
                You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
             2. (Re-)Start Reaper  
-            3. Go into the Menu Extensions -> ReaPack -> manage Repositories  
+            3. Go into the Menu Extensions -> ReaPack -> Manage Repositories  
             4. Click on Import/export...-button and choose Import repositories  
             5. Paste into the dialog the following link  
                     
@@ -593,121 +592,124 @@
             
             Structure:  
             
-                    RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
-            RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
-            RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
-            RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-            RenderTable["Bounds"] - 0, Custom time range; 
-                                    1, Entire project; 
-                                    2, Time selection; 
-                                    3, Project regions; 
-                                    4, Selected Media Items(in combination with Source 32); 
-                                    5, Selected regions
-                                    6, Razor edit areas
-                                    7, All project markers
-                                    8, Selected markers
-            RenderTable["Channels"] - the number of channels in the rendered file; 
-                                      1, mono; 
-                                      2, stereo; 
-                                      higher, the number of channels
-            RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
-            RenderTable["Dither"] - &1, dither master mix; 
-                                    &2, noise shaping master mix; 
-                                    &4, dither stems; 
-                                    &8, dither noise shaping stems
-            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
-            RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-            RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
-            RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
-            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
-            RenderTable["FadeIn"] - the fade-in-time in seconds
-            RenderTable["FadeIn_Shape"] - the fade-in-shape
-                                   - 0, Linear fade in
-                                   - 1, Inverted quadratic fade in
-                                   - 2, Quadratic fade in
-                                   - 3, Inverted quartic fade in
-                                   - 4, Quartic fade in
-                                   - 5, Cosine S-curve fade in
-                                   - 6, Quartic S-curve fade in
-            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
-            RenderTable["FadeOut"] - the fade-out time in seconds
-            RenderTable["FadeOut_Shape"] - the fade-out-shape
-                                   - 0, Linear fade in
-                                   - 1, Inverted quadratic fade in
-                                   - 2, Quadratic fade in
-                                   - 3, Inverted quartic fade in
-                                   - 4, Quartic fade in
-                                   - 5, Cosine S-curve fade in
-                                   - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
-            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
-            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
-                           0, LUFS-I
-                           1, RMS-I
-                           2, Peak
-                           3, True Peak
-                           4, LUFS-M max
-                           5, LUFS-S max
-            RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
-            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
-                                                              false, normalize each file individually
-            RenderTable["Normalize_Target"] - the normalize-target as dB-value
-            RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
-            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
-                                                    0, Full-speed Offline
-                                                    1, 1x Offline
-                                                    2, Online Render
-                                                    3, Online Render(Idle)
-                                                    4, Offline Render(Idle)
-            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
-            RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
-            RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
-            RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
-            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
-            RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
-            RenderTable["RenderResample"] - Resample mode-dropdownlist; 
-                                                0, Sinc Interpolation: 64pt (medium quality)
-                                                1, Linear Interpolation: (low quality)
-                                                2, Point Sampling (lowest quality, retro)
-                                                3, Sinc Interpolation: 192pt
-                                                4, Sinc Interpolation: 384pt
-                                                5, Linear Interpolation + IIR
-                                                6, Linear Interpolation + IIRx2
-                                                7, Sinc Interpolation: 16pt
-                                                8, Sinc Interpolation: 512pt(slow)
-                                                9, Sinc Interpolation: 768pt(very slow)
-                                                10, r8brain free (highest quality, fast)
-            RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-            RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
-            RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
-            RenderTable["RenderTable"]=true - signals, this is a valid render-table
-            RenderTable["SampleRate"] - the samplerate of the rendered file(s)
-            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
-            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
-            RenderTable["Source"] - 0, Master mix; 
-                                    1, Master mix + stems; 
-                                    3, Stems (selected tracks); 
-                                    8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
-                                    32, Selected media items; 
-                                    64, selected media items via master; 
-                                    128, selected tracks via master
-                                    4096, Razor edit areas
-                                    4224, Razor edit areas via master
-            RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
-                                      &1, custom time bounds; 
-                                      &2, entire project; 
-                                      &4, time selection; 
-                                      &8, all project regions; 
-                                      &16, selected media items; 
-                                      &32, selected project regions
-                                      &64, razor edit areas
-            RenderTable["TailMS"] - the amount of milliseconds of the tail
+                  RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+                  RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
+                  RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
+                  RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
+                  RenderTable["Bounds"] - 0, Custom time range; 
+                                          1, Entire project; 
+                                          2, Time selection; 
+                                          3, Project regions; 
+                                          4, Selected Media Items(in combination with Source 32); 
+                                          5, Selected regions
+                                          6, Razor edit areas
+                                          7, All project markers
+                                          8, Selected markers
+                  RenderTable["Channels"] - the number of channels in the rendered file; 
+                                            1, mono; 
+                                            2, stereo; 
+                                            higher, the number of channels
+                  RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
+                  RenderTable["Dither"] - &1, dither master mix; 
+                                          &2, noise shaping master mix; 
+                                          &4, dither stems; 
+                                          &8, dither noise shaping stems
+                  RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+                  RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
+                  RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
+                  RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+                  RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+                  RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+                  RenderTable["FadeIn"] - the fade-in-time in seconds
+                  RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                         - 0, Linear fade in
+                                         - 1, Inverted quadratic fade in
+                                         - 2, Quadratic fade in
+                                         - 3, Inverted quartic fade in
+                                         - 4, Quartic fade in
+                                         - 5, Cosine S-curve fade in
+                                         - 6, Quartic S-curve fade in
+                  RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+                  RenderTable["FadeOut"] - the fade-out time in seconds
+                  RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                         - 0, Linear fade in
+                                         - 1, Inverted quadratic fade in
+                                         - 2, Quadratic fade in
+                                         - 3, Inverted quartic fade in
+                                         - 4, Quartic fade in
+                                         - 5, Cosine S-curve fade in
+                                         - 6, Quartic S-curve fade in
+                  RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+                  RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+                  RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                 0, LUFS-I
+                                 1, RMS-I
+                                 2, Peak
+                                 3, True Peak
+                                 4, LUFS-M max
+                                 5, LUFS-S max
+                  RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                                               - true, checkbox checked
+                                                               - false, checkbox unchecked
+                  RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
+                                                                    false, normalize each file individually
+                  RenderTable["Normalize_Target"] - the normalize-target as dB-value
+                  RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+                  RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
+                                                          0, Full-speed Offline
+                                                          1, 1x Offline
+                                                          2, Online Render
+                                                          3, Online Render(Idle)
+                                                          4, Offline Render(Idle)
+                  RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+                  RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
+                  RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
+                                                                 true, checked; false, unchecked
+                  RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
+                  RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
+                  RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
+                  RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
+                  RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+                                                      0, Sinc Interpolation: 64pt (medium quality)
+                                                      1, Linear Interpolation: (low quality)
+                                                      2, Point Sampling (lowest quality, retro)
+                                                      3, Sinc Interpolation: 192pt
+                                                      4, Sinc Interpolation: 384pt
+                                                      5, Linear Interpolation + IIR
+                                                      6, Linear Interpolation + IIRx2
+                                                      7, Sinc Interpolation: 16pt
+                                                      8, Sinc Interpolation: 512pt(slow)
+                                                      9, Sinc Interpolation: 768pt(very slow)
+                                                      10, r8brain free (highest quality, fast)
+                  RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
+                  RenderTable["RenderString"] -  the render-cfg-string, that holds all settings of the currently set render-output-format 
+                                                 as BASE64 string
+                  RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format 
+                                                 as BASE64 string
+                  RenderTable["RenderTable"]=true - signals, this is a valid render-table
+                  RenderTable["SampleRate"] - the samplerate of the rendered file(s)
+                  RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
+                  RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
+                  RenderTable["Source"] - 0, Master mix
+                                          1, Master mix + stems; 
+                                          3, Stems (selected tracks); 
+                                          8, Region render matrix; 
+                                          32, Selected media items; 
+                                          64, selected media items via master; 
+                                          128, selected tracks via master
+                                          136, Region render matrix via master
+                                          4096, Razor edit areas
+                                          4224, Razor edit areas via master
+                  RenderTable["Startposition"] - the startposition of the rendering selection in seconds
+                  RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
+                                            &1, custom time bounds; 
+                                            &2, entire project; 
+                                            &4, time selection; 
+                                            &8, all project regions; 
+                                            &16, selected media items; 
+                                            &32, selected project regions
+                                            &64, razor edit areas
+                  RenderTable["TailMS"] - the amount of milliseconds of the tail
                     
             This rendertable can be used by, e.g. [RenderProject\_RenderTable](usdocml://RenderProject_RenderTable)
             
@@ -842,7 +844,7 @@
                    [CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK)
                    [CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
                    [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo),
-                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video](usdocml://CreateRenderCFG_FLV_Video)], 
                    [CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
                     
                2. passing the render-string to one of the Render-functions  
@@ -869,7 +871,7 @@
                    [CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK)
                    [CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
                    [CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo), 
-                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+                   [CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video](usdocml://CreateRenderCFG_FLV_Video)], 
                    [CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
 
                3. Render the project, using the function:  
@@ -933,7 +935,7 @@
             >[CreateRenderCFG\_OGG](usdocml://CreateRenderCFG_OGG), [CreateRenderCFG\_Opus](usdocml://CreateRenderCFG_Opus), [CreateRenderCFG\_WAV](usdocml://CreateRenderCFG_WAV), [CreateRenderCFG\_WAVPACK](usdocml://CreateRenderCFG_WAVPACK),
             >[CreateRenderCFG\_AVI_Video](usdocml://CreateRenderCFG_AVI_Video), [CreateRenderCFG\_GIF](usdocml://CreateRenderCFG_GIF), [CreateRenderCFG\_LCF](usdocml://CreateRenderCFG_LCF), [CreateRenderCFG\_MKV_Video](usdocml://CreateRenderCFG_MKV_Video), [CreateRenderCFG\_MOVMAC_Video](usdocml://CreateRenderCFG_MOVMAC_Video), [CreateRenderCFG\_MP4MAC_Video](usdocml://CreateRenderCFG_MP4MAC_Video), 
             >[CreateRenderCFG\_QTMOVMP4_Video](usdocml://CreateRenderCFG_QTMOVMP4_Video), [CreateRenderCFG\_WebMVideo](usdocml://CreateRenderCFG_WebMVideo)
-            >[CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video(usdocml://CreateRenderCFG_FLV_Video)], 
+            >[CreateRenderCFG\_CAF](usdocml://CreateRenderCFG_CAF), [CreateRenderCFG\_FLV\_Video](usdocml://CreateRenderCFG_FLV_Video)], 
             >[CreateRenderCFG\_MPEG1\_Video](usdocml://CreateRenderCFG_MPEG1_Video), [CreateRenderCFG\_MPEG2\_Video](usdocml://CreateRenderCFG_MPEG2_Video)
                    
             If you have already a Base64-encoded-renderstring but would love to know, which settings it holds, you can analyze them as well.
@@ -961,7 +963,7 @@
             >[GetRenderCFG\_Settings\_OGG](usdocml://GetRenderCFG_Settings_OGG), [GetRenderCFG\_Settings\_OPUS](usdocml://GetRenderCFG_Settings_OPUS), [GetRenderCFG\_Settings\_WAV](usdocml://GetRenderCFG_Settings_WAV), [GetRenderCFG\_Settings\_WAVPACK](usdocml://GetRenderCFG_Settings_WAVPACK),
             >[GetRenderCFG\_Settings\_AVI\_Video](usdocml://GetRenderCFG_Settings_AVI_Video), [GetRenderCFG\_Settings\_GIF](usdocml://GetRenderCFG_Settings_GIF), [GetRenderCFG\_Settings\_LCF](usdocml://GetRenderCFG_Settings_LCF), [GetRenderCFG\_Settings\_MKV\_Video](usdocml://GetRenderCFG_Settings_MKV_Video), [GetRenderCFG\_Settings\_MOVMac\_Video](usdocml://GetRenderCFG_Settings_MOVMac_Video),
             >[GetRenderCFG\_Settings\_MP4Mac\_Video](usdocml://GetRenderCFG_Settings_MP4Mac_Video), [GetRenderCFG\_Settings\_QTMOVMP4\_Video](usdocml://GetRenderCFG_Settings_QTMOVMP4_Video), [GetRenderCFG\_Settings\_WebMVideo](usdocml://GetRenderCFG_Settings_WebMVideo)
-            >[GetRenderCFG\_CAF](usdocml://GetRenderCFG_CAF), [GetRenderCFG\_FLV\_Video(usdocml://GetRenderCFG_FLV_Video)], 
+            >[GetRenderCFG\_CAF](usdocml://GetRenderCFG_CAF), [GetRenderCFG\_FLV\_Video](usdocml://GetRenderCFG_FLV_Video)], 
             >[GetRenderCFG\_MPEG1\_Video](usdocml://GetRenderCFG_MPEG1_Video), [GetRenderCFG\_MPEG2\_Video](usdocml://GetRenderCFG_MPEG2_Video)
         </description>
         <target_document>US_Api_Introduction_and_Concepts</target_document>

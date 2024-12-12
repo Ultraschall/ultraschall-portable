@@ -588,7 +588,7 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetClosestNextMarker</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5
     Reaper=5.40
     SWS=2.8.8
     Lua=5.3
@@ -655,6 +655,7 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
     local retval2, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
     if isrgn==false then
       if pos>cursortime and pos<retposition then
+        --print2(i)
         retposition=pos
         retindexnumber=markrgnindexnumber
         retmarkername=name
@@ -666,7 +667,7 @@ function ultraschall.GetClosestNextMarker(cursor_type, time_position)
   end
   -- return found marker
   if retindexnumber==-1 then retposition=-1 end
-  return retindex, retposition, retmarkername, retindexnumber
+  return retindexnumber, retposition, retmarkername, retindexnumber
 end
 
 function ultraschall.GetClosestPreviousMarker(cursor_type, time_position)

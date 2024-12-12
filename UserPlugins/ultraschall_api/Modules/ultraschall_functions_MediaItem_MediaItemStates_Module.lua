@@ -4292,3 +4292,59 @@ function ultraschall.SetItemPlayRate(MediaItem, statechunk, playbackrate, preser
 end
 
 
+function ultraschall.GetItemYPos(MediaItem, statechunk)
+--  reaper.MB(statechunk,"",0)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetItemYPos</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>number y_position, number y_height, integer lane_or_fipm = ultraschall.GetItemYPos(MediaItem MediaItem, optional string MediaItemStateChunk)</functioncall>
+  <description>
+    Returns position and height of the MediaItem in a fixed item lane/free item positioning.
+    
+    It's the YPOS-entry
+    
+    Note when in item-lanes: You can use the y_height-retval to calculate, how many item-lanes the track contains, that has this MediaItem.
+    Use 1/y_height to calculate this the number of lanes. You can then calculate, on which lane the item lies: (1/y_height)*y_position.
+    
+    Returns nil in case of error or if the item is not placed in track lane/free item positioning.
+  </description>
+  <parameters>
+    MediaItem MediaItem - the MediaItem, whose yposition-state you want to know; nil, use parameter MediaItemStatechunk instead
+    optional string MediaItemStateChunk - an rpp-xml-statechunk, as created by reaper-api-functions like GetItemStateChunk
+  </parameters>
+  <retvals>
+    number y_position - the y-position of the MediaItem in fipm/within all track-lanes, calculate the used item-lane(see description for details)
+    number y_height - the height of the item in fipm/within the track-lanes, calculate the used item-lane(see description for details)
+    integer lane_or_fipm - 1, item is in free item positioning; 2, item is in an item-lane
+  </retvals>
+  <chapter_context>
+    MediaItem Management
+    Get MediaItem States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_MediaItem_MediaItemStates_Module.lua</source_document>
+  <tags>mediaitemmanagement, get, media, item, statechunk, rppxml, state, chunk, item lane, y-posiiton, height</tags>
+</US_DocBloc>
+]]
+  -- check parameters and prepare statechunk-variable
+  local retval
+  if MediaItem~=nil then
+    if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==true then retval, statechunk=reaper.GetItemStateChunk(MediaItem,"",false) 
+    else ultraschall.AddErrorMessage("GetItemYPos","MediaItem", "must be a MediaItem.", -2) return end
+  elseif MediaItem==nil and ultraschall.IsValidItemStateChunk(statechunk)==false then ultraschall.AddErrorMessage("GetItemYPos","MediaItemStateChunk", "must be a valid MediaItemStateChunk.", -1) return
+  end
+  -- get value and return it
+  statechunk=statechunk:match("YPOS( .-)%c")
+  if statechunk==nil then return nil end
+  statechunk=statechunk.." "
+
+  return tonumber(statechunk:match(" (.-) ")), 
+         tonumber(statechunk:match(" .- (.-) ")),
+         tonumber(statechunk:match(" .- .- (.-) "))
+end
+

@@ -10,11 +10,7 @@ Ultraschall API Docs-Functions
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
-<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
 <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
@@ -67,8 +63,8 @@ Ultraschall API Docs-Functions
 <hr>
 <a class="anch" id="Docs_ConvertPlainTextToHTML"></a>
 <a href="#Docs_ConvertPlainTextToHTML"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.4.png" alt="Ultraschall version 4.4"><u><b>Docs_ConvertPlainTextToHTML</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.4.png" alt="requires Ultraschall version 4.4"><u><b>Docs_ConvertPlainTextToHTML</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> html_text = <em>ultraschall.Docs_ConvertPlainTextToHTML</em>(<i>string</i> String, <i>optional</i> <i>boolean</i> nobsp, <i>optional</i> <i>boolean</i> ignore_pre)</code></div>
 </div><p>
@@ -103,8 +99,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_FindReaperApiFunction_Pattern"></a>
 <a href="#Docs_FindReaperApiFunction_Pattern"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_FindReaperApiFunction_Pattern</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_FindReaperApiFunction_Pattern</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> found_functions_count, <i>table</i> found_functions, <i>table</i> found_functions_desc = <em>ultraschall.Docs_FindReaperApiFunction_Pattern</em>(<i>string</i> pattern, <i>boolean</i> case_sensitive, <i>optional</i> <i>boolean</i> include_descriptions, <i>optional</i> <i>boolean</i> include_tags)</code></div>
 </div><p>
@@ -162,8 +158,8 @@ Index follows the index of found_functions</td></tr>
 <hr>
 <a class="anch" id="Docs_FindReaperConfigVar_Pattern"></a>
 <a href="#Docs_FindReaperConfigVar_Pattern"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_FindReaperConfigVar_Pattern</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_FindReaperConfigVar_Pattern</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> found_configvar_count, <i>table</i> found_configvars, <i>table</i> found_config_vars_desc = <em>ultraschall.Docs_FindReaperConfigVar_Pattern</em>(<i>string</i> pattern, <i>boolean</i> case_sensitive, <i>optional</i> <i>boolean</i> include_descriptions, <i>optional</i> <i>boolean</i> include_tags)</code></div>
 </div><p>
@@ -220,8 +216,8 @@ table will be nil if include_descriptions=false</td></tr>
 <hr>
 <a class="anch" id="Docs_FindUltraschallApiFunction_Pattern"></a>
 <a href="#Docs_FindUltraschallApiFunction_Pattern"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_FindUltraschallApiFunction_Pattern</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_FindUltraschallApiFunction_Pattern</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> found_functions_count, <i>table</i> found_functions, <i>table</i> found_functions_desc = <em>ultraschall.Docs_FindUltraschallApiFunction_Pattern</em>(<i>string</i> pattern, <i>boolean</i> case_sensitive, <i>optional</i> <i>boolean</i> include_descriptions, <i>optional</i> <i>boolean</i> include_tags)</code></div>
 </div><p>
@@ -279,8 +275,8 @@ Index follows the index of found_functions</td></tr>
 <hr>
 <a class="anch" id="Docs_GetAllReaperApiFunctionnames"></a>
 <a href="#Docs_GetAllReaperApiFunctionnames"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetAllReaperApiFunctionnames</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetAllReaperApiFunctionnames</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> slugs, <i>table</i> titles = <em>ultraschall.Docs_GetAllReaperApiFunctionnames</em>()</code></div>
 </div><p>
@@ -292,8 +288,8 @@ returns tables with all slugs and all titles of all Reaper-API-functions(usually
 <hr>
 <a class="anch" id="Docs_GetAllUltraschallApiFunctionnames"></a>
 <a href="#Docs_GetAllUltraschallApiFunctionnames"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetAllUltraschallApiFunctionnames</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetAllUltraschallApiFunctionnames</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> slugs = <em>ultraschall.Docs_GetAllUltraschallApiFunctionnames</em>()</code></div>
 </div><p>
@@ -305,8 +301,8 @@ returns tables with all slugs of all Ultraschall-API-functions and variables<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Call"></a>
 <a href="#Docs_GetReaperApiFunction_Call"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Call</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Call</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> functioncall = <em>ultraschall.Docs_GetReaperApiFunction_Call</em>(<i>string</i> functionname, <i>integer</i> proglang)</code></div>
 </div><p>
@@ -340,8 +336,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Call"></a>
 <a href="#Docs_GetReaperApiFunction_Call"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Call</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Call</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> functioncall = <em>ultraschall.Docs_GetReaperApiFunction_Call</em>(<i>string</i> functionname, <i>integer</i> proglang)</code></div>
 </div><p>
@@ -375,8 +371,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Categories"></a>
 <a href="#Docs_GetReaperApiFunction_Categories"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Categories</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Categories</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> categories_count, <i>table</i> categories = <em>ultraschall.Docs_GetReaperApiFunction_Categories</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -408,8 +404,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Description"></a>
 <a href="#Docs_GetReaperApiFunction_Description"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Description</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Description</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> description = <em>ultraschall.Docs_GetReaperApiFunction_Description</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -437,8 +433,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Description"></a>
 <a href="#Docs_GetReaperApiFunction_Description"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Description</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Description</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> description = <em>ultraschall.Docs_GetReaperApiFunction_Description</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -466,8 +462,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Params"></a>
 <a href="#Docs_GetReaperApiFunction_Params"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Params</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Params</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> paramscount, <i>table</i> params = <em>ultraschall.Docs_GetReaperApiFunction_Params</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -504,8 +500,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Requires"></a>
 <a href="#Docs_GetReaperApiFunction_Requires"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Requires</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Requires</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> requires_count, <i>table</i> requires, <i>table</i> requires_alt = <em>ultraschall.Docs_GetReaperApiFunction_Requires</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -543,8 +539,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Retvals"></a>
 <a href="#Docs_GetReaperApiFunction_Retvals"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Retvals</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Retvals</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> retvalscount, <i>table</i> retvals = <em>ultraschall.Docs_GetReaperApiFunction_Retvals</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -581,8 +577,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetReaperApiFunction_Tags"></a>
 <a href="#Docs_GetReaperApiFunction_Tags"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Tags</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetReaperApiFunction_Tags</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> tags_count, <i>table</i> tags = <em>ultraschall.Docs_GetReaperApiFunction_Tags</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -614,8 +610,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Categories"></a>
 <a href="#Docs_GetUltraschallApiFunction_Categories"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Categories</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Categories</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> tags_count, <i>table</i> tags = <em>ultraschall.Docs_GetUltraschallApiFunction_Categories</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -645,8 +641,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Description"></a>
 <a href="#Docs_GetUltraschallApiFunction_Description"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Description</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Description</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> description = <em>ultraschall.Docs_GetUltraschallApiFunction_Description</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -672,8 +668,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Params"></a>
 <a href="#Docs_GetUltraschallApiFunction_Params"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Params</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Params</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> paramscount, <i>table</i> params = <em>ultraschall.Docs_GetUltraschallApiFunction_Params</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -708,8 +704,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Requires"></a>
 <a href="#Docs_GetUltraschallApiFunction_Requires"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Requires</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Requires</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> requires_count, <i>table</i> requires, <i>table</i> requires_alt = <em>ultraschall.Docs_GetUltraschallApiFunction_Requires</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -745,8 +741,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Retvals"></a>
 <a href="#Docs_GetUltraschallApiFunction_Retvals"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Retvals</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Retvals</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> retvalscount, <i>table</i> retvals = <em>ultraschall.Docs_GetUltraschallApiFunction_Retvals</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -781,8 +777,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUltraschallApiFunction_Tags"></a>
 <a href="#Docs_GetUltraschallApiFunction_Tags"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Tags</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_GetUltraschallApiFunction_Tags</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> tags_count, <i>table</i> tags = <em>ultraschall.Docs_GetUltraschallApiFunction_Tags</em>(<i>string</i> functionname)</code></div>
 </div><p>
@@ -812,8 +808,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_LoadReaperConfigVarsDocBlocs"></a>
 <a href="#Docs_LoadReaperConfigVarsDocBlocs"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_LoadReaperConfigVarsDocBlocs</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_LoadReaperConfigVarsDocBlocs</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <em>ultraschall.Docs_LoadReaperConfigVarsDocBlocs</em>()</code></div>
 </div><p>
@@ -825,8 +821,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_LoadUltraschallAPIDocBlocs"></a>
 <a href="#Docs_LoadUltraschallAPIDocBlocs"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.8.png" alt="Ultraschall version 4.8"><u><b>Docs_LoadUltraschallAPIDocBlocs</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.8.png" alt="requires Ultraschall version 4.8"><u><b>Docs_LoadUltraschallAPIDocBlocs</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <em>ultraschall.Docs_LoadUltraschallAPIDocBlocs</em>()</code></div>
 </div><p>
@@ -838,8 +834,8 @@ returns -1 in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetAllUSDocBlocsFromFile"></a>
 <a href="#Docs_GetAllUSDocBlocsFromFile"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.9.png" alt="Ultraschall version 4.9"><u><b>Docs_GetAllUSDocBlocsFromFile</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.9.png" alt="requires Ultraschall version 4.9"><u><b>Docs_GetAllUSDocBlocsFromFile</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> found_usdocblocs, <i>array</i> all_found_usdocblocs = <em>ultraschall.Docs_GetAllUSDocBlocsFromString</em>(<i>string</i> filename)</code></div>
 </div><p>
@@ -869,8 +865,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetAllUSDocBlocsFromString"></a>
 <a href="#Docs_GetAllUSDocBlocsFromString"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetAllUSDocBlocsFromString</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetAllUSDocBlocsFromString</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> found_usdocblocs, <i>array</i> all_found_usdocblocs = <em>ultraschall.Docs_GetAllUSDocBlocsFromString</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -900,8 +896,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Changelog"></a>
 <a href="#Docs_GetUSDocBloc_Changelog"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Changelog</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Changelog</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> changelogscount, <i>table</i> changelogs = <em>ultraschall.Docs_GetUSDocBloc_Changelog</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
@@ -943,8 +939,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_ChapterContext"></a>
 <a href="#Docs_GetUSDocBloc_ChapterContext"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_ChapterContext</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_ChapterContext</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> chapters, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_ChapterContext</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
@@ -983,8 +979,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Deprecated"></a>
 <a href="#Docs_GetUSDocBloc_Deprecated"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Deprecated</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_Deprecated</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> what, <i>string</i> when, <i>string</i> alternative = <em>ultraschall.Docs_GetUSDocBloc_Deprecated</em>(<i>string</i> US_DocBloc)</code></div>
 </div><p>
@@ -1022,8 +1018,8 @@ returns nil in case of an error or if no such deprecated-tag exists for this US_
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Description"></a>
 <a href="#Docs_GetUSDocBloc_Description"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Description</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Description</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> description, <i>string</i> markup_type, <i>string</i> markup_version, <i>string</i> indent, <i>optional</i> <i>string</i> language, <i>optional</i> <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Description</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
@@ -1085,8 +1081,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Examples"></a>
 <a href="#Docs_GetUSDocBloc_Examples"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.9.png" alt="Ultraschall version 4.9"><u><b>Docs_GetUSDocBloc_Examples</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.9.png" alt="requires Ultraschall version 4.9"><u><b>Docs_GetUSDocBloc_Examples</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> num_code_examples, <i>table</i> code_examples = <em>ultraschall.Docs_GetUSDocBloc_Examples</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1123,8 +1119,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Functioncall"></a>
 <a href="#Docs_GetUSDocBloc_Functioncall"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Functioncall</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Functioncall</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> functioncall, <i>string</i> prog_lang = <em>ultraschall.Docs_GetUSDocBloc_Functioncall</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
@@ -1160,8 +1156,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_LinkedTo"></a>
 <a href="#Docs_GetUSDocBloc_LinkedTo"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.2.png" alt="Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_LinkedTo</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>Docs_GetUSDocBloc_LinkedTo</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> linked_to_count, <i>table</i> links, <i>string</i> description = <em>ultraschall.Docs_GetUSDocBloc_LinkedTo</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
@@ -1206,8 +1202,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_NextChapter"></a>
 <a href="#Docs_GetUSDocBloc_NextChapter"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_NextChapter</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_NextChapter</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> next_chapter = <em>ultraschall.Docs_GetUSDocBloc_NextChapter</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1233,8 +1229,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Params"></a>
 <a href="#Docs_GetUSDocBloc_Params"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Params</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Params</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> parmcount, <i>table</i> Params, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Params</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
@@ -1300,8 +1296,8 @@ That means, indentation relative to the first line is kept.</td></tr>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_PreviousChapter"></a>
 <a href="#Docs_GetUSDocBloc_PreviousChapter"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_PreviousChapter</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_PreviousChapter</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> previous_chapter = <em>ultraschall.Docs_GetUSDocBloc_PreviousChapter</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1327,8 +1323,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Requires"></a>
 <a href="#Docs_GetUSDocBloc_Requires"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Requires</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Requires</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> requires, <i>array</i> requires_alt = <em>ultraschall.Docs_GetUSDocBloc_Requires</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1362,8 +1358,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Retvals"></a>
 <a href="#Docs_GetUSDocBloc_Retvals"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Retvals</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Retvals</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> retvalscount, <i>table</i> retvals, <i>string</i> markuptype, <i>string</i> markupversion, <i>string</i> prog_lang, <i>string</i> spok_lang, <i>string</i> indent = <em>ultraschall.Docs_GetUSDocBloc_Retvals</em>(<i>string</i> String, <i>boolean</i> unindent_description, <i>integer</i> index)</code></div>
 </div><p>
@@ -1429,8 +1425,8 @@ That means, indentation relative to the first line is kept.</td></tr>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Slug"></a>
 <a href="#Docs_GetUSDocBloc_Slug"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Slug</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Slug</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> slug = <em>ultraschall.Docs_GetUSDocBloc_Slug</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1456,8 +1452,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_SourceDocument"></a>
 <a href="#Docs_GetUSDocBloc_SourceDocument"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_SourceDocument</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_SourceDocument</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> source_document = <em>ultraschall.Docs_GetUSDocBloc_SourceDocument</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1484,8 +1480,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Tags"></a>
 <a href="#Docs_GetUSDocBloc_Tags"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Tags</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Tags</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> tags, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Tags</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
@@ -1524,8 +1520,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_TargetDocument"></a>
 <a href="#Docs_GetUSDocBloc_TargetDocument"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_TargetDocument</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_TargetDocument</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> target_document = <em>ultraschall.Docs_GetUSDocBloc_TargetDocument</em>(<i>string</i> String)</code></div>
 </div><p>
@@ -1552,8 +1548,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_GetUSDocBloc_Title"></a>
 <a href="#Docs_GetUSDocBloc_Title"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Title</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_GetUSDocBloc_Title</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> title, <i>string</i> spok_lang = <em>ultraschall.Docs_GetUSDocBloc_Title</em>(<i>string</i> String, <i>integer</i> index)</code></div>
 </div><p>
@@ -1588,8 +1584,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="Docs_RemoveIndent"></a>
 <a href="#Docs_RemoveIndent"> ^</a> 
-<img width="3%" src="gfx/reaper5.978.png" alt="Reaper version 5.978">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>Docs_RemoveIndent</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.978.png" alt="requires Reaper version 5.978">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>Docs_RemoveIndent</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>string</i> unindented_text = <em>ultraschall.Docs_RemoveIndent</em>(<i>string</i> String, <i>string</i> indenttype)</code></div>
 </div><p>
@@ -1630,7 +1626,7 @@ That means, indentation relative to the first line is kept.</td></tr>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.9  - 43 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.1  - 43 elements available <br></td></table>
         <hr>
       </div>
       <br>

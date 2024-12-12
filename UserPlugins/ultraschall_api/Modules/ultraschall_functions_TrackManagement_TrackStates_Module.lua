@@ -5278,3 +5278,170 @@ function ultraschall.SetTrackPlayOffsState(tracknumber, TrackStateChunk, offset,
     return true, StateChunk
   end
 end
+
+function ultraschall.GetTrackFixedLanesState(tracknumber, str)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackFixedLanesState</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>integer collapsed_state, integer state2, integer show_only_lane = ultraschall.GetTrackFixedLanesState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <description>
+    returns Fixed Lanes-state. 
+
+    It's the entry FIXEDLANES
+    
+    returns nil in case of an error or if there's no lane in the track
+  </description>
+  <retvals>
+    integer collapsed_state - &2, unknown
+                            - &8, collapsed state(set=not collapsed; unset=collapsed)
+    integer state2 - unknown
+    integer show_only_lane - 0, show all lanes; 1, show only one lane
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
+    optional string TrackStateChunk - a TrackStateChunk that you want to use, instead of a given track
+  </parameters>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, fixed lanes, collapsed, show all lanes, get, state, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("FIXEDLANES", str, "GetTrackFixedLanesState", true)
+end
+
+function ultraschall.GetTrackLaneSoloState(tracknumber, str)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackLaneSoloState</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>number lane_solo_state, number state2, number state3, number state4 = ultraschall.GetTrackLaneSoloState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <description>
+    returns Lanes solo-state. 
+
+    It's the entry LANESOLO
+    
+    returns nil in case of an error or if there's no lane in the track
+  </description>
+  <retvals>
+    number lane_solo_state - the lanes that are set to play; &1=lane 1, &2=lane 2, &4=lane 3, &8=lane 4, etc
+    number state2 - unknown
+    number state3 - unknown
+    number state4 - unknown
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
+    optional string TrackStateChunk - a TrackStateChunk that you want to use, instead of a given track
+  </parameters>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, fixed lanes, lane solo, get, state, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("LANESOLO", str, "GetTrackLaneSoloState", true)
+end
+
+function ultraschall.GetTrackLaneRecState(tracknumber, str)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackLaneRecState</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>integer lane_rec_state, integer state2, integer state3 = ultraschall.GetTrackLaneRecState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <description>
+    returns Lanes rec-state. 
+
+    It's the entry LANEREC
+    
+    returns nil in case of an error or if there's no lane in the track
+  </description>
+  <retvals>
+    integer lane_rec_state - the lanes into which you record; 0-based
+    integer state2 - unknown; usually -1
+    integer state3 - unknown; usually -1
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
+    optional string TrackStateChunk - a TrackStateChunk that you want to use, instead of a given track
+  </parameters>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, fixed lanes, lane rec, get, state, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+  return ultraschall.GetTrackState_NumbersOnly("LANEREC", str, "GetTrackLaneRecState", true)
+end
+
+function ultraschall.GetTrackLaneNameState(tracknumber, str)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetTrackLaneNameState</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>string lanename1, string lanename2, string lanename3, .. = ultraschall.GetTrackLaneNameState(integer tracknumber, optional string TrackStateChunk)</functioncall>
+  <description>
+    returns Lanes name-state. 
+
+    It's the entry LANENAME
+    
+    returns nil in case of an error or if there's no lane in the track
+  </description>
+  <retvals>
+    integer lane_name_1 - the name of the first lane
+    integer lane_name_2 - the name of the second lane
+    integer lane_name_3 - the name of the third lane
+    ... - ...
+  </retvals>
+  <parameters>
+    integer tracknumber - number of the track, beginning with 1; 0 for master track; -1, if you want to use the parameter TrackStateChunk instead.
+    optional string TrackStateChunk - a TrackStateChunk that you want to use, instead of a given track
+  </parameters>
+  <chapter_context>
+    Track Management
+    Get Track States
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_TrackManagement_TrackStates_Module.lua</source_document>
+  <tags>trackmanagement, fixed lanes, lane name, get, state, trackstatechunk</tags>
+</US_DocBloc>
+--]]
+  local retval
+  if tracknumber~=-1 then retval, str = ultraschall.GetTrackStateChunk_Tracknumber(tracknumber) end
+
+  local ReaperString=str:match("LANENAME.-\n")
+  local A, lane_names = ultraschall.SplitReaperString(ReaperString)
+  return table.unpack(lane_names)
+end
+

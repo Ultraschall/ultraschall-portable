@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.71
+Render-Presets-docs as of Reaper 7.16
 
-compiled by Meo-Ada Mespotine, 7th of December 2022
+compiled by Meo-Ada Mespotine, 25th of July 2024
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -131,6 +131,8 @@ RENDERPRESET_EXT
                                     &2048, 2nd pass render
                                     &8192, Render stems pre-fader
                                     &16384, Only render channels that are sent to parent
+                                    &32768, (Preserve) Metadata-checkbox
+                                    &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
 
     string render_cfg - the render-format-settings(mp3, wav, flac, etc) encoded as BASE64-string
 

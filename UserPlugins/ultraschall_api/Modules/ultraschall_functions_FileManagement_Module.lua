@@ -877,7 +877,7 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
     Returns nil in case of an error
   </description>
   <parameters>
-    string filename_with_path - the file to check for it's image-fileformat
+    string filename_with_path - the file to check for its image-fileformat
   </parameters>
   <retvals>
     string fileformat - the format of the file; JPG, PNG, GIF, LCF, ICO, WAV, AIFF, ASF/WMA/WMV, MP3, MP3 -ID3TAG, FLAC, MKV/MKA/MKS/MK3D/WEBM, AVI, RPP_PROJECT, unknown

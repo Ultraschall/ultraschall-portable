@@ -47,7 +47,8 @@ _,filename=reaper.get_action_context()
 Sep=package.config:sub(1,1)
 
 filename=filename:match("(.*)[\\/]"):sub(1,-2)
-filename=filename:match("(.*)[\\/]")..Sep.."Documentation"..Sep.."Reaper_Config_Variables.html"
+--filename=filename:match("(.*)[\\/]")..Sep.."Documentation"..Sep.."Reaper_Config_Variables.html"
+filename=reaper.GetResourcePath()..Sep.."UserPlugins"..Sep.."ultraschall_api"..Sep.."Documentation"..Sep.."Reaper_Config_Variables.html"
 
 
 OpenURL("file:///"..string.gsub(filename, "\\", "/"))

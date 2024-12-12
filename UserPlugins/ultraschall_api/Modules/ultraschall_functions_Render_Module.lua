@@ -1304,7 +1304,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
       Reaper=6.62
       Lua=5.3
     </requires>
-    <functioncall>integer MJPEG_quality, integer AUDIO_CODEC, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, string VideoExportOptions, string AudioExportOptions = ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(string rendercfg)</functioncall>
+    <functioncall>integer MJPEG_quality, integer AUDIO_CODEC, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VIDEOCODEC, string VideoExportOptions, string AudioExportOptions = ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(string rendercfg)</functioncall>
     <description>
       Returns the settings stored in a render-cfg-string for QT/MOV/MP4-video.
       
@@ -1327,7 +1327,7 @@ function ultraschall.GetRenderCFG_Settings_QTMOVMP4_Video(rendercfg)
       integer HEIGHT - the height of the video in pixels
       number FPS  - the fps of the video; must be a double-precision-float value (9.09 or 25.00); due API-limitations, this supports 0.01fps to 2000.00fps
       boolean AspectRatio  - the aspect-ratio; true, keep source aspect ratio; false, don't keep source aspect ratio 
-      integer VideoCodec - the video-codec
+      integer VIDEOCODEC - the video-codec
                          - 0, H.264(only with FFMPEG 4.1.3 installed)
                          - 1, MPEG-2(only with FFMPEG 4.1.3 installed)
                          - 2, MJPEG
@@ -2533,10 +2533,10 @@ function ultraschall.GetRenderTable_Project()
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 
-                                    64, selected media items via master; 
+                                    64, Selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -2794,10 +2794,10 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 
                                     64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -3079,6 +3079,8 @@ function ultraschall.CreateRenderCFG_Opus(Mode, Kbps, Complexity, channel_audio,
   <description>
     Creates the render-cfg-string for the Opus-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
+    Note: Can also be applied as RecCFG!
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -3144,6 +3146,8 @@ function ultraschall.CreateRenderCFG_OGG(Mode, VBR_Quality, CBR_KBPS, ABR_KBPS, 
   <description>
     Returns the render-cfg-string for the OGG-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     For all mode-settings that you don't need(kbps or quality), you can safely set them to 1.
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -3247,6 +3251,8 @@ function ultraschall.CreateRenderCFG_FLAC(Bitrate, EncSpeed)
   <description>
     Returns the render-cfg-string for the FLAC-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
+    Note: Can also be applied as RecCFG!
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -3321,6 +3327,8 @@ function ultraschall.CreateRenderCFG_WAVPACK(Mode, Bitdepth, Writemarkers, Write
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WAVPACK(integer Mode, integer Bitdepth, integer Writemarkers, boolean WriteBWFChunk, boolean IncludeFilenameBWF)</functioncall>
   <description>
     Returns the render-cfg-string for the WAVPACK-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -3505,7 +3513,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_Project</slug>
   <requires>
-    Ultraschall=4.75
+    Ultraschall=5
     Reaper=6.71
     SWS=2.10.0.1
     JS=0.972
@@ -3596,6 +3604,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
                                                true, checked; 
                                                false, unchecked
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
             RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
@@ -3629,9 +3639,10 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 64, selected media items via master; 
+                                    64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -3700,6 +3711,17 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     if Source&2048~=0 then Source=Source-2048 end
   end
   
+  if RenderTable["Preserve_Start_Offset"]==true then 
+    if Source&65536==0 then
+      Source=Source+65536
+    end
+  end
+  
+  if RenderTable["Preserve_Metadata"]==true then
+    if Source&32768==0 then
+      Source=Source+32768
+    end
+  end
   
   if RenderTable["RenderStems_Prefader"]==true then
     if Source&8192==0 then Source=Source+8192 end
@@ -3713,7 +3735,6 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     if Source&16384~=0 then Source=Source-16384 end
   end  
   
-  
   if RenderTable["MultiChannelFiles"]==true and Source&4==0 then 
     Source=Source+4 
   elseif RenderTable["MultiChannelFiles"]==false and Source&4==4 then 
@@ -3725,7 +3746,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   elseif RenderTable["OnlyMonoMedia"]==false and Source&16==16 then 
     Source=Source-16 
   end
-  
+
   local normalize_method=RenderTable["Normalize_Method"]
   normalize_method=normalize_method*2
   local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
@@ -3785,6 +3806,7 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   ultraschall.SetRender_AutoIncrementFilename(RenderTable["SilentlyIncrementFilename"])
   ultraschall.SetRender_QueueDelay(RenderTable["RenderQueueDelay"], RenderTable["RenderQueueDelaySeconds"])
   ultraschall.SetRender_ResampleMode(RenderTable["RenderResample"])
+  
   ultraschall.SetRender_OfflineOnlineMode(RenderTable["OfflineOnlineRendering"])
   
   if RenderTable["RenderFile"]==nil then RenderTable["RenderFile"]="" end
@@ -3798,7 +3820,6 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
       RenderTable["RenderFile"]=string.gsub(path,"\\\\", "\\")
     end
   end
-  
   
   if RenderTable["SaveCopyOfProject"]==true then SaveCopyOfProject=1 else SaveCopyOfProject=0 end
   hwnd = ultraschall.GetRenderToFileHWND()
@@ -3836,8 +3857,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=4.75
-    Reaper=6.71
+    Ultraschall=5
+    Reaper=7.16
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(table RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
@@ -3923,6 +3944,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
                                                true, checked; 
                                                false, unchecked
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
             RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
@@ -3956,9 +3979,10 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 64, selected media items via master; 
+                                    64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -4068,6 +4092,18 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
     if Source&16384~=0 then Source=Source-16384 end
   end  
 
+  if RenderTable["Preserve_Start_Offset"]==true then 
+    if Source&65536==0 then
+      Source=Source+65536
+    end
+  end
+  
+  if RenderTable["Preserve_Metadata"]==true then
+    if Source&32768==0 then
+      Source=Source+32768
+    end
+  end
+
   local normalize_method=RenderTable["Normalize_Method"]
   normalize_method=normalize_method*2
   local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
@@ -4147,16 +4183,16 @@ RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers
 EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender, 
 Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
 Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
-Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape, OnlyChannelsSentToParent, RenderStems_Prefader)
+Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape, OnlyChannelsSentToParent, RenderStems_Prefader, Preserve_Start_Offset, Preserve_Metadata)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
   <requires>
-    Ultraschall=4.75
-    Reaper=6.71
+    Ultraschall=5
+    Reaper=7.16
     Lua=5.3
   </requires>
-  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Method, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape, optional boolean OnlyChannelsSentToParent, optional boolean RenderStems_Prefader)</functioncall>
+  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Only_Files_Too_Loud, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape, optional boolean OnlyChannelsSentToParent, optional boolean RenderStems_Prefader, optional boolean Preserve_Start_Offset, optional boolean Preserve_Metadata)</functioncall>
   <description>
     Creates a new RenderTable.
     
@@ -4194,6 +4230,8 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
               RenderTable["OnlyChannelsSentToParent"]=false
               RenderTable["OnlyMonoMedia"]=false
               RenderTable["ProjectSampleRateFXProcessing"]=true
+              RenderTable["Preserve_Start_Offset"]=false
+              RenderTable["Preserve_Metadata"]=false
               RenderTable["RenderFile"]=""
               RenderTable["RenderPattern"]=""
               RenderTable["RenderQueueDelay"]=false
@@ -4328,6 +4366,8 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
                                    - 6, Quartic S-curve fade in
     optional boolean OnlyChannelsSentToParent - true, will only render channels sent to parent; false, normal rendering
     optional boolean RenderStems_Prefader - true, stems will be rendered pre-fader; false, normal rendering of stems
+    optional boolean Preserve_Start_Offset - true, preserve start-offset (when selected media items as source); false, don't preserve start-offset
+    optional boolean Preserve_Metadata - true, preserve metadata(when selected media items as source); false, don't preserve metadata
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -4393,8 +4433,10 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
   
   if OnlyChannelsSentToParent~=nil and type(OnlyChannelsSentToParent)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "OnlyChannelsSentToParent", "#44: must be nil or a boolean", -45) return end  
   if RenderStems_Prefader~=nil and type(RenderStems_Prefader)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "RenderStems_Prefader", "#45: must be nil or a boolean", -46) return end  
-    
-
+  
+  if Preserve_Start_Offset~=nil and type(Preserve_Start_Offset)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Preserve_Start_Offset", "#46: must be nil or a boolean", -47) return end  
+  if Preserve_Metadata~=nil and type(Preserve_Metadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Preserve_Metadata", "#47: must be nil or a boolean", -48) return end  
+  
   -- create Reaper-vanilla default RenderTable
   local RenderTable={}  
   RenderTable["AddToProj"]=false
@@ -4443,6 +4485,8 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
   RenderTable["FadeOut_Shape"]=0
   RenderTable["OnlyChannelsSentToParent"]=false
   RenderTable["RenderStems_Prefader"]=false
+  RenderTable["Preserve_Start_Offset"]=false
+  RenderTable["Preserve_Metadata"]=false
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end
@@ -4489,6 +4533,9 @@ Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Ena
   if FadeOut_Enabled~=nil then RenderTable["FadeOut_Enabled"]=FadeOut_Enabled end
   if FadeOut~=nil then RenderTable["FadeOut"]=FadeOut end
   if FadeOut_Shape~=nil then RenderTable["FadeOut_Shape"]=FadeOut_Shape end
+  
+  if Preserve_Start_Offset~=nil then RenderTable["Preserve_Start_Offset"]=false end
+  if Preserve_Metadata~=nil then RenderTable["Preserve_Metadata"]=false end
  
   return RenderTable
 end
@@ -4971,8 +5018,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
-     Ultraschall=4.75
-     Reaper=6.71
+     Ultraschall=5
+     Reaper=7.16
      Lua=5.3
    </requires>
    <functioncall>table RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
@@ -5062,6 +5109,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
                                                true, checked; 
                                                false, unchecked
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
             RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
@@ -5094,9 +5143,10 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 64, selected media items via master; 
+                                    64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -5293,6 +5343,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["RenderStems_Prefader"]=tonumber(Various_checkboxes2)&8192==8192
   RenderTable["Normalize_Enabled"]=Normalize_Method&1==1  
   RenderTable["Normalize_Stems_to_Master_Target"]=Normalize_Method&32==32
+  RenderTable["Preserve_Start_Offset"]=tonumber(Various_checkboxes2)&65536==65536
+  RenderTable["Preserve_Metadata"]=tonumber(Various_checkboxes2)&32768==32768
   if RenderTable["Normalize_Enabled"]==true then Normalize_Method=Normalize_Method-1 end
   if RenderTable["Normalize_Stems_to_Master_Target"]==true then Normalize_Method=Normalize_Method-32 end
   RenderTable["Brickwall_Limiter_Enabled"]=Normalize_Method&64==64
@@ -5452,8 +5504,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>AddRenderPreset</slug>
    <requires>
-     Ultraschall=4.75
-     Reaper=6.71
+     Ultraschall=5
+     Reaper=7.16
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5490,6 +5542,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       32, Selected media items
                                       64, selected media items via master
                                       128, selected tracks via master
+                                      136, Region render matrix via master
                                       4096, Razor edit areas
                                       4224, Razor edit areas via master
               RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
@@ -5552,6 +5605,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
               RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
               RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
               RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
               RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings
               RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
@@ -5615,6 +5670,9 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["Enable2ndPassRender"]==true then CheckBoxes=CheckBoxes+2048 end
   if RenderTable["RenderStems_Prefader"]==true then CheckBoxes=CheckBoxes+8192 end
   if RenderTable["OnlyChannelsSentToParent"]==true then CheckBoxes=CheckBoxes+16384 end
+  
+  if RenderTable["Preserve_Start_Offset"]==true then CheckBoxes=CheckBoxes+65536 end
+  if RenderTable["Preserve_Metadata"]==true then CheckBoxes=CheckBoxes+32768 end
   
   if RenderTable["ProjectSampleRateFXProcessing"]==true then ProjectSampleRateFXProcessing=1 else ProjectSampleRateFXProcessing=0 end
   if RenderTable["RenderPattern"]=="" or RenderTable["RenderPattern"]:match("%s")~=nil then
@@ -5692,8 +5750,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>SetRenderPreset</slug>
    <requires>
-     Ultraschall=4.75
-     Reaper=6.71
+     Ultraschall=5
+     Reaper=7.16
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5722,6 +5780,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       8, Selected markers
               RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
+              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
               RenderTable["Source"]+RenderTable["MultiChannelFiles"]+RenderTable["OnlyMonoMedia"] - the source dropdownlist, includes 
                                       0, Master mix 
                                       1, Master mix + stems
@@ -5861,6 +5921,9 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["RenderStems_Prefader"]==true then CheckBoxes=CheckBoxes+8192 end
   if RenderTable["OnlyChannelsSentToParent"]==true then CheckBoxes=CheckBoxes+16384 end
 
+  if RenderTable["Preserve_Start_Offset"]==true then CheckBoxes=CheckBoxes+65536 end
+  if RenderTable["Preserve_Metadata"]==true then CheckBoxes=CheckBoxes+32768 end
+
   if RenderTable["ProjectSampleRateFXProcessing"]==true then ProjectSampleRateFXProcessing=1 else ProjectSampleRateFXProcessing=0 end
   if RenderTable["RenderPattern"]=="" or RenderTable["RenderPattern"]:match("%s")~=nil then
     RenderPattern="\""..RenderTable["RenderPattern"].."\""
@@ -5896,8 +5959,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
              " "..RenderTable["OfflineOnlineRendering"]..
              " "..ProjectSampleRateFXProcessing..
              " "..RenderTable["RenderResample"]..
-             " "..RenderTable["Dither"]..
-             " "..CheckBoxes.. 
+             " "..RenderTable["Dither"].. -- various_checkboxes
+             " "..CheckBoxes..  -- various_checkboxes2
              "\n  "..RenderTable["RenderString"].."\n>"
     RenderFormatOptions = ultraschall.EscapeMagicCharacters_String(RenderFormatOptions)
     A=string.gsub(A, RenderFormatOptions, String)
@@ -6055,9 +6118,10 @@ function ultraschall.RenderProject_RenderTable(projectfilename_with_path, Render
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 64, selected media items via master; 
+                                    64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
@@ -6933,6 +6997,8 @@ function ultraschall.CreateRenderCFG_MP3MaxQuality()
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3MaxQuality(optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with highest quality-settings. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
   </description>
   <retvals>
     string render_cfg_string - the renderstring for MP3 with maximum quality
@@ -6966,6 +7032,8 @@ function ultraschall.CreateRenderCFG_MP3VBR(vbr_quality, quality, no_joint_stere
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3VBR(integer vbr_quality, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with variable bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -7039,6 +7107,8 @@ function ultraschall.CreateRenderCFG_MP3ABR(bitrate, quality, no_joint_stereo, w
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3ABR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with average bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -7128,6 +7198,8 @@ function ultraschall.CreateRenderCFG_MP3CBR(bitrate, quality, no_joint_stereo, w
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3CBR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with constant bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -7219,6 +7291,8 @@ function ultraschall.CreateRenderCFG_WAV(BitDepth, LargeFiles, BWFChunk, Include
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WAV(integer BitDepth, integer LargeFiles, integer BWFChunk, integer IncludeMarkers, boolean EmbedProjectTempo)</functioncall>
   <description>
     Creates the render-cfg-string for the WAV-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -7463,6 +7537,8 @@ function ultraschall.CreateRenderCFG_AIFF(bits, EmbedBeatLength)
   <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_AIFF(integer bits, optional boolean EmbedBeatLength)</functioncall>
   <description>
     Returns the render-cfg-string for the AIFF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Note: Can also be applied as RecCFG!
     
     Returns nil in case of an error
   </description>
@@ -8474,6 +8550,8 @@ function ultraschall.CreateRenderCFG_CAF(bits, EmbedTempo, include_markers)
   <description>
     Returns the render-cfg-string for the CAF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
+    Note: Can also be applied as RecCFG!
+    
     Returns nil in case of an error
   </description>
   <retvals>
@@ -9076,8 +9154,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectDefaults</slug>
   <requires>
-    Ultraschall=4.75
-    Reaper=6.71
+    Ultraschall=5
+    Reaper=7.16
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -9158,6 +9236,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                                     4, Offline Render(Idle)
             RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
             RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog; 
@@ -9190,10 +9270,10 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    16, Tracks with only Mono-Media to Mono Files; 
                                     32, Selected media items; 
                                     64, selected media items via master; 
                                     128, selected tracks via master
+                                    136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds; always 0 because it's not stored with project defaults
@@ -9299,7 +9379,9 @@ function ultraschall.GetRenderTable_ProjectDefaults()
     
     RenderTable["OnlyChannelsSentToParent"]=RenderTable["Source"]&2048==2048
     if RenderTable["Source"]&8192==8192 then RenderTable["Source"]=RenderTable["Source"]-8192 end
-    
+    RenderTable["Preserve_Start_Offset"]=RenderTable["Source"]&65536==65536
+    RenderTable["Preserve_Metadata"]=RenderTable["Source"]&32768==32768
+            
     RenderTable["RenderStems_Prefader"]=RenderTable["Source"]&2048==2048
     if RenderTable["Source"]&16384==16384 then RenderTable["Source"]=RenderTable["Source"]-16384 end
     
@@ -9920,4 +10002,149 @@ end
 
 --B=ultraschall.GetRenderTable_ExtState("test")
 --ultraschall.IsValidRenderTable(B)
+
+function ultraschall.CreateRenderCFG_RAW(bitrate, write_sidecar_file)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>CreateRenderCFG_RAW</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_RAW(integer bitrate, boolean write_sidecar_file)</functioncall>
+  <description>
+    Returns the render-cfg-string for the RAW-PCM-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+    
+    Returns nil in case of an error
+  </description>
+  <retvals>
+    string render_cfg_string - the render-cfg-string for the selected RAW PCM-settings
+  </retvals>
+  <parameters>
+    integer bitrate - the bitrate 
+                    - 1, 8 bit unsigned
+                    - 2, 8 bit signed
+                    - 3, 16 bit little endian
+                    - 4, 24 bit little endian
+                    - 5, 32 bit little endian
+                    - 6, 16 bit big endian
+                    - 7, 24 bit big endian
+                    - 8, 32 bit big endian
+                    - 9, 32 bit FP little endian
+                    - 10, 64 bit FP little endian
+                    - 11, 32 bit FP big endian
+                    - 12, 64 bit FP big endian
+    boolean write_sidecar_file - true, write a .rsrc.txt sidecar file; false, don't write a sidecar file
+  </parameters>
+  <chapter_context>
+    Rendering Projects
+    Creating Renderstrings
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+  <tags>render management, create, render, outputformat, raw, pcm, sidecar</tags>
+</US_DocBloc>
+]]
+  if math.type(bitrate)~="integer" then ultraschall.AddErrorMessage("CreateRenderCFG_RAW", "bitrate", "must be an integer", -1) return end
+  if type(write_sidecar_file)~="boolean" then ultraschall.AddErrorMessage("CreateRenderCFG_RAW", "write_sidecar_file", "must be a boolean", -2) return end
+  if bitrate<1 or bitrate>12 then ultraschall.AddErrorMessage("CreateRenderCFG_RAW", "bitrate", "must be between 1 and 12", -3) return end
+  if     bitrate==1 then bitrate=8 option=4 -- 8bit unsigned
+  elseif bitrate==2 then bitrate=8 option=0 -- 8bit signed
+  elseif bitrate==3 then bitrate=16 option=0 -- 16 bit little endian
+  elseif bitrate==4 then bitrate=24 option=0 -- 24 bit little endian
+  elseif bitrate==5 then bitrate=32 option=0 -- 32 bit little endian
+  elseif bitrate==6 then bitrate=16 option=2 -- 16 bit big endian
+  elseif bitrate==7 then bitrate=24 option=2 -- 24 bit big endian
+  elseif bitrate==8 then bitrate=32 option=2 -- 32 bit big endian
+  elseif bitrate==9 then bitrate=32 option=1 -- 32 bit FP little endian
+  elseif bitrate==10 then bitrate=64 option=1 -- 64 bit FP little endian
+  elseif bitrate==11 then bitrate=32 option=3 -- 32 bit FP big endian
+  elseif bitrate==12 then bitrate=64 option=3 -- 64 bit FP big endian
+  end
+  if write_sidecar_file==false then option=option+64 end
+  --print2(option)
+  return ultraschall.Base64_Encoder(" war"..string.char(bitrate)..string.char(option))
+end
+
+function ultraschall.GetRenderCFG_Settings_RAW(rendercfg)
+  --[[
+  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+    <slug>GetRenderCFG_Settings_RAW</slug>
+    <requires>
+      Ultraschall=5
+      Reaper=7.0
+      Lua=5.4
+    </requires>
+    <functioncall>integer bitrate, boolean write_sidecar_file = ultraschall.GetRenderCFG_Settings_RAW(string rendercfg)</functioncall>
+    <description>
+      Returns the settings stored in a render-cfg-string for RAW PCM.
+
+      You can get this from the current RENDER_FORMAT using reaper.GetSetProjectInfo_String or from ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+      
+      Returns -1 in case of an error
+    </description>
+    <retvals>
+      integer bitrate - the encoding-depth of the raw-pcm
+      integer bitrate - the bitrate 
+                      - 1, 8 bit unsigned
+                      - 2, 8 bit signed
+                      - 3, 16 bit little endian
+                      - 4, 24 bit little endian
+                      - 5, 32 bit little endian
+                      - 6, 16 bit big endian
+                      - 7, 24 bit big endian
+                      - 8, 32 bit big endian
+                      - 9, 32 bit FP little endian
+                      - 10, 64 bit FP little endian
+                      - 11, 32 bit FP big endian
+                      - 12, 64 bit FP big endian
+      boolean write_sidecar_file - true, write .rsrc.txt sidecar file; false, don't write a sidecar file
+    </retvals>
+    <parameters>
+      string render_cfg - the render-cfg-string, that contains the raw-settings; 
+    </parameters>
+    <chapter_context>
+      Rendering Projects
+      Analyzing Renderstrings
+    </chapter_context>
+    <target_document>US_Api_Functions</target_document>
+    <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
+    <tags>render management, get, settings, rendercfg, renderstring, raw, pcm, sidecar</tags>
+  </US_DocBloc>
+  ]]
+  if type(rendercfg)~="string" then ultraschall.AddErrorMessage("GetRenderCFG_Settings_RAW", "rendercfg", "must be a string", -1) return -1 end
+  if rendercfg==nil then
+    local retval
+    retval, rendercfg = reaper.BR_Win32_GetPrivateProfileString("flac sink defaults", "default", "", reaper.get_ini_file())
+    if retval==0 then rendercfg="63616C661000000005000000AB" end
+    rendercfg = ultraschall.ConvertHex2Ascii(rendercfg)
+    rendercfg=ultraschall.Base64_Encoder(rendercfg)
+  end
+  local Decoded_string = ultraschall.Base64_Decoder(rendercfg)
+  if Decoded_string==nil or Decoded_string:sub(1,4)~=" war" then ultraschall.AddErrorMessage("GetRenderCFG_Settings_RAW", "rendercfg", "not a render-cfg-string of the format raw pcm", -2) return -1 end
+   
+  if Decoded_string:len()==4 then
+    return 3, false
+  end
+  local bitrate=string.byte(Decoded_string:sub(5,5))
+  local option= string.byte(Decoded_string:sub(6,6))
+  if option&64==64 then option=option-64 end
+  local val=-2
+  if     bitrate==8 and option==4 then val=1 -- 8bit unsigned
+  elseif bitrate==8 and option==0 then val=2-- 8bit signed
+  elseif bitrate==16 and option==0 then val=3-- 16 bit little endian
+  elseif bitrate==24 and option==0 then val=4-- 24 bit little endian
+  elseif bitrate==32 and option==0 then val=5-- 32 bit little endian
+  elseif bitrate==16 and option==2 then val=6-- 16 bit big endian
+  elseif bitrate==24 and option==2 then val=7-- 24 bit big endian
+  elseif bitrate==32 and option==2 then val=8-- 32 bit big endian
+  elseif bitrate==32 and option==1 then val=9-- 32 bit FP little endian
+  elseif bitrate==64 and option==1 then val=10-- 64 bit FP little endian
+  elseif bitrate==32 and option==3 then val=11-- 32 bit FP big endian
+  elseif bitrate==64 and option==3 then val=12-- 64 bit FP big endian
+  end
+  return val, string.byte(Decoded_string:sub(6,6))&64==0
+end
+
 

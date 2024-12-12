@@ -6975,3 +6975,56 @@ function ultraschall.GetRandomString()
   end
   return newstr
 end
+
+function ultraschall.SplitReaperString(ReaperString)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SplitReaperString</slug>
+  <requires>
+    Ultraschall=5
+    Reaper=7.0
+    Lua=5.4
+  </requires>
+  <functioncall>integer string_count, table strings = ultraschall.SplitReaperString(string ReaperString)</functioncall>
+  <description>
+    splits a Reaper-string into its components.
+    
+    Reaper strings are usually found in statechunks, where some strings are alphanumeric, while others who contain a space in them are enclosed in \"
+    Example: Tudelu "My Shoe" is bigger "than yours"
+    
+    returns -1 in case of an error
+  </description>
+  <retvals>
+    integer string_count - the number of strings found
+    table strings - a table with all found strings
+  </retvals>
+  <parameters>
+    string ReaperString - the string, that you want to split into its individual parts
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Various
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua.lua</source_document>
+  <tags>api helper function, split, reaper string, statechunks</tags>
+</US_DocBloc>
+--]]
+  if type(ReaperString)~="string" then ultraschall.AddErrorMessage("SplitReaperString", "ReaperString", "must be a string", -1) return -1 end
+  local Strings={}
+  local index=1
+  Strings[index]=""
+  for i=0, ReaperString:len() do
+    if ReaperString:sub(i,i)==" " and inside~=true then
+      index=index+1
+      Strings[index]=""
+    elseif ReaperString:sub(i,i)=="\"" and inside~=true then
+      inside=true
+    elseif ReaperString:sub(i,i)=="\"" and inside==true then
+      inside=false
+    elseif ReaperString:sub(i,i)~="\"" then
+      Strings[index]=Strings[index]..ReaperString:sub(i,i)
+    end
+  end
+  return #Strings, Strings
+end

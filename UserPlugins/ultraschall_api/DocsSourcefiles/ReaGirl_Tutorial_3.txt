@@ -1,0 +1,386 @@
+## Tutorial #3: a basic image viewer with a drag'n'drop-zone and a context menu
+
+In this tutorial, I will show you a basic image viewer. I will also show you, how to add a drag'n'drop-zone to this image as well as a context menu.
+And as a cherry on the top, we will make clicking the image setting the loaded image as track icon for the first track in the current project.
+So let's get it on.
+
+Let's start with basic code, which will show one of Reaper's images, a bass guitar, in a window.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When you run it, it will show the image of a bass guitar.
+Now, we will try to adapt the code, so you can drag n drop an image onto it to change it. To achieve this, we need a drag n drop area for this image.
+In ReaGirl, you can add to each ui-element a dropzone. This will have the dimensions and position of the ui-element.
+This dropzone gets it's own run-function that is run every time a file is dropped onto the dropzone.
+So, let's add a dropzone for our image, using the function reagirl.UI\_Element\_GetSet\_DropZoneFunction(). We also add a run-function for this drop-zone, Image\_DropZone\_RunFunction.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    reaper.MB(dropped_filenames_table[1], "First dropped file", 0)
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+You'll notice, it's only one functioncall to add the dropzone plus a run-function. That's all you need.
+Now you can drop files onto the image. A dialog will pop up that tells you the filename of the first file dropped. It's only the first one in this code, but you could drop multiple files at the same time into it.
+What we would like to do next, is to change the shown image. For this, we alter the function Image\_DropZone\_RunFunction accordingly.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    
+    -- load the first file dropped as new image and show it
+    reagirl.Image_Load(element_id, dropped_filenames_table[1])
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+You see, it's simply one functioncall of reagirl.Image\_Load() to load the dropped file. The first file dropped in this case (dropped\_filenames\_table[1]).
+Now that we have an image-viewer that accepts dropping of image-files, we might want to have a context-menu that allows us to load a file-requester and to clear the image.
+Contextmenus work the same as dropzones. You can add a context-menu to a specific ui-element and you add a run-function. 
+When the user right-clicks the ui-element, the context-menu is opened. When the user selects a menu-entry, the run-function for this context-menu is run, which gives you the chance to react to the user's choice.
+Let's add a context-menu using reagirl.UI\_Element\_GetSet\_ContextMenu() including its run-function.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    
+    -- load the first file dropped as new image and show it
+    reagirl.Image_Load(element_id, dropped_filenames_table[1])
+  end
+  
+  function Image_ContextMenu_RunFunction(element_id, menu_entry_selection)
+    -- this function will be called when the user opens up 
+    -- the context-menu of the image and makes a choice
+    reaper.MB("The user chose menuentry "..menu_entry_selection, "Menu chosen", 0)
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  -- add a context-menu to this image
+  reagirl.UI_Element_GetSet_ContextMenu(image_id, true, "Clear Image|Select a file", Image_ContextMenu_RunFunction)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+  
+Now you can right-click on the image and a menu will appear. You can select either of the entries and the run-function Image\_ContextMenu\_RunFunction() will show a dialog with the selected menu-entry-number.
+The parameter menu of the function reagirl.UI\_Element\_GetSet\_ContextMenu works like gfx.showmenu from Reaper's own gfx-functions.
+So check out the docs for it for more details or read the chapter about context-menus, where I'll explain it in more detail.
+Ok, now that we have a menu, let's alter the run-function Image\_ContextMenu\_RunFunction() to react to the individual menu-entries.
+The first menu-entry will clear the image to be fully black, while the other one loads a filerequester that allows you to choose an image.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    
+    -- load the first file dropped as new image and show it
+    reagirl.Image_Load(element_id, dropped_filenames_table[1])
+  end
+  
+  function Image_ContextMenu_RunFunction(element_id, menu_entry_selection)
+    -- this function will be called when the user opens up 
+    -- the context-menu of the image and makes a choice
+    
+    if menu_entry_selection==1 then
+      -- if user chose the first menu-entry, clear the image to black
+      reagirl.Image_ClearToColor(element_id, 0, 0, 0)
+    elseif menu_entry_selection==2 then
+      -- if user chose the second menu-entry, allow to load an image using a file requester
+      local retval, filename = 
+              reaper.GetUserFileNameForRead(reaper.GetResourcePath().."/Data/track_icons/", 
+                                            "Choose an image to load", 
+                                            "*.png;*.jpg")
+      if retval==true then
+        reagirl.Image_Load(element_id, filename)  
+      end
+    end
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  -- add a context-menu to this image
+  reagirl.UI_Element_GetSet_ContextMenu(image_id, true, "Clear Image|Select a file", Image_ContextMenu_RunFunction)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+Nice, it does the job. But there's still one thing, that might bother you: images that are not square will be shown stretched. So, why not keeping the aspect ratio of the image properly?
+We can achieve this with the function reagirl.Image\_KeepAspectRatio()
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    
+    -- load the first file dropped as new image and show it
+    reagirl.Image_Load(element_id, dropped_filenames_table[1])
+  end
+  
+  function Image_ContextMenu_RunFunction(element_id, menu_entry_selection)
+    -- this function will be called when the user opens up 
+    -- the context-menu of the image and makes a choice
+    if menu_entry_selection==1 then
+      -- if user chose the first menu-entry, clear the image to black
+      reagirl.Image_ClearToColor(element_id, 0, 0, 0)
+    elseif menu_entry_selection==2 then
+      -- if user chose the second menu-entry, allow to load an image using a file requester
+      local retval, filename = 
+              reaper.GetUserFileNameForRead(reaper.GetResourcePath().."/Data/track_icons/", 
+                                            "Choose an image to load", 
+                                            "*.png;*.jpg")
+      if retval==true then
+        reagirl.Image_Load(element_id, filename)  
+      end
+    end
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  -- add a context-menu to this image
+  reagirl.UI_Element_GetSet_ContextMenu(image_id, true, "Clear Image|Select a file", Image_ContextMenu_RunFunction)
+  -- keep the aspect ratio of the image properly
+  reagirl.Image_KeepAspectRatio(image_id, true)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+  
+```
+
+This is starting to look good.
+Since we're good in programming flow, let's put the currently loaded image as track-icon of the first track in the project everytime the user clicks on the image.
+For this, we need to adapt the run-function for the image(it's finally used!).
+First, we get the filename of the currently used image-file for the image using reagirl.Image\_GetImageFilename() and pass it over to reaper.GetSetMediaTrackInfo\_String().
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Image_RunFunction(clicked_image_id)
+    -- this function is run, when the image is clicked
+    
+    -- get the filename of the currently loaded image-file
+    filename = reagirl.Image_GetImageFilename(clicked_image_id)
+    
+    -- set it as track-icon of the first track
+    reaper.GetSetMediaTrackInfo_String(reaper.GetTrack(0,0), "P_ICON", filename, true)
+  end
+  
+  function Image_DropZone_RunFunction(element_id, dropped_filenames_table)
+    -- this function will be called everytime a file is dropped onto the image
+    
+    -- load the first file dropped as new image and show it
+    reagirl.Image_Load(element_id, dropped_filenames_table[1])
+  end
+  
+  function Image_ContextMenu_RunFunction(element_id, menu_entry_selection)
+    -- this function will be called when the user opens up 
+    -- the context-menu of the image and makes a choice
+    if menu_entry_selection==1 then
+      -- if user chose the first menu-entry, clear the image to black
+      reagirl.Image_ClearToColor(element_id, 0, 0, 0)
+    elseif menu_entry_selection==2 then
+      -- if user chose the second menu-entry, allow to load an image using a file requester
+      local retval, filename = 
+              reaper.GetUserFileNameForRead(reaper.GetResourcePath().."/Data/track_icons/", 
+                                            "Choose an image to load", 
+                                            "*.png;*.jpg")
+      if retval==true then
+        reagirl.Image_Load(element_id, filename)  
+      end
+    end
+  end
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- add the image of a bass guitar to this gui
+  image_id = reagirl.Image_Add(10, 10, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "An image", "A user selectable image.", Image_RunFunction)
+  -- add a dropzone for dropped files for this image
+  reagirl.UI_Element_GetSet_DropZoneFunction(image_id, true, Image_DropZone_RunFunction)
+  -- add a context-menu to this image
+  reagirl.UI_Element_GetSet_ContextMenu(image_id, true, "Clear Image|Select a file", Image_ContextMenu_RunFunction)
+  -- keep the aspect ratio of the image properly
+  reagirl.Image_KeepAspectRatio(image_id, true)
+  
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "Image Viewer", "This is a demo image viewer.", 120, 120)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When running this script, left-clicking the image will set the loaded image to be the track-icon of track 1 in the project.
+
+And then we're done.
+A gui-script which shows an image on which you can drag n drop image-files. You can also use a context-menu with it to clear it/load a new image.
+And when clicking on it, the loaded imagefile will be set as track-icon.
+In 64 lines of code(including comments ;) ).

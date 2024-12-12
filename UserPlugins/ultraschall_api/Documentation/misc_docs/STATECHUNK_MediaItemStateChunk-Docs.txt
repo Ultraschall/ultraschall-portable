@@ -78,14 +78,19 @@ SEL integer state
     is the item selected or not
         integer state - 0, unselected; 1, selected
 
-YPOS number y_pos number y_height
-    is position of the item, when "Track Free Item Positioning" is enabled in this track
-    disappears, when item is positioned at the top of the track(y_pos=0) and item-height is normal(y_height=0.5)
+YPOS number y_pos  number y_height  integer lane_or_fipm
+    is position of the item, when "Track Free Item Positioning"/Track lanes are enabled in this track
+    disappears, when item is positioned at the top of the track(y_pos=0) and item-height is normal(y_height=0.5)/no track lanes exist
         number y_pos - the position of the item in the track, 0(top) to 0.949519(bottom, when item height is minimized)
         number y_height - the height of the item; 0.050378(minimum height, equals minimum trackheight) to 1(full trackheight);
                           when dragged by mouse, the minimum height depends on the vertical-height of the track, means: even 0.952381 can 
                           mean minimum height, if the trackheight itself is minimized!
-                          
+                          When Item_Lanes: You can use this to calculate the number of lanes in a 
+                                           track with: 1/y_height
+                                           You can use that to calculate, in which lane the item is:
+                                           lane_index=(1/y_height)*y_pos
+        integer lane_or_fipm - 1, item is free item positioning; 2, item is in a track-lane
+        
 GROUP integer group_id
     the group, this item belongs to. Disappears, if item is not associated to any group
         integer group_id - the group the item belongs to; 1 to infinite

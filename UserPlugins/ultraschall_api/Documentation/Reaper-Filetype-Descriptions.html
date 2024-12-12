@@ -11,11 +11,7 @@ REAPER Filetype-descriptions
             <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
                 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
                 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button.png" alt="Reaper Internals Documentation"></a>
-                <img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-                <img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-                <img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-                <img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-                <img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+                <a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
                 <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
                 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
                 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
@@ -1262,8 +1258,11 @@ MM_CTX_AREASEL=1<br>
                     The individual [sections] with the behavior-settings work after the following principle:<p>
 <div style="padding-left:4%;">                        
                         <strong>[sectionname]</strong><br>
-                        Key_ID=Value<br>
+                        Key_ID=Value [m|c]<br>
+                        name=The text of the tooltip for a toolbar button.
 </div>
+
+The small m after the number of Key_ID means, it's a mouse modifier, a small c means, it's a command-id. _ActionCommandIDs do not have a "m" or "c" after them.
 <br>
 <h3>Keys used in every [section]</h3>
 There are standard keys for every [section] in the <i>reaper-mouse.ini</i>. Each key is for a special key-combination within the context of the mouse-behavior.<p>
@@ -1297,7 +1296,8 @@ You can circumvent this problem by creating a new action that uses the CommandID
 Every [section] has it's own set of values you can set to each key. If you want to give simple left click on items the behavior "Select Item", the entry would look like:<p></p>
 <div style="padding-left:4%;">
     [MM_CTX_ITEM_CLK]<br>
-    mm_0=3<br>
+    mm_0=3 m<br>
+    name=The text of the tooltip for a toolbar button.
 </div>
 <br>
 Note: within the description you will find something like "Main-section" or "MIDI-Editor"; that is NOT a [section] but refers to the sections you have in the Actions->Show Actions List-dialoque within Reaper. The Reaper-mouse.ini-[sections] are always written as [sectionname].<p></p>
@@ -1325,7 +1325,47 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 14 </i> - Restore previous zoom level <br>
  <i> 15 </i> - Add stretch marker <br>
  <i> 20 </i> - Extend razor edit area <br>
- <i> 21 </i> - and higher: refer to CommandIDs for Main-section <br>
+ </div>
+ <br>
+ 
+ <strong> [MM_CTX_ARRANGE_A] and [MM_CTX_ARRANGE_B] and [MM_CTX_ARRANGE_C] and [MM_CTX_ARRANGE_D] </strong>- Arrange view override - left drag <br> <br>
+ <div style="padding-left:4%;">
+ <i> -1 </i> - default behavior<br>
+ <i> 0 </i> - no action <br>
+<i>1</i> - Marquee select items <br>
+<i>2</i> - Marquee select items and time <br>
+<i>3</i> - Marquee select items and time ignoring snap <br>
+<i>4</i> - Select time <br>
+<i>5</i> - Select time ignoring snap <br>
+<i>6</i> - Marquee toggle item selection <br>
+<i>7</i> - Marquee add to item selection <br>
+<i>8</i> - Hand scroll <br>
+<i>9</i> - Scroll browser-style <br>
+<i>10</i> - Scrub audio <br>
+<i>11</i> - Jog audio <br>
+<i>12</i> - Scrub audio (looped-segment mode) <br>
+<i>13</i> - Jog audio (looped-segment mode) <br>
+<i>14</i> - Marquee zoom <br>
+<i>16</i> - Hand scroll and horizontal zoom <br>
+<i>17</i> - Horizontal zoom <br>
+<i>18</i> - Horizontal zoom <br>
+<i>19</i> - Set edit cursor and horizontal zoom <br>
+<i>20</i> - Set edit cursor and horizontal zoom <br>
+<i>21</i> - Set edit cursor and hand scroll <br>
+<i>22</i> - Set edit cursor, hand scroll and horizontal zoom <br>
+<i>23</i> - Set edit cursor, hand scroll and horizontal zoom <br>
+<i>24</i> - Select razor edit area <br>
+<i>25</i> - Select razor edit area ignoring snap <br>
+<i>26</i> - Add to razor edit area <br>
+<i>27</i> - Add to razor edit area ignoring snap <br>
+<i>28</i> - Select razor edit area from cursor <br>
+<i>29</i> - Select razor edit area from cursor ignoring snap <br>
+<i>30</i> - Remove from razor edit area <br>
+<i>31</i> - Remove from razor edit area ignoring snap <br>
+<i>32</i> - Select razor edit area and time <br>
+<i>33</i> - Select razor edit area and time ignoring snap <br>
+<i>34</i> - Create fixed lane comp area <br>
+<i>35</i> - Create fixed lane comp area ignoring snap <br>
  </div>
  <br>
  
@@ -1399,7 +1439,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 65 </i> - Add to razor edit area ignoring snap <br>
  <i> 66 </i> - Select razor edit area and time <br>
  <i> 67 </i> - Select razor edit area and time ignoring snap<br>
- <i> 68 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEM_DBLCLK] </strong>- Media Item - double click  <br> <br>
@@ -1415,7 +1454,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - MIDI: open in editor, Subprojects: open projec, Audio: show media item properties <br>
  <i> 7 </i> - Show take list <br>
  <i> 8 </i> - Show take props list <br>
- <i> 9 </i> - and higher -> Reaper Command IDs <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMLOWER_CLK] </strong>- Media Item Bottom Half - left click <br> <br>
@@ -1440,7 +1478,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 15 </i> - Add stretch marker <br>
  <i> 19 </i> - Select razor edit area <br>
  <i> 20 </i> - Extend razor edit area <br> 
- <i> 21 </i> - and higher -> Reaper Command IDs <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMLOWER] </strong>- Media Item Bottom Half - left drag <br> <br>
@@ -1513,7 +1550,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 65 </i> - Add to razor edit area ignoring snap <br>
  <i> 66 </i> - Select razor edit area and time <br>
  <i> 67 </i> - Select razor edit area and time ignoring snap<br>
- <i> 69 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMLOWER_DBLCLK] </strong>- Media Item Bottom Half - double click <br> <br>
@@ -1529,7 +1565,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - MIDI: open in editor, Subprojects: open project, Audio: show media item properties <br>
  <i> 7 </i> - Show take list <br>
  <i> 8 </i> - Show take props list <br>
- <i> 9 </i> - and higher -> Reaper Command IDs <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMEDGE] </strong>- Media Item Edge - left drag <br> <br>
@@ -1561,7 +1596,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 24 </i> - Add to razor edit area ignoring snap <br>
  <i> 25 </i> - Select razor edit area and time <br>
  <i> 26 </i> - Select razor edit area and time ignoring snap<br>
- <i> 27 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMEDGE_DBLCLK] </strong>- Media Item Edge - double click <br> <br>
@@ -1570,7 +1604,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> -1 </i> - default Reaper-builtin-behavior <br>
  <i> 0 </i> - - no action <br>
  <i> 1 </i> - - no action <br>
- <i> 2 </i> - and higher -> Reaper Command IDs <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMFADE_CLK] </strong>- Media Item Fade/autocrossfade - left click <br> <br>
@@ -1585,7 +1618,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 5 </i> - Set fade/crossfade to previous shape ignoring selection <br>
  <i> 6 </i> - Set fade/crossfade to next shape ignoring selection <br>
  <i> 7 </i> - Open crossfade editor <br>
- <i> 8 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <br>
@@ -1629,7 +1661,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 32 </i> - Move fade ignoring crossfaded items <br>
  <i> 33 </i> - Move fade ignoring crossfaded items and selection/grouping <br>
  <i> 34 </i> - Move fade ignoring crossfaded items (relative edge edit) <br>
- <i> 35 </i> - and higher -> Reaper Command IDs, though they don't work! <br>
  <br>
  </div>
  <strong> [MM_CTX_ITEMFADE_DBLCLK] </strong>- Media Item Fade/autocrossfade - double click <br> <br>
@@ -1639,7 +1670,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Delete item fade/crossfde <br>
  <i> 2 </i> - Open crossfade editor <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_CROSSFADE_CLK] </strong>- Media item fade intersection - left click <br> <br>
@@ -1652,7 +1682,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 3 </i> - Set both fades to next shape ignoring selection <br>
  <i> 4 </i> - Set both fades ti previous shape ignoring selection <br>
  <i> 5 </i> - Open crossfade editor <br>
- <i> 7 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_CROSSFADE] </strong>- Media item fade intersection - left drag <br> <br>
@@ -1682,7 +1711,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 20 </i> - Adjust length of both fades preserving intersection <br>
  <i> 21 </i> - Adjust length of both fades preserving intersection ignoring selection/grouping <br>
  <i> 22 </i> - Adjust length of both fades preserving intersection (relative edge edit) <br>
- <i> 23 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_CROSSFADE_DBLCLK] </strong>- Media item fade intersection - double click <br> <br>
@@ -1692,7 +1720,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Open crossfade editor <br>
  <i> 2 </i> - Reset to default crossfade <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMSTRETCHMARKER] </strong>- Media item stretch marker - left drag <br> <br>
@@ -1726,7 +1753,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 24 </i> - Move stretch marker perserving all rates (rate envelope mode) ignoring snap <br>
  <i> 25 </i> - Move stretch marker preserving all rates (rate envelope mode) ignoring selection/grouping <br>
  <i> 26 </i> - Move stretch marker preserving all rates (rate envelope mode) ignoring snap and selection/grouping <br>
- <i> 27 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMSTRETCHMARKER_DBLCLK] </strong>- Media item stretch marker - double click <br> <br>
@@ -1736,7 +1762,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Reset stretch marker rate to 1.0 <br>
  <i> 2 </i> - Edit stretch marker rate <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_ITEMSTRETCHMARKERRATE] </strong>- Media item stretch marker rate - left drag <br> <br>
@@ -1757,10 +1782,8 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 12 </i> - Edit stretch marker rates on both sides preserving marker positions(rate envelope mode), ignoring selection/grouping <br>
  <i> 13 </i> - Edit stretch marker rate, move contents under marker, ignoring selection/grouping <br>
  <i> 14 </i> - Edit stretch marker rates on both sides, move contents under marker, ignoring selection/grouping, ripple markers <br>
-  <br>
  <i> 15 </i> - Edit stretch marker rate, ripple markers, ignoring selection/grouping <br>
  <i> 16 </i> - Edit stretch marker rates on both sides, ripple markers, ignoring selection/grouping <br>
- <i> 17 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ENVLANE] </strong>- Envelope Lane - left click <br> <br>
@@ -1770,7 +1793,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Deselect all envelope points <br>
  <i> 2 </i> - Deselect all envelope points and move edit cursor <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
   <strong> [MM_CTX_POOLEDENV] </strong>- Automation Items - left drag <br> <br>
@@ -1798,7 +1820,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Set time selection to item<br>
  <i> 3 </i> - Set loop-points to item<br>
  <i> 4 </i> - Load automation item<br>
- <i> 5 </i> - and higher or _ActionCommandID: refer to CommandIDs for Main-section <br>
  </div>
  
  <br>
@@ -1837,7 +1858,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 10 </i> - Move envelope point horizontally <br>
  <i> 11 </i> - Move envelope point horizontally ignoring snap <br>
  <i> 12 </i> - Move envelope point vertically <br>
- <i> 13 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ENVPT_DBLCLK] </strong>- Envelope Point - double click <br> <br>
@@ -1847,7 +1867,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Reset point to default value <br>
  <i> 2 </i> - Open envelope point editor <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_ENVSEG] </strong>- Envelope Segment - left drag <br> <br>
@@ -1862,7 +1881,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - Move envelope segment <br>
  <i> 7 </i> - Move envelope segment preserving edge points <br>
  <i> 8 </i> - Edit envelope segment curvature (gang selected points) <br>
- <i> 9 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_ENVSEG_DBLCLK] </strong>- Envelope Segment - double click <br> <br>
@@ -1872,7 +1890,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Reset envelope segment curvature <br>
  <i> 2 </i> - Add envelope point <br>
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_TRACK_CLK] </strong>- Track - left click <br> <br>
@@ -1894,7 +1911,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 28 </i> - Add to razor edit area ignoring snap <br>
  <i> 29 </i> - Select razor edit area and time <br>
  <i> 30 </i> - Select razor edit area and time ignoring snap<br>
- <i> 31 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_TRACK] </strong>- Track - left drag <br> <br>
@@ -1924,7 +1940,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 20 </i> - Edit loop points <br>
  <i> 21 </i> - Edit loop points ignoring snap <br>
  <i> 22 </i> - Marquee zoom <br>
- <i> 23 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_TRACK_DBLCLK] </strong>- Track - double click <br> <br>
@@ -1932,7 +1947,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> _ActionCommandID </i> - for Actions from the section Main <br>
  <i> -1 </i> - default Reaper-builtin-behavior <br>
  <i> 0 </i> - No action <br>
- <i> 1 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_TCP_DBLCLK] </strong>- Track Control Panel - double click <br> <br>
@@ -1946,7 +1960,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 4 </i> - Add all media items on track to selection <br>
  <i> 5 </i> - restore previous zoom/scroll <br>
  <i> 6 </i> - Restore previous zoom level <br>
- <i> 7 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_MCP_DBLCLK] </strong>- Mixer Control Panel - double click <br> <br>
@@ -1958,7 +1971,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Zoom view to track <br>
  <i> 3 </i> - Toggle selection for all media items on track <br>
  <i> 4 </i> - Add all media items on track to selection <br>
- <i> 5 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_ENVCP_DBLCLK] </strong>- Envelope Control Panel - double click <br> <br>
@@ -1967,7 +1979,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> -1 </i> - default Reaper-builtin-behavior <br>
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Select/unselect all envelope points <br>
- <i> 2 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_RULER_CLK] </strong>- Ruler - left click <br> <br>
@@ -1983,7 +1994,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - Seek playback without moving edit cursor <br>
  <i> 7 </i> - restore previous zoom/scroll <br>
  <i> 8 </i> - Restore previous zoom level <br>
- <i> 9 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_RULER] </strong>- Ruler - left drag <br> <br>
@@ -2012,7 +2022,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 3 </i> - Set loop points and time selection to region <br>
  <i> 4 </i> - Restore previous zoom/scroll <br>
  <i> 5 </i> - Restore previous zoom level <br>
- <i> 6 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_MARKERLANES] </strong>- Ruler marker/region lanes - left drag <br> <br>
@@ -2025,7 +2034,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - Set edit cursor and horizontal zoom <br>
  <i> 8 </i> - Set edit cursor and hand scroll <br>
  <i> 9 </i> - Set edit cursor, hand scroll and horizontal zoom <br>
- <i> 11 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_REGION] </strong>- Project region - left drag <br> <br>
@@ -2040,7 +2048,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - Move project regions but not contents ignoring snap<br>
  <i> 7 </i> - Copy project regions but not contents<br>
  <i> 8 </i> - Copy project regions but not contents ignoring snap<br>
- <i> 9 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_MARKER_REGIONEDGE] </strong>- Project marker/region edge - left drag <br> <br>
@@ -2049,7 +2056,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 0 </i> - No action <br>
  <i> 1 </i> - Move project marker/region edge<br>
  <i> 2 </i> - Move project marker/region edge ignoring snap<br> 
- <i> 3 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_TEMPOMARKER] </strong>- Project tempo/time signature marker - left drag <br> <br>
@@ -2060,7 +2066,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Move project tempo/time signature marker ignoring snap<br>
  <i> 3 </i> - Move project tempo/time signature marker, adjusting previous tempo<br>
  <i> 4 </i> - Move project tempo/time signature marker, adjusting previous and current tempo<br>
- <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div> 
  <br>
  <strong> [MM_CTX_AREASEL_CLK] </strong>- Razor edit area - left click <br> <br>
@@ -2076,7 +2081,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 6 </i> - Move areas forwards<br>
  <i> 7 </i> - Move areas up without contents<br>
  <i> 8 </i> - Move areas down without contents<br> 
- <i> 9 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_AREASEL] </strong>- Razor edit area - left drag <br> <br>
@@ -2099,7 +2103,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 14 </i> - Copy areas horizontally ignoring snap<br>
  <i> 15 </i> - Copy areas on one axis only<br>
  <i> 16 </i> - Copy areas on one axis only ignoring snap<br> 
- <i> 17 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div> 
  <br>
  <strong> [MM_CTX_AREASEL_EDGE] </strong>- Razor edit edge - left drag <br> <br>
@@ -2110,7 +2113,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Move edges ignoring snap<br>
  <i> 3 </i> - Stretch areas<br>
  <i> 4 </i> - Stretch areas ignoring snap<br>
- <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div> 
  <br>
  <strong> [MM_CTX_AREASEL_ENV] </strong>- Razor edit envelope area - left drag <br> <br>
@@ -2121,7 +2123,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Expand or compress envelope range<br>
  <i> 3 </i> - Expand or compress envelope range toward top/bottom<br>
  <i> 4 </i> - Move or tilt envelope vertically (fine)<br>
- <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div> 
  <br>
  <strong> [MM_CTX_ARRANGE_RMOUSE] </strong>- Arrange view - right drag <br> <br>
@@ -2158,7 +2159,8 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 31 </i> - Remove from razor edit area ignoring snap<br>
  <i> 32 </i> - Select razor edit area and time<br>
  <i> 33 </i> - Select razor edit area and time ignoring snap<br>
- <i> 34 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
+ <i> 34 </i> - Create fixed lane comp area<br>
+ <i> 35 </i> - Create fixed lane comp area ignoring snap<br>
  </div>
  <br>
  <strong> [MM_CTX_ARRANGE_MMOUSE_CLK] </strong>- Arrange view - middle click <br> <br>
@@ -2169,7 +2171,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 1 </i> - Restore previous zoom/scroll <br>
  <i> 2 </i> - Restore previous zoom level <br>
  <i> 3 </i> - Move edit cursor ignoring snap <br>
- <i> 4 </i> - and higher -> Reaper Command IDs from Main section <br>
  </div>
  <br>
  <strong> [MM_CTX_ARRANGE_MMOUSE] </strong>- Arrange view - middle drag <br> <br>
@@ -2190,7 +2191,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
   <br>
  <i> 15 </i> - Set edit cursor and hand scroll <br>
  <i> 16 </i> - Set edit cursor, hand scroll and horizontal zoom <br>
- <i> 17 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
  <strong> [MM_CTX_CURSORHANDLE] </strong>- Edit Cursor Handle - left drag <br> <br>
@@ -2201,9 +2201,113 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 2 </i> - Jog audio <br>
  <i> 3 </i> - Scrub audio (looped-segment mode) <br>
  <i> 4 </i> - Jog audio (looped-segment mode) <br>
- <i> 5 </i> - and higher -> Reaper Command IDs from Main section though they don't work <br>
  </div>
  <br>
+ <strong> [MM_CTX_LINKEDLANE] </strong>- Fixed lane comp area - left drag<br> <br>
+ <i> -1 </i> - default Reaper-builtin-behavior <br>
+ <i> 0 </i> - no action <br>
+ <i> 1 </i> - Move comp area vertically
+<i> 2 </i> - Move comp area ignoring snap
+<i> 3 </i> - Move comp area horizontally
+<i> 4 </i> - Move comp area horizontally ignoring snap
+<i> 5 </i> - Move comp area vertically
+<i> 6 </i> - Move comp area on one axis only
+<i> 7 </i> - Move comp area and media items
+<i> 8 </i> - Move comp area and media items ignoring snap
+<i> 9 </i> - Move comp area and media items horizontally
+<i> 10 </i> - Move comp area and media items horizontally ignoring snap
+<i> 11 </i> - Move comp area and media items vertically
+<i> 12 </i> - Move comp area and media items on one axis only
+<i> 13 </i> - Add comp area
+<i> 14 </i> - Add comp area ignoring snap
+<i> 15 </i> - Copy comp area and media items together
+<i> 16 </i> - Copy comp area and media items together ignoring snap
+<i> 17 </i> - Move comp area and media items on all lanes
+<i> 18 </i> - Move comp area and media items on all lanes ignoring snap
+<i> 19 </i> - Copy comp area and media items on all lanes together
+<i> 20 </i> - Copy comp area and media items on all lanes together ignoring snap
+<i> 21 </i> - Move comp area and adjacent comp area edges
+<i> 22 </i> - Move comp area and adjacent comp area edges ignoring snap
+<i> 23 </i> - Move comp area and adjacent comp area edges and media items
+<i> 24 </i> - Move comp area and adjacent comp area edges and media items ignoring snap
+<i> 25 </i> - Move comp area and adjacent comp area edges horizontally
+<i> 26 </i> - Move comp area and adjacent comp area edges horizontally ignoring snap
+<i> 27 </i> - Move comp area and adjacent comp area edges on one axis only
+ </div>
+<br>
+<strong> [MM_CTX_LINKEDLANE_CLK] </strong>-Fixed lane comp area - left click <br>
+<div style="padding-left:4%;">
+  <i> -1 </i> - default Reaper-builtin-behavior <br>
+  <i> 0 </i> - No action <br> 
+  <i> 1 </i> - Move comp area up <br> 
+  <i> 2 </i> - Move comp down <br> 
+  <i> 3 </i> - Delete comp area but not media items <br> 
+  <i> 4 </i> - Set loop points to comp area <br> 
+  <i> 5 </i> - Move comp area to lane under mouse <br> 
+  <i> 6 </i> - Heal comp area with adjacent comp areas on the same lane <br> 
+  <i> 7 </i> - Split media items at comp area edges <br> 
+  <i> 8 </i> - Extend comp area to next comp area or end of media <br> 
+  <i> 9 </i> - Delete comp area <br> 
+  <i> 10 </i> - Split comp area <br> 
+  <i> 11 </i> - Split comp area ignoring snap <br> 
+  <i> 12 </i> - Set loop points to comp area (half second preroll/postroll) <br> 
+  <i> 13 </i> - Set loop points to comp area (one second preroll/postroll) <br> 
+  <i> 14 </i> - Copy edited media items to new lane and re-comp <br> 
+</div>
+<br>
+<strong> [MM_CTX_LINKEDLANE_DBLCLK] </strong>-Fixed lane comp area - double click <br>
+<div style="padding-left:4%;">
+  <i> -1 </i> - default Reaper-builtin-behavior <br>
+  <i> 0 </i> - No action <br> 
+  <i> 1 </i> - Set loop points to comp area<br> 
+  <i> 2 </i> - Extend comp area to next comp area or end of media<br> 
+  <i> 3 </i> - Split media items at comp area edges<br> 
+  <i> 4 </i> - Copy edited media items to new lane and re-comp<br> 
+  <i> 5 </i> - Set loop points to comp area (half second preroll/postroll)<br> 
+  <i> 6 </i> - Set loop points to comp area (one second preroll/postroll)<br> 
+</div>
+<br>
+<strong> [MM_CTX_FIXEDLANETAB_CLK] </strong>-Fixed lane header button - left click <br>
+<div style="padding-left:4%;">
+  <i> -1 </i> - default Reaper-builtin-behavior <br>
+  <i> 0 </i> - No action<br> 
+  <i> 1 </i> - Select items in lane<br> 
+  <i> 2 </i> - Toggle selection of items in lane<br> 
+  <i> 3 </i> - Play only this lane<br> 
+  <i> 4 </i> - Play no lanes<br> 
+  <i> 5 </i> - Toggle playing this lane<br> 
+  <i> 6 </i> - Play only this lane while mouse button is pressed<br> 
+  <i> 7 </i> - Record into this lane<br> 
+  <i> 8 </i> - Play all lanes<br> 
+  <i> 9 </i> - Comp into lane<br> 
+  <i> 10 </i> - Comp into a new copy of lane<br> 
+  <i> 11 </i> - Comp into a new empty lane<br> 
+  <i> 12 </i> - Insert lane<br> 
+  <i> 13 </i> - Delete lane (including media items)<br> 
+  <i> 14 </i> - Comp into a new empty lane, automatically creating comp areas<br> 
+  <i> 15 </i> - Copy edited media items to new lane and re-comp<br> 
+</div>
+<br>
+<strong> [MM_CTX_FIXEDLANETAB_DBLCLK] </strong>-Fixed lane header button - double click <br>
+<div style="padding-left:4%;">
+  <i> -1 </i> - default Reaper-builtin-behavior <br>
+  <i> 0 </i> - No action <br>
+  <i> 1 </i> - Select items in lane <br>
+  <i> 2 </i> - Toggle selection of items in lane <br>
+  <i> 3 </i> - Play only this lane <br>
+  <i> 4 </i> - Play no lanes <br>
+  <i> 5 </i> - Toggle playing this lane <br>
+  <i> 6 </i> - Record into this lane <br>
+  <i> 7 </i> - Play all lanes <br>
+  <i> 8 </i> - Comp into lane <br>
+  <i> 9 </i> - Comp into a new copy of lane <br>
+  <i> 10 </i> - Comp into a new empty lane <br>
+  <i> 11 </i> - Insert lane <br>
+  <i> 12 </i> - Delete lane (including media items) <br>
+  <i> 13 </i> - Comp into a new empty lane, automatically creating comp areas <br>
+  <i> 14 </i> - Copy edited media items with no matching source lane to new lane and re-comp <br>
+</div>
+ <br> 
  <strong> [MM_CTX_MIDI_NOTE_CLK] </strong>- MIDI note - left click <br> <br>
  <div style="padding-left:4%;">
  <i> _ActionCommandID </i> - from MIDI-editor section <br>
@@ -2381,7 +2485,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 1 </i> - Reset CC segment curvature<br>
  <i> 2 </i> - Add CC event<br>
  <i> 3 </i> - Add CC event ignoring snap<br>
- <i> 4 </i> - and higher: refer to CommandIDs for MIDI Editor<br>
  </div> 
  <br>
  <strong> [MM_CTX_MIDI_ENDPTR] </strong>- MIDI source loop end marker - left drag <br> <br>
@@ -2453,7 +2556,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> 7 </i> - Set draw channel lower <br>
  <i> 8 </i> - Insert note, leaving other notes selected <br>
  <i> 9 </i> - Insert note ignoring snap, leaving other notes selected <br>
- <i> 10 </i> - and higher -> Reaper Command IDs from the MIDI-Editor-section <br>
  </div>
  <br>
  <strong> [MM_CTX_MIDI_PIANOROLL] </strong>- MIDI piano roll - left drag <br> <br>
@@ -2504,8 +2606,6 @@ Especially note: when a default-action is selected, Reaper seems to remove the e
  <i> -1 </i> - No action <br>
  <i> 0 </i> - Insert note <br>
  <i> 1 </i> - Insert note ignoring snap <br>
- <i> 2 </i> - and higher -> Reaper Command IDs from the MIDI-Editor-section <br>
- <i> 3 </i> -  ID from section MIDI Editor <br>
  </div>
  <br>
  <strong> [MM_CTX_MIDI_RMOUSE] </strong>- MIDI Editor - right click <br> <br>
