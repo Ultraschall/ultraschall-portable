@@ -13,7 +13,7 @@ def rpr_getfp(fn):
   return _ft[fn]
 
 def rpr_packp(t,v):
-  m=re.match('^\((\w+\*|HWND)\)0x([0-9A-F]+)$', str(v))
+  m=re.match('^\\((\\w+\\*|HWND)\\)0x([0-9A-F]+)$', str(v))
   if (m != None):
     (_t,_v)=m.groups()
     if (_t == t or t == 'void*'):
@@ -878,6 +878,13 @@ def RPR_EnumerateSubdirectories(p0,p1):
   t=(rpr_packsc(p0),c_int(p1))
   r=f(t[0],t[1])
   return str(r.decode())
+
+def RPR_EnumInstalledFX(p0,p1,p2):
+  a=_ft['EnumInstalledFX']
+  f=CFUNCTYPE(c_byte,c_int,c_uint64,c_uint64)(a)
+  t=(c_int(p0),rpr_packp('char**',p1),rpr_packp('char**',p2))
+  r=f(t[0],t[1],t[2])
+  return r
 
 def RPR_EnumPitchShiftModes(p0,p1):
   a=_ft['EnumPitchShiftModes']
@@ -1936,11 +1943,25 @@ def RPR_GetSetRepeatEx(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def RPR_GetSetTempoTimeSigMarkerFlag(p0,p1,p2,p3):
+  a=_ft['GetSetTempoTimeSigMarkerFlag']
+  f=CFUNCTYPE(c_int,c_uint64,c_int,c_int,c_byte)(a)
+  t=(rpr_packp('ReaProject*',p0),c_int(p1),c_int(p2),c_byte(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return r
+
 def RPR_GetSetTrackGroupMembership(p0,p1,p2,p3):
   a=_ft['GetSetTrackGroupMembership']
   f=CFUNCTYPE(c_int,c_uint64,c_char_p,c_int,c_int)(a)
   t=(rpr_packp('MediaTrack*',p0),rpr_packsc(p1),c_int(p2),c_int(p3))
   r=f(t[0],t[1],t[2],t[3])
+  return r
+
+def RPR_GetSetTrackGroupMembershipEx(p0,p1,p2,p3,p4):
+  a=_ft['GetSetTrackGroupMembershipEx']
+  f=CFUNCTYPE(c_int,c_uint64,c_char_p,c_int,c_int,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),rpr_packsc(p1),c_int(p2),c_int(p3),c_int(p4))
+  r=f(t[0],t[1],t[2],t[3],t[4])
   return r
 
 def RPR_GetSetTrackGroupMembershipHigh(p0,p1,p2,p3):
@@ -2088,6 +2109,13 @@ def RPR_GetTooltipWindow():
   f=CFUNCTYPE(c_uint64)(a)
   r=f()
   return rpr_unpackp('HWND',r)
+
+def RPR_GetTouchedOrFocusedFX(p0,p1,p2,p3,p4,p5):
+  a=_ft['GetTouchedOrFocusedFX']
+  f=CFUNCTYPE(c_byte,c_int,c_void_p,c_void_p,c_void_p,c_void_p,c_void_p)(a)
+  t=(c_int(p0),c_int(p1),c_int(p2),c_int(p3),c_int(p4),c_int(p5))
+  r=f(t[0],byref(t[1]),byref(t[2]),byref(t[3]),byref(t[4]),byref(t[5]))
+  return (r,p0,int(t[1].value),int(t[2].value),int(t[3].value),int(t[4].value),int(t[5].value))
 
 def RPR_GetTrack(p0,p1):
   a=_ft['GetTrack']
@@ -2421,6 +2449,12 @@ def RPR_InsertTrackAtIndex(p0,p1):
   t=(c_int(p0),c_byte(p1))
   f(t[0],t[1])
 
+def RPR_InsertTrackInProject(p0,p1,p2):
+  a=_ft['InsertTrackInProject']
+  f=CFUNCTYPE(None,c_uint64,c_int,c_int)(a)
+  t=(rpr_packp('ReaProject*',p0),c_int(p1),c_int(p2))
+  f(t[0],t[1],t[2])
+
 def RPR_IsMediaExtension(p0,p1):
   a=_ft['IsMediaExtension']
   f=CFUNCTYPE(c_byte,c_char_p,c_byte)(a)
@@ -2641,6 +2675,13 @@ def RPR_MediaItemDescendsFromTrack(p0,p1):
   t=(rpr_packp('MediaItem*',p0),rpr_packp('MediaTrack*',p1))
   r=f(t[0],t[1])
   return r
+
+def RPR_Menu_GetHash(p0,p1,p2,p3):
+  a=_ft['Menu_GetHash']
+  f=CFUNCTYPE(c_byte,c_char_p,c_int,c_char_p,c_int)(a)
+  t=(rpr_packsc(p0),c_int(p1),rpr_packs(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],t[3])
+  return (r,p0,p1,rpr_unpacks(t[2]),p3)
 
 def RPR_MIDI_CountEvts(p0,p1,p2,p3):
   a=_ft['MIDI_CountEvts']
@@ -2864,6 +2905,12 @@ def RPR_MIDI_InsertTextSysexEvt(p0,p1,p2,p3,p4,p5,p6):
   r=f(t[0],t[1],t[2],t[3],t[4],t[5],t[6])
   return r
 
+def RPR_MIDI_RefreshEditors(p0):
+  a=_ft['MIDI_RefreshEditors']
+  f=CFUNCTYPE(None,c_uint64)(a)
+  t=(rpr_packp('MediaItem_Take*',p0),)
+  f(t[0])
+
 def RPR_midi_reinit():
   a=_ft['midi_reinit']
   f=CFUNCTYPE(None)(a)
@@ -2991,6 +3038,13 @@ def RPR_MIDIEditor_SetSetting_int(p0,p1,p2):
   t=(rpr_packp('HWND',p0),rpr_packsc(p1),c_int(p2))
   r=f(t[0],t[1],t[2])
   return r
+
+def RPR_MIDIEditorFlagsForTrack(p0,p1,p2,p3):
+  a=_ft['MIDIEditorFlagsForTrack']
+  f=CFUNCTYPE(None,c_uint64,c_void_p,c_void_p,c_byte)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1),c_int(p2),c_byte(p3))
+  f(t[0],byref(t[1]),byref(t[2]),t[3])
+  return (p0,int(t[1].value),int(t[2].value),p3)
 
 def RPR_mkpanstr(p0,p1):
   a=_ft['mkpanstr']
@@ -4713,6 +4767,13 @@ def RPR_UpdateItemInProject(p0):
   f=CFUNCTYPE(None,c_uint64)(a)
   t=(rpr_packp('MediaItem*',p0),)
   f(t[0])
+
+def RPR_UpdateItemLanes(p0):
+  a=_ft['UpdateItemLanes']
+  f=CFUNCTYPE(c_byte,c_uint64)(a)
+  t=(rpr_packp('ReaProject*',p0),)
+  r=f(t[0])
+  return r
 
 def RPR_UpdateTimeline():
   a=_ft['UpdateTimeline']

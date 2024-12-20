@@ -27,6 +27,12 @@
 -- converts, if necessary old Metadata from Ultraschall 4 and lower to Ultraschall4.1 and higher format
 -- 24th of May 2020, Meo-Ada Mespotine
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+A,B=reaper.GetSetProjectInfo_String(0, "RENDER_TARGETS", "", true)
+
+reaper.SetProjExtState(0, "Ultraschall_File", "filename", (B..","):match("(.-),"))
+
 -- read out Metadata (Ultraschall 4.1 and higher)
 retval1, Title    = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TIT2", false)
 retval2, Podcast  = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:TALB", false)
@@ -63,6 +69,30 @@ if Title=="" and Podcast=="" and Author=="" and Year=="" and Category=="" and De
   retval6, Description = reaper.GetSetProjectInfo_String(0, "RENDER_METADATA", "ID3:COMM|"..Description, true)
 end
 
+A=""
+
+AA,filename=reaper.GetProjExtState(0, "Ultraschall_File", "filename")
+A=A.."exportfilename:"..filename.."\n"
+
+for i=1, ultraschall.CountNormalMarkers() do
+  AA={ultraschall.EnumerateNormalMarkers(i)}
+  url=ultraschall.GetMarkerExtState(AA[1], "url")
+  if url==nil then url="" end
+  imagefile=reaper.EnumerateFiles(reaper.GetResourcePath().."/Data/toolbar_icons/", i-1)
+  if i==1 then imagefile="" else imagefile=reaper.GetResourcePath().."/Data/toolbar_icons/"..imagefile end
+  if i==3 then imagefile="" url="" end
+  A=A.."markerindex:"..i.."\n"
+  A=A.."markerposition:"..AA[3].."\n"
+  A=A.."markername:"..AA[4].."\n"
+  A=A.."markerurl:"..url.."\n"
+  A=A.."markerimage:"..imagefile.."\n"
+end
+
+reaper.SetProjExtState(0, "Ultraschall_Markerdata", "markers", A)
+
 cmdid=reaper.NamedCommandLookup("_ULTRASCHALL_INSERT_MEDIA_PROPERTIES")
 --_ULTRASCHALL_CONVERT_OLD_METADATA_AND_INSERT_MEDIA_PROPERTIES
 reaper.Main_OnCommand(cmdid,0)
+
+reaper.ClearConsole()
+reaper.ShowConsoleMsg(A)
