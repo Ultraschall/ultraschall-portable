@@ -111,6 +111,8 @@ function button_apply_and_close()
   reaper.SetExtState("ReaGirl", "osara_enable_accmessage", tostring(reagirl.Checkbox_GetCheckState(tab2.checkbox_osara_enable_acc_help)), true)
   local menuitems, selected_menuitem = reagirl.DropDownMenu_GetMenuItems(tab3.error_message_target)
   reaper.SetExtState("ReaGirl", "Error_Message_Destination", tostring(selected_menuitem), true)
+  if reagirl.Checkbox_GetCheckState(tab1.checkbox_blink_always_on)==false then focus_rectangle_always_on="" else focus_rectangle_always_on="true" end
+  reaper.SetExtState("ReaGirl", "FocusRectangle_AlwaysOn", focus_rectangle_always_on, true)
 
 reaper.GetExtState("ReaGirl", "osara_enable_accmessage")
 
@@ -133,7 +135,7 @@ function SetUpNewGui()
   reagirl.Gui_New()
   
   if tabnumber==nil then tabnumber=1 end
-  Tabs=reagirl.Tabs_Add(10, 10, 335, 420, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
+  Tabs=reagirl.Tabs_Add(10, 10, 335, 437, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
   
   tab1={}
   --[[ Blinking Focus Rectangle ]]
@@ -156,7 +158,7 @@ function SetUpNewGui()
   reagirl.NextLine(10)
   tab1.Label_FocusRectangle=reagirl.Label_Add(nil, nil, "Focus Rectangle", "Settings for the focus rectangle.", false, nil)
   --reagirl.Label_SetStyle(tab1.Label_FocusRectangle, 6, 0, 0)
-  reagirl.Label_SetBackdrop(tab1.Label_FocusRectangle, 300, 55) -- set a backdrop around the next few labels
+  reagirl.Label_SetBackdrop(tab1.Label_FocusRectangle, 300, 75) -- set a backdrop around the next few labels
   
   reagirl.NextLine()
   val=tonumber(reaper.GetExtState("ReaGirl", "FocusRectangle_BlinkSpeed"))
@@ -168,6 +170,11 @@ function SetUpNewGui()
   if val2==nil then val2=0 end
   focus_rectangle_blinktime_cancel=val2
   
+  fr_always_on=reaper.GetExtState("ReaGirl", "FocusRectangle_AlwaysOn")
+  if fr_always_on=="" then fr_always_on=false else fr_always_on=true end
+  
+  tab1.checkbox_blink_always_on = reagirl.Checkbox_Add(nil, nil, "Always show focus rectangle", "When checked, ReaGirl will show focus rectangle always, when unchecked, it will only show, when you tab through the gui with the tab-key.", fr_always_on, checkbox)
+  reagirl.NextLine()
   tab1.slider_blink_every = reagirl.Slider_Add(nil, nil, 300, "Blink every", 100, "Set the speed of the blinking of the focus rectangle.", "seconds", 0.4, 3, 0.1, val/33, 1, BlinkSpeed)
   reagirl.NextLine(-4)
   tab1.slider_blink_for = reagirl.Slider_Add(nil, nil, 300, "Blink for", 100, "Set the duration of the blinking of the focus rectangle.", "seconds", 0, 10, 1, val2, 0, BlinkTime)
@@ -218,7 +225,7 @@ function SetUpNewGui()
   tab1.slider_blink_every_draggable=reagirl.Slider_Add(nil, nil, 300, "Blink every", 100, "Set the speed of the blinking of the drag-destinations; 0=no blinking.", "seconds", 0, 5, 0.1, drag_blinking/33, 0, DragBlinkSpeed)
   reagirl.NextLine(5)
   tab1.image_source=reagirl.Image_Add(50,nil,50,50,reaper.GetResourcePath().."/Data/track_icons/double_bass.png", "The source-image, an image of a double bass.", "Drag this double bass to the microphone.", Image)
-  tab1.image_middle=reagirl.Image_Add(160,nil,25,25,reaper.GetResourcePath().."/Data/track_icons/folder_right.png", "Graphics with an arrow pointing to the drag-destination of the double bass.", "Graphics with an arrow pointing to the drag-destination of the double bass.",nil)
+  tab1.image_middle=reagirl.Image_Add(160,nil,25,25,reaper.GetResourcePath().."/Data/track_icons/folder_right.png", "Image of an arrow pointing to the drag-destination of the double bass.", "Graphics with an arrow pointing to the drag-destination of the double bass.",nil)
   tab1.image_dest=reagirl.Image_Add(250,nil,50,50,reaper.GetResourcePath().."/Data/track_icons/mic_dynamic_1.png", "The destination image, an image of a microphone.", "The destination image, drag the double bass over here.",nil)
   reagirl.Image_SetDraggable(tab1.image_source, true, {tab1.image_dest})
   --reagirl.Label_SetDraggable(tab1.Label_Draggable_UI_Elements, true, {tab1.image_dest})
@@ -280,8 +287,8 @@ function SetUpNewGui()
   
   reagirl.Tabs_SetUIElementsForTab(Tabs, 3, tab3)
   
-  button_apply_and_close_id = reagirl.Button_Add(180, 465, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
-  button_cancel_id = reagirl.Button_Add(290, 465, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
+  button_apply_and_close_id = reagirl.Button_Add(180, 485, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
+  button_cancel_id = reagirl.Button_Add(290, 485, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
   reagirl.NextLine()
 end
 
@@ -290,7 +297,7 @@ reagirl.Gui_AtEnter(button_apply_and_close)
 SetUpNewGui()
 color=40
 reagirl.Background_GetSetColor(true,color,color,color)
-reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 355, 500, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 354, 515, nil, nil, nil)
   
 --reagirl.Window_ForceSize_Minimum(355, 470) -- set the minimum size of the window
 --reagirl.Window_ForceSize_Maximum(355, 470) -- set the maximum size of the window
