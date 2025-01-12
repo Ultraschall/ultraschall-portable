@@ -597,7 +597,7 @@ function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   );]]
 
 VideoCode2=[[//Image overlay
-//@param1:opacity 'opacity' 0.5
+//@param1:opacity 'opacity' 1
 //@param2:zoom 'zoom' 2.4 -15 15 0
 //@param3:xoffs 'X offset' 0.0816 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
@@ -622,6 +622,8 @@ img2 != img1 && input_info(img2,sw,sh) ? (
     x = (project_w - dw + (project_w + dw)*xoffs)*.5;
     y = (project_h - dh + (project_h + dh)*yoffs)*.5;
     gfx_blit(img2,0, x|0,y|0,dw,dh);
+    gfx_set(0,0,0,0.5);
+    gfx_fillrect(0,0, project_w, project_h);
   );
 );]]
 
