@@ -1372,7 +1372,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
   if moveenvelopepoints==true then
     for i=1, #individual_tracks do
       local MediaTrack=reaper.GetTrack(0,individual_tracks[i]-1)
-      ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition, MediaTrack)
+      ultraschall.DeleteTrackEnvelopePointsBetween(startposition, endposition, MediaTrack)  
       ultraschall.MoveTrackEnvelopePointsBy(endposition, reaper.GetProjectLength(), -delta, MediaTrack, false) 
     end
   end
@@ -3801,7 +3801,7 @@ function ultraschall.GetParentTrack_MediaItem(MediaItem)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetParentTrack_MediaItem</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.2
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -3828,8 +3828,7 @@ function ultraschall.GetParentTrack_MediaItem(MediaItem)
 </US_DocBloc>
 ]]
   if reaper.ValidatePtr2(0, MediaItem, "MediaItem*")==false then ultraschall.AddErrorMessage("GetParentTrack_MediaItem","MediaItem", "Must be a MediaItem!", -1) return -1 end
-  
-  local MediaTrack = reaper.GetMediaItemTake_Track(reaper.GetMediaItemTake(MediaItem,0))
+	MediaTrack = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK")
   
   return math.tointeger(reaper.GetMediaTrackInfo_Value(MediaTrack, "IP_TRACKNUMBER")), MediaTrack
 end
@@ -4644,13 +4643,13 @@ end
 function ultraschall.DeleteMediaItemsBetween(startposition, endposition,  trackstring, inside)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>DeleteMediaItems_Position</slug>
+  <slug>DeleteMediaItemsBetween</slug>
   <requires>
     Ultraschall=4.00
     Reaper=5.95
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, array MediaItemStateChunkArray = ultraschall.DeleteMediaItems_Between(number startposition, number endposition, string trackstring, boolean inside)</functioncall>
+  <functioncall>boolean retval, array MediaItemStateChunkArray = ultraschall.DeleteMediaItemsBetween(number startposition, number endposition, string trackstring, boolean inside)</functioncall>
   <description>
     Delete the MediaItems between start- and endposition, from the tracks as given by trackstring.
     Returns also a MediaItemStateChunkArray, that contains the statechunks of all deleted MediaItem
