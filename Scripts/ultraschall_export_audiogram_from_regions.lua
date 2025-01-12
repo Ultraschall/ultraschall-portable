@@ -991,11 +991,11 @@ function Audiogram_Main()
       
       -- render audiogram
       if ultraschall.IsOS_Windows()==true then
-        count2=renderAudiogramPC(Audiogram_Title, startTime, endTime)
+        count2, _, Filearray=renderAudiogramPC(Audiogram_Title, startTime, endTime)
       elseif ultraschall.IsOS_Mac()==true then
-        count2=renderAudiogramMac(Audiogram_Title, startTime, endTime)
+        count2, _, Filearray=renderAudiogramMac(Audiogram_Title, startTime, endTime)
       else
-        count2=renderAudiogramLinux(Audiogram_Title, startTime, endTime)
+        count2, _, Filearray=renderAudiogramLinux(Audiogram_Title, startTime, endTime)
       end 
       
       count=count+count2
