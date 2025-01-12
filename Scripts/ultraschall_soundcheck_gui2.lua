@@ -392,7 +392,7 @@ function buildGuiWarnings()
 
     end
 
-    gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
+    --gfx.init("", 1000, WindowHeight, 0, GUI.x, GUI.y)
     GUI.drawnow = true
     rebuild_gui = true
 
@@ -456,7 +456,7 @@ function buildGuiWarnings()
       reaper.atexit(atexitClean)
     else
 
-      gfx.init("", 1000, 170, 0, GUI.x, GUI.y)
+      --gfx.init("", 1000, 170, 0, GUI.x, GUI.y)
       GUI.drawnow = true
       rebuild_gui = true
 
