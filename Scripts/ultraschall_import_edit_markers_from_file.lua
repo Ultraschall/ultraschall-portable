@@ -53,7 +53,7 @@ if #Chaps==0 then reaper.MB("No Edit markers available.", "No edit markers", 0) 
 
 -- insert chapters and renumerate the marker-numbers
 for i=0, #Chaps do
-  marker_number, guid, normal_marker_idx = ultraschall.AddEditMarker(Chaps[i][3], 0, Chaps[i][5])
+  marker_number, guid, normal_marker_idx = ultraschall.AddEditMarker(Chaps[i][2], 0, Chaps[i][5])
 end
 --ultraschall.RenumerateNormalMarkers()
 
