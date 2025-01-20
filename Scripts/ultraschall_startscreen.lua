@@ -131,8 +131,8 @@ gfx_path=script_path.."/Ultraschall_Gfx/Startscreen/"
 
 ---- Window settings and user functions ----
 
-GUI.name = "Ultraschall 5.1.1 - Welcome!"
-GUI.w, GUI.h = 680, 700
+GUI.name = "Ultraschall 5.1.2 - Welcome!"
+GUI.w, GUI.h = 680, 700 
 
 ------------------------------------------------------
 -- position always in the center of the screen
