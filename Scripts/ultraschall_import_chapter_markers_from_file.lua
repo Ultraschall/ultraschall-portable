@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-################################################################################
+################################################################################ 
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -48,7 +48,7 @@ for i=0, 65500 do
   if Chaps[i][4]==false then Chaps[i]=nil break end
 end
 
--- when no chapters, show error-message
+-- when no chapters, show error-message 
 if #Chaps==0 then reaper.MB("No Chapter markers available.", "No chapter markers", 0) return end
 
 -- insert chapters and renumerate the marker-numbers
