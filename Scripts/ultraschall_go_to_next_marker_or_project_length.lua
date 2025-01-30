@@ -29,8 +29,9 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 ultraschall.RunCommand("_Ultraschall_Turn_Off_Followmode")
 
 length=reaper.GetProjectLength(0)
-markerindex, position, markertitle, markerindex_shownnumber = ultraschall.GetClosestNextMarker(0)
-markerindex, position2, markertitle, edge_type, markerindex_shownnumber = ultraschall.GetClosestNextRegionEdge(0)
+if reaper.GetPlayState()~=0 then cursor_type=1 else cursor_type=0 end
+markerindex, position, markertitle, markerindex_shownnumber = ultraschall.GetClosestNextMarker(cursor_type)
+markerindex, position2, markertitle, edge_type, markerindex_shownnumber = ultraschall.GetClosestNextRegionEdge(cursor_type)
 --SLEM()
 if position==-1 then position=position2 end
 if position2~=-1 and position2<position then position=position2 end
