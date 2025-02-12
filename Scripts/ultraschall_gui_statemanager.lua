@@ -346,9 +346,12 @@ function checkGuiStates()
 
 
       if project_state == "0" then
-      
-        reaper.SetToggleCommandState(0, commandid, 0)
-        reaper.RefreshToolbar2(0, commandid)
+        reaper.Main_OnCommand(commandid, 0)
+        if reaper.GetToggleCommandState(commandid)==1 then
+          reaper.Main_OnCommand(commandid, 0)
+        end
+        --reaper.SetToggleCommandState(0, commandid, 0)
+        --reaper.RefreshToolbar2(0, commandid)
       
       elseif project_state == "1" then
         if (string.find(GUIServices[i], "Matrix")) then 
@@ -444,7 +447,7 @@ function checkGuiStates()
  -------------------------------------------------
 
   ultraschall.Defer(checkGuiStates, "Check GUI Defer", 1, 50) -- alle 0.2 Sekunden
-	return "Check GUI Defer"
+  return "Check GUI Defer"
 
 end
 
@@ -525,4 +528,4 @@ lastNumberOfEnvelopes = reaper.GetExtState("ultraschall_gui", "numberenvelopes")
 
 checkGuiStates()
 
--- 	retval = ultraschall.StopDeferCycle("Check GUI Defer")
+--   retval = ultraschall.StopDeferCycle("Check GUI Defer")
