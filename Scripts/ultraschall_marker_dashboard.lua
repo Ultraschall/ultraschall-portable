@@ -161,31 +161,33 @@ if reaper.GetOS() == "Win32" or reaper.GetOS() == "Win64" then     separator = "
       if take~=nil then
 
           src = reaper.GetMediaItemTake_Source(take)
-          filename = reaper.GetMediaSourceFileName(src, "")
-          fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
-
-          if mediatype == "Image" then
-
-            item_position = ultraschall.GetItemPosition(media_item)
-
-            -- print (ultraschall.GetMarkerByTime(position, true))
-            -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
-
-            position = NearMarker(item_position)
-
-            if position then
-
-              section = "chapterimages"
-
-            else  -- Bild liegt ohne Marker rum
-              section = "lostimages"
-              position = item_position
-
+          if src~=nil then 
+            filename = reaper.GetMediaSourceFileName(src, "")
+            fileformat, supported_by_reaper, mediatype = ultraschall.CheckForValidFileFormats(filename)
+  
+            if mediatype == "Image" then
+  
+              item_position = ultraschall.GetItemPosition(media_item)
+  
+              -- print (ultraschall.GetMarkerByTime(position, true))
+              -- if ultraschall.GetMarkerByTime(position, true) ~= "" then  -- da liegt auch ein Marker, alles gut
+  
+              position = NearMarker(item_position)
+  
+              if position then
+  
+                section = "chapterimages"
+  
+              else  -- Bild liegt ohne Marker rum
+                section = "lostimages"
+                position = item_position
+  
+              end
+  
+              imagecount = reaper.SetProjExtState(0, section, position, filename)
+              --reaper.SetExtState(section, position, filename, true) -- nur debugging
+  
             end
-
-            imagecount = reaper.SetProjExtState(0, section, position, filename)
-            --reaper.SetExtState(section, position, filename, true) -- nur debugging
-
           end
       end
     end
