@@ -126,8 +126,11 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
 
   local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
   Identifier=reaper.JS_LICE_LoadPNG(filename_with_path)
+  Identifier_Exists=reaper.file_exists(filename_with_path)
+  
   Width=reaper.JS_LICE_GetWidth(Identifier)
   Height=reaper.JS_LICE_GetHeight(Identifier)
+  
   if aspectratio==true then
     squaresize=width
     if Width>Height then 
@@ -145,6 +148,11 @@ function ResizeAndBlurPNG(filename_with_path, outputfilename_with_path, aspectra
     NewHeight=height
     NewWidth=width
   end
+  
+  if Identifier_Exists==false then return "File does not exist. Errorcode: "..NewWidth.." "..NewHeight.."." end
+  if Identifier==nil then return "File not accessible. Errorcode: "..NewWidth.." "..NewHeight.."." end
+  
+  if math.type(NewWidth)~="integer" then NewWidth=width end
   
   local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
   local alpha1=0.5/((blurradius))
@@ -241,8 +249,11 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
   if blurstepsize==nil then blurstepsize=1 end
   local Identifier, Identifier2, squaresize, NewWidth, NewHeight, Height, Width, Retval
   Identifier=reaper.JS_LICE_LoadJPG(filename_with_path)
+  Identifier_Exists=reaper.file_exists(filename_with_path)
+  
   Width=reaper.JS_LICE_GetWidth(Identifier)
   Height=reaper.JS_LICE_GetHeight(Identifier)
+  
   if aspectratio==true then
     squaresize=width
     if Width>Height then 
@@ -260,7 +271,12 @@ function ResizeAndBlurJPG(filename_with_path, outputfilename_with_path, aspectra
     NewHeight=height
     NewWidth=width
   end
-
+  
+  if Identifier_Exists==false then return "File does not exist. Errorcode: "..NewWidth.." "..NewHeight.."." end
+  if Identifier==nil then return "File not accessible. Errorcode: "..NewWidth.." "..NewHeight.."." end
+  
+  if math.type(NewWidth)~="integer" then NewWidth=width end
+  
   local BlurIdentifier3=reaper.JS_LICE_CreateBitmap(true, NewWidth, NewHeight)
 
   local alpha1=0.5/((blurradius))
@@ -548,12 +564,13 @@ end
 function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   -- inserts the background-cover-image track, including all of its fx
   if cover:sub(-4,-1)==".png" then
-    ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 1000, 1, 1)
+    retval=ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.png"
   else
-    ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
+    retval=ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
     cover=cover.."-audiogram-blurred.jpg"
   end
+  if retval~=nil then return retval end
   startTime=startTime-1
   endTime=endTime+1
   
@@ -936,7 +953,8 @@ function main2()
   Audiogram_Title="Audiogram_-_"..trackname_format..startTime_format.."-"..endTime_format
   
   -- setup tracks for cover-images shown in the audiogram
-  InsertBackgroundTrack(startTime, endTime, img_location, trackname)
+  retval=InsertBackgroundTrack(startTime, endTime, img_location, trackname)
+  if retval~=nil then reaper.MB("Couldn't load the cover-image: "..retval, "Problem loading image", 0) return false end
   InsertForegroundTrack(startTime, endTime, img_location, trackname)
   -- setup fx on master-track needed for audiogram
   setAudiogramFX()
