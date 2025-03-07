@@ -47,6 +47,8 @@ So if you just want to see the change in a selected envelope, select it first, t
 Meo Mespotine mespotine.de - 1st of november 2018
 --]]
 
+reaper.set_action_options(1)
+
 function SplitStringAtLineFeedToArray(unsplitstring)
   local array={}
   local i=1

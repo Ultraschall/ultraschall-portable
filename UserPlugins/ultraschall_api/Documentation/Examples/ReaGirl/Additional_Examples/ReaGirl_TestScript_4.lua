@@ -31,7 +31,7 @@
 -- So you can combine them.
 
   dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
-
+  
   -- create new gui
   reagirl.Gui_New()
   tabs=reagirl.Tabs_Add(nil, nil, nil, nil, "Tabs", "Demo-Tabs most elements in first tab only.", {"General Tab", "Advanced Tab", "Extras Tab"}, 1, nil )
@@ -68,18 +68,37 @@
   reagirl.Label_AutoBackdrop(tab1.label_header, tab1.label_large) -- set backdrop drawn by tab1.label_header
                                                                   -- let it end underneath tab1.label_large - the largest label
 
+  -- Burgermenus and Color-Rectangles
+  reagirl.NextLine(10)
+  tab1.label_header6=reagirl.Label_Add(nil, nil, "Burgermenu and Color-Rectangle", "A burgermenu and some color-rectangles.", false, nil)
+  
+  reagirl.NextLine()
+  tab1.burgermenu = reagirl.Burgermenu_Add(nil, nil, "A Burgermenu", "A demo-burger-menu with some options.", "Setting 1|Setting 2|>Subfolder|Setting 3|Setting 4|<|Setting 5", nil)
+  tab1.colorrectangle1 = reagirl.ColorRectangle_Add(nil,nil,16,16,255,0,0,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle2 = reagirl.ColorRectangle_Add(nil,nil,16,16,0,255,0,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle3 = reagirl.ColorRectangle_Add(nil,nil,16,16,0,0,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle4 = reagirl.ColorRectangle_Add(nil,nil,16,16,0,0,0,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle5 = reagirl.ColorRectangle_Add(nil,nil,16,16,255,255,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle6 = reagirl.ColorRectangle_Add(nil,nil,16,16,0,255,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle7 = reagirl.ColorRectangle_Add(nil,nil,16,16,255,0,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle8 = reagirl.ColorRectangle_Add(nil,nil,16,16,255,255,0,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle9 = reagirl.ColorRectangle_Add(nil,nil,16,16,128,255,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  tab1.colorrectangle10 = reagirl.ColorRectangle_Add(nil,nil,16,16,255,128,255,"A Color Rectangle", "A color rectangle with a color. Click it to select a different color.", true, nil)
+  
+  reagirl.Label_AutoBackdrop(tab1.label_header6, tab1.colorrectangle10) -- set backdrop drawn by tab1.label_header5
+
   -- Inputboxes
   reagirl.NextLine(10)
   tab1.label_header2=reagirl.Label_Add(nil, nil, "Inputboxes", "Some demo-inputboxes.", false, nil)
   
   reagirl.NextLine()
-  tab1.inputbox_name_of_setting = reagirl.Inputbox_Add(nil, nil, 291, "Name:", 90, "Type in here the name of the setting.", "No title", nil, nil)
+  tab1.inputbox_name_of_setting = reagirl.Inputbox_Add(nil, nil, 290, "Name:", 90, "Type in here the name of the setting.", "No title", nil, nil)
   
   reagirl.NextLine()
-  tab1.inputbox_description_of_setting = reagirl.Inputbox_Add(nil, nil, 291, "Description:", 90, "Type in here a description of the setting.", "No Description", nil, nil)
+  tab1.inputbox_description_of_setting = reagirl.Inputbox_Add(nil, nil, 290, "Description:", 90, "Type in here a description of the setting.", "No Description", nil, nil)
   
   reagirl.NextLine()
-  tab1.button_choose_file_id = reagirl.Button_Add(255, nil, 0, 0, "Choose file", "Choose a file.", nil) -- a button
+  tab1.button_choose_file_id = reagirl.Button_Add(253, nil, 0, 0, "Choose file", "Choose a file.", nil) -- a button
 
   reagirl.Label_AutoBackdrop(tab1.label_header2, tab1.button_choose_file_id) -- set backdrop drawn by tab1.label_header2
                                                                              -- let it end underneath tab1.button_choose_file_id
@@ -90,13 +109,13 @@
 
   reagirl.NextLine() -- first line of checkboxes
   tab1.checkbox_mysetting = reagirl.Checkbox_Add(nil, nil, "My setting", "The first checkbox.", true, nil)
-  reagirl.Checkbox_SetWidth(tab1.checkbox_mysetting, 80) -- set the position of the next checkbox to a specific position to align it
+  reagirl.Checkbox_SetWidth(tab1.checkbox_mysetting, 85) -- set the position of the next checkbox to a specific position to align it
                                                          -- with the next line of checkboxes
   tab1.checkbox_another_setting = reagirl.Checkbox_Add(nil, nil, "Another setting", "The second checkbox.", true, nil)
   
   reagirl.NextLine() -- second line of checkboxes
   tab1.checkbox_extra_setting = reagirl.Checkbox_Add(nil, nil, "Extra", "A third checkbox?", true, nil)
-  reagirl.Checkbox_SetWidth(tab1.checkbox_extra_setting, 80) -- set the position of the next checkbox to a specific position to align it
+  reagirl.Checkbox_SetWidth(tab1.checkbox_extra_setting, 85) -- set the position of the next checkbox to a specific position to align it
                                                              -- with the previous line of checkboxes
   tab1.checkbox_remember = reagirl.Checkbox_Add(nil, nil, "Remember chosen setting", "Shall this setting be used as future default?", true, nil)
   
@@ -121,27 +140,27 @@
   
   -- Sliders and DropDownMenus
   reagirl.NextLine(10)
-  tab1.label_header5=reagirl.Label_Add(nil, nil, "Sliders and DropDownMenus", ".", false, nil)
+  tab1.label_header5=reagirl.Label_Add(nil, nil, "Sliders and DropDownMenus", "Some sliders and drop down menus.", false, nil)
   
   reagirl.NextLine()
-  tab1.slider_blink_every = reagirl.Slider_Add(40, nil, 280, "Length in", 100, "Set the length in seconds.", "seconds", 1, 30, 0.1, 10, 1, nil)
+  tab1.slider_blink_every = reagirl.Slider_Add(nil, nil, 290, "Length in", 100, "Set the length in seconds.", "seconds", 1, 30, 0.1, 10, 1, nil)
   
   reagirl.NextLine()
-  tab1.options=reagirl.DropDownMenu_Add(40, nil, 280, "Options:", 100, "Choose one of the options that set your settings.", {"Menu1", "Menu2", "Menu3"}, 1, nil)
+  tab1.options=reagirl.DropDownMenu_Add(nil, nil, 290, "Options:", 100, "Choose one of the options that set your settings.", {"Menu1", "Menu2", "Menu3"}, 1, nil)
   
   reagirl.NextLine()
-  tab1.more_options=reagirl.DropDownMenu_Add(40, nil, 280, "More Options:", 100, "Choose additional settings in the options.", {"Option1", "Option2", "Option3"}, 2, nil)
+  tab1.more_options=reagirl.DropDownMenu_Add(nil, nil, 290, "More Options:", 100, "Choose additional settings in the options.", {"Option1", "Option2", "Option3"}, 2, nil)
   
   reagirl.Label_AutoBackdrop(tab1.label_header5, tab1.more_options) -- set backdrop drawn by tab1.label_header5
                                                                     -- let it end underneath tab1.more_options
-
+                                                                    -- let it end underneath tab1.more_options
   -- Buttons
   reagirl.NextLine(10)
   button_ok_id = reagirl.Button_Add(245, nil, 0, 0, "OK", "Apply changes and close dialog.", nil)
   button_cancel_id = reagirl.Button_Add(nil, nil, 0, 0, "Cancel", "Discard changes and close dialog.", nil)
 
   -- open the new gui
-  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.")
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", nil, nil, 0, nil, nil)
 
   -- make the background grey
   reagirl.Background_GetSetColor(true, 55, 55, 55)

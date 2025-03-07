@@ -7,6 +7,8 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
+
 function main()
   A,B = reaper.GetSetProjectInfo_String(0, "RENDER_FORMAT", "", false)
   B=ultraschall.Base64_Decoder(B)

@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 501, "5.1","11th of December 2024", "",  "\"Beach Boys - Wind Chimes\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 502, "5.2","7th of March 2025", "",  "\"Warpaint - Keep it healthy\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -958,6 +958,8 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
  
   if target==nil then 
     target=tonumber(reaper.GetExtState("ultraschall_api", "ShowLastErrorMessage_Target"))
+		if target==nil then target=1 end
+		target=target-1
   end
   
   local CountErrMessage=ultraschall.CountErrorMessages()

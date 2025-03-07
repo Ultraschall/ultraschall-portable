@@ -42,6 +42,8 @@ if Path==nil then Path=Ab:match("(.*/)") end
 
 version="2.3.1 - 1. 5. 2021"
 
+reaper.set_action_options(1)
+
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
 -- load configvars

@@ -3,6 +3,9 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- 0. enable ReaGirl for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+reaper.set_action_options(1)
+
 -- check for required version; alter the version-number if necessary
 if reagirl.GetVersion()<1.0 then reaper.MB("Needs ReaGirl v"..(1.0).." to run", "Too old version", 2) return false end
 
@@ -92,7 +95,7 @@ reagirl.Background_GetSetColor(true, 55, 55, 55)
 reagirl.Gui_AtEnter(CreateScript)
 
 -- 4. open the gui
-reagirl.Gui_Open("ReaGirl Testdialog #1", false, "ReaGirl Testdialog #1", "a test dialog that features all available ui-elements.", nil, nil, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl Testdialog #1", false, "Create new script", "A dialog that let's you create new scripts and associate them to specific sections.", nil, nil, nil, nil, nil)
 
 -- 5. a main-function that runs the gui-management-function
 function main()

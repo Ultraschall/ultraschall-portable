@@ -3,7 +3,7 @@
       <slug>Introduction</slug>
       <title>Introduction to Config Variables</title>  
       <description markup_type="markdown" markup_version="1.0.1" indent="default">  
-         List of all Config Variables as of Reaper 7.16 and probably are missing some, but should be fairly complete anyway.  
+         List of all Config Variables as of Reaper 7.34 and probably are missing some, but should be fairly complete anyway.  
          These can be used to set configuration-stuff in the preferences, the project-settings, the render-dialog, many context-menus(like MCP or transport-context-menus) and many others.  
          To change them, you can use the following ReaScript API-functions(requires SWS being installed):
           
@@ -94,6 +94,22 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>__fx_loadstate_ctx</slug>  
+      <title>__fx_loadstate_ctx</title>  
+      <description>  
+          0 if unknown, or during FX state loading: 'u' (instantiating via undo), 'U' (updating via undo), 'P' (loading preset).         
+          It is an integer, global variable.
+      </description>  
+      <chapter_context>
+         Preferences
+         System
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+      <tags></tags>
+    </US_DocBloc>  
+		
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>__metronome_ptr</slug>  
       <title>__metronome_ptr</title>  
       <description>  
@@ -127,13 +143,28 @@
       <target_document>Reaper_Config_Variables</target_document>  
       <tags></tags>
     </US_DocBloc>  
-    
-    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
-      <slug>__fx_loadstate_ctx</slug>  
-      <title>__fx_loadstate_ctx</title>  
+		
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>__reascript_runcnt</slug>  
+      <title>__reascript_runcnt</title>  
       <description>  
-          0 if unknown, or during FX state loading: 'u' (instantiating via undo), 'U' (updating via undo), 'P' (loading preset).         
-          It is an integer, global variable.
+          A counter that counts up every 33th of a second to signal, when all script-runs of the internal timer have been done.
+					Means: Reaper has an internal timer for the gui-thread, which is run 33 times per second.
+					In each run all started and deferred scripts are executed once. This config-variable counts up these runs.
+					  
+           >-2147483648 to 2147483647
+					 
+					 Note: when it reaches the highest number, it switches to the lowest number and counts up from there.
+					 
+					 This variable increments by one after(!) deferred scripts are processed. Deferred scripts and extension 
+					 timers are currently run from the same underlying Win32 timer. During most situations they are both executed 
+					 one after the other. However there are multiple edge cases causing one to run without the others, like extension 
+					 is halted and scripts run or scripts are halted and the extension still runs. For instance, deferred scripts 
+					 are bypassed while the splash screen is active and both have a separate reentrancy check.
+					 With this variable you can check from the extension, whether scripts have been halted and react accordingly, 
+					 if your extension needs to.
+					 
+					 Used by extensions like ReaImGui.
       </description>  
       <chapter_context>
          Preferences
@@ -143,6 +174,7 @@
       <target_document>Reaper_Config_Variables</target_document>  
       <tags></tags>
     </US_DocBloc>  
+    
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>acidimport</slug>  
@@ -519,8 +551,8 @@
            >&4=0, Close audio device when inactive and ReWire devices are open(off) - unchecked  
            >&4=1, Close audio device when inactive and ReWire devices are open(on) - checked  
            
-           >&8=0, Close control surface device when stopped and not active applications, as set in Preferences -> Control/OSC/web, unchecked  
-           >&8=1, Close control surface device when stopped and not active applications, as set in Preferences -> Control/OSC/web, checked  
+           >&8=0, Close control surface device when stopped and not active applications, as set in Preferences -> Control/OSC/web - unchecked  
+           >&8=1, Close control surface device when stopped and not active applications, as set in Preferences -> Control/OSC/web - checked  
 
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -3555,20 +3587,20 @@
            >&1=0, Check free disk space on record start, warn if less than-checkbox(Preferences -> Recording)(off) - unchecked  
            >&1=1, Check free disk space on record start, warn if less than-checkbox(Preferences -> Recording)(on) - checked  
             
-           >&2=0, Show free disk space/Show free disk space in menu bar(off), unchecked  
-           >&2=1, Show free disk space/Show free disk space in menu bar(on), checked  
+           >&2=0, Show free disk space/Show free disk space in menu bar(off) - unchecked  
+           >&2=1, Show free disk space/Show free disk space in menu bar(on) - checked  
            
-           >&4=0, Show recording path/Show primary recording path(off), unchecked  
-           >&4=1, Show recording path/Show primary recording path(on), checked  
+           >&4=0, Show recording path/Show primary recording path(off) - unchecked  
+           >&4=1, Show recording path/Show primary recording path(on) - checked  
            
-           >&8=0, Show recording format(on), checked  
-           >&8=1, Show recording format(off), unchecked  
+           >&8=0, Show recording format(on) - checked  
+           >&8=1, Show recording format(off) - unchecked  
            
-           >&16=0, Show audio device information(on), checked  
-           >&16=1, Show audio device information(off), unchecked  
+           >&16=0, Show audio device information(on) - checked  
+           >&16=1, Show audio device information(off) - unchecked  
            
-           >&32=0, Show recording volume name(off), unchecked  
-           >&32=1, Show recording volume name(on), checked  
+           >&32=0, Show recording volume name(off) - unchecked  
+           >&32=1, Show recording volume name(on) - checked  
             
            set in Preferences -> Buffering -> Advanced Disk I/O Settings!  
       
@@ -3706,7 +3738,45 @@
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
-  
+	
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>env_pt_scale</slug>  
+      <title>env_pt_scale</title>  
+      <description>  
+          Envelope point size scaling-inputbox, as set in Preferences -> Appearance Settings  
+          It is a double-float-variable, preferences variable.
+          
+           >0.0 to 10.0, default is 1.0
+
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Preferences
+         Appearance
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+		
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>env_pt_scale2</slug>  
+      <title>env_pt_scale2</title>  
+      <description>  
+          Scale non selected-inputbox, as set in Preferences -> Appearance Settings  
+          It is a double-float-variable, preferences variable.
+          
+           >0.0 to 10.0, default is 1.0
+
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Preferences
+         Appearance
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+	
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>env_ol_minh</slug>  
       <title>env_ol_minh</title>  
@@ -4289,7 +4359,7 @@
       <title>fxenvinterp</title>  
       <description>  
           Automation rate when interpolating between points-inputbox, as set in Preferences -> Plug-In compatibility
-          This in an double-float-variable, preferences variable.  
+          This in a double-float-variable, preferences variable.  
           
             >0 to 1000 in milliseconds(0=once per buffer block)
           
@@ -4590,8 +4660,8 @@
              4, CPU/RAM use, time since last save   
            
            >This one can be set all the times:  
-             &65536=0, Show mouse editing-help(on), checked  
-             &65536=1, Show mouse editing-help(off), unchecked  
+             &65536=0, Show mouse editing-help(on) - checked  
+             &65536=1, Show mouse editing-help(off) - unchecked  
            
            >Context-menu in performane meter display:
              &131072=0, &262144=0, Display CPU utilization as 100% = all cores fully utilized 
@@ -5182,7 +5252,40 @@
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>itemranks</slug>  
+      <title>itemranks</title>  
+      <description>  
+          Take marker ranking levels-dropdownlist and Up/down/cycle actions skip 'no ranking'-checkbox, as set in Preferences -> Editing behavior  
+          It is an integer, preferences variable.
+						
+						>1, 1 up, 0 down
+						>2, 2 up, 0 down
+						>3, 3 up, 0 down
+						>4, 4 up, 0 down
+						>5, 5 up, 0 down
+						>17, 1 up, 1 down
+						>18, 2 up, 1 down
+						>19, 3 up, 1 down
+						>20, 4 up, 1 down
+						>21, 5 up, 1 down
+						
+						>&256=0, Up/down/cylce actions skip 'no ranking'-checkbox - checked
+						>&256=1, Up/down/cylce actions skip 'no ranking'-checkbox - unchecked
+						
+					Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+				 Preferences
+         Editing Behavior
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
   
+	
+	
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>itemsnap</slug>  
       <title>itemsnap</title>  
@@ -5593,25 +5696,39 @@
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>loudgraph_alpha</slug>  
+      <title>loudgraph_alpha</title>  
+      <description>  
+          Unknown
+          It is an integer, unknown variable.
+
+          Stored in reaper.ini under the same name in the section REAPER.  
+      </description>  
+      <chapter_context>
+         Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>loudpeak_alpha</slug>  
       <title>loudpeak_alpha</title>  
       <description>  
-          
-          It is an integer, preferences variable.
-          REAPER7
-           >
+          Unknown
+          It is an integer, unknown variable.
 
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
-         Preferences
-         Playback
+         Unknown
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
     </US_DocBloc>  
+		
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>lv2_opts</slug>  
@@ -7305,8 +7422,7 @@
       <slug>optimizesilence</slug>  
       <title>optimizesilence</title>  
       <description>  
-          Reduce CPU use of silent tracks during playback (experimental)-checkbox, as set in Preferences -> Audio  as well as 
-          Disable FX auto-bypass when using offline render/apply FX/render stems-checkbox, as set in Preferences -> Rendering
+          Several settings/checkboxes, as set in Preferences -> Audio  as well as Disable FX auto-bypass when using offline render/apply FX/render stems-checkbox, as set in Preferences -> Rendering
           It is an integer, preferences variable.
           
            >&1=0, Reduce CPU use of silent tracks during playback (experimental)-checkbox - unchecked
@@ -7317,6 +7433,12 @@
            
            >&8=0, Disable FX auto-bypass when using offline render/apply FX/render stems-checkbox - unchecked
            >&8=1, Disable FX auto-bypass when using offline render/apply FX/render stems-checkbox - checked
+					 
+					 >&16=0, Temporarily bypass oversampling on record arm-affected tracks - unchecked
+					 >&16=1, Temporarily bypass oversampling on record arm-affected tracks - checked
+					 
+					 >&32=0, Auto-bypass FX on record arm-affected tracks whose PDC exceeds-checkbox - unchecked
+					 >&32=1, Auto-bypass FX on record arm-affected tracks whose PDC exceeds-checkbox - checked
 
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
@@ -7425,6 +7547,25 @@
       <chapter_context>
          Project Settings
          Advanced
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+		
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>pdcautobypassms</slug>  
+      <title>pdcautobypassms</title>  
+      <description>  
+          Auto-bypass FX on record arm-affected tracks whose PDC exceeds-inputbox, as set in Preferences -> Audio
+          It's a double-float, preferences variable.
+          
+          >-100000000.0 to 100000000.0 in ms
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Preferences
+         Audio
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -7924,6 +8065,30 @@
       <chapter_context>
          Project Settings
          Video
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+		
+		<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projbeatbase</slug>  
+      <title>projbeatbase</title>  
+      <description>  
+          BPM basis-dropdownlist as set in Project Settings -> Project Settings
+          It is an integer, project variable.
+          
+           >0, 1/4
+					 >1, 1/8
+					 >2, 1/2
+					 >3, 1/4 dotted
+					 >4, 1/8 dotted
+					 >5, 1/2 dotted
+
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         Project Settings
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -8747,8 +8912,11 @@
            >&1=0, Dither isn't checked  
            >&1=1, Dither is checked  
            
-           >&2=0, Noise shaping isn't checked  
-           >&2=1, Noise shaping is checked  
+           >&2=0, Noise shape master - unchecked
+           >&2=1, Noise shape master - checked  
+					 
+					 >&8=0, Noise shape stems - unchecked
+					 >&8=1, Noise shape stems - checked
 
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8766,7 +8934,7 @@
       <description>  
           The fade-in-time in seconds, as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
           Decimals are allowed for milliseconds.
-          It's an double-float, project variable.
+          It's a double-float, project variable.
           
            >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
            >(limitation by the dialog, can be set higher)
@@ -8813,7 +8981,7 @@
       <description>  
           The fade-out-time in seconds, as set in the Render to File-Dialog -> Normalize/Limit/Fade-Button
           Decimals are allowed for milliseconds.
-          It's an double-float, project variable.
+          It's a double-float, project variable.
           
            >0 to 9999999999999999500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000(limitation by the dialog, can be set higher)
 
@@ -8916,10 +9084,7 @@
            >> 1 1 0, True Peak  
            >> 0 0 1, LUFS-M max  
            >> 1 0 1, LUFS-S max  
-            
-           >&32=0, Nomalize stems to master target-checkbox(only available with source -> Master mix + stems) - unchecked  
-           >&32=1, Nomalize stems to master target-checkbox(only available with source -> Master mix + stems) - checked  
-           
+                      
            >&64=0, Brickwall Limit-checkbox - unchecked
            >&64=1, Brickwall Limit-checkbox - checked
            
@@ -8929,11 +9094,23 @@
            >&256=0, Only normalize that are too loud - unchecked 
            >&256=1, Only normalize that are too loud - checked
            
-           >512=0, Fade In-checkbox - unchecked
-           >512=1, Fade In-checkbox - checked
+           >&512=0, Fade In-checkbox - unchecked
+           >&512=1, Fade In-checkbox - checked
            
-           >1024=0, Fade Out-checkbox - unchecked
-           >1024=1, Fade Out-checkbox - checked
+           >&1024=0, Fade Out-checkbox - unchecked
+           >&1024=1, Fade Out-checkbox - checked
+					 
+					 >&2048=0, too quiet-checkbox - unchecked
+					 >&2048=1, too quiet-checkbox - checked
+					 
+					 >&32 &4096, Normalize-dropdownlist
+					 >> 0 0, Normalize each file separately
+					 >> 0 1, Normalize to loudest file
+					 >> 1 1, Normalize as if one long file
+					 >> 1 0, Normalize all files to master mix
+					 
+					 >&8192=0, Adjust mono media an additional -3dB - unchecked
+					 >&8192=1, Adjust mono media an additional -3dB - checked
 
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -8962,6 +9139,34 @@
       <chapter_context>
          Project Settings
          Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderpadin</slug>  
+      <title>projrenderpadin</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknown variable.
+      </description>  
+      <chapter_context>
+         Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+		
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderpadout</slug>  
+      <title>projrenderpadout</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknown variable.
+      </description>  
+      <chapter_context>
+         Unknown
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -9065,7 +9270,7 @@
       <slug>projrenderstems</slug>  
       <title>projrenderstems</title>  
       <description>  
-          The Source-dropdownlist, as well as the "Embed stretch markers/transient guides"-checkbox, as set in the Render to File-dialog.  
+          The Source-dropdownlist, as well as some checkboxes, as set in the Render to File-dialog.  
           It is an integer, project variable.
           
            >0, Master mix  
@@ -9090,6 +9295,34 @@
       <chapter_context>
          Project Settings
          Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrendertrimthreshin</slug>  
+      <title>projrendertrimthreshin</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknown variable.
+      </description>  
+      <chapter_context>
+         Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+		
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrendertrimthreshout</slug>  
+      <title>projrendertrimthreshout</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknown variable.
+      </description>  
+      <chapter_context>
+         Unknown
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -9246,15 +9479,39 @@
             >> 1 0, Only snap at start/snap offset  
             >> 0 1, Snap both start/end  
            
-           >&8192=0, Snap cursor to edges of media items on any track(off) - unchecked  
-           >&8192=1, Snap cursor to edges of media items on any track(on) - checked  
+           >&8192=0, Snap cursor to edges of media items/take markers "cursor"-checkbox - unchecked  
+           >&8192=1, Snap cursor to edges of media items/take markers "cursor"-checkbox - checked  
+
+					 >&16384=0, Snap automation items to Automation Items-checkbox - unchecked
+					 >&16384=1, Snap automation items to Automation Items-checkbox - checked
 
            >&32768=0, Grid snap settings follow grid visibility(on) - checked  
            >&32768=1, Grid snap settings follow grid visibility(off) - unchecked  
+					 
+					 >&65536=0, Snap automation items to Media Items-checkbox - unchecked
+					 >&65536=1, Snap automation items to Media Items-checkbox - checked
 
            >&131072=0, Snap to project sample rate(off) - unchecked  
            >&131072=1, Snap to project sample rate(on) - checked  
-
+					 
+					 >&262144=0, Snap cursor to edges of media items/take markers "selection"-checkbox - unchecked  
+					 >&262144=1, Snap cursor to edges of media items/take markers "selection"-checkbox - checked  
+					 
+					 >&524288=0, Snap razor edits to Media Items - unchecked
+					 >&524288=1, Snap razor edits to Media Items - checked
+					 
+					 >&1048576=0, Snap razor edits to Automation Items - unchecked
+					 >&1048576=1, Snap razor edits to Automation Items - checked
+					 
+					 >&2097152=0, Snap media items to media item in other fixed lanes-checkbox - unchecked
+					 >&2097152=1, Snap media items to media item in other fixed lanes-checkbox - unchecked
+					 
+					 >&4194304=0, Snap fixed lane comp areas to media items-checkbox - checked
+					 >&4194304=1, Snap fixed lane comp areas to media items-checkbox - unchecked
+					
+  				 >&8388608=0, Snap media item edges to source media start/end-checkbox - checked
+					 >&8388608=1, Snap media item edges to source media start/end-checkbox - unchecked
+					 
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
       <chapter_context>
@@ -9536,8 +9793,8 @@
           Use Project sample rate-checkbox, as set in the Project Settings -> Project Settings  
           It is an integer, project variable.
           
-           >0, unchecked; don't use project sample rate  
-           >1, checked; use project sample rate  
+           >0, don't use project sample rate  - unchecked
+           >1, use project sample rate - checked;
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
             
@@ -9738,23 +9995,23 @@
            >&256 = 0, items in higher numbered tracks replace lower  
            >&256 = 1, items in lower numbered tracks replace higher  
            
-           >&512 = 0, unchecked: Always resize video sources to preferred video size  
-           >&512 = 1, checked: Always resize video sources to preferred video size  
+           >&512 = 0, unchecked: Always resize video sources to preferred video size - unchcecked
+           >&512 = 1, checked: Always resize video sources to preferred video size  - checked
            
-           >&1024 = 0, unchecked: Always resize output to preferred video size  
-           >&1024 = 1, checked: Always resize output to preferred video size  
+           >&1024 = 0, unchecked: Always resize output to preferred video size  - unchecked
+           >&1024 = 1, checked: Always resize output to preferred video size  - checked
            
-           >&2048 = 0, checked: Use high quality filtering when resizing  
-           >&2048 = 1, unchecked: Use high quality filtering when resizing  
+           >&2048 = 0, checked: Use high quality filtering when resizing - checked
+           >&2048 = 1, unchecked: Use high quality filtering when resizing - unchecked 
            
-           >&4096 = 0, checked: Preserve aspect ratio(letterbox) when resizing  
-           >&4096 = 1, unchecked: Preserve aspect ratio(letterbox) when resizing  
+           >&4096 = 0, checked: Preserve aspect ratio(letterbox) when resizing - checked
+           >&4096 = 1, unchecked: Preserve aspect ratio(letterbox) when resizing  - unchecked
            
-           >&8192 = 0, unchecked: Video is affected by the solo state of other tracks
-           >&8192 = 1, checked: Video is affected by the solo state of other tracks
+           >&8192 = 0, unchecked: Video is affected by the solo state of other tracks - unchecked
+           >&8192 = 1, checked: Video is affected by the solo state of other tracks - checked
            
-           >&16384 = 0, unchecked: Video is affected by muted parent tracks
-           >&16384 = 1, unchecked: Video is affected by muted parent tracks
+           >&16384 = 0, unchecked: Video is affected by muted parent tracks - unchecked
+           >&16384 = 1, checked: Video is affected by muted parent tracks - checked
            
            >&32768 = 0, Video processor automation-dropdownlist -> Evaluate at middle of frame
            >&32768 = 1, Video processor automation-dropdownlist -> Evaluate at start of frame
@@ -10439,11 +10696,11 @@
       <slug>renderclosewhendone</slug>  
       <title>renderclosewhendone</title>  
       <description>  
-          Some render-settings, as set in either the Render to File-dialog or in the Rendering to File-status window and the Project Render Metadata-dialog
+          Some render-settings, as set in either the Rendering-page of the preferences, Render to File-dialog or in the Rendering to File-status window and the Project Render Metadata-dialog
           It is an integer-bitfield, project variable.
           
-           >&1=0, Automatically close, when finished - checkbox in the Rendering to File-status-window - unchecked  
-           >&1=1, Automatically close, when finished - checkbox in the Rendering to File-status-window - checked  
+           >&1=0, Auto-close all render windows when finished - checkbox - unchecked  
+           >&1=1, Auto-close all render windows when finished - checkbox - checked  
 
            >&16=0, Silently increment filenames to avoid overwriting - unchecked  
            >&16=1, Silently increment filenames to avoid overwriting - checked  
@@ -10457,14 +10714,12 @@
            >&128=0, Mark overs in render peaks display - checked  
            >&128=1, Mark overs in render peaks display - unchecked
            
-           >&256=0, True Peak -> Calculate statistics when rendering-button - unchecked  
-           >&256=1, True Peak -> Calculate statistics when rendering-button - checked
+           >&256=0, Stats/Charts-button -> Calculate statistics when rendering -> Peak - unchecked  
+           >&256=1, Stats/Charts-button -> Calculate statistics when rendering -> True Peak - checked
            
-           >&512=0, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - checked
-           >&512=1, LUFS-I, LUFS-M(integrated loudness, momentary loudness) -> Calculate statistics when rendering-button - unchecked
-           
-           >&1024=0, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - checked  
-           >&1024=1, LRA, LUFS-S (loudness range, short-term loudness) -> Calculate statistics when rendering-button - unchecked
+					 >&512 &1024 - Stats/Charts-button -> Calculate statistics when rendering
+					 >> 0  0  - LUFS-M LUFS-S LUFS-I LRA
+           >> 1  1  - RMS-M RMS-S RMS-I RMS-RA
 
            >&2048=0, Calculate and embed peak/loudness value-checkbox - unchecked  
            >&2048=1, Calculate and embed peak/loudness value-checkbox - checked
@@ -10478,6 +10733,16 @@
            >seems not to be available anymore as of Reaper 5.977:  
            >&65537=0, Save copy of project to outfile.wav.RPP - unchecked  
            >&65537=1, Save copy of project to outfile.wav.RPP - checked  
+					 
+					 >&131072=0, per rendered file-radiobutton
+					 >&131072=1, combined-radiobutton
+					 
+					 >&262144=0, Customize render statistics charts -> Hide project regions/markers - checked
+					 >&262144=1, Customize render statistics charts -> Hide project regions/markers - unchecked
+					 
+					 >&524288=0, Customize render statistics charts -> Hide file paths - checked
+					 >&524288=1, Customize render statistics charts -> Hide file paths - unchecked
+					 
       </description>  
       <chapter_context>
          Project Settings
@@ -10523,6 +10788,32 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>renderpeaks</slug>  
+      <title>renderpeaks</title>  
+      <description>  
+          The Stats/Charts-button -> Render peaks display settings-menu and the context-menu of the peak/loudness-graph in the dialog during rendering.
+					It is an integer, preferences variable.
+						>&128=0, Reopen render results window modelessly to allow focus to return to project - checked
+						>&128=1, Reopen render results window modelessly to allow focus to return to project - unchecked
+					
+						>&4=0, Shade areas that do not contribute to LUFS-I (gate: -70.0) - unchecked
+						>&4=1, Shade areas that do not contribute to LUFS-I (gate: -70.0) - checked
+						
+						>&16=0, Display momentary loudness graph - unchecked
+						>&16=1, Display momentary loudness graph - checked
+						
+						>&16=0, Display short-term loudness graph - unchecked
+						>&16=1, Display short-term loudness graph - checked
+      </description>  
+      <chapter_context>
+         Preferences
+				 Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc> 
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>renderqdelay</slug>  
       <title>renderqdelay</title>  
       <description>  
@@ -10539,7 +10830,7 @@
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
-    </US_DocBloc>  
+    </US_DocBloc> 		
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>rendertail</slug>  
@@ -11231,7 +11522,7 @@
       <title>scrubgain</title>  
       <description>  
           Scrub/jog volume gain-inputbox, as set in Preferences -> Scrub/Jog
-          It is an double-float, preferences variable.
+          It is a double-float, preferences variable.
           
           Note: use ultraschall.DB2MKVOL() and ultraschall.MKVOL2DB() to convert the value from/to db.
           
@@ -12369,6 +12660,20 @@
     </US_DocBloc>  
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>tempoenvsnap</slug>  
+      <title>tempoenvsnap</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknon variable.
+      </description>  
+      <chapter_context>
+         Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  	 
+	
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>textflags</slug>  
       <title>textflags</title>  
       <description>  
@@ -13469,7 +13774,7 @@
       <description>  
           Current state of the vertical zoom
           Can be set but will not update arrange view; even if you use UpdateArrange() !  
-          It is an double, project variable.
+          It is a double, project variable.
           
           NOTE: This must be set, when vzoom2 is set, or it can cause issues!
           Also note: vzoom3 allows the zoomfactor in smaller steps, due it being double, unlike vzoom2.

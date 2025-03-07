@@ -4390,10 +4390,359 @@
           Tutorials
         </chapter_context>
         <previous_chapter>Tutorial_010_Structuring_Guis_With_Labels_When_Autopositioning</previous_chapter>  
+        <next_chapter>Tutorial_012_Sticky_UI_Elements</next_chapter>  
+        <tags></tags>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+        <slug>Tutorial_012_Sticky_UI_Elements</slug>  
+        <title>Tutorial 012: Sticky UI-elements</title>  
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+					ReaGirl has the option to make ui-elements sticky. That means, that they will not be scrolled around and stick to their initial place when the users scrolls the gui.    
+					You can choose, whether to prevent horizontal scrolling, vertical scrolling or both.   
+					In the following tutorial, we will see, how to make sticky ui-elements possible.  
+				
+					Let's start with a basic gui, that has two inputboxes, one at the top and one at the bottom.  
+					
+								-- 0. enable ReaGirl for the script
+									dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+
+								-- 1. add the run-functions for the ui-elements
+									function checkbox_run_function()
+									end
+									
+									function inputbox_run_function_enter()
+									end
+									
+									function inputbox_run_function_type()
+									end
+
+
+								-- 2. start a new gui
+									reagirl.Gui_New()
+
+
+								-- 3. add the ui-elements and set their attributes
+
+								-- add the inputbox and background decorative rectangle to the top of the window
+								-- inputbox
+									inputbox = reagirl.Inputbox_Add(-220, 6, 200, "InputBox", 50, ".", "Test text", inputbox_run_function_enter, inputbox_run_function_type)
+
+								-- add the inputbox and background decorative rectangle to the bottom of the window
+								-- inputbox
+									inputbox2 = reagirl.Inputbox_Add(-220, -35, 200, "InputBox", 50, ".", "More test text", inputbox_run_function_enter, inputbox_run_function_type)
+
+								-- 4. open the gui
+									reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 235, 225, nil, nil, nil)
+
+
+								-- 5. a main-function that runs the gui-management-function
+									function main()
+										reagirl.Gui_Manage()
+									
+										if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+									end
+									
+									main()
+
+
+					![A window with tow inputboxes that read "InputBox" as caption and "Test text" and "More test text" as their values. ](gfx/Tutorial12_01.png "A window with tow inputboxes that read "InputBox" as caption and "Test text" and "More test text" as their values. ")  
+
+					This doesn't scroll at all, so let's add 100 checkboxes to the code, which looks like this:  
+
+						
+								-- 0. enable ReaGirl for the script
+									dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+
+								-- 1. add the run-functions for the ui-elements
+									function checkbox_run_function()
+									end
+									
+									function inputbox_run_function_enter()
+									end
+									
+									function inputbox_run_function_type()
+									end
+
+
+								-- 2. start a new gui
+									reagirl.Gui_New()
+
+
+								-- 3. add the ui-elements and set their attributes
+
+								-- add the inputbox and background decorative rectangle to the top of the window
+								-- inputbox
+									inputbox = reagirl.Inputbox_Add(-220, 6, 200, "InputBox", 50, ".", "Test text", inputbox_run_function_enter, inputbox_run_function_type)
+
+								-- add the inputbox and background decorative rectangle to the bottom of the window
+								-- inputbox
+									inputbox2 = reagirl.Inputbox_Add(-220, -35, 200, "InputBox", 50, ".", "More test text", inputbox_run_function_enter, inputbox_run_function_type)
+
+								-- add some checkboxes
+									checkboxes={}
+								-- add the first checkbox with a fixed position
+									checkboxes[1]=reagirl.Checkbox_Add(10, 35, "Checkbox #1", "A demo checkbox.", true, checkbox_run_function)
+								-- add all the other checkboxes with autopositioning
+									for i=2, 100 do
+										reagirl.NextLine()
+										checkboxes[i]=reagirl.Checkbox_Add(10, nil, "Checkbox #"..i, "A demo checkbox.", true, checkbox_run_function)
+									end
+
+								-- 4. open the gui
+									reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 235, 225, nil, nil, nil)
+
+
+								-- 5. a main-function that runs the gui-management-function
+									function main()
+										reagirl.Gui_Manage()
+									
+										if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+									end
+									
+									main()
+
+
+					![The same window with 100 additional checkboxes, that are scrolled around. The inputboxes are scrolled with them.](gfx/Tutorial12_02.gif "The same window with 100 additional checkboxes, that are scrolled around. The inputboxes are scrolled with them.")  		
+					
+					What you'll quickly notice is, that the inputboxes are scrolling around with the checkboxes. So let's prevent that.  
+					
+					For this, we need the function reagirl.UI\_Element\_GetSetSticky(), which we will use for the inputboxes. It has four parameters.  
+					First, the element\_id of the ui-element that we want to set to sticky, in our case inputbox and inputbox2.   
+					The second parameter is either true for setting or false for getting the stickyness of a ui-element.  
+					The last two parameters decide, whether the scrolling of the sticky ui-element shall be prevented for the horizontal and/or the vertical direction respectively.  
+					In this tutorial, we set, that the inputboxes shall scroll horizontally(false) but not vertically(true).  
+					
+					The code looks like this:  
+
+						
+								-- 0. enable ReaGirl for the script
+									dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+
+								-- 1. add the run-functions for the ui-elements
+									function checkbox_run_function()
+									end
+									
+									function inputbox_run_function_enter()
+									end
+									
+									function inputbox_run_function_type()
+									end
+
+
+								-- 2. start a new gui
+									reagirl.Gui_New()
+
+
+								-- 3. add the ui-elements and set their attributes
+
+								-- add the inputbox and background decorative rectangle to the top of the window
+								-- inputbox
+									inputbox = reagirl.Inputbox_Add(-220, 6, 200, "InputBox", 50, ".", "Test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox, true, false, true) -- set the inputbox at the top to sticky
+									
+								-- add the inputbox and background decorative rectangle to the bottom of the window
+								-- inputbox
+									inputbox2 = reagirl.Inputbox_Add(-220, -35, 200, "InputBox", 50, ".", "More test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox2, true, false, true) -- set the inputbox at the bottom to sticky
+
+								-- add some checkboxes
+									checkboxes={}
+								-- add the first checkbox with a fixed position
+									checkboxes[1]=reagirl.Checkbox_Add(10, 35, "Checkbox #1", "A demo checkbox.", true, checkbox_run_function)
+								-- add all the other checkboxes with autopositioning
+									for i=2, 100 do
+										reagirl.NextLine()
+										checkboxes[i]=reagirl.Checkbox_Add(10, nil, "Checkbox #"..i, "A demo checkbox.", true, checkbox_run_function)
+									end
+
+								-- 4. open the gui
+									reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 235, 225, nil, nil, nil)
+
+
+								-- 5. a main-function that runs the gui-management-function
+									function main()
+										reagirl.Gui_Manage()
+									
+										if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+									end
+									
+									main()
+
+					![The same window, whose checkboxes are scrolled around and tabbed through. The inputboxes stay at the same position. Some ui-elements get stuck behind inputboxes.](gfx/Tutorial12_03.gif "The same window, whose checkboxes are scrolled around and tabbed through. The inputboxes stay at the same position. Some ui-elements get stuck behind inputboxes.")  						
+						
+					Yeah, this looks much better. 
+					However, when scrolling around or using the tab-key, you'll quickly notice, that ui-elements can become stuck behind the sticky inputboxes.  
+					But there's a solution for this: sticky offsets.  
+					Sticky offsets are offsets at the top or at the bottom of the window, where you can define, how much space the sticky ui-elements need. Once defined, scrolling and tabbing will always put the 
+					ui-elements into view and prevent them from being hidden behind.  
+					For this, we need the function reagirl.Gui_GetSetStickyOffset(), which has three parameters. First, if you want to set the offsets(true) or get the currently added offsets(false), then the offset in pixels from the top and from the bottom respectively.    
+					
+					So let's add the offsets:    
+					
+								-- 0. enable ReaGirl for the script
+									dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+
+								-- 1. add the run-functions for the ui-elements
+									function checkbox_run_function()
+									end
+									
+									function inputbox_run_function_enter()
+									end
+									
+									function inputbox_run_function_type()
+									end
+
+
+								-- 2. start a new gui
+									reagirl.Gui_New()
+
+
+								-- 3. add the ui-elements and set their attributes
+
+								-- add the inputbox and background decorative rectangle to the top of the window
+								-- inputbox
+									inputbox = reagirl.Inputbox_Add(-220, 6, 200, "InputBox", 50, ".", "Test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox, true, false, true) -- set the inputbox at the top to sticky
+									
+								-- add the inputbox and background decorative rectangle to the bottom of the window
+								-- inputbox
+									inputbox2 = reagirl.Inputbox_Add(-220, -35, 200, "InputBox", 50, ".", "More test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox2, true, false, true) -- set the inputbox at the bottom to sticky
+
+								-- add some checkboxes
+									checkboxes={}
+								-- add the first checkbox with a fixed position
+									checkboxes[1]=reagirl.Checkbox_Add(10, 35, "Checkbox #1", "A demo checkbox.", true, checkbox_run_function)
+								-- add all the other checkboxes with autopositioning
+									for i=2, 100 do
+										reagirl.NextLine()
+										checkboxes[i]=reagirl.Checkbox_Add(10, nil, "Checkbox #"..i, "A demo checkbox.", true, checkbox_run_function)
+									end
+									
+								-- set a scrolling/tabbing offset to the top and the bottom of the window, so ui-elements
+								-- don't get stuck behind the sticky ui-elements
+									reagirl.Gui_GetSetStickyOffset(true, 35, 25)
+
+								-- 4. open the gui
+									reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 235, 225, nil, nil, nil)
+
+
+								-- 5. a main-function that runs the gui-management-function
+									function main()
+										reagirl.Gui_Manage()
+									
+										if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+									end
+									
+									main()
+
+					![The same window, whose checkboxes are scrolled around and tabbed through. The inputboxes stay at the same position. The ui-elements never get stuck behind inputboxes now.](gfx/Tutorial12_04.gif "The same window, whose checkboxes are scrolled around and tabbed through. The inputboxes stay at the same position. The ui-elements never get stuck behind inputboxes now.")  						
+
+					Great, that looks much better. 
+					
+					Now the ui-elements do not get stuck behind the inputboxes, which is fantastic.   
+					
+					But there's still one bad thing, though: the caption of the inputboxes is hard to read when checkboxes are behind them.  	 
+					For this, we use a feature of ReaGirl, called DecorRectangles. 
+					
+					These are decorative rectangles that are just drawn but can't be selected or clicked. If we put them behind the input-boxes, the captions will become readable.   
+					reagirl.DecorRectangle_Add() has 8 parameters. First, x, y, width and height and then the radius of the edges of the rectangle. The last three parameters are the color-r, g, b-values.    
+					We can also set the individual edges of the decorative rectangle to square or rounded with the additional function reagirl.DecorRectangle\_SetEdgeStyle(). That way, we can have the bottom edges of the top and the top edges of the bottom rectangle rounded, which looks much nicer.    
+					
+					With this, we can add these decorative rectangles behind the inputboxes to make the captions readable.   
+					We also need to set these rectangles to sticky, so they don't scroll around.  
+					
+					So let's fix the caption issue, shall we?    
+					
+				
+								-- 0. enable ReaGirl for the script
+									dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+
+								-- 1. add the run-functions for the ui-elements
+									function checkbox_run_function()
+									end
+									
+									function inputbox_run_function_enter()
+									end
+									
+									function inputbox_run_function_type()
+									end
+
+
+								-- 2. start a new gui
+									reagirl.Gui_New()
+
+
+								-- 3. add the ui-elements and set their attributes
+
+								-- add the inputbox and background decorative rectangle to the top of the window
+								-- inputbox
+									inputbox = reagirl.Inputbox_Add(-220, 6, 200, "InputBox", 50, ".", "Test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox, true, false, true) -- set the inputbox at the top to sticky
+									-- decorative rectangle
+									decorect=reagirl.DecorRectangle_Add(-230, 0, 220, 30, 10, 40, 40, 40)    -- add decorative rectangle to the top
+									reagirl.UI_Element_GetSetSticky(decorect, true, false, true)             -- set decorative rectangle sticky
+									reagirl.DecorRectangle_SetEdgeStyle(decorect, true, false, true, false)  -- set top edges square
+
+								-- add the inputbox and background decorative rectangle to the bottom of the window
+								-- inputbox
+									inputbox2 = reagirl.Inputbox_Add(-220, -35 200, "InputBox", 50, ".", "More test text", inputbox_run_function_enter, inputbox_run_function_type)
+									reagirl.UI_Element_GetSetSticky(inputbox2, true, false, true) -- set the inputbox at the bottom to sticky
+									-- decorative rectangle
+									decorect2=reagirl.DecorRectangle_Add(-230, -42, 220, 30, 10, 40, 40, 40) -- add decorative rectangle to the bottom
+									reagirl.UI_Element_GetSetSticky(decorect2, true, false, true)            -- set decorative rectangle sticky
+									reagirl.DecorRectangle_SetEdgeStyle(decorect2, false, true, false, true) -- set bottom edges square
+
+								-- add some checkboxes
+									checkboxes={}
+								-- add the first checkbox with a fixed position
+									checkboxes[1]=reagirl.Checkbox_Add(10, 35, "Checkbox #1", "A demo checkbox.", true, checkbox_run_function)
+								-- add all the other checkboxes with autopositioning
+									for i=2, 100 do
+										reagirl.NextLine()
+										checkboxes[i]=reagirl.Checkbox_Add(10, nil, "Checkbox #"..i, "A demo checkbox.", true, checkbox_run_function)
+									end
+
+								-- set a scrolling/tabbing offset to the top and the bottom of the window, so ui-elements
+								-- don't get stuck behind the sticky ui-elements
+									reagirl.Gui_GetSetStickyOffset(true, 35, 25)
+
+
+								-- 4. open the gui
+									reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 235, 225, nil, nil, nil)
+
+
+								-- 5. a main-function that runs the gui-management-function
+									function main()
+										reagirl.Gui_Manage()
+									
+										if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+									end
+									
+									main()
+
+					![The same window, whose checkboxes are scrolled around and tabbed through. The inputboxes stay at the same position. The ui-elements never get stuck behind inputboxes now and the captions of the inputbox is now readable thanks to the decorative rectangle.](gfx/Tutorial12_05.gif "The ui-elements never get stuck behind inputboxes now and the captions of the inputbox is now readable thanks to the decorative rectangle.")  						
+
+					Ahh, no we're talking.   
+					The caption is now readable, thanks to the decorative rectangles. They are also sticky and have some of the edges rounded and others square. With this, the gui is finished.  
+					
+					A note for blind scripters: if you want to place a decorative rectangle, put the x and y-position a few pixels left and above the ui-element(s) that shall be backed up by it. Set the width and height to the lowest and most right edges of the lowest and most right ui-element AND: add the number of pixels*2 you positioned it to the left and top. So if you place the rectangle 3 pixels from the left and 3 pixesl from the top of the first ui-element, add to the width and height 3\*2 pixels. That way, it will always look properly positioned. 
+        </description>  
+        <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
+        <source_document>ReaGirl_Introduction_and_Concepts.USDocML</source_document>  
+        <chapter_context>
+          Tutorials
+        </chapter_context>
+        <previous_chapter>Tutorial_011_Linking_UI_Elements_To_States</previous_chapter>  
         <next_chapter>The_Gui_Elements_000</next_chapter>  
         <tags></tags>  
     </US_DocBloc>  
-          
       
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
         <slug>The_Gui_Elements_000</slug>  
@@ -4444,7 +4793,7 @@
             - reagirl.Button\_SetRadius - allows you to make the button more round or more square  
             - reagirl.Button\_GetRadius - gets the current roundness of the button's edges  
               
-            Check the [first tutorial "A basic gui"](#Tutorial_001_A_Basic_Gui) to see examples of guis with a buttons.  
+            Check the [first tutorial "A basic gui"](#Tutorial_001_A_Basic_Gui) to see examples of guis with buttons.  
         </description>  
         <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
         <source_document>ReaGirl_Introduction_and_Concepts.USDocML</source_document>  
@@ -4593,6 +4942,8 @@
                   
             You can do more things with images:  
               
+							- reagirl.Image\_GetAutoUpdate - gets, if the image is automatically updated when the underlying image-file is changed/updated
+							- reagirl.Image\_SetAutoUpdate - sets, if the image is automatically updated when the underlying image-file is changed/updated
               - reagirl.Image\_GetDraggable - get if the image is draggable and what the potential drag-destinations are  
               - reagirl.Image\_SetDraggable - set the image to draggable and set the potential drag-destination-ui-elements  
               - reagirl.Image\_GetDimensions - get the width and height of the image  
@@ -4650,10 +5001,11 @@
             - reagirl.Inputbox\_GetSelectedText - gets the currently selected text  
             - reagirl.InputBox\_GetCursorOffset - gets the current offset of the edit-cursor in the editfield of an inputbox              
 			
-			- reagirl.InputBox\_LinkToConfigVar - links the inputbox to a certain config-variable
-			- reagirl.InputBox\_LinkToExtstate - links the inputbox to an extstate  
-			- reagirl.InputBox\_LinkToIniValue - links the inputbox to an ini-value
-			- reagirl.InputBox\_Unlink - removes the link between the inputbox and a certain state  
+						- reagirl.InputBox\_LinkToConfigVar - links the inputbox to a certain config-variable
+						- reagirl.InputBox\_LinkToExtstate - links the inputbox to an extstate  
+						- reagirl.InputBox\_LinkToIniValue - links the inputbox to an ini-value
+						- reagirl.InputBox\_Unlink - removes the link between the inputbox and a certain state  
+						
             Check the examples in the subfolder Additional\_Examples for examples of guis with inputboxes. Run the action "ReaGirl\_OpenFolder\_ExampleScripts.lua" to open the example-folder.  
         </description>  
         <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
@@ -4697,9 +5049,9 @@
             - reagirl.DropDownMenu\_GetMenuItems - gets the menu-items of the drop down menu  
             - reagirl.DropDownMenu\_SetMenuItems - sets the menu-items of the drop down menu  
 			
-			- reagirl.DropDownMenu\_LinkToExtstate - links the drop down menu to an extstate  
-			- reagirl.DropDownMenu\_LinkToIniValue - links the drop down menu to an ini-value
-			- reagirl.DropDownMenu\_Unlink - removes the link between the drop down menu and a certain state  
+						- reagirl.DropDownMenu\_LinkToExtstate - links the drop down menu to an extstate  
+						- reagirl.DropDownMenu\_LinkToIniValue - links the drop down menu to an ini-value
+						- reagirl.DropDownMenu\_Unlink - removes the link between the drop down menu and a certain state  
 			
             Check the [fourth tutorial "Disabled UI-Elements"](#Tutorial_004_Disabled_UI_Elements) to see examples of guis with sliders.  
         </description>  
@@ -4761,10 +5113,10 @@
             - reagirl.Slider\_SetDisabled - sets the disability-state of the slider, means, if it can be influenced by mouse or keyboard or not  
 			
             - reagirl.Slider\_LinkToIntConfigVar - links the slider to a certain integer config-variable
-			- reagirl.Slider\_LinkToDoubleConfigVar - links the slider to a certain double config-variable
-			- reagirl.Slider\_LinkToExtstate - links the slider to an extstate  
-			- reagirl.Slider\_LinkToIniValue - links the slider to an ini-value
-			- reagirl.Slider\_Unlink - removes the link between the checkbox and a certain state  
+						- reagirl.Slider\_LinkToDoubleConfigVar - links the slider to a certain double config-variable
+						- reagirl.Slider\_LinkToExtstate - links the slider to an extstate  
+						- reagirl.Slider\_LinkToIniValue - links the slider to an ini-value
+						- reagirl.Slider\_Unlink - removes the link between the checkbox and a certain state  
             Check the [fourth tutorial "Disabled UI-Elements"](#Tutorial_004_Disabled_UI_Elements) to see examples of guis with sliders.  
         </description>  
         <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
@@ -4818,11 +5170,82 @@
           The Gui Elements
         </chapter_context>
         <previous_chapter>The_Gui_Elements_007_Sliders</previous_chapter>  
-        <next_chapter>The_Gui_Elements_Concepts001_Context_Menus</next_chapter>  
+        <next_chapter>The_Gui_Elements_009_ColorRectangle</next_chapter>  
         <tags></tags>  
     </US_DocBloc>  
       
-  
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+        <slug>The_Gui_Elements_009_ColorRectangle</slug>  
+        <title>Color Rectangle</title>  
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+            A color rectangle is a rectangle that is of a specific color of your choosing. It can be clicked by the user.
+						It is optionally possible to open a color-selector-dialog when clicking the color rectangle and the chosen color will be used right away in the rectangle.
+						It has a border around it. You can also choose to make the edges round or square shaped individually.
+						
+						Screen reader users will get notified the color value by its name and by its color-values. These are also communicated via the tooltip for colorblind users.
+						To make it easier for blind users to get a picture of the used color, use one that has a name for it. You can use reagirl.Color_EnumerateNames(), reagirl.Color_GetName() 
+						and reagirl.Color_GetColorValuesByName() for this. All standard HTML-color-names are supported.
+              
+            You add Color-Rectangles to your gui using reagirl.ColorRectangle\_Add(), which has 11 parameters.  
+              
+            - Parameters 1 and 2 are x and y-position of the color rectangle in pixels. You can set these to nil to autoposition the tabs.  
+            - Parameters 3 and 4 are the width and height of the color rectangle.
+            - Parameter 5 through 7 are the r,g,b-values of the color of the rectangle(values ranging from 1-255)
+            - Parameter 8 is the caption of the color-rectangle, which is communicated to screen readers.
+						- Parameter 9 is meaningOfUI\_Element, which is a description for the color-rectangle, communicated to screen reader users. Explain what the rectangle is for and why.  
+            - Parameter 10 signals, if clicking the color-rectangle opens up a color-selector-dialog(true) or not(false)
+						- Parameter 11 is the run-function, that is run everytime the user clicks the color-rectangle. If a color-selector-dialog is opened, the run-function will be run after the user closed the color-selector.
+              
+            There are more things you can do with color-rectangles:  
+            
+						- reagirl.ColorRectangle\_GetEdgeStyle - gets if the individual edges of the color-rectangle are square or rounded			
+            - reagirl.ColorRectangle\_SetEdgeStyle - sets the individual edges of the color-rectangle to square or rounded  
+						- reagirl.ColorRectangle\_GetRadius - gets the current radius of the color-rectangle edges
+						- reagirl.ColorRectangle\_SetRadius - sets the radius of the color-rectangle edges
+						- reagirl.ColorRectangle\_GetColor - gets the current color of the color-rectangle
+						- reagirl.ColorRectangle\_SetColor - sets the color of the color-rectangle
+              
+            Check the [second tutorial "Adding Tabs to a Gui"](#Tutorial_002_Adding_Tabs_to_a_Gui) as well as the [eight tutorial "Autopositioning with tabs"](#Tutorial_008_Autopositioning_With_Tabs) to see, how to code tabs.  
+        </description>  
+        <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
+        <source_document>ReaGirl_Introduction_and_Concepts.USDocML</source_document>  
+        <chapter_context>
+          The Gui Elements
+        </chapter_context>
+        <previous_chapter>The_Gui_Elements_008_Tabs</previous_chapter>  
+        <next_chapter>The_Gui_Elements_010_BurgerMenu</next_chapter>  
+        <tags></tags>  
+    </US_DocBloc>  
+		
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+        <slug>The_Gui_Elements_010_BurgerMenu</slug>  
+        <title>Burger Menu</title>  
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">  
+            A burger-menu is a ui-element very common on websites, being a button with three horizontal lines on it. It opens a menu when clicking on it, so the user can select additional options.
+						
+						You add Burger-menus to your gui using reagirl.Burgermenu\_Add(), which has 6 parameters.  
+              
+            - Parameters 1 and 2 are x and y-position of the burger-menu in pixels. You can set these to nil to autoposition the tabs.  
+            - Parameter 3 is a caption read to accessibility-users
+            - Parameter 4 is a description of the burger-menu, communicated to accessibility-users by screen reader as well as a tooltip
+            - Parameter 5 is the menu shown, when the user clicks the burger-menu. It is formatted the way as gfx.showmenu() accepts it.
+						- Parameter 6 is the run-function, that is run everytime the user selects a menu-entry
+              
+            There are more things you can do with burgermenus:  
+						- reagirl.Burgermenu\_GetMenu - gets the currently set menu of the burger-menu
+						- reagirl.Burgermenu\_SetMenu - sets a new menu to the burger-menu 
+        </description>  
+        <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
+        <source_document>ReaGirl_Introduction_and_Concepts.USDocML</source_document>  
+        <chapter_context>
+          The Gui Elements
+        </chapter_context>
+        <previous_chapter>The_Gui_Elements_009_ColorRectangle</previous_chapter>  
+        <next_chapter>The_Gui_Elements_Concepts001_Context_Menus</next_chapter>  
+        <tags>burger menu</tags>  
+    </US_DocBloc>  
+      
+	
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
         <slug>The_Gui_Elements_Concepts001_Context_Menus</slug>  
         <title>Context Menus</title>  
@@ -4921,6 +5344,7 @@
           - reagirl.UI\_Element\_GetSetMeaningOfUIElement - gets/sets the meaning of ui-element, like tooltip/screen reader helpmessage  
           - reagirl.UI\_Element\_GetSetPosition - gets/sets the position of a ui-element  
           - reagirl.UI\_Element\_GetSetRunFunction - gets/sets the current run-functions  
+					- reagirl.UI\_Element\_GetSetSticky - gets/sets if a ui-element is set to sticky
           - reagirl.UI\_Element\_GetSetVisibility - gets/sets visibility of a ui-element  
           - reagirl.UI\_Element\_GetType - gets the type of a ui-element, like Edit for inputboxes, label, checkbox, etc  
           - reagirl.UI\_Element\_IsElementAtMousePosition - checks, if a ui-element is at mouse-position  
@@ -4937,10 +5361,12 @@
           - reagirl.Gui\_Close - closes the gui-window  
           - reagirl.Gui\_ForceRefresh - forces a refresh of the gui, if something has changed, usually not needed  
           - reagirl.Gui\_GetBoundaries - gets the current boundaries of the ui-elements  
+					- reagirl.Gui\_GetCurrentScriptInstance - gets the identifier of the current script-instance  
           - reagirl.Gui\_IsOpen - returns, if the gui-window is currently opened or not  
           - reagirl.Gui\_Manage - manages the gui-functionality, needs to be called periodically  
           - reagirl.Gui\_New - starts a new gui and throws away the current one  
           - reagirl.Gui\_Open - opens up the gui-window  
+					- reagirl.Gui\_GetSetStickyOffset - sets an offset to the top/bottom to prevent ui-elements scrolling/tabbing behind sticky ui-elements
           - reagirl.Gui\_PreventCloseViaEscForOneCycle - prevents the closing of the gui via esc-key for one defer-cycle  
           - reagirl.Gui\_PreventEnterForOneCycle - prevents the "global" enter-key from working for one defer-cycle  
           - reagirl.Gui\_PreventScrollingForOneCycle - prevents scrolling of the gui for one defer-cycle  
@@ -4948,20 +5374,34 @@
           Functions for the gui-window:  
             
           - reagirl.Window\_ForceSize\_Minimum - forces that the window can't be resizes under a specific minimum  
+          - reagirl.Window\_ForceSize\_Maximum - forces that the window can't be resizes above a specific maximum  
           - reagirl.Window\_GetCurrentScale - gets the currently used scaling-factor for the gui  
+					- reagirl.Window\_GetScrollOffset - gets the current scroll-offset of the gui  
+					- reagirl.Window\_GetHWND - gets the window-handler of the current ReaGirl-window  
+					- reagirl.Window\_ResizedFunc - sets a run-function that gets called everytime the ReaGirl-window gets resized  
           - reagirl.Window\_SetCurrentScale - sets a scaling factor for the gui between 1 and 8  
           - reagirl.Window\_SetFocus - sets window-focus back to the gui-window  
-          - reagirl.Window\_ForceSize\_Maximum - forces that the window can't be resizes above a specific maximum  
             
           Function to access a ReaGirl-gui-window from other scripts:  
   
           - reagirl.Ext\_Tab\_SetSelected - sets a tab of specific ReaGirl-gui-window focused  
+					- reagirl.Ext\_UI\_Element\_GetHovered - gets the currently hovered ui-element from a ReaGirl-gui-window   
+					- reagirl.Ext\_Window\_GetInstances - gets the ReaGirl-window-instances currently opened  
           - reagirl.Ext\_Window\_Focus - sets window-focus to an opened ReaGirl-gui-window  
+					- reagirl.Ext\_IsAnyReaGirlGuiHovered - gets, if the mouse is currently hovering above any ReaGirl-window  
           - reagirl.Ext\_Window\_IsOpen - gets, if a specific ReaGirl-gui-window is currently opened  
           - reagirl.Ext\_Window\_GetState - gets the current dimensions and dock-state of an opened/previously opened ReaGirl-window  
-          - reagirl.Ext\_Window\_SetState - gets the current dimensions and dock-state of an opened/previously opened ReaGirl-window  
+          - reagirl.Ext\_Window\_SetState - sets the current dimensions and dock-state of an opened/previously opened ReaGirl-window  
           - reagirl.Ext\_Window\_ResetToDefault - resets a ReaGirl-Gui-Window to its default dimensions and dockstate  
   
+					Tools:  
+					
+					- reagirl.Color\_GetColorValuesByName - get the r,g,b-color-values by the name of a color(all html-color-names are supported)
+					- reagirl.Color\_GetName - gets the name of a color by its r,g,b-values(all html-color-names are supported)
+					- reagirl.Color\_EnumerateNames - enumerates the supported html-names  
+					- reagirl.Base64\_Decoder - decodes a base-64-encoded string  
+					- reagirl.Base64\_Encoder - encodes a string into base64  
+	
           Most of them are probably not needed by you but some you may need them from time to time.  
         </description>  
         <target_document>ReaGirl_Introduction_and_Concepts.html</target_document>  
@@ -5044,12 +5484,12 @@
             7. Check, if your gui is working in black'n'white/grayscale, means, make a screenshot, put it into a graphics-editor and set saturation to 0. 
                Check, if all ui-elements are still easy to differentiate from each other. This is important for colorblind users.
                for instance: If you have two images, next to each other, one is red and the other one is green, you can easily differentiate them from each other.
-               But: many colorblind people only see everything in grayscale and two color, that look very different from each other, may have the exact same grey color for colorblind people.
+               But: many colorblind people only see everything in grayscale and two colors, that look very different from each other, may have the exact same grey color for colorblind people.
                So, when you want to have two images next to each other that are differentiable from each other, make one brighter than the other.
                And to know, if you did it right, check the gui in black'n'white/grayscale and see, if one image looks brighter from the other.
                If yes, then it's easier to read for colorblind people.
             
-            8. Ask for feedback, especially by blind users. They know best, if your explanations are understandable or hard to get.  
+            8. Ask for feedback, especially by blind users. They know best if your explanations are understandable or hard to get.  
                There's a mailing list called Reaper without Peepers, which is primarily a mailinglist by blind people for blind people.  
                Ask there for people who could test your script and give you feedback.  
                They have the most experience in what a good description is and what is a bad one, so pay attention and listen.  

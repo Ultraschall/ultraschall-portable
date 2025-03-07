@@ -24,13 +24,44 @@
 ################################################################################
 ]]
 
-if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
-  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-else
-  dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
-end
+-- enable Ultraschall-API for the script
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
-ultraschall.Lokasenna_LoadGuiLib_v2()
+-- 0. enable ReaGirl for the script
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+-- check for required version; alter the version-number if necessary
+if reagirl.GetVersion()<1.2 then reaper.MB("Needs ReaGirl v"..(1.2).." to run", "Too old version", 2) return false end
+
+-- 1. add the run-functions for the ui-elements
+
+
+-- 2. start a new gui
+reagirl.Gui_New()
+
+-- 3. add the ui-elements and set their attributes
+label_header = reagirl.Label_Add(nil, nil, "Ultraschall-API settings", "Settings to customize Ultraschall-API behavior.", false, nil)
+reagirl.NextLine()
+
+dropdown_menu_guid = reagirl.DropDownMenu_Add(nil, nil, 300, "Error message target", nil, "Choose, where error-messages of an Ultraschall-API-script shall be shown.", {"Messagebox", "ReaScript Console", "Clipboard", "Return-value-string"}, 1, nil)
+reagirl.DropDownMenu_LinkToExtstate(dropdown_menu_guid, "ultraschall_api", "ShowLastErrorMessage_Target", 4, true)
+
+reagirl.Label_AutoBackdrop(label_header, dropdown_menu_guid)
+reagirl.Background_GetSetColor(true, 55, 55, 55)
+reagirl.NextLine(10)
+ button_guid = reagirl.Button_Add(-120, nil, 0, 0, "Apply and close", "Apply and close dialog.", reagirl.Gui_Close)
+
+-- 4. open the gui
+reagirl.Gui_Open("Ultraschall API settings", false, "Ultraschall API-settings", "Some settings for Ultraschall API.", nil, nil, nil, nil, nil)
+
+-- 5. a main-function that runs the gui-management-function
+function main()
+  reagirl.Gui_Manage()
+  
+  if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+end
+main()
+
+if lol==nil then return end
 
 function set_slem_val()
     local num =  GUI.Val("ShowLastErrorMessage")

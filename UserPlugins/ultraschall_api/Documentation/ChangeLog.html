@@ -30,7 +30,76 @@
         </div>
       
           <div class="ch"><p></p>
+<p>Issues: ReaGirl: Retina bläst ReaGirl-Gui auf doppelte Größe(also 2x wird 4x, etc) -&gt; fixen Focus Rectangle sollte erst erscheinen, wenn man in der Gui Tab benutzt, sonst ausgeblendet(wird auch bei Klick in Feld ohne Gui-Element wieder ausgeblendet) - optional immer einblendbar machen (drin, aber teste es nochmal genauer aus) Docs: eine Doku, wie man eine Gui so schreibt, dass man einfach mal schnell ui-elemente hinzufügen kann, ohne alles per Hand neu verschieben zu müssen und ohne Autoposition zu nutzen. Prinzipiell: h=100 Checkbox<em>Add(10,h) h=h+10 Checkbox</em>Add(10,h) h=h+10 Image<em>Add(10,h,100,100) h=h+100 Checkbox</em>Add(10,h) So in Etwa. Slider: Clickarea des Slider-Knobs ist verschoben nach rechts, bitte nochmal nachjustieren(see ReaGirl-Settings) ColorRectangle: Tooltip muss den Farbwert kommunizieren(für Farbenblinde), entweder Farbname oder Farbwerte</p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>5.2 - "Warpaint - Keep it healthy" - 7th of March 2025</h3>
+<p>Has now 1858 functions, with 24 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>ReaGirl</strong><br />
+New features, including a burgermenu, a color-rectangle, a decorative rectangle, ui-elements can be made sticky(non scrollable) now, images can auto-update now if the underlying image gets altered. It also features tons of bugfixes, specifically on Mac, so things are more robust now. I also improves performances, so all experienced slowdowns should be a thing of the past.</p>
+<ul>
+<li><strong>Developer Tools</strong><br />
+A new developer-tool that shows all opened ReaGirl-window-instances including name, guid and processing time. So you can check, whether the gui performs properly. Only the actual gui-processing-time is measured, not the overall code!<br />
+With the devtools who are deferred scripts, they will not open the terminate-instance-dialog anymore when running them again, but rather stop now. That way, you can toggle them on/off via shortcut/menu/toolbar-buttons.</li>
+</ul></li>
+</ul>
+<h4>New features in 5.2</h4>
+<pre><code>- Developer Tools: ReaGirl\_Monitor\_Opened\_Windows - shows all currently opened ReaGirl-window instances with name, guid and processing time
+- ReaGirl: Burgermenu\_Add - adds a burger-menu to a gui
+- ReaGirl: Burgermenu\_GetMenu - sets a new menu to a burgermenu
+- ReaGirl: Burgermenu\_SetMenu - sets a new menu to a burgermenu</code></pre>
+<ul>
+<li>ReaGirl: ColorRectangle_Add - adds a color-rectangle, optionally opening a color-selector-dialog when clicking item
+<ul>
+<li>ReaGirl: ColorRectangle_GetColor - gets the current color of a color-rectangle</li>
+<li>ReaGirl: ColorRectangle_\GetEdgeStyle - sets the individual edges of the color-rectangle to square/round</li>
+<li>ReaGirl: ColorRectangle_GetRadius - gets the current radius of the edges of a color-rectangle</li>
+<li>ReaGirl: ColorRectangle_SetColor - sets the color of a color-rectangle</li>
+<li>ReaGirl: ColorRectangle_\GetEdgeStyle - sets the individual edges of the color-rectangle to square/round</li>
+<li>ReaGirl: ColorRectangle_SetRadius - sets the radius of the edges of a color-rectangle</li>
+<li>ReaGirl: DecorRectangle_Add - adds a decorative rectangle for design purposes only, which has can't be clicked or tabbed to</li>
+<li>ReaGirl: DecorRectangle_GetColor - gets the current color of a deorative rectangle<br />
+</li>
+<li>ReaGirl: DecorRectangle_GetEdgeStyle - gets, if the individual corners of a decorative rectangle is square or round</li>
+<li>ReaGirl: DecorRectangle_GetRadius - gets the current radius of the edges of a deorative rectangle<br />
+</li>
+<li>ReaGirl: DecorRectangle_SetColor - sets a new color of a deorative rectangle<br />
+</li>
+<li>ReaGirl: DecorRectangle_SetEdgeStyle - sets, if the individual corners of a decorative rectangle is square or round</li>
+<li>ReaGirl: DecorRectangle_SetRadius - sets the radius of the edges of a deorative rectangle<br />
+</li>
+<li>ReaGirl: Ext_Window_GetProcessTime - returns the processing time of a ReaGirl-window-instance in the last defer-cycle; good for measuring the resources needed for that gui-instance<br />
+</li>
+<li>ReaGirl: Menu_GetEntryName - gets the menu-entry-name of a menu by its index<br />
+</li>
+<li>ReaGirl: Gui_GetSetStickyOffset - gets/sets a y-offset to prevent ui-elements from getting stuck behind sticky elements</li>
+<li>ReaGirl: Image_GetAutoUpdate - gets, if the image is automatically updated when the underlying image-file is changed/updated</li>
+<li>ReaGirl: Image_SetAutoUpdate - sets, if the image is automatically updated when the underlying image-file is changed/updated</li>
+<li>ReaGirl: UI_Element_GetSetSticky - gets/sets a ui-element to a sticky position, so it will not move when scrolling</li>
+<li>ReaGirl: Window_GetHWND - returns the window-handler of the gui-window<br />
+</li>
+<li>ReaGirl: Window_GetScrollOffset - gets the scroll-offset of the window's gui</li>
+</ul></li>
+</ul>
+<h4>Changes from 5.1 to 5.2</h4>
+<pre><code>- Developer Tools: deferred tools and ReaGirl settings - will now stop when rerunning them (requested by amagalma)
+- Docs: Reaper Internals - updated to Reaper 7.34
+- MediaItem Management: GetParentTrack\_MediaItem - had problems with items not having takes(note-items) -&gt; fixed(thanks to fernsehmuell)
+- ReaGirl: General - prevent possible crash, when not running Gui_Manage()
+- ReaGirl: Gui\_Manage - simplified code, so it should run more smoothly now; improved performance; ui-elements on top of other ui-elements were not recognised and therefore could&#39;t be clicked -&gt; fixed
+- ReaGirl: Gui\_Open - fixed crash, when trying to open the window with last used position/dimension; On Mac, it didn&#39;t position the window on the same spot as on Windows and Linux -&gt; fixed
+- ReaGirl: Inputboxes - adjusted height, so it is now the same as other ui-elements; cursor does only blink when not typing; could crash when typing insert key -&gt; fixed  
+- ReaGirl: Ext\_IsAnyReaGirlGuiHovered - needs less resources, now  
+- ReaGirl: keyboard-navigation - focus-rectangle is only shown, when the user uses the tab key to navigates; can be set to &quot;show always&quot; in the settings
+- ReaGirl: Labels - backdrop wasn&#39;t properly drawn, when the backdrop wasn&#39;t visible at startup and had to be scrolled in
+- ReaGirl: Mac - fixed scaling of window on Retina-Macs
+- ReaGirl: mouse-cursors - when hovering above clickable/draggable areas, the mouse always changes the cursor to show you, where click/drag areas are
+- ReaGirl: scaling - scaled too big on Retina/hiDPI-resolutions -&gt; fixed
+- ReaGirl: Sliders - clickarea for the slider-knob should be more precise and not move to the left of the knob
+- ReaGirl: UI\_Element\_GetSet\_ContextMenu - run-functions get now the name of the selected menu-item as third parameter
+- Settings: Ultraschall-API settings - the dialog wasn&#39;t working anymore -&gt; fixed</code></pre>
+<hr />
 <h3>5.1 - "Beach Boys - Wind Chimes" - 11th of December 2024</h3>
 <p>Has now 1834 functions, with 27 new ones</p>
 <p><strong>new in this release:</strong></p>

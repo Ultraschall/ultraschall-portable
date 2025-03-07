@@ -31,6 +31,8 @@
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+reaper.set_action_options(1)
+
 watch_numseconds=5
 
 print("")

@@ -1751,7 +1751,7 @@ function ultraschall.GetProject_RenderDitherState(projectfilename_with_path, Pro
   <slug>GetProject_RenderDitherState</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=6.02
+    Reaper=7.16
     Lua=5.3
   </requires>
   <functioncall>integer renderdither_state = ultraschall.GetProject_RenderDitherState(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1769,9 +1769,9 @@ function ultraschall.GetProject_RenderDitherState(projectfilename_with_path, Pro
   <retvals>
     integer renderdither_state - the state of render dithering
     - &1,   Dither Master mix
-    - &2,   Noise shaping Master mix
+    - &2,   Noise shape Master mix
     - &4,   Dither Stems
-    - &8,   Noise shaping Stems
+    - &8,   Noise shape Stems
   </retvals>
   <chapter_context>
     Project-Management

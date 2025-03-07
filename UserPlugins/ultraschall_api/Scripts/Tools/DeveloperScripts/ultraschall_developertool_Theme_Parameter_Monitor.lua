@@ -36,6 +36,9 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
+
+
 fontsize=12
 gfx.setfont(2, "arial", fontsize)
 gfx.setfont(3, "arial", fontsize, 73)

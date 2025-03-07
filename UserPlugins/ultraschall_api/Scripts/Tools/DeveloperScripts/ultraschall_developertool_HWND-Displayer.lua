@@ -46,6 +46,8 @@
 
 ultraschall_override=true
 
+reaper.set_action_options(1)
+
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 else
