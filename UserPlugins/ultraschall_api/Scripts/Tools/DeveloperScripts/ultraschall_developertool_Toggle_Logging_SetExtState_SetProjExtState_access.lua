@@ -34,6 +34,7 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
 
 if reaper.GetExtState("ultraschall_api", "debug_extstate")=="true" then
   reaper.SetExtState("ultraschall_api", "debug_extstate", "", false)

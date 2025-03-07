@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 7.16
+Render-Presets-docs as of Reaper 7.34
 
-compiled by Meo-Ada Mespotine, 25th of July 2024
+compiled by Meo-Ada Mespotine
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.

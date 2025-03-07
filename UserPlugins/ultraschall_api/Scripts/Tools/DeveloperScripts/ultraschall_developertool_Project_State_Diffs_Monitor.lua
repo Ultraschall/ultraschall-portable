@@ -1,4 +1,4 @@
-  --[[
+--[[
   ################################################################################
   # 
   # Copyright (c) 2014-2020 Ultraschall (http://ultraschall.fm)
@@ -39,8 +39,10 @@ This will display the changed lines(including line-number within the statechunk)
 
 It will ask you, whether to put the changed lines into the clipboard.
 
-Meo Mespotine mespotine.de - 21 of January 2021
+Meo Mespotine mespotine.de - 21st of January 2021
 --]]
+
+reaper.set_action_options(1)
 
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -110,6 +112,8 @@ This will display the changed lines(including line-number within the statechunk)
  + the two lines before it and the one after it
 
 It will ask you, whether to put the changed lines into the clipboard.
+
+NOTE: sometimes it will not show the difs. Just restart the tool and it should work again.
 
 Meo Mespotine mespotine.de - 21st of January 2021"]]
  

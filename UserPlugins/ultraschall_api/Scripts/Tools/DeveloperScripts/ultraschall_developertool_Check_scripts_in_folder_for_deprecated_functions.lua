@@ -54,7 +54,7 @@ reaper.SetExtState("ultraschall_api", "deprecated_script_checker", C, true)
 
 state=reaper.GetExtState("ultraschall_api", "deprecated_script_checker_ask")
 
-if state=="3" then
+if state=="3" or state=="" then
   retval=reaper.MB("Do you want to include subfolders as well?\n\n(You can set default behavior for this in Ultraschall-API settings.)", "Subfolders?", 4)
 elseif state=="1" then 
   retval=6

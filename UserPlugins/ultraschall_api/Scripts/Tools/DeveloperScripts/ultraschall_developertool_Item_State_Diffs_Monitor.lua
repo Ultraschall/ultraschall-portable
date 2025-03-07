@@ -49,6 +49,8 @@ So if you just want to see the change in a selected MediaItem, select it first, 
 Meo Mespotine mespotine.de - 30th of october 2018"
 --]]
 
+reaper.set_action_options(1)
+
 function SplitStringAtLineFeedToArray(unsplitstring)
   local array={}
   local i=1

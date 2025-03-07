@@ -97,7 +97,7 @@ butt2=reagirl.Button_Add(nil, nil, 0, 0, "Button #2", "The second button.", butt
 reagirl.Background_GetSetColor(true, 55, 55, 55)
 
 -- open gui
-reagirl.Gui_Open("ReaGirl Testdialog #1", false, "ReaGirl Testdialog #1", "a test dialog that features all available ui-elements.", 355, 225, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl Testdialog #1", false, "ReaGirl Testdialog #1", "a test dialog that features all available ui-elements.", 355, 255, nil, nil, nil)
 
 -- manage gui
 function main()

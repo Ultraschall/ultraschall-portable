@@ -36,6 +36,8 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
+
 function main()
   marker_update_counter = ultraschall.GetMarkerUpdateCounter()
   if marker_update_counter~=old_marker_update_counter then

@@ -27,6 +27,7 @@
 -- NOTE!! Osara is always enabled in this dialog so blind people can't shut themselves out of using this dialog!!!
 
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+reaper.set_action_options(1)
 
 reagirl.Settings_Override=true
 --dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -126,6 +127,7 @@ reaper.GetExtState("ReaGirl", "osara_enable_accmessage")
   reaper.SetExtState("ReaGirl", "scaling_override", val, true)
   if reagirl.Slider_GetValue(tab1.slider_blink_every_draggable)==0 then val="" else val=math.floor(reagirl.Slider_GetValue(tab1.slider_blink_every_draggable)*33) end
   reaper.SetExtState("ReaGirl", "highlight_drag_destination_blink", val, true)
+  --reaper.SetExtState("ReaGirl", "font_face", reagirl.Inputbox_GetText(tab4.font_face), true)
   reagirl.Gui_Close()
 end
 
@@ -135,7 +137,7 @@ function SetUpNewGui()
   reagirl.Gui_New()
   
   if tabnumber==nil then tabnumber=1 end
-  Tabs=reagirl.Tabs_Add(10, 10, 335, 437, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
+  Tabs=reagirl.Tabs_Add(10, 10, 332, 437, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
   
   tab1={}
   --[[ Blinking Focus Rectangle ]]
@@ -287,9 +289,16 @@ function SetUpNewGui()
   
   reagirl.Tabs_SetUIElementsForTab(Tabs, 3, tab3)
   
-  button_apply_and_close_id = reagirl.Button_Add(180, 485, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
-  button_cancel_id = reagirl.Button_Add(290, 485, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
+  button_apply_and_close_id = reagirl.Button_Add(180, 482, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
+  button_cancel_id = reagirl.Button_Add(288, 482, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
   reagirl.NextLine()
+  tab4={}
+  reagirl.AutoPosition_SetNextUIElementRelativeTo(Tabs)
+  reagirl.NextLine()
+  --local font_face=reaper.GetExtState("ReaGirl", "font_face")
+  --if font_face=="" then font_face="Arial" end
+  --tab4.font_face = reagirl.Inputbox_Add(nil, nil, 290, "Font Face:", 100, "The name of the font to use. It must be the exact font-name.", font_face, nil, nil)
+  --reagirl.Tabs_SetUIElementsForTab(Tabs, 4, tab4)
 end
 
 reagirl.Gui_AtEnter(button_apply_and_close)
@@ -297,7 +306,7 @@ reagirl.Gui_AtEnter(button_apply_and_close)
 SetUpNewGui()
 color=40
 reagirl.Background_GetSetColor(true,color,color,color)
-reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 354, 515, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 352, 509, nil, nil, nil)
   
 --reagirl.Window_ForceSize_Minimum(355, 470) -- set the minimum size of the window
 --reagirl.Window_ForceSize_Maximum(355, 470) -- set the maximum size of the window
@@ -332,10 +341,14 @@ function CheckIfSettingChanged()
   end
 end
 
+reagirl.ReScale=1
+
 function main()
   B,B1,B2=CheckIfSettingChanged()
   if B==true then A=reaper.time_precise() testtext=reagirl.Inputbox_GetText(tab1.input_id) i=reagirl.Elements.FocusedElement if i==nil then i=1 end tabnumber=reagirl.Tabs_GetSelected(Tabs) SetUpNewGui() reagirl.Elements.FocusedElement=i end
   reagirl.Gui_Manage()
+  if reagirl.Key==43 then reagirl.ReScale=reagirl.ReScale+1 end -- +
+  if reagirl.Key==45 then reagirl.ReScale=reagirl.ReScale-1 end -- -
   if B==true then
     reagirl.Elements.FocusedElement=i
     reagirl.Gui_ForceRefresh()

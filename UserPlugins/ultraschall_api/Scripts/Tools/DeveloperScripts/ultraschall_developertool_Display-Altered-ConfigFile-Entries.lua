@@ -31,6 +31,8 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
+
 files={}
 files[#files+1]=reaper.GetResourcePath().."/BR.ini"
 files[#files+1]=reaper.GetResourcePath().."/reaninjam.ini"
