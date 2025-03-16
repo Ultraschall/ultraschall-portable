@@ -38,6 +38,7 @@ if found==false then
   return
 end
 
+reaper.CSurf_OnPlayRateChange(1.0)
 
 -- Quality presets
 local qualities = {

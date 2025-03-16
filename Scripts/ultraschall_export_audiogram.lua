@@ -27,6 +27,8 @@
 -- Initialize Ultraschall-API
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+reaper.CSurf_OnPlayRateChange(1.0)
+
 local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 length=endTime-startTime
 if length==0 then reaper.MB("Please make a time-selection first!", "No time selection", 0) return end

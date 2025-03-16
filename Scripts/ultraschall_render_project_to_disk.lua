@@ -24,35 +24,5 @@
 ################################################################################
 ]]
 
--- checks, whether any track is muted and warns in that case before rendering
--- user can abort before rendering in that case as well
-
-
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-
-
---A=reaper.GetMasterMuteSoloFlags()
---if lol==nil then return end
-
-if ultraschall.AnyTrackMute(true) == true then
-  if reaper.GetMasterMuteSoloFlags()&1==1 then text="(including Master track)" else text="" end
-  Retval=reaper.MB("There are muted tracks"..text..". Do you want to continue rendering?", "Warning: muted tracks!", 4)
-else
-  Retval=6
-end
-
 reaper.CSurf_OnPlayRateChange(1.0)
-
-if Retval == 6 then
-  cmd=reaper.NamedCommandLookup("40521")  -- set playrate to 1
-  reaper.Main_OnCommand(cmd,0)
-
-  -- cmd=reaper.NamedCommandLookup("_Ultraschall_set_Matrix_Editing")  -- set routing matrix to editing
-  -- reaper.Main_OnCommand(cmd,0)
-
-  cmd=reaper.NamedCommandLookup("40296")  -- select all tracks
-  reaper.Main_OnCommand(cmd,0)
-
-  cmd=reaper.NamedCommandLookup("40015")  -- open render interface
-  reaper.Main_OnCommand(cmd,0)
-end
+reaper.Main_OnCommand(40015, 0)
