@@ -1,70 +1,36 @@
-function CheckForDependencies(ReaImGui, js_ReaScript, US_API, SWS, Osara)
-  if US_API==true or js_ReaScript==true or ReaImGui==true or SWS==true or Osara==true then
-    if US_API==true and reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==false then
-      US_API="Ultraschall API" -- "Ultraschall API" or ""
-    else
-      US_API=""
-    end
-    
-    if reaper.JS_ReaScriptAPI_Version==nil and js_ReaScript==true then
-      js_ReaScript="js_ReaScript" -- "js_ReaScript" or ""
-    else
-      js_ReaScript=""
-    end
-    
-    if reaper.ImGui_GetVersion==nil and ReaImGui==true then
-      ReaImGui="ReaImGui" -- "ReaImGui" or ""
-    else
-      ReaImGui=""
-    end
-    
-    if reaper.CF_GetSWSVersion==nil and SWS==true then
-      SWS="SWS" -- "ReaImGui" or ""
-    else
-      SWS=""
-    end
-    
-    if reaper.osara_outputMessage==nil and Osara==true then
-      Osara="Osara" -- "ReaImGui" or ""
-    else
-      Osara=""
-    end
-    
-    if Osara=="" and SWS=="" and js_ReaScript=="" and ReaImGui=="" and US_API=="" then return true end
-    local state=reaper.MB("This script needs additionally \n\n"..ReaImGui.."\n"..js_ReaScript.."\n"..US_API.."\n"..SWS.."\n"..Osara.."\n\ninstalled to work. Do you want to install them?", "Dependencies required", 4) 
-    if state==7 then return false end
-    if SWS~="" then
-      reaper.MB("SWS can be downloaded from sws-extension.org/download/pre-release/", "SWS missing", 0)
-    end
-    
-    if Osara~="" then
-      reaper.MB("Osara can be downloaded from https://osara.reaperaccessibility.com/", "Osara missing", 0)
-    end
-    
-    if reaper.ReaPack_BrowsePackages==nil and (US_API~="" or ReaImGui~="" or js_ReaScript~="") then
-      reaper.MB("Some uninstalled dependencies need ReaPack to be installed. Can be downloaded from https://reapack.com/", "ReaPack missing", 0)
-      return false
-    else
-      
-      if US_API=="Ultraschall API" then
-        reaper.ReaPack_AddSetRepository("Ultraschall API", "https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api_index.xml", true, 2)
-        reaper.ReaPack_ProcessQueue(true)
-      end
-      
-      if US_API~="" or ReaImGui~="" or js_ReaScript~="" then 
-        reaper.ReaPack_BrowsePackages(js_ReaScript.." OR "..ReaImGui.." OR "..US_API)
-      end
-    end
-  end
-  return true
-end
+--[[
+################################################################################
+# 
+# Copyright (c) 2023-present Meo-Ada Mespotine mespotine.de
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+# 
+################################################################################
+]] 
+-- This script shows an image. You can drag n drop a new image-file onto the image to load it.
+-- The image also has a context-menu that allows you to clear the image or load one with a file-requester.
 
-state=CheckForDependencies(false, true, false, true, false)
-if state==false then reaper.MB("Can't start script due to missing dependencies", "Error", 0) return end
-if reaper.JS_ReaScriptAPI_Version==nil then return end
   
+  -- add ReaGirl to script
   dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
   
+  -- add some run-functions
   function Image_RunFunction(clicked_image_id)
     -- this function is run, when the image is clicked
     
