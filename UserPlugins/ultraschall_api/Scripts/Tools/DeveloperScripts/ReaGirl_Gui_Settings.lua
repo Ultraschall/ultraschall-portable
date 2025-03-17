@@ -75,6 +75,11 @@ function BlinkTime(element_id, val)
   reaper.SetExtState("ReaGirl", "FocusRectangle_BlinkTime", val, true)
 end
 
+function HightLighting(element_id, val)
+  if reagirl.Slider_GetValue(tab1.slider_blink_for)<0 then val="" else val=math.floor(reagirl.Slider_GetValue(tab1.slider_blink_for)) end
+  reaper.SetExtState("ReaGirl", "Highlight_Intensity", val, true)
+end
+
 function CursorBlinkSpeed(element_id, val)
   if reagirl.Slider_GetValue(tab1.slider_blink_every_cursor)==1 then val="" else val=math.floor(reagirl.Slider_GetValue(tab1.slider_blink_every_cursor)*33) end
   reaper.SetExtState("ReaGirl", "Inputbox_BlinkSpeed", val, true)
@@ -115,7 +120,7 @@ function button_apply_and_close()
   if reagirl.Checkbox_GetCheckState(tab1.checkbox_blink_always_on)==false then focus_rectangle_always_on="" else focus_rectangle_always_on="true" end
   reaper.SetExtState("ReaGirl", "FocusRectangle_AlwaysOn", focus_rectangle_always_on, true)
 
-reaper.GetExtState("ReaGirl", "osara_enable_accmessage")
+  reaper.GetExtState("ReaGirl", "osara_enable_accmessage")
 
   if reagirl.Slider_GetValue(tab1.slider_blink_every)==1 then val="" else val=math.floor(reagirl.Slider_GetValue(tab1.slider_blink_every)*33) end
   reaper.SetExtState("ReaGirl", "FocusRectangle_BlinkSpeed", val, true)
@@ -128,6 +133,8 @@ reaper.GetExtState("ReaGirl", "osara_enable_accmessage")
   if reagirl.Slider_GetValue(tab1.slider_blink_every_draggable)==0 then val="" else val=math.floor(reagirl.Slider_GetValue(tab1.slider_blink_every_draggable)*33) end
   reaper.SetExtState("ReaGirl", "highlight_drag_destination_blink", val, true)
   --reaper.SetExtState("ReaGirl", "font_face", reagirl.Inputbox_GetText(tab4.font_face), true)
+  if reagirl.Slider_GetValue(tab1.highlighting)==0.075 then val="" else val=reagirl.Slider_GetValue(tab1.highlighting) end
+  highlighting2=reaper.SetExtState("ReaGirl", "Highlight_Intensity", val, true)
   reagirl.Gui_Close()
 end
 
@@ -137,7 +144,7 @@ function SetUpNewGui()
   reagirl.Gui_New()
   
   if tabnumber==nil then tabnumber=1 end
-  Tabs=reagirl.Tabs_Add(10, 10, 332, 437, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
+  Tabs=reagirl.Tabs_Add(10, 10, 332, 487, "Settings", "Some ReaGirl Settings.", {"General", "Accessibility", "Development"}, tabnumber, nil)
   
   tab1={}
   --[[ Blinking Focus Rectangle ]]
@@ -193,12 +200,21 @@ function SetUpNewGui()
   reagirl.NextLine()
   tab1.input_id = reagirl.Inputbox_Add(nil, nil, 290, "Test input:", 100, "Input text to check cursor blinking speed.", testtext, nil, nil)
   reagirl.Inputbox_SetEmptyText(tab1.input_id, "Test blink-speed here...")
+
+  --[[ Highlighting ]]
+  reagirl.NextLine(15)
+  tab1.Label_Highlighting=reagirl.Label_Add(nil, nil, "Highlighting UI Elements", "Settings for the highlighting of ui-elements, when hovering above them.", false, nil)
+  reagirl.Label_SetBackdrop(tab1.Label_Highlighting, 300, 40) -- set a backdrop around the next few labels
+  reagirl.NextLine()
+  highlighting=tonumber(reaper.GetExtState("ReaGirl", "Highlight_Intensity", value, true))
+  if highlighting==nil then highlighting2=0.075 else highlighting2=highlighting end
+  tab1.highlighting = reagirl.Slider_Add(nil, nil, 285, "Highlight intensity", 100, "Set the highlighting intensity when hovering above ui-elements; 0, no highlighting.", "", 0, 0.5, 0.025, highlighting2, 0.075, Highlighting)
+  reagirl.NextLine(15)
   
   -- [[ Scaling Override ]]
   reagirl.NextLine(15)
   tab1.Label_Scaling=reagirl.Label_Add(nil, nil, "Scaling", "Settings for the scaling-factor of ReaGirl-Guis.", false, nil)
   reagirl.Label_SetBackdrop(tab1.Label_Scaling, 300, 40) -- set a backdrop around the next few labels
-  --reagirl.Label_SetStyle(tab1.Label_Scaling, 6, 0, 0)
   reagirl.NextLine()
   scaling_override=tonumber(reaper.GetExtState("ReaGirl", "scaling_override", value, true))
   if scaling_override==nil then scaling_override2=0 else scaling_override2=scaling_override end
@@ -289,8 +305,8 @@ function SetUpNewGui()
   
   reagirl.Tabs_SetUIElementsForTab(Tabs, 3, tab3)
   
-  button_apply_and_close_id = reagirl.Button_Add(180, 482, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
-  button_cancel_id = reagirl.Button_Add(288, 482, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
+  button_apply_and_close_id = reagirl.Button_Add(180, 527, 0, 0, "Apply and Close", "Apply the chosen settings and close window.", button_apply_and_close)
+  button_cancel_id = reagirl.Button_Add(288, 527, 0, 0, "Cancel", "Simply close without applying the settings.", button_cancel)
   reagirl.NextLine()
   tab4={}
   reagirl.AutoPosition_SetNextUIElementRelativeTo(Tabs)
@@ -306,7 +322,7 @@ reagirl.Gui_AtEnter(button_apply_and_close)
 SetUpNewGui()
 color=40
 reagirl.Background_GetSetColor(true,color,color,color)
-reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 352, 509, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 352, 555, nil, nil, nil)
   
 --reagirl.Window_ForceSize_Minimum(355, 470) -- set the minimum size of the window
 --reagirl.Window_ForceSize_Maximum(355, 470) -- set the maximum size of the window
@@ -326,12 +342,18 @@ function CheckIfSettingChanged()
     else
       return false
     end
+  --elseif inputbox_blinkspeed_cancel~=tonumber(reaper.GetExtState("ReaGirl", "InputBox_BlinkSpeed", value, true)) then
+--    return true, 4.2
+  elseif highlighting~=tonumber(reaper.GetExtState("ReaGirl", "Highlight_Intensity", value, true)) then
+    return true, 4.5
   elseif osara_move_mouse~=toboolean(reaper.GetExtState("ReaGirl", "osara_move_mouse"), true) then
     return true, 4
   elseif osara_hover_mouse~=toboolean(reaper.GetExtState("ReaGirl", "osara_hover_mouse"), true) then
     return true, 5
   elseif show_tooltips~=toboolean(reaper.GetExtState("ReaGirl", "show_tooltips"), true) then
     return true, 6
+  --elseif focus_rectangle_blinktime_cancel~=tonumber(reaper.GetExtState("ReaGirl", "FocusRectangle_BlinkSpeed")) then
+    --return true, 6.5
   elseif osara_enable_accmessage~=toboolean(reaper.GetExtState("ReaGirl", "osara_enable_accmessage"), true) then
     return true, 7
   elseif scroll_via_keyboard~=toboolean(reaper.GetExtState("ReaGirl", "scroll_via_keyboard"), true) then
