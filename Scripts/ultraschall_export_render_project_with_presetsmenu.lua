@@ -31,6 +31,7 @@ if ultraschall.AnyTrackMute(true) == true then
   if Retval==7 then return end
 end
 
+reaper.CSurf_OnPlayRateChange(1.0)
 
 menu={}
 menu[#menu+1]={"           Render using last used settings ...", ""}

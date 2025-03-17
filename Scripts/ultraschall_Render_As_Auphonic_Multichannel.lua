@@ -41,6 +41,8 @@ else
   A=false
 end
 
+reaper.CSurf_OnPlayRateChange(1.0)
+
 if A == false then
   cmd=reaper.NamedCommandLookup("40521")  -- set playrate to 1
   reaper.Main_OnCommand(cmd,0)
