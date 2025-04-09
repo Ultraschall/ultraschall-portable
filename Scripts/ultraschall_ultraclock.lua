@@ -24,7 +24,7 @@
 ################################################################################
 ]]
 
--- Ultraschall 5.1 - Changelog - Meo-Ada Mespotine
+-- Ultraschall 5.1.2 - Changelog - Meo-Ada Mespotine
 -- * Retina/HiDPI support(requires Ultraschall 4.0 Theme installed or a theme with a line:
 --    "layout_dpi_translate  'Ultraschall 2 TCP'    1.74  'Ultraschall 2 TCP Retina'"
 --   included, so the clock automatically knows, if your device is Retina/HiDPI-ready.)
@@ -50,6 +50,9 @@
 --        improvement compared to earlier version, due new features in Reaper's API
 -- * includes now a visible settings-button which shows the same menu, as rightclick, but gives a better clue, THAT there are settings
 -- * various bugfixes
+-- * highlighting ui-elements when hovering above them including changing the mouse-cursor to signal "click here"
+-- * screen reader support
+-- * keyboard navigation(run action "Focus ULTRASCHALL Clock(Ultraschall) to unlock this; when focusing another window, keyboard navigation will be turned off, until refocused by the action.
 
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -61,6 +64,10 @@ local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
+if reaper.osara_outputMessage==nil then
+  function reaper.osara_outputMessage()
+  end
+end
 
 Date_Length={0,0,0,0} -- initialize variable
 
@@ -112,9 +119,9 @@ function count_all_warnings() -- zähle die Arten von Soundchecks aus
   event_count = ultraschall.EventManager_CountRegisteredEvents()
   EventIdentifier=ultraschall.EventManager_GetAllEventIdentifier()
   --event_count=1
-  local active_warning_count = 0
-  local paused_warning_count = 0
-  local passed_warning_count = 0
+  active_warning_count = 0
+  paused_warning_count = 0
+  passed_warning_count = 0
 
   --print_update("")
   for i = 1, event_count do
@@ -293,6 +300,7 @@ end
 function InitGFX()
   gfx.clear=0x333333 --background color
   reaper.SetToggleCommandState(section, cmdid, 1)
+  local retval, hwnd = ultraschall.GFX_Init("Dashboard", width, height)
   gfx.init("Dashboard",width,height,false) --create window
   if docked then d=1 else d=0 end
 
@@ -312,6 +320,7 @@ function InitGFX()
   gfx.dock( d + 256 * dock_id) -- dock it do docker 4 (&1=docked)
   gfx.update()
   reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
+  return hwnd
 end
 
 function showmenu(trigger)
@@ -340,7 +349,7 @@ function showmenu(trigger)
   return ret
 end
 
-function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, style1, style2, style3) -- if y<0 then center horizontally
+function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, style1, style2, style3, highlight, focused) -- if y<0 then center horizontally
   -- text - the text to display
   -- color - the color in which to display
   -- font - the font-style in which to display
@@ -363,11 +372,12 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, s
   -- 7, negative
   -- 8, 90Â° counter-clockwise
   -- 9, 90Â° clockwise
+  --
+  -- highlight - the value to add to the color, when highlighting the text(negative is allowed) -1.0 to 1.0
+  -- focus - true, draws a focus-rectangle around the text
   fontsize_fixed = fixed or 0
   if type(offset)~="number" then offset=0 end
-  gfx.r=(color & 0xff0000) / 0xffffff
-  gfx.g=(color & 0x00ff00) / 0xffff
-  gfx.b=(color & 0x0000ff) / 0xff
+  
   if x_offset==nil then x_offset=0 end
   if style1==nil then style1=0 end
   if style2==nil then style2=0 end
@@ -392,7 +402,21 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, s
   
   gfx.x=gfx.x+x_offset*gfx.measurechar(32)
   gfx.y=y
+  local tw, th=gfx.measurestr(text)
+  gfx.set(0.4)
+  if focused==true then
+    gfx.rect(gfx.x, gfx.y, tw, th, 0)
+  end
+  gfx.r=(color & 0xff0000) / 0xffffff
+  gfx.g=(color & 0x00ff00) / 0xffff
+  gfx.b=(color & 0x0000ff) / 0xff
+  if highlight~=nil then
+    gfx.r=gfx.r+highlight
+    gfx.g=gfx.g+highlight
+    gfx.b=gfx.b+highlight
+  end
   gfx.drawstr(text)
+  
   return x, y, w, h
 end
 
@@ -460,7 +484,19 @@ function drawClock()
   drawn_already_in_this_loop=true
   gfx.x=zahnradbutton_posx
   gfx.y=zahnradbutton_posy
+  zahnrad_w, zahnrad_h=gfx.getimgdim(zahnradbutton_unclicked)
+  if focused==1 then
+    gfx.set(0.4)
+    gfx.rect(gfx.x, gfx.y, (zahnrad_w*(zahnradscale)), (zahnrad_h*(zahnradscale)), 0)
+  end
   gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
+  if add_color2~=0 then
+    gfx.mode=1
+    gfx.a=0.2
+    gfx.blit(zahnradbutton_unclicked, zahnradscale, 0)
+    gfx.a=1
+    gfx.mode=0
+  end
   if uc_menu[3].checked then -- get Timecode/Status
     playstate=reaper.GetPlayState()
     if reaper.GetSetRepeat(-1)==1 then repeat_txt=" (REPEAT)" else repeat_txt="" end
@@ -476,7 +512,8 @@ function drawClock()
       else txt_color=0xb3b3b3 status=""
     end
     --A=uc_menu[5].checked
-    if uc_menu[4].checked==true then pos=get_position(1)//1
+    if uc_menu[4].checked==true then 
+      pos=get_position(1)//1
     else
       pos=get_position()//1
     end
@@ -535,6 +572,7 @@ function drawClock()
     
     
     Date = tostring(LUFS_integral).." LUFS"
+    LUFS_msg=""
     --print_update(Date, FX_active, LUFS_integral, ultraschall.LUFS_Metering_GetValues())
     local tr = reaper.GetMasterTrack(0)
     local index=-1
@@ -547,10 +585,13 @@ function drawClock()
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
       Date = "Analyze LUFS" 
       date_color = 0x777777
+    else
+      LUFS_msg=tostring(LUFS_integral).." LUFS."
     end
   else
     Date=""
   end
+  
   
   --Date_Length=gfx.measurestr(Date)
   
@@ -570,7 +611,7 @@ function drawClock()
     if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
-    Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style)} -- print realtime hh:mm:ss
+    Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
     
   end
   if time~="" then
@@ -583,11 +624,13 @@ function drawClock()
 
   soundcheck_y_offset = 70 * retina_mod
 
-
-
-  setColor(0.27,0.27,0.27)
   -- gfx.roundrect(50, 50, 100, 50, 10, 1)
-
+  
+  if focused==4 then
+    gfx.set(0.4)
+    gfx.rect(9*retina_mod, gfx.h-(soundcheck_y_offset - 5*retina_mod), (gfx.w - 14*retina_mod), 48*retina_mod, 0)
+  end
+  setColor(0.27+add_color,0.27+add_color,0.27+add_color)
   roundrect(10*retina_mod, gfx.h -(soundcheck_y_offset - 6*retina_mod), (gfx.w - 20*retina_mod), 41*retina_mod, 10*retina_mod, 1, 1)
 
   active_warning_count, paused_warning_count, passed_warning_count = count_all_warnings()
@@ -682,8 +725,10 @@ function drawClock()
     if uc_menu[4].checked==true and reaper.GetProjectLength()<get_position() then plus="+" else plus="" end
     checkpos=pos:match("(.-):")
     if checkpos:len()==1 then addzero="0" else addzero="" end
-    WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border) -- print Status (Pause/Play...)
-    time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border) --print timecode in h:mm:ss format
+    WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border, nil, nil, nil, nil, nil, nil, add_color4) -- print Status (Pause/Play...)
+    time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border, nil, nil, nil, nil, nil, nil, add_color4, focused==3) --print timecode in h:mm:ss format
+    
+    projectpos_msg=plus..addzero..pos
   end
 
   -- Time Selection
@@ -736,6 +781,18 @@ end
 
 
 function MainLoop()
+  if reaper.GetExtState("UltraClock", "FocusMe")=="true" then
+    reaper.JS_Window_SetFocus(clock_hwnd)
+    focus_window=true
+    reaper.SetExtState("UltraClock", "FocusMe", "", false)
+  end
+  focus_me()
+  local retval, msg=checkhover()
+  if msg~=oldmsg then
+    reaper.osara_outputMessage(msg)
+  end
+  oldmsg=msg
+  if retval==true then gfx.setcursor(0x7f89, "") else gfx.setcursor(0, "") end
   if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
 
   if Triggered==true then
@@ -753,7 +810,7 @@ function MainLoop()
     AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked
     --ultraschall.ShowErrorMessagesInReascriptConsole()
   end
-
+  
   if Triggered==nil then
     if gfx.mouse_cap & 2 == 2 then -- right mousecklick
       Triggered=true
@@ -763,7 +820,6 @@ function MainLoop()
       gfx.x=zahnradbutton_posx
       gfx.y=zahnradbutton_posy
       gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
-
     elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
       id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
       reaper.Main_OnCommand(id,0)
@@ -771,9 +827,11 @@ function MainLoop()
       Triggered2=true
       if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
       gfx.update()
+      
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+60 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+      lufs_pos_y=date_position_y
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
@@ -792,8 +850,15 @@ function MainLoop()
     lastw, lasth=gfx.w, gfx.h
     clock_focus_state=gfx.getchar(65536)&2
     if clock_focus_state~=0 then
-      reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
+      if focus_window==false then
+        focussss=reaper.time_precise()
+        reaper.SetCursorContext(1) -- Set Cursor context to the arrange window, so keystrokes work
+      end
+    else
+      focused=0
+      focus_window=false
     end
+    --
     gfx.update()
     --ALABAMASONG=GetProjectLength()
     drawn_already_in_this_loop=false
@@ -806,8 +871,108 @@ function exit_clock()
   reaper.SetToggleCommandState(section, cmdid, 0)
 end
 
+function checkhover()
+  local soundcheck_y_offset = 70 * retina_mod
+  if gfx.mouse_x>10*retina_mod and gfx.mouse_y>=gfx.h-(soundcheck_y_offset - 6*retina_mod) and
+    gfx.mouse_x<gfx.w-20*retina_mod and gfx.mouse_y<gfx.h-(soundcheck_y_offset - 6*retina_mod)+41*retina_mod then
+    -- soundcheck highlighter
+     add_color=0.05
+     gfx.setcursor(0x7f89, "")
+     refresh_me()
+     return true, "Soundcheck."
+  end
+  
+  local tw, th=gfx.getimgdim(zahnradbutton_clicked)
+  if gfx.mouse_x>zahnradbutton_posx and gfx.mouse_y>=zahnradbutton_posy and
+    gfx.mouse_x<zahnradbutton_posx+tw*zahnradscale and gfx.mouse_y<zahnradbutton_posy+th*zahnradscale then
+    -- zahnrad highlighter
+     add_color2=0.1
+     refresh_me()
+     return true, "Ultraclock Settings."
+  end
+  
+  if gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h then
+    -- projecttime-toggle
+    if reaper.GetPlayState()~=0 then add_color4=0.05 else add_color4=-0.2 end
+    refresh_me()
+    local remaining=""
+    if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
+      remaining="Remaining "
+    end
+    return true, remaining.."Project position "..projectpos_msg
+  end
+  
+  if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
+     gfx.mouse_y > lufs_pos_y-10*retina_mod and 
+     gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+    add_color3=0.1
+    refresh_me()
+    return true, "Analyze LUFS. "..LUFS_msg
+  end
+  
+  add_color=0
+  add_color2=0
+  add_color3=0
+  add_color4=0
+  refresh_me()
+  return false, ""
+end
+
+function focus_me()
+  Key=KeyVegas
+  tts=false
+  if gfx.mouse_cap==1 then focused=0 end
+  if gfx.mouse_cap==0 and Key==9 then focused=focused+1 tts=true end
+  if gfx.mouse_cap==8 and Key==9 then focused=focused-1 tts=true end
+  if focused~=0 and focused<1 then focused=4 end
+  if focused>4 then focused=1 end
+  
+  if Key==32 or Key==13 then
+    if focused==1 then showmenu(1) 
+    elseif focused==2 then
+      openWindowLUFS()
+      tts=true
+    elseif focused==3 then
+      if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
+      tts=true
+    elseif focused==4 then 
+      id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
+      reaper.Main_OnCommand(id,0)
+    end
+  end
+  if tts==true then
+    if focused==1 then 
+      reaper.osara_outputMessage("Settings-Menu. Space to choose settings.")
+    elseif focused==2 then
+      reaper.osara_outputMessage("Analyze LUFS. "..LUFS_msg.." Space to measure LUFS")
+    elseif focused==3 then
+      if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
+        reaper.osara_outputMessage("Project position. Remaining "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
+      else
+        reaper.osara_outputMessage("Project position. Currently at "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
+      end
+    elseif focused==4 then
+      reaper.osara_outputMessage("Soundcheck. Passed warning "..passed_warning_count..". Ignored warning "..paused_warning_count..". Active Warnings "..active_warning_count..". Hit Space to open Soundcheck Window.")
+    end
+  end
+end
+
+focused=0
+
+function refresh_me()
+  if refresh_restart==nil then
+    
+  end
+  lasttime=lasttime-refresh
+end
+
 reaper.atexit(exit_clock)
 Init()
-InitGFX()
+clock_hwnd=InitGFX()
 lasttime=reaper.time_precise()-1
 reaper.defer(MainLoop)
+lufs_pos_y=0
+add_color=0
+add_color4=0
+time_x, time_y, time_w, time_h = 0,0,0,0
+focus_window=false
