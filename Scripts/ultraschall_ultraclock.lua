@@ -1017,6 +1017,7 @@ function focus_me()
   if focused==7 and uc_menu[7].checked==false then focused=focused+add end
   --if focused==8 and uc_menu[7].checked==false then focused=focused+1 end
   if focused>8 then focused=1 end
+  if Key==27 then focus=0 reaper.SetCursorContext(1) end
   
   if Key==32 or Key==13 then
     if focused==1 then showmenu(1) 
