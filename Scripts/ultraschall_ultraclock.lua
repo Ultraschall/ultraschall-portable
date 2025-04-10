@@ -962,7 +962,7 @@ function checkhover()
      return true, "Ultraclock Settings."
   end
   
-  if gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h then
+  if gfx.mouse_x>0 and gfx.mouse_x<gfx.w and gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h then
     -- projecttime-toggle
     if reaper.GetPlayState()~=0 then add_color4=0.05 else add_color4=-0.2 end
     refresh_me()
