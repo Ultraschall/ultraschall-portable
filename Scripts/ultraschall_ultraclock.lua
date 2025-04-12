@@ -69,20 +69,6 @@ if reaper.osara_outputMessage==nil then
   end
 end
 
-function string.utf8_sub(source_string, startoffset, endoffset)
-  -- written by CFillion for his Interactive ReaScript-Tool, available in the ReaTeam-repository(install via ReaPack)
-  -- thanks for allowing me to use it :)
-  startoffset = utf8.offset(source_string, startoffset)
-  if not startoffset then return '' end -- i is out of bounds
-
-  if endoffset and (endoffset > 0 or endoffset < -1) then
-    endoffset = utf8.offset(source_string, endoffset + 1)
-    if endoffset then endoffset = endoffset - 1 end
-  end
-
-  return string.sub(source_string, startoffset, endoffset)
-end
-
 Date_Length={0,0,0,0} -- initialize variable
 
 function setColor (r,g,b)
@@ -422,10 +408,9 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, s
   if focused==true then
     gfx.rect(gfx.x, gfx.y, tw, th, 0)
   end
-  local r,g,b=reaper.ColorFromNative(color)
-  gfx.r=r/255--(color & 0xff0000) / 0xffffff
-  gfx.g=g/255--(color & 0x00ff00) / 0xffff
-  gfx.b=b/255--(color & 0x0000ff) / 0xff
+  gfx.r=(color & 0xff0000) / 0xffffff
+  gfx.g=(color & 0x00ff00) / 0xffff
+  gfx.b=(color & 0x0000ff) / 0xff
   if highlight~=nil then
     gfx.r=gfx.r+highlight
     gfx.g=gfx.g+highlight
@@ -519,40 +504,19 @@ function drawClock()
     if playstate == 1 then
       if repeat_txt~="" then txt_color=0x15729d else txt_color=0x2092c7 end
       status="PLAYING"..repeat_txt --play
-    elseif playstate == 5 then 
-      txt_color=0xf24949 status="RECORDING" --record
-    elseif playstate == 2 then
-      if repeat_txt~="" then txt_color=0xa86010 else txt_color=0xd17814 end
-      status="PAUSED"..repeat_txt --play/pause
-    elseif playstate == 6 then 
-      txt_color=0xff6b4d status="REC/PAUSED" --record/pause
-    elseif playstate == 0 then 
-      txt_color=0xeeeeee status="STOPPED" --record/pause
-    else 
-      txt_color=0xb3b3b3 status=""
-    end
-    if playstate == 1 then
-      if repeat_txt~="" then txt_color=reaper.ColorToNative(0x15, 0x72, 0x9d) else txt_color=reaper.ColorToNative(0x20, 0x92, 0xc7) end
-      status="PLAYING"..repeat_txt --play
-    elseif playstate == 5 then 
-      txt_color=reaper.ColorToNative(0xf2, 0x49, 0x49) status="RECORDING" --record
-    elseif playstate == 2 then
-      if repeat_txt~="" then txt_color=reaper.ColorToNative(0xa8, 0x60, 0x10) else txt_color=reaper.ColorToNative(0xd1, 0x78, 0x14) end
-      status="PAUSED"..repeat_txt --play/pause
-    elseif playstate == 6 then 
-      txt_color=reaper.ColorToNative(0xff, 0x6b, 0x4d) status="REC/PAUSED" --record/pause
-    elseif playstate == 0 then 
-      txt_color=reaper.ColorToNative(0xee, 0xee, 0xee) status="STOPPED" --record/pause
-    else 
-      txt_color=reaper.ColorToNative(0xb3, 0xb3, 0xb3) status=""
+      elseif playstate == 5 then txt_color=0xf24949 status="RECORDING" --record
+      elseif playstate == 2 then
+        if repeat_txt~="" then txt_color=0xa86010 else txt_color=0xd17814 end
+        status="PAUSED"..repeat_txt --play/pause
+      elseif playstate == 6 then txt_color=0xff6b4d status="REC/PAUSED" --record/pause
+      elseif playstate == 0 then txt_color=0xeeeeee status="STOPPED" --record/pause
+      else txt_color=0xb3b3b3 status=""
     end
     --A=uc_menu[5].checked
     if uc_menu[4].checked==true then 
       pos=get_position(1)//1
-      projectpos_msg3="-"
     else
       pos=get_position()//1
-      projectpos_msg3=""
     end
 
     pos=formattimestr(pos)
@@ -593,13 +557,13 @@ function drawClock()
     LUFS_integral, target, dB_Gain, FX_active = ultraschall.LUFS_Metering_GetValues()
 
     if LUFS_integral > target-1 and LUFS_integral <= target+1 then -- Grün
-      date_color = reaper.ColorToNative(0x15, 0xee, 0x15)
+      date_color = 0x15ee15
     elseif LUFS_integral > target+1 and LUFS_integral <= target+2 then -- Gelb
-      date_color = reaper.ColorToNative(0xee, 0xee, 0x15)
+      date_color = 0xeeee15
     elseif LUFS_integral > target+2 then -- Rot
-      date_color = reaper.ColorToNative(0xee, 0x55, 0x99)
+      date_color = 0xee5599
     else
-      date_color = reaper.ColorToNative(0x20, 0x92, 0xc7) -- Blau
+      date_color = 0x2092c7 -- Blau
     end
   
     -- roundrect(17*retina_mod, txt_line[2].y*height+border-2, 14*retina_mod, 30*retina_mod, 5*retina_mod, 5, 1)
@@ -621,7 +585,7 @@ function drawClock()
     end
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
       Date = "Analyze LUFS" 
-      date_color = reaper.ColorFromNative(0x77, 0x77, 0x77)
+      date_color = 0x777777
     else
       LUFS_msg=tostring(LUFS_integral).." LUFS."
     end
@@ -645,7 +609,7 @@ function drawClock()
     local y_offset=0
     local x_offset=0
     local resizer=0
-    if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(31, 145, 199) x_offset=1 resizer=1 y_offset=0 end
+    if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
     Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
@@ -735,7 +699,7 @@ function drawClock()
 
 
   if active_warning_count > 0 then
-    setColor(0.95,0.95,0.15)
+    setColor(0.95,0.15,0.15)
     sc_txt_color = 0xcccccc
   else
     setColor(0.5,0.5,0.5)
@@ -768,12 +732,9 @@ function drawClock()
     WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border, nil, nil, nil, nil, nil, nil, add_color4) -- print Status (Pause/Play...)
     time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border, nil, nil, nil, nil, nil, nil, add_color4, focused==4) --print timecode in h:mm:ss format
     
-    projectpos_msg2=plus..addzero..format_time_for_tts(pos)
     projectpos_msg=plus..addzero..format_time_for_tts(pos)
-    if pos:sub(1,1)=="-" then plus="-" end
   else
     time_x, time_y, time_w, time_h=0,0,0,0
-    projectpos_msg2=""
     projectpos_msg=""
   end
 
@@ -782,11 +743,11 @@ function drawClock()
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
     if length > 0 then
-      Time_Sel0={WriteAlignedText("Time Selection", reaper.ColorToNative(251, 209, 255), clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0)} -- print date
+      Time_Sel0={WriteAlignedText("Time Selection",0xffbb00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0)} -- print date
       start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
       end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
       length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-      Time_Sel={WriteAlignedText(start.."     [".. length.."]     "..end_loop,reaper.ColorToNative(251, 209, 0), clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0)} -- print date
+      Time_Sel={WriteAlignedText(start.."     [".. length.."]     "..end_loop,0xffbb00, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0)} -- print date
       timesel_start=format_time_for_tts(start)
       timesel_length=format_time_for_tts(length)
       timesel_end=format_time_for_tts(end_loop)
@@ -829,8 +790,8 @@ function drawClock()
     prevelm=string.gsub(prevelm,"Region_.-:","R:")
     nextelm=string.gsub(nextelm,"Region_.-:","R:")
 
-    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:utf8_sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
-    WriteAlignedText(nextelm:utf8_sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
+    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
+    WriteAlignedText(nextelm:sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
 
     prevtime=formattimestr(prevtime*(-1))
     nexttime=formattimestr(nexttime*(-1))
@@ -864,7 +825,6 @@ function MainLoop()
   if reaper.GetExtState("UltraClock", "FocusMe")=="true" then
     reaper.JS_Window_SetFocus(clock_hwnd)
     focus_window=true
-    reaper.osara_outputMessage("Ultraclock focused. Tab and Shift Tab to go through ui-elements, space to click them. Escape to return to arrangeview.")
     reaper.SetExtState("UltraClock", "FocusMe", "", false)
   end
   focus_me()
@@ -911,8 +871,7 @@ function MainLoop()
       
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      lufs_pos_y=Date_Length[2]
-      lufs_pos_h=Date_Length[4]
+      lufs_pos_y=date_position_y
       if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
@@ -954,10 +913,6 @@ function exit_clock()
 end
 
 function checkhover()
-  local window_state=gfx.getchar(65536)
-  ABBA=tonumber(reaper.GetAppVersion():match("(.-)/"))
-  if ABBA>7.07 and window_state&8==0 then return false end
-  
 --gfx.rect(Date_Length[1], Date_Length[2], Date_Length[3], Date_Length[4], 1)
 --gfx.rect(0,marker_y, gfx.w, marker_h,1)
   if gfx.mouse_x>=Project_Duration[1] and 
@@ -985,7 +940,7 @@ function checkhover()
      gfx.mouse_y>Time_Length[2] and 
      gfx.mouse_x<=Time_Length[1]+Time_Length[3] and 
      gfx.mouse_y<=Time_Length[2]+Time_Length[4] then
-    return false, "Current time. "..time_msg.."." 
+    return false, "Current time. "..time_msg.."."
   end
   
   local soundcheck_y_offset = 70 * retina_mod
@@ -1011,16 +966,15 @@ function checkhover()
     -- projecttime-toggle
     if reaper.GetPlayState()~=0 then add_color4=0.05 else add_color4=-0.2 end
     refresh_me()
-    local remaining=" currently"
-    if projectpos_msg3=="-" then 
-      remaining=" remaining"
+    local remaining=""
+    if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
+      remaining="Remaining "
     end
-    return true, "Project position "..projectpos_msg:sub(1,-2)..remaining.."."
+    return true, remaining.."Project position "..projectpos_msg
   end
   
-  if gfx.mouse_y > lufs_pos_y and 
-     gfx.mouse_y < lufs_pos_y+lufs_pos_h and 
-     gfx.mouse_x>0 and
+  if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
+     gfx.mouse_y > lufs_pos_y-10*retina_mod and 
      gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
     add_color3=0.1
     refresh_me()
@@ -1073,7 +1027,7 @@ function focus_me()
     elseif focused==3 then
       tts=true
     elseif focused==4 then
-      if uc_menu[4].checked==true then uc_menu[4].checked=false projectpos_msg3="-" else uc_menu[4].checked=true projectpos_msg3="" end
+      if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
       tts=true
     elseif focused==5 then
       tts=true
@@ -1094,10 +1048,10 @@ function focus_me()
     elseif focused==3 then
       reaper.osara_outputMessage("Current time. Label. "..time_msg..".")
     elseif focused==4 then
-      if projectpos_msg3=="-" then
-        reaper.osara_outputMessage("Project position. Label. "..projectpos_msg2:sub(1,-2).." until project end. Space to toggle projecttime between current and remaining time.")
+      if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
+        reaper.osara_outputMessage("Project position. Label. Remaining "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
       else
-        reaper.osara_outputMessage("Project position. Label. "..projectpos_msg2:sub(1,-2).." remaining until project end. Space to toggle projecttime between current and remaining time.")
+        reaper.osara_outputMessage("Project position. Label. Currently at "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
       end
     elseif focused==5 then
       reaper.osara_outputMessage("Time_selection. Label. Start "..timesel_start..". End "..timesel_end..". Length "..timesel_length)
@@ -1126,7 +1080,6 @@ clock_hwnd=InitGFX()
 lasttime=reaper.time_precise()-1
 reaper.defer(MainLoop)
 lufs_pos_y=0
-lufs_pos_h=0
 add_color=0
 add_color4=0
 time_x, time_y, time_w, time_h = 0,0,0,0
