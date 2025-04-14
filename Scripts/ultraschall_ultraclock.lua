@@ -871,7 +871,8 @@ function MainLoop()
       
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      lufs_pos_y=date_position_y
+      lufs_pos_y=Date_Length[2]
+      lufs_pos_h=Date_Length[4]
       if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
@@ -973,8 +974,8 @@ function checkhover()
     return true, remaining.."Project position "..projectpos_msg
   end
   
-  if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
-     gfx.mouse_y > lufs_pos_y-10*retina_mod and 
+  if gfx.mouse_y > lufs_pos_y and 
+     gfx.mouse_y < lufs_pos_y+lufs_pos_h and 
      gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
     add_color3=0.1
     refresh_me()
@@ -1080,6 +1081,7 @@ clock_hwnd=InitGFX()
 lasttime=reaper.time_precise()-1
 reaper.defer(MainLoop)
 lufs_pos_y=0
+lufs_pos_h=0
 add_color=0
 add_color4=0
 time_x, time_y, time_w, time_h = 0,0,0,0
