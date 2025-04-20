@@ -408,9 +408,10 @@ function WriteAlignedText(text, color, font, size, y, offset, fixed, x_offset, s
   if focused==true then
     gfx.rect(gfx.x, gfx.y, tw, th, 0)
   end
-  gfx.r=(color & 0xff0000) / 0xffffff
-  gfx.g=(color & 0x00ff00) / 0xffff
-  gfx.b=(color & 0x0000ff) / 0xff
+  local r,g,b=reaper.ColorFromNative(color)
+  gfx.r=r/255--(color & 0xff0000) / 0xffffff
+  gfx.g=g/255--(color & 0x00ff00) / 0xffff
+  gfx.b=b/255--(color & 0x0000ff) / 0xff
   if highlight~=nil then
     gfx.r=gfx.r+highlight
     gfx.g=gfx.g+highlight
@@ -609,7 +610,7 @@ function drawClock()
     local y_offset=0
     local x_offset=0
     local resizer=0
-    if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
+    if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(31, 145, 199) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
     Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
