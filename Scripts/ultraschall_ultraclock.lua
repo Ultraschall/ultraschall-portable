@@ -516,8 +516,10 @@ function drawClock()
     --A=uc_menu[5].checked
     if uc_menu[4].checked==true then 
       pos=get_position(1)//1
+      projectpos_msg3="-"
     else
       pos=get_position()//1
+      projectpos_msg3=""
     end
 
     pos=formattimestr(pos)
@@ -733,9 +735,12 @@ function drawClock()
     WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border, nil, nil, nil, nil, nil, nil, add_color4) -- print Status (Pause/Play...)
     time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border, nil, nil, nil, nil, nil, nil, add_color4, focused==4) --print timecode in h:mm:ss format
     
+    projectpos_msg2=plus..addzero..format_time_for_tts(pos)
     projectpos_msg=plus..addzero..format_time_for_tts(pos)
+    if pos:sub(1,1)=="-" then plus="-" end
   else
     time_x, time_y, time_w, time_h=0,0,0,0
+    projectpos_msg2=""
     projectpos_msg=""
   end
 
@@ -826,6 +831,7 @@ function MainLoop()
   if reaper.GetExtState("UltraClock", "FocusMe")=="true" then
     reaper.JS_Window_SetFocus(clock_hwnd)
     focus_window=true
+    reaper.osara_outputMessage("Ultraclock focused. Tab and Shift Tab to go through ui-elements, space to click them. Escape to return to arrangeview.")
     reaper.SetExtState("UltraClock", "FocusMe", "", false)
   end
   focus_me()
@@ -942,7 +948,7 @@ function checkhover()
      gfx.mouse_y>Time_Length[2] and 
      gfx.mouse_x<=Time_Length[1]+Time_Length[3] and 
      gfx.mouse_y<=Time_Length[2]+Time_Length[4] then
-    return false, "Current time. "..time_msg.."."
+    return false, "Current time. "..time_msg.."." 
   end
   
   local soundcheck_y_offset = 70 * retina_mod
@@ -968,11 +974,11 @@ function checkhover()
     -- projecttime-toggle
     if reaper.GetPlayState()~=0 then add_color4=0.05 else add_color4=-0.2 end
     refresh_me()
-    local remaining=""
-    if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
-      remaining="Remaining "
+    local remaining=" currently"
+    if projectpos_msg3=="-" then 
+      remaining=" remaining"
     end
-    return true, remaining.."Project position "..projectpos_msg
+    return true, "Project position "..projectpos_msg:sub(1,-2)..remaining.."."
   end
   
   if gfx.mouse_y > lufs_pos_y and 
@@ -1029,7 +1035,7 @@ function focus_me()
     elseif focused==3 then
       tts=true
     elseif focused==4 then
-      if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
+      if uc_menu[4].checked==true then uc_menu[4].checked=false projectpos_msg3="-" else uc_menu[4].checked=true projectpos_msg3="" end
       tts=true
     elseif focused==5 then
       tts=true
@@ -1050,10 +1056,10 @@ function focus_me()
     elseif focused==3 then
       reaper.osara_outputMessage("Current time. Label. "..time_msg..".")
     elseif focused==4 then
-      if projectpos_msg:sub(1,1)=="+" or projectpos_msg:sub(1,1)=="-" then
-        reaper.osara_outputMessage("Project position. Label. Remaining "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
+      if projectpos_msg3=="-" then
+        reaper.osara_outputMessage("Project position. Label. "..projectpos_msg2:sub(1,-2).." until project end. Space to toggle projecttime between current and remaining time.")
       else
-        reaper.osara_outputMessage("Project position. Label. Currently at "..projectpos_msg.." until project end. Space to toggle projecttime between current and remaining time.")
+        reaper.osara_outputMessage("Project position. Label. "..projectpos_msg2:sub(1,-2).." remaining until project end. Space to toggle projecttime between current and remaining time.")
       end
     elseif focused==5 then
       reaper.osara_outputMessage("Time_selection. Label. Start "..timesel_start..". End "..timesel_end..". Length "..timesel_length)
