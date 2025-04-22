@@ -921,6 +921,10 @@ function exit_clock()
 end
 
 function checkhover()
+  local window_state=gfx.getchar(65536)
+  ABBA=tonumber(reaper.GetAppVersion():match("(.-)/"))
+  if ABBA>7.07 and window_state&8==0 then return false end
+  
 --gfx.rect(Date_Length[1], Date_Length[2], Date_Length[3], Date_Length[4], 1)
 --gfx.rect(0,marker_y, gfx.w, marker_h,1)
   if gfx.mouse_x>=Project_Duration[1] and 
