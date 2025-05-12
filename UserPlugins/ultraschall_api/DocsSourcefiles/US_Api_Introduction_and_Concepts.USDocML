@@ -106,7 +106,7 @@
             
             If you can't or don't want to install ReaPack, you can also install it manually.
             
-            1. Just download the zip-file of the current version from [ultraschall_api5.2.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api5.2.zip).  
+            1. Just download the zip-file of the current version from [ultraschall_api5.3.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api5.3.zip).  
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".    
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt and ultraschall\_api.lua after this step.  
             3. Restart Reaper.
@@ -613,7 +613,7 @@
                   RenderTable["Dither"] - &1, dither master mix; 
                                           &2, noise shaping master mix; 
                                           &4, dither stems; 
-                                          &8, dither noise shaping stems
+                                          &8, noise shaping stems
                   RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
                   RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
                   RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
@@ -663,6 +663,8 @@
                                                           4, Offline Render(Idle)
                   RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
                   RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
+									RenderTable["Preserve_Metadata"] - true, preserve metadata(when selected media items as source); false, don't preserve metadata
+									RenderTable["Preserve_Start_Offset"] - true, preserve start-offset (when selected media items as source); false, don't preserve start-offset
                   RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                                  true, checked; false, unchecked
                   RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
@@ -687,8 +689,10 @@
                   RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format 
                                                  as BASE64 string
                   RenderTable["RenderTable"]=true - signals, this is a valid render-table
+									RenderTable["ReturnToDialog"] - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
                   RenderTable["SampleRate"] - the samplerate of the rendered file(s)
                   RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
+									RenderTable["SaveRenderStatsFile"] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
                   RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
                   RenderTable["Source"] - 0, Master mix
                                           1, Master mix + stems; 

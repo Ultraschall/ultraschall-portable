@@ -9085,6 +9085,9 @@
            >> 0 0 1, LUFS-M max  
            >> 1 0 1, LUFS-S max  
                       
+           >&16=0, Adjust mono files by an additional-checkbox(see &524288) - unchecked
+           >&16=1, Adjust mono files by an additional-checkbox(see &524288) - checked
+           
            >&64=0, Brickwall Limit-checkbox - unchecked
            >&64=1, Brickwall Limit-checkbox - checked
            
@@ -9108,9 +9111,21 @@
 					 >> 0 1, Normalize to loudest file
 					 >> 1 1, Normalize as if one long file
 					 >> 1 0, Normalize all files to master mix
-					 
-					 >&8192=0, Adjust mono media an additional -3dB - unchecked
-					 >&8192=1, Adjust mono media an additional -3dB - checked
+           
+           >&16384=0, Trim leading silence-checkbox - unchecked
+           >&16384=1, Trim leading silence-checkbox - checked
+
+           >&32768=0, Trim trailing silence-checkbox - unchecked
+           >&32768=1, Trim trailing silence-checkbox - checked
+  
+           >&65536=0, Pad start with silence-checkbox - unchecked
+           >&65536=1, Pad start with silence-checkbox - checked
+
+           >&131072=0, Pad end with silence-checkbox - unchecked
+           >&131072=1, Pad end with silence-checkbox - checked
+           
+           >&524288=0, Adjust mono files by an additional -3dB
+           >&524288=1, Adjust mono files by an additional +3dB
 
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -9145,6 +9160,25 @@
     </US_DocBloc>  
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderpadend</slug>
+      <title>projrenderpadend</title>  
+      <description>  
+          Pad end with silence-inputbox, as set in the Render to File-dialog -> Postprocess button.
+          It is a double-float, project variable.
+          
+          In seconds.
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>projrenderpadin</slug>  
       <title>projrenderpadin</title>  
       <description>  
@@ -9167,6 +9201,63 @@
       </description>  
       <chapter_context>
          Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrenderpadstart</slug>  
+      <title>projrenderpadstart</title>  
+      <description>  
+          Pad start with silence-inputbox, as set in the Render to File-dialog -> Postprocess button.
+          It is a double-float, project variable.
+          
+          In seconds.
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrendertrimend</slug>  
+      <title>projrendertrimend</title>  
+      <description>  
+          Trim trailing silence-inputbox, as set in the Render to File-dialog -> Postprocess button.
+          It is a double-float, project variable.
+          
+          Use ultraschall.MKVOL2DB() to convert it to db.
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         Render to File
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projrendertrimstart</slug>  
+      <title>projrendertrimstart</title>  
+      <description>  
+          Trim trailing silence-inputbox, as set in the Render to File-dialog -> Postprocess button.
+          It is a double-float, project variable.
+          
+          Use ultraschall.MKVOL2DB() to convert it to db.
+          
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         Render to File
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -9289,6 +9380,7 @@
            >&16384, Only render channels that are sent to parent
            >&32768, (Preserve) Metadata-checkbox
            >&65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
+           >&524288, Parallel render
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -9354,7 +9446,27 @@
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
-    </US_DocBloc>  
+    </US_DocBloc>   
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>projripeditcfg</slug>  
+      <title>projripeditcfg</title>  
+      <description>  
+          The ripple-item-edge-state of the current project, as set by the action "Options: Ripple edit when editing media item edges"
+          It's an integer, project variable.
+          
+          >&4=0, Ripple edit when editing media item edges off
+          >&4=1, Ripple edit when editing media item edges on
+            
+          Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
+      </description>  
+      <chapter_context>
+         Project Settings
+         misc
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>    
   
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>projsellock</slug>  
@@ -10814,6 +10926,20 @@
     </US_DocBloc> 
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
+      <slug>renderprvwvol</slug>  
+      <title>renderprvwvol</title>  
+      <description>  
+          Unknown
+          It is a double-float, unknown variable.
+      </description>  
+      <chapter_context>
+         Unknown
+      </chapter_context>
+      <source_document>Reaper_Config_Variables.USDocML</source_document>
+      <target_document>Reaper_Config_Variables</target_document>  
+    </US_DocBloc>  
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  
       <slug>renderqdelay</slug>  
       <title>renderqdelay</title>  
       <description>  
@@ -11985,7 +12111,7 @@
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
-         
+         Unknown
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
@@ -12003,7 +12129,7 @@
           Stored in reaper.ini under the same name in the section REAPER.  
       </description>  
       <chapter_context>
-         
+         Unknown
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  

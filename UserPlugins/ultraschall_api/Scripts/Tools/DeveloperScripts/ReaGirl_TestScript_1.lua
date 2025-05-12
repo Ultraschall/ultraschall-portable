@@ -98,7 +98,7 @@ function label(element_id, dragged_element_id)
   elseif dragged_element_id==image_source then
     reaper.MB("Successfully dragged to source-image ", "", 0)
   elseif element_id==label2 then
-    reaper.MB("Clickable label clicked", "", 0)
+    reaper.MB("Clickable label clicked", "", 1)
   end
 end
 
