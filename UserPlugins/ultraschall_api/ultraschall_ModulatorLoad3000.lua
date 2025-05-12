@@ -5325,6 +5325,14 @@ else
     ultraschall.LM(29)
     return ultraschall.GetRender_SaveRenderStats(table.unpack({...}))
   end
+  function ultraschall.GetRender_AutoReturnToDialog(...)
+    ultraschall.LM(29)
+    return ultraschall.GetRender_AutoReturnToDialog(table.unpack({...}))
+  end
+  function ultraschall.SetRender_AutoReturnToDialog(...)
+    ultraschall.LM(29)
+    return ultraschall.SetRender_AutoReturnToDialog(table.unpack({...}))
+  end
   function ultraschall.StoreRenderTable_ProjExtState(...)
     ultraschall.LM(29)
     return ultraschall.StoreRenderTable_ProjExtState(table.unpack({...}))

@@ -46,7 +46,7 @@ ultraschall={}
 ultraschall.temp, ultraschall.Script_Context=reaper.get_action_context()
 
 -- include beta-functions(true) or not(false)
-ultraschall.US_BetaFunctions=false
+ultraschall.US_BetaFunctions=true
 
 -- get the current system's separator
 if reaper.GetOS():sub(1,3) == "Win" then ultraschall.Separator = "\\" else ultraschall.Separator = "/" end

@@ -56,7 +56,7 @@ Ultraschall API Functions
 <!-- External Script -->
 <script src="./scripts/scripts.js.Download"></script>
 <table class="indexpad" border="0"><tr><td><br><a class="inpad" id="API-Helper functions"><a href="#API-Helper functions">^</a></a><strong> <u>API-Helper functions</u></strong><br><br>
-<b style="font-size:small;"><br><a class="inpad" id="Action Related Functions"><a href="#Action Related Functions">^</a></a> Action Related Functions</b>
+</td></tr><tr><td class="tdsm"><a href="#get_action_context_MediaItemDiff">get_action_context_MediaItemDiff</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Action Related Functions"><a href="#Action Related Functions">^</a></a> Action Related Functions</b>
 </td></tr><tr><td class="tdsm"><a href="#ActionsList_GetAllActions">ActionsList_GetAllActions</a></td><td class="tdsm"><a href="#ActionsList_GetSelectedActions">ActionsList_GetSelectedActions</a></td><td class="tdsm"><a href="#CheckActionCommandIDFormat">CheckActionCommandIDFormat</a></td></tr><td class="tdsm"><a href="#CheckActionCommandIDFormat">CheckActionCommandIDFormat</a></td><td class="tdsm"><a href="#CheckActionCommandIDFormat2">CheckActionCommandIDFormat2</a></td><td class="tdsm"><a href="#GetAllActions">GetAllActions</a></td></tr><td class="tdsm"><a href="#GetScriptFilenameFromActionCommandID">GetScriptFilenameFromActionCommandID</a></td><td class="tdsm"><a href="#RefreshToolbar_Action">RefreshToolbar_Action</a></td><td class="tdsm"><a href="#RunCommand">RunCommand</a></td></tr><td class="tdsm"><a href="#ToggleStateAction">ToggleStateAction</a></td><td class="tdsm"><a href="#ToggleStateButton">ToggleStateButton</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Benchmark"><a href="#Benchmark">^</a></a> Benchmark</b>
 </td></tr><tr><td class="tdsm"><a href="#Benchmark_GetAllStartTimesAndSlots">Benchmark_GetAllStartTimesAndSlots</a></td><td class="tdsm"><a href="#Benchmark_GetStartTime">Benchmark_GetStartTime</a></td><td class="tdsm"><a href="#Benchmark_MeasureTime">Benchmark_MeasureTime</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Child Scripts"><a href="#Child Scripts">^</a></a> Child Scripts</b>
 </td></tr><tr><td class="tdsm"><a href="#GetScriptIdentifier">GetScriptIdentifier</a></td><td class="tdsm"><a href="#GetScriptIdentifier_Description">GetScriptIdentifier_Description</a></td><td class="tdsm"><a href="#GetScriptIdentifier_Title">GetScriptIdentifier_Title</a></td></tr><td class="tdsm"><a href="#GetScriptParameters">GetScriptParameters</a></td><td class="tdsm"><a href="#GetScriptReturnvalues">GetScriptReturnvalues</a></td><td class="tdsm"><a href="#GetScriptReturnvalues_Sender">GetScriptReturnvalues_Sender</a></td></tr><td class="tdsm"><a href="#MIDI_OnCommandByFilename">MIDI_OnCommandByFilename</a></td><td class="tdsm"><a href="#Main_OnCommandByFilename">Main_OnCommandByFilename</a></td><td class="tdsm"><a href="#Main_OnCommand_LuaCode">Main_OnCommand_LuaCode</a></td></tr><td class="tdsm"><a href="#SetScriptIdentifier_Description">SetScriptIdentifier_Description</a></td><td class="tdsm"><a href="#SetScriptIdentifier_Title">SetScriptIdentifier_Title</a></td><td class="tdsm"><a href="#SetScriptParameters">SetScriptParameters</a></td></tr><td class="tdsm"><a href="#SetScriptReturnvalues">SetScriptReturnvalues</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Config Vars"><a href="#Config Vars">^</a></a> Config Vars</b>
@@ -66,7 +66,8 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#FloatCompare">FloatCompare</a></td><td class="tdsm"><a href="#ReturnTypeOfReaperObject">ReturnTypeOfReaperObject</a></td><td class="tdsm"><a href="#has_alphanumeric">has_alphanumeric</a></td></tr><td class="tdsm"><a href="#has_control">has_control</a></td><td class="tdsm"><a href="#has_digits">has_digits</a></td><td class="tdsm"><a href="#has_hex">has_hex</a></td></tr><td class="tdsm"><a href="#has_letter">has_letter</a></td><td class="tdsm"><a href="#has_lowercase">has_lowercase</a></td><td class="tdsm"><a href="#has_printables">has_printables</a></td></tr><td class="tdsm"><a href="#has_space">has_space</a></td><td class="tdsm"><a href="#has_uppercase">has_uppercase</a></td><td class="tdsm"><a href="#toboolean">toboolean</a></td></tr><td class="tdsm"><a href="#type">type</a></td><td class="tdsm"><a href="#utf8_len">utf8_len</a></td><td class="tdsm"><a href="#utf8_sub">utf8_sub</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Debug"><a href="#Debug">^</a></a> Debug</b>
 </td></tr><tr><td class="tdsm"><a href="#PingMe">PingMe</a></td><td class="tdsm"><a href="#deprecated">deprecated</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Function Related"><a href="#Function Related">^</a></a> Function Related</b>
 </td></tr><tr><td class="tdsm"><a href="#ConvertFunction_FromBase64String">ConvertFunction_FromBase64String</a></td><td class="tdsm"><a href="#ConvertFunction_FromHexString">ConvertFunction_FromHexString</a></td><td class="tdsm"><a href="#ConvertFunction_ToBase64String">ConvertFunction_ToBase64String</a></td></tr><td class="tdsm"><a href="#ConvertFunction_ToHexString">ConvertFunction_ToHexString</a></td><td class="tdsm"><a href="#MakeFunctionUndoable">MakeFunctionUndoable</a></td><td class="tdsm"><a href="#RunLuaSourceCode">RunLuaSourceCode</a></td></tr><td class="tdsm"><a href="#StoreFunctionInExtState">StoreFunctionInExtState</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Gmem/Shared Memory"><a href="#Gmem/Shared Memory">^</a></a> Gmem/Shared Memory</b>
-</td></tr><tr><td class="tdsm"><a href="#GMem_GetValues_VideoSamplePeeker">GMem_GetValues_VideoSamplePeeker</a></td><td class="tdsm"><a href="#GMem_Read_ValueRange">GMem_Read_ValueRange</a></td><td class="tdsm"><a href="#Gmem_GetCurrentAttachedName">Gmem_GetCurrentAttachedName</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LoadFunctionFromExtState"><a href="#LoadFunctionFromExtState">^</a></a> LoadFunctionFromExtState</b>
+</td></tr><tr><td class="tdsm"><a href="#GMem_GetValues_VideoSamplePeeker">GMem_GetValues_VideoSamplePeeker</a></td><td class="tdsm"><a href="#GMem_Read_ValueRange">GMem_Read_ValueRange</a></td><td class="tdsm"><a href="#Gmem_GetCurrentAttachedName">Gmem_GetCurrentAttachedName</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LiceCap"><a href="#LiceCap">^</a></a> LiceCap</b>
+</td></tr><tr><td class="tdsm"><a href="#SetLiceCapExe">SetLiceCapExe</a></td><td class="tdsm"><a href="#SetupLiceCap">SetupLiceCap</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="LoadFunctionFromExtState"><a href="#LoadFunctionFromExtState">^</a></a> LoadFunctionFromExtState</b>
 </td></tr><tr><td class="tdsm"><a href="#LoadFunctionFromExtState">LoadFunctionFromExtState</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ProgressBar"><a href="#ProgressBar">^</a></a> ProgressBar</b>
 </td></tr><tr><td class="tdsm"><a href="#PrintProgressBar">PrintProgressBar</a></td><td class="tdsm"><a href="#ResetProgressBar">ResetProgressBar</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="ReaScript Console"><a href="#ReaScript Console">^</a></a> ReaScript Console</b>
 </td></tr><tr><td class="tdsm"><a href="#BringReaScriptConsoleToFront">BringReaScriptConsoleToFront</a></td><td class="tdsm"><a href="#CloseReaScriptConsole">CloseReaScriptConsole</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper Paths"><a href="#Reaper Paths">^</a></a> Reaper Paths</b>
@@ -104,10 +105,10 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#AddErrorMessage">AddErrorMessage</a></td><td class="tdsm"><a href="#CountErrorMessage_Funcname">CountErrorMessage_Funcname</a></td><td class="tdsm"><a href="#CountErrorMessages">CountErrorMessages</a></td></tr><td class="tdsm"><a href="#DAEM">DAEM</a></td><td class="tdsm"><a href="#DeleteAllErrorMessages">DeleteAllErrorMessages</a></td><td class="tdsm"><a href="#DeleteErrorMessage">DeleteErrorMessage</a></td></tr><td class="tdsm"><a href="#DeleteLastErrorMessage">DeleteLastErrorMessage</a></td><td class="tdsm"><a href="#GetErrorMessage_Funcname">GetErrorMessage_Funcname</a></td><td class="tdsm"><a href="#GetLastErrorMessage">GetLastErrorMessage</a></td></tr><td class="tdsm"><a href="#GetLastErrorMessage2">GetLastErrorMessage2</a></td><td class="tdsm"><a href="#GetLastErrorMessage_Funcname">GetLastErrorMessage_Funcname</a></td><td class="tdsm"><a href="#ReadErrorMessage">ReadErrorMessage</a></td></tr><td class="tdsm"><a href="#SFEM">SFEM</a></td><td class="tdsm"><a href="#SLEM">SLEM</a></td><td class="tdsm"><a href="#ShowErrorMessagesInReascriptConsole">ShowErrorMessagesInReascriptConsole</a></td></tr><td class="tdsm"><a href="#ShowLastErrorMessage">ShowLastErrorMessage</a></td><td class="tdsm"><a href="#SuppressErrorMessages">SuppressErrorMessages</a></td><td class="tdsm"><a href="#ToggleIDE_Errormessages">ToggleIDE_Errormessages</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a> Helper functions</b>
 </td></tr><tr><td class="tdsm"><a href="#APIExists">APIExists</a></td><td class="tdsm"><a href="#ApiTest">ApiTest</a></td><td class="tdsm"><a href="#EditReaScript">EditReaScript</a></td></tr><td class="tdsm"><a href="#RFR">RFR</a></td><td class="tdsm"><a href="#RLR">RLR</a></td><td class="tdsm"><a href="#RRR">RRR</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Envelope Management"><a href="#Envelope Management">^</a></a><strong> <u>Envelope Management</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Envelopes"><a href="#Envelopes">^</a></a> Envelopes</b>
-</td></tr><tr><td class="tdsm"><a href="#GetAllTakeEnvelopes">GetAllTakeEnvelopes</a></td><td class="tdsm"><a href="#GetAllTrackEnvelopes">GetAllTrackEnvelopes</a></td><td class="tdsm"><a href="#GetTakeEnvelopeFromPoint">GetTakeEnvelopeFromPoint</a></td></tr><td class="tdsm"><a href="#GetTakeEnvelopeUnderMouseCursor">GetTakeEnvelopeUnderMouseCursor</a></td><td class="tdsm"><a href="#IsAnyMuteEnvelopeVisible">IsAnyMuteEnvelopeVisible</a></td><td class="tdsm"><a href="#IsEnvelopeTrackEnvelope">IsEnvelopeTrackEnvelope</a></td></tr><td class="tdsm"><a href="#IsEnvelope_Track">IsEnvelope_Track</a></td><td class="tdsm"><a href="#IsTrackEnvelopeVisible_ArrangeView">IsTrackEnvelopeVisible_ArrangeView</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Get Envelope States"><a href="#Get Envelope States">^</a></a> Get Envelope States</b>
+</td></tr><tr><td class="tdsm"><a href="#GetAllTakeEnvelopes">GetAllTakeEnvelopes</a></td><td class="tdsm"><a href="#GetAllTrackEnvelopes">GetAllTrackEnvelopes</a></td><td class="tdsm"><a href="#GetTakeEnvelopeFromPoint">GetTakeEnvelopeFromPoint</a></td></tr><td class="tdsm"><a href="#GetTakeEnvelopeUnderMouseCursor">GetTakeEnvelopeUnderMouseCursor</a></td><td class="tdsm"><a href="#GetTakeEnvelopeUnderMouseCursor">GetTakeEnvelopeUnderMouseCursor</a></td><td class="tdsm"><a href="#IsAnyMuteEnvelopeVisible">IsAnyMuteEnvelopeVisible</a></td></tr><td class="tdsm"><a href="#IsEnvelopeTrackEnvelope">IsEnvelopeTrackEnvelope</a></td><td class="tdsm"><a href="#IsEnvelope_Track">IsEnvelope_Track</a></td><td class="tdsm"><a href="#IsTrackEnvelopeVisible_ArrangeView">IsTrackEnvelopeVisible_ArrangeView</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Get Envelope States"><a href="#Get Envelope States">^</a></a> Get Envelope States</b>
 </td></tr><tr><td class="tdsm"><a href="#GetArmState_Envelope">GetArmState_Envelope</a></td><td class="tdsm"><a href="#GetEnvelopeState_Act">GetEnvelopeState_Act</a></td><td class="tdsm"><a href="#GetEnvelopeState_DefShape">GetEnvelopeState_DefShape</a></td></tr><td class="tdsm"><a href="#GetEnvelopeState_EnvName">GetEnvelopeState_EnvName</a></td><td class="tdsm"><a href="#GetEnvelopeState_LaneHeight">GetEnvelopeState_LaneHeight</a></td><td class="tdsm"><a href="#GetEnvelopeState_NumbersOnly">GetEnvelopeState_NumbersOnly</a></td></tr><td class="tdsm"><a href="#GetEnvelopeState_PT">GetEnvelopeState_PT</a></td><td class="tdsm"><a href="#GetEnvelopeState_PooledEnvInstance">GetEnvelopeState_PooledEnvInstance</a></td><td class="tdsm"><a href="#GetEnvelopeState_Vis">GetEnvelopeState_Vis</a></td></tr><td class="tdsm"><a href="#GetEnvelopeState_Voltype">GetEnvelopeState_Voltype</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Get Envelope"><a href="#Get Envelope">^</a></a> Get Envelope</b>
 </td></tr><tr><td class="tdsm"><a href="#GetClosestEnvelopePointIDX_ByTime">GetClosestEnvelopePointIDX_ByTime</a></td><td class="tdsm"><a href="#GetEnvelopePoint">GetEnvelopePoint</a></td><td class="tdsm"><a href="#GetEnvelopePointIDX_Between">GetEnvelopePointIDX_Between</a></td></tr><td class="tdsm"><a href="#GetLastEnvelopePoint_TrackEnvelope">GetLastEnvelopePoint_TrackEnvelope</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a> Helper functions</b>
-</td></tr><tr><td class="tdsm"><a href="#ActivateEnvelope">ActivateEnvelope</a></td><td class="tdsm"><a href="#ActivateTrackPanEnv">ActivateTrackPanEnv</a></td><td class="tdsm"><a href="#ActivateTrackPanEnv_TrackObject">ActivateTrackPanEnv_TrackObject</a></td></tr><td class="tdsm"><a href="#ActivateTrackPreFXPanEnv">ActivateTrackPreFXPanEnv</a></td><td class="tdsm"><a href="#ActivateTrackPreFXPanEnv_TrackObject">ActivateTrackPreFXPanEnv_TrackObject</a></td><td class="tdsm"><a href="#ActivateTrackPreFXVolumeEnv">ActivateTrackPreFXVolumeEnv</a></td></tr><td class="tdsm"><a href="#ActivateTrackPreFXVolumeEnv_TrackObject">ActivateTrackPreFXVolumeEnv_TrackObject</a></td><td class="tdsm"><a href="#ActivateTrackTrimVolumeEnv">ActivateTrackTrimVolumeEnv</a></td><td class="tdsm"><a href="#ActivateTrackTrimVolumeEnv_TrackObject">ActivateTrackTrimVolumeEnv_TrackObject</a></td></tr><td class="tdsm"><a href="#ActivateTrackVolumeEnv">ActivateTrackVolumeEnv</a></td><td class="tdsm"><a href="#ActivateTrackVolumeEnv_TrackObject">ActivateTrackVolumeEnv_TrackObject</a></td><td class="tdsm"><a href="#CheckEnvelopePointObject">CheckEnvelopePointObject</a></td></tr><td class="tdsm"><a href="#CountEnvelopePoints">CountEnvelopePoints</a></td><td class="tdsm"><a href="#CreateEnvelopePointObject">CreateEnvelopePointObject</a></td><td class="tdsm"><a href="#GetAllActiveEnvelopes_Take">GetAllActiveEnvelopes_Take</a></td></tr><td class="tdsm"><a href="#GetAllActiveEnvelopes_Track">GetAllActiveEnvelopes_Track</a></td><td class="tdsm"><a href="#GetTrackEnvelopeFromPoint">GetTrackEnvelopeFromPoint</a></td><td class="tdsm"><a href="#GetTrackEnvelope_ClickState">GetTrackEnvelope_ClickState</a></td></tr><td class="tdsm"><a href="#IsValidEnvStateChunk">IsValidEnvStateChunk</a></td><td class="tdsm"><a href="#IsValidEnvelopePointArray">IsValidEnvelopePointArray</a></td><td class="tdsm"><a href="#IsValidEnvelopePointObject">IsValidEnvelopePointObject</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Set Envelope States"><a href="#Set Envelope States">^</a></a> Set Envelope States</b>
+</td></tr><tr><td class="tdsm"><a href="#ActivateEnvelope">ActivateEnvelope</a></td><td class="tdsm"><a href="#ActivateTrackPanEnv">ActivateTrackPanEnv</a></td><td class="tdsm"><a href="#ActivateTrackPanEnv_TrackObject">ActivateTrackPanEnv_TrackObject</a></td></tr><td class="tdsm"><a href="#ActivateTrackPreFXPanEnv">ActivateTrackPreFXPanEnv</a></td><td class="tdsm"><a href="#ActivateTrackPreFXPanEnv_TrackObject">ActivateTrackPreFXPanEnv_TrackObject</a></td><td class="tdsm"><a href="#ActivateTrackPreFXVolumeEnv">ActivateTrackPreFXVolumeEnv</a></td></tr><td class="tdsm"><a href="#ActivateTrackPreFXVolumeEnv_TrackObject">ActivateTrackPreFXVolumeEnv_TrackObject</a></td><td class="tdsm"><a href="#ActivateTrackTrimVolumeEnv">ActivateTrackTrimVolumeEnv</a></td><td class="tdsm"><a href="#ActivateTrackTrimVolumeEnv_TrackObject">ActivateTrackTrimVolumeEnv_TrackObject</a></td></tr><td class="tdsm"><a href="#ActivateTrackVolumeEnv">ActivateTrackVolumeEnv</a></td><td class="tdsm"><a href="#ActivateTrackVolumeEnv_TrackObject">ActivateTrackVolumeEnv_TrackObject</a></td><td class="tdsm"><a href="#CheckEnvelopePointObject">CheckEnvelopePointObject</a></td></tr><td class="tdsm"><a href="#CountEnvelopePoints">CountEnvelopePoints</a></td><td class="tdsm"><a href="#CreateEnvelopePointObject">CreateEnvelopePointObject</a></td><td class="tdsm"><a href="#GetAllActiveEnvelopes_Take">GetAllActiveEnvelopes_Take</a></td></tr><td class="tdsm"><a href="#GetAllActiveEnvelopes_Track">GetAllActiveEnvelopes_Track</a></td><td class="tdsm"><a href="#GetTrackEnvelopeFromPoint">GetTrackEnvelopeFromPoint</a></td><td class="tdsm"><a href="#GetTrackEnvelope_ClickState">GetTrackEnvelope_ClickState</a></td></tr><td class="tdsm"><a href="#GetTrackEnvelope_ClickState">GetTrackEnvelope_ClickState</a></td><td class="tdsm"><a href="#IsValidEnvStateChunk">IsValidEnvStateChunk</a></td><td class="tdsm"><a href="#IsValidEnvelopePointArray">IsValidEnvelopePointArray</a></td></tr><td class="tdsm"><a href="#IsValidEnvelopePointObject">IsValidEnvelopePointObject</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Set Envelope States"><a href="#Set Envelope States">^</a></a> Set Envelope States</b>
 </td></tr><tr><td class="tdsm"><a href="#SetArmState_Envelope">SetArmState_Envelope</a></td><td class="tdsm"><a href="#SetEnvelopeState_Act">SetEnvelopeState_Act</a></td><td class="tdsm"><a href="#SetEnvelopeState_DefShape">SetEnvelopeState_DefShape</a></td></tr><td class="tdsm"><a href="#SetEnvelopeState_LaneHeight">SetEnvelopeState_LaneHeight</a></td><td class="tdsm"><a href="#SetEnvelopeState_Vis">SetEnvelopeState_Vis</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Set Envelope"><a href="#Set Envelope">^</a></a> Set Envelope</b>
 </td></tr><tr><td class="tdsm"><a href="#AddEnvelopePoints_EnvelopePointArray">AddEnvelopePoints_EnvelopePointArray</a></td><td class="tdsm"><a href="#AddEnvelopePoints_EnvelopePointObject">AddEnvelopePoints_EnvelopePointObject</a></td><td class="tdsm"><a href="#DeleteEnvelopePoints_EnvelopePointArray">DeleteEnvelopePoints_EnvelopePointArray</a></td></tr><td class="tdsm"><a href="#DeleteEnvelopePoints_EnvelopePointObject">DeleteEnvelopePoints_EnvelopePointObject</a></td><td class="tdsm"><a href="#DeleteTrackEnvelopePointsBetween">DeleteTrackEnvelopePointsBetween</a></td><td class="tdsm"><a href="#MoveTrackEnvelopePointsBy">MoveTrackEnvelopePointsBy</a></td></tr><td class="tdsm"><a href="#SetEnvelopeHeight">SetEnvelopeHeight</a></td><td class="tdsm"><a href="#SetEnvelopePoints_EnvelopePointArray">SetEnvelopePoints_EnvelopePointArray</a></td><td class="tdsm"><a href="#SetEnvelopePoints_EnvelopePointObject">SetEnvelopePoints_EnvelopePointObject</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Event Manager"><a href="#Event Manager">^</a></a><strong> <u>Event Manager</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#EventManager_AddEvent">EventManager_AddEvent</a></td><td class="tdsm"><a href="#EventManager_AddStartupEvent">EventManager_AddStartupEvent</a></td><td class="tdsm"><a href="#EventManager_CountRegisteredEvents">EventManager_CountRegisteredEvents</a></td></tr><td class="tdsm"><a href="#EventManager_CountStartupEvents">EventManager_CountStartupEvents</a></td><td class="tdsm"><a href="#EventManager_DebugMode">EventManager_DebugMode</a></td><td class="tdsm"><a href="#EventManager_DebugMode_UserSpace">EventManager_DebugMode_UserSpace</a></td></tr><td class="tdsm"><a href="#EventManager_Debug_GetAllActionRunStates">EventManager_Debug_GetAllActionRunStates</a></td><td class="tdsm"><a href="#EventManager_Debug_GetExecutionTime">EventManager_Debug_GetExecutionTime</a></td><td class="tdsm"><a href="#EventManager_EnumerateEvents">EventManager_EnumerateEvents</a></td></tr><td class="tdsm"><a href="#EventManager_EnumerateEvents2">EventManager_EnumerateEvents2</a></td><td class="tdsm"><a href="#EventManager_EnumerateStartupEvents">EventManager_EnumerateStartupEvents</a></td><td class="tdsm"><a href="#EventManager_EnumerateStartupEvents2">EventManager_EnumerateStartupEvents2</a></td></tr><td class="tdsm"><a href="#EventManager_GetAllEventIdentifier">EventManager_GetAllEventIdentifier</a></td><td class="tdsm"><a href="#EventManager_GetAllEventIdentifier">EventManager_GetAllEventIdentifier</a></td><td class="tdsm"><a href="#EventManager_GetAllEventNames">EventManager_GetAllEventNames</a></td></tr><td class="tdsm"><a href="#EventManager_GetEventIdentifier">EventManager_GetEventIdentifier</a></td><td class="tdsm"><a href="#EventManager_GetLastCheckfunctionState">EventManager_GetLastCheckfunctionState</a></td><td class="tdsm"><a href="#EventManager_GetLastCheckfunctionState2">EventManager_GetLastCheckfunctionState2</a></td></tr><td class="tdsm"><a href="#EventManager_GetLastUpdateTime">EventManager_GetLastUpdateTime</a></td><td class="tdsm"><a href="#EventManager_GetPausedState">EventManager_GetPausedState</a></td><td class="tdsm"><a href="#EventManager_GetPausedState2">EventManager_GetPausedState2</a></td></tr><td class="tdsm"><a href="#EventManager_GetRegisteredEventID">EventManager_GetRegisteredEventID</a></td><td class="tdsm"><a href="#EventManager_IsValidEventIdentifier">EventManager_IsValidEventIdentifier</a></td><td class="tdsm"><a href="#EventManager_PauseEvent">EventManager_PauseEvent</a></td></tr><td class="tdsm"><a href="#EventManager_RemoveAllEvents_Script">EventManager_RemoveAllEvents_Script</a></td><td class="tdsm"><a href="#EventManager_RemoveEvent">EventManager_RemoveEvent</a></td><td class="tdsm"><a href="#EventManager_RemoveStartupEvent">EventManager_RemoveStartupEvent</a></td></tr><td class="tdsm"><a href="#EventManager_RemoveStartupEvent2">EventManager_RemoveStartupEvent2</a></td><td class="tdsm"><a href="#EventManager_ResumeEvent">EventManager_ResumeEvent</a></td><td class="tdsm"><a href="#EventManager_SetEvent">EventManager_SetEvent</a></td></tr><td class="tdsm"><a href="#EventManager_SetStartupEvent">EventManager_SetStartupEvent</a></td><td class="tdsm"><a href="#EventManager_Start">EventManager_Start</a></td><td class="tdsm"><a href="#EventManager_Stop">EventManager_Stop</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="FX-Management"><a href="#FX-Management">^</a></a><strong> <u>FX-Management</u></strong><br><br>
@@ -118,7 +119,7 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#InputFX_AddByName">InputFX_AddByName</a></td><td class="tdsm"><a href="#InputFX_CopyFX">InputFX_CopyFX</a></td><td class="tdsm"><a href="#InputFX_CopyFXFromTakeFX">InputFX_CopyFXFromTakeFX</a></td></tr><td class="tdsm"><a href="#InputFX_CopyFXFromTrackFX">InputFX_CopyFXFromTrackFX</a></td><td class="tdsm"><a href="#InputFX_CopyFXToTakeFX">InputFX_CopyFXToTakeFX</a></td><td class="tdsm"><a href="#InputFX_CopyFXToTrackFX">InputFX_CopyFXToTrackFX</a></td></tr><td class="tdsm"><a href="#InputFX_Delete">InputFX_Delete</a></td><td class="tdsm"><a href="#InputFX_EndParamEdit">InputFX_EndParamEdit</a></td><td class="tdsm"><a href="#InputFX_FormatParamValue">InputFX_FormatParamValue</a></td></tr><td class="tdsm"><a href="#InputFX_FormatParamValueNormalized">InputFX_FormatParamValueNormalized</a></td><td class="tdsm"><a href="#InputFX_GetChainVisible">InputFX_GetChainVisible</a></td><td class="tdsm"><a href="#InputFX_GetComment">InputFX_GetComment</a></td></tr><td class="tdsm"><a href="#InputFX_GetCount">InputFX_GetCount</a></td><td class="tdsm"><a href="#InputFX_GetEQ">InputFX_GetEQ</a></td><td class="tdsm"><a href="#InputFX_GetEQBandEnabled">InputFX_GetEQBandEnabled</a></td></tr><td class="tdsm"><a href="#InputFX_GetEQParam">InputFX_GetEQParam</a></td><td class="tdsm"><a href="#InputFX_GetEnabled">InputFX_GetEnabled</a></td><td class="tdsm"><a href="#InputFX_GetFXChain">InputFX_GetFXChain</a></td></tr><td class="tdsm"><a href="#InputFX_GetFXGUID">InputFX_GetFXGUID</a></td><td class="tdsm"><a href="#InputFX_GetFXName">InputFX_GetFXName</a></td><td class="tdsm"><a href="#InputFX_GetFloatingWindow">InputFX_GetFloatingWindow</a></td></tr><td class="tdsm"><a href="#InputFX_GetFormattedParamValue">InputFX_GetFormattedParamValue</a></td><td class="tdsm"><a href="#InputFX_GetIOSize">InputFX_GetIOSize</a></td><td class="tdsm"><a href="#InputFX_GetNamedConfigParm">InputFX_GetNamedConfigParm</a></td></tr><td class="tdsm"><a href="#InputFX_GetNumParams">InputFX_GetNumParams</a></td><td class="tdsm"><a href="#InputFX_GetOffline">InputFX_GetOffline</a></td><td class="tdsm"><a href="#InputFX_GetOpen">InputFX_GetOpen</a></td></tr><td class="tdsm"><a href="#InputFX_GetParam">InputFX_GetParam</a></td><td class="tdsm"><a href="#InputFX_GetParamEx">InputFX_GetParamEx</a></td><td class="tdsm"><a href="#InputFX_GetParamName">InputFX_GetParamName</a></td></tr><td class="tdsm"><a href="#InputFX_GetParamNormalized">InputFX_GetParamNormalized</a></td><td class="tdsm"><a href="#InputFX_GetParameterStepSizes">InputFX_GetParameterStepSizes</a></td><td class="tdsm"><a href="#InputFX_GetPinMappings">InputFX_GetPinMappings</a></td></tr><td class="tdsm"><a href="#InputFX_GetPreset">InputFX_GetPreset</a></td><td class="tdsm"><a href="#InputFX_GetPresetIndex">InputFX_GetPresetIndex</a></td><td class="tdsm"><a href="#InputFX_GetUserPresetFilename">InputFX_GetUserPresetFilename</a></td></tr><td class="tdsm"><a href="#InputFX_MoveFX">InputFX_MoveFX</a></td><td class="tdsm"><a href="#InputFX_MoveFXFromTakeFX">InputFX_MoveFXFromTakeFX</a></td><td class="tdsm"><a href="#InputFX_MoveFXFromTrackFX">InputFX_MoveFXFromTrackFX</a></td></tr><td class="tdsm"><a href="#InputFX_MoveFXToTakeFX">InputFX_MoveFXToTakeFX</a></td><td class="tdsm"><a href="#InputFX_MoveFXToTrackFX">InputFX_MoveFXToTrackFX</a></td><td class="tdsm"><a href="#InputFX_NavigatePresets">InputFX_NavigatePresets</a></td></tr><td class="tdsm"><a href="#InputFX_QueryFirstFXIndex">InputFX_QueryFirstFXIndex</a></td><td class="tdsm"><a href="#InputFX_SetEQBandEnabled">InputFX_SetEQBandEnabled</a></td><td class="tdsm"><a href="#InputFX_SetEQParam">InputFX_SetEQParam</a></td></tr><td class="tdsm"><a href="#InputFX_SetEnabled">InputFX_SetEnabled</a></td><td class="tdsm"><a href="#InputFX_SetFXChain">InputFX_SetFXChain</a></td><td class="tdsm"><a href="#InputFX_SetOffline">InputFX_SetOffline</a></td></tr><td class="tdsm"><a href="#InputFX_SetOpen">InputFX_SetOpen</a></td><td class="tdsm"><a href="#InputFX_SetParam">InputFX_SetParam</a></td><td class="tdsm"><a href="#InputFX_SetParamNormalized">InputFX_SetParamNormalized</a></td></tr><td class="tdsm"><a href="#InputFX_SetPinMappings">InputFX_SetPinMappings</a></td><td class="tdsm"><a href="#InputFX_SetPreset">InputFX_SetPreset</a></td><td class="tdsm"><a href="#InputFX_SetPresetByIndex">InputFX_SetPresetByIndex</a></td></tr><td class="tdsm"><a href="#InputFX_Show">InputFX_Show</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Parameter Mapping Alias"><a href="#Parameter Mapping Alias">^</a></a> Parameter Mapping Alias</b>
 </td></tr><tr><td class="tdsm"><a href="#AddParmAlias_FXStateChunk">AddParmAlias_FXStateChunk</a></td><td class="tdsm"><a href="#CountParmAlias_FXStateChunk">CountParmAlias_FXStateChunk</a></td><td class="tdsm"><a href="#DeleteParmAlias2_FXStateChunk">DeleteParmAlias2_FXStateChunk</a></td></tr><td class="tdsm"><a href="#DeleteParmAlias_FXStateChunk">DeleteParmAlias_FXStateChunk</a></td><td class="tdsm"><a href="#GetAllParmAliasNames_FXStateChunk">GetAllParmAliasNames_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmAlias2_FXStateChunk">GetParmAlias2_FXStateChunk</a></td></tr><td class="tdsm"><a href="#GetParmAliasID_by_FXParam_FXStateChunk">GetParmAliasID_by_FXParam_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmAlias_FXStateChunk">GetParmAlias_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmAlias_MediaTrack">GetParmAlias_MediaTrack</a></td></tr><td class="tdsm"><a href="#SetParmAlias2_FXStateChunk">SetParmAlias2_FXStateChunk</a></td><td class="tdsm"><a href="#SetParmAlias_FXStateChunk">SetParmAlias_FXStateChunk</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Parameter Mapping LFOLearn"><a href="#Parameter Mapping LFOLearn">^</a></a> Parameter Mapping LFOLearn</b>
 </td></tr><tr><td class="tdsm"><a href="#AddParmLFOLearn_FXStateChunk">AddParmLFOLearn_FXStateChunk</a></td><td class="tdsm"><a href="#CountParmLFOLearn_FXStateChunk">CountParmLFOLearn_FXStateChunk</a></td><td class="tdsm"><a href="#DeleteParmLFOLearn_FXStateChunk">DeleteParmLFOLearn_FXStateChunk</a></td></tr><td class="tdsm"><a href="#GetParmLFOLearnID_by_FXParam_FXStateChunk">GetParmLFOLearnID_by_FXParam_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLFOLearn_FXStateChunk">GetParmLFOLearn_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLFOLearn_MediaItem">GetParmLFOLearn_MediaItem</a></td></tr><td class="tdsm"><a href="#GetParmLFOLearn_MediaTrack">GetParmLFOLearn_MediaTrack</a></td><td class="tdsm"><a href="#SetParmLFOLearn_FXStateChunk">SetParmLFOLearn_FXStateChunk</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Parameter Mapping Learn"><a href="#Parameter Mapping Learn">^</a></a> Parameter Mapping Learn</b>
-</td></tr><tr><td class="tdsm"><a href="#AddParmLearn_FXStateChunk">AddParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#AddParmLearn_FXStateChunk2">AddParmLearn_FXStateChunk2</a></td><td class="tdsm"><a href="#CountParmLearn_FXStateChunk">CountParmLearn_FXStateChunk</a></td></tr><td class="tdsm"><a href="#DeleteParmLearn_FXStateChunk">DeleteParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLearnID_by_FXParam_FXStateChunk">GetParmLearnID_by_FXParam_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLearn_Default">GetParmLearn_Default</a></td></tr><td class="tdsm"><a href="#GetParmLearn_FXStateChunk">GetParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLearn_FXStateChunk2">GetParmLearn_FXStateChunk2</a></td><td class="tdsm"><a href="#GetParmLearn_MediaItem">GetParmLearn_MediaItem</a></td></tr><td class="tdsm"><a href="#GetParmLearn_MediaTrack">GetParmLearn_MediaTrack</a></td><td class="tdsm"><a href="#SetParmLearn_Default">SetParmLearn_Default</a></td><td class="tdsm"><a href="#SetParmLearn_FXStateChunk">SetParmLearn_FXStateChunk</a></td></tr><td class="tdsm"><a href="#SetParmLearn_FXStateChunk2">SetParmLearn_FXStateChunk2</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Parameter Modulation"><a href="#Parameter Modulation">^</a></a> Parameter Modulation</b>
+</td></tr><tr><td class="tdsm"><a href="#AddParmLearn_FXStateChunk">AddParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#AddParmLearn_FXStateChunk2">AddParmLearn_FXStateChunk2</a></td><td class="tdsm"><a href="#CountParmLearn_FXStateChunk">CountParmLearn_FXStateChunk</a></td></tr><td class="tdsm"><a href="#DeleteParmLearn2_FXStateChunk">DeleteParmLearn2_FXStateChunk</a></td><td class="tdsm"><a href="#DeleteParmLearn_FXStateChunk">DeleteParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLearnID_by_FXParam_FXStateChunk">GetParmLearnID_by_FXParam_FXStateChunk</a></td></tr><td class="tdsm"><a href="#GetParmLearn_Default">GetParmLearn_Default</a></td><td class="tdsm"><a href="#GetParmLearn_FXStateChunk">GetParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmLearn_FXStateChunk2">GetParmLearn_FXStateChunk2</a></td></tr><td class="tdsm"><a href="#GetParmLearn_MediaItem">GetParmLearn_MediaItem</a></td><td class="tdsm"><a href="#GetParmLearn_MediaTrack">GetParmLearn_MediaTrack</a></td><td class="tdsm"><a href="#SetParmLearn_Default">SetParmLearn_Default</a></td></tr><td class="tdsm"><a href="#SetParmLearn_FXStateChunk">SetParmLearn_FXStateChunk</a></td><td class="tdsm"><a href="#SetParmLearn_FXStateChunk2">SetParmLearn_FXStateChunk2</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Parameter Modulation"><a href="#Parameter Modulation">^</a></a> Parameter Modulation</b>
 </td></tr><tr><td class="tdsm"><a href="#AddParmMod_ParmModTable">AddParmMod_ParmModTable</a></td><td class="tdsm"><a href="#CountParmModFromFXStateChunk">CountParmModFromFXStateChunk</a></td><td class="tdsm"><a href="#CreateDefaultParmModTable">CreateDefaultParmModTable</a></td></tr><td class="tdsm"><a href="#DeleteParmModFromFXStateChunk">DeleteParmModFromFXStateChunk</a></td><td class="tdsm"><a href="#GetParmModTable_FXStateChunk">GetParmModTable_FXStateChunk</a></td><td class="tdsm"><a href="#GetParmModulationChunk_FXStateChunk">GetParmModulationChunk_FXStateChunk</a></td></tr><td class="tdsm"><a href="#IsValidParmModTable">IsValidParmModTable</a></td><td class="tdsm"><a href="#SetParmMod_ParmModTable">SetParmMod_ParmModTable</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Plugins"><a href="#Plugins">^</a></a> Plugins</b>
 </td></tr><tr><td class="tdsm"><a href="#AutoDetectVSTPluginsFolder">AutoDetectVSTPluginsFolder</a></td><td class="tdsm"><a href="#ScanDXPlugins">ScanDXPlugins</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Set States"><a href="#Set States">^</a></a> Set States</b>
 </td></tr><tr><td class="tdsm"><a href="#SetDocked_FXStateChunk">SetDocked_FXStateChunk</a></td><td class="tdsm"><a href="#SetFXAutoBypassSettings">SetFXAutoBypassSettings</a></td><td class="tdsm"><a href="#SetFXAutoBypass_FXStateChunk">SetFXAutoBypass_FXStateChunk</a></td></tr><td class="tdsm"><a href="#SetFXBypass_FXStateChunk">SetFXBypass_FXStateChunk</a></td><td class="tdsm"><a href="#SetFXComment_FXStateChunk">SetFXComment_FXStateChunk</a></td><td class="tdsm"><a href="#SetFXFloatPos_FXStateChunk">SetFXFloatPos_FXStateChunk</a></td></tr><td class="tdsm"><a href="#SetFXGuid_FXStateChunk">SetFXGuid_FXStateChunk</a></td><td class="tdsm"><a href="#SetFXMidiPreset_FXStateChunk">SetFXMidiPreset_FXStateChunk</a></td><td class="tdsm"><a href="#SetFXWak_FXStateChunk">SetFXWak_FXStateChunk</a></td></tr><td class="tdsm"><a href="#SetLastSel_FXStateChunk">SetLastSel_FXStateChunk</a></td><td class="tdsm"><a href="#SetShow_FXStateChunk">SetShow_FXStateChunk</a></td><td class="tdsm"><a href="#SetTakeFXComment">SetTakeFXComment</a></td></tr><td class="tdsm"><a href="#SetTakeFX_AlternativeName">SetTakeFX_AlternativeName</a></td><td class="tdsm"><a href="#SetTrackFXComment">SetTrackFXComment</a></td><td class="tdsm"><a href="#SetTrackFX_AlternativeName">SetTrackFX_AlternativeName</a></td></tr><td class="tdsm"><a href="#SetWndRect_FXStateChunk">SetWndRect_FXStateChunk</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="File Management"><a href="#File Management">^</a></a><strong> <u>File Management</u></strong><br><br>
@@ -127,7 +128,7 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#CheckForValidFileFormats">CheckForValidFileFormats</a></td><td class="tdsm"><a href="#CountLinesInFile">CountLinesInFile</a></td><td class="tdsm"><a href="#GetLengthOfFile">GetLengthOfFile</a></td></tr><td class="tdsm"><a href="#OnlyFilesOfCertainType">OnlyFilesOfCertainType</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a> Helper functions</b>
 </td></tr><tr><td class="tdsm"><a href="#CountDirectoriesAndFilesInPath">CountDirectoriesAndFilesInPath</a></td><td class="tdsm"><a href="#CreateValidTempFile">CreateValidTempFile</a></td><td class="tdsm"><a href="#DirectoryExists">DirectoryExists</a></td></tr><td class="tdsm"><a href="#DirectoryExists2">DirectoryExists2</a></td><td class="tdsm"><a href="#GetAllDirectoriesInPath">GetAllDirectoriesInPath</a></td><td class="tdsm"><a href="#GetAllFilenamesInPath">GetAllFilenamesInPath</a></td></tr><td class="tdsm"><a href="#GetAllRecursiveFilesAndSubdirectories">GetAllRecursiveFilesAndSubdirectories</a></td><td class="tdsm"><a href="#GetPath">GetPath</a></td><td class="tdsm"><a href="#GetReaperWorkDir">GetReaperWorkDir</a></td></tr><td class="tdsm"><a href="#SetReaperWorkDir">SetReaperWorkDir</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Manipulate Files"><a href="#Manipulate Files">^</a></a> Manipulate Files</b>
 </td></tr><tr><td class="tdsm"><a href="#MakeCopyOfFile">MakeCopyOfFile</a></td><td class="tdsm"><a href="#MakeCopyOfFile_Binary">MakeCopyOfFile_Binary</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Read Files"><a href="#Read Files">^</a></a> Read Files</b>
-</td></tr><tr><td class="tdsm"><a href="#ReadBinaryFileFromPattern">ReadBinaryFileFromPattern</a></td><td class="tdsm"><a href="#ReadBinaryFileUntilPattern">ReadBinaryFileUntilPattern</a></td><td class="tdsm"><a href="#ReadBinaryFile_Offset">ReadBinaryFile_Offset</a></td></tr><td class="tdsm"><a href="#ReadFileAsLines_Array">ReadFileAsLines_Array</a></td><td class="tdsm"><a href="#ReadFullFile">ReadFullFile</a></td><td class="tdsm"><a href="#ReadLinerangeFromFile">ReadLinerangeFromFile</a></td></tr><td class="tdsm"><a href="#ReadSubtitles_SRT">ReadSubtitles_SRT</a></td><td class="tdsm"><a href="#ReadValueFromFile">ReadValueFromFile</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Write Files"><a href="#Write Files">^</a></a> Write Files</b>
+</td></tr><tr><td class="tdsm"><a href="#ReadBinaryFileFromPattern">ReadBinaryFileFromPattern</a></td><td class="tdsm"><a href="#ReadBinaryFileUntilPattern">ReadBinaryFileUntilPattern</a></td><td class="tdsm"><a href="#ReadBinaryFile_Offset">ReadBinaryFile_Offset</a></td></tr><td class="tdsm"><a href="#ReadFileAsLines_Array">ReadFileAsLines_Array</a></td><td class="tdsm"><a href="#ReadFullFile">ReadFullFile</a></td><td class="tdsm"><a href="#ReadLinerangeFromFile">ReadLinerangeFromFile</a></td></tr><td class="tdsm"><a href="#ReadSubtitles_SRT">ReadSubtitles_SRT</a></td><td class="tdsm"><a href="#ReadSubtitles_VTT">ReadSubtitles_VTT</a></td><td class="tdsm"><a href="#ReadValueFromFile">ReadValueFromFile</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Write Files"><a href="#Write Files">^</a></a> Write Files</b>
 </td></tr><tr><td class="tdsm"><a href="#SaveSubtitles_SRT">SaveSubtitles_SRT</a></td><td class="tdsm"><a href="#WriteValueToFile">WriteValueToFile</a></td><td class="tdsm"><a href="#WriteValueToFile_Insert">WriteValueToFile_Insert</a></td></tr><td class="tdsm"><a href="#WriteValueToFile_InsertBinary">WriteValueToFile_InsertBinary</a></td><td class="tdsm"><a href="#WriteValueToFile_Replace">WriteValueToFile_Replace</a></td><td class="tdsm"><a href="#WriteValueToFile_ReplaceBinary">WriteValueToFile_ReplaceBinary</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Image File Handling"><a href="#Image File Handling">^</a></a><strong> <u>Image File Handling</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#CaptureScreenAreaAsPNG">CaptureScreenAreaAsPNG</a></td><td class="tdsm"><a href="#CaptureWindowAsPNG">CaptureWindowAsPNG</a></td><td class="tdsm"><a href="#ConvertJPG2PNG">ConvertJPG2PNG</a></td></tr><td class="tdsm"><a href="#ConvertPNG2JPG">ConvertPNG2JPG</a></td><td class="tdsm"><a href="#ResizeJPG">ResizeJPG</a></td><td class="tdsm"><a href="#ResizePNG">ResizePNG</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Localization"><a href="#Localization">^</a></a><strong> <u>Localization</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#Localize">Localize</a></td><td class="tdsm"><a href="#Localize_RefreshFile">Localize_RefreshFile</a></td><td class="tdsm"><a href="#Localize_UseFile">Localize_UseFile</a></td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="MIDI Management"><a href="#MIDI Management">^</a></a><strong> <u>MIDI Management</u></strong><br><br>
@@ -168,7 +169,7 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#GetGuidExtState">GetGuidExtState</a></td><td class="tdsm"><a href="#SetGuidExtState">SetGuidExtState</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Extension States"><a href="#Extension States">^</a></a> Extension States</b>
 </td></tr><tr><td class="tdsm"><a href="#DeleteProjExtState_Key">DeleteProjExtState_Key</a></td><td class="tdsm"><a href="#DeleteProjExtState_Section">DeleteProjExtState_Section</a></td><td class="tdsm"><a href="#GetProjExtState_AllKeyValues">GetProjExtState_AllKeyValues</a></td></tr><td class="tdsm"><a href="#ProjExtState_CountAllKeys">ProjExtState_CountAllKeys</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Markers"><a href="#Markers">^</a></a> Markers</b>
 </td></tr><tr><td class="tdsm"><a href="#GetMarkerExtState">GetMarkerExtState</a></td><td class="tdsm"><a href="#SetMarkerExtState">SetMarkerExtState</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Podcast Metadata"><a href="#Podcast Metadata">^</a></a> Podcast Metadata</b>
-</td></tr><tr><td class="tdsm"><a href="#CountContributors">CountContributors</a></td><td class="tdsm"><a href="#GetChapterAttributesAsJSON">GetChapterAttributesAsJSON</a></td><td class="tdsm"><a href="#GetEpisodeAttributePresetSlotByName">GetEpisodeAttributePresetSlotByName</a></td></tr><td class="tdsm"><a href="#GetEpisodeAttributesAsJSON">GetEpisodeAttributesAsJSON</a></td><td class="tdsm"><a href="#GetPodcastAttributePresetSlotByName">GetPodcastAttributePresetSlotByName</a></td><td class="tdsm"><a href="#GetPodcastAttributesAsJSON">GetPodcastAttributesAsJSON</a></td></tr><td class="tdsm"><a href="#GetPodcastAttributesPreset_Name">GetPodcastAttributesPreset_Name</a></td><td class="tdsm"><a href="#GetPodcastContributorAttributesAsJSON">GetPodcastContributorAttributesAsJSON</a></td><td class="tdsm"><a href="#GetPodcastEpisodeAttributesPreset_Name">GetPodcastEpisodeAttributesPreset_Name</a></td></tr><td class="tdsm"><a href="#GetSetContributor_Attributes">GetSetContributor_Attributes</a></td><td class="tdsm"><a href="#GetSetPodcastEpisode_Attributes">GetSetPodcastEpisode_Attributes</a></td><td class="tdsm"><a href="#GetSetPodcastWebsite">GetSetPodcastWebsite</a></td></tr><td class="tdsm"><a href="#GetSetPodcast_Attributes">GetSetPodcast_Attributes</a></td><td class="tdsm"><a href="#GetShownoteAttributesAsJSON">GetShownoteAttributesAsJSON</a></td><td class="tdsm"><a href="#PodcastMetaData_ExportWebsiteAsJSON">PodcastMetaData_ExportWebsiteAsJSON</a></td></tr><td class="tdsm"><a href="#PodcastMetadata_CreateJSON_Entry">PodcastMetadata_CreateJSON_Entry</a></td><td class="tdsm"><a href="#SetPodcastAttributesPreset_Name">SetPodcastAttributesPreset_Name</a></td><td class="tdsm"><a href="#SetPodcastEpisodeAttributesPreset_Name">SetPodcastEpisodeAttributesPreset_Name</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper Metadata Management"><a href="#Reaper Metadata Management">^</a></a> Reaper Metadata Management</b>
+</td></tr><tr><td class="tdsm"><a href="#CountContributors">CountContributors</a></td><td class="tdsm"><a href="#GetChapterAttributesAsJSON">GetChapterAttributesAsJSON</a></td><td class="tdsm"><a href="#GetEpisodeAttributePresetSlotByName">GetEpisodeAttributePresetSlotByName</a></td></tr><td class="tdsm"><a href="#GetEpisodeAttributesAsJSON">GetEpisodeAttributesAsJSON</a></td><td class="tdsm"><a href="#GetPodcastAttributePresetSlotByName">GetPodcastAttributePresetSlotByName</a></td><td class="tdsm"><a href="#GetPodcastAttributesAsJSON">GetPodcastAttributesAsJSON</a></td></tr><td class="tdsm"><a href="#GetPodcastAttributesPreset_Name">GetPodcastAttributesPreset_Name</a></td><td class="tdsm"><a href="#GetPodcastContributorAttributesAsJSON">GetPodcastContributorAttributesAsJSON</a></td><td class="tdsm"><a href="#GetPodcastEpisodeAttributesPreset_Name">GetPodcastEpisodeAttributesPreset_Name</a></td></tr><td class="tdsm"><a href="#GetSetContributor_Attributes">GetSetContributor_Attributes</a></td><td class="tdsm"><a href="#GetSetPodcastEpisode_Attributes">GetSetPodcastEpisode_Attributes</a></td><td class="tdsm"><a href="#GetSetPodcastWebsite">GetSetPodcastWebsite</a></td></tr><td class="tdsm"><a href="#GetSetPodcast_Attributes">GetSetPodcast_Attributes</a></td><td class="tdsm"><a href="#GetSetTranscription_Attributes">GetSetTranscription_Attributes</a></td><td class="tdsm"><a href="#GetShownoteAttributesAsJSON">GetShownoteAttributesAsJSON</a></td></tr><td class="tdsm"><a href="#PodcastMetaData_ExportWebsiteAsJSON">PodcastMetaData_ExportWebsiteAsJSON</a></td><td class="tdsm"><a href="#PodcastMetadata_CreateJSON_Entry">PodcastMetadata_CreateJSON_Entry</a></td><td class="tdsm"><a href="#SetPodcastAttributesPreset_Name">SetPodcastAttributesPreset_Name</a></td></tr><td class="tdsm"><a href="#SetPodcastEpisodeAttributesPreset_Name">SetPodcastEpisodeAttributesPreset_Name</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper Metadata Management"><a href="#Reaper Metadata Management">^</a></a> Reaper Metadata Management</b>
 </td></tr><tr><td class="tdsm"><a href="#MetaDataTable_Create">MetaDataTable_Create</a></td><td class="tdsm"><a href="#MetaDataTable_GetProject">MetaDataTable_GetProject</a></td><td class="tdsm"><a href="#Metadata_ExtractCover">Metadata_ExtractCover</a></td></tr><td class="tdsm"><a href="#Metadata_GetAllPresetNames">Metadata_GetAllPresetNames</a></td><td class="tdsm"><a href="#Metadata_GetMetaDataTable_Presets">Metadata_GetMetaDataTable_Presets</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Tags"><a href="#Tags">^</a></a> Tags</b>
 </td></tr><tr><td class="tdsm"><a href="#Metadata_AIFF_GetSet">Metadata_AIFF_GetSet</a></td><td class="tdsm"><a href="#Metadata_APE_GetSet">Metadata_APE_GetSet</a></td><td class="tdsm"><a href="#Metadata_ASWG_GetSet">Metadata_ASWG_GetSet</a></td></tr><td class="tdsm"><a href="#Metadata_AXML_GetSet">Metadata_AXML_GetSet</a></td><td class="tdsm"><a href="#Metadata_BWF_GetSet">Metadata_BWF_GetSet</a></td><td class="tdsm"><a href="#Metadata_CAFINFO_GetSet">Metadata_CAFINFO_GetSet</a></td></tr><td class="tdsm"><a href="#Metadata_CART_GetSet">Metadata_CART_GetSet</a></td><td class="tdsm"><a href="#Metadata_CUE_GetSet">Metadata_CUE_GetSet</a></td><td class="tdsm"><a href="#Metadata_FLACPIC_GetSet">Metadata_FLACPIC_GetSet</a></td></tr><td class="tdsm"><a href="#Metadata_ID3_GetSet">Metadata_ID3_GetSet</a></td><td class="tdsm"><a href="#Metadata_IFF_GetSet">Metadata_IFF_GetSet</a></td><td class="tdsm"><a href="#Metadata_INFO_GetSet">Metadata_INFO_GetSet</a></td></tr><td class="tdsm"><a href="#Metadata_IXML_GetSet">Metadata_IXML_GetSet</a></td><td class="tdsm"><a href="#Metadata_VORBIS_GetSet">Metadata_VORBIS_GetSet</a></td><td class="tdsm"><a href="#Metadata_WAVEXT_GetSet">Metadata_WAVEXT_GetSet</a></td></tr><td class="tdsm"><a href="#Metadata_XMP_GetSet">Metadata_XMP_GetSet</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Miscellaneous"><a href="#Miscellaneous">^</a></a><strong> <u>Miscellaneous</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#WinterlySnowflakes">WinterlySnowflakes</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Mute Management"><a href="#Mute Management">^</a></a><strong> <u>Mute Management</u></strong><br><br>
@@ -179,7 +180,7 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#Scrubbing_MoveCursor_GetToggleState">Scrubbing_MoveCursor_GetToggleState</a></td><td class="tdsm"><a href="#Scrubbing_MoveCursor_Toggle">Scrubbing_MoveCursor_Toggle</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Transport"><a href="#Transport">^</a></a> Transport</b>
 </td></tr><tr><td class="tdsm"><a href="#GetLoopState">GetLoopState</a></td><td class="tdsm"><a href="#SetLoopState">SetLoopState</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project-Files"><a href="#Project-Files">^</a></a><strong> <u>Project-Files</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a> Helper functions</b>
-</td></tr><tr><td class="tdsm"><a href="#GetProjectStateChunk">GetProjectStateChunk</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="RPP-Files Set"><a href="#RPP-Files Set">^</a></a> RPP-Files Set</b>
+</td></tr><tr><td class="tdsm"><a href="#GetProjectStateChunk">GetProjectStateChunk</a></td><td class="tdsm"><a href="#GetProject_RenderOutputPath">GetProject_RenderOutputPath</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="RPP-Files Set"><a href="#RPP-Files Set">^</a></a> RPP-Files Set</b>
 </td></tr><tr><td class="tdsm"><a href="#SetProject_GroupOverride">SetProject_GroupOverride</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Project-Management"><a href="#Project-Management">^</a></a><strong> <u>Project-Management</u></strong><br><br>
 <b style="font-size:small;"><br><a class="inpad" id="AutoSave"><a href="#AutoSave">^</a></a> AutoSave</b>
 </td></tr><tr><td class="tdsm"><a href="#AutoSave_GetMinutes">AutoSave_GetMinutes</a></td><td class="tdsm"><a href="#AutoSave_GetOptions">AutoSave_GetOptions</a></td><td class="tdsm"><a href="#AutoSave_SetMinutes">AutoSave_SetMinutes</a></td></tr><td class="tdsm"><a href="#AutoSave_SetOptions">AutoSave_SetOptions</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Helper functions"><a href="#Helper functions">^</a></a> Helper functions</b>
@@ -197,9 +198,10 @@ Ultraschall API Functions
 <b style="font-size:small;"><br><a class="inpad" id="Analyzing Renderstrings"><a href="#Analyzing Renderstrings">^</a></a> Analyzing Renderstrings</b>
 </td></tr><tr><td class="tdsm"><a href="#GetOutputFormat_RenderCfg">GetOutputFormat_RenderCfg</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_AIFF">GetRenderCFG_Settings_AIFF</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_AVI_Video">GetRenderCFG_Settings_AVI_Video</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_AudioCD">GetRenderCFG_Settings_AudioCD</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_CAF">GetRenderCFG_Settings_CAF</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_DDP">GetRenderCFG_Settings_DDP</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_FLAC">GetRenderCFG_Settings_FLAC</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_FLV_Video">GetRenderCFG_Settings_FLV_Video</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_GIF">GetRenderCFG_Settings_GIF</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_LCF">GetRenderCFG_Settings_LCF</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_M4AMac">GetRenderCFG_Settings_M4AMac</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MKV_Video">GetRenderCFG_Settings_MKV_Video</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_MOVMac_Video">GetRenderCFG_Settings_MOVMac_Video</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MP3">GetRenderCFG_Settings_MP3</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MP3ABR">GetRenderCFG_Settings_MP3ABR</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_MP3CBR">GetRenderCFG_Settings_MP3CBR</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MP3MaxQuality">GetRenderCFG_Settings_MP3MaxQuality</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MP3VBR">GetRenderCFG_Settings_MP3VBR</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_MP4Mac_Video">GetRenderCFG_Settings_MP4Mac_Video</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MPEG1_Video">GetRenderCFG_Settings_MPEG1_Video</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_MPEG2_Video">GetRenderCFG_Settings_MPEG2_Video</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_OGG">GetRenderCFG_Settings_OGG</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_OPUS">GetRenderCFG_Settings_OPUS</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_QTMOVMP4_Video">GetRenderCFG_Settings_QTMOVMP4_Video</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_RAW">GetRenderCFG_Settings_RAW</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_WAV">GetRenderCFG_Settings_WAV</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_WAVPACK">GetRenderCFG_Settings_WAVPACK</a></td></tr><td class="tdsm"><a href="#GetRenderCFG_Settings_WMF">GetRenderCFG_Settings_WMF</a></td><td class="tdsm"><a href="#GetRenderCFG_Settings_WebM_Video">GetRenderCFG_Settings_WebM_Video</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Assistance functions"><a href="#Assistance functions">^</a></a> Assistance functions</b>
 </td></tr><tr><td class="tdsm"><a href="#ApplyRenderTable_Project">ApplyRenderTable_Project</a></td><td class="tdsm"><a href="#ApplyRenderTable_ProjectFile">ApplyRenderTable_ProjectFile</a></td><td class="tdsm"><a href="#AreRenderTablesEqual">AreRenderTablesEqual</a></td></tr><td class="tdsm"><a href="#CreateNewRenderTable">CreateNewRenderTable</a></td><td class="tdsm"><a href="#GetLastRenderPaths">GetLastRenderPaths</a></td><td class="tdsm"><a href="#GetLastUsedRenderPatterns">GetLastUsedRenderPatterns</a></td></tr><td class="tdsm"><a href="#GetRenderTable_ExtState">GetRenderTable_ExtState</a></td><td class="tdsm"><a href="#GetRenderTable_ProjExtState">GetRenderTable_ProjExtState</a></td><td class="tdsm"><a href="#GetRenderTable_Project">GetRenderTable_Project</a></td></tr><td class="tdsm"><a href="#GetRenderTable_ProjectDefaults">GetRenderTable_ProjectDefaults</a></td><td class="tdsm"><a href="#GetRenderTable_ProjectFile">GetRenderTable_ProjectFile</a></td><td class="tdsm"><a href="#GetRenderTargetFiles">GetRenderTargetFiles</a></td></tr><td class="tdsm"><a href="#GetSetRenderBlocksize">GetSetRenderBlocksize</a></td><td class="tdsm"><a href="#IsReaperRendering">IsReaperRendering</a></td><td class="tdsm"><a href="#IsValidRenderTable">IsValidRenderTable</a></td></tr><td class="tdsm"><a href="#StoreRenderTable_ExtState">StoreRenderTable_ExtState</a></td><td class="tdsm"><a href="#StoreRenderTable_ProjExtState">StoreRenderTable_ProjExtState</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Creating Renderstrings"><a href="#Creating Renderstrings">^</a></a> Creating Renderstrings</b>
-</td></tr><tr><td class="tdsm"><a href="#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a></td><td class="tdsm"><a href="#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a></td><td class="tdsm"><a href="#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a></td><td class="tdsm"><a href="#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_FLV_Video">CreateRenderCFG_FLV_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a></td><td class="tdsm"><a href="#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a></td><td class="tdsm"><a href="#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a></td><td class="tdsm"><a href="#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_RAW">CreateRenderCFG_RAW</a></td><td class="tdsm"><a href="#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a></td><td class="tdsm"><a href="#CreateRenderCFG_WMF">CreateRenderCFG_WMF</a></td><td class="tdsm"><a href="#CreateRenderCFG_WebM_Video">CreateRenderCFG_WebM_Video</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Render Presets"><a href="#Render Presets">^</a></a> Render Presets</b>
+</td></tr><tr><td class="tdsm"><a href="#CreateRenderCFG_AIFF">CreateRenderCFG_AIFF</a></td><td class="tdsm"><a href="#CreateRenderCFG_AVI_Video">CreateRenderCFG_AVI_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_AudioCD">CreateRenderCFG_AudioCD</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_CAF">CreateRenderCFG_CAF</a></td><td class="tdsm"><a href="#CreateRenderCFG_DDP">CreateRenderCFG_DDP</a></td><td class="tdsm"><a href="#CreateRenderCFG_FLAC">CreateRenderCFG_FLAC</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_FLV_Video">CreateRenderCFG_FLV_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_GIF">CreateRenderCFG_GIF</a></td><td class="tdsm"><a href="#CreateRenderCFG_LCF">CreateRenderCFG_LCF</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_M4AMAC">CreateRenderCFG_M4AMAC</a></td><td class="tdsm"><a href="#CreateRenderCFG_MKV_Video">CreateRenderCFG_MKV_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_MOVMAC_Video">CreateRenderCFG_MOVMAC_Video</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MP3ABR">CreateRenderCFG_MP3ABR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP3CBR">CreateRenderCFG_MP3CBR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP3MaxQuality">CreateRenderCFG_MP3MaxQuality</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MP3VBR">CreateRenderCFG_MP3VBR</a></td><td class="tdsm"><a href="#CreateRenderCFG_MP4MAC_Video">CreateRenderCFG_MP4MAC_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_MPEG1_Video">CreateRenderCFG_MPEG1_Video</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_MPEG2_Video">CreateRenderCFG_MPEG2_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_OGG">CreateRenderCFG_OGG</a></td><td class="tdsm"><a href="#CreateRenderCFG_Opus">CreateRenderCFG_Opus</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_QTMOVMP4_Video">CreateRenderCFG_QTMOVMP4_Video</a></td><td class="tdsm"><a href="#CreateRenderCFG_RAW">CreateRenderCFG_RAW</a></td><td class="tdsm"><a href="#CreateRenderCFG_WAV">CreateRenderCFG_WAV</a></td></tr><td class="tdsm"><a href="#CreateRenderCFG_WAVPACK">CreateRenderCFG_WAVPACK</a></td><td class="tdsm"><a href="#CreateRenderCFG_WMF">CreateRenderCFG_WMF</a></td><td class="tdsm"><a href="#CreateRenderCFG_WebM_Video">CreateRenderCFG_WebM_Video</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Loudness Calculation"><a href="#Loudness Calculation">^</a></a> Loudness Calculation</b>
+</td></tr><tr><td class="tdsm"><a href="#CalculateLoudness">CalculateLoudness</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Render Presets"><a href="#Render Presets">^</a></a> Render Presets</b>
 </td></tr><tr><td class="tdsm"><a href="#AddRenderPreset">AddRenderPreset</a></td><td class="tdsm"><a href="#DeleteRenderPreset_Bounds">DeleteRenderPreset_Bounds</a></td><td class="tdsm"><a href="#DeleteRenderPreset_FormatOptions">DeleteRenderPreset_FormatOptions</a></td></tr><td class="tdsm"><a href="#GetRenderPreset_Names">GetRenderPreset_Names</a></td><td class="tdsm"><a href="#GetRenderPreset_RenderTable">GetRenderPreset_RenderTable</a></td><td class="tdsm"><a href="#ResolvePresetName">ResolvePresetName</a></td></tr><td class="tdsm"><a href="#SetRenderPreset">SetRenderPreset</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Render Settings"><a href="#Render Settings">^</a></a> Render Settings</b>
-</td></tr><tr><td class="tdsm"><a href="#GetRender_AddRenderedFilesToProject">GetRender_AddRenderedFilesToProject</a></td><td class="tdsm"><a href="#GetRender_AutoIncrementFilename">GetRender_AutoIncrementFilename</a></td><td class="tdsm"><a href="#GetRender_EmbedMetaData">GetRender_EmbedMetaData</a></td></tr><td class="tdsm"><a href="#GetRender_EmbedStretchMarkers">GetRender_EmbedStretchMarkers</a></td><td class="tdsm"><a href="#GetRender_NoSilentFiles">GetRender_NoSilentFiles</a></td><td class="tdsm"><a href="#GetRender_OfflineOnlineMode">GetRender_OfflineOnlineMode</a></td></tr><td class="tdsm"><a href="#GetRender_ProjectSampleRateForMix">GetRender_ProjectSampleRateForMix</a></td><td class="tdsm"><a href="#GetRender_QueueDelay">GetRender_QueueDelay</a></td><td class="tdsm"><a href="#GetRender_ResampleMode">GetRender_ResampleMode</a></td></tr><td class="tdsm"><a href="#GetRender_SaveCopyOfProject">GetRender_SaveCopyOfProject</a></td><td class="tdsm"><a href="#GetRender_SaveRenderStats">GetRender_SaveRenderStats</a></td><td class="tdsm"><a href="#GetRender_TailLength">GetRender_TailLength</a></td></tr><td class="tdsm"><a href="#SetRender_AddRenderedFilesToProject">SetRender_AddRenderedFilesToProject</a></td><td class="tdsm"><a href="#SetRender_AutoIncrementFilename">SetRender_AutoIncrementFilename</a></td><td class="tdsm"><a href="#SetRender_EmbedMetaData">SetRender_EmbedMetaData</a></td></tr><td class="tdsm"><a href="#SetRender_EmbedStretchMarkers">SetRender_EmbedStretchMarkers</a></td><td class="tdsm"><a href="#SetRender_NoSilentFiles">SetRender_NoSilentFiles</a></td><td class="tdsm"><a href="#SetRender_OfflineOnlineMode">SetRender_OfflineOnlineMode</a></td></tr><td class="tdsm"><a href="#SetRender_ProjectSampleRateForMix">SetRender_ProjectSampleRateForMix</a></td><td class="tdsm"><a href="#SetRender_QueueDelay">SetRender_QueueDelay</a></td><td class="tdsm"><a href="#SetRender_ResampleMode">SetRender_ResampleMode</a></td></tr><td class="tdsm"><a href="#SetRender_SaveCopyOfProject">SetRender_SaveCopyOfProject</a></td><td class="tdsm"><a href="#SetRender_SaveRenderStats">SetRender_SaveRenderStats</a></td><td class="tdsm"><a href="#SetRender_TailLength">SetRender_TailLength</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="RenderQueue"><a href="#RenderQueue">^</a></a> RenderQueue</b>
+</td></tr><tr><td class="tdsm"><a href="#GetRender_AddRenderedFilesToProject">GetRender_AddRenderedFilesToProject</a></td><td class="tdsm"><a href="#GetRender_AutoIncrementFilename">GetRender_AutoIncrementFilename</a></td><td class="tdsm"><a href="#GetRender_AutoReturnToDialog">GetRender_AutoReturnToDialog</a></td></tr><td class="tdsm"><a href="#GetRender_EmbedMetaData">GetRender_EmbedMetaData</a></td><td class="tdsm"><a href="#GetRender_EmbedStretchMarkers">GetRender_EmbedStretchMarkers</a></td><td class="tdsm"><a href="#GetRender_NoSilentFiles">GetRender_NoSilentFiles</a></td></tr><td class="tdsm"><a href="#GetRender_OfflineOnlineMode">GetRender_OfflineOnlineMode</a></td><td class="tdsm"><a href="#GetRender_ProjectSampleRateForMix">GetRender_ProjectSampleRateForMix</a></td><td class="tdsm"><a href="#GetRender_QueueDelay">GetRender_QueueDelay</a></td></tr><td class="tdsm"><a href="#GetRender_ResampleMode">GetRender_ResampleMode</a></td><td class="tdsm"><a href="#GetRender_SaveCopyOfProject">GetRender_SaveCopyOfProject</a></td><td class="tdsm"><a href="#GetRender_SaveRenderStats">GetRender_SaveRenderStats</a></td></tr><td class="tdsm"><a href="#GetRender_TailLength">GetRender_TailLength</a></td><td class="tdsm"><a href="#SetRender_AddRenderedFilesToProject">SetRender_AddRenderedFilesToProject</a></td><td class="tdsm"><a href="#SetRender_AutoIncrementFilename">SetRender_AutoIncrementFilename</a></td></tr><td class="tdsm"><a href="#SetRender_AutoReturnToDialog">SetRender_AutoReturnToDialog</a></td><td class="tdsm"><a href="#SetRender_EmbedMetaData">SetRender_EmbedMetaData</a></td><td class="tdsm"><a href="#SetRender_EmbedStretchMarkers">SetRender_EmbedStretchMarkers</a></td></tr><td class="tdsm"><a href="#SetRender_NoSilentFiles">SetRender_NoSilentFiles</a></td><td class="tdsm"><a href="#SetRender_OfflineOnlineMode">SetRender_OfflineOnlineMode</a></td><td class="tdsm"><a href="#SetRender_ProjectSampleRateForMix">SetRender_ProjectSampleRateForMix</a></td></tr><td class="tdsm"><a href="#SetRender_QueueDelay">SetRender_QueueDelay</a></td><td class="tdsm"><a href="#SetRender_ResampleMode">SetRender_ResampleMode</a></td><td class="tdsm"><a href="#SetRender_SaveCopyOfProject">SetRender_SaveCopyOfProject</a></td></tr><td class="tdsm"><a href="#SetRender_SaveRenderStats">SetRender_SaveRenderStats</a></td><td class="tdsm"><a href="#SetRender_TailLength">SetRender_TailLength</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="RenderQueue"><a href="#RenderQueue">^</a></a> RenderQueue</b>
 </td></tr><tr><td class="tdsm"><a href="#AddProjectFileToRenderQueue">AddProjectFileToRenderQueue</a></td><td class="tdsm"><a href="#AddSelectedItemsToRenderQueue">AddSelectedItemsToRenderQueue</a></td><td class="tdsm"><a href="#GetRenderQueuedProjects">GetRenderQueuedProjects</a></td></tr><td class="tdsm"><a href="#RenderProject_RenderQueue">RenderProject_RenderQueue</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Rendering any Outputformat"><a href="#Rendering any Outputformat">^</a></a> Rendering any Outputformat</b>
 </td></tr><tr><td class="tdsm"><a href="#RenderProject">RenderProject</a></td><td class="tdsm"><a href="#RenderProject_Regions">RenderProject_Regions</a></td><td class="tdsm"><a href="#RenderProject_RenderTable">RenderProject_RenderTable</a></td></tr><td class="tdsm"><a href="#Render_Loop">Render_Loop</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Themeing"><a href="#Themeing">^</a></a><strong> <u>Themeing</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#ApplyAllThemeLayoutParameters">ApplyAllThemeLayoutParameters</a></td><td class="tdsm"><a href="#GetAllThemeElements">GetAllThemeElements</a></td><td class="tdsm"><a href="#GetAllThemeLayoutNames">GetAllThemeLayoutNames</a></td></tr><td class="tdsm"><a href="#GetAllThemeLayoutParameters">GetAllThemeLayoutParameters</a></td><td class="tdsm"><a href="#GetThemeParameterIndexByDescription">GetThemeParameterIndexByDescription</a></td><td class="tdsm"><a href="#GetThemeParameterIndexByName">GetThemeParameterIndexByName</a></td></tr><td class="tdsm"><a href="#GetTrack_ThemeElementPositions">GetTrack_ThemeElementPositions</a></td><td class="tdsm"><a href="#SetThemeParameterIndexByDescription">SetThemeParameterIndexByDescription</a></td><td class="tdsm"><a href="#SetThemeParameterIndexByName">SetThemeParameterIndexByName</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Default v6-Theme"><a href="#Default v6-Theme">^</a></a> Default v6-Theme</b>
@@ -225,7 +227,8 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#BrowseForOpenFiles">BrowseForOpenFiles</a></td><td class="tdsm"><a href="#GetUserInputs">GetUserInputs</a></td><td class="tdsm"><a href="#MB">MB</a></td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="MediaItems"><a href="#MediaItems">^</a></a> MediaItems</b>
 </td></tr><tr><td class="tdsm"><a href="#GetItemButtonsVisible">GetItemButtonsVisible</a></td><td class="tdsm"><a href="#SetItemButtonsVisible">SetItemButtonsVisible</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Menu Management"><a href="#Menu Management">^</a></a> Menu Management</b>
 </td></tr><tr><td class="tdsm"><a href="#ShowAutomationItemMenu">ShowAutomationItemMenu</a></td><td class="tdsm"><a href="#ShowEnvelopeMenu">ShowEnvelopeMenu</a></td><td class="tdsm"><a href="#ShowEnvelopePointMenu">ShowEnvelopePointMenu</a></td></tr><td class="tdsm"><a href="#ShowEnvelopePointMenu_AutomationItem">ShowEnvelopePointMenu_AutomationItem</a></td><td class="tdsm"><a href="#ShowMediaItemMenu">ShowMediaItemMenu</a></td><td class="tdsm"><a href="#ShowRulerMenu">ShowRulerMenu</a></td></tr><td class="tdsm"><a href="#ShowTrackAreaMenu">ShowTrackAreaMenu</a></td><td class="tdsm"><a href="#ShowTrackInputMenu">ShowTrackInputMenu</a></td><td class="tdsm"><a href="#ShowTrackPanelMenu">ShowTrackPanelMenu</a></td></tr><td class="tdsm"><a href="#ShowTrackRoutingMenu">ShowTrackRoutingMenu</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Miscellaneous"><a href="#Miscellaneous">^</a></a> Miscellaneous</b>
-</td></tr><tr><td class="tdsm"><a href="#ConvertYCoordsMac2Win">ConvertYCoordsMac2Win</a></td><td class="tdsm"><a href="#GetDpiFromScale">GetDpiFromScale</a></td><td class="tdsm"><a href="#GetIDEFontSize">GetIDEFontSize</a></td></tr><td class="tdsm"><a href="#GetScaleRangeFromDpi">GetScaleRangeFromDpi</a></td><td class="tdsm"><a href="#GetTimeByMouseXPosition">GetTimeByMouseXPosition</a></td><td class="tdsm"><a href="#GetUIScale">GetUIScale</a></td></tr><td class="tdsm"><a href="#SetIDEFontSize">SetIDEFontSize</a></td><td class="tdsm"><a href="#SetUIScale">SetUIScale</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper-Windowhandler"><a href="#Reaper-Windowhandler">^</a></a> Reaper-Windowhandler</b>
+</td></tr><tr><td class="tdsm"><a href="#ConvertYCoordsMac2Win">ConvertYCoordsMac2Win</a></td><td class="tdsm"><a href="#GetDpiFromScale">GetDpiFromScale</a></td><td class="tdsm"><a href="#GetIDEFontSize">GetIDEFontSize</a></td></tr><td class="tdsm"><a href="#GetScaleRangeFromDpi">GetScaleRangeFromDpi</a></td><td class="tdsm"><a href="#GetTimeByMouseXPosition">GetTimeByMouseXPosition</a></td><td class="tdsm"><a href="#GetUIScale">GetUIScale</a></td></tr><td class="tdsm"><a href="#SetIDEFontSize">SetIDEFontSize</a></td><td class="tdsm"><a href="#SetUIScale">SetUIScale</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper Main Window"><a href="#Reaper Main Window">^</a></a> Reaper Main Window</b>
+</td></tr><tr><td class="tdsm"><a href="#GetReaperWindow_Position">GetReaperWindow_Position</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Reaper-Windowhandler"><a href="#Reaper-Windowhandler">^</a></a> Reaper-Windowhandler</b>
 </td></tr><tr><td class="tdsm"><a href="#GetActionsHWND">GetActionsHWND</a></td><td class="tdsm"><a href="#GetBatchFileItemConverterHWND">GetBatchFileItemConverterHWND</a></td><td class="tdsm"><a href="#GetConsolidateTracksHWND">GetConsolidateTracksHWND</a></td></tr><td class="tdsm"><a href="#GetExportProjectMIDIHWND">GetExportProjectMIDIHWND</a></td><td class="tdsm"><a href="#GetHWND_ArrangeView">GetHWND_ArrangeView</a></td><td class="tdsm"><a href="#GetHWND_ArrangeViewAndTimeLine">GetHWND_ArrangeViewAndTimeLine</a></td></tr><td class="tdsm"><a href="#GetHWND_TCP">GetHWND_TCP</a></td><td class="tdsm"><a href="#GetHWND_Transport">GetHWND_Transport</a></td><td class="tdsm"><a href="#GetMediaExplorerHWND">GetMediaExplorerHWND</a></td></tr><td class="tdsm"><a href="#GetPreferencesHWND">GetPreferencesHWND</a></td><td class="tdsm"><a href="#GetProjectDirectoryCleanupHWND">GetProjectDirectoryCleanupHWND</a></td><td class="tdsm"><a href="#GetProjectSettingsHWND">GetProjectSettingsHWND</a></td></tr><td class="tdsm"><a href="#GetReaScriptConsoleWindow">GetReaScriptConsoleWindow</a></td><td class="tdsm"><a href="#GetRenderQueueHWND">GetRenderQueueHWND</a></td><td class="tdsm"><a href="#GetRenderToFileHWND">GetRenderToFileHWND</a></td></tr><td class="tdsm"><a href="#GetRenderingToFileHWND">GetRenderingToFileHWND</a></td><td class="tdsm"><a href="#GetSaveLiveOutputToDiskHWND">GetSaveLiveOutputToDiskHWND</a></td><td class="tdsm"><a href="#GetSaveProjectAsHWND">GetSaveProjectAsHWND</a></td></tr><td class="tdsm"><a href="#GetTrackManagerHWND">GetTrackManagerHWND</a></td><td class="tdsm"><a href="#GetVideoHWND">GetVideoHWND</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Screen Management"><a href="#Screen Management">^</a></a> Screen Management</b>
 </td></tr><tr><td class="tdsm"><a href="#GetScreenHeight">GetScreenHeight</a></td><td class="tdsm"><a href="#GetScreenWidth">GetScreenWidth</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Track Control Panel(TCP)"><a href="#Track Control Panel(TCP)">^</a></a> Track Control Panel(TCP)</b>
 </td></tr><tr><td class="tdsm"><a href="#GetTCPWidth">GetTCPWidth</a></td><td class="tdsm"><a href="#TCP_SetWidth">TCP_SetWidth</a></td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="Transport and Ruler"><a href="#Transport and Ruler">^</a></a> Transport and Ruler</b>
@@ -235,6 +238,91 @@ Ultraschall API Functions
 </td></tr><tr><td class="tdsm"><a href="#GetAllReaScriptIDEWindows">GetAllReaScriptIDEWindows</a></td><td class="tdsm"><a href="#GetChildSizeWithinParentHWND">GetChildSizeWithinParentHWND</a></td><td class="tdsm"><a href="#GetReaperWindowAttributes">GetReaperWindowAttributes</a></td></tr><td class="tdsm"><a href="#GetTopmostHWND">GetTopmostHWND</a></td><td class="tdsm"><a href="#HasHWNDChildWindowNames">HasHWNDChildWindowNames</a></td><td class="tdsm"><a href="#IsValidHWND">IsValidHWND</a></td></tr><td class="tdsm"><a href="#MoveChildWithinParentHWND">MoveChildWithinParentHWND</a></td><td class="tdsm"><a href="#ReturnAllChildHWND">ReturnAllChildHWND</a></td><td class="tdsm"><a href="#VideoWindow_FullScreenToggle">VideoWindow_FullScreenToggle</a></td></tr><td class="tdsm"><a href="#Windows_Find">Windows_Find</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><b style="font-size:small;"><br><a class="inpad" id="misc"><a href="#misc">^</a></a> misc</b>
 </td></tr><tr><td class="tdsm"><a href="#GetHelpDisplayMode">GetHelpDisplayMode</a></td><td class="tdsm"><a href="#SetHelpDisplayMode">SetHelpDisplayMode</a></td><td class="tdsm"><a href="#WiringDiagram_GetOptions">WiringDiagram_GetOptions</a></td></tr><td class="tdsm"><a href="#WiringDiagram_SetOptions">WiringDiagram_SetOptions</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><table class="indexpad" border="0"><tr><td><br><a class="inpad" id="Web Interface"><a href="#Web Interface">^</a></a><strong> <u>Web Interface</u></strong><br><br>
 </td></tr><tr><td class="tdsm"><a href="#WebInterface_GetInstalledInterfaces">WebInterface_GetInstalledInterfaces</a></td><td class="inds">&nbsp;</td><td class="inds">&nbsp;</td></tr></table><br></div><div class="ch">
+<hr>
+<a class="anch" id="get_action_context_MediaItemDiff"></a>
+<a href="#get_action_context_MediaItemDiff"> ^</a> 
+<img width="3%" src="gfx/reaper5.975.png" alt="requires Reaper version 5.975">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>get_action_context_MediaItemDiff</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>MediaItem</i> MediaItem, <i>MediaItem_Take</i> MediaItem_Take, <i>MediaItem</i> MediaItem_unlocked, <i>boolean</i> Item_moved, <i>number</i> StartDiffTime, <i>number</i> EndDiffTime, <i>number</i> LengthDiffTime, <i>number</i> OffsetDiffTime = <em>ultraschall.get_action_context_MediaItemDiff</em>(<i>optional</i> <i>boolean</i> exlude_mousecursorsize, <i>optional</i> <i>integer</i> x, <i>optional</i> <i>integer</i> y)</code></div>
+</div><p>
+<div class="ch">
+Returns the currently clicked MediaItem, Take as well as the difference of position, end, length and startoffset since last time calling this function.<br>
+Good for implementing ripple-drag/editing-functions, whose position depends on changes in the currently clicked MediaItem.<br>
+Repeatedly call this (e.g. in a defer-cycle) to get all changes made, during dragging position, length or offset of the MediaItem underneath mousecursor.<br>
+<br>
+This function takes into account the size of the start/end-drag-mousecursor, that means: if mouse-position is within 3 pixels before start/after end of the item, it will get the correct MediaItem. <br>
+This is a workaround, as the mouse-cursor changes to dragging and can still affect the MediaItem, even though the mouse at this position isn't above a MediaItem anymore.<br>
+To be more strict, set exlude_mousecursorsize to true. That means, it will only detect MediaItems directly beneath the mousecursor. If the mouse isn't above a MediaItem, this function will ignore it, even if the mouse could still affect the MediaItem.<br>
+If you don't understand, what that means: simply omit exlude_mousecursorsize, which should work in almost all use-cases. If it doesn't work as you want, try setting it to true and see, whether it works now.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>MediaItem</i> MediaItem</td></tr>
+<tr><td class="ch2">the MediaItem at the current mouse-position; nil if not found</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>MediaItem_Take</i> MediaItem_Take</td></tr>
+<tr><td class="ch2">the MediaItem_Take underneath the mouse-cursor</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>MediaItem</i> MediaItem_unlocked</td></tr>
+<tr><td class="ch2">if the MediaItem isn't locked, you'll get a MediaItem here. If it is locked, this retval is nil</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> Item_moved</td></tr>
+<tr><td class="ch2">true, the item was moved; false, only a part(either start or end or offset) of the item was moved</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> StartDiffTime</td></tr>
+<tr><td class="ch2">if the start of the item changed, this is the difference;<br/>
+&nbsp;&nbsp;positive, the start of the item has been changed towards the end of the project<br/>
+&nbsp;&nbsp;negative, the start of the item has been changed towards the start of the project<br/>
+&nbsp;&nbsp;0, no changes to the itemstart-position at all</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> EndDiffTime</td></tr>
+<tr><td class="ch2">if the end of the item changed, this is the difference;<br/>
+&nbsp;&nbsp;positive, the end of the item has been changed towards the end of the project<br/>
+&nbsp;&nbsp;negative, the end of the item has been changed towards the start of the project<br/>
+&nbsp;&nbsp;0, no changes to the itemend-position at all</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> LengthDiffTime</td></tr>
+<tr><td class="ch2">if the length of the item changed, this is the difference;<br/>
+&nbsp;&nbsp;positive, the length is longer<br/>
+&nbsp;&nbsp;negative, the length is shorter<br/>
+&nbsp;&nbsp;0, no changes to the length of the item</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> OffsetDiffTime</td></tr>
+<tr><td class="ch2">if the offset of the item-take has changed, this is the difference;<br/>
+&nbsp;&nbsp;positive, the offset has been changed towards the start of the project<br/>
+&nbsp;&nbsp;negative, the offset has been changed towards the end of the project<br/>
+&nbsp;&nbsp;0, no changes to the offset of the item-take<br/>
+Note: this is the offset of the take underneath the mousecursor, which might not be the same size, as the MediaItem itself!<br/>
+So changes to the offset maybe changes within the MediaItem or the start of the MediaItem!<br/>
+This could be important, if you want to affect other items with rippling.</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> exlude_mousecursorsize</td></tr>
+<tr><td class="ch2">false or nil, get the item underneath, when it can be affected by the mouse-cursor(dragging etc): when in doubt, use this<br/>
+true, get the item underneath the mousecursor only, when mouse is strictly above the item,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which means: this ignores the item when mouse is not above it, even if the mouse could affect the item</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> x</td></tr>
+<tr><td class="ch2">nil, use the current x-mouseposition; otherwise the x-position in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> y</td></tr>
+<tr><td class="ch2">nil, use the current y-mouseposition; otherwise the y-position in pixels</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
 <hr>
 <a class="anch" id="ActionsList_GetAllActions"></a>
 <a href="#ActionsList_GetAllActions"> ^</a> 
@@ -3815,6 +3903,115 @@ returns nil if no gmem had been attached since addition of Ultraschall-API to th
 <table class="ch">
 <tr><td class="pr"><i>string</i> current_gmem_attachname</td></tr>
 <tr><td class="ch2">the name of the currently attached gmem</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="SetLiceCapExe"></a>
+<a href="#SetLiceCapExe"> ^</a> 
+<img width="3%" src="gfx/reaper5.975.png" alt="requires Reaper version 5.975">
+<img width="3%" src="gfx/sws2.9.7.png" alt="requires SWS version 2.9.7">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>SetLiceCapExe</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetLiceCapExe</em>(<i>string</i> PathToLiceCapExecutable)</code></div>
+</div><p>
+<div class="ch">
+Sets the path and filename of the LiceCap-executable<br>
+<br>
+Note: Doesn't work on Linux, as there isn't a Linux-port of LiceCap yet.<br>
+<br>
+Returns false in case of error.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">false in case of error; true in case of success</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> SetLiceCapExe</td></tr>
+<tr><td class="ch2">the LiceCap-executable with path</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="SetupLiceCap"></a>
+<a href="#SetupLiceCap"> ^</a> 
+<img width="3%" src="gfx/reaper5.975.png" alt="requires Reaper version 5.975">
+<img width="3%" src="gfx/sws2.9.7.png" alt="requires SWS version 2.9.7">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>SetupLiceCap</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetupLiceCap</em>(<i>string</i> output_filename, <i>string</i> title, <i>integer</i> titlems, <i>integer</i> x, <i>integer</i> y, <i>integer</i> right, <i>integer</i> bottom, <i>integer</i> fps, <i>integer</i> gifloopcount, <i>integer</i> stopafter, <i>integer</i> prefs)</code></div>
+</div><p>
+<div class="ch">
+Sets up an installed LiceCap-instance.<br>
+<br>
+To choose the right LiceCap-version, run the action 41298 - Run LICEcap (animated screen capture utility)<br>
+<br>
+Note: Doesn't work on Linux, as there isn't a Linux-port of LiceCap yet.<br>
+<br>
+Returns false in case of error.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">false in case of error; true in case of success</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> output_filename</td></tr>
+<tr><td class="ch2">the output-file; you can choose whether it shall be a gif or an lcf by giving it the accompanying extension "mylice.gif" or "milice.lcf"; nil, keep the current outputfile</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> title</td></tr>
+<tr><td class="ch2">the title, which shall be shown at the beginning of the licecap; newlines will be exchanged by spaces, as LiceCap doesn't really support newlines; nil, keep the current title</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> titlems</td></tr>
+<tr><td class="ch2">how long shall the title be shown, in milliseconds; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">the x-position of the LiceCap-window in pixels; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">the y-position of the LiceCap-window in pixels; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> right</td></tr>
+<tr><td class="ch2">the right side-position of the LiceCap-window in pixels; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> bottom</td></tr>
+<tr><td class="ch2">the bottom-position of the LiceCap-window in pixels; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> fps</td></tr>
+<tr><td class="ch2">the maximum frames per seconds, the LiceCap shall have; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> gifloopcount</td></tr>
+<tr><td class="ch2">how often shall the gif be looped?; 0, infinite looping; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> stopafter</td></tr>
+<tr><td class="ch2">stop recording after xxx milliseconds; nil, keep the current setting</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> prefs</td></tr>
+<tr><td class="ch2">the preferences-settings of LiceCap, which is a bitfield; nil, keep the current settings<br/>
+&1 - display in animation: title frame - checkbox<br/>
+&2 - Big font - checkbox<br/>
+&4 - display in animation: mouse button press - checkbox<br/>
+&8 - display in animation: elapsed time - checkbox<br/>
+&16 - Ctrl+Alt+P pauses recording - checkbox<br/>
+&32 - Use .GIF transparency for smaller files - checkbox<br/>
+&64 - Automatically stop after xx seconds - checkbox&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td></tr>
 </table>
 <br>
 </div>
@@ -10128,6 +10325,34 @@ returns the take-envelope underneath the mouse<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="GetTakeEnvelopeUnderMouseCursor"></a>
+<a href="#GetTakeEnvelopeUnderMouseCursor"> ^</a> 
+<img width="3%" src="gfx/reaper6.10.png" alt="requires Reaper version 6.10">
+<img width="3%" src="gfx/sws2.8.8.png" alt="requires SWS version 2.8.8">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>GetTakeEnvelopeUnderMouseCursor</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> TakeEnvelope env, <i>MediaItem_Take</i> take, <i>number</i> projectposition = <em>ultraschall.GetTakeEnvelopeUnderMouseCursor</em>()</code></div>
+</div><p>
+<div class="ch">
+returns the take-envelope underneath the mouse<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr">TakeEnvelope env</td></tr>
+<tr><td class="ch2">the take-envelope found unterneath the mouse; nil, if none has been found</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>MediaItem_Take</i> take</td></tr>
+<tr><td class="ch2">the take from which the take-envelope is</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> projectposition</td></tr>
+<tr><td class="ch2">the project-position</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="IsAnyMuteEnvelopeVisible"></a>
 <a href="#IsAnyMuteEnvelopeVisible"> ^</a> 
 <img width="3%" src="gfx/reaper6.10.png" alt="requires Reaper version 6.10">
@@ -11499,6 +11724,60 @@ returns nil in case of an error<br>
 <table class="ch">
 <tr><td class="pr"><i>integer</i> y</td></tr>
 <tr><td class="ch2">the y-position in pixels, at which to look for envelopes</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GetTrackEnvelope_ClickState"></a>
+<a href="#GetTrackEnvelope_ClickState"> ^</a> 
+<img width="3%" src="gfx/reaper6.10.png" alt="requires Reaper version 6.10">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>GetTrackEnvelope_ClickState</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> clickstate, <i>number</i> position, <i>MediaTrack</i> track, <i>TrackEnvelope</i> envelope, <i>integer</i> EnvelopePointIDX = <em>ultraschall.GetTrackEnvelope_ClickState</em>(<i>integer</i> mouse_button)</code></div>
+</div><p>
+<div class="ch">
+Returns the currently clicked Envelopepoint and TrackEnvelope, as well as the current timeposition.<br>
+<br>
+Works only, if the mouse is above the EnvelopePoint while having it clicked!<br>
+<br>
+Returns false, if no envelope is clicked at<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> clickstate</td></tr>
+<tr><td class="ch2">true, an envelopepoint has been clicked; false, no envelopepoint has been clicked</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>number</i> position</td></tr>
+<tr><td class="ch2">the position, at which the mouse has clicked</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>MediaTrack</i> track</td></tr>
+<tr><td class="ch2">the track, from which the envelope and it's corresponding point is taken from</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>TrackEnvelope</i> envelope</td></tr>
+<tr><td class="ch2">the TrackEnvelope, in which the clicked envelope-point lies</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> EnvelopePointIDX</td></tr>
+<tr><td class="ch2">the id of the clicked EnvelopePoint</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> mouse_button</td></tr>
+<tr><td class="ch2">the mousebutton, that shall be clicked at the envelope; you can combine them as flags<br/>
+-1, get all states<br/>
+&1, only left mouse button<br/>
+&2, only right mouse button<br/>
+&4, Ctrl/Cmd-key<br/>
+&8, Shift-key<br/>
+&16, Alt key<br/>
+&32, Windows key<br/>
+&64, Middle mouse button</td></tr>
 </table>
 <br>
 </div>
@@ -17887,6 +18166,47 @@ returns -1 in case of an error<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="DeleteParmLearn2_FXStateChunk"></a>
+<a href="#DeleteParmLearn2_FXStateChunk"> ^</a> 
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>DeleteParmLearn2_FXStateChunk</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval, <i>string</i> alteredFXStateChunk = <em>ultraschall.DeleteParmLearn2_FXStateChunk</em>(<i>string</i> FXStateChunk, <i>integer</i> fxid, <i>integer</i> parmidx)</code></div>
+</div><p>
+<div class="ch">
+Deletes a ParmLearn-entry from an FXStateChunk, by parameter index.<br>
+<br>
+Unlike [DeleteParmLearn\_FXStateChunk](#DeleteParmLearn_FXStateChunk), this indexes the parameters not the already existing parmlearns.<br>
+<br>
+returns false in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, if deletion was successful; false, if the function couldn't delete anything</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> alteredFXStateChunk</td></tr>
+<tr><td class="ch2">the altered FXStateChunk</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> FXStateChunk</td></tr>
+<tr><td class="ch2">the FXStateChunk, which you want to delete a ParmLearn from</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> fxid</td></tr>
+<tr><td class="ch2">the id of the fx, which holds the to-delete-ParmLearn-entry; beginning with 1</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> parmidx</td></tr>
+<tr><td class="ch2">the index of the parameter, whose parmlearn you want to delete; beginning with 1</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="DeleteParmLearn_FXStateChunk"></a>
 <a href="#DeleteParmLearn_FXStateChunk"> ^</a> 
 <img width="3%" src="gfx/reaper5.979.png" alt="requires Reaper version 5.979">
@@ -21027,6 +21347,48 @@ returns nil in case of an error<br>
 <table class="ch">
 <tr><td class="pr"><i>string</i> filename_with_path</td></tr>
 <tr><td class="ch2">the filename with path of the subrip srt-file</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="ReadSubtitles_VTT"></a>
+<a href="#ReadSubtitles_VTT"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="requires Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>ReadSubtitles_VTT</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>string</i> Kind, <i>string</i> Language, <i>integer</i> Captions_Counter, <i>table</i> Captions = <em>ultraschall.ReadSubtitles_VTT</em>(<i>string</i> filename_with_path)</code></div>
+</div><p>
+<div class="ch">
+parses a webvtt-subtitle-file and returns its contents as table<br>
+<br>
+returns nil in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> Kind</td></tr>
+<tr><td class="ch2">the type of the webvtt-file, like: captions</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> Language</td></tr>
+<tr><td class="ch2">the language of the webvtt-file</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> Captions_Counter</td></tr>
+<tr><td class="ch2">the number of captions in the file</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>table</i> Captions</td></tr>
+<tr><td class="ch2">the Captions as a table of the format:<br/>
+&nbsp;&nbsp; Captions[index]["start"]= the starttime of this caption in seconds<br/>
+&nbsp;&nbsp; Captions[index]["end"]= the endtime of this caption in seconds<br/>
+&nbsp;&nbsp; Captions[index]["caption"]= the caption itself</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> filename_with_path</td></tr>
+<tr><td class="ch2">the filename with path of the webvtt-file</td></tr>
 </table>
 <br>
 </div>
@@ -36329,6 +36691,63 @@ use 1 for the main-website</td></tr>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="GetSetTranscription_Attributes"></a>
+<a href="#GetSetTranscription_Attributes"> ^</a> 
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/ultraschall4.7.png" alt="requires Ultraschall version 4.7"><u><b>GetSetTranscription_Attributes</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval, <i>string</i> content = <em>ultraschall.GetSetTranscription_Attributes</em>(<i>boolean</i> is_set, <i>integer</i> idx, <i>string</i> attributename, <i>string</i> content)</code></div>
+</div><p>
+<div class="ch">
+Will get/set additional attributes of a transcription.<br>
+<br>
+A podcast can have multiple transcriptions in multiple languages.<br>
+<br>
+Note: transcriptions are not created by Ultraschall, but can be included into the mediafile at export.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For this, the file must be present locally.<br>
+<br>
+Note too: all attributes must be set; though "url" can be set to "", which means, it's stored in the same location as the media file or the podcast-metadata-exchange-file<br>
+"transcript" is optional<br>
+<br>
+returns false in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, if the attribute exists/could be set; false, if not or an error occurred</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> content</td></tr>
+<tr><td class="ch2">the content of a specific attribute</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> is_set</td></tr>
+<tr><td class="ch2">true, set the attribute; false, retrieve the current content</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> idx</td></tr>
+<tr><td class="ch2">the index of the transcript, whose attribute you want to get; 1-based</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> attributename</td></tr>
+<tr><td class="ch2">the attributename you want to get/set<br/>
+supported attributes are:<br/>
+"language" - the language of the transcription<br/>
+"description" - a more detailed description for this transcription<br/>
+"url" - the url where the webvtt/srt-file is stored; can be relative to the podcast-metadata-exchange-file/mediafile<br/>
+"transcript" - the actual transcript-content for inclusion into the metadata of the mediafile(only srt or webvtt!)<br/>
+"type" - srt or webvtt</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> content</td></tr>
+<tr><td class="ch2">the new contents to set the attribute with</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="GetShownoteAttributesAsJSON"></a>
 <a href="#GetShownoteAttributesAsJSON"> ^</a> 
 <img width="3%" src="gfx/reaper6.20.png" alt="requires Reaper version 6.20">
@@ -39042,6 +39461,35 @@ returns nil if getting the ProjectStateChunk took too long<br>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>boolean</i> keepqrender</td></tr>
 <tr><td class="ch2">true, keeps the QUEUED_RENDER_OUTFILE and QUEUED_RENDER_ORIGINAL_FILENAME entries in the ProjectStateChunk, if existing; false or nil, remove them</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GetProject_RenderOutputPath"></a>
+<a href="#GetProject_RenderOutputPath"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="requires Reaper version 5.965">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>GetProject_RenderOutputPath</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>string</i> render_output_directory = <em>ultraschall.GetProject_RenderOutputPath</em>(<i>string</i> projectfilename_with_path)</code></div>
+</div><p>
+<div class="ch">
+returns the output-directory for rendered files of a project.<br>
+<br>
+Doesn't return the correct output-directory for queued-projects!<br>
+<br>
+returns nil in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> render_output_directory</td></tr>
+<tr><td class="ch2">the output-directory for projects</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> projectfilename_with_path</td></tr>
+<tr><td class="ch2">the projectfilename with path, whose renderoutput-directories you want to know</td></tr>
 </table>
 <br>
 </div>
@@ -52978,10 +53426,10 @@ q=9 ; mp3 VBR lowest</td></tr>
 <hr>
 <a class="anch" id="ApplyRenderTable_Project"></a>
 <a href="#ApplyRenderTable_Project"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>ApplyRenderTable_Project</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>ApplyRenderTable_Project</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval, <i>boolean</i> dirty = <em>ultraschall.ApplyRenderTable_Project</em>(<i>table</i> RenderTable, <i>optional</i> <i>boolean</i> apply_rendercfg_string, <i>optional</i> <i>boolean</i> dirtyness)</code></div>
 </div><p>
@@ -53013,7 +53461,7 @@ q=9 ; mp3 VBR lowest</td></tr>
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;]       - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;]    - Embed Take markers; true, checked; false, unchecked
@@ -53090,10 +53538,12 @@ q=9 ; mp3 VBR lowest</td></tr>
     RenderTable[&quot;RenderString&quot;]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - true, return to render to file-dialog after rendering; false, don&#39;t return to render to file-dialog after rendering
     RenderTable[&quot;SampleRate&quot;]       - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; 
                                         true, checked; 
                                         false, unchecked
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; 
                                                 true, checked
                                                 false, unchecked
@@ -53149,8 +53599,8 @@ q=9 ; mp3 VBR lowest</td></tr>
 <hr>
 <a class="anch" id="ApplyRenderTable_ProjectFile"></a>
 <a href="#ApplyRenderTable_ProjectFile"> ^</a> 
-<img width="3%" src="gfx/reaper7.16.png" alt="requires Reaper version 7.16">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>ApplyRenderTable_ProjectFile</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>ApplyRenderTable_ProjectFile</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval, <i>string</i> ProjectStateChunk = <em>ultraschall.ApplyRenderTable_ProjectFile</em>(<i>table</i> RenderTable, <i>string</i> projectfilename_with_path, <i>optional</i> <i>boolean</i> apply_rendercfg_string, <i>optional</i> <i>string</i> ProjectStateChunk)</code></div>
 </div><p>
@@ -53181,7 +53631,7 @@ q=9 ; mp3 VBR lowest</td></tr>
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;]       - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;]    - Embed Take markers; true, checked; false, unchecked
@@ -53258,10 +53708,12 @@ q=9 ; mp3 VBR lowest</td></tr>
     RenderTable[&quot;RenderString&quot;]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - not stored in project files
     RenderTable[&quot;SampleRate&quot;]       - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; 
                                         true, checked; 
                                         false, unchecked
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - not stored in project files
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; 
                                                 true, checked
                                                 false, unchecked
@@ -53368,8 +53820,8 @@ Returns false in case of an error<br>
 <hr>
 <a class="anch" id="CreateNewRenderTable"></a>
 <a href="#CreateNewRenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper7.16.png" alt="requires Reaper version 7.16">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>CreateNewRenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>CreateNewRenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.CreateNewRenderTable</em>(<i>optional</i> <i>integer</i> Source, <i>optional</i> <i>integer</i> Bounds, <i>optional</i> <i>number</i> Startposition, <i>optional</i> <i>number</i> Endposition, <i>optional</i> <i>integer</i> TailFlag, <i>optional</i> <i>integer</i> TailMS, <i>optional</i> <i>string</i> RenderFile, <i>optional</i> <i>string</i> RenderPattern, <i>optional</i> <i>integer</i> SampleRate, <i>optional</i> <i>integer</i> Channels, <i>optional</i> <i>integer</i> OfflineOnlineRendering, <i>optional</i> <i>boolean</i> ProjectSampleRateFXProcessing, <i>optional</i> <i>integer</i> RenderResample, <i>optional</i> <i>boolean</i> OnlyMonoMedia, <i>optional</i> <i>boolean</i> MultiChannelFiles, <i>optional</i> <i>integer</i> Dither, <i>optional</i> <i>string</i> RenderString, <i>optional</i> <i>boolean</i> SilentlyIncrementFilename, <i>optional</i> <i>boolean</i> AddToProj, <i>optional</i> <i>boolean</i> SaveCopyOfProject, <i>optional</i> <i>boolean</i> RenderQueueDelay, <i>optional</i> <i>integer</i> RenderQueueDelaySeconds, <i>optional</i> <i>boolean</i> CloseAfterRender, <i>optional</i> <i>boolean</i> EmbedStretchMarkers, <i>optional</i> <i>string</i> RenderString2, <i>optional</i> <i>boolean</i> EmbedTakeMarkers, <i>optional</i> <i>boolean</i> DoNotSilentRender, <i>optional</i> <i>boolean</i> EmbedMetadata, <i>optional</i> <i>boolean</i> Enable2ndPassRender, <i>optional</i> <i>boolean</i> Normalize_Enabled, <i>optional</i> <i>integer</i> Normalize_Method, <i>optional</i> <i>boolean</i> Normalize_Stems_to_Master_Target, <i>optional</i> <i>number</i> Normalize_Target, <i>optional</i> <i>boolean</i> Brickwall_Limiter_Enabled, <i>optional</i> <i>integer</i> Brickwall_Limiter_Method, <i>optional</i> <i>number</i> Brickwall_Limiter_Target, <i>optional</i> <i>boolean</i> Normalize_Only_Files_Too_Loud, <i>optional</i> <i>boolean</i> FadeIn_Enabled, <i>optional</i> <i>number</i> FadeIn, <i>optional</i> <i>integer</i> FadeIn_Shape, <i>optional</i> <i>boolean</i> FadeOut_Enabled, <i>optional</i> <i>number</i> FadeOut, <i>optional</i> <i>integer</i> FadeOut_Shape, <i>optional</i> <i>boolean</i> OnlyChannelsSentToParent, <i>optional</i> <i>boolean</i> RenderStems_Prefader, <i>optional</i> <i>boolean</i> Preserve_Start_Offset, <i>optional</i> <i>boolean</i> Preserve_Metadata)</code></div>
 </div><p>
@@ -53409,6 +53861,7 @@ Factory-Default will be set to these settings:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["OfflineOnlineRendering"]=0<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["OnlyChannelsSentToParent"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["OnlyMonoMedia"]=false<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["ReturnToDialog"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["ProjectSampleRateFXProcessing"]=true<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Preserve_Start_Offset"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Preserve_Metadata"]=false<br>
@@ -53421,7 +53874,9 @@ Factory-Default will be set to these settings:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["RenderString"]=""<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["RenderString2"]=""<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["RenderTable"]=true<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["ReturnToDialog"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["SampleRate"]=44100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["SaveRenderStatsFile"]=0<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["SaveCopyOfProject"]=false<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["SilentlyIncrementFilename"]=true<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTable["Source"]=0<br>
@@ -53544,7 +53999,7 @@ Returns nil in case of an error<br>
 &1, dither master mix<br/>
 &2, noise shaping master mix<br/>
 &4, dither stems<br/>
-&8, dither noise shaping stems</td></tr>
+&8, noise shaping stems</td></tr>
 </table>
 <table class="ch">
 <tr><td class="pr"><i>optional</i> <i>string</i> RenderString</td></tr>
@@ -53692,6 +54147,14 @@ Include project filename in BWF unchecked, Do not include markers or regions, Em
 <tr><td class="pr"><i>optional</i> <i>boolean</i> Preserve_Metadata</td></tr>
 <tr><td class="ch2">true, preserve metadata(when selected media items as source); false, don't preserve metadata</td></tr>
 </table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>boolean</i> ReturnToDialog</td></tr>
+<tr><td class="ch2">true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> SaveRenderStatsFile</td></tr>
+<tr><td class="ch2">0, no render-stats-outfile; 1, Combined; 2, Per rendered file</td></tr>
+</table>
 <br>
 </div>
 <div class="ch">
@@ -53792,10 +54255,10 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
 <hr>
 <a class="anch" id="GetRenderTable_Project"></a>
 <a href="#GetRenderTable_Project"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.75.png" alt="requires Ultraschall version 4.75"><u><b>GetRenderTable_Project</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRenderTable_Project</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderTable_Project</em>()</code></div>
 </div><p>
@@ -53822,7 +54285,7 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;] - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;] - Embed Take markers; true, checked; false, unchecked                        
@@ -53873,6 +54336,8 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;OnlyMonoMedia&quot;] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
     RenderTable[&quot;OnlyChannelsSentToParent&quot;] - true, option is checked; false, option is unchecked
     RenderTable[&quot;ProjectSampleRateFXProcessing&quot;] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
+                    RenderTable[&quot;Preserve_Metadata&quot;] - true, preserve metadata(when selected media items as source); false, don&#39;t preserve metadata
+                    RenderTable[&quot;Preserve_Start_Offset&quot;] - true, preserve start-offset (when selected media items as source); false, don&#39;t preserve start-offset
     RenderTable[&quot;RenderFile&quot;] - the contents of the Directory-inputbox of the Render to File-dialog
     RenderTable[&quot;RenderPattern&quot;] - the render pattern as input into the File name-inputbox of the Render to File-dialog
     RenderTable[&quot;RenderQueueDelay&quot;] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
@@ -53893,8 +54358,10 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;RenderString&quot;] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - true, return to render to file-dialog after rendering; false, don&#39;t return to render to file-dialog after rendering
     RenderTable[&quot;SampleRate&quot;] - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; true, checked; false, unchecked
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
     RenderTable[&quot;Source&quot;] - 0, Master mix; 
                             1, Master mix + stems; 
@@ -53929,10 +54396,10 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
 <hr>
 <a class="anch" id="GetRenderTable_ProjectDefaults"></a>
 <a href="#GetRenderTable_ProjectDefaults"> ^</a> 
-<img width="3%" src="gfx/reaper7.16.png" alt="requires Reaper version 7.16">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>GetRenderTable_ProjectDefaults</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRenderTable_ProjectDefaults</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderTable_ProjectDefaults</em>()</code></div>
 </div><p>
@@ -53960,7 +54427,7 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;] - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;] - Embed Take markers; true, checked; false, unchecked                        
@@ -54037,8 +54504,10 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;RenderString&quot;] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - true, return to render to file-dialog after rendering; false, don&#39;t return to render to file-dialog after rendering
     RenderTable[&quot;SampleRate&quot;] - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; true, checked; false, unchecked
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
     RenderTable[&quot;Source&quot;] - 0, Master mix; 
                             1, Master mix + stems; 
@@ -54073,8 +54542,8 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
 <hr>
 <a class="anch" id="GetRenderTable_ProjectFile"></a>
 <a href="#GetRenderTable_ProjectFile"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
-<img width="3%" src="gfx/ultraschall4.75.png" alt="requires Ultraschall version 4.75"><u><b>GetRenderTable_ProjectFile</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRenderTable_ProjectFile</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderTable_ProjectFile</em>(<i>string</i> projectfilename_with_path)</code></div>
 </div><p>
@@ -54101,7 +54570,7 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;] - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;] - Embed Take markers; true, checked; false, unchecked                        
@@ -54169,8 +54638,10 @@ Gets the render-settings of a RenderTable from a project-extstate, stored by Set
     RenderTable[&quot;RenderString&quot;] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - not stored in project files
     RenderTable[&quot;SampleRate&quot;] - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; always true(checked), as this isn&#39;t stored in projectfiles
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - not stored in project files
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; always false, as this is not stored in projectfiles
     RenderTable[&quot;Source&quot;] - 0, Master mix; 
                             1, Master mix + stems; 
@@ -54308,8 +54779,8 @@ Returns, if Reaper is currently rendering and the rendering position and project
 <hr>
 <a class="anch" id="IsValidRenderTable"></a>
 <a href="#IsValidRenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
-<img width="3%" src="gfx/ultraschall4.75.png" alt="requires Ultraschall version 4.75"><u><b>IsValidRenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>IsValidRenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.IsValidRenderTable</em>(<i>table</i> RenderTable)</code></div>
 </div><p>
@@ -55913,10 +56384,67 @@ q=9 ; mp3 VBR lowest&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="CalculateLoudness"></a>
+<a href="#CalculateLoudness"> ^</a> 
+<img width="3%" src="gfx/reaper6.30.png" alt="requires Reaper version 6.30">
+<img width="3%" src="gfx/ultraschall4.2.png" alt="requires Ultraschall version 4.2"><u><b>CalculateLoudness</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>string</i> filename, <i>string</i> peak, <i>string</i> clip, <i>string</i> rms, <i>string</i> lrange, <i>string</i> lufs_i = <em>ultraschall.CalculateLoudness</em>(<i>integer</i> mode, <i>boolean</i> timeselection)</code></div>
+</div><p>
+<div class="ch">
+Calculates the loudness of items and tracks or returns the loudness of last render/dry-render.<br>
+<br>
+Returns nil in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>string</i> filename</td></tr>
+<tr><td class="ch2">the filename, that would be rendered</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> peak</td></tr>
+<tr><td class="ch2">the peak of the rendered element</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> clip</td></tr>
+<tr><td class="ch2">the clipping of the rendered element</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> rms</td></tr>
+<tr><td class="ch2">the rms of the rendered element</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> lrange</td></tr>
+<tr><td class="ch2">the lrange of the rendered element</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>string</i> lufs_i</td></tr>
+<tr><td class="ch2">the lufs-i of the rendered element</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> mode</td></tr>
+<tr><td class="ch2">-1, return loudness-stats of the last render/dry render<br/>
+0, calculate loudness-stats of selected media items<br/>
+1, calculate loudness-stats of master track<br/>
+2, calculate loudness-stats of selected tracks</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> timeselection</td></tr>
+<tr><td class="ch2">shall loudness calculation only be within time-selection?<br/>
+only with mode 1 and 2; if no time-selection is given, use entire track<br/>
+false, calculate loudness within the entire tracks;<br/>
+true, calculate loudness-stats within time-selection</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="AddRenderPreset"></a>
 <a href="#AddRenderPreset"> ^</a> 
-<img width="3%" src="gfx/reaper7.16.png" alt="requires Reaper version 7.16">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>AddRenderPreset</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>AddRenderPreset</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.AddRenderPreset</em>(<i>string</i> Bounds_Name, <i>string</i> Options_and_Format_Name, <i>table</i> RenderTable)</code></div>
 </div><p>
@@ -55993,7 +56521,7 @@ Options_and_Format_Name stores only:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &1, dither master mix<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &2, noise shaping master mix<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &4, dither stems<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &8, dither noise shaping stems<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &8, noise shaping stems<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["MultiChannelFiles"] - multichannel-files-checkbox<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox<br>
@@ -56072,7 +56600,7 @@ Returns false in case of an error<br>
 <a class="anch" id="DeleteRenderPreset_Bounds"></a>
 <a href="#DeleteRenderPreset_Bounds"> ^</a> 
 <img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
-<img width="3%" src="gfx/ultraschall4.7.png" alt="requires Ultraschall version 4.7"><u><b>DeleteRenderPreset_Bounds</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>DeleteRenderPreset_Bounds</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.DeleteRenderPreset_Bounds</em>(<i>string</i> Bounds_Name)</code></div>
 </div><p>
@@ -56100,7 +56628,7 @@ Returns false in case of an error<br>
 <a class="anch" id="DeleteRenderPreset_FormatOptions"></a>
 <a href="#DeleteRenderPreset_FormatOptions"> ^</a> 
 <img width="3%" src="gfx/reaper6.32.png" alt="requires Reaper version 6.32">
-<img width="3%" src="gfx/ultraschall4.7.png" alt="requires Ultraschall version 4.7"><u><b>DeleteRenderPreset_FormatOptions</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>DeleteRenderPreset_FormatOptions</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.DeleteRenderPreset_FormatOptions</em>(<i>string</i> Options_and_Format_Name)</code></div>
 </div><p>
@@ -56166,8 +56694,8 @@ Returns all render-preset-names for a) Bounds and output pattern/filename b) Opt
 <hr>
 <a class="anch" id="GetRenderPreset_RenderTable"></a>
 <a href="#GetRenderPreset_RenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper7.16.png" alt="requires Reaper version 7.16">
-<img width="3%" src="gfx/ultraschall5.png" alt="requires Ultraschall version 5"><u><b>GetRenderPreset_RenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRenderPreset_RenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>table</i> RenderTable = <em>ultraschall.GetRenderPreset_RenderTable</em>(<i>string</i> Bounds_Name, <i>string</i> Options_and_Format_Name)</code></div>
 </div><p>
@@ -56199,7 +56727,7 @@ Returns all render-preset-names for a) Bounds and output pattern/filename b) Opt
    RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                            &amp;2, noise shaping master mix; 
                            &amp;4, dither stems; 
-                           &amp;8, dither noise shaping stems
+                           &amp;8, noise shaping stems
    RenderTable[&quot;EmbedMetaData&quot;]       - Embed metadata; true, checked; false, unchecked
    RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
    RenderTable[&quot;EmbedTakeMarkers&quot;]    - Embed Take markers; true, checked; false, unchecked
@@ -56278,8 +56806,10 @@ Returns all render-preset-names for a) Bounds and output pattern/filename b) Opt
    RenderTable[&quot;RenderString&quot;]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
    RenderTable[&quot;RenderString2&quot;]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
    RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - not stored in presets
    RenderTable[&quot;SampleRate&quot;]       - the samplerate of the rendered file(s)
    RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; always false, as this isn&#39;t stored in render-presets
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - not stored in presets
    RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; 
                                               always true, as this isn&#39;t stored in Presets
    RenderTable[&quot;Source&quot;] - 0, Master mix; 
@@ -56443,7 +56973,7 @@ Options_and_Format_Name stores only:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &1, dither master mix<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &2, noise shaping master mix<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &4, dither stems<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &8, dither noise shaping stems<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &8, noise shaping stems<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox<br>
@@ -56544,6 +57074,27 @@ Returns the current check-state of the "Add rendered items to new tracks in proj
 </div><p>
 <div class="ch">
 Gets the current state of the "Silently increment filenames to avoid overwriting"-checkbox from the Render to File-dialog.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> state</td></tr>
+<tr><td class="ch2">true, check the checkbox; false, uncheck the checkbox</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="GetRender_AutoReturnToDialog"></a>
+<a href="#GetRender_AutoReturnToDialog"> ^</a> 
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRender_AutoReturnToDialog</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GetRender_AutoReturnToDialog</em>()</code></div>
+</div><p>
+<div class="ch">
+Sets the "Auto-return to this dialog when finished"-checkboxstate of the Render to File-dialog.<br>
 </div><br>      
 <u>Returnvalues:</u>
 <table class="ch">
@@ -56745,12 +57296,12 @@ Returns false in case of an error<br>
 <hr>
 <a class="anch" id="GetRender_SaveRenderStats"></a>
 <a href="#GetRender_SaveRenderStats"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.75.png" alt="requires Ultraschall version 4.75"><u><b>GetRender_SaveRenderStats</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>GetRender_SaveRenderStats</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.GetRender_SaveRenderStats</em>()</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval, <i>integer</i> mode = <em>ultraschall.GetRender_SaveRenderStats</em>()</code></div>
 </div><p>
 <div class="ch">
 Sets the "Save outfile.render_stats.html"-checkboxstate of the Render to File-dialog.<br>
@@ -56759,6 +57310,10 @@ Sets the "Save outfile.render_stats.html"-checkboxstate of the Render to File-di
 <table class="ch">
 <tr><td class="pr"><i>boolean</i> state</td></tr>
 <tr><td class="ch2">true, check the checkbox; false, uncheck the checkbox</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> mode</td></tr>
+<tr><td class="ch2">1, combined; 2, per rendered file</td></tr>
 </table>
 <br>
 </div>
@@ -56834,6 +57389,39 @@ Returns false in case of an error<br>
 <table class="ch">
 <tr><td class="pr"><i>boolean</i> state</td></tr>
 <tr><td class="ch2">true, check the checkbox; false, uncheck the checkbox</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
+<a class="anch" id="SetRender_AutoReturnToDialog"></a>
+<a href="#SetRender_AutoReturnToDialog"> ^</a> 
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>SetRender_AutoReturnToDialog</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetRender_AutoReturnToDialog</em>(<i>boolean</i> state, <i>optional</i> <i>integer</i> mode)</code></div>
+</div><p>
+<div class="ch">
+Sets the "Auto-return to this dialog when finished"-checkboxstate of the Render to File-dialog.<br>
+<br>
+Returns false in case of an error<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> retval</td></tr>
+<tr><td class="ch2">true, setting was successful; false, it was unsuccessful</td></tr>
+</table>
+<br>
+<u>Parameters:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> state</td></tr>
+<tr><td class="ch2">true, check the checkbox; false, uncheck the checkbox</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> mode</td></tr>
+<tr><td class="ch2">1, combined; 2, per rendered file</td></tr>
 </table>
 <br>
 </div>
@@ -57091,12 +57679,12 @@ Returns false in case of an error<br>
 <hr>
 <a class="anch" id="SetRender_SaveRenderStats"></a>
 <a href="#SetRender_SaveRenderStats"> ^</a> 
-<img width="3%" src="gfx/reaper6.71.png" alt="requires Reaper version 6.71">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.75.png" alt="requires Ultraschall version 4.75"><u><b>SetRender_SaveRenderStats</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>SetRender_SaveRenderStats</b></u><br>			<p>
 <div class="cc">
-<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetRender_SaveRenderStats</em>(<i>boolean</i> state)</code></div>
+<div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.SetRender_SaveRenderStats</em>(<i>boolean</i> state, <i>optional</i> <i>integer</i> mode)</code></div>
 </div><p>
 <div class="ch">
 Sets the "Save outfile.render_stats.html"-checkboxstate of the Render to File-dialog.<br>
@@ -57113,6 +57701,10 @@ Returns false in case of an error<br>
 <table class="ch">
 <tr><td class="pr"><i>boolean</i> state</td></tr>
 <tr><td class="ch2">true, check the checkbox; false, uncheck the checkbox</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>optional</i> <i>integer</i> mode</td></tr>
+<tr><td class="ch2">1, combined; 2, per rendered file</td></tr>
 </table>
 <br>
 </div>
@@ -57434,10 +58026,10 @@ Default is an empty string.</td></tr>
 <hr>
 <a class="anch" id="RenderProject_RenderTable"></a>
 <a href="#RenderProject_RenderTable"> ^</a> 
-<img width="3%" src="gfx/reaper6.64.png" alt="requires Reaper version 6.64">
+<img width="3%" src="gfx/reaper7.34.png" alt="requires Reaper version 7.34">
 <img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
 <img width="3%" src="gfx/js_0.972.png" alt="requires JS version 0.972">
-<img width="3%" src="gfx/ultraschall4.7.png" alt="requires Ultraschall version 4.7"><u><b>RenderProject_RenderTable</b></u><br>			<p>
+<img width="3%" src="gfx/ultraschall5.3.png" alt="requires Ultraschall version 5.3"><u><b>RenderProject_RenderTable</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> count, <i>array</i> MediaItemStateChunkArray, <i>array</i> Filearray = <em>ultraschall.RenderProject_RenderTable</em>(<i>optional</i> <i>string</i> projectfilename_with_path, <i>optional</i> <i>table</i> RenderTable, <i>optional</i> <i>boolean</i> AddToProj, <i>optional</i> <i>boolean</i> CloseAfterRender, <i>optional</i> <i>boolean</i> SilentlyIncrementFilename)</code></div>
 </div><p>
@@ -57465,7 +58057,7 @@ Default is an empty string.</td></tr>
     RenderTable[&quot;Dither&quot;] - &amp;1, dither master mix; 
                             &amp;2, noise shaping master mix; 
                             &amp;4, dither stems; 
-                            &amp;8, dither noise shaping stems
+                            &amp;8, noise shaping stems
     RenderTable[&quot;EmbedMetaData&quot;]       - Embed metadata; true, checked; false, unchecked
     RenderTable[&quot;EmbedStretchMarkers&quot;] - Embed stretch markers/transient guides; true, checked; false, unchecked
     RenderTable[&quot;EmbedTakeMarkers&quot;]    - Embed Take markers; true, checked; false, unchecked
@@ -57518,10 +58110,12 @@ Default is an empty string.</td></tr>
     RenderTable[&quot;RenderString&quot;]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
     RenderTable[&quot;RenderString2&quot;]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
     RenderTable[&quot;RenderTable&quot;]=true - signals, this is a valid render-table
+                    RenderTable[&quot;ReturnToDialog&quot;] - true, return to render to file-dialog after rendering; false, don&#39;t return to render to file-dialog after rendering
     RenderTable[&quot;SampleRate&quot;]       - the samplerate of the rendered file(s)
     RenderTable[&quot;SaveCopyOfProject&quot;] - the &quot;Save copy of project to outfile.wav.RPP&quot;-checkbox; 
                                         true, checked; 
                                         false, unchecked
+                    RenderTable[&quot;SaveRenderStatsFile&quot;] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
     RenderTable[&quot;SilentlyIncrementFilename&quot;] - Silently increment filenames to avoid overwriting-checkbox; 
                                                 true, checked
                                                 false, unchecked
@@ -68649,6 +69243,63 @@ returns false in case of an error.<br>
 </div>
 <div class="ch">
 <hr>
+<a class="anch" id="GetReaperWindow_Position"></a>
+<a href="#GetReaperWindow_Position"> ^</a> 
+<img width="3%" src="gfx/reaper5.965.png" alt="requires Reaper version 5.965">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/js_0.963.png" alt="requires JS version 0.963">
+<img width="3%" src="gfx/ultraschall4.6.png" alt="requires Ultraschall version 4.6"><u><b>GetReaperWindow_Position</b></u><br>			<p>
+<div class="cc">
+<div class="l">Lua: <code> <i>boolean</i> maximized_window, <i>integer</i> x, <i>integer</i> y, <i>integer</i> right, <i>integer</i> bottom, <i>integer</i> height_main_toolbar, <i>integer</i> height_top_docker, <i>integer</i> width_left_docker, <i>integer</i> width_right_docker, <i>integer</i> height_bottom_docker = <em>ultraschall.GetReaperWindow_Position</em>()</code></div>
+</div><p>
+<div class="ch">
+returns the dimensions of the reaper-window and dimensions of various elements like docker.<br>
+</div><br>      
+<u>Returnvalues:</u>
+<table class="ch">
+<tr><td class="pr"><i>boolean</i> maximized_window</td></tr>
+<tr><td class="ch2">true, window is maximized; false, window is not maximized</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> x</td></tr>
+<tr><td class="ch2">x-position of reaper-window in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> y</td></tr>
+<tr><td class="ch2">y-position of reaper-window in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> right</td></tr>
+<tr><td class="ch2">right position of reaper-window in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> bottom</td></tr>
+<tr><td class="ch2">bottom position of reaper-window in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> height_main_toolbar</td></tr>
+<tr><td class="ch2">the height of the main-toolbar in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> height_top_docker</td></tr>
+<tr><td class="ch2">the height of the top-docker in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> width_left_docker</td></tr>
+<tr><td class="ch2">the width of the left-docker in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> width_right_docker</td></tr>
+<tr><td class="ch2">the width of the right-docker in pixels</td></tr>
+</table>
+<table class="ch">
+<tr><td class="pr"><i>integer</i> height_bottom_docker</td></tr>
+<tr><td class="ch2">the height of the bottom-docker in pixels</td></tr>
+</table>
+<br>
+</div>
+<div class="ch">
+<hr>
 <a class="anch" id="GetActionsHWND"></a>
 <a href="#GetActionsHWND"> ^</a> 
 <img width="3%" src="gfx/reaper5.965.png" alt="requires Reaper version 5.965">
@@ -70038,7 +70689,7 @@ Will return Reaper's default ones(resources-folder/Plugins/reaper_www_root/) as 
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.2  - 1624 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.3  - 1637 elements available <br></td></table>
         <hr>
       </div>
       <br>

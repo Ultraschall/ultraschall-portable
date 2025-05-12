@@ -9861,7 +9861,7 @@
         <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
         <functioncall prog_lang="python">Float retval = RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
         <requires>
-            Reaper=7.23
+            Reaper=7.37
         </requires>
         <description>
             Get or set project information.
@@ -9880,6 +9880,11 @@
                 &512=Embed Metadata, if format supports is, 
                 &1024=Take markers-checkbox(Only with WAV and Source=Selected media items/Selected media items via master); 
                 &2048=2nd pass render  
+								&8192=Render stems pre-fader
+								&16384=Render only channels sent to parent
+								&32768=Preserve Metadata
+								&65536=Preserve Start offset
+                &&524288=Parallel render-checkbox
             OGG, OPUS and FLAC support embedding of tempoinformation via metadata, settable using GetSetProjectInfo_String.  
             RENDER_BOUNDSFLAG : 
               0=custom time bounds, 
@@ -9909,9 +9914,10 @@
               &1=dither, 
               &2=noise shaping, 
               &4=dither stems, 
-              &8=noise shaping on stems  
+              &8=noise shaping on stems                
             RENDER_NORMALIZE: 
-              &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max, 
+              &;1=enable, (&;14==0)=LUFS-I, (&;14==2)=RMS, (&;14==4)=peak, (&;14==6)=true peak, (&;14==8)=LUFS-M max, (&;14==10)=LUFS-S max,
+              &16=Adjust mono files by an additional-checkbox(see &524288)
               &64=enable brickwall limit, 
               &128=brickwall limit true peak, 
               &256=only normalize files that are too loud, 
@@ -9919,16 +9925,24 @@
               &1024=apply fade-out
               &2048==0 and &256==256 - only normalize files that are too loud
               &2048==2048 and &256==0 - only normalize files that are too quiet
-              &4128=32 = normalize stems to common gain based on master, 
-       &4128=4096 = normalize to loudest file
-       &4128=4128 = normalize as if one long file
-       &8192=adjust mono media additional -3dB
-            RENDER_NORMALIZE_TARGET: render normalization target as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc  
-            RENDER_BRICKWALL: render brickwall limit as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc
+              &4128=32 = normalize stems as if files play together (common gain), 
+              &4128=4096 = normalize to loudest file
+              &4128=4128 = normalize as if files play together
+              &524288=0 - adjust mono media additional -3dB; =524288 - adjust mono media additional +3dB
+              &(1<<<16)=pad start with silence, 
+              &(2<<16)=pad end with silence, 
+              &(4<<16)=disable all render postprocessing, 
+              &(32<<16)=limit as if files play together
+            RENDER_NORMALIZE_TARGET: render normalization target as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc; requires RENDER_NORMALIZE &1
+            RENDER_BRICKWALL: render brickwall limit as amplitude, so 0.5 means -6.02dB, 0.25 means -12.04dB, etc; requires RENDER_NORMALIZE &64
             RENDER_FADEIN: render fade-in (0.001 means 1 ms, requires RENDER_NORMALIZE&512)
             RENDER_FADEOUT: render fade-out (0.001 means 1 ms, requires RENDER_NORMALIZE&1024)
             RENDER_FADEINSHAPE: render fade-in shape
             RENDER_FADEOUTSHAPE: render fade-out shape
+            RENDER_PADSTART: pad render start with silence (0.001 means 1ms, requires RENDER_NORMALIZE&amp;(1&lt;&lt;16))
+            RENDER_PADEND: pad render end with silence (0.001 means 1ms, requires RENDER_NORMALIZE&amp;(2&lt;&lt;16))
+            RENDER_TRIMSTART: trim start threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB
+            RENDER_TRIMEND: trim end threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB
             PROJECT_SRATE : samplerate (ignored unless PROJECT_SRATE_USE set)  
             PROJECT_SRATE_USE : set to 1 if project samplerate is used  
         </description>
@@ -9936,7 +9950,7 @@
             number value - the new/current value set with this attribute
         </retvals>
         <parameters>
-            ReaProject project -the project, whos project settings you want to get/set; 0, for the current project
+            ReaProject project -the project, whose project settings you want to get/set; 0, for the current project
             string desc - the attribute you want to get/set, like RENDER_CHANNELS, PROJECT_SRATE, RENDER_SETTINGS, etc
             number value - if is_set==true, this is the new value to set; if is_set==false, set this to 0
             boolean is_set - true, set a new value; false, get the current value
@@ -9953,7 +9967,8 @@
         </chapter_context>
         <tags></tags>
         <changelog>
-       Reaper 7.23 - RENDER_NORMALIZE allows now for normalize to loudest file, normalize as if one long file and adjust mono media additional
+            Reaper 7.37 - TRIMSTART, TRIMEND, RENDER_PADSTART, RENDER_PADEND and additional flags for enabling pad-start/padend in RENDER_NORMALIZE added as new attributes
+            Reaper 7.23 - RENDER_NORMALIZE allows now for normalize to loudest file, normalize as if one long file and adjust mono media additional
             Reaper 7.08 - RENDER_NORMALIZE allows now for normalize files that are too quiet
             Reaper 6.64 - FadeIn/FadeOut now supported in RENDER_NORMALIZE, RENDER_FADEIN, RENDER_FADEINSHAPE, RENDER_FADEOUT, RENDER_FADEOUTSHAPE
             Reaper 6.62 - RENDER_BOUNDSFLAG and RENDER_TAILFLAG support now markers as well
@@ -9969,7 +9984,7 @@
         <functioncall prog_lang="lua">boolean retval, string valuestrNeedBig = reaper.GetSetProjectInfo_String(ReaProject project, string desc, string valuestrNeedBig, boolean is_set)</functioncall>
         <functioncall prog_lang="python">(Boolean retval, ReaProject project, String desc, String valuestrNeedBig, Boolean is_set) = RPR_GetSetProjectInfo_String(project, desc, valuestrNeedBig, is_set)</functioncall>
         <requires>
-            Reaper=7.00
+            Reaper=7.36
         </requires>
         <description>
             Get or set project information.  
@@ -9985,6 +10000,7 @@
             RECORD_PATH_SECONDARY: secondary recording directory  
             RECORD_FORMAT : base64-encoded sink configuration (see project files, etc). Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type.
             APPLYFX_FORMAT : base64-encoded sink configuration (see project files, etc). Used only if RECFMT_OPENCOPY is set to 1. Callers can also pass a simple 4-byte string (non-base64-encoded), e.g. "evaw" or "l3pm", to use default settings for that sink type.
+            RECTAG : project recording tag wildcard ($rectag). Can be used in Preferences/Audio/Recording to auto-name recorded files.
             RENDER_FILE: render directory  
             RENDER_PATTERN: render file name (may contain wildcards)  
             RENDER_METADATA : get or set the metadata saved with the project (not metadata embedded in project media). Example, ID3 album name metadata: valuestr="ID3:TALB" to get, valuestr="ID3:TALB|my album name" to set. Call with valuestr="" and is_set=false to get a semicolon-separated list of defined project metadata identifiers.  
@@ -10059,6 +10075,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+            Reaper 7.36 - "RECTAG" added as new attribute
             Reaper 7.00 - "raw" added as new render-output format
             Reaper 6.76 - "OPENCOPY_CFGIDX", "RECORD_FORMAT" and "APPLYFX_FORMAT" - added as new attributes
             Reaper 6.71 - "MARKER_INDEX_FROM_GUID:{GUID}" - added, which allows getting marker-index by marker-guid
@@ -13999,6 +14016,49 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>MediaExplorerGetLastPlayedFileInfo</slug>
+        <title>MediaExplorerGetLastPlayedFileInfo</title>
+        <functioncall prog_lang="cpp">bool MediaExplorerGetLastPlayedFileInfo(char* filenameOut, int filenameOut_sz, int* filemodeOut, double* selstartOut, double* selendOut, double* pitchshiftOut, double* voladjOut, double* rateadjOut, double* sourcebpmOut, char* extrainfoOut, int extrainfoOut_sz)</functioncall>
+        <functioncall prog_lang="eel">bool MediaExplorerGetLastPlayedFileInfo(#filename, int &filemode, &selstart, &selend, &pitchshift, &voladj, &rateadj, &sourcebpm, #extrainfo)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, string filename, integer filemode, number selstart, number selend, number pitchshift, number voladj, number rateadj, number sourcebpm, string extrainfo = reaper.MediaExplorerGetLastPlayedFileInfo()</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, String filenameOut, Int filenameOut_sz, Int filemodeOut, Float selstartOut, Float selendOut, Float pitchshiftOut, Float voladjOut, Float rateadjOut, Float sourcebpmOut, String extrainfoOut, Int extrainfoOut_sz) = RPR_MediaExplorerGetLastPlayedFileInfo(filenameOut, filenameOut_sz, filemodeOut, selstartOut, selendOut, pitchshiftOut, voladjOut, rateadjOut, sourcebpmOut, extrainfoOut, extrainfoOut_sz)</functioncall>
+        <requires>
+            Reaper=7.35
+        </requires>
+        <description prog_lang="*">
+            Get information about the most recently previewed Media Explorer file. 
+            
+            filename: last played file name. 
+            filemode: &1:insert on new track, &2:insert into sampler, &8:tempo sync 1x, &16:tempo sync 0.5x, &32:tempo sync 2x, &64:do not preserve pitch when changing playrate, &128:loop selection exists, &256:time selection exists, &512:apply pitch/rate adjustment on insert, &1024:apply volume adjustment on insert, &2048:apply normalization on insert, &8192:reverse preview. 
+            selstart/selend: time selection in [0.0, 1.0]. 
+            pitchshift/voladj/rateadj: current pitch/volume/playrate preview adjustments. 
+            srcbpm: source media tempo. 
+            extrainfo: currently unused.
+        </description>
+        <retvals>
+            boolean retval - true, there was a last played file; false, there wasn't a last played file
+            string filename - the filename+path of the file played
+            integer filemode - the filemode, see description for details
+            number selstart - the start of the selection in the MediaExplorer
+            number selend - the end of the selection in the MediaExplorer
+            number pitchshift - the pitch, see description for details
+            number voladj - the volume, see description for details
+            number rateadj - the playrate, see description for detaild
+            number sourcebpm - the source media tempo
+            string extrainfo - unused
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            MediaExplorer
+        </chapter_context>
+        <tags>media explorer, get, last file, information</tags>
+        <changelog>
+          Reaper 7.35 - added to api
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>MediaItemDescendsFromTrack</slug>
         <title>MediaItemDescendsFromTrack</title>
         <functioncall prog_lang="cpp">int MediaItemDescendsFromTrack(MediaItem* item, MediaTrack* track)</functioncall>
@@ -15619,7 +15679,7 @@
         <functioncall prog_lang="lua">integer retval = reaper.MIDIEditor_GetSetting_int(HWND midieditor, string setting_desc)</functioncall>
         <functioncall prog_lang="python">Int retval = RPR_MIDIEditor_GetSetting_int(HWND midieditor, String setting_desc)</functioncall>
         <requires>
-            Reaper=6.41
+            Reaper=7.36
         </requires>
         <description>
             Get settings from a MIDI editor. setting_desc can be:
@@ -15637,6 +15697,7 @@
                             0x206=sysex, 
                             0x207=off velocity, 
                             0x208=notation events, 
+                            0x209=aftertouch,
                             0x210=media item lane
                 default_note_vel: returns 0-127
                 default_note_chan: returns 0-15
@@ -15669,6 +15730,7 @@
         </chapter_context>
         <tags></tags>
         <changelog>
+          Reaper 7.36 - added 0x209=aftertouch for the attribute last_clicked_cc_lane
         </changelog>
     </US_DocBloc>
 
@@ -16383,8 +16445,7 @@
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
-            User Interface
-            Misc
+            MediaExplorer
         </chapter_context>
         <tags>userinterface, media explorer, open, filename, audio, play</tags>
         <changelog>
@@ -19111,7 +19172,9 @@
             Reaper=6.71
         </requires>
         <description>
-            Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc, rather than representing the displayed marker/region ID number (see [SetProjectMarker3](#SetProjectMarker3)). Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK).
+            Differs from SetProjectMarker4 in that markrgnidx is 0 for the first marker/region, 1 for the next, etc, rather than representing the displayed marker/region ID number (see [SetProjectMarker3](#SetProjectMarker3)). 
+            IDnumber less than 0 to ignore.
+            Function will fail if attempting to set a duplicate ID number for a region (duplicate ID numbers for markers are OK).
             
             flags&1 to clear name
             flags&2, markers will not be re-sorted, and after making updates, you MUST call SetProjectMarkerByIndex2 with markrgnidx=-1 and flags&2 to force re-sort/UI updates.
@@ -19599,6 +19662,8 @@
              * col_routingact : Routing matrix input activity highlight
              * col_vudoint : Theme has interlaced VU meters 
              * col_vuclip : VU meter clip indicator 
+             * col_vudbscale : VU meters dB scales (not record armed)
+             * col_vudbscale2 : VU meters dB scales (record armed)
              * col_vutop : VU meter top 
              * col_vumid : VU meter middle 
              * col_vubot : VU meter bottom 
@@ -19843,8 +19908,9 @@
         </chapter_context>
         <tags></tags>
         <changelog>
-      Reaper 7.19 - new theme-colors: mouseitem_color, mouseitem_mode
-      Reaper 7.17 - new theme-colors: take_marker_sel, region_lane_text
+            Reaper 7.37 - new theme-colors: col_vudbscale and col_vudbscale2
+            Reaper 7.19 - new theme-colors: mouseitem_color, mouseitem_mode
+            Reaper 7.17 - new theme-colors: take_marker_sel, region_lane_text
             Reaper 7.16 - new theme-colors: region_edge, region_edge_sel, marker_edge, marker_edge_sel; removed: marker_lane_text
             Reaper 7.00 - new theme-colors: selitem_dot, track_lane_tabcol, track_lanesolo_tabcol, track_lanesolo_text, track_lane_gutter, track_lane_gutter_drawmode, linkedlane_fill, linkedlane_fillmode, linkedlane_outline, linkedlane_outlinemode, linkedlane_unsynced, linkedlane_unsynced_mode, vu_gr_bgcol, vu_gr_fgcol
             Reaper 6.74 - new theme-colors: col_routingact, wiring_activity
@@ -21009,6 +21075,8 @@
         <description markup_type="markdown" markup_version="1.0.1" indent="default">
             Adds or queries the position of a named FX in a take. See [TrackFX\_AddByName()](#TrackFX_AddByName) for information on fxname and instantiate. 
             
+						This allows also adding .FXChain-files. Just provide the full path+filename to the parameter fxname.
+						
             FX indices can have 0x2000000 added to them, in which case they will be used to address FX in containers. To address a container, the 1-based subitem is multiplied by one plus the count of the FX chain and added to the 1-based container item index. e.g. to address the third item in the container at the second position of the track FX chain for tr, the index would be 0x2000000 + 3*(TrackFX_GetCount(tr)+1) + 2. This can be extended to sub-containers using TrackFX_GetNamedConfigParm with container_count and similar logic. In REAPER v7.06+, you can use the much more convenient method to navigate hierarchies, see TrackFX_GetNamedConfigParm with parent_container and container_item.X. In REAPER v7.06+, you can use the much more convenient method to navigate hierarchies, see TrackFX_GetNamedConfigParm with parent_container and container_item.X.
         </description>
         <retvals>
@@ -23310,6 +23378,8 @@
             0 to only query the first instance of an effect, or a positive value to add an instance if one is not found.
 
             Returns -1 on failure or the new position in chain on success.
+						
+						This allows also adding .FXChain-files. Just provide the full path+filename to the parameter fxname.
             
             FX indices can have 0x2000000 added to them, in which case they will be used to address FX in containers. To address a container, the 1-based subitem is multiplied by one plus the count of the FX chain and added to the 1-based container item index. e.g. to address the third item in the container at the second position of the track FX chain for tr, the index would be 0x2000000 + 3*(TrackFX_GetCount(tr)+1) + 2. This can be extended to sub-containers using TrackFX_GetNamedConfigParm with container_count and similar logic. In REAPER v7.06+, you can use the much more convenient method to navigate hierarchies, see TrackFX_GetNamedConfigParm with parent_container and container_item.X.
         </description>
@@ -29028,6 +29098,35 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Blink_GetAudioBufferTimingInfo</slug>
+        <title>Blink_GetAudioBufferTimingInfo(Blink)</title>
+        <functioncall prog_lang="cpp">void Blink_GetAudioBufferTimingInfo(int* lenOut, double* srateOut, double* timeOut)/functioncall>
+        <functioncall prog_lang="eel">Blink_GetAudioBufferTimingInfo(int &len, &srate, &time)/functioncall>
+        <functioncall prog_lang="lua">integer len, number srate, number time = reaper.Blink_GetAudioBufferTimingInfo()</functioncall>
+        <functioncall prog_lang="python">(Int lenOut, Float srateOut, Float timeOut) = Blink_GetAudioBufferTimingInfo(lenOut, srateOut, timeOut)/functioncall>
+        <requires>
+            Reaper=6.23
+            ReaBlink=0.5.6
+        </requires>
+        <description>
+          Get audio buffer timing information. This is the length (size) of audio buffer in samples, sample rate and 'latest audio buffer switch wall clock time' in seconds.
+        </description>
+        <retvals>
+            integer len - 
+            number srate - 
+            number time - 
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaBlink
+        </chapter_context>
+        <tags>reablink, ableton live</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Blink_GetBeatAtTime</slug>
         <title>Blink_GetBeatAtTime(Blink)</title>
         <functioncall prog_lang="cpp">double Blink_GetBeatAtTime(double time, double quantum)</functioncall>
@@ -29039,7 +29138,6 @@
             ReaBlink=0.4.0
         </requires>
         <description>
-
             Get session beat value corresponding to given time for given quantum.
         </description>
         <retvals>
@@ -29404,6 +29502,33 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Blink_GetTimelineOffset</slug>
+        <title>Blink_GetTimelineOffset(Blink)</title>
+        <functioncall prog_lang="cpp">double Blink_GetTimelineOffset()</functioncall>
+        <functioncall prog_lang="eel">double Blink_GetTimelineOffset()/functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.Blink_GetTimelineOffset()</functioncall>
+        <functioncall prog_lang="python">Float Blink_GetTimelineOffset()</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaBlink=0.5.6
+        </requires>
+        <description>
+            Get timeline offset. This is the offset between REAPER timeline and Link session timeline.
+        </description>
+        <retvals>
+            number retval -
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaBlink
+        </chapter_context>
+        <tags>reablink, ableton live</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Blink_GetVersion</slug>
         <title>Blink_GetVersion(Blink)</title>
         <functioncall prog_lang="cpp">double Blink_GetVersion()</functioncall>
@@ -29531,7 +29656,7 @@
             ReaBlink=0.4.4
         </requires>
         <description>
-            Captures REAPER Transport commands and 'Tempo: Increase/Decrease current project tempo by 01 BPM' commands and broadcasts them into Link session. When used with Master or Puppet mode enabled, provides better integration between REAPER and Link session transport and tempos.
+            Captures REAPER Transport commands and 'Tempo: Increase/Decrease current project tempo by' commands and broadcasts them into Link session. When used with Master or Puppet mode enabled, provides better integration between REAPER and Link session transport and tempos.
         </description>
         <parameters>
             boolean enable -
@@ -29563,6 +29688,33 @@
         </description>
         <parameters>
             boolean enable -
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaBlink
+        </chapter_context>
+        <tags>reablink, ableton live</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Blink_SetLaunchOffset</slug>
+        <title>Blink_SetLaunchOffset(Blink)</title>
+        <functioncall prog_lang="cpp">void Blink_SetLaunchOffset(double offset)</functioncall>
+        <functioncall prog_lang="eel">Blink_SetLaunchOffset(offset)</functioncall>
+        <functioncall prog_lang="lua">reaper.Blink_SetLaunchOffset(number offset)</functioncall>
+        <functioncall prog_lang="python">Blink_SetLaunchOffset(Float offset)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaBlink=0.5.6
+        </requires>
+        <description>
+            Set launch offset. This is used to compensate for possible constant REAPER transport launch delay, if such exists.
+        </description>
+        <parameters>
+            number offset -
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -29779,7 +29931,7 @@
             ReaBlink=0.4.0
         </requires>
         <description>
-            Set tempo to given bpm value, taking effect at given time.
+            Set tempo to given bpm value, taking effect (heard from speakers)at given wall clock time.
         </description>
         <parameters>
             number bpm - 
@@ -29972,6 +30124,47 @@
         </chapter_context>
         <tags>sws, helperfunctions, clipboard, get, faststring, big</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CF_SendActionShortcut</slug>
+        <title>CF_SendActionShortcut</title>
+        <functioncall prog_lang="cpp">bool CF_SendActionShortcut(void* hwnd, int section, int key, int* modifiersInOptional)</functioncall>
+        <functioncall prog_lang="eel">bool CF_SendActionShortcut(void* hwnd, int section, int key, optional int modifiersIn)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.CF_SendActionShortcut(identifier hwnd, integer section, integer key, optional integer modifiersIn)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, void hwnd, Int section, Int key, Int modifiersInOptional) = CF_SendActionShortcut(hwnd, section, key, modifiersInOptional)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.14.0.1
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Run in the specified window the action command ID associated with the shortcut key in the given section. See CF_EnumerateActions for common section IDs.
+
+            Keys are [Windows virtual key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes). &0x8000 for an extended key (eg. Numpad Enter = VK_RETURN & 0x8000).
+            Modifier values: nil = read from keyboard, 0 = no modifier, &4 = Control (Cmd on macOS), &8 = Shift, &16 = Alt, &32 = Super
+            
+            See JS_VKeys_GetState to get the key-code currently typed in.
+        </description>
+        <parameters>
+            identifier hwnd - the window, to which you want to send the action-shortcut
+            integer section - the section of the shortcut
+            integer key - the key-code to send 
+            optional integer modifiersIn - the modifiers, see description for more details
+        </parameters>
+        <linked_to desc="see also:">
+            JS:JS_VKeys_GetState
+                   gets the typed keyboard-key
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Actions
+        </chapter_context>
+        <tags>sws, helperfunctions, clipboard, put, set</tags>
+        <changelog>
+          SWS 2.14.0.1 - added to sws
         </changelog>
     </US_DocBloc>
 
@@ -31064,6 +31257,60 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_GetDoubleConfigVarEx</slug>
+        <title>SNM_GetDoubleConfigVarEx</title>
+        <functioncall prog_lang="cpp">double SNM_GetDoubleConfigVarEx(ReaProject* proj, const char* varname, double errvalue)</functioncall>
+        <functioncall prog_lang="eel">double SNM_GetDoubleConfigVarEx(ReaProject proj, "varname", errvalue)</functioncall>
+        <functioncall prog_lang="lua">number retval = reaper.SNM_GetDoubleConfigVarEx(ReaProject proj, string varname, number errvalue)</functioncall>
+        <functioncall prog_lang="python">Boolean SNM_SetDoubleConfigVarEx(ReaProject proj, String varname, Float newvalue)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            [S&M] Returns a floating-point preference (look in project prefs first, then in general prefs). Returns errvalue if failed (e.g. varname not found).
+
+            The settings can be from the Preferences, Project settings and Render-dialog, as well as numerous other settings, as e.g. set in the context menu of the transport-area.
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+
+            For project-config-variables: The project-parameter allows you to choose, from which project you want to get the config-variable.
+
+            see <a ="Reaper_Config_Variables.html">Reaper Config Variables</a> for valid config-vars
+        </description>
+        <retvals>
+            number retval - the returned number/doublefloat-value of varname
+        </retvals>
+        <parameters>
+            ReaProject proj - the project, from which you want to get the config-variable-value
+            string varname - the name of the config-variable to be read; not case sensitive
+            number errvalue - the errorvalue that will be returned, if varname isn't a valid one
+        </parameters>
+        <linked_to desc="see also:">
+            SWS:SNM_GetIntConfigVar
+                   gets value of integer-config variables
+            SWS:SNM_SetIntConfigVar
+                   sets value of integer-config variables
+            SWS:SNM_SetDoubleConfigVar
+                   sets value of double-float-config variables
+            SWS:get_config_var_string
+                   gets value of string-config variables
+            SWS:SNM_SetStringConfigVar
+                   sets value of string-config variables
+            www:Reaper_Config_Variables.html
+                a list of config-variables as used in Reaper
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, get, internal</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_GetFastString</slug>
         <title>SNM_GetFastString</title>
         <functioncall prog_lang="cpp">const char* SNM_GetFastString(WDL_FastString* str)</functioncall>
@@ -31177,6 +31424,60 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_GetIntConfigVarEx</slug>
+        <title>SNM_GetIntConfigVarEx</title>
+        <functioncall prog_lang="cpp">int SNM_GetIntConfigVarEx(ReaProject* proj, const char* varname, int errvalue)</functioncall>
+        <functioncall prog_lang="eel">int SNM_GetIntConfigVarEx(ReaProject proj, "varname", int errvalue)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.SNM_GetIntConfigVarEx(ReaProject proj, string varname, integer errvalue)</functioncall>
+        <functioncall prog_lang="python">Int SNM_GetIntConfigVarEx(ReaProject proj, String varname, Int errvalue)</functioncall>
+        <requires>
+            Reaper=5.80
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            [S&M] Returns an integer preference (look in project prefs first, then in general prefs). Returns errvalue if failed (e.g. varname not found).
+
+            The settings can be from the Preferences, Project settings and Render-dialog, as well as numerous other settings, as e.g. set in the context menu of the transport-area.
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+            
+            For project-config-variables: The project-parameter allows you to choose, from which project you want to get the config-variable.
+
+            see <a href="Reaper_Config_Variables.html">Reaper Config Variables</a> for valid config-vars
+        </description>
+        <retvals>
+            integer retval - the returned integer-value of varname
+        </retvals>
+        <parameters>
+            string varname - the name of the config-variable to be read; not case sensitive
+            integer errvalue - the errorvalue that will be returned, if varname isn't a valid one
+        </parameters>
+        <linked_to desc="see also:">
+            SWS:SNM_SetIntConfigVar
+                   sets value of integer-config variables
+            SWS:SNM_GetDoubleConfigVar
+                   gets value of double-float-config variables
+            SWS:SNM_SetDoubleConfigVar
+                   sets value of double-float-config variables
+            SWS:get_config_var_string
+                   gets value of string-config variables
+            SWS:SNM_SetStringConfigVar
+                   sets value of string-config variables
+            www:Reaper_Config_Variables.html
+                a list of config-variables as used in Reaper
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, get, internal</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to sws
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_GetLongConfigVar</slug>
         <title>SNM_GetLongConfigVar</title>
         <functioncall prog_lang="cpp">bool SNM_GetLongConfigVar(const char* varname, int* highOut, int* lowOut)</functioncall>
@@ -31208,6 +31509,43 @@
         </chapter_context>
         <tags>sws, reaper, project, config, preferences, variables, get, internal</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_GetLongConfigVarEx</slug>
+        <title>SNM_GetLongConfigVarEx</title>
+        <functioncall prog_lang="cpp">bool SNM_GetLongConfigVarEx(ReaProject* proj, const char* varname, int* highOut, int* lowOut)</functioncall>
+        <functioncall prog_lang="eel">bool SNM_GetLongConfigVarEx(ReaProject proj, "varname", int &high, int &low)</functioncall>
+        <functioncall prog_lang="lua">boolean retval, integer high, integer low = reaper.SNM_GetLongConfigVarEx(ReaProject proj, string varname)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, ReaProject proj, String varname, Int highOut, Int lowOut) = SNM_GetLongConfigVarEx(proj, varname, highOut, lowOut)</functioncall>
+        <requires>
+            Reaper=5.80
+            SWS=2.14.0.0
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            \[S&M\] Reads a 64-bit integer preference split in two 32-bit integers (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+
+            see [Reaper Config Variables](Reaper_Config_Variables.html) for valid config-vars
+        </description>
+        <retvals>
+            boolean retval - true, varname was found; false, varname wasn't found
+            integer high - the high-32bits of the value
+            integer low - the low-32bits of the value
+        </retvals>
+        <parameters>
+            ReaProject proj - the project, whose project config-variables you want to get
+            string varname - the name of the config-variable to be read; not case sensitive
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, get, internal</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to sws
         </changelog>
     </US_DocBloc>
 
@@ -31426,8 +31764,7 @@
             SWS=2.10.0.1
         </requires>
         <description prog_lang="*">
-            [S&M] Deprecated, see TakeFX_/TrackFX_ CopyToTrack/Take, TrackFX/TakeFX _Delete (v5.95pre2+). Move or removes a track FX. Returns true if tr has been updated.
-            fxId: fx index in chain or -1 for the selected fx. what: 0 to remove, -1 to move fx up in chain, 1 to move fx down in chain.
+            [S&amp;M] Deprecated, see TrackFX_{CopyToTrack,Delete} (v5.95+). Move or removes a track FX. Returns true if tr has been updated.
         </description>
         <deprecated since_when="SWS 2.10.0.1" alternative="TakeFX_/TrackFX_ CopyToTrack/Take, TrackFX/TakeFX _Delete(available since at least Reaper 5.96)"/>
         <retvals>
@@ -31631,6 +31968,60 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_SetDoubleConfigVarEx</slug>
+        <title>SNM_SetDoubleConfigVarEx</title>
+        <functioncall prog_lang="cpp">bool SNM_SetDoubleConfigVarEx(ReaProject* proj, const char* varname, double newvalue)</functioncall>
+        <functioncall prog_lang="eel">bool SNM_SetDoubleConfigVarEx(ReaProject proj, "varname", newvalue)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.SNM_SetDoubleConfigVarEx(ReaProject proj, string varname, number newvalue)</functioncall>
+        <functioncall prog_lang="python">Boolean SNM_SetDoubleConfigVarEx(ReaProject proj, String varname, Float newvalue)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            [S&M] Returns a floating-point preference (look in project prefs first, then in general prefs). Returns errvalue if failed (e.g. varname not found).
+
+            The settings can be from the Preferences, Project settings and Render-dialog, as well as numerous other settings, as e.g. set in the context menu of the transport-area.
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+
+            For project-config-variables: The project-parameter allows you to choose, into which project you want to set the config-variable.
+
+            see <a ="Reaper_Config_Variables.html">Reaper Config Variables</a> for valid config-vars
+        </description>
+        <retvals>
+            number retval - the returned number/doublefloat-value of varname
+        </retvals>
+        <parameters>
+            string varname - the name of the config-variable to be read; not case sensitive
+            number errvalue - the errorvalue that will be returned, if varname isn't a valid one
+        </parameters>
+        <linked_to desc="see also:">
+            SWS:SNM_GetIntConfigVar
+                   gets value of integer-config variables
+            SWS:SNM_SetIntConfigVar
+                   sets value of integer-config variables
+            SWS:SNM_SetDoubleConfigVar
+                   sets value of double-float-config variables
+            SWS:get_config_var_string
+                   gets value of string-config variables
+            SWS:SNM_SetStringConfigVar
+                   sets value of string-config variables
+            www:Reaper_Config_Variables.html
+                a list of config-variables as used in Reaper
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, get, internal</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_SetFastString</slug>
         <title>SNM_SetFastString</title>
         <functioncall prog_lang="cpp">WDL_FastString* SNM_SetFastString(WDL_FastString* str, const char* newstr)</functioncall>
@@ -31714,6 +32105,62 @@
     </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_SetIntConfigVarEx</slug>
+        <title>SNM_SetIntConfigVarEx</title>
+        <functioncall prog_lang="cpp">bool SNM_SetIntConfigVarEx(ReaProject* proj, const char* varname, int newvalue)</functioncall>
+        <functioncall prog_lang="eel">bool SNM_SetIntConfigVarEx(ReaProject proj, "varname", int newvalue)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.SNM_SetIntConfigVarEx(ReaProject proj, string varname, integer newvalue)</functioncall>
+        <functioncall prog_lang="python">Boolean SNM_SetIntConfigVarEx(ReaProject proj, String varname, Int newvalue)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            [S&M] Sets an integer preference (look in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+            The changed settings are usually only changed within the running Reaper, but not stored in the config-files, so you need to do it manually or they get lost after Reaper is closed!
+
+            For project-config-variables: The project-parameter allows you to choose, into which project you want to set the config-variable.
+
+            see <a href="Reaper_Config_Variables.html">Reaper Config Variables</a> for valid config-vars
+        </description>
+        <retvals>
+            boolean retval - true, if setting was successful, false if not
+        </retvals>
+        <parameters>
+            ReaProject proj - the project, whose config-variable-values you want to set
+            string varname - the name of the config-variable to be read; not case sensitive
+            integer newvalue - the newly set value for varname
+        </parameters>
+        <linked_to desc="see also:">
+            SWS:SNM_GetIntConfigVar
+                   gets value of integer-config variables
+            SWS:SNM_GetDoubleConfigVar
+                   gets value of double-float-config variables
+            SWS:SNM_SetDoubleConfigVar
+                   sets value of double-float-config variables
+            SWS:get_config_var_string
+                   gets value of string-config variables
+            SWS:SNM_SetStringConfigVar
+                   sets value of string-config variables
+            www:Reaper_Config_Variables.html
+                a list of config-variables as used in Reaper
+        </linked_to>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, set, internal</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to sws
+        </changelog>
+    </US_DocBloc>
+
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_SetLongConfigVar</slug>
         <title>SNM_SetLongConfigVar</title>
         <functioncall prog_lang="cpp">bool SNM_SetLongConfigVar(const char* varname, int newHighValue, int newLowValue)</functioncall>
@@ -31750,6 +32197,48 @@
         <changelog>
         </changelog>
     </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>SNM_SetLongConfigVarEx</slug>
+        <title>SNM_SetLongConfigVarEx</title>
+        <functioncall prog_lang="cpp">bool SNM_SetLongConfigVarEx(ReaProject* proj, const char* varname, int newHighValue, int newLowValue)</functioncall>
+        <functioncall prog_lang="eel">bool SNM_SetLongConfigVarEx(ReaProject proj, "varname", int newHighValue, int newLowValue)</functioncall>
+        <functioncall prog_lang="lua">boolean reaper.SNM_SetLongConfigVarEx(ReaProject proj, string varname, integer newHighValue, integer newLowValue)</functioncall>
+        <functioncall prog_lang="python">Boolean SNM_SetLongConfigVarEx(ReaProject proj, String varname, Int newHighValue, Int newLowValue)</functioncall>
+        <requires>
+            Reaper=5.62
+            SWS=2.14.0.0
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            \[S&M\] Sets a 64-bit integer preference from two 32-bit integers (looks in project prefs first, then in general prefs). Returns false if failed (e.g. varname not found).
+
+            Some variables are bitfields, where each bit represents e.g a checkbox in the preferences.
+            The changed settings are usually only changed within the running Reaper, but not stored in the config-files, so you need to do it manually or they get lost after Reaper is closed!
+
+            For project-config-variables: The project-parameter allows you to choose, into which project you want to set the config-variable.
+
+            see [Reaper Config Variables](Reaper_Config_Variables.html) for valid config-vars
+        </description>
+        <retvals>
+            boolean retval - true, if setting was successful, false if not
+        </retvals>
+        <parameters>
+            ReaProject proj - the project, whose config-variable-value you want to set
+            string varname - the name of the config-variable to be read; not case sensitive
+            integer newHighValue - the newly set value for varname of the high-32bits
+            integer newLowValue - the newly set value for varname of the low-32bits
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Config Variables
+        </chapter_context>
+        <tags>sws, reaper, project, config, preferences, variables, set, internal</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>SNM_SetProjectMarker</slug>
@@ -31983,6 +32472,68 @@
         </chapter_context>
         <tags>sws, mediaitemmanagement, set, mediaitem, notes, sws</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JB_GetSWSExtraProjectNotes</slug>
+        <title>JB_GetSWSExtraProjectNotes</title>
+        <functioncall prog_lang="cpp">const char* JB_GetSWSExtraProjectNotes(ReaProject* project)</functioncall>
+        <functioncall prog_lang="eel">bool JB_GetSWSExtraProjectNotes(#retval, ReaProject project)</functioncall>
+        <functioncall prog_lang="lua">string extra_project_notes = reaper.JB_GetSWSExtraProjectNotes(ReaProject project)</functioncall>
+        <functioncall prog_lang="python">String JB_GetSWSExtraProjectNotes(ReaProject project)</functioncall>
+        <requires>
+            Reaper=5.974
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            Gets the extra notes, as set in the menu Extensions -> SWS -> Notes where you select "Extra project notes" in the drop down list.
+        </description>
+        <retvals>
+           string extra_project_notes - the extra project notes
+        </retvals>
+        <parameters>
+           ReaProject project - the project, whose notes you want to get
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+           Project Management
+           Project States
+        </chapter_context>
+        <tags>js-extension</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to sws
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en">
+        <slug>JB_SetSWSExtraProjectNotes</slug>
+        <title>JB_SetSWSExtraProjectNotes</title>
+        <functioncall prog_lang="cpp">void JB_SetSWSExtraProjectNotes(ReaProject* project, const char* extra_project_notes)</functioncall>
+        <functioncall prog_lang="eel">JB_SetSWSExtraProjectNotes(ReaProject project, "extra_project_notes")</functioncall>
+        <functioncall prog_lang="lua">reaper.JB_SetSWSExtraProjectNotes(ReaProject project, string extra_project_notes)</functioncall>
+        <functioncall prog_lang="python">JB_SetSWSExtraProjectNotes(ReaProject project, String extra_project_notes)</functioncall>
+        <requires>
+            Reaper=5.974
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            Sets the extra notes, as set in the menu Extensions -> SWS -> Notes where you select "Extra project notes" in the drop down list.
+        </description>
+        <parameters>
+           ReaProject project - the project, whose notes you want to get
+           string extra_project_notes - the extra project notes
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+           Project Management
+           Project States
+        </chapter_context>
+        <tags>js-extension</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to sws
         </changelog>
     </US_DocBloc>
 
@@ -37402,9 +37953,9 @@
             JS=0.963
         </requires>
         <description indent="default" markup_type="markdown" markup_version="1.0.1" indent="default">
-            Deprecated - use [GetViewportFromRect](#GetViewportFromRect) instead.
+            Deprecated - use [JS_Window_GetViewportFromRect](#JS_Window_GetViewportFromRect) instead.
         </description>
-        <deprecated since_when="JS 0.963" alternative="GetViewportFromRect(available since at least JS 0.980)"/>
+        <deprecated since_when="JS 0.963" alternative="JS_Window_GetViewportFromRect(available since at least JS 0.980)"/>
         <retvals>
             integer left - 
             integer top - 
@@ -39372,20 +39923,17 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>Llm_Do</slug>
         <title>Llm_Do</title>
-        <functioncall prog_lang="cpp">void Llm_Do(int* paramInOptional)</functioncall>
-        <functioncall prog_lang="eel">extension_api("Llm_Do", optional int paramIn)</functioncall>
-        <functioncall prog_lang="lua">reaper.Llm_Do(optional integer paramIn)</functioncall>
-        <functioncall prog_lang="python">Llm_Do(int* paramInOptional)</functioncall>
+        <functioncall prog_lang="cpp">void Llm_Do()</functioncall>
+        <functioncall prog_lang="eel">Llm_Do() </functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_Do()</functioncall>
+        <functioncall prog_lang="python">Llm_Do()</functioncall>
         <requires>
             Reaper=6.23
-            ReaLlm=0.4.1
+            ReaLlm=0.7.0
         </requires>
         <description>            
-            Called with parameter value 1 executes one ReaLlm cycle. E.g. for running ReaLlm on custom timer, or deferred. 0 or nothing performs shutdown. Disarming/disabling all monitored inputs and calling with parameter value 1 equals to shutdown.
-        </description>        
-        <parameters>
-            optional integer paramIn -
-        </parameters>                
+            Do. Call this function to run one ReaLlm cycle. Use this function to run ReaLlm on arbitrary time intervals e.g. from a deferred script.
+        </description>                     
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
@@ -39393,37 +39941,38 @@
         </chapter_context>
         <tags>ReaLlm</tags>
         <changelog>
+          ReaLlm 0.7.0 - simplified api
           ReaLlm 0.3.0 - added as new function
         </changelog>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>Llm_Get</slug>
-        <title>Llm_Get</title>
-        <functioncall prog_lang="cpp">void Llm_Get(const char* parmname, char* bufOutNeedBig, int bufOutNeedBig_sz, MediaTrack* trInOptional)</functioncall>
-        <functioncall prog_lang="eel">extension_api("Llm_Get", "parmname", #buf, MediaTrack trIn)</functioncall>
-        <functioncall prog_lang="lua">string buf = reaper.Llm_Get(string parmname, string buf, MediaTrack trIn)</functioncall>
-        <functioncall prog_lang="python">void void = Llm_Get(const char* parmname, char* bufOutNeedBig, int bufOutNeedBig_sz, MediaTrack* trInOptional)</functioncall>
+        <slug>Llm_GetPaths</slug>
+        <title>Llm_GetPaths</title>
+        <functioncall prog_lang="cpp">void Llm_GetPaths(bool includeFx, MediaTrack* startInOptional, MediaTrack* endInOptional, char* pathStringOut, int pathStringOut_sz)</functioncall>
+        <functioncall prog_lang="eel">Llm_GetPaths(bool includeFx, MediaTrack startIn, MediaTrack endIn, #pathString) </functioncall>
+        <functioncall prog_lang="lua">string pathString = reaper.Llm_GetPaths(boolean includeFx, MediaTrack startIn, MediaTrack endIn)</functioncall>
+        <functioncall prog_lang="python">(Boolean includeFx, MediaTrack startInOptional, MediaTrack endInOptional, String pathStringOut, Int pathStringOut_sz) = Llm_GetPaths(includeFx, startInOptional, endInOptional, pathStringOut, pathStringOut_sz)</functioncall>
         <requires>
             Reaper=6.23
-            ReaLlm=0.4.1
+            ReaLlm=0.7.0
         </requires>
         <description>            
-            Get ReaLlm information string. Zero-based indices. Master track index -1. Optional MediaTrack* tr gets results relative to tr. Each line (newline '\n' separated) represents entry. Tracks are separated with ';'. FX are listed after ':' separated with ','.
-            GRAPH : Mixer routings as network graph in format "node;neighborhood\n" where node is track, and neighborhood is group of tracks in format "track;tr#1;tr#2...\n". Or as "parent;children\n" where first field is parent and rest are children. Or as multiply linked list where first field is node and rest are links. E.g. "7;1;-1;\n" would mean "8th track is connected to 2nd track and Master track."
-            PDCLATENCY : Latency in samples.
-            PDCLIMIT : Limit in samples.
-            REALLM or STATE : Current state of ReaLlm as approach vektors with disabled FX in format: "begin:disabled fx,...;next:fx,...;end:fx,...;\n." E.g. "3:1,2;0;-1:0\n" would be: 4th track, fx#2 and #3 disabled => 1st track, nofx disabled => Master track, fx#1 disabled.
-            SAFE : 'Safed' plugins as "track#:fx#\n" pairs.
-            VECTOR : Same as REALLM without FX information. Faster.
+            Get paths. 
+            
+            Returns a string of the form "start:fx#1.fx#2...;track:fxs;...;end:fxs" where track is the track number and fx is the fx index. 
+            
+            The string is truncated to pathStringOut_sz. 1-based indexing is used. If no MediaTrack* start is provided, all monitored input tracks are used. 
+            
+            If no MediaTrack* end is provided, all hardware output tracks are used. If includeFx is true, the fx indices are included.
         </description>        
         <retvals>
-            string buf - 
+            string pathString - 
         </retvals>        
         <parameters>
-            string parmname - 
-            string buf - 
-            MediaTrack trIn -
+            boolean includeFx - 
+            MediaTrack startIn - 
+            MediaTrack endIn -
         </parameters>                
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -39432,31 +39981,32 @@
         </chapter_context>
         <tags>ReaLlm</tags>
         <changelog>
-          ReaLlm 0.3.0 - added as new function
         </changelog>
     </US_DocBloc>
     
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-        <slug>Llm_Set</slug>
-        <title>Llm_Set</title>
-        <functioncall prog_lang="cpp">void Llm_Set(const char* parmname, const char* bufIn)</functioncall>
-        <functioncall prog_lang="eel">extension_api("Llm_Set", "parmname", "bufIn")</functioncall>
-        <functioncall prog_lang="lua">reaper.Llm_Set(string parmname, string bufIn)</functioncall>
-        <functioncall prog_lang="python">Llm_Set(const char* parmname, const char* bufIn)</functioncall>
+        <slug>Llm_GetSafed</slug>
+        <title>Llm_GetSafed</title>
+        <functioncall prog_lang="cpp">void Llm_GetSafed(char* safeStringOut, int safeStringOut_sz)</functioncall>
+        <functioncall prog_lang="eel">Llm_GetSafed(#safeString)</functioncall>
+        <functioncall prog_lang="lua">string safeString = reaper.Llm_GetSafed()</functioncall>
+        <functioncall prog_lang="python">(String safeStringOut, Int safeStringOut_sz) = Llm_GetSafed(safeStringOut, safeStringOut_sz)</functioncall>
         <requires>
             Reaper=6.23
-            ReaLlm=0.4.1
+            ReaLlm=0.7.0
         </requires>
         <description>            
-            Set ReaLlm parameters.
-            PDCLIMIT : PDC latency limit in audio blocks/buffers, e.g. "1.5".
-            MONITORINGFX : Use any non-empty string to include Monitoring FX. E.g. "true".
-            PARAMCHANGE : Instead of bypassing, changes FX parameter between val1 (low latency) and val2 (original). Use bufIn string format 'fx_name,param_index,val1,val2'.
+            Get safed. 
+            
+            Returns a string of the form "track:fx;track:fx;..." where track is the track number and fx is the fx index. 
+            
+            The string is truncated to safeStringOut_sz. 1-based indexing is used. 
+            
+            The string is followed by a | delimited list of fx names that have been set safed.
         </description>        
-        <parameters>
-            string parmname - 
-            string bufIn -
-        </parameters>                
+        <retvals>
+            string safeString - 
+        </retvals>                 
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
         <chapter_context>
@@ -39464,7 +40014,211 @@
         </chapter_context>
         <tags>ReaLlm</tags>
         <changelog>
-          ReaLlm 0.3.0 - added as new function
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_GetVersion</slug>
+        <title>Llm_GetVersion</title>
+        <functioncall prog_lang="cpp">void Llm_GetVersion(int* majorOut, int* minorOut, int* patchOut, int* buildOut, char* commitOut, int commitOut_sz)</functioncall>
+        <functioncall prog_lang="eel">Llm_GetVersion(int &major, int &minor, int &patch, int &build, #commit)</functioncall>
+        <functioncall prog_lang="lua">integer major, integer minor, integer patch, integer build, string commit = reaper.Llm_GetVersion()</functioncall>
+        <functioncall prog_lang="python">(Int majorOut, Int minorOut, Int patchOut, Int buildOut, String commitOut, Int commitOut_sz) = Llm_GetVersion(majorOut, minorOut, patchOut, buildOut, commitOut, commitOut_sz)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Get version. 
+            
+            Returns the version of the plugin as integers and the commit hash as a string. The string is truncated to commitOut_sz.
+        </description>        
+        <retvals>
+            integer major - 
+            integer minor - 
+            integer patch - 
+            integer build - 
+            string commit - 
+        </retvals>                 
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetClearSafe</slug>
+        <title>Llm_SetClearSafe</title>
+        <functioncall prog_lang="cpp">void Llm_SetClearSafe(bool clear_manually_safed_fx)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetClearSafe(bool clear_manually_safed_fx)</functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_SetClearSafe(boolean clear_manually_safed_fx)</functioncall>
+        <functioncall prog_lang="python">Llm_SetClearSafe(Boolean clear_manually_safed_fx)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set clear safe. Set clear_manually_safed_fx = true to clear manually safed fx
+        </description>        
+        <parameters>
+            boolean clear_manually_safed_fx - 
+        </parameters>                 
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetKeepPdc</slug>
+        <title>Llm_SetKeepPdc</title>
+        <functioncall prog_lang="cpp">void Llm_SetKeepPdc(bool enable)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetKeepPdc(bool enable)</functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_SetKeepPdc(boolean enable)</functioncall>
+        <functioncall prog_lang="python">Llm_SetKeepPdc(Boolean enable)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set keep pdc
+        </description>        
+        <parameters>
+            boolean enable - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetMonitoringFX</slug>
+        <title>Llm_SetMonitoringFX</title>
+        <functioncall prog_lang="cpp">void Llm_SetMonitoringFX(bool enable)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetMonitoringFX(bool enable)</functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_SetMonitoringFX(boolean enable)</functioncall>
+        <functioncall prog_lang="python">Llm_SetMonitoringFX(Boolean enable)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set to include MonitoringFX. In REAPER land this means the fx on the master track record fx chain. Indexed as fx# + 0x1000000, 0-based.
+        </description>        
+        <parameters>
+            boolean enable - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetParameterChange</slug>
+        <title>Llm_SetParameterChange</title>
+        <functioncall prog_lang="cpp">void Llm_SetParameterChange(const char* fx_name, int parameter_index, double val1, double val2)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetParameterChange("fx_name", int parameter_index, val1, val2)</functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_SetParameterChange(string fx_name, integer parameter_index, number val1, number val2)</functioncall>
+        <functioncall prog_lang="python">Llm_SetParameterChange(String fx_name, Int parameter_index, Float val1, Float val2)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set parameter change. 
+            
+            Set val1 = val2 to clear change. 
+            Set parameter_index = -666 to clear all changes. 
+            
+            Use this function to set parameter changes between values val1 and val2 for fx_name and parameter_index instead of disabling the effect. 
+            Use custom fx names to identify individual fx.
+        </description>        
+        <parameters>
+            string fx_name - 
+            integer parameter_index - 
+            number val1 - 
+            number val2 - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetPdcLimit</slug>
+        <title>Llm_SetPdcLimit</title>
+        <functioncall prog_lang="cpp">void Llm_SetPdcLimit(double pdc_factor)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetPdcLimit(pdc_factor)</functioncall>
+        <functioncall prog_lang="lua">reaper.Llm_SetPdcLimit(number pdc_factor)</functioncall>
+        <functioncall prog_lang="python">Llm_SetPdcLimit(Float pdc_factor)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set pdc limit as factor of audio buffer size.
+        </description>        
+        <parameters>
+            integer pdc_factor - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>Llm_SetSafed</slug>
+        <title>Llm_SetSafed</title>
+        <functioncall prog_lang="cpp">void Llm_SetSafed(char* fx_name, bool isSet)</functioncall>
+        <functioncall prog_lang="eel">Llm_SetSafed(#fx_name, bool isSet)</functioncall>
+        <functioncall prog_lang="lua">string fx_name = reaper.Llm_SetSafed(string fx_name, boolean isSet)</functioncall>
+        <functioncall prog_lang="python">(String fx_name, Boolean isSet) = Llm_SetSafed(fx_name, isSet)</functioncall>
+        <requires>
+            Reaper=6.23
+            ReaLlm=0.7.0
+        </requires>
+        <description>            
+            Set safed. Set isSet = true to safe fx name. Set isSet = false to unsafe fx name.
+        </description>        
+        <parameters>
+            string fx_name - 
+            boolean isSet - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            ReaLlm
+        </chapter_context>
+        <tags>ReaLlm</tags>
+        <changelog>
         </changelog>
     </US_DocBloc>
 
@@ -40054,13 +40808,13 @@
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>BR_Win32_GetWindowText</slug>
         <title>BR_Win32_GetWindowText</title>
-        <functioncall prog_lang="cpp">int BR_Win32_GetWindowText(void* hwnd, char* textOut, int textOut_sz)</functioncall>
+        <functioncall prog_lang="cpp">int BR_Win32_GetWindowText(void* hwnd, char* textOutNeedBig, int textOutNeedBig_sz)</functioncall>
         <functioncall prog_lang="eel">int extension_api("BR_Win32_GetWindowText", void* hwnd, #text)</functioncall>
         <functioncall prog_lang="lua">integer retval, string text = reaper.BR_Win32_GetWindowText(identifier hwnd)</functioncall>
-        <functioncall prog_lang="python">(Int retval, void hwnd, String textOut, Int textOut_sz) = BR_Win32_GetWindowText(hwnd, textOut, textOut_sz)</functioncall>
+        <functioncall prog_lang="python">(Int retval, void hwnd, String textOutNeedBig, Int textOutNeedBig_sz) = BR_Win32_GetWindowText(hwnd, textOutNeedBig, textOutNeedBig_sz)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.10.0.1
+            SWS=2.14.0.3
         </requires>
         <description prog_lang="*">
             [BR] Equivalent to win32 API GetWindowText().
@@ -40081,6 +40835,7 @@
         </chapter_context>
         <tags>sws</tags>
         <changelog>
+          SWS 2.14.0.3 - on CPP and Python, parameters textOut are textOutNeedBig now
         </changelog>
     </US_DocBloc>
 
@@ -41403,17 +42158,60 @@
         <changelog>
         </changelog>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CF_NormalizeUTF8</slug>
+        <title>CF_NormalizeUTF8</title>
+        <functioncall prog_lang="cpp">void CF_NormalizeUTF8(const char* input, int mode, char* normalizedOutNeedBig, int normalizedOutNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">CF_NormalizeUTF8("input", int mode, #normalized)</functioncall>
+        <functioncall prog_lang="lua">string normalized = reaper.CF_NormalizeUTF8(string input, integer mode)</functioncall>
+        <functioncall prog_lang="python">(String input, Int mode, String normalizedOutNeedBig, Int normalizedOutNeedBig_sz) = CF_NormalizeUTF8(input, mode, normalizedOutNeedBig, normalizedOutNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.14.0.2
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Apply [Unicode normalization](https://unicode.org/reports/tr15/) to the provided UTF-8 string.
+
+            Mode values:
+            - Bit 0 (composition mode):
+            * 0 = decomposition only
+            * 1 = decomposition + canonical composition
+            - Bit 1 (decomposition mode):
+            * 0 = canonical decomposition
+            * 1 = compatibility decomposition
+            
+            Warning: this function is no-op on Windows XP (the input string is returned as-is).
+        </description>
+        <retvals>
+            string normalized - the normalized string
+        </retvals>
+        <parameters>
+            integer mode - see description for more details
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Api-Helper-Functions
+            Misc
+        </chapter_context>
+        <tags>sws</tags>
+        <changelog>
+          SWS 2.14.0.2 - limited functionality under Windows XP
+          SWS 2.14.0.0 - added to SWS
+        </changelog>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>CF_PCM_Source_SetSectionInfo</slug>
         <title>CF_PCM_Source_SetSectionInfo</title>
-        <functioncall prog_lang="cpp">bool CF_PCM_Source_SetSectionInfo(PCM_source* section, PCM_source* source, double offset, double length, bool reverse)</functioncall>
-        <functioncall prog_lang="eel">bool extension_api("CF_PCM_Source_SetSectionInfo", PCM_source section, PCM_source source, offset, length, bool reverse)</functioncall>
-        <functioncall prog_lang="lua">boolean retval = reaper.CF_PCM_Source_SetSectionInfo(PCM_source section, PCM_source source, number offset, number length, boolean reverse)</functioncall>
-        <functioncall prog_lang="python">Boolean CF_PCM_Source_SetSectionInfo(PCM_source section, PCM_source source, Float offset, Float length, Boolean reverse)</functioncall>
+        <functioncall prog_lang="cpp">bool CF_PCM_Source_SetSectionInfo(PCM_source* section, PCM_source* source, double offset, double length, bool reverse, double* fadeInOptional)</functioncall>
+        <functioncall prog_lang="eel">bool CF_PCM_Source_SetSectionInfo(PCM_source section, PCM_source source, offset, length, bool reverse, optional fadeIn)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.CF_PCM_Source_SetSectionInfo(PCM_source section, PCM_source source, number offset, number length, boolean reverse, optional number fadeIn)</functioncall>
+        <functioncall prog_lang="python">(Boolean retval, PCM_source section, PCM_source source, Float offset, Float length, Boolean reverse, Float fadeInOptional) = CF_PCM_Source_SetSectionInfo(section, source, offset, length, reverse, fadeInOptional)</functioncall>
         <requires>
             Reaper=5.965
-            SWS=2.13.2.0
+            SWS=2.14.0.0
         </requires>
         <description>
             Give a section source created using PCM_Source_CreateFromType("SECTION"). Offset and length are ignored if 0. Negative length to subtract from the total length of the source.
@@ -41427,6 +42225,7 @@
             number offset - 
             number length - 
             boolean reverse - 
+            optional number fadeIn - 
         </parameters>
         <target_document>Reaper_Api_Documentation</target_document>
         <source_document>Reaper_Api_Documentation.USDocML</source_document>
@@ -41436,7 +42235,41 @@
         </chapter_context>
         <tags>sws</tags>
         <changelog>
+            SWS 2.14.0.0 - added new parameter fadeIn
             SWS 2.13.2.0 - added to SWS
+        </changelog>
+    </US_DocBloc>
+    
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CF_Preview_GetOutputTrack</slug>
+        <title>CF_Preview_GetOutputTrack</title>
+        <functioncall prog_lang="cpp">MediaTrack* CF_Preview_GetOutputTrack(CF_Preview* preview)</functioncall>
+        <functioncall prog_lang="eel">MediaTrack CF_Preview_GetOutputTrack(CF_Preview preview)</functioncall>
+        <functioncall prog_lang="lua">MediaTrack track = reaper.CF_Preview_GetOutputTrack(CF_Preview preview)</functioncall>
+        <functioncall prog_lang="python">MediaTrack CF_Preview_GetOutputTrack(CF_Preview preview)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.14.0.0
+        </requires>
+        <description>
+            
+        </description>
+        <retvals>
+            MediaTrack track - 
+        </retvals>
+        <parameters>
+            CF_Preview preview - 
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Audio Management
+            Source Management
+        </chapter_context>
+        <tags>sws</tags>
+        <changelog>
+            SWS 2.14.0.0 - added to SWS
         </changelog>
     </US_DocBloc>
 
@@ -41452,7 +42285,7 @@
             SWS=2.13.2.0
         </requires>
         <description>
-            Read peak volume for channel 0 or 1. Only available when outputting to a hardware output (not through a track).
+            Return the maximum sample value played since the last read. Refresh speed depends on buffer size.
         </description>
         <retvals>
             boolean retval - 
@@ -41490,13 +42323,13 @@
 
             B_LOOP seek to the beginning when reaching the end of the source
             B_PPITCH preserve pitch when changing playback rate
-            D_FADEINLEN lenght in seconds of playback fade in
-            D_FADEOUTLEN lenght in seconds of playback fade out
+            D_FADEINLEN length in seconds of playback fade in
+            D_FADEOUTLEN length in seconds of playback fade out
             D_LENGTH (read only) length of the source * playback rate
             D_MEASUREALIGN >0 = wait until the next bar before starting playback (note: this causes playback to silently continue when project is paused and previewing through a track)
             D_PAN playback pan
             D_PITCH pitch adjustment in semitones
-            D_PLAYRATE playback rate
+            D_PLAYRATE playback rate (0.01..100)
             D_POSITION current playback position
             D_VOLUME playback volume
             I_OUTCHAN first hardware output channel (&1024=mono, reads -1 when playing through a track, see CF_Preview_SetOutputTrack)
@@ -41677,6 +42510,32 @@
         <tags>sws</tags>
         <changelog>
             SWS 2.13.2.0 - added to SWS
+        </changelog>
+    </US_DocBloc>  
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>CF_SelectTakeFX</slug>
+        <title>CF_SelectTakeFX</title>
+        <functioncall prog_lang="cpp">bool CF_SelectTakeFX(MediaItem_Take* take, int index)</functioncall>
+        <functioncall prog_lang="eel">bool CF_SelectTakeFX(MediaItem_Take take, int index)</functioncall>
+        <functioncall prog_lang="lua">boolean retval = reaper.CF_SelectTakeFX(MediaItem_Take take, integer index)</functioncall>
+        <functioncall prog_lang="python">Boolean CF_SelectTakeFX(MediaItem_Take take, Int index)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.14.0.0
+        </requires>
+        <description>
+           Set which take effect is active in the take's FX chain. The FX chain window does not have to be open.
+        </description>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Audio Management
+            Misc
+        </chapter_context>
+        <tags>sws</tags>
+        <changelog>
+            SWS 2.14.0.0 - added to SWS
         </changelog>
     </US_DocBloc>  
   
@@ -41944,6 +42803,37 @@
         </chapter_context>
         <tags>sws</tags>
         <changelog>
+        </changelog>
+    </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>NF_GetThemeDefaultTCPHeights</slug>
+        <title>NF_GetThemeDefaultTCPHeights</title>
+        <functioncall prog_lang="cpp">void NF_GetThemeDefaultTCPHeights(int* supercollapsedOut, int* collapsedOut, int* smallOut, int* recarmOut)</functioncall>
+        <functioncall prog_lang="eel">NF_GetThemeDefaultTCPHeights(int &supercollapsed, int &collapsed, int &small, int &recarm)</functioncall>
+        <functioncall prog_lang="lua">integer supercollapsed, integer collapsed, integer small, integer recarm = reaper.NF_GetThemeDefaultTCPHeights()</functioncall>
+        <functioncall prog_lang="python">(Int supercollapsedOut, Int collapsedOut, Int smallOut, Int recarmOut) = NF_GetThemeDefaultTCPHeights(supercollapsedOut, collapsedOut, smallOut, recarmOut)</functioncall>
+        <requires>
+            Reaper=5.965
+            SWS=2.14.0.0
+        </requires>
+        <description markup_type="markdown" markup_version="1.0.1" indent="default">
+            Gets the heights for a track in tcp in miscellaneous variations.
+        </description>
+        <retvals>
+            integer supercollapsed - when supercollapsed in pixels
+            integer collapsed - when collapsed in pixels
+            integer small - when small in pixels
+            integer recarm - when recarmed in pixels
+        </retvals>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+            Theme
+        </chapter_context>
+        <tags>sws</tags>
+        <changelog>
+          SWS 2.14.0.0 - added to SWS
         </changelog>
     </US_DocBloc>
 
@@ -79601,10 +80491,10 @@ Mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>MCULive_Map</slug>
         <title>MCULive_Map</title>
-        <functioncall prog_lang="cpp">int MCULive_Map(int device, int button, int command_id, isRemap bool)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("MCULive_Map", int device, int button, int command_id, <b>unsupported</b> bool)</functioncall>
-        <functioncall prog_lang="lua">integer retval = reaper.MCULive_Map(integer device, integer button, integer command_id, unsupported bool)</functioncall>
-        <functioncall prog_lang="python">int MCULive_Map(int device, int button, int command_id, isRemap bool)</functioncall>
+        <functioncall prog_lang="cpp">int MCULive_Map(int device, int button, int command_id, bool isRemap)</functioncall>
+        <functioncall prog_lang="eel">int MCULive_Map(int device, int button, int command_id, bool isRemap)</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.MCULive_Map(integer device, integer button, integer command_id, boolean isRemap)</functioncall>
+        <functioncall prog_lang="python">int MCULive_Map(Int device, Int button, Int command_id, Boolean isRemap)</functioncall>
         <requires>
             Reaper=6.44
             ReaMCULive=0.1.5
@@ -79751,10 +80641,10 @@ Mespotine
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>MCULive_SendMIDIMessage</slug>
         <title>MCULive_SendMIDIMessage</title>
-        <functioncall prog_lang="cpp">int MCULive_SendMIDIMessage(int device, int status, int data1, int data2, const char* msgInOptional, int* msgInOptional_sz msgInOptional_sz)</functioncall>
-        <functioncall prog_lang="eel">int extension_api("MCULive_SendMIDIMessage", int device, int status, int data1, int data2, optional "msgIn", <b>unsupported</b> msgIn)</functioncall>
-        <functioncall prog_lang="lua">integer retval = reaper.MCULive_SendMIDIMessage(integer device, integer status, integer data1, integer data2, optional string msgIn, unsupported msgIn)</functioncall>
-        <functioncall prog_lang="python">int MCULive_SendMIDIMessage(int device, int status, int data1, int data2, const char* msgInOptional, int* msgInOptional_sz msgInOptional_sz)</functioncall>
+        <functioncall prog_lang="cpp">int MCULive_SendMIDIMessage(int device, int status, int data1, int data2, const char* msgInOptional, int msgInOptional_sz)</functioncall>
+        <functioncall prog_lang="eel">int MCULive_SendMIDIMessage(int device, int status, int data1, int data2, optional "msgIn")</functioncall>
+        <functioncall prog_lang="lua">integer retval = reaper.MCULive_SendMIDIMessage(integer device, integer status, integer data1, integer data2, optional string msgIn)</functioncall>
+        <functioncall prog_lang="python">Int MCULive_SendMIDIMessage(Int device, Int status, Int data1, Int data2, String msgInOptional, Int msgInOptional_sz)</functioncall>
         <requires>
             Reaper=6.44
             ReaMCULive=0.1.5
@@ -80064,6 +80954,4 @@ Mespotine
         <changelog>
         </changelog>
     </US_DocBloc>
-    
-    
 </USDocBloc>
