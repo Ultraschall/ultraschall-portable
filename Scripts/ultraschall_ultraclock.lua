@@ -987,6 +987,7 @@ function checkhover()
   
   if gfx.mouse_y > lufs_pos_y and 
      gfx.mouse_y < lufs_pos_y+lufs_pos_h and 
+     gfx.mouse_x>0 and
      gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
     add_color3=0.1
     refresh_me()
