@@ -41,6 +41,7 @@ end
 
 
 --AddMuteEnvelopePoint_IfNecessary(10, 11)
+reaper.Main_OnCommand(40289, 0)
 
 --if lol==nil then return end
 
