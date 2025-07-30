@@ -512,8 +512,8 @@ function SettingsPageSettings()
 
   x_offset = 55
 
-  block = GUI.Area:new(45, header_height + 92,730, 500,5,1,1,"section_bg")
-    table.insert(GUI.elms, block)
+  block = GUI.Area:new(45, header_height + 92, 730, 525,5,1,1,"section_bg")
+  table.insert(GUI.elms, block)
 
 
   for i = 1, section_count , 1 do

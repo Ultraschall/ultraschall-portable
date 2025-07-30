@@ -306,12 +306,10 @@ end
 -- Start Followmode-reset-backgroundscript
 --------------------------
 
-if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value" ,"ultraschall-settings.ini") == "1" then
+--cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
+cmd=reaper.NamedCommandLookup("_Ultraschall_Follow_Auto_Off")
+reaper.Main_OnCommand(cmd,0)
 
-  cmd=reaper.NamedCommandLookup("_Ultraschall_Toggle_Reset")
-  reaper.Main_OnCommand(cmd,0)
-
-end
 
 
 --------------------------
