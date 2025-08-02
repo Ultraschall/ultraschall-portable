@@ -69,6 +69,20 @@ if reaper.osara_outputMessage==nil then
   end
 end
 
+function string.utf8_sub(source_string, startoffset, endoffset)
+  -- written by CFillion for his Interactive ReaScript-Tool, available in the ReaTeam-repository(install via ReaPack)
+  -- thanks for allowing me to use it :)
+  startoffset = utf8.offset(source_string, startoffset)
+  if not startoffset then return '' end -- i is out of bounds
+
+  if endoffset and (endoffset > 0 or endoffset < -1) then
+    endoffset = utf8.offset(source_string, endoffset + 1)
+    if endoffset then endoffset = endoffset - 1 end
+  end
+
+  return string.sub(source_string, startoffset, endoffset)
+end
+
 Date_Length={0,0,0,0} -- initialize variable
 
 function setColor (r,g,b)
@@ -815,8 +829,8 @@ function drawClock()
     prevelm=string.gsub(prevelm,"Region_.-:","R:")
     nextelm=string.gsub(nextelm,"Region_.-:","R:")
 
-    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
-    WriteAlignedText(nextelm:sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
+    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:utf8_sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
+    WriteAlignedText(nextelm:utf8_sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
 
     prevtime=formattimestr(prevtime*(-1))
     nexttime=formattimestr(nexttime*(-1))

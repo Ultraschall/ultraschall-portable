@@ -68,6 +68,12 @@ function main()
         ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
       end
     end
+    if reaper.GetExtState("Ultraschall", "AutoFollowOff")=="true" then
+      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+      end
+      reaper.SetExtState("Ultraschall", "AutoFollowOff", "", false)
+    end
   end
   
   reaper.SetExtState("follow", "skip", "", false)
