@@ -23,6 +23,7 @@
 # 
 ################################################################################
 ]]
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 if reaper.GetPlayState() & 2 == 2 then -- if pause, use edit cursor position
   current_position = reaper.GetCursorPosition() 
@@ -31,7 +32,7 @@ else
 end
 
 retval, retvals_csv = reaper.GetUserInputs("Insert chapter marker", 1, "Name of this chapter marker:", "") -- User input box
-
+ultraschall.pause_follow_one_cycle()
 if retval == true then -- User pressed ok          
   markername = retvals_csv
   reaper.AddProjectMarker(0, false, current_position, 0 , markername, -1) -- Place named marker

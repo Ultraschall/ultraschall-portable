@@ -42,3 +42,5 @@ runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if n
 
 color = ultraschall.ConvertColor(110,110,220)
 reaper.AddProjectMarker2(0, false, past_position, 0, "_Past", 0, color) -- set blue past-marker
+
+ultraschall.pause_follow_one_cycle()

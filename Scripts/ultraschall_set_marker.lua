@@ -48,5 +48,6 @@ markercount=ultraschall.CountNormalMarkers_NumGap()
 
 runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 
+ultraschall.pause_follow_one_cycle()
 
 reaper.AddProjectMarker2(0, false, current_position, 0, "", markercount, 0)

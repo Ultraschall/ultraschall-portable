@@ -48,5 +48,5 @@ for i=0, num_markers-1 do
 end
 
 ultraschall.RenumerateMarkers(0, 1)
-
+ultraschall.pause_follow_one_cycle()
 reaper.Undo_EndBlock("Ultraschall: Set next planned marker to Play-/Rec-Cursor.",0)

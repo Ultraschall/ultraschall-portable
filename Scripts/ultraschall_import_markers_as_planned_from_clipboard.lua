@@ -88,6 +88,7 @@ for i=1, number_of_markerentries do
     reaper.AddProjectMarker2(0, false, green_marker_num*0.001,0, marker_table[3][i]:match("(.-)%s-$"), 0, color)
   end
 end
+ultraschall.pause_follow_one_cycle()
 
 -- renumber grey markers
 ultraschall.RenumerateMarkers(0, 1)

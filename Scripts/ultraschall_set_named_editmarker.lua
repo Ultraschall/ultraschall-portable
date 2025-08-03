@@ -56,4 +56,5 @@ if retval == true then -- User pressed ok
   color = ultraschall.ConvertColor(255,0,0) -- set color of edit markers to red
   reaper.AddProjectMarker2(0, false, current_position, 0, "_Edit: "..markername, 0, color)
   runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
+  ultraschall.pause_follow_one_cycle()
 end -- Else = user pressed cancel, so nothing to do here.

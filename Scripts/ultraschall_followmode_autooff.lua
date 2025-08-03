@@ -33,6 +33,7 @@ else
   old_envelope_points=0
 end
 old_marker_counter=ultraschall.GetMarkerUpdateCounter()
+old_start, old_ende = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
 
 function main()
   position=reaper.GetCursorPosition()
@@ -42,45 +43,62 @@ function main()
   else
     envelope_points=0
   end
+  start, ende = reaper.GetSet_ArrangeView2(0, false, 0, 0, 0, 0)
   
   if ultraschall.GetUSExternalState("ultraschall_settings_followmode_auto", "Value" ,"ultraschall-settings.ini") == "1" then
-    -- when edit-cursor moves, turn follow off
-    if old_position~=position and reaper.GetPlayState()~=0 and reaper.GetExtState("follow", "skip", "true", false)~="true" then
-      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
-        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+    if reaper.GetExtState("follow", "skip", "true", false)~="true" and reaper.GetPlayState()~=0 then
+      -- when edit-cursor moves, turn follow off
+      if old_position~=position and reaper.GetExtState("follow", "skip", "true", false)~="true" and reaper.GetPlayState()~=0 then
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
       end
-    end
-    if envelope~=old_envelope then
-      -- when selected envelope changes, turn follow off
-      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
-        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+      if envelope~=old_envelope then
+        -- when selected envelope changes, turn follow off
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
       end
-    end
-    if old_envelope_points~=envelope_points then
-      -- when envelope-points are added/deleted, turn follow off
-      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
-        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+      if old_envelope_points~=envelope_points then
+        -- when envelope-points are added/deleted, turn follow off
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
       end
-    end
-    if old_marker_counter~=ultraschall.GetMarkerUpdateCounter() then
-      -- when markers are moved/added/deleted, turn follow off
-      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
-        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+      if old_marker_counter~=ultraschall.GetMarkerUpdateCounter() then
+        -- when markers are moved/added/deleted, turn follow off
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
       end
-    end
-    if reaper.GetExtState("Ultraschall", "AutoFollowOff")=="true" then
-      if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
-        ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+      if reaper.GetExtState("Ultraschall", "AutoFollowOff")=="true" then
+        -- when auto-follow off has been triggered from the outside
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
+        reaper.SetExtState("Ultraschall", "AutoFollowOff", "", false)
       end
-      reaper.SetExtState("Ultraschall", "AutoFollowOff", "", false)
+      --[[
+      if ende-start==old_ende-old_start and (start<old_start or start>old_start+2) then
+        -- when scrolling the arrangeview(doesn't work, due to auto-scrolling when turning follow on)
+        if reaper.GetToggleCommandState(reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow"))==1 then
+          ultraschall.RunCommand("_Ultraschall_Toggle_Follow")
+        end
+        print("6")
+      end
+      --]]
     end
   end
   
   reaper.SetExtState("follow", "skip", "", false)
   old_position=position
   old_envelope=envelope
+  
   old_envelope_points=envelope_points
   old_marker_counter=ultraschall.GetMarkerUpdateCounter()
+  old_start=start
+  old_ende=ende 
+  reaper.SetExtState("follow", "skip", "", false)
   reaper.defer(main)
 end
 
