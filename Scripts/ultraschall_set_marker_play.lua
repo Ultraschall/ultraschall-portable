@@ -34,7 +34,6 @@ end
 
 markercount=ultraschall.CountNormalMarkers_NumGap()
 
+ultraschall.pause_follow_one_cycle()
 reaper.AddProjectMarker2(0, false, current_position, 0, "", markercount, 0)
-
-
 

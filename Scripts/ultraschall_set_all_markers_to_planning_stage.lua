@@ -74,7 +74,7 @@ if answer==6 then --yes
   end
 --]]
 end
-
+ultraschall.pause_follow_one_cycle()
 reaper.Undo_EndBlock("Ultraschall: Set all markers to planning stage.",0)
 
 

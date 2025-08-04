@@ -56,3 +56,5 @@ if retval == true then -- User pressed ok
 	reaper.AddProjectMarker2(0, false, current_position, 0, markername, markercount, 0)
 	runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
 end -- Else = user pressed cancel, so nothing to do here.
+
+ultraschall.pause_follow_one_cycle()

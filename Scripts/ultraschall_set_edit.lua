@@ -48,3 +48,4 @@ runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if n
 
 color = ultraschall.ConvertColor(255,0,0) -- set color of edit markers to red
 reaper.AddProjectMarker2(0, false, current_position, 0, "_Edit", 0, color) -- set red edit-marker
+ultraschall.pause_follow_one_cycle()

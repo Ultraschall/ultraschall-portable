@@ -34,3 +34,4 @@ end
 
 color = ultraschall.ConvertColor(255,0,0) -- set color of edit markers to red
 reaper.AddProjectMarker2(0, false, current_position, 0, "_Edit", 0, color) -- set red edit-marker
+ultraschall.pause_follow_one_cycle()

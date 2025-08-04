@@ -69,6 +69,20 @@ if reaper.osara_outputMessage==nil then
   end
 end
 
+function string.utf8_sub(source_string, startoffset, endoffset)
+  -- written by CFillion for his Interactive ReaScript-Tool, available in the ReaTeam-repository(install via ReaPack)
+  -- thanks for allowing me to use it :)
+  startoffset = utf8.offset(source_string, startoffset)
+  if not startoffset then return '' end -- i is out of bounds
+
+  if endoffset and (endoffset > 0 or endoffset < -1) then
+    endoffset = utf8.offset(source_string, endoffset + 1)
+    if endoffset then endoffset = endoffset - 1 end
+  end
+
+  return string.sub(source_string, startoffset, endoffset)
+end
+
 Date_Length={0,0,0,0} -- initialize variable
 
 function setColor (r,g,b)
@@ -505,13 +519,32 @@ function drawClock()
     if playstate == 1 then
       if repeat_txt~="" then txt_color=0x15729d else txt_color=0x2092c7 end
       status="PLAYING"..repeat_txt --play
-      elseif playstate == 5 then txt_color=0xf24949 status="RECORDING" --record
-      elseif playstate == 2 then
-        if repeat_txt~="" then txt_color=0xa86010 else txt_color=0xd17814 end
-        status="PAUSED"..repeat_txt --play/pause
-      elseif playstate == 6 then txt_color=0xff6b4d status="REC/PAUSED" --record/pause
-      elseif playstate == 0 then txt_color=0xeeeeee status="STOPPED" --record/pause
-      else txt_color=0xb3b3b3 status=""
+    elseif playstate == 5 then 
+      txt_color=0xf24949 status="RECORDING" --record
+    elseif playstate == 2 then
+      if repeat_txt~="" then txt_color=0xa86010 else txt_color=0xd17814 end
+      status="PAUSED"..repeat_txt --play/pause
+    elseif playstate == 6 then 
+      txt_color=0xff6b4d status="REC/PAUSED" --record/pause
+    elseif playstate == 0 then 
+      txt_color=0xeeeeee status="STOPPED" --record/pause
+    else 
+      txt_color=0xb3b3b3 status=""
+    end
+    if playstate == 1 then
+      if repeat_txt~="" then txt_color=reaper.ColorToNative(0x15, 0x72, 0x9d) else txt_color=reaper.ColorToNative(0x20, 0x92, 0xc7) end
+      status="PLAYING"..repeat_txt --play
+    elseif playstate == 5 then 
+      txt_color=reaper.ColorToNative(0xf2, 0x49, 0x49) status="RECORDING" --record
+    elseif playstate == 2 then
+      if repeat_txt~="" then txt_color=reaper.ColorToNative(0xa8, 0x60, 0x10) else txt_color=reaper.ColorToNative(0xd1, 0x78, 0x14) end
+      status="PAUSED"..repeat_txt --play/pause
+    elseif playstate == 6 then 
+      txt_color=reaper.ColorToNative(0xff, 0x6b, 0x4d) status="REC/PAUSED" --record/pause
+    elseif playstate == 0 then 
+      txt_color=reaper.ColorToNative(0xee, 0xee, 0xee) status="STOPPED" --record/pause
+    else 
+      txt_color=reaper.ColorToNative(0xb3, 0xb3, 0xb3) status=""
     end
     --A=uc_menu[5].checked
     if uc_menu[4].checked==true then 
@@ -560,13 +593,13 @@ function drawClock()
     LUFS_integral, target, dB_Gain, FX_active = ultraschall.LUFS_Metering_GetValues()
 
     if LUFS_integral > target-1 and LUFS_integral <= target+1 then -- Grün
-      date_color = 0x15ee15
+      date_color = reaper.ColorToNative(0x15, 0xee, 0x15)
     elseif LUFS_integral > target+1 and LUFS_integral <= target+2 then -- Gelb
-      date_color = 0xeeee15
+      date_color = reaper.ColorToNative(0xee, 0xee, 0x15)
     elseif LUFS_integral > target+2 then -- Rot
-      date_color = 0xee5599
+      date_color = reaper.ColorToNative(0xee, 0x55, 0x99)
     else
-      date_color = 0x2092c7 -- Blau
+      date_color = reaper.ColorToNative(0x20, 0x92, 0xc7) -- Blau
     end
   
     -- roundrect(17*retina_mod, txt_line[2].y*height+border-2, 14*retina_mod, 30*retina_mod, 5*retina_mod, 5, 1)
@@ -588,7 +621,7 @@ function drawClock()
     end
     if index==-1 or reaper.TrackFX_GetEnabled(tr, index)==false then 
       Date = "Analyze LUFS" 
-      date_color = 0x777777
+      date_color = reaper.ColorFromNative(0x77, 0x77, 0x77)
     else
       LUFS_msg=tostring(LUFS_integral).." LUFS."
     end
@@ -702,7 +735,7 @@ function drawClock()
 
 
   if active_warning_count > 0 then
-    setColor(0.95,0.15,0.15)
+    setColor(0.95,0.95,0.15)
     sc_txt_color = 0xcccccc
   else
     setColor(0.5,0.5,0.5)
@@ -749,11 +782,11 @@ function drawClock()
     start, end_loop = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
     length=end_loop-start
     if length > 0 then
-      Time_Sel0={WriteAlignedText("Time Selection",0xffbb00, clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0)} -- print date
+      Time_Sel0={WriteAlignedText("Time Selection", reaper.ColorToNative(251, 209, 255), clockfont_bold, txt_line[7].size * fsize, txt_line[7].y*height+border,0)} -- print date
       start=reaper.format_timestr_len(start, "", 0, 5):match("(.*):")
       end_loop=reaper.format_timestr_len(end_loop, "", 0, 5):match("(.*):")
       length=reaper.format_timestr_len(length, "", 0, 5):match("(.*):")
-      Time_Sel={WriteAlignedText(start.."     [".. length.."]     "..end_loop,0xffbb00, clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0)} -- print date
+      Time_Sel={WriteAlignedText(start.."     [".. length.."]     "..end_loop,reaper.ColorToNative(251, 209, 0), clockfont_bold, txt_line[8].size * fsize, txt_line[8].y*height+border,0)} -- print date
       timesel_start=format_time_for_tts(start)
       timesel_length=format_time_for_tts(length)
       timesel_end=format_time_for_tts(end_loop)
@@ -796,8 +829,8 @@ function drawClock()
     prevelm=string.gsub(prevelm,"Region_.-:","R:")
     nextelm=string.gsub(nextelm,"Region_.-:","R:")
 
-    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
-    WriteAlignedText(nextelm:sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
+    _,marker_y, _, marker_h = WriteAlignedText("  "..prevelm:utf8_sub(1,22),0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,1) -- print previous marker/region/projectstart/end
+    WriteAlignedText(nextelm:utf8_sub(1,20).."  ",0xb6b6bb, clockfont_bold, txt_line[5].size * fsize ,txt_line[5].y*height+border,2) -- print next marker/region/projectstart/end
 
     prevtime=formattimestr(prevtime*(-1))
     nexttime=formattimestr(nexttime*(-1))

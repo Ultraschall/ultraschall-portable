@@ -63,6 +63,7 @@ end
 L=CreateDateTime()
 timestamp=os.date("%Y-%m-%d; %H:%M:%S")
 --reaper.AddProjectMarker2(0, false, current_position, 0, "_Time: "..timestamp, markercount, 274877906943)
+ultraschall.pause_follow_one_cycle()
 Marker = reaper.AddProjectMarker2(0, false, current_position, 0,
 "_Time: "..CreateDateTime(),
 0, 274877906943)

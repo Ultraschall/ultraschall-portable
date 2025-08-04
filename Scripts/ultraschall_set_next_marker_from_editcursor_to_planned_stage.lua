@@ -119,4 +119,5 @@ if AA~=-1 then
   reaper.Undo_BeginBlock()
     reaper.SetProjectMarkerByIndex2(0, AA-1, false, 0.1, 0, 0, AA3, ultraschall.ConvertColor(100,255,0), 0)
   reaper.Undo_EndBlock("Set next normal marker to planned chapter", -1) -- has to be a second UNDO block!
+  ultraschall.pause_follow_one_cycle()
 end
