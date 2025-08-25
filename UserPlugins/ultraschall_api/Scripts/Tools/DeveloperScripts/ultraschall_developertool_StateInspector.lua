@@ -42,6 +42,8 @@ if Path==nil then Path=Ab:match("(.*/)") end
 
 version="2.3.1 - 1. 5. 2021"
 
+reaper.set_action_options(1)
+
 gfx.init("Ultraschall State Inspector "..version, 560, 520)
 
 -- load configvars
@@ -2478,5 +2480,16 @@ function main()
   end
 end
 
-LoadSlot(0, false)
+--old_slot=reaper.GetExtState("Ultraschall State-Inspector", "Old Slot")
+retval, old_slot = reaper.BR_Win32_GetPrivateProfileString("Ultraschall State-Inspector", "Old Slot", slotnumber, InspectorIni_File)
+old_slot=tonumber(old_slot)
+if old_slot==nil then old_slot=0 end
+LoadSlot(tonumber(old_slot), false)
 main()
+
+function atexit()
+  boolean=reaper.BR_Win32_WritePrivateProfileString("Ultraschall State-Inspector", "Old Slot", slotnumber, InspectorIni_File)
+  --reaper.SetExtState("Ultraschall State-Inspector", "Old Slot", slotnumber, true)
+end
+
+reaper.atexit(atexit)

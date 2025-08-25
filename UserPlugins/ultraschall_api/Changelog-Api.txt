@@ -1,4 +1,6 @@
 <TODO>
+   
+
     -- SPectral Edit: supports takes, but do the functions support takes too? Answer: NO, not yet...
 
     -- later releases
@@ -104,11 +106,11 @@
       TODO!!  - GetAllTakesFromMediaItem - returns an array with all takes from an item, objects as well as info_values
       TODO!!  - Envelope-StateChunk-functions
 
-		  TODO!! - preview/send midi-note through track
+      TODO!! - preview/send midi-note through track
                 - temporarily set track-input to midi-virtual midi keyboard
                 - send the midi-note via StuffMidiMessage
                 - reset input
-		
+    
 #### readded from earlier development-builds
    - Developer: SetReaScriptConsole_FontStyle - sets the style of the font in the ReaConsole
    - LiceCap: SetLiceCapExe - sets the LiceCap-executable, which shall be used by Reaper
@@ -315,9 +317,508 @@ ToDo Marker Menu:
       to see, where in Lokasenna's ui-Lib gfx.getchar is used to debug it with the new UTF8-fixes.
       
       todo: vzoom3 (double) missing in configvar-docs - vzoom2 is math.floor(vzoom3). When settin, vzoom2 and vzoom3 must be set or it can cause issues.
+      
+      TODO: LINKEDLANE for comp-areas (see zoom-ezgif.com-gif-to-mp4-converter.mp4 on how to create a comp-area and influence the LINKEDLANE-entry)
+        LINKEDLANE double start_position  double end_position  integer lane_index  unknown unknown4  unknown unknown5  double unknown6  double unknown7 
+        
+    - general: instead of math.floor() use number // 1 | 0 as this is massively faster for creating integers!
+        9.87654 // 1 | 0
+        1.23456 // 1 | 0
+        
+    - kb.ini-docs
+      - ActionCommandIDs are case-insensitive, please add this info to the docs
+
+    - add this to render-table
+    // RENDER_NORMALIZE: (&2304==256)=only normalize files that are too loud, (&2304==2048)=only normalize files that are too quiet
+    
+    &2048==0 and &256==256 - only normalize files that are too loud
+    &2048==2048 and &256==0 - only normalize files that are too quiet
+
+- RippleCut_Reverse - might be buggy with envelopes and markers and regions not moving correctly
+
+- The following code makes occasionally refocus the first ui-element(every five times clicking the weiter button):
+
+    -- enable Ultraschall-API for the script
+    dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+    -- 0. enable ReaGirl for the script
+    dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+    -- check for required version; alter the version-number if necessary
+    if reagirl.GetVersion()<1.0 then reaper.MB("Needs ReaGirl v"..(1.0).." to run", "Too old version", 2) return false end
+
+    -- 1. add the run-functions for the ui-elements
+
+    function button_func(element_id)
+      if element_id==weiter then
+        label_text=tostring(files_array[math.floor(math.random()*found_files+1)])
+        A=label_text
+        reagirl.Label_SetLabelText(label, label_text:match(".*/(.*)"))
+      elseif element_id==play then
+        reaper.ExecProcess("\"c:\\Program Files\\VideoLAN\\VLC\\vlc.exe\" \""..string.gsub(label_text, "/", "\\").."\"", -1)
+      elseif element_id==copy then
+        
+      end
+    end
+
+    -- 2. start a new gui
+    reagirl.Gui_New()
+
+    -- 3. add the ui-elements and set their attributes
+    label=reagirl.Label_Add(10, 10, "Tudel", "Loo.", false)
+    _, _, found_files, files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories("C:\\Users\\Meo\\Desktop\\trss\\2024-January")
+    label_text=tostring(files_array[math.floor(math.random()*found_files)])
+    reagirl.Label_SetLabelText(label, label_text:match(".*/(.*)"))
+
+    reagirl.NextLine()
+
+    weiter=reagirl.Button_Add(nil, nil, 0, 0, "Weiter", "weiter.", button_func)
+    play=reagirl.Button_Add(nil, nil, 0, 0, "Play", "play.", button_func)
+    copy=reagirl.Button_Add(nil, nil, 0, 0, "Copy", "copy.", button_func)
+
+    -- 4. open the gui
+    reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 355, 70, nil, nil, nil)
+
+    -- 5. a main-function that runs the gui-management-function
+    function main()
+      reagirl.Gui_Manage()
+      
+      if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+    end
+
+    main()
+		
+
+Check why that is...probably because of Label_SetLabelText somehow resetting the focused ui-element...
+
+
+Issues:
+Docs: eine Doku, wie man eine Gui so schreibt, dass man einfach mal schnell ui-elemente hinzufügen kann, ohne alles per Hand neu verschieben zu müssen und ohne Autoposition zu nutzen.
+  Prinzipiell:
+    h=100
+    Checkbox_Add(10,h)
+    h=h+10
+    Checkbox_Add(10,h)
+    h=h+10
+    Image_Add(10,h,100,100)
+    h=h+100
+    Checkbox_Add(10,h)
+  So in Etwa.
+
+To Do:
+  - add entries to global context menu(when right clicking an empty area), which currently only has dock and close states
+  - Render Presets docs: Adjust mono files by an additional -3db +3db not documented yet, due to a bug in Reaper, which produces inconsistent values when toggling the checkbox
+ 
 </TODO>
 
 ## Ultraschall Framework - Changelog
+
+### 5.3 - "Spice Girls - Too Much" - 12th of May 2025
+
+Has now 1904 functions, with 46 new ones
+
+**new in this release:**  
+
+  - **ReaGirl**  
+  New ui-elements toolbar buttons as well as level-meters for track and hardware inputs. 
+  
+  - **ReaGirl**  
+  You can control guis now from an external script. This should make it possible to set values in a pre-existing script without having to modify the original gui-script.
+  
+  - **ReaGirl**  
+  Inputboxes can now have text suggestions.
+  
+  - **ReaGirl**  
+  It's now possible to easily dock/undock ReaGirl-windows. It's also possible to set them, that left-clicking into an empty area allows dragging the window.
+  
+  - **Bugfixes**  
+  As usual ;)
+  
+    
+#### New features in 5.3  
+  - ReaGirl: Button\_GetEdgeStyle - gets, if the individual edges of a button are rounded or square
+  - ReaGirl: Button\_SetEdgeStyle - sets, if the individual edges of a button are rounded or square
+  - ReaGirl: Color\_GetSet - gets/sets the global colors of a specific ui-element
+  - ReaGirl: DropDownMenu\_GetSelectedMenuItem - gets the selected menu-item
+  - ReaGirl: DropDownMenu\_SetSelectedMenuItem - sets the selected menu-item
+  - ReaGirl: Ext\_SendEvent - send various events to ui-elements in a ReaGirl-gui
+  - ReaGirl: Ext\_SendEventByID - send various events to ui-elements in a ReaGirl-gui by ID
+  - ReaGirl: Ext\_Window_Close - close a ReaGirl-gui-window from the outside
+  - ReaGirl: Image\_GetDropShadow - gets a drop-shadow-state, drawn behind the image
+  - ReaGirl: Image\_SetDropShadow - sets a drop-shadow drawn behind the image
+  - ReaGirl: Inputbox\_GetTextSuggestions - gets the currently available text suggestions that the user can choose from a dropdownmenu in the inputbox
+  - ReaGirl: Inputbox\_SetTextSuggestions - sets text suggestions that the user can choose from a dropdownmenu in the inputbox
+  - ReaGirl: Meter\_Add - adds a level-meter to the gui
+  - ReaGirl: Meter\_GetLink - gets, to which the meter is currently linked to
+  - ReaGirl: Meter\_GetMode - gets the current drawing mode of a meter
+  - ReaGirl: Meter\_GetOptions - gets the current drawing options
+  - ReaGirl: Meter\_GetPeaks - gets the currently drawn peak-value for all channels
+  - ReaGirl: Meter\_GetScreenreaderOptions - gets various options for meters with screen reader
+  - ReaGirl: Meter\_LinkToTrack - links a meter to a certain track, so its levels are displayed
+  - ReaGirl: Meter\_LinkToHWInput- links a meter to a certain hardware input, so its levels are displayed
+  - ReaGirl: Meter\_SetMode - sets the drawing mode of a meter
+  - ReaGirl: Meter\_SetOptions - sets the drawing options
+  - ReaGirl: Meter\_SetPeaks - sets the peaks to be drawn to a meter
+  - ReaGirl: Meter\_SetScreenreaderOptions - sets various options for meters with screen reader
+  - ReaGirl: Meter\_Unlink - unlinks a meter from hardware inputs/tracks
+  - ReaGirl: Settings - new option for setting, if clicking into an empty area allows dragging of the window
+  - ReaGirl: ToolbarButton\_Add - adds a toolbar-button to a ReaGirl-gui
+  - ReaGirl: ToolbarButton\_GetColor - gets the background-color of a toolbar-button
+  - ReaGirl: ToolbarButton\_GetState - gets the current state of the toolbar-button
+  - ReaGirl: ToolbarButton\_GetDropShadow - gets a drop-shadow-state, drawn behind the button-image
+  - ReaGirl: ToolbarButton\_GetEdgeStyle - gets, if the individual edges of a toolbar-button are rounded or square
+  - ReaGirl: ToolbarButton\_GetRadius - gets the radius of the edges of a toolbar-button
+  - ReaGirl: ToolbarButton\_LinkToIntConfigVar - links a toolbar-button to an integer config-variable
+  - ReaGirl: ToolbarButton\_LinkToIntConfigVarBit - links a toolbar-button to an integer config-variable bit
+  - ReaGirl: ToolbarButton\_LinkToExtstate - links a toolbar-button to an extstate
+  - ReaGirl: ToolbarButton\_LinkToIniValue - links a toolbar-button to an ini-value
+  - ReaGirl: ToolbarButton\_LinkToToggleState - links a toolbar-button to a toggle-state
+  - ReaGirl: ToolbarButton\_SetColor - sets the background-color of a toolbar-button
+  - ReaGirl: ToolbarButton\_SetDropShadow - sets a drop-shadow drawn behind the button-image
+  - ReaGirl: ToolbarButton\_SetEdgeStyle - sets the individual edges of a toolbar-button to either rounded or square
+  - ReaGirl: ToolbarButton\_SetRadius - sets the radius of the edges of a toolbar-button
+  - ReaGirl: ToolbarButton\_SetState - sets the current state of a toolbar button
+  - ReaGirl: ToolbarButton\_Unlink - unlinks a toolbar-button rom a state
+  - ReaGirl: Window\_DragOnEmptyArea - sets, if clicking into an empty area allows dragging of the window
+  - ReaGirl: Window\_SetBorderless - sets, if the gui-window is borderless or regular
+  - Rendering: GetRender\_AutoReturnToDialog - gets the auto-return to this dialog when finished-checkboxstate in the Render to file-dialog
+  - Rendering: SetRender\_AutoReturnToDialog - sets the auto-return to this dialog when finished-checkbox in the Render to file-dialog
+
+#### Changes from 5.2 to 5.3  
+  - Docs: Reaper Internals - updated to Reaper 7.38, SWS 2.14.0.3, Llm 0.7.0, ReaMCULive 0.1.7, ReaBlink 0.5.6
+  - ReaGirl: General - clicking outside any ui-element resets the focus rectangle; right click into an empty area gives option to dock/close window
+  - ReaGirl: All UI-elements - except images will now highlight, when the mouse hovers above them(can be disabled in the settings)
+  - ReaGirl: Buttons - caption wasn't properly drawn when y-margin was>0 -> fixed
+  - ReaGirl: Checkboxes - linked states weren't updated, when setting checkstate via Checkbox\_SetCheckState(); when linked-state was update from externally, it was reported constantly to screen reader -> fixed
+  - ReaGirl: DropDownMenus - clicking dropdownlists wasn't shown properly, when focus rectangle was set as show always; linked states weren't updated, when setting via DropDownMenu\_SetSelectedMenuItem() -> fixed
+  - ReaGirl: InputBoxes - when screen reader support is active, Ctrl+C copies the entire text to clipboard and Ctrl+V overwrites text with text from clipboard; linked states weren't updated when setting new text via Inputbox_SetText(); could crash under rare circumstances -> fixed
+  - ReaGirl: Labels - with clickable labels, hitting enter always triggered the run-function, even when it was not focused
+  - ReaGirl: Sliders - couldn't show negative unit-values; linked states weren't updated, when setting value using Slider\_SetValue() -> fixed
+  - ReaGirl: Slider\_LinkToDoubleConfigVar - added new parameter factor
+  - ReaGirl: Slider\_LinkToExtstate - added new parameter factor
+  - ReaGirl: Slider\_LinkToIniValue - added new parameter factor
+  - ReaGirl: Slider\_LinkToIntConfigVa - added new parameter factor
+  - ReaGirl: Tooltips - the meaning_ofUIElement is now in the first line, the info Has contextmenu, draggable and Allows dropping of files is now in the second line. Looks more clean that way.
+  - Rendering: AddRenderPreset - improved error-handling when presets already exist
+  - Rendering: SetRenderPreset - didn't accept all preset-names, should be fixed now - thanks to MountWest
+  - Rendering: ApplyRenderTable\_Project - added new attributes ReturnToDialog, SaveOutfile
+  - Rendering: CreateNewRenderTable - added new attributes Preserve\_Start\_Offset, Preserve\_Metadata, ReturnToDialog, SaveOutfile
+  - Rendering: GetRender\_SaveRenderStats - added combined/per rendered file-options; didn't return correct values when render to file-dialog was closed -> fixed
+  - Rendering: GetRenderTable\_Project - added new attributes Preserve\_Start\_Offset, Preserve\_Metadata, ReturnToDialog, SaveOutfile
+  - Rendering: GetRenderTable\_ProjectDefaults - added new attributes ReturnToDialog, SaveOutfile
+  - Rendering: DeleteRenderPreset\_Bounds - didn't accept all preset-names, should be fixed now - thanks to MountWest
+  - Rendering: DeleteRenderPreset\_FormatOptions - didn't accept all preset-names, should be fixed now - thanks to MountWest
+  - Rendering: IsValidRenderTable - added new attributes Preserve\_Start\_Offset, Preserve\_Metadata, ReturnToDialog, SaveOutfile
+  - Rendering: SetRender\_SaveRenderStats - added combined/per rendered file-options
+
+---
+
+### 5.2 - "Warpaint - Keep it healthy" - 7th of March 2025
+
+Has now 1858 functions, with 24 new ones
+
+**new in this release:**  
+
+  - **ReaGirl**  
+  New features, including a burgermenu, a color-rectangle, a decorative rectangle, ui-elements can be made sticky(non scrollable) now, images can auto-update now if the underlying image gets altered.
+  It also features tons of bugfixes, specifically on Mac, so things are more robust now.  I also improves performances, so all experienced slowdowns should be a thing of the past.
+    
+  - **Developer Tools**  
+  A new developer-tool that shows all opened ReaGirl-window-instances including name, guid and processing time. So you can check, whether the gui performs properly. Only the actual gui-processing-time is measured, not the overall code!  
+  With the devtools who are deferred scripts, they will not open the terminate-instance-dialog anymore when running them again, but rather stop now. That way, you can toggle them on/off via shortcut/menu/toolbar-buttons.
+    
+#### New features in 5.2 
+  - Developer Tools: ReaGirl\_Monitor\_Opened\_Windows - shows all currently opened ReaGirl-window instances with name, guid and processing time
+  - ReaGirl: Burgermenu\_Add - adds a burger-menu to a gui
+  - ReaGirl: Burgermenu\_GetMenu - sets a new menu to a burgermenu
+  - ReaGirl: Burgermenu\_SetMenu - sets a new menu to a burgermenu
+  - ReaGirl: ColorRectangle\_Add - adds a color-rectangle, optionally opening a color-selector-dialog when clicking item
+  - ReaGirl: ColorRectangle\_GetColor - gets the current color of a color-rectangle
+  - ReaGirl: ColorRectangle_\GetEdgeStyle - sets the individual edges of the color-rectangle to square/round
+  - ReaGirl: ColorRectangle\_GetRadius - gets the current radius of the edges of a color-rectangle
+  - ReaGirl: ColorRectangle\_SetColor - sets the color of a color-rectangle
+  - ReaGirl: ColorRectangle_\GetEdgeStyle - sets the individual edges of the color-rectangle to square/round
+  - ReaGirl: ColorRectangle\_SetRadius - sets the radius of the edges of a color-rectangle
+  - ReaGirl: DecorRectangle\_Add - adds a decorative rectangle for design purposes only, which has can't be clicked or tabbed to
+  - ReaGirl: DecorRectangle\_GetColor - gets the current color of a deorative rectangle  
+  - ReaGirl: DecorRectangle\_GetEdgeStyle - gets, if the individual corners of a decorative rectangle is square or round
+  - ReaGirl: DecorRectangle\_GetRadius - gets the current radius of the edges of a deorative rectangle  
+  - ReaGirl: DecorRectangle\_SetColor - sets a new color of a deorative rectangle  
+  - ReaGirl: DecorRectangle\_SetEdgeStyle - sets, if the individual corners of a decorative rectangle is square or round
+  - ReaGirl: DecorRectangle\_SetRadius - sets the radius of the edges of a deorative rectangle  
+  - ReaGirl: Ext\_Window\_GetProcessTime - returns the processing time of a ReaGirl-window-instance in the last defer-cycle; good for measuring the resources needed for that gui-instance  
+  - ReaGirl: Menu\_GetEntryName - gets the menu-entry-name of a menu by its index  
+  - ReaGirl: Gui\_GetSetStickyOffset - gets/sets a y-offset to prevent ui-elements from getting stuck behind sticky elements
+  - ReaGirl: Image\_GetAutoUpdate - gets, if the image is automatically updated when the underlying image-file is changed/updated
+  - ReaGirl: Image\_SetAutoUpdate - sets, if the image is automatically updated when the underlying image-file is changed/updated
+  - ReaGirl: UI\_Element\_GetSetSticky - gets/sets a ui-element to a sticky position, so it will not move when scrolling
+  - ReaGirl: Window\_GetHWND - returns the window-handler of the gui-window  
+  - ReaGirl: Window\_GetScrollOffset - gets the scroll-offset of the window's gui
+
+#### Changes from 5.1 to 5.2  
+  - Developer Tools: deferred tools and ReaGirl settings - will now stop when rerunning them (requested by amagalma)
+  - Docs: Reaper Internals - updated to Reaper 7.34
+  - MediaItem Management: GetParentTrack\_MediaItem - had problems with items not having takes(note-items) -> fixed(thanks to fernsehmuell)
+  - ReaGirl: General - prevent possible crash, when not running Gui_Manage()
+  - ReaGirl: Gui\_Manage - simplified code, so it should run more smoothly now; improved performance; ui-elements on top of other ui-elements were not recognised and therefore could't be clicked -> fixed
+  - ReaGirl: Gui\_Open - fixed crash, when trying to open the window with last used position/dimension; On Mac, it didn't position the window on the same spot as on Windows and Linux -> fixed
+  - ReaGirl: Inputboxes - adjusted height, so it is now the same as other ui-elements; cursor does only blink when not typing; could crash when typing insert key -> fixed  
+  - ReaGirl: Ext\_IsAnyReaGirlGuiHovered - needs less resources, now  
+  - ReaGirl: keyboard-navigation - focus-rectangle is only shown, when the user uses the tab key to navigates; can be set to "show always" in the settings
+  - ReaGirl: Labels - backdrop wasn't properly drawn, when the backdrop wasn't visible at startup and had to be scrolled in
+  - ReaGirl: Mac - fixed scaling of window on Retina-Macs
+  - ReaGirl: mouse-cursors - when hovering above clickable/draggable areas, the mouse always changes the cursor to show you, where click/drag areas are
+  - ReaGirl: scaling - scaled too big on Retina/hiDPI-resolutions -> fixed
+  - ReaGirl: Sliders - clickarea for the slider-knob should be more precise and not move to the left of the knob
+  - ReaGirl: UI\_Element\_GetSet\_ContextMenu - run-functions get now the name of the selected menu-item as third parameter
+  - Settings: Ultraschall-API settings - the dialog wasn't working anymore -> fixed
+
+---
+
+### 5.1 - "Beach Boys - Wind Chimes" - 11th of December 2024
+
+Has now 1834 functions, with 27 new ones
+
+**new in this release:**  
+
+  - **Link UI-Elements to Extstates/Config Variables/Ini-File-Values and Toggle-states**  
+  That way, you can easily link ui-elements to these states. So if the state is updated, the ui-element gets immediately updated.
+  And if the ui-element gets altered, the linked state gets updated too.  
+  Making a settings-dialog for i.e. the most used preferences has never been easier to do.  
+    
+  - **MetaData Extraction**  
+  There's a new function that extracts the cover image of a media file for further use.
+    
+#### New features in 5.1  
+  - MetaData: Metadata\_ExtractCover - extracts the cover-image from a file
+  - ReaGirl: Checkbox\_LinkToConfigVar - link a checkbox-state to a config-variable
+  - ReaGirl: Checkbox\_LinkToExtstate - link a checkbox-state to an extstate
+  - ReaGirl: Checkbox\_LinkToIniValue - link a checkbox-state to an ini-value
+  - ReaGirl: Checkbox\_LinkToToggleState - link a checkbox-state to a toggle-state
+  - ReaGirl: Checkbox\_Unlink - remove link of an inputbox with an ini-file-entry/configvar/extstate/toggle-state
+  - ReaGirl: Color\_EnumerateNames - enumerate available html-color-names
+  - ReaGirl: Color\_GetColorValuesByName - gets the color-values by html-color-name
+  - ReaGirl: Color\_GetName - gets the colorname by r,g,b-values
+  - ReaGirl: DropDownMenu\_LinkToExtstate - links a drop-down-menu to an extstate
+  - ReaGirl: DropDownMenu\_LinkToIniValue - links a drop-down-menu to an ini-file-entry
+  - ReaGirl: DropDownMenu\_Unlink - remove link of a drop-down-menu with an ini-file-entry/extstate
+  - ReaGirl: Ext\_IsAnyReaGirlGuiHovered - returns, if the mouse is currently hovering above any ReaGirl-gui-window
+  - ReaGirl: Ext\_UI\_Element\_GetHovered - returns the ReaGirl-window and ui-element the mouse is currently hovering above
+  - ReaGirl: Ext\_Window\_GetInstances - returns the currently opened ReaGirl-window-instances
+  - ReaGirl: Gui\_GetCurrentScriptInstance - returns the current's gui-script-identifier and gui-name
+  - ReaGirl: Inputbox\_LinkToConfigVar - link an inputbox to a string config-variable
+  - ReaGirl: Inputbox\_LinkToExtstate - link an inputbox to an extstate
+  - ReaGirl: Inputbox\_LinkToIniValue - link an inputbox to an ini-file
+  - ReaGirl: Inputbox\_Unlink - remove link of an inputbox with an ini-file-entry/configvar/extstate
+  - ReaGirl: Label\_GetLabelText - gets the current text of a label  
+  - ReaGirl: Slider\_LinkToDoubleConfigVar - link a slider to a double-config-variable
+  - ReaGirl: Slider\_LinkToExtstate - link a slider to an extstate
+  - ReaGirl: Slider\_LinkToIniValue - link a slider to an ini-file-entry
+  - ReaGirl: Slider\_LinkToIntConfigVar - link a slider to an integer-config-variable
+  - ReaGirl: Slider\_Unlink - remove link of a slider with an ini-file-entry/configvar/extstate
+  - ReaGirl: Tutorials - a new tutorial to link a checkbox to a toggle-command-state
+  - ReaGirl: Window\_ResizedFunc - adds a run-function that is always executed, when the window is resized
+
+#### Changes from 5 to 5.1  
+  - ReaGirl: General - scrollbuttons/bars are now reported to screen reader when hovering above them
+  - ReaGirl: General - (re)scale other than 1 was positioning the window wrong -> fixed
+  - ReaGirl: Gui\_Manage - has new parameter that allows running the gui without having to add a dedicated defer-loop
+  - ReaGirl: screenreader-messages - could be reported twice under certain circumstances; could be slow in reporting -> fixed
+  - ReaGirl: Ext\_Window\_Focus - allows now focusing a dedicated ReaGirl-gui-instance, if multiple are opened with the same name
+  - ReaGirl: Ext\_Window\_GetState - allows now getting window dimensions of a dedicated ReaGirl-gui-instance, if multiple are opened with the same name
+  - ReaGirl: Ext\_Window\_SetState - allows now setting window dimensions of a dedicated ReaGirl-gui-instance, if multiple are opened with the same name
+  
+---
+
+### 5 - "Eels - Novocaine for the Soul" - 9th of August 2024
+
+Has now 1807 functions, with 144 new ones
+
+Note: requires at least Reaper 7.03 now!
+
+**new in this release:**  
+
+  - **ReaGirl - an accessible gui-library**  
+  One and a half years in the making, I've finally added ReaGirl, an accessible gui-library for Reaper. It allows you
+  to easily code your own guis with labels, checkboxes, buttons, drop down menus, sliders, images and tabs.  
+  Open the docs with the action "ReaGirl\_Help\_Introduction\_Concepts\_Tutorials\_Documentation.lua" to read, how to work with it.
+  
+  - **Preview MIDI-functions**  
+  You can preview now midi-notes, cc, pc and pitch in a certain track with dedicated functions for it.  
+  
+  - **Lane functions**  
+  Various functions around the new track-lane-features of Reaper.
+  
+  - **Project pos 2 Take-pos 2 Project pos**  
+  Functions to get the take-position at a certain project position and the project-position at a take position.
+  Used to be in there in an earlier version and reappear now, due to a bugfix in Reaper.
+    
+#### New features in 5  
+  - Helpers: SplitReaperString - splits a Reaper-string into its components.
+  - Item: GetItemYPos - Returns position and height of the MediaItem in a fixed item lane/free item positioning.
+  - Items: MediaItem\_GetAllVisibleTransients\_ActiveTake - returns the number and positions of visible transients of the active take of a MediaItem.
+  - Lanes: GetTrackFixedLanesState - returns Fixed Lanes-state. 
+  - Lanes: GetTrackLaneNameState - returns Lanes name-state. 
+  - Lanes: GetTrackLaneRecState - returns Lanes rec-state. 
+  - Lanes: GetTrackLaneSoloState - returns Lanes solo-state. 
+  - Lanes: ItemLane\_Count - returns the number of item-lanes in a track
+  - Lanes: ItemLane\_GetAllMediaItems - returns the MediaItems from an item-lanes in a track between start\_position and end\_position
+  - Lanes: ItemLane\_GetFromPoint - returns the MediaTrack and the item-lane at a screen-coordinate
+  - Lanes: ItemLane\_GetPositionAndHeight - returns the position and height of an item-lanes in a track
+  - Markers: RippleCut\_Regions\_Reverse - ripple cuts regions before startposition and moves them towards project-end
+  - MIDI: PreviewMidiCCInTrack - previews a midi-cc in a specific armed track
+  - MIDI: PreviewMidiNoteInTrack - previews a midi-note in a specific armed track
+  - MIDI: PreviewMidiPCInTrack - previews a midi-pc in a specific armed track
+  - MIDI: PreviewMidiPitchInTrack - previews a midi-pitch in a specific armed track
+  - ReaGirl: AtEnter - Adds a function that shall be run when someone hits Enter while the gui is opened.
+  - ReaGirl: AutoPosition\_SetNextUIElementRelativeTo - Set the auto-positioning starting point to the position of a certain ui-element.
+  - ReaGirl: Background\_GetSetColor - Gets/Sets the color of the background.
+  - ReaGirl: Base64\_Decoder - Converts a Base64-encoded string into a normal string. 
+  - ReaGirl: Base64\_Encoder - Converts a string into a Base64-Encoded string. 
+  - ReaGirl: Button\_Add - Adds a button to a gui.
+  - ReaGirl: Button\_GetDisabled - Gets a button's disabled(non clickable)-state.
+  - ReaGirl: Button\_GetRadius - Gets a button's radius.
+  - ReaGirl: Button\_SetDisabled - Sets a button as disabled(non clickable).
+  - ReaGirl: Button\_SetRadius - Sets the radius of a button.
+  - ReaGirl: Checkbox\_Add - Adds a checkbox to a gui.
+  - ReaGirl: Checkbox\_GetCheckState - Gets a checkbox's current checked-state.
+  - ReaGirl: Checkbox\_GetDisabled - Gets a checkbox's disabled(non clickable)-state.
+  - ReaGirl: Checkbox\_SetCheckState - Sets a checkbox's state of the checkbox.
+  - ReaGirl: Checkbox\_SetDisabled - Sets a checkbox as disabled(non clickable).
+  - ReaGirl: Checkbox\_SetWidth - sets width of a checkbox, which helps you with autopositioning
+  - ReaGirl: DropDownMenu\_Add - Adds a dropdown-menu to a gui.
+  - ReaGirl: DropDownMenu\_GetDimensions - Gets the width of a drop down menu.
+  - ReaGirl: DropDownMenu\_GetDisabled - Gets a dropdown-menu's disabled(non clickable)-state.
+  - ReaGirl: DropDownMenu\_GetMenuItems - Gets a dropdown-menu's menu-items and the index of the currently selected menu-item.
+  - ReaGirl: DropDownMenu\_SetDimensions - Sets the width of a dropdownmenu.
+  - ReaGirl: DropDownMenu\_SetDisabled - Sets a drop down menu as disabled(non clickable)-state.
+  - ReaGirl: DropDownMenu\_SetMenuItems - Sets a dropdown-menu's menuitems and the index of the currently selected menu-item.
+  - ReaGirl: Ext\_Tab\_SetSelected - sets a tab of specific ReaGirl-gui-window focused
+  - ReaGirl: Ext\_Window\_Focus - sets focus to an opened ReaGirl-gui-window
+  - ReaGirl: Ext\_Window\_GetState - gets the position, current dimensions and dock-state of an opened/previously opened ReaGirl-window
+  - ReaGirl: Ext\_Window\_IsOpen - gets, if a specific ReaGirl-gui-window is currently opened
+  - ReaGirl: Ext\_Window\_ResetToDefault - resets a ReaGirl-Gui-Window to its default dimensions and dockstate
+  - ReaGirl: Ext\_Window\_SetState - gets the current dimensions and dock-state of an opened/previously opened ReaGirl-window
+  - ReaGirl: GetVersion - Returns the version-number of the installed ReaGirl.
+  - ReaGirl: Gui\_AtExit - Adds a function that shall be run when the gui is closed with reagirl.Gui\_Close()
+  - ReaGirl: Gui\_Close - Closes the gui-window.
+  - ReaGirl: Gui\_ForceRefresh - Forces a refresh of the gui.
+  - ReaGirl: Gui\_GetBoundaries - Returns the current boundaries of the ui-elements. Means, from 0 to the the farthest ui-element-width/height at right/bottom edge of the gui-window.
+  - ReaGirl: Gui\_IsOpen - Checks, whether the gui-window is open.
+  - ReaGirl: Gui\_Manage - Manages the gui-window.
+  - ReaGirl: Gui\_New - Creates a new gui by removing all currently(if available) ui-elements.
+  - ReaGirl: Gui\_Open - Opens a gui-window. If x and/or y are not given, it will be opened centered.
+  - ReaGirl: Gui\_PreventCloseViaEscForOneCycle - Prevents the closing of the gui via esc-key for one defer-cycle.
+  - ReaGirl: Gui\_PreventEnterForOneCycle - Prevents the user from hitting the enter-key for one cycle, so the run-function for the enter-key is not run in this cycle.
+  - ReaGirl: Gui\_PreventScrollingForOneCycle - Prevents the scrolling of the gui via keyboard/mousewheel/swiping for this defer-cycle.
+  - ReaGirl: Image\_Add - Adds an image to the gui. This image can run a function when clicked on it. 
+  - ReaGirl: Image\_ClearToColor - Clears the image with a set r-g-b-color. It also clears the previously loaded image-filename.
+  - ReaGirl: Image\_GetDimensions - Gets the width and height of an image.
+  - ReaGirl: Image\_GetDraggable - Gets the current draggable state of an image.
+  - ReaGirl: Image\_GetImageFilename - Returns the filename of the currently loaded image.
+  - ReaGirl: Image\_KeepAspectRatio - Set if the image shall keep its aspect ratio when shown.
+  - ReaGirl: Image\_Load - Loads a new image-file of an existing image in the gui. 
+  - ReaGirl: Image\_ReloadImage\_Scaled - Realoads an image. 
+  - ReaGirl: Image\_SetDimensions - Sets the width and height of an image.
+  - ReaGirl: Image\_SetDraggable - Sets the current draggable state of an image.
+  - ReaGirl: Inputbox\_Add - Adds an inputbox to a gui.
+  - ReaGirl: Inputbox\_GetCursorOffset - Gets an inputbox's current cursor offset.
+  - ReaGirl: Inputbox\_GetDisabled - Gets an inputbox's disabled(non clickable)-state.
+  - ReaGirl: Inputbox\_GetPassword - gets an inputbox to show * instead of the text(for password entry, etc)
+  - ReaGirl: Inputbox\_GetSelectedText - Gets an inputbox's currently selected text.
+  - ReaGirl: Inputbox\_GetText - Gets an inputbox's current text.
+  - ReaGirl: Inputbox\_SetDisabled - Sets an inputbox as disabled(non clickable).
+  - ReaGirl: Inputbox\_SetEmptyText - Sets an inputbox's shown text when nothing has been input.
+  - ReaGirl: Inputbox\_SetPassword - Sets an inputbox to show * instead of the text(for password entry, etc)
+  - ReaGirl: Inputbox\_SetText - Sets a new text of an inputbox.
+  - ReaGirl: IsValidGuid - Checks, if guid is a valid guid. Can also be used for strings, that contain a guid somewhere in them(strict=false)
+  - ReaGirl: Label\_Add - Adds a label to the gui.
+  - ReaGirl: Label\_AutoBackdrop - sets a backdrop from label to underneath a specific ui-element
+  - ReaGirl: Label\_GetAlignement - Gets the alignment of a label.
+  - ReaGirl: Label\_GetDraggable - Gets the current draggable state of a label.
+  - ReaGirl: Label\_GetBackdrop - Gets the backdrop of a label.
+  - ReaGirl: Label\_GetFontSize - Gets the font-size of a label.
+  - ReaGirl: Label\_GetStyle - Gets the style of a label.
+  - ReaGirl: Label\_SetAlignment - Sets the font-size of a label.
+  - ReaGirl: Label\_SetBackdrop - Sets the backdrop of a label.
+  - ReaGirl: Label\_SetDraggable - Sets the current draggable state of a label.
+  - ReaGirl: Label\_SetFontSize - Sets the font-size of a label.
+  - ReaGirl: Label\_SetLabelText - Sets a new label text to an already existing label.
+  - ReaGirl: Label\_SetStyle - Sets the style of a label.
+  - ReaGirl: Mouse\_GetCap - Checks clickstate and mouseclick/wheel-behavior, since last time calling this function and returns their states.
+  - ReaGirl: NextLine - Starts a new line, when autopositioning ui-elements using the \_add-functions.
+  - ReaGirl: ReserveImageBuffer - Reserves a framebuffer which will not be used by ReaGirl for drawing.
+  - ReaGirl: ResizeImageKeepAspectRatio - Resizes an image, keeping its aspect-ratio. You can set a background-color for non rectangular-images.
+  - ReaGirl: ScreenReader\_SendMessage - sends a message to screen-reader users
+  - ReaGirl: Slider\_Add - Adds a slider to a gui.
+  - ReaGirl: Slider\_GetDefaultValue - Gets the current set value of the slider.
+  - ReaGirl: Slider\_GetDimensions - Gets the width of a slider.
+  - ReaGirl: Slider\_GetDisabled - Gets the current disability state of the slider.
+  - ReaGirl: Slider\_GetEndValue - Gets the current set maximum-value of the slider.
+  - ReaGirl: Slider\_GetStartValue - Gets the current set minimum-value of the slider.
+  - ReaGirl: Slider\_GetValue - Gets the current set value of the slider.
+  - ReaGirl: Slider\_ResetToDefaultValue - Resets the current set value of the slider to the default value.
+  - ReaGirl: Slider\_SetDefaultValue - Sets the default value of the slider.
+  - ReaGirl: Slider\_SetDimensions - Sets the width of a slider.
+  - ReaGirl: Slider\_SetDisabled - Sets a slider disabled.
+  - ReaGirl: Slider\_SetEndValue - Sets the maximum value of the slider.
+  - ReaGirl: Slider\_SetStartValue - Sets the minimum value of the slider.
+  - ReaGirl: Slider\_SetValue - Sets the current value of the slider.
+  - ReaGirl: Tabs\_Add - Adds a tab to a gui.
+  - ReaGirl: Tabs\_GetSelected - Gets the selected tab of a tabs-element.
+  - ReaGirl: Tabs\_SetSelected - Sets the selected tab of a tabs-element.
+  - ReaGirl: Tabs\_SetUIElementsForTab - Sets the ui-elements for a tab from a table.
+  - ReaGirl: UI\_Element\_GetFocusRect - gets the rectangle for focused ui-element. Can be used for custom ui-element, who need to control the focus-rectangle due some of their own ui-elements incorporated, like options in radio-buttons, etc.
+  - ReaGirl: UI\_Element\_GetFocused - Get the ui-element-guid, that is currently focused. 
+  - ReaGirl: UI\_Element\_GetHovered - Get the ui-element-guid, where the mouse is currently.
+  - ReaGirl: UI\_Element\_GetSetCaption - gets/sets the caption of the ui-element
+  - ReaGirl: UI\_Element\_GetSetMeaningOfUIElement - gets/sets the meaningOfUI\_Element of the ui-element, which will describe, how to use the ui-element to blind persons.
+  - ReaGirl: UI\_Element\_GetSetPosition - gets/sets the position of the ui-element
+  - ReaGirl: UI\_Element\_GetSetRunFunction - gets/sets the run\_function of the ui-element, which will be run, when the ui-element is toggled
+  - ReaGirl: UI\_Element\_GetSetVisibility - gets/sets the hidden-state of the ui-element
+  - ReaGirl: UI\_Element\_GetSet\_ContextMenu - gets/sets the context-menu and context-menu-run-function of a ui-element.
+  - ReaGirl: UI\_Element\_GetSet\_DropZoneFunction - gets/sets the dropzone-run-function of a ui-element.
+  - ReaGirl: UI\_Element\_GetType - returns the type of the ui-element
+  - ReaGirl: UI\_Element\_IsElementAtMousePosition - returns, if ui-element with element\_id is at mouse-position
+  - ReaGirl: UI\_Element\_Last\_Element\_Current\_Position - Returns the x and y position as well as width and height of the last added ui-element.
+  - ReaGirl: UI\_Element\_Remove - Removes a ui-element.
+  - ReaGirl: UI\_Element\_SetFocusRect - sets the rectangle for focused ui-element. Can be used for custom ui-element, who need to control the focus-rectangle due some of their own ui-elements incorporated, like options in radio-buttons, etc.
+  - ReaGirl: UI\_Element\_SetFocused - Set an ui-element focused. 
+  - ReaGirl: UI\_Element\_SetHiddenFromTable - Set ui-elements stored in a table to hidden or visible.
+  - ReaGirl: UI\_Elements\_OutsideWindow - returns, if any of the gui-elements are outside of the window and by how much.
+  - ReaGirl: Window\_ForceSize\_Maximum - Sets a maximum window size that will be enforced by ReaGirl.
+  - ReaGirl: Window\_ForceSize\_Minimum - Sets a minimum window size that will be enforced by ReaGirl.
+  - ReaGirl: Window\_GetCurrentScale - Gets the current scaling-factor
+  - ReaGirl: Window\_SetCurrentScale - Sets a new scaling-factor that overrides auto-scaling/scaling preferences
+  - ReaGirl: Window\_SetFocus - Sets window focus back to the ReaGirl-gui-window.
+  - Rendering: CreateRenderCFG\_RAW - Returns the render-cfg-string for the RAW-PCM-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
+  - Rendering: CreateRenderCFG\_RAW - creates a renderstring for RAW-renderformat
+  - Rendering: GetRenderCFG\_Settings\_RAW - Returns the settings stored in a render-cfg-string for RAW PCM.
+  - Rendering: GetRenderCFG\_Settings\_RAW - gets settings of a RAW-renderformat-renderstring
+  - Takes: GetProjectPosByTakeSourcePos - returns the project-position-representation of the source-position of a take. 
+  - Takes: GetTakeSourcePosByProjectPos - returns the source-position of a take at a certain project-position. Will obey time-stretch-markers, offsets, etc, as well.
+  - Takes: TakeMarker\_GetAllTakeMarkers - returns all take-markers of a MediaItem\_Take, including project-position.
+
+#### Changes from 4.9 to 5  
+  - Developer Tools: State Inspector - restores the loaded slot when reopening; ini-file doesn't get overwritten anymore after updating US_API
+  - Developer Tools: Create\_New\_Script\_With\_Dialog.lua - uses ReaGirl now to do the gui, also accessible now
+  - Docs: open-docs-actions - didn't always open the docs -> fixed
+  - Editing: RippleCut - does now a standard fadein/out-time of 10ms; didn't move regions, markers and envelopes correctly -> fixed(thnx to lennardodavinci)
+  - Editing: RippleCut\_Reverse - does now a standard fadein/out-time of 10ms; didn't move regions, markers and envelopes correctly -> fixed
+  - Envelopes: DeleteTrackEnvelopePointsBetween - inserts now envelope-points at "cut"-edges
+  - Envelopes: MoveTrackEnvelopePointsBy - didn't move first envelope-point in the envelope -> fixed
+  - Helpers: EditReaScript - allows now adding ReaGirl-basic structure to a script  
+  - ProjectManagement: GetProject\_RenderStems - added preserve startoffset and metadata-settings
+  - ProjectManagement: SetProject\_RenderStems - added preserve startoffset and metadata-settings
+  - Rendering: AddRenderPreset - added preserve startoffset and metadata-settings
+  - Rendering: ApplyRenderTable\_Project - added preserve startoffset and metadata-settings
+  - Rendering: ApplyRenderTable\_ProjectFile - added preserve startoffset and metadata-settings
+  - Rendering: CreateNewRenderTable - added preserve startoffset and metadata-settings
+  - Rendering: GetRenderPreset - added preserve startoffset and metadata-settings
+  - Rendering: GetRenderTable_ProjectDefaults - added preserve startoffset and metadata-settings
+  - Rendering: SetRenderPreset - added preserve startoffset and metadata-settings
+  - UserInterface: GetHWND\_ArrangeViewAndTimeLine - fixed possible edge-case bug that causes crashes of scripts
+  
+---
 
 ### 4.9 - "Depeche Mode - Everything Counts" - 30th of June 2023
 
@@ -359,8 +860,8 @@ Has now 1663 functions, with 13 new ones and two fewer ones(!)
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - removed from release, due a Reaper bug that might remove take-markers; will return when bug is fixed
   - PodcastMetadata: GetPodcastContributorAttributesAsJSON - fix due fix in GetSetContributor_Attributes 
   - PodcastMetadata: GetSetContributor\_Attributes - had wrong undocumented parameter in the function which is removed now; added "ctrb_role"
-  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - removed "epsd_tagline" and "epsd_author"
-  - PodcastMetadata: GetSetPodcast\_Attributes - added "podc_tagline" and "podc_feed"
+  - PodcastMetadata: GetSetPodcastEpisode\_Attributes - removed "epsd\_tagline" and "epsd\_author"
+  - PodcastMetadata: GetSetPodcast\_Attributes - added "podc\_tagline" and "podc\_feed"
   - PodcastMetadata: GetShownoteAttributesAsJSON - timestamp is now in hh:mm:ss:mss
   - PodcastMetadata: PodcastMetadata\_CreateJSON_Entry - did only do the first chapter, ignoring the rest; improved layout of JSON -> fixed
   - RazorEdit: RazorEdit\_Nudge\_Track - index didn't count properly, when envelopes had razor-edits -> fixed now
@@ -427,8 +928,9 @@ Has now 1652 functions, with 37 new ones
   - Rendering: SetRenderTable\_ProjExtState - stores a RenderTable in a projextstate
   
 #### Changes from 4.75 to 4.8  
-  - Docs: Reaper Internals - updated docs to Reaper 6.78, SWS 2.13.2.0, ReaFab 0.3.10, ReaImGui 0.8.5, ReaLlm 0.4.1 and added PeloReaper 2023.02.19
+  - Docs: Reaper Internals - updated docs to Reaper 6.78, SWS 2.13.2.0, ReaFab 0.3.10, ReaImGui 0.8.5, ReaLlm 0.4.1 and added PeloReaper 2023.02.19  
   - FXManagement: SetFXStateChunk - didn't work properly on tracks without an existing FXChain -> fixed now(thanks to tompad)
+  
 ---
 
 ### 4.75 - "Soundgarden - Black Hole Sun" - 19th of December 2022
@@ -674,8 +1176,8 @@ Has now 1590 functions, with 58 new ones
   - Navigation: GetClosestPreviousMarker - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - Navigation: GetClosestPreviousRegionEdge - didn't return the index but rather shown number instead; returns now also shown number officially -> fixed
   - ProjectManagement: GetProjectStateChunk - didn't work under certain circumstances on Linux/Mac -> fixed
-  - ProjectManagement: GetProject\_Render\_Normalize - supports now fade_in and fade_out rendering-modes
-  - ProjectManagement: SetProject\_Render\_Normalize - supports now fade_in and fade_out rendering-modes
+  - ProjectManagement: GetProject\_Render\_Normalize - supports now fade\_in and fade_out rendering-modes
+  - ProjectManagement: SetProject\_Render\_Normalize - supports now fade\_in and fade_out rendering-modes
   - Rendering: AddRenderPreset - TailMS supported now as of Reaper 6.62+; supports now FadeIn/Out and marker-rendering
   - Rendering: ApplyRenderTable\_Project - supports now marker-rendering as well as fade-in/fade-out
   - Rendering: ApplyRenderTable\_ProjectFile - supports now marker-rendering as well as fade-in/fade-out
@@ -686,7 +1188,7 @@ Has now 1590 functions, with 58 new ones
   - Rendering: CreateRenderCFG\_MPEG1\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_MPEG2\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec; corrected docs
   - Rendering: CreateRenderCFG\_QTMOVMP4\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
-  - Rendering: CreateRenderCFG\_WebMVideo - renamed to CreateRenderCFG_WebM_Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
+  - Rendering: CreateRenderCFG\_WebMVideo - renamed to CreateRenderCFG\_WebM\_Video(old functionname still available); supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
   - Rendering: CreateRenderCFG\_WMF\_Video - renamed to CreateRenderCFG\_WMF (old functionname is still available, though)
   - Rendering: GetRender\_AutoIncrementFilename - always returned true, when Render to File was closed -> fixed(thnx to aurelien)
   - Rendering: GetRenderCFG\_Settings\_AVI\_Video - supports now audio/video FMPEG-export options; supports now NONE as Audio/VideoCodec
@@ -2145,8 +2647,8 @@ Has now 1200 functions, with 54 new ones
 #### Changes from 4.1.002 to 4.1.003
    - API: Requirements - requires now JS-extension 1.215
    - API: titles will now be references to FarScape-episode-titles, until I conquered the farscape of Gui-development   
-   - Docs: GetRender_AutoIncrementFilename	- moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
-   - Docs: GetRender_EmbedMetaData	- moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
+   - Docs: GetRender_AutoIncrementFilename  - moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
+   - Docs: GetRender_EmbedMetaData  - moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
    - Docs: GetRender_EmbedStretchMarkers - moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
    - Docs: GetRender_NoSilentFiles - moved in the index to Rendering Projects -> Render Settings, where I would expect such functions
    - Docs: GetRender_OfflineOnlineMode - moved in the index to Rendering Projects -> Render Settings, where I would expect such functions

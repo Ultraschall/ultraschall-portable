@@ -1693,8 +1693,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.75
-    Reaper=6.71
+    Ultraschall=5
+    Reaper=7.16
     Lua=5.3
   </requires>
   <functioncall>integer render_stems = ultraschall.GetProject_RenderStems(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1726,6 +1726,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
     - &2048, 2nd pass rendering
     - &8192, Render stems pre-fader
     - &16384, Only render channels that are sent to parent
+    - &32768, (Preserve) Metadata-checkbox
+    - &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
     - 4096, Razor edit areas
     - 4224, Razor edit areas via master
   </retvals>
@@ -1749,7 +1751,7 @@ function ultraschall.GetProject_RenderDitherState(projectfilename_with_path, Pro
   <slug>GetProject_RenderDitherState</slug>
   <requires>
     Ultraschall=4.00
-    Reaper=6.02
+    Reaper=7.16
     Lua=5.3
   </requires>
   <functioncall>integer renderdither_state = ultraschall.GetProject_RenderDitherState(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1767,9 +1769,9 @@ function ultraschall.GetProject_RenderDitherState(projectfilename_with_path, Pro
   <retvals>
     integer renderdither_state - the state of render dithering
     - &1,   Dither Master mix
-    - &2,   Noise shaping Master mix
+    - &2,   Noise shape Master mix
     - &4,   Dither Stems
-    - &8,   Noise shaping Stems
+    - &8,   Noise shape Stems
   </retvals>
   <chapter_context>
     Project-Management
@@ -6007,8 +6009,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_RenderStems</slug>
   <requires>
-    Ultraschall=4.75
-    Reaper=6.71
+    Ultraschall=5
+    Reaper=7.16
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_RenderStems(string projectfilename_with_path, integer render_stems, optional string ProjectStateChunk)</functioncall>
@@ -6034,6 +6036,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
     - &2048, 2nd pass rendering
     - &8192, Render stems pre-fader
     - &16384, Only render channels that are sent to parent
+    - &32768, (Preserve) Metadata-checkbox
+    - &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
     - 4096, Razor edit areas
     - 4224, Razor edit areas via master
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed

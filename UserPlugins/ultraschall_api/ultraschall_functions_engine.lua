@@ -163,7 +163,7 @@ function ultraschall.GetApiVersion()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetApiVersion</slug>
   <requires>
-    Ultraschall=4.1
+    Ultraschall=5.1
     Reaper=5.40
     Lua=5.3
   </requires>
@@ -186,11 +186,11 @@ function ultraschall.GetApiVersion()
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>ultraschall_functions_engine.lua</source_document>
-  <tags>version,versionmanagement</tags>
+  <tags>version, versionmanagement</tags>
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 490, "4.9","30th of June 2023", "",  "\"Depeche Mode - Everything Counts\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 503, "5.3","12th of May 2025", "",  "\"Spice Girls - Too Much\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -372,7 +372,7 @@ function ultraschall.AddErrorMessage(functionname, parametername, errormessage, 
       
       -- let's create the new errormessage
       local context_nr=6
-      local context=ultraschall.Lua_Debug.getinfo(context_nr)
+      local context=debug.getinfo(context_nr)
       if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
       if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
       if context==nil then context_nr=context_nr-1 context=debug.getinfo(context_nr) end
@@ -958,6 +958,8 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
  
   if target==nil then 
     target=tonumber(reaper.GetExtState("ultraschall_api", "ShowLastErrorMessage_Target"))
+		if target==nil then target=1 end
+		target=target-1
   end
   
   local CountErrMessage=ultraschall.CountErrorMessages()
@@ -2529,11 +2531,11 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
   <requires>
-    Ultraschall=4.5
-    Reaper=6.10
+    Ultraschall=5.0
+    Reaper=7.03
     Lua=5.3
   </requires>
-  <functioncall>boolean retval, optional command_id, boolean created_new_script = ultraschall.EditReaScript(optional string filename, optional boolean add_ultraschall_api, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2, optional string default_script_content)</functioncall>
+  <functioncall>boolean retval, optional command_id, boolean created_new_script = ultraschall.EditReaScript(optional string filename, optional integer add_ultraschall_api_or_reagirl, optional integer add_to_actionlist_section, optional integer x_pos, optional integer y_pos, optional integer width, optional integer height, optional integer showstate, optional integer watchlist_size, optional integer watchlist_size_row1, optional integer watchlist_size_row2, optional string default_script_content)</functioncall>
   <description>
     Opens a script in Reaper's ReaScript-IDE.
     
@@ -2546,7 +2548,10 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   <parameters>
     optional string filename - the filename of the new reascript-file to create(add .lua or .py or .eel to select the language).
                              - nil, opens the last ReaScript-file you opened with this function
-    optional boolean add_ultraschall_api - true, add Ultraschall-API-call into the script(only in newly created ones!); false or nil, just open a blank script
+    optional integer add_ultraschall_api_or_reagirl - 0 or false or nil, create a blank script
+                                           1 or true, add Ultraschall-API-call into the script(only in newly created ones!)
+                                           2, add basic ReaGirl-structure into the script(only in newly crated ones!)
+                                           3, add Ultraschall-API-functioncall and ReaGirl basic structure into the script
     optional integer add_to_actionlist_section - the section, into which you want to add the script
                                                - nil, don't add, only open the script in IDE
                                                - 0, Main
@@ -2605,6 +2610,9 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   local command_id
   local created_new_script=false
   
+  if add_ultraschall_api==true then add_ultraschall_api=1 end
+  if add_ultraschall_api==false then add_ultraschall_api=0 end
+  
   if reaper.file_exists(filename)==false and ultraschall.DirectoryExists2(ultraschall.GetPath(filename))==false then
     -- if path does not exist, create filename in the scripts-folder
     local Path, Filename=ultraschall.GetPath(filename)
@@ -2614,10 +2622,35 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     -- create new file if not yet existing
     local content=default_script_content
     if content~="" then content=content.."\n" end
-    if add_ultraschall_api==true then 
-      content=content.."dofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"
-    else
-      content=content
+    if add_ultraschall_api&1==1 then 
+      content=content.."-- enable Ultraschall-API for the script\ndofile(reaper.GetResourcePath()..\"/UserPlugins/ultraschall_api.lua\")\n\n"  
+    end
+    if add_ultraschall_api&2==2 then 
+      local retval, vers = reaper.BR_Win32_GetPrivateProfileString("ReaGirl_Build", "version", "", reaper.GetResourcePath().."/UserPlugins/ultraschall_api/IniFiles/ultraschall_api.ini")
+      content=content..[[-- 0. enable ReaGirl for the script
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+-- check for required version; alter the version-number if necessary
+if reagirl.GetVersion()<]]..vers..[[ then reaper.MB("Needs ReaGirl v"..(]]..vers..[[).." to run", "Too old version", 2) return false end
+
+-- 1. add the run-functions for the ui-elements
+
+
+-- 2. start a new gui
+reagirl.Gui_New()
+
+-- 3. add the ui-elements and set their attributes
+
+
+-- 4. open the gui
+reagirl.Gui_Open("My Dialog Name", false, "Dialog Title", "A short explanation of my dialog.", 355, 225, nil, nil, nil)
+
+-- 5. a main-function that runs the gui-management-function
+function main()
+  reagirl.Gui_Manage()
+
+  if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+end
+main()]]
     end
     created_new_script=reaper.file_exists(filename)
     ultraschall.WriteValueToFile(filename, content)

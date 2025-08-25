@@ -1,0 +1,160 @@
+##Tutorial autopositioning with tabs
+
+In the last tutorial, I showed you how to use autopositioning in ReaGirl. In this one, we will enhance it by adding tabs, which differs slightly.
+You probably remember from the last tutorial, that using auto-positioning, the next ui-element is positioned relative to the previous ui-element.
+Means: after the previous ui-element or underneath it(when using reagirl.NextLine()).
+We could use the same thing using tabs, what would look like the following, which includes all the ui-elements from the
+previous tutorial but sorted into tabs, using autopositioning:
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  tab1={}
+  tab2={}
+  tab3={}
+  tab4={}
+  
+  -- let's add tabs
+  tabs_id = reagirl.Tabs_Add(10, 10, 620, 187, "Tabs", "Different options in this dialog.", {"Tab1", "Tab2", "Tab3", "Tab4"}, 1, Tab_RunFunction)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 1, tab1)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 2, tab2)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 3, tab3)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 4, tab4)
+  --]]
+  
+  -- first line of checkboxes
+  --reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+  tab1.checkbox1 = reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  tab1.checkbox2 = reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  tab1.checkbox3 = reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+  
+  -- second line of checkboxes
+  reagirl.NextLine() -- start a new line of ui-elements
+  tab2.checkbox1 = reagirl.Checkbox_Add(nil, nil, "Checkbox 4", "This is the fourth checkbox.", true, nil)
+  tab2.checkbox2 = reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  
+  -- third line with one checkbox and one button anchored to right side of the window
+  -- this line is placed 10 pixels lower to gain some distance between the lines
+  reagirl.NextLine(10) -- start a new line of ui-elements, ten pixels lower than
+  tab3.checkbox = reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  tab3.button = reagirl.Button_Add(nil, nil, 0, 0, "Store", "Store 1.", nil)
+  
+  -- fourth line with one checkbox and one button anchored to the left side of the window
+  reagirl.NextLine()
+  tab4.checkbox = reagirl.Checkbox_Add(nil, nil, "Checkbox 6", "This is the fifth checkbox.", true, nil)
+  tab4.button = reagirl.Button_Add(nil, nil, 0, 0, "Store 2", "Store 2.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.")--, 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+However, when you run it, you quickly realize, there's a problem. When clicking through the tabs, the ui-elements are positioned
+under the ui-elements from the previous tabs. So when you click through tab1 to tab4, the ui-elements wander downwards.
+This is due the fact, that they are positioned according to the last ui-element in the code and not by the tabs.
+And it would be much better, if the ui-elements would start at the top in each tab.
+For this, we add another new function, called reagirl.AutoPosition\_SetNextYToUIElement(). With this function,
+you can set, which ui-element shall be seen as the previous one, so autoposition uses this "newly set" ui-element as basis to position the next ui-element.
+
+In our element, we want to set the first checkbox of each tab right after the tab. So all we do is include 
+
+```
+reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+```
+
+into our script right before each checkbox, that shall be put at the beginning of the tab. You'll notice, that we
+put the element\_id of the tabs, "tabs\_id", as parameter. This tells autoposition "The next ui-element shall be put after tabs.
+Here's how it looks like:
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  tab1={}
+  tab2={}
+  tab3={}
+  tab4={}
+  
+  -- let's add tabs
+  tabs_id = reagirl.Tabs_Add(10, 10, 620, 187, "Tabs", "Different options in this dialog.", {"Tab1", "Tab2", "Tab3", "Tab4"}, 1, Tab_RunFunction)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 1, tab1)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 2, tab2)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 3, tab3)
+  reagirl.Tabs_SetUIElementsForTab(tabs_id, 4, tab4)
+  
+  -- first line of checkboxes
+  reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+  tab1.checkbox1 = reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  tab1.checkbox2 = reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  tab1.checkbox3 = reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+  
+  -- second line of checkboxes
+  reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+  reagirl.NextLine() -- start a new line of ui-elements
+  tab2.checkbox1 = reagirl.Checkbox_Add(nil, nil, "Checkbox 4", "This is the fourth checkbox.", true, nil)
+  tab2.checkbox2 = reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  
+  -- third line with one checkbox and one button anchored to right side of the window
+  -- this line is placed 10 pixels lower to gain some distance between the lines
+  reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+  reagirl.NextLine(10) -- start a new line of ui-elements, ten pixels lower than
+  tab3.checkbox = reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  tab3.button = reagirl.Button_Add(nil, nil, 0, 0, "Store", "Store 1.", nil)
+  
+  -- fourth line with one checkbox and one button anchored to the left side of the window
+  reagirl.AutoPosition_SetNextYToUIElement(tabs_id)
+  reagirl.NextLine()
+  tab4.checkbox = reagirl.Checkbox_Add(nil, nil, "Checkbox 6", "This is the fifth checkbox.", true, nil)
+  tab4.button = reagirl.Button_Add(nil, nil, 0, 0, "Store 2", "Store 2.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.")
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+You'll notice, that reagirl.AutoPosition\_SetNextYToUIElement() is put right before the reagirl.Checkbox\_Add()-functioncalls to tell ReaGirl to autoposition the next checkbox right after the next tab.
+And when you run it and click through the tabs, the ui-elements are now positioned at the right position: right after the tabs.
+
+One thing to notice: you could theoretically put the element\_id of any ui-element into reagirl.AutoPosition\_SetNextYToUIElement(), not just tabs.
+That way, you can autoposition in relation to any ui-element.
+Keep in mind: when using tabs, autoposition will assume that the next ui-element shall be put into the next line, so you don't need to use reagirl.NextLine() when using reagirl.AutoPosition\_SetNextYToUIElement() with tabs.
+With other ui-elements, like buttons, checkboxes, sliders, etc, the next ui-element will be placed next to the right of it. So you might need to add reagirl.NextLine() when needed.
+You'll see it when it happens and if you want to put the next ui-element underneath the one you put in reagirl.AutoPosition\_SetNextYToUIElement(), simply use reagirl.NextLine() and you're fine.
+
+And there you are. If you followed all tutorials up til this one, you know most of the concepts and possibilities in ReaGirl.
+This should give you plenty of possibilities to code guis as you need and wish.

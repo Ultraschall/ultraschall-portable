@@ -1,6 +1,6 @@
-Render-Presets-docs as of Reaper 6.71
+Render-Presets-docs as of Reaper 7.34
 
-compiled by Meo-Ada Mespotine, 7th of December 2022
+compiled by Meo-Ada Mespotine
 licensed under creative-commons cc-by-license
 
 The render-presets are stored into reaper-render.ini in the resources-folder of Reaper.
@@ -18,7 +18,7 @@ When selecting "Options and format" or "All settings":
       string rendercfg2
     >
     
-    RENDERPRESET_EXT string presetname  integer normalize_mode  number normalize_target  number brickwall_target  number fadein_length  number fadeout_length  integer fadein_shape  integer fadeout_shape
+    RENDERPRESET_EXT string presetname  integer normalize_mode  number normalize_target  number brickwall_target  number fadein_length  number fadeout_length  integer fadein_shape  integer fadeout_shape  number trim_leading_silence_threshold_peak  number trim_trailing_silence_threshold_peak  number pad_start_with_silence_ms  number pad_end_with_silence_ms
     
 When selecting "Bounds and Outputpattern filename" or "All settings":
     RENDERPRESET_OUTPUT string presetname  integer bounds_dropdownlist  number start_position  number end_position  integer source_dropdownlist_and_checkboxes  integer unknown  string outputfilename_renderpattern  integer tail_checkbox  string output_directory  integer tail_length_ms
@@ -61,6 +61,19 @@ RENDERPRESET_EXT
                                &1024, Fade-out-checkbox
                                      0, disabled
                                      1, enabled
+                               &16384, Trim leading silence-checbox
+                                     0, enabled
+                                     1, disabled
+                               &32768, Trim trailing silence-checkbox
+                                     0, enabled
+                                     1, disabled
+                               &65536, Pad start with silence-checbox
+                                     0, enabled
+                                     1, disabled
+                               &131072, Pad end with silence-checbox
+                                     0, enabled
+                                     1, disabled
+                                     
                             
     number normalize_target - the target as MKVOL-value. Use ultraschall.MKVOL2DB to convert it to dB in RENDERPRESET_EXT
 
@@ -87,6 +100,14 @@ RENDERPRESET_EXT
                               4, quartic fade-out
                               5, Cosine S-curve fade-out
                               6, Quartic S-curve fade-out
+    
+    number trim_leading_silence_threshold_peak - the threshold for the trim silence; use ultraschall.MKVOL2DB() to convert it to dB and ultraschall.DB2MKVOL() to convert db to the value needed here
+    
+    number trim_trailing_silence_threshold_peak - the threshold for the trim silence; use ultraschall.MKVOL2DB() to convert it to dB and ultraschall.DB2MKVOL() to convert db to the value needed here
+    
+    number pad_start_with_silence_ms - the time for the pad start with silence; it is in seconds here, not(!) milliseconds(even though the dialog asks for ms)
+    
+    number pad_end_with_silence_ms - the time for the pad end with silence; it is in seconds here, not(!) milliseconds(even though the dialog asks for ms)
 
 
 <RENDERPRESET    
@@ -131,6 +152,9 @@ RENDERPRESET_EXT
                                     &2048, 2nd pass render
                                     &8192, Render stems pre-fader
                                     &16384, Only render channels that are sent to parent
+                                    &32768, (Preserve) Metadata-checkbox
+                                    &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
+                                    &524288, Parallel render-checkbox
 
     string render_cfg - the render-format-settings(mp3, wav, flac, etc) encoded as BASE64-string
 

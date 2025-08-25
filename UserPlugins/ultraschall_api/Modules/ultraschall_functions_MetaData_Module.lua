@@ -1943,3 +1943,84 @@ function ultraschall.MetaDataTable_GetProject()
   end
   return MetaDataTable
 end
+
+function ultraschall.Metadata_ExtractCover(media_filename, target_filename)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>Metadata_ExtractCover</slug>
+  <requires>
+    Ultraschall=5.1
+    Reaper=7.03
+    Lua=5.3
+  </requires>
+  <functioncall>boolean retval, string filename = ultraschall.Metadata_ExtractCover(string media_filename, string target_filename)</functioncall>
+  <description>
+    Extracts the cover-image from a media-file into an image-file.
+    
+    Note: don't add the extension to the target-filename, since the filetype is defined by the stored cover-image(usually jpeg or png).
+    Use the return value "filename" to get the actual filename of the cover-image.
+    
+    returns false in case of an error
+  </description> 
+  <retvals>
+    boolean retval - true, cover image was extracted; false, cover-image couldn't be extracted
+    string filename - the filename of the extracted cover-image
+    string image_description - a description of the image
+  </retvals>
+  <parameters>
+    string media_filename - the media-file, whose cover-image you want to extract
+    string target_filename - the filename, where you want to store the cover-image(don't add an extension)
+  </parameters>
+  <chapter_context>
+    Metadata Management
+    Reaper Metadata Management
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Markers_Module.lua</source_document>
+  <tags>metadata, get, extract, cover image</tags>
+</US_DocBloc>
+]]
+    if type(media_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "must be a string", -1) return false, "" end
+  if type(target_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "target_filename", "must be a string", -2) return false, "" end
+  if reaper.file_exists(media_filename)==false then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "no such file", -3) return false end
+  local PCM_Source=reaper.PCM_Source_CreateFromFile(media_filename)
+  local A,B,C=reaper.GetMediaFileMetadata(PCM_Source, "ID3:APIC")
+  reaper.PCM_Source_Destroy(PCM_Source)
+  if A==0 then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "no cover-image", -4) return false end
+
+  local filetype, offset, length = B:match("image/(.-) .- offset:(.-) length:(.*)")
+  local image_desc, image_type = B:match("desc:(.*) type:(.-) ")
+  if image_desc==nil then
+    image_desc=""
+    image_type = B:match("type:(.-) ")
+  end
+  local length, C = ultraschall.ReadBinaryFile_Offset(media_filename, tonumber(offset), tonumber(length))
+  local retval = ultraschall.WriteValueToFile(target_filename.."."..filetype, C, true)
+  if retval==-1 then ultraschall.AddErrorMessage("Metadata_ExtractCover", "target_filename", "can't write file", -5) return false, "" end
+
+  if image_type=="0" then image_type="Other"
+  elseif image_type=="1" then image_type="32x32 pixel file icon (PNG only)" 
+  elseif image_type=="2" then image_type="Other file icon" 
+  elseif image_type=="3" then image_type="Cover (front)"
+  elseif image_type=="4" then image_type="Cover (back)" 
+  elseif image_type=="5" then image_type="Leaflet page" 
+  elseif image_type=="6" then image_type="Media" 
+  elseif image_type=="7" then image_type="Lead artist/Lead performer/Soloist" 
+  elseif image_type=="8" then image_type="Artist/Performer" 
+  elseif image_type=="9" then image_type="Conductor" 
+  elseif image_type=="10" then image_type="Band/Orchestra" 
+  elseif image_type=="11" then image_type="Composer" 
+  elseif image_type=="12" then image_type="Lyricist/Text Writer" 
+  elseif image_type=="13" then image_type="Recording location" 
+  elseif image_type=="14" then image_type="During recording" 
+  elseif image_type=="15" then image_type="During performance" 
+  elseif image_type=="16" then image_type="Movie/video screen capture" 
+  elseif image_type=="17" then image_type="A bright colored fish" 
+  elseif image_type=="18" then image_type="Illustration" 
+  elseif image_type=="19" then image_type="Band/Artist logotype" 
+  elseif image_type=="20" then image_type="Publisher/Studio logotype" 
+  end
+  
+  return true, target_filename.."."..filetype, image_desc, image_type
+end
+

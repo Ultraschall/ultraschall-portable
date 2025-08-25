@@ -1,6 +1,6 @@
 compiled by Meo Mespotine(mespotine.de) for the ultraschall.fm-project
 
-Documentation for Reaper-Internals 6.80 and Ultraschall Api 4.9 , SWS 2.13.2.0, JS-extension-plugin 1.31 and ReaPack
+Documentation for Reaper-Internals 7.38 and Ultraschall Api 5.3 , SWS 2.14.0.3, JS-extension-plugin 1.31 and ReaPack
 
 Written and compiled by Meo-Ada Mespotine (mespotine.de) for the Ultraschall.FM-project.
 licensed under creative-commons by-sa-nc-license

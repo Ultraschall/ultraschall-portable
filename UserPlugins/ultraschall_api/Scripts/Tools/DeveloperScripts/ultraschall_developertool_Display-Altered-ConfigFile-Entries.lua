@@ -24,11 +24,14 @@
   ################################################################################
   --]]
 
+ultraschall_override=true
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
+
+reaper.set_action_options(1)
 
 files={}
 files[#files+1]=reaper.GetResourcePath().."/BR.ini"

@@ -10,11 +10,7 @@ Ultraschall API Video-Functions
 <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
-<img alt="" style="width:6.9%; position: absolute; left:23.9%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:30.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:36.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:42.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:48.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:54.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:60.8%;" src="gfx/linedance.png"><img alt="" style="width:6.9%; position: absolute; left:66.8%;" src="gfx/linedance.png">
-<img alt="" style="width:6.9%; position: absolute; left:68.8%;" src="gfx/linedance.png">
+<a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
 <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
@@ -67,9 +63,9 @@ Ultraschall API Video-Functions
 <hr>
 <a class="anch" id="ProjectSettings_GetVideoFramerate"></a>
 <a href="#ProjectSettings_GetVideoFramerate"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
-<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>ProjectSettings_GetVideoFramerate</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>ProjectSettings_GetVideoFramerate</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> framerate, <i>string</i> addnotes = <em>ultraschall.ProjectSettings_GetVideoFramerate</em>()</code></div>
 </div><p>
@@ -91,9 +87,9 @@ returns the video-framerate of the current project<br>
 <hr>
 <a class="anch" id="ProjectSettings_SetVideoFramerate"></a>
 <a href="#ProjectSettings_SetVideoFramerate"> ^</a> 
-<img width="3%" src="gfx/reaper6.02.png" alt="Reaper version 6.02">
-<img width="3%" src="gfx/sws2.10.0.1.png" alt="SWS version 2.10.0.1">
-<img width="3%" src="gfx/ultraschall4.1.png" alt="Ultraschall version 4.1"><u><b>ProjectSettings_SetVideoFramerate</b></u><br>			<p>
+<img width="3%" src="gfx/reaper6.02.png" alt="requires Reaper version 6.02">
+<img width="3%" src="gfx/sws2.10.0.1.png" alt="requires SWS version 2.10.0.1">
+<img width="3%" src="gfx/ultraschall4.1.png" alt="requires Ultraschall version 4.1"><u><b>ProjectSettings_SetVideoFramerate</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>boolean</i> retval = <em>ultraschall.ProjectSettings_SetVideoFramerate</em>(<i>integer</i> framerate, <i>boolean</i> persist)</code></div>
 </div><p>
@@ -126,8 +122,8 @@ returns false in case of an error<br>
 <hr>
 <a class="anch" id="VID_Pixels2VideoUIStateCoords"></a>
 <a href="#VID_Pixels2VideoUIStateCoords"> ^</a> 
-<img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>VID_Pixels2VideoUIStateCoords</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.97.png" alt="requires Reaper version 5.97">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>VID_Pixels2VideoUIStateCoords</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>number</i> uistate_x, <i>number</i> uistate_y = <em>ultraschall.VID_Pixels2VideoUIStateCoords</em>(<i>integer</i> x, <i>integer</i> y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
@@ -171,8 +167,8 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="VID_VideoUIStateCoords2Pixels"></a>
 <a href="#VID_VideoUIStateCoords2Pixels"> ^</a> 
-<img width="3%" src="gfx/reaper5.97.png" alt="Reaper version 5.97">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>VID_VideoUIStateCoords2Pixels</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.97.png" alt="requires Reaper version 5.97">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>VID_VideoUIStateCoords2Pixels</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>integer</i> x_coordinate, <i>integer</i> y_coordinate = <em>ultraschall.VID_VideoUIStateCoords2Pixels</em>(<i>number</i> uistate_x, <i>number</i> uistate_y, <i>integer</i> videowindow_width, <i>integer</i> videowindow_height)</code></div>
 </div><p>
@@ -216,9 +212,9 @@ returns nil in case of an error<br>
 <hr>
 <a class="anch" id="GetVideoHWND"></a>
 <a href="#GetVideoHWND"> ^</a> 
-<img width="3%" src="gfx/reaper5.965.png" alt="Reaper version 5.965">
-<img width="3%" src="gfx/js_0.963.png" alt="JS version 0.963">
-<img width="3%" src="gfx/ultraschall4.00.png" alt="Ultraschall version 4.00"><u><b>GetVideoHWND</b></u><br>			<p>
+<img width="3%" src="gfx/reaper5.965.png" alt="requires Reaper version 5.965">
+<img width="3%" src="gfx/js_0.963.png" alt="requires JS version 0.963">
+<img width="3%" src="gfx/ultraschall4.00.png" alt="requires Ultraschall version 4.00"><u><b>GetVideoHWND</b></u><br>			<p>
 <div class="cc">
 <div class="l">Lua: <code> <i>HWND</i> hwnd = <em>ultraschall.GetVideoHWND</em>()</code></div>
 </div><p>
@@ -237,7 +233,7 @@ returns nil if the Video Window is closed<br>
       <div class="ch">
         <hr>
                      
-          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 4.9  - 5 elements available <br></td></table>
+          <table><td class="td2"> &#160;</td><td>&#160;</td><td class="td3">Automatically generated by Ultraschall-API 5.3  - 5 elements available <br></td></table>
         <hr>
       </div>
       <br>

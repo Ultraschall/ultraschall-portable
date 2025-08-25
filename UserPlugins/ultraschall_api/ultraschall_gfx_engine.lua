@@ -1001,51 +1001,6 @@ function ultraschall.GFX_GetDropFile()
   return changed, ultraschall.GetDropFile_Filecount-1, ultraschall.GetDropFile_List, ultraschall.GetDropFile_MouseX, ultraschall.GetDropFile_MouseY
 end
 
-function ultraschall.Lokasenna_LoadGuiLib_v2()
---[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-  <slug>Lokasenna_LoadGuiLib_v2</slug>
-  <requires>
-    Ultraschall=4.1
-    Reaper=6.02
-    Lua=5.3
-  </requires>
-  <functioncall>ultraschall.Lokasenna_LoadGuiLib_v2()</functioncall>
-  <description>
-    loads Lokasenna's Gui Lib v2 into the current script, so you can make your own guis.
-    
-    This prevents the need to use dofile, require, loadfile to load Lokasenna's Gui Lib, so you can code the actual Gui right after calling this function.
-    
-    It gives you access to all classes immediately.
-    
-    It uses a version of Lokasenna's Gui Lib v2 included with Ultraschall-API, so it doesn't get into conflict with other installed versions on your system.
-    
-    You can find the documentation for it <a href="../3rd_party_modules/Lokasenna_GUI%20v2/Developer%20Tools/Documentation.html">at this location.</a>
-  </description>
-  <chapter_context>
-    User Interface
-    Lokasenna Gui Lib v2
-  </chapter_context>
-  <target_document>US_Api_Functions</target_document>
-  <source_document>ultraschall_gfx_engine.lua</source_document>
-  <tags>user interface, load, lokasenna, guilib, v2, classes</tags>
-</US_DocBloc>
---]]
-  loadfile(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Core.lua")()
-  
-  local filename=""
-  local i=0
-  reaper.EnumerateFiles("", -1) -- flush cache
-  while filename~=nil do
-    filename=reaper.EnumerateFiles(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Classes/", i)
-    if filename==nil then break end
-    i=i+1
-    loadfile(ultraschall.Api_Path.."/3rd_party_modules/Lokasenna_GUI v2/Library/Classes/"..filename)()
-  end
-end
-
---ultraschall.Lokasenna_LoadGuiLib_v2()
-
 function ultraschall.GFX_DrawEmbossedSquare(x, y, w, h, rbg, gbg, bbg, r, g, b)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">

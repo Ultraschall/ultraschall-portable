@@ -1,0 +1,860 @@
+## First steps into ReaGirl
+
+When making a gui in ReaGirl, you basically have to work through 5 steps.
+
+0. Initialize ReaGirl
+1. Add some run-functions
+2. Start a new gui using reagirl.Gui\_New()
+3. Add some ui-elements using the various \_Add-functions
+4. Open a gui using reagirl.Gui\_Open()
+5. Write and run a defer-function, in which you call reagirl.Gui\_Manage()
+
+Let's get into these steps in more details.
+
+### Step 0: Initialize ReaGirl
+First add the line
+
+```
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+```
+to your script. It will load all functions and features of ReaGirl. After that, you can start writing your guis with it.
+
+### Step 1: Add some run-functions
+Run-Functions are functions that are run, when the user interacts with a user-interface-element(ui-element). For instance, clicking a checkbox or a button.
+Or typing/hitting enter into an inputbox. Or if the user moves the slider or selects a menu in a drop-down-menu.  
+Or if the user selects a context-menu-entry or drag n drops files onto a ui-element.  
+So in a run function you tell Reaper what to do, after the user interacted with a ui element.
+
+A rule of thumb is: every ui-element and interaction-style gets it's own run-function.
+So one for when the user hits the button. One for when the user types text into an inputbox and one for when the user hits enter into the inputbox, etc, etc.
+These run-functions will get parameters passed from the gui, like the identifier of a ui-element(more on this later) or additional information like a selected menu-entry.
+So run-functions are powerful and will make the magic happen, once the user interacted with a ui-element.
+
+When writing a new gui, you can just write some "empty" functions that do nothing. We'll fill them in later.
+More on run-functions in our tutorials.
+
+### Step 2: Start a new gui using reagirl.Gui\_New()
+This will tell ReaGirl, that you want to start a new gui. And it's simple, just add reagirl.Gui\_New() to your script and you're done.
+You can also use this later in more complex scripts to throw away an already existing gui and start a new one, but in most cases, you'll only do this once at the beginning of your gui-script.
+
+### Step 3: Add some ui-elements using the various \_Add-functions
+Now the magic starts, we add our first ui-elements. You do it using the various \_Add-functions like Button\_Add, InputBox\_Add, DropDownMenu\_Add, Slider\_Add, Checkbox\_Add, Label\_Add, Image\_Add, etc.
+All these add-functions will ask you for the position of the ui-element, a caption(which is usually shown next to it), an accessibility-hint which is shown as tooltip and also helps blind users to navigate and understand your gui, and a run-function.
+Some may ask you for more things like width and height(Images) or initial values(Checkboxes, Sliders, DropDownMenu) or even additional run-functions(InputBox uses one run-function when the user types text and one for when the user hits enter in the inputbox).
+
+All \_Add-functions return a string called element\_id. This element\_id is like a unique name for your ui-element.
+You can use this to do additional things with the ui-element. For instance, you can make the edges of a button more round or more edgier using the reagirl-Button\_SetRadius()-function.
+The function needs this element\_id to know, of which button you want to edit the edges and alter it accordingly.
+If you remember what I told you about run-functions, then you'll know already that element\_ids are also passed to a run-function by ReaGirl.
+So you can use one run-function for all buttons. You just check, whether the element\_id passed to the run-function is the same as the element\_id of button1, button2 or button3.
+So keep these element\_ids in variables or tables, as you can do really nice things with it(we'll dive deeper into element\_ids in the tutorials).
+
+You can add up to several thousand ui-elements in your gui(though usually, you will do much less).
+
+### Step 4: Open a gui using reagirl.Gui\_Open()
+This will open the gui. You can pass to it the position, the dimensions, the window-title, an accessibility-hint which tells the blind user what to expect from your gui and so on.
+It's pretty straightforward, so just follow the documentation for what the parameters shall be.
+
+### Step 5: Write and run a defer-function, in which you call reagirl.Gui\_Manage()
+This one's also very easy. Add the following lines at the end of your script:
+
+```
+function main()
+  -- let ReaGirl manage the gui
+  reagirl.Gui_Manage()
+  
+  -- check, if the gui-window is still open and if not, stop the script
+  if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+end
+
+main()
+```
+
+This will run the Gui\_Manage-function, which basically does all the management of the gui, like drawing, click-management, runnning the run-functions when the user interacts with a ui-element, scrolling and other cool stuff, so you don't have to do it yourself.
+And that's it, 5 steps to make your own gui.
+
+Some general things to know about ReaGirl:
+Don't bother with scrolling your ui-elements. This is done by ReaGirl. So if a ui-element is outside of the window, scrollbars appear and you can scroll around with them or by swiping or by keyboard(basically like you do in web-browsers).
+
+Also don't bother about scaling like Retina/HiDPI or something. This is also done by ReaGirl automatically. So if the user chooses to run your script on Retina/HiDPI-displays or even with an altered scaling set in the preferences, your gui will change automatically.
+
+Since one of the key-features in ReaGirl is accessibility for blind people, most of the stuff needed for screenreader-management is done by ReaGirl itself. You just need to set the parameters meaningOfUI\_Element properly by giving a short and precise explanation, what the ui-element is doing and why. This will be shown as tooltip and also communicated to blind users via screenreader. This happens automatically, so you don't need to do much more.
+There's a chapter dedicated on best practices for accessible guis later, if you want to improve on things further.
+
+In the next chapters, I will take you through some basic tutorials on how making a gui is done in practice.
+And we'll start with a basic one.
+
+
+
+## Tutorial #1 - a basic gui
+
+In this tutorial, I will show you how to make a basic gui with some buttons, inputboxes and checkboxes. I will also explain to you the basic concepts in practice that you need to know to make guis with ReaGirl.
+Stick with me, it's easier than you think.
+
+Let's start with a basic gui, which will show one single button.
+
+```
+  -- Step 0: initialize ReaGirl
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+  -- Step 1: write the run-functions
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    reaper.MB("Button has been pressed", "Pressed", 0)
+  end
+
+  -- Step 2: create new gui
+  reagirl.Gui_New()
+  
+  -- Step 3: add the ui-elements to the gui
+  -- add an ok-button to the gui at x-position 30 and y-position 200 with the run-function Button_RunFunction
+  -- The meaningOfUI_Element-parameter "Apply changes and close dialog" will be shown as tooltip 
+  -- and sent to a screenreader for blind people.
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  
+  -- Step 4: open the new gui with size 640x250 pixels, titled "The dialog". 
+  -- In addition to the title, blind people will also get "This is a demo dialog with settings for tool xyz." 
+  -- sent to their screenreaders.
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  -- Step 5: Write and run a defer-function, in which you call reagirl.Gui_Manage()
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+
+```  
+You see the 5 steps I mentioned in the first steps-chapter detailed out in the script. 
+This adds a button and the run-function Button\_RunFunction which is run when the user hits the button.
+Also note the parameter meaningOfUI\_Element, which is set to "Apply changes and close dialog". This parameter will be shown as a tooltip. It will also tell blind users, what the ui-element is supposed to do and why via screenreader. So if you add your own ui-elements, add a short and descriptive explanation into this parameter which says more than just "ok". Blind users will thank you for that.
+And that's it, a simple gui with one button. Try it and experiment with it. Write a different text into the button. Alter the numbers in the parameters of reagirl.Button\_Add to see what happens.
+Don't worry about making mistakes. When you pass wrong parameters to ReaGirl-functions, they will tell you with an error message, what went wrong and where.
+
+You'll note in the code, that reagirl.Button_Add() returns the element\_id as a returnvalue that I put into the variable button\_ok\_id. We will use this later on.
+
+As a sidenote: ReaGirl stores in the background the position, size and dockstate of the window, so you can reopen it the next time with the old position, size and dockstate.
+This will be done by the first two parameters of reagirl.Gui\_New(). The first parameter is a name for your window that should be a unique one like "Mespotine_My gui Window", which will be used by ReaGirl as a settings name to store position, size and dockstate in the background.
+The second parameter sets, if the window shall be reopened with the old position, size and dockstate. Set it to false to open always with the position you give in reagirl.Gui\_Open() or set it to true to reopen it with the old position, size and dockstate.
+Try it. Set the second parameter in reagirl.Gui\_Open() to true and run the script. Move it, resize it and then close it. When you run the script again, the window reopens at the position where you closed it.
+In the tutorials, we will set the second parameter to false so the examples always behave the same. But in your scripts, you can do what works best for you.
+
+Ok, now that you fiddled around with the example, how about adding a second button?
+For this, we add a second Button\_Add-function for a Cancel-button. We'll also give it the same run-function like the first button. The returned element\_id of the cancel-button we put into the variable button\_cancel\_id.
+It's looks like the following code.
+
+```  
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+You'll also notice, that I altered the runfunction Button\_RunFunction. I mentioned in the first steps chapter, that the run-function gets passed over several parameters, with the first one being the element\_id of the button that got pressed.
+In our example, the function Button\_RunFunction has a parameter pressed\_button\_id into which ReaGirl will tell you, which button that uses this run-function got pressed.
+You remember, that both added buttons share the same run-function.
+And that's the reason, why the variables button\_ok\_id and button\_cancel\_id come in handy, because you can use them now to check, if pressed\_button\_id==button\_ok\_id(the ok-button got pressed) or elseif pressed\_button\_id==button\_cancel\_id(the cancel button got pressed).
+In this code, we will show a message-box that tells you, which one had been pressed.
+This way, all buttons can share the same run-function, as you can compare the element\_ids of each button with the parameter pressed\_button\_id.
+
+As a little excercise, add another button called "Help". Put its return-value into the variable button\_help\_id and add to the run-function a help-message shown, when the help button is pressed.
+It'll help you internalising how the mechanics work and will help you further down the road with more complex guis.
+
+Now that we have two buttons, we could add another ui-element. This time it's checkboxes.
+You know the drill: Checkbox\_Add adds checkboxes into the next script. The Checkbox\_Add-functions return the element\_ids which will be put into the variables checkbox\_remember and checkbox\_mysetting.
+We also add a run-function for it called Checkbox\_RunFunction, which will pop up a dialog when one of the checkboxes is checked. It'll tell you which one it will be with the help of the element\_ids, just like we did with the buttons.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+One thing that's different from before is, that the run-function for the checkboxes Checkbox\_RunFunction gets now two parameters, whereas the one for the buttons only got one.
+The parameters are 1) the element\_id of the clicked checkbox(like it was in the button's run-function) AND 2) a parameter for the current checkstate after clicking the checkbox.
+So a run-function for checkboxes gets the element\_id and the state of the checkbox after it was clicked. That way you know, how the checkbox-state currently is.
+You can then use it for things like storing settings in the background: when the checkbox is checked you store "true" and when the checkbox is unchecked you store "false".
+And since you can check against the individual element\_ids of the checkboxes, you know, which one got clicked and therefore must be stored.
+
+The different parameters of the run-functions is also the reason, why you cannot use the same run-function for all types of ui-elements, as different ui-elements pass over different parameters to the run-function.
+This could confuse your code. It's possible to code around this but I highly recommend to only use one run-function for all buttons and one for all checkboxes and one for all sliders, etc.
+
+Although you can do one run-function for each ui-element, which is perfectly fine.
+
+Back to our example.
+
+We have now two checkboxes and two buttons. Let's add another type of ui-elements: InputBoxes. 
+InputBoxes allow to type in text into your gui. They are added basically like all other ui-elements: InputBox\_Add and two run-functions.
+
+Two run-functions?
+
+Yes, InputBoxes allow to have two run-functions. One is called everytime the user enters a character into the inputbox while the other one is called when the user hits enter into the inputbox.
+Let's add two inputboxes with the two run-functions(InputBox\_RunFunction\_Type for when the user types text, InputBox\_RunFunction\_Enter when the user hits enter into the inputbox).
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"My Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, 300, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+If you run this script, you can click into the inputbox and enter text. The entered text will be shown in the debugging-window "ReaScript Console" of Reaper.
+This outputting is done by the run-function InputBox\_RunFunction\_Type. When you hit enter, a message-box appears which shows you the entered text. This is done by the run-function InputBox\_RunFunction\_Enter.
+Both run-functions get as parameters the element\_id(inputbox\_id) as well as the entered text(entered\_text).
+
+Ok, now we have two buttons, two checkboxes and two inputboxes, all doing stuff when clicking/typing.
+
+I would like to introduce you to another ui-element, the label element. This allows you to show some text.
+It's working the same: Label\_Add adds a label. This could potentially be made clickable which would mean, we need a run-function as well, but we just make it a regular label that just shows text.
+Therefore the last parameter for the run-function is nil(which means, no run-function available for this ui-element).
+I would also like to show you something else that you can do with the element\_id: setting additional attributes for a ui-element.
+In this case, we want to make the font-size of the label bigger and set it's style to underlined.
+For this, we use the functions Label\_SetFontSize and Label\_SetStyle.
+
+```  
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, 300, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)  
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+Running this code will add the text "This is a settings dialog" to the gui in font-size 40 and underlined.
+You'll notice that Label\_SetFontSize and Label\_SetStyle are using the element\_id stored in the variable label\_header to adress, which label shall be altered.
+Another use-case for element\_ids.
+This is how you can actually change other ui-elements too. For buttons for instance, just look up all functionnames starting with reagirl.Button\_ in the documentation to find lots of functions to alter buttons. They'll expect the element\_id of the button that you want to alter.
+The same goes for reagirl.InputBox\_, reagirl.Slider\_, reagirl.DropDownMenu_\, reagirl.Label\_, reagirl.Checkbox\_, reagirl.Tabs\_, etc.
+
+Speaking of altering buttons: let's make the OK-button more round and the Cancel-button more edgier.
+For this, we use the function reagirl.Button\_SetRadius in the following code, which allows us to set the radius of the edges.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, 300, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+  reagirl.Button_SetRadius(button_ok_id, 20)    -- make the ok-button rounder
+  reagirl.Button_SetRadius(button_cancel_id, 0) -- make the cancel button square
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+You see, it's working the same: you give the reagirl.Button\_SetRadius-function the element\_id of the button that you want to alter.
+
+What's now bothering me, is the black background, which looks a little bleak in my eyes, so let's change it using reagirl.Background\_GetSetColor.
+This function accepts four parameters, with the first one setting if you want to set the background or get its colors and the other three the red, green and blue-color values from 0-255.
+I'll choose to set it(true) to a grey tone(55).
+
+```  
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, 300, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+  reagirl.Button_SetRadius(button_ok_id, 20)    -- make the ok-button rounder
+  reagirl.Button_SetRadius(button_cancel_id, 0) -- make the cancel button square
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+Ahh, that's better. Of course, you can choose a different color. Just experiment with it.  
+  
+And while we are at making things prettier, let's add one last ui-element, an image.
+Reaper deploys several images for track-icons so let's choose one of them to display here, one of a bass-guitar.
+This time, though, I would like to anchor the image to the right and bottom side of the window. ReaGirl supports anchoring ui-elements to the right-side/bottom of the window.
+To achieve this, just make the x/y-coordinate negative. In the case of our image, I choose to make the image 150 pixels from the right side of the window(-150) and 120 pixels from the bottom(-120).
+
+```  
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()  
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, 300, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+  reagirl.Button_SetRadius(button_ok_id, 20)    -- make the ok-button rounder
+  reagirl.Button_SetRadius(button_cancel_id, 0) -- make the cancel button square
+
+  -- add an image of a bass guitar
+  reagirl.Image_Add(-150, -120, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "A Bass guitar", "An image of a bass guitar.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+Hmmm, nice bass guitar, Davie. And when you resize the window, you'll notice, that it'll stay linked to the right and bottom side of the window.
+You can also link other ui-elements that way or even just link width and height of a ui-element to it(if a ui-element has width and height). Works the same: make the coordinate negative.
+Let's link the width of the first inputbox to the right-side of the window(-50) to see how that looks.
+
+```  
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()  
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, -50, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+  reagirl.Button_SetRadius(button_ok_id, 20)    -- make the ok-button rounder
+  reagirl.Button_SetRadius(button_cancel_id, 0) -- make the cancel button square
+
+  -- add an image of a bass guitar
+  reagirl.Image_Add(-150, -120, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "A Bass guitar", "An image of a bass guitar.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+Looking good. This way, the user can choose, how long the visible inputbox shall be.
+Images support this as well, so you can experiment by making x and y linked to the left/top of the window(positive value) and link width and height to the right/bottom of the window(negative value).
+That way, the size of the image changes the way the window is resized. You can also use reagirl.Image\_KeepAspectRatio() to keep the image from looking stretched(more on this in tutorial #3: "a basic image viewer with a drag'n'drop-zone and a context menu").
+
+When resizing the window to make it smaller, you probably noticed already, that the image is moving behind the inputboxes at some point. It would be nice to have a way to prevent that.
+There's a way. The functions reagirl.Window\_ForceSize\_Minimum() and reagirl.Window\_ForceSize\_Maximum() set a minimum and maximum window-size. So the user cannot resize it bigger or smaller than that.
+Let's add them into our gui and set some reasonable boundaries.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  function Button_RunFunction(pressed_button_id)
+    -- this function is run, when a button is pressed
+    if pressed_button_id==button_ok_id then
+      reaper.MB("OK Button is pressed", "OK Button", 0)
+    elseif pressed_button_id==button_cancel_id then
+      reaper.MB("Cancel Button is pressed", "Cancel Button", 0)
+    end
+  end
+
+  function Checkbox_RunFunction(checked_checkbox_id, checkstate)
+    -- this function is run, when the checkstate of a checkbox is changed
+    if checked_checkbox_id==checkbox_remember then
+      reaper.MB("Checkbox \"Remember\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    elseif checked_checkbox_id==checkbox_mysetting then
+      reaper.MB("Checkbox \"my Setting\" is "..tostring(checkstate), "Checkbox-State changed", 0)
+    end
+  end
+
+  function InputBox_RunFunction_Type(inputbox_id, entered_text)
+    -- this function is run, when the user types in text into an inputbox
+    reaper.ClearConsole()
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.ShowConsoleMsg("NAME: "..entered_text)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.ShowConsoleMsg("DESCRIPTION: "..entered_text)
+    end
+  end
+
+  function InputBox_RunFunction_Enter(inputbox_id, entered_text)
+    -- this function is run, when the user hits enter into an inputbox
+    if inputbox_id==inputbox_name_of_setting then
+      reaper.MB(entered_text, "The typed text into NAME was", 0)
+    elseif inputbox_id==inputbox_description_of_setting then
+      reaper.MB(entered_text, "The typed text into DESCRIPTION was", 0)
+    end
+  end
+
+
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- add a textlabel to the top of the gui
+  label_header=reagirl.Label_Add(30, 50, "This is a settings dialog", "Set the settings, as you wish.", false, nil)
+  reagirl.Label_SetFontSize(label_header, 40) -- set the font-size of the label to 40
+  reagirl.Label_SetStyle(label_header, 6, 0, 0) -- set the label to underlined
+
+  -- add inputboxes to type in text
+  inputbox_name_of_setting = reagirl.Inputbox_Add(30, 105, -50, "Name of the setting:", 150, "Type in here the name of the setting.", "No title", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+  inputbox_description_of_setting = reagirl.Inputbox_Add(30, 130, 300, "Description of the setting:", 150, "Type in here a description of the setting.", "No Description", InputBox_RunFunction_Enter, InputBox_RunFunction_Type)
+
+  -- add two checkboxes to the gui
+  checkbox_mysetting = reagirl.Checkbox_Add(30, 150, "My setting", "How shall my setting be set?", true, Checkbox_RunFunction)
+  checkbox_remember = reagirl.Checkbox_Add(30, 170, "Remember chosen setting", "Shall this setting be used as future default?", true, Checkbox_RunFunction)
+
+  -- add an ok-button and a cancel button to the gui
+  button_ok_id = reagirl.Button_Add(30, 200, 0, 0, "OK", "Apply changes and close dialog.", Button_RunFunction)
+  button_cancel_id = reagirl.Button_Add(70, 200, 0, 0, "Cancel", "Discard changes and close dialog.", Button_RunFunction)
+  reagirl.Button_SetRadius(button_ok_id, 20)    -- make the ok-button rounder
+  reagirl.Button_SetRadius(button_cancel_id, 0) -- make the cancel button square
+
+  -- add an image of a bass guitar
+  reagirl.Image_Add(-150, -120, 100, 100, reaper.GetResourcePath().."/Data/track_icons/bass.png", "A Bass guitar", "An image of a bass guitar.", nil)
+
+  -- let's force window-sizes
+  reagirl.Window_ForceSize_Minimum(550, 250) -- set the minimum size of the window
+  reagirl.Window_ForceSize_Maximum(800, 400) -- set the maximum size of the window
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 640, 250)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+When you try to resize the window now, it will remain within the chosen constraints, not bigger and not smaller, only inbetweens.
+And so we're done. Our first basic gui with a lot of ui-elements and features applied.
+Toy around with it to get a deeper grip on how the basic concepts work.
+
+And when you are ready, you can move on to tutorial #2, which shows you, how to add tabs to this gui.

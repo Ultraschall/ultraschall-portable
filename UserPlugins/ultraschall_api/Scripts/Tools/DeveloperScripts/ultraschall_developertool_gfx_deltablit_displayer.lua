@@ -30,6 +30,8 @@
 --
 -- At the bottom, you have a description, what the selected parameter is supposed to do.
 
+reaper.set_action_options(1)
+
 gfx.setfont(1, "arial", 15)
 Table={0,0,0,0,0,0,241,140,1,0,0,1,0,0,0,0}
 Defaults={0,0,0,0,0,0,241,140,1,0,0,1,0,0,0,0}

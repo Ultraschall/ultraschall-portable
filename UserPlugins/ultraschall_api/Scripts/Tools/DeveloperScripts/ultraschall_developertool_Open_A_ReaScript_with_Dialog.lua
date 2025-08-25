@@ -8,6 +8,7 @@ else
   dofile(reaper.GetResourcePath().."/Scripts/Reaper_Internals/ultraschall_api.lua")
 end
 
+reaper.set_action_options(1)
 
 filename=ultraschall.GetUSExternalState("REAPER", "lastscript", "reaper.ini")
 if filename~="" and reaper.file_exists(filename)==false then filename=reaper.GetResourcePath().."/Scripts/"..filename end

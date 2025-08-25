@@ -529,10 +529,6 @@ else
     ultraschall.LM(10)
     return ultraschall.SetEnvelopeHeight(table.unpack({...}))
   end
-  function ultraschall.GetAllTrackEnvelopes(...)
-    ultraschall.LM(10)
-    return ultraschall.GetAllTrackEnvelopes(table.unpack({...}))
-  end
   function ultraschall.IsValidEnvelopePointArray(...)
     ultraschall.LM(10)
     return ultraschall.IsValidEnvelopePointArray(table.unpack({...}))
@@ -2137,6 +2133,10 @@ else
     ultraschall.LM(14)
     return ultraschall.GetRandomString(table.unpack({...}))
   end
+  function ultraschall.SplitReaperString(...)
+    ultraschall.LM(14)
+    return ultraschall.SplitReaperString(table.unpack({...}))
+  end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(15)
     return ultraschall.ResizePNG(table.unpack({...}))
@@ -2212,6 +2212,22 @@ else
   function ultraschall.MidiEditor_GetFixOverlapState(...)
     ultraschall.LM(17)
     return ultraschall.MidiEditor_GetFixOverlapState(table.unpack({...}))
+  end
+  function ultraschall.PreviewMidiPitchInTrack(...)
+    ultraschall.LM(17)
+    return ultraschall.PreviewMidiPitchInTrack(table.unpack({...}))
+  end
+  function ultraschall.PreviewMidiPCInTrack(...)
+    ultraschall.LM(17)
+    return ultraschall.PreviewMidiPCInTrack(table.unpack({...}))
+  end
+  function ultraschall.PreviewMidiCCInTrack(...)
+    ultraschall.LM(17)
+    return ultraschall.PreviewMidiCCInTrack(table.unpack({...}))
+  end
+  function ultraschall.PreviewMidiNoteInTrack(...)
+    ultraschall.LM(17)
+    return ultraschall.PreviewMidiNoteInTrack(table.unpack({...}))
   end
   function ultraschall.AddNormalMarker(...)
     ultraschall.LM(18)
@@ -2448,6 +2464,10 @@ else
   function ultraschall.RippleCut_Regions(...)
     ultraschall.LM(18)
     return ultraschall.RippleCut_Regions(table.unpack({...}))
+  end
+  function ultraschall.RippleCut_Regions_Reverse(...)
+    ultraschall.LM(18)
+    return ultraschall.RippleCut_Regions_Reverse(table.unpack({...}))
   end
   function ultraschall.GetAllCustomMarkers(...)
     ultraschall.LM(18)
@@ -2781,6 +2801,10 @@ else
     ultraschall.LM(18)
     return ultraschall.GetPodcastEpisodeAttributesPreset_Name(table.unpack({...}))
   end
+  function ultraschall.TakeMarker_GetAllTakeMarkers(...)
+    ultraschall.LM(18)
+    return ultraschall.TakeMarker_GetAllTakeMarkers(table.unpack({...}))
+  end
   function ultraschall.GetItemPosition(...)
     ultraschall.LM(19)
     return ultraschall.GetItemPosition(table.unpack({...}))
@@ -2964,6 +2988,10 @@ else
   function ultraschall.SetItemPlayRate(...)
     ultraschall.LM(19)
     return ultraschall.SetItemPlayRate(table.unpack({...}))
+  end
+  function ultraschall.GetItemYPos(...)
+    ultraschall.LM(19)
+    return ultraschall.GetItemYPos(table.unpack({...}))
   end
   function ultraschall.IsValidMediaItemStateChunk(...)
     ultraschall.LM(20)
@@ -3269,9 +3297,9 @@ else
     ultraschall.LM(20)
     return ultraschall.GetGapsBetweenItems(table.unpack({...}))
   end
-  function ultraschall.DeleteMediaItems_Position(...)
+  function ultraschall.DeleteMediaItemsBetween(...)
     ultraschall.LM(20)
-    return ultraschall.DeleteMediaItems_Position(table.unpack({...}))
+    return ultraschall.DeleteMediaItemsBetween(table.unpack({...}))
   end
   function ultraschall.ApplyActionToMediaItemArray2(...)
     ultraschall.LM(20)
@@ -3397,6 +3425,34 @@ else
     ultraschall.LM(20)
     return ultraschall.ToggleCrossfadeStateForSplits(table.unpack({...}))
   end
+  function ultraschall.GetTakeSourcePosByProjectPos(...)
+    ultraschall.LM(20)
+    return ultraschall.GetTakeSourcePosByProjectPos(table.unpack({...}))
+  end
+  function ultraschall.GetProjectPosByTakeSourcePos(...)
+    ultraschall.LM(20)
+    return ultraschall.GetProjectPosByTakeSourcePos(table.unpack({...}))
+  end
+  function ultraschall.MediaItem_GetAllVisibleTransients_ActiveTake(...)
+    ultraschall.LM(20)
+    return ultraschall.MediaItem_GetAllVisibleTransients_ActiveTake(table.unpack({...}))
+  end
+  function ultraschall.ItemLane_Count(...)
+    ultraschall.LM(20)
+    return ultraschall.ItemLane_Count(table.unpack({...}))
+  end
+  function ultraschall.ItemLane_GetFromPoint(...)
+    ultraschall.LM(20)
+    return ultraschall.ItemLane_GetFromPoint(table.unpack({...}))
+  end
+  function ultraschall.ItemLane_GetPositionAndHeight(...)
+    ultraschall.LM(20)
+    return ultraschall.ItemLane_GetPositionAndHeight(table.unpack({...}))
+  end
+  function ultraschall.ItemLane_GetAllMediaItems(...)
+    ultraschall.LM(20)
+    return ultraschall.ItemLane_GetAllMediaItems(table.unpack({...}))
+  end
   function ultraschall.DeleteProjExtState_Section(...)
     ultraschall.LM(21)
     return ultraschall.DeleteProjExtState_Section(table.unpack({...}))
@@ -3508,6 +3564,10 @@ else
   function ultraschall.MetaDataTable_GetProject(...)
     ultraschall.LM(21)
     return ultraschall.MetaDataTable_GetProject(table.unpack({...}))
+  end
+  function ultraschall.Metadata_ExtractCover(...)
+    ultraschall.LM(21)
+    return ultraschall.Metadata_ExtractCover(table.unpack({...}))
   end
   function ultraschall.ToggleMute(...)
     ultraschall.LM(22)
@@ -5265,6 +5325,14 @@ else
     ultraschall.LM(29)
     return ultraschall.GetRender_SaveRenderStats(table.unpack({...}))
   end
+  function ultraschall.GetRender_AutoReturnToDialog(...)
+    ultraschall.LM(29)
+    return ultraschall.GetRender_AutoReturnToDialog(table.unpack({...}))
+  end
+  function ultraschall.SetRender_AutoReturnToDialog(...)
+    ultraschall.LM(29)
+    return ultraschall.SetRender_AutoReturnToDialog(table.unpack({...}))
+  end
   function ultraschall.StoreRenderTable_ProjExtState(...)
     ultraschall.LM(29)
     return ultraschall.StoreRenderTable_ProjExtState(table.unpack({...}))
@@ -5280,6 +5348,14 @@ else
   function ultraschall.GetRenderTable_ExtState(...)
     ultraschall.LM(29)
     return ultraschall.GetRenderTable_ExtState(table.unpack({...}))
+  end
+  function ultraschall.CreateRenderCFG_RAW(...)
+    ultraschall.LM(29)
+    return ultraschall.CreateRenderCFG_RAW(table.unpack({...}))
+  end
+  function ultraschall.GetRenderCFG_Settings_RAW(...)
+    ultraschall.LM(29)
+    return ultraschall.GetRenderCFG_Settings_RAW(table.unpack({...}))
   end
   function ultraschall.GetAllThemeLayoutNames(...)
     ultraschall.LM(30)
@@ -6092,6 +6168,22 @@ else
   function ultraschall.SetTrackPlayOffsState(...)
     ultraschall.LM(33)
     return ultraschall.SetTrackPlayOffsState(table.unpack({...}))
+  end
+  function ultraschall.GetTrackFixedLanesState(...)
+    ultraschall.LM(33)
+    return ultraschall.GetTrackFixedLanesState(table.unpack({...}))
+  end
+  function ultraschall.GetTrackLaneSoloState(...)
+    ultraschall.LM(33)
+    return ultraschall.GetTrackLaneSoloState(table.unpack({...}))
+  end
+  function ultraschall.GetTrackLaneRecState(...)
+    ultraschall.LM(33)
+    return ultraschall.GetTrackLaneRecState(table.unpack({...}))
+  end
+  function ultraschall.GetTrackLaneNameState(...)
+    ultraschall.LM(33)
+    return ultraschall.GetTrackLaneNameState(table.unpack({...}))
   end
   function ultraschall.TrackManager_ClearFilter(...)
     ultraschall.LM(34)

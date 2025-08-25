@@ -1,0 +1,222 @@
+Tutorial for autopositioning of ui elements
+
+When doing guis in ReaGirl, you can use its autopositioning-feature. This is very practical, as you don't really need to place them by hand.
+Especially when you are blind and want to create a gui, you need a way to position the gui-elements without having to use your eyes to finetune things.
+In this tutorial, I will show you, how to use it. 
+And believe me: it's easy.
+
+First we start with a basic gui with no ui-element in it.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+And then we add some ui-elements in it, let's say, three checkboxes. These shall be one after another in one line.
+To do that with the autopositioning-feature, you simply set the x and y-parameters to nil.
+Here's how it looks like.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- first line of checkboxes
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+There you are. Three checkboxes, positioned after each other in one line.
+Now, let's add another line into it, but how to do that?
+Simple. Before we start another line, we add reagirl.NextLine() to it. Then we add another line of checkboxes with x and y set to nil.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- first line of checkboxes
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+  
+  -- second line of checkboxes
+  reagirl.NextLine() -- start a new line of ui-elements
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 4", "This is the fourth checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+When you run it, you see two lines of checkboxes, one with three and one with two checkboxes. 
+Let's add another line of ui-elements, this time a checkbox and a button, anchored to the right side of the window. And we position it a few pixels more than the space between the first two lines were.
+To do that, we use reagirl.NextLine() but this time we add 10 pixels as parameter to it.
+And then we add a checkbox and a button. For the checkbox we add as x-parameter 200 pixels from the right side of the window(-200) and y-parameter we leave at nil for autopositioning.
+The button, we set x=nil and y=nil.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- first line of checkboxes
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+  
+  -- second line of checkboxes
+  reagirl.NextLine() -- start a new line of ui-elements
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 4", "This is the fourth checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  
+  -- third line with one checkbox and one button anchored to right side of the window
+  -- this line is placed 10 pixels lower to gain some distance between the lines
+  reagirl.NextLine(10) -- start a new line of ui-elements, ten pixels lower than
+  reagirl.Checkbox_Add(-200, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  button = reagirl.Button_Add(nil, nil, 0, 0, "Store", "Store 1.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+When we run this script, the newly added checkbox and button are anchored to the right side of the window. So when you resize it, they more accordingly.
+You also notice, that the button is positioned relative to the checkbox that we put at x=-200. So ui-elements coming after a ui-element that was positioned "manually" will be placed relative to the manually placed one.
+Let's add another line with a checkbox and a button, this time anchored again to the left side of the window.
+But how do we do that?
+Simple:
+We set the x-position(40) and this time the y-position as well(100) of the checkbox. After that, we autoposition another button with x=nil and y=nil.
+
+```
+  dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+  
+  -- create new gui
+  reagirl.Gui_New()
+  
+  -- first line of checkboxes
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 1", "This is the first checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 2", "This is the second checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 3", "This is the third checkbox.", true, nil)
+  
+  -- second line of checkboxes
+  reagirl.NextLine() -- start a new line of ui-elements
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 4", "This is the fourth checkbox.", true, nil)
+  reagirl.Checkbox_Add(nil, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  
+  -- third line with one checkbox and one button anchored to right side of the window
+  -- this line is placed 10 pixels lower to gain some distance between the lines
+  reagirl.NextLine(10) -- start a new line of ui-elements, ten pixels lower than
+  reagirl.Checkbox_Add(-200, nil, "Checkbox 5", "This is the fifth checkbox.", true, nil)
+  button = reagirl.Button_Add(nil, nil, 0, 0, "Store", "Store 1.", nil)
+  
+  -- fourth line with one checkbox and one button anchored to the left side of the window
+  reagirl.Checkbox_Add(40, 100, "Checkbox 6", "This is the fifth checkbox.", true, nil)
+  button = reagirl.Button_Add(nil, nil, 0, 0, "Store 2", "Store 2.", nil)
+
+  -- open the new gui
+  reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", 425, 240)
+
+  -- make the background grey
+  reagirl.Background_GetSetColor(true, 55, 55, 55)
+
+  reagirl.Gui_AtExit(AtExit_RunFunction)
+  reagirl.Gui_AtEnter(AtEnter_RunFunction)
+
+  function main()
+    -- a function that runs the gui-manage function in the background, so the gui is updated correctly
+    reagirl.Gui_Manage()
+    
+    -- if the gui-window hasn't been closed, keep the script alive.
+    if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
+  end
+
+  main()
+```
+
+And there you are. The new line added is anchored to the left side of the window again and the button has been placed relative to this checkbox.
+
+So rule of thumb is:
+1. to autoposition, set x and/or y-position to nil to place ui-elements after each other.
+2. add reagirl.NextLine() to start another line of ui-elements
+3. when you place a ui-element to specific coordinates, all following ui-elements will be autopositioned relative to the previous one when x=nil and/or y=nil
+
+Toy around with it to get a grip on it.
+
+More on using autopositioning as blind scripter in a later chapter.
+
+In the next tutorial, I will explain to you, how to use auto-positioning with tabs.
