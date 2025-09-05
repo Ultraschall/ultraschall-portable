@@ -84,12 +84,12 @@ elseif first_start == "true" or startscreen == "1" or startscreen == "-1" then
   reaper.Main_OnCommand(start_id,0)   --Show Startscreen
 end
 
-if reaper.GetExtState("ultraschall_version", "version_check")~="5.1.1" then
-  if reaper.GetAppVersion():match("6%.83")==nil then
-    reaper.MB("This version of Ultraschall requires Reaper 6.83 to work.\n\nAny other version might lead to Ultraschall being not fully functional or not functional at all.\n\nPlease head over to: http://reaper.fm/download-old.php?ver=6x to download Reaper 6.83", "Wrong Reaper version!", 0)
+if reaper.GetExtState("ultraschall_version", "version_check")~="5.1.2" then
+  if reaper.GetAppVersion():match("7%.43")==nil then
+    reaper.MB("This version of Ultraschall requires Reaper 7.43 to work.\n\nAny other version might lead to Ultraschall being not fully functional or not functional at all.\n\nPlease head over to: http://reaper.fm/download-old.php?ver=7x to download Reaper 7.43", "Wrong Reaper version!", 0)
   end
 end
-reaper.SetExtState("ultraschall_version", "version_check", "5.1.1", true)
+reaper.SetExtState("ultraschall_version", "version_check", "5.1.2", true)
 
 --reaper.SetExtState("ultraschall_version", "version_check", "", true)
 --print2(reaper.GetExtState("ultraschall_version", "version_check"))
