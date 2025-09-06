@@ -35,23 +35,31 @@ if length==0 then reaper.MB("Please make a time-selection first!", "No time sele
 
 -- Quality presets
 local qualities = {
-    {label = " Square", suffix = "", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068},
-    {label = "Low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89},
-    {label = "Medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89},
-    {label = "High (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89},
-    {label = "Super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89},
-    {label = " ", suffix = "", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=1224, waveformh=0.8},
-    {label = " Portrait", suffix = "", vid_kbps = 1024, aud_kbps = 360, fps = 60, mult = 1.068, w=1080, h=1920, waveformh=0.8},
-    {label = "Low Portrait(Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8},
-    {label = "Medium Portrait(TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8},
-    {label = "High Portrait(Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8},
-    {label = "Super High Portrait(Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8}
+    {label = " Square (1:1)"},
+    {label = "Low (Mastodon)",            suffix = "-low",  vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",  vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Portrait (9:16)"},
+    {label = "Low Portrait(Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Medium Portrait(TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "High Portrait(Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Super High Portrait(Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Landscape (16:9)"},
+    {label = "Low (Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
 }
 
 -- Calculate MB for each quality
 for _, quality in ipairs(qualities) do
-    local total_kbps = quality.vid_kbps + quality.aud_kbps
-    quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    if quality.suffix~=nil then
+      local total_kbps = quality.vid_kbps + quality.aud_kbps
+      quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    end
 end
 
 -- Show menu and get user selection
@@ -68,9 +76,9 @@ for i, quality in ipairs(qualities) do
 end
 local retval = ultraschall.ShowMenu("Choose quality", menu, xx, yy - 50)
 if retval == -1 or retval < 1 or retval > #qualities then return end
-
 -- Set selected quality
 if retval>=7 then retval=retval+1 end
+if retval>=12 then retval=retval+1 end
 local selected_quality = qualities[retval]
 local vidkbps = selected_quality.vid_kbps
 local audkbps = selected_quality.aud_kbps
@@ -82,6 +90,7 @@ local height_def = selected_quality.h
 local textposy=selected_quality.textypos
 local texth=selected_quality.texth
 local waveformh=selected_quality.waveformh
+local cover_zoom=selected_quality.cover_zoom
 --if lol==nil then return end
 
 function GetPath(str,sep)
@@ -491,7 +500,7 @@ function InsertForegroundTrack(startTime, endTime, cover, trackname)
   COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
-//@param2:zoom 'zoom' -2.16 -15 15 0
+//@param2:zoom 'zoom' ]]..cover_zoom..[[ -15 15 0
 //@param3:xoffs 'X offset' 0 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
