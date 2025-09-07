@@ -47,7 +47,7 @@ abs(recpos[]=spl0+spl1) > minvol ? update=1;
 recpos = ((recpos+1) >= histsize ? 0 : (recpos+1));
 
 @gfx 640 400
-small_mode = gfx_w<200 || gfx_h < 50;
+small_mode = gfx_w<200*gfx_ext_retina || gfx_h < 50*gfx_ext_retina;
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 function draw_button(xp, yp, str) 

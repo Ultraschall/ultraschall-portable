@@ -232,7 +232,7 @@ LYRICS \t trackindex \t beat_position \t lyric \t ...
 
 Retrieves MIDI lyrics for trackindex.
 
-String will have newlines/tabs/backslashes encoded as \\n, \\t and \\. Length is limited to around 16k.
+String will have newlines/tabs/backslashes encoded as \\n, \\t and \\.
 
 * SET/PROJEXTSTATE/section/key/value
 
@@ -246,7 +246,7 @@ PROJEXTSTATE \t section \t key \t string
 
 See: GetProjExtState() API
 
-String will have newlines/tabs/backslashes encoded as \\n, \\t and \\. Length is limited to around 16k.
+String will have newlines/tabs/backslashes encoded as \\n, \\t and \\.
 
 * GET/EXTSTATE/section/key
 

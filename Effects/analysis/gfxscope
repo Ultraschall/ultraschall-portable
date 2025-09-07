@@ -35,7 +35,7 @@ g_hold<0 ? (
 );
 
 @gfx 640 400
-small_mode = gfx_w<200 || gfx_h<100;
+small_mode = gfx_w<200*gfx_ext_retina || gfx_h<100*gfx_ext_retina;
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 gfx_getchar(); // request mouse_cap to be set even when mouse button not down

@@ -70,7 +70,7 @@ recpos >= histsize ? recpos=0;
 gfx_ext_retina>1 ? gfx_setfont(1,"Arial",16*gfx_ext_retina,'b') : gfx_setfont(0);
 
 old_w != gfx_w || old_h!=gfx_h? (
-  small_mode = gfx_w<200 || gfx_h<200;
+  small_mode = gfx_w<200*gfx_ext_retina || gfx_h<200*gfx_ext_retina;
   cur_xpos=0;
   old_w=gfx_w; old_h=gfx_h;
   

@@ -52,6 +52,7 @@ desc:Super8 MIDI-controlled synchronized looper (Cockos)
 // - latch: wait to run commands until next loop iteration
 
 <? nch < 1 ? nch = 8 ?>
+<? maxmem < 8 ? maxmem = 256 ?>
 <?
   loop(x=0;nch,printf("in_pin:input %d\n",x+=1));
   loop(x=0;nch,printf("out_pin:output %d\n",x+=1));
@@ -59,9 +60,10 @@ desc:Super8 MIDI-controlled synchronized looper (Cockos)
 out_pin:monitor output
 out_pin:click output
 
-options: maxmem=33000000 no_meter gfx_idle
-
 config: nch "Channels" 8 1 2 4 8="8 (namesake)" 12 16 24 32 48
+config: maxmem "Memory Size -preserve-config" 256 64="64MB - max length 0:23 for 8 channels @ 44.1kHz" 128="128MB - max length 0:47 for 8 channels @ 44.1kHz" 256="256MB (default) - max length 1:35 for 8 channels @ 44.1kHz" 512="512MB - max length 3:10 for 8 channels @ 44.1kHz" 1024="1GB - max length 6:20 for 8 channels @ 44.1kHz"
+
+options: maxmem=<? printf("%d",maxmem*1024*128); ?> no_meter gfx_idle prealloc=* 
 
 slider1:g_slider_sync=0<0,2,1{off,project,playback}>-Sync
 slider4:g_slider_click_cnt=0<0,64,1>-Click count/length
@@ -72,7 +74,7 @@ slider4:g_slider_click_cnt=0<0,64,1>-Click count/length
 g_nchan = <? printf("%d",nch) ?>;
 g_max_alloc = __memtop(); // JSFX memory available
 g_latchq_len = 1024; // 1024 midi events queueable for latch mode
-g_maxlen = ((g_max_alloc-4096 - g_latchq_len*3)/(g_nchan+1))|0; // use nearly all of available memory
+g_maxlen = ((g_max_alloc - 4096 - g_latchq_len*3)/g_nchan)|0; // use nearly all of available memory
 g_infthreshdb = -120;
 g_infthresh = 10^(g_infthreshdb/20);
 g_latchmode=0;
@@ -147,15 +149,26 @@ function init(x, n1,n2,n3)
   this.updatefromrec();
 );
 
-function get_zero_buffer(buf,buftop) (
-  buftop > 0 ? ( 
-    get_section() != 'gfx' && buftop > max(8192, g_spare_buf_ztop) ? ( 
-      atomic_exch(buf, g_spare_buf);
-      atomic_exch(buftop, g_spare_buf_ztop);
-    );
-    buftop > 0 ? memset(buf,0,buftop);
+// clearing the buffer when starting recording on a particular channel
+function set_need_zero(dt) global(g_maxlen) instance(need_zero nz_0) (
+  need_zero = max(need_zero, min(g_maxlen,dt+1));
+  nz_0 = -1;
+);
+function process_need_zero(p1, p2) global()
+  instance(need_zero nz_0 nz_0e nz_1 nz_1e nz_2 buf) 
+  local(sz)
+(
+  nz_0 === -1 ? (
+    // three write pointers:  0..p1 p1..p2 p2..need_zero
+    nz_0 = 0;
+    nz_0e = nz_1 = min(p1,p2);
+    nz_1e = nz_2 = max(p1,p2);
   );
-  buf;
+  
+  (sz = min(8, nz_0e-nz_0)) > 0 ? ( memset(buf + nz_0, 0, sz); nz_0 += sz; );
+  (sz = min(8, nz_1e-nz_1)) > 0 ? ( memset(buf + nz_1, 0, sz); nz_1 += sz; );
+  (sz = min(8, need_zero-nz_2)) > 0 ? ( memset(buf + nz_2, 0, sz); nz_2 += sz; );
+  nz_2 >= need_zero && nz_1 >= nz_1e && nz_0>=nz_0e ? need_zero=0;
 );
 
 function setstate(st) instance(fpos_slope, fpos2_slope, rec) local(dt)
@@ -166,12 +179,12 @@ function setstate(st) instance(fpos_slope, fpos2_slope, rec) local(dt)
     ) : g_length > 0 ? (
       g_firstrec = 0;   
       g_prevent_processing &= 0xe;
-      this.extra_recording = 0|min(srate*.5, g_maxlen-g_length);
+      this.extra_recording = (g_pos == 0 || g_pos == g_length) ? (0|min(srate*.5, g_maxlen-g_length)) : 0;
     );
   ) : (
     st>0 ? ( 
       st == 2 && (dt = max(rec[st_dirty], this.dirty_top+1)) > 0 ? (
-        this.buf = rec[st_buf] = get_zero_buffer(this.buf,dt);
+        this.set_need_zero(dt);
         this.dirty_top=-1;
         rec[st_dirty]=0;
       );
@@ -237,10 +250,13 @@ function play_or_stop_all() local(want_state rec)
 
 function process_rev(buf)
   instance(rev_state, rev_pos, rev_p0, rev_p1, rev_p2,
-           rev_fade_pos, rev_fade_slope, l_length, l_pos)
+           rev_fade_pos, rev_fade_slope, l_length, l_pos, l_offs)
   local(tmpo old)
   global(srate)
 (
+  // if the user reverses right after starting recording, shrug
+  this.need_zero > 0 ? this.process_need_zero(l_offs+l_length,l_offs+l_length);
+
   // process reverse ahead of the read pointer
   // if l_pos is more than halfway, then we go until the end, then the mirror of the original l_pos+1
   // if l_pos is less than halfway, we go until the halfway point, then to the mirror of the original l_pos+1
@@ -301,7 +317,8 @@ function process(s)
       wrpos < 0 ? wrpos += l_length;
     );
   );
-
+  this.need_zero > 0 ? this.process_need_zero(l_offs+wrpos,l_offs+l_pos);
+  
   r = this.rev_state!==0 ? this.process_rev(buf)*sc : sc > 0.0001 ? buf[l_pos]*sc;
   monmode === 0 ? (
     // no monitoring
@@ -466,17 +483,6 @@ function estbpm(len) local(bpm, tsnum) global(ts_num, srate, cfgp_clickcnt)
   bpm;
 );
 
-function gen_action(i)
-(
-  i == cfgp_reset  ? reset() : 
-  i == cfgp_halve  ? adjustsizes(0.5,1) : 
-  i == cfgp_double ? adjustsizes(2,1) : 
-  i == cfgp_double_norep ? adjustsizes(2,0) : 
-  i == cfgp_export  ? g_need_export=1 : 
-  i == cfgp_xfade   ? adjustsizes(1, 0) :
-  i == cfgp_playall || i == cfgp_playsel ? g_inject_midinote = 1024 + i; // inject to support latch mode
-);
-
 
 // one-time initialization
 ext_noinit == 0 ? (
@@ -536,7 +542,6 @@ ext_noinit == 0 ? (
   mem_stlist = alloc(g_nchan * st_num);
 
   g_inject_midinote = 0;
-  g_need_export = 0;
 
   g_inactive_blockcnt=0;  
   g_active_mask = 0; 
@@ -548,9 +553,7 @@ ext_noinit == 0 ? (
   g_prevent_processing = 0; // &1=gate, &2=sync mode
   g_chan_selected = -1; // currently selected channel
   g_lastmsg = -1;
-  g_spare_buf = alloc(g_maxlen);
-  g_spare_buf_ztop = 0;
-
+  
   <? loop(x=0;a=36; nch, 
       printf("ch%d.init(%d,%d,%d, 128);\n",x+1,x,a,a+1);
       a+= x==1 ||x==4 || x==6? 3 : 2;
@@ -628,11 +631,6 @@ doconf();
 @block
 g_peak_decay = 10^(-samplesblock/srate*10);
 
-function trimspare() local(a) (
-  a = min(g_spare_buf_ztop, 65536);
-  memset(g_spare_buf + (g_spare_buf_ztop -= a),0,a);
-);
-g_spare_buf_ztop > 0 ? trimspare();
 
 g_prevent_processing &= 0xd;
 (g_syncmode=cfgp_sync[]) ? (
@@ -654,7 +652,7 @@ g_prevent_processing &= 0xd;
 
 g_syncmode==0 || (!(play_state&1) && g_syncmode != 2) ? (
   g_active_mask==0 ? (
-    <? loop(i=0;nch, printf("%s ch%d.fpos2 > 0.0001\n",i?"||":"",i); i+=1; );
+    <? loop(i=0;nch, printf("%s ch%d.fpos2 > 0.0001\n",i?"||":"",i+1); i+=1; );
        printf("? g_inactive_blockcnt=0;\n"); ?>
     g_inactive_blockcnt < 2 ? ( 
       g_inactive_blockcnt+=1; 
@@ -687,8 +685,9 @@ function onblock()
     this.rev_requested && atomic_exch(this.rev_state=0,this.rev_requested) ? (
       this.rev_state &= 1;
       this.rev_pos = -1;
-    ) : last_w=-1; // force redraw
+    );
   );
+  this.rev_state !== 0 ? last_w=-1; // force redraw if reversing this block
 );
 
 <? loop(x=0;nch, printf("ch%d.onblock();\n",x+=1)) ?>
@@ -776,12 +775,12 @@ while (sidx == nextmsg_offs)
       latchq_add(nextmsg_1,nextmsg_2,nextmsg_3);
     );
     
-    nextmsg_2 == cfgp_reset[]        ? gen_action(cfgp_reset);
-    nextmsg_2 == cfgp_halve[]        ? gen_action(cfgp_halve);
-    nextmsg_2 == cfgp_double[]       ? gen_action(cfgp_double);
-    nextmsg_2 == cfgp_double_norep[] ? gen_action(cfgp_double_norep); 
-    nextmsg_2 == cfgp_export[]       ? gen_action(cfgp_export);
-    nextmsg_2 == cfgp_xfade[]        ? gen_action(cfgp_xfade);
+    nextmsg_2 == cfgp_reset[]        ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "r")) :
+    nextmsg_2 == cfgp_halve[]        ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "h")) :
+    nextmsg_2 == cfgp_double[]       ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "d")) :
+    nextmsg_2 == cfgp_double_norep[] ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "D")) :
+    nextmsg_2 == cfgp_export[]       ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "e")) :
+    nextmsg_2 == cfgp_xfade[]        ? (strlen(#mainthread_todo)<100 ? strcat(#mainthread_todo, "x"));
       
     nextmsg_2 < 1024 ? g_lastmsg = nextmsg_2;
   );
@@ -798,6 +797,8 @@ g_chan_selected >= 0 ? (
     g_chan_peak >= g_recstart_gate ? g_prevent_processing = 0;
   );
 );
+
+g_pos >= g_length && g_firstrec == 0 ? g_pos = 0;
 
 <? loop(x=0;nch, printf("spl%d=ch%d.process(spl%d);\n",x,x+1,x);x+=1) ?>
 
@@ -1007,8 +1008,26 @@ function draw_value_tweaker(xpos,ypos,midimem,draw, lbl)
   w;
 );
 
-function draw_waveform(xpos,ycent,w,amp,bptr,srclen) local(minv,maxv, i,v, di, dbptr)
+function draw_waveform(xpos,ycent,w,amp,start_offs,bptr,srclen,chan_idx)
+  local(minv,maxv, i,v, di, dbptr z0 z0e z1 z1e z2 z2e)
 (
+  bptr += start_offs;
+  <? 
+    0 /*enable this if you want to show/debug zeroing logic*/ ? printf("z2e = 0;") :
+    loop(i=0; nch,
+      printf("chan_idx == %d ? ( (z2e = ch%d.need_zero)>0 ? ( 
+                  z0 = ch%d.nz_0; z0e = ch%d.nz_0e;
+                  z1 = ch%d.nz_1; z1e = ch%d.nz_1e;
+                  z2 = ch%d.nz_2;
+                )) %s\n",i,i+1,i+1,i+1,i+1,i+1,i+1,
+                i == nch-1 ? ";" : ":");
+                i+=1; 
+      );
+  ?>
+  z2e > 0 ? (
+    z0 += start_offs; z1 += start_offs; z2 += start_offs;
+    z0e += start_offs; z1e += start_offs; z2e += start_offs;
+  );
   minv=100;
   maxv=-100;
   i=xpos|0;
@@ -1017,7 +1036,10 @@ function draw_waveform(xpos,ycent,w,amp,bptr,srclen) local(minv,maxv, i,v, di, d
   di = w / srclen;
   ycent|=0;
   loop(srclen,
-    v=bptr[0];
+    v = z2e <= 0 || (
+        (bptr < z0 || bptr >= z0e) &&
+        (bptr < z1 || bptr >= z1e) &&
+        (bptr < z2 || bptr >= z2e)) ? bptr[0] : 0;
     minv=min(v,minv);
     maxv=max(v,maxv);
     bptr+=dbptr;
@@ -1180,7 +1202,7 @@ function draw(ixpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
 
       gfx_set(0.5);
       w > 80 && rec[st_dirty] && (wl = floor(g_length/rec[st_div] + 0.5)) > 0 ?
-        draw_waveform(xpos+gap,ypos+h*.5,floor(w/rec[st_div]+.5)-2*gap,h*.25, rec[st_buf]+(g_offs % wl),wl);
+        draw_waveform(xpos+gap,ypos+h*.5,floor(w/rec[st_div]+.5)-2*gap,h*.25, rec[st_buf], (g_offs % wl),wl, i);
 
       rec[st_monmode]==0 ? (
         gfx_set(0.2)
@@ -1298,12 +1320,18 @@ function draw(ixpos, ypos) local(i i2 w h gap rec mode force_redraw rowsize
                sprintf(#,"%s%.0f mS",w<98 ? "" : w<160 ? "fade " : "halve fade: ",lasthalve)
                );
     );
-    draw_value_tweaker(-(xpos+w-gap),
-      min(ypos+h-24-gap,gfx_h-24), 
-      mem_gen_cfg + i, force_redraw, 0);
+
+    i += mem_gen_cfg;
+    draw_value_tweaker(-(xpos+w-gap), min(ypos+h-24-gap,gfx_h-24),  i, force_redraw, 0);
 
     !(last_mouse_cap&1) && (mouse_cap&1) && mouse_in(xpos,ypos,w,h) ? (
-      gen_action(mem_gen_cfg + i);
+      i == cfgp_reset        ? strcat(#mainthread_todo, "r") :
+      i == cfgp_halve        ? strcat(#mainthread_todo, "h") :
+      i == cfgp_double       ? strcat(#mainthread_todo, "d") :
+      i == cfgp_double_norep ? strcat(#mainthread_todo, "D") :
+      i == cfgp_export       ? strcat(#mainthread_todo, "e") :
+      i == cfgp_xfade        ? strcat(#mainthread_todo, "x") :
+      i == cfgp_playall || i == cfgp_playsel ? g_inject_midinote = 1024 + i; // inject to support latch mode
     );
 
     t+=1;
@@ -1335,7 +1363,6 @@ function draw_position(ypos) local(last_pos,last_len)
 
 function draw_topbar(need_ref) local(s,i,t, lastlen, lastgate, lastlatch, lastclickcount, lastvclickoffs, lastoffs, lastsync)
 (
-//need_ref=1;
   need_ref == 0 ? (
     need_ref = (lastlen != g_length || 
                 lastsync != cfgp_sync[] ||
@@ -1515,11 +1542,8 @@ function draw_trim_waveform(xpos, ypos, w, h, chan, isend)
     buf = 0;
   );
   
-  buf += rec[st_buf];
-  
-  
   g_length && rec[st_dirty] ? 
-    draw_waveform(xpos2,ypos+h*.5,w2,h*.25,buf,len);
+    draw_waveform(xpos2,ypos+h*.5,w2,h*.25,rec[st_buf],buf,len,chan);
     
   gfx_set(0,.5,.7,.5);
   xpos += (w*(isend?.8:.2))|0;
@@ -1596,7 +1620,7 @@ function draw_trim_waveform(xpos, ypos, w, h, chan, isend)
   );
 ); // !(gfx_ext_flags&2)
 
-// export must happen from UI thread
+
 function export()  local(rec, flag, tidx, idx, ster, l)
 (
   rec = mem_stlist;
@@ -1621,8 +1645,14 @@ function export()  local(rec, flag, tidx, idx, ster, l)
   );
 );
 
-g_need_export ? (
-  export();
-  g_need_export = 0;
-);
+strlen(#mainthread_todo) > 0 ? (
+  mtc = str_getchar(#mainthread_todo,0);
+  strcpy_substr(#mainthread_todo,#mainthread_todo,1);
 
+  mtc == 'r' ? reset() :
+  mtc == 'h' ? adjustsizes(0.5,1) :
+  mtc == 'd' ? adjustsizes(2,1) :
+  mtc == 'D' ? adjustsizes(2,0) :
+  mtc == 'e' ? export() :
+  mtc == 'x' ? adjustsizes(1, 0);
+);
