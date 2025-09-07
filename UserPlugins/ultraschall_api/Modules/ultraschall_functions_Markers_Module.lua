@@ -5551,11 +5551,7 @@ function ultraschall.AddShownoteMarker(pos, name)
   if type(name)~="string" then ultraschall.AddErrorMessage("AddShownoteMarker", "name", "must be a string", -3) return -1  end
   local Count = ultraschall.CountAllCustomMarkers("Shownote")
   local Color
-  if reaper.GetOS():sub(1,3)=="Win" then
-    Color = 0x3E90FF|0x1000000
-  else
-    Color = 0xFF903E|0x1000000
-  end
+  Color=reaper.ColorFromNative(255,144,255)  
   local name2=reaper.genGuid("")..reaper.time_precise()..reaper.genGuid("")
   local A={ultraschall.AddCustomMarker("Shownote", pos, name2, Count+1, Color)}  
   A[4]=A[4]+1

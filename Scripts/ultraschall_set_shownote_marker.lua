@@ -25,20 +25,26 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-reaper.set_action_options(3)
 
--- Chapter Marker
-ultraschall.MarkerMenu_SetEntry_DefaultMarkers(0, 0, 1, "MISSING", "Set Chapter-marker metadata", "Set the metadata of the chapter-marker", 0, false, false)
+-- A=ultraschall.GetUSExternalState("ultraschall_follow", "state")
 
--- Planned Chapter Marker
-ultraschall.MarkerMenu_SetEntry_DefaultMarkers(1, 0, 1, "MISSING", "Set planned Chapter-marker metadata", "Set the metadata of the planned chapter-marker", 0, false, false)
+commandid = reaper.NamedCommandLookup("_Ultraschall_Toggle_Follow")
+buttonstate = reaper.GetToggleCommandStateEx(0, commandid)
+if buttonstate <= 0 then buttonstate = 0 end
 
+if reaper.GetPlayState() == 0 or reaper.GetPlayState() == 2 then -- 0 = Stop, 2 = Pause
+  current_position = reaper.GetCursorPosition() -- Position of edit-cursor
+else
+    if buttonstate == 1 then -- follow mode is active
+    current_position = reaper.GetPlayPosition() -- Position of play-cursor
+--     elseif reaper.GetPlayState()~=0 then
+--          current_position = reaper.GetPlayPosition() -- Position of play-cursor
+  else
+    current_position = reaper.GetCursorPosition() -- Position of edit-cursor
+  end
+end
 
--- ShowNotes
-ultraschall.MarkerMenu_SetEntry_DefaultMarkers(3, 0, 1, "_RSd20d7b14266554c01126a443c7973e3d462d08d4", "Set shownote-marker metadata", "Set the metadata of the shownote", 0, false, false)
+runcommand("_Ultraschall_Center_Arrangeview_To_Cursor") -- scroll to cursor if not visible
+markernumber, guid, shownotemarker_index = ultraschall.AddShownoteMarker(current_position, "")
+ultraschall.pause_follow_one_cycle()
 
--- Edit-marker
-retval = ultraschall.MarkerMenu_SetEntry_DefaultMarkers(2, 0, 1, "MISSING", "Set Edit-marker title", "Set the title of the Edit-marker", 0, false, false)
-
-
---ultraschall.MarkerMenu_Stop()
