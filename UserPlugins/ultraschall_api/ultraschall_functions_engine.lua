@@ -1012,6 +1012,7 @@ function ultraschall.ShowLastErrorMessage(dunk, target, message_type)
     end
   end
   local retval
+  if context_function==nil then context_function="" end
   if parmname~="" then 
     -- if error-causing-parameter was given, display this message
     retval=functionname.."\n\n"..parmname.."\nerror  : "..errormessage.."\n\nerrcode: "..errcode.."\n\nFunction context: "..context_function.."\nFunction line_number: "..context_sourceline.."\n\nFunction source-file: "..context_sourcefile:sub(2,-1)

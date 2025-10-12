@@ -26,17 +26,14 @@
 
 -- Meo-Ada Mespotine - 8th of December 2023
 
--- sets tracks under mouse muted in the mute-envelope within the time-selection
+-- sets last clicked(touched) track muted in the mute-envelope within the time-selection
 -- shows the mute-envelope
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 start_sel, end_sel = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
-reaper.Undo_BeginBlock()
-
-track = reaper.GetTrackFromPoint(reaper.GetMousePosition())
-if track==nil then return end
+track=reaper.GetLastTouchedTrack()
 ultraschall.ActivateMute_TrackObject(track, true)
 envelope=reaper.GetTrackEnvelopeByName(track, "Mute")
 ENVPoint=reaper.GetEnvelopePointByTime(envelope, end_sel-0.000001)
