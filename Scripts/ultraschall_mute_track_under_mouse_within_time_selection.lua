@@ -36,11 +36,18 @@ start_sel, end_sel = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 reaper.Undo_BeginBlock()
 
 track = reaper.GetTrackFromPoint(reaper.GetMousePosition())
+if track==nil then return end
 ultraschall.ActivateMute_TrackObject(track, true)
-ultraschall.ToggleMute_TrackObject(track, start_sel, 0)
-ultraschall.ToggleMute_TrackObject(track, end_sel, 1)
+envelope=reaper.GetTrackEnvelopeByName(track, "Mute")
+ENVPoint=reaper.GetEnvelopePointByTime(envelope, end_sel-0.000001)
+retval, time, value = reaper.GetEnvelopePoint(envelope, ENVPoint)
 
-reaper.Undo_EndBlock("Muting mute-envelope of track under mouse", -1)
+reaper.DeleteEnvelopePointRange(envelope, start_sel, end_sel)
+track=math.tointeger(reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER"))
 
+ultraschall.ToggleMute(track, start_sel, 0)
+ultraschall.ToggleMute(track, end_sel, math.floor(value))
 
+time_selection_start, time_selection_end = reaper.GetSet_LoopTimeRange2(0, true, false, 0, 0, false)
 
+reaper.Undo_EndBlock("Muting mute-envelope of last clicked track", -1)
