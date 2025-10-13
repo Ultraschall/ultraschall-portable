@@ -42,38 +42,63 @@ reaper.CSurf_OnPlayRateChange(1.0)
 
 -- Quality presets
 local qualities = {
-    {label = "Low quality(Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
-    {label = "Medium quality(TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
-    {label = "High quality(Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
-    {label = "Super quality(high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
+    {label = " Square (1:1)"},
+    {label = "Low (Mastodon)",            suffix = "-low",  vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",  vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Portrait (9:16)"},
+    {label = "Low Portrait(Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Medium Portrait(TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "High Portrait(Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Super High Portrait(Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Landscape (16:9)"},
+    {label = "Low (Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
 }
 
 -- Calculate MB for each quality
 for _, quality in ipairs(qualities) do
-    local total_kbps = quality.vid_kbps + quality.aud_kbps
-    quality.mb = ""--tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    if quality.suffix~=nil then
+      --local total_kbps = quality.vid_kbps + quality.aud_kbps
+      quality.mb = ""--tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    end
 end
 
+-- Show menu and get user selection
 -- Show menu and get user selection
 local xx, yy = reaper.GetMousePosition()
 local menu = ""
 for i, quality in ipairs(qualities) do
-    menu = menu .. "   "..quality.label.."|"
+    if quality.label:sub(1,1)~=" " then
+      menu = menu .. quality.label .. "|"
+    else
+      local label=quality.label:sub(2,-1)
+      if label:len()>0 then label="#"..label end
+      menu=menu..label.."|"
+    end
 end
-
-local retval = ultraschall.ShowMenu("Render Regions as Audiogram in", menu, xx, yy - 50)
-menu_retval=retval
-if retval>5 then retval=retval-5 end
---print2(retval)
+local retval = ultraschall.ShowMenu("Choose quality", menu, xx, yy - 50)
 if retval == -1 or retval < 1 or retval > #qualities then return end
--- Set selected quality
+menu_retval=retval
+if retval>=7 then retval=retval+1 end
+if retval>=12 then retval=retval+1 end
 local selected_quality = qualities[retval]
 local vidkbps = selected_quality.vid_kbps
 local audkbps = selected_quality.aud_kbps
 local fps_def = selected_quality.fps
-local quality = selected_quality.suffix
-local width_def = 1224
-local height_def = 1224
+quality = selected_quality.suffix
+quality2=selected_quality
+local width_def = selected_quality.w
+local height_def = selected_quality.h
+local textposy=selected_quality.textypos
+local texth=selected_quality.texth
+local waveformh=selected_quality.waveformh
+local cover_zoom=selected_quality.cover_zoom
 
 retval_audiogram_title=reaper.MB("Do you want to add the region-text as title to the top of the audiogram?", "Regiontext as Audiogramtitle?", 4)
 
@@ -81,7 +106,7 @@ if retval_audiogram_title==6 then
   local found_markers={}
   for i=0, reaper.CountProjectMarkers(0) do
     local index, isrgn, _, _, name, markernumber = reaper.EnumProjectMarkers3(0, i)
-    if name:len()>35 then
+    if isrgn==true and name:len()>35 then
       found_markers[#found_markers+1]=markernumber..": "..name:sub(1,35).."..."
     end
   end
@@ -495,17 +520,21 @@ end
 
 function InsertForegroundTrack(startTime, endTime, cover, trackname)
   -- inserts the foreground-cover-image track, including all of its fx
-  if cover:sub(-4,-1)==".png" then
-    ultraschall.ResizePNG(cover, cover.."-audiogram.png", true, width_def, height_def, 100, 1, 1)
-    cover=cover.."-audiogram.png"
+  if COVER1==nil then
+    if cover:sub(-4,-1)==".png" then
+      ultraschall.ResizePNG(cover, cover.."-audiogram.png", true, width_def, height_def, 100, 1, 1)
+      cover=cover.."-audiogram.png"
+    else
+      ultraschall.ResizeJPG(cover, cover.."-audiogram.jpg", true, width_def, height_def, 100, 1, 1)
+      cover=cover.."-audiogram.jpg"
+    end
+    COVER1=cover
   else
-    ultraschall.ResizeJPG(cover, cover.."-audiogram.jpg", true, width_def, height_def, 100, 1, 1)
-    cover=cover.."-audiogram.jpg"
-  end
-  COVER1=cover
+    cover=COVER1
+  end  
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
-//@param2:zoom 'zoom' -2.16 -15 15 0
+//@param2:zoom 'zoom' ]]..cover_zoom..[[ -15 15 0
 //@param3:xoffs 'X offset' 0 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
@@ -536,8 +565,8 @@ VideoCode2=[[// Text/timecode overlay
 #text=""; // set to string to override
 font="Arial";
 
-//@param1:size 'text height' 0.045 0.01 0.2 0.1 0.001
-//@param2:ypos 'y position' 0.05 0 1 0.5 0.01
+//@param1:size 'text height' ]]..texth..[[ 0.01 0.2 0.1 0.001
+//@param2:ypos 'y position' ]]..textposy..[[ 0 1 0.5 0.01
 //@param3:xpos 'x position' 0.5 0 1 0.5 0.01
 //@param4:border 'bg pad' 0.01 0 1 0.5 0.01
 //@param5:fgc 'text bright' 1.0 0 1 0.5 0.01
@@ -596,17 +625,21 @@ end
 
 function InsertBackgroundTrack(startTime, endTime, cover, trackname)
   -- inserts the background-cover-image track, including all of its fx
-  if cover:sub(-4,-1)==".png" then
-    retval=ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 1000, 1, 1)
-    cover=cover.."-audiogram-blurred.png"
+  if COVER2==nil then
+    if cover:sub(-4,-1)==".png" then
+      retval=ResizeAndBlurPNG(cover, cover.."-audiogram-blurred.png", true, width_def+200, height_def+200, 1000, 1, 1)
+      cover=cover.."-audiogram-blurred.png"
+    else
+      retval=ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
+      cover=cover.."-audiogram-blurred.jpg"
+    end
+    COVER2=cover
+    if retval~=nil then return retval end
   else
-    retval=ResizeAndBlurJPG(cover, cover.."-audiogram-blurred.jpg", true, width_def+200, height_def+200, 1000, 1, 1)
-    cover=cover.."-audiogram-blurred.jpg"
+    cover=COVER2
   end
-
-  if retval~=nil then return retval end
-
-  COVER2=cover
+  
+  
   VideoCode1=[[// Blur (low quality)
   //@param1:weight_parm 'blur amount' 0 0 .99 0.5 0.001
   //@param2:weight_mod 'Y modifier' 1 .8 1.2 1.0 0.001
@@ -861,7 +894,7 @@ function setAudiogramFX()
 //@param 12:bg_g "background G" 0 0 1 .5 .02
 //@param 13:bg_b "background B" 0 0 1 .5 .02
 //@param 14:cx "center X" .5 0 1 .5 .01
-//@param 15:cy "center Y" .89 0 1 .5 .01
+//@param 15:cy "center Y" ]]..waveformh..[[ 0 1 .5 .01
 
 last_frame && fadespeed > 0 ? (
   xo = project_w*zoom_amt*.25;
@@ -952,7 +985,7 @@ function Audiogram_Main()
   count=0
   for i=0, reaper.CountProjectMarkers(0)-1 do
     retval, isrgn, startTime, endTime, trackname, index_number = reaper.EnumProjectMarkers3(0, i)
-    if retval_audiogram_title==7 then trackname2=" " else trackname2=trackname end
+    if retval_audiogram_title==7 or trackname=="" then trackname2=" " else trackname2=trackname end
     if isrgn==true then
       startTime_format=reaper.format_timestr(startTime, "")
       startTime_format=startTime_format:match("(.*):").."m"..startTime_format:match(".*:(.*)")
@@ -979,8 +1012,8 @@ function Audiogram_Main()
       oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
       
       -- set video-dimensions to square of 1024x1024 pixels
-      reaper.SNM_SetIntConfigVar("projvidw", 1024) 
-      reaper.SNM_SetIntConfigVar("projvidh", 1024) 
+      reaper.SNM_SetIntConfigVar("projvidw", width_def) 
+      reaper.SNM_SetIntConfigVar("projvidh", height_def) 
       
       -- set correct track-order for rendering the audiogram
       projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
@@ -1028,11 +1061,12 @@ function Audiogram_Main()
       
       -- undo everything: an easy way to reset, leaving just the rendered video:
       reaper.Main_OnCommand(40029, 0)
-      os.remove(COVER1)
-      os.remove(COVER2)
+
       if count2<1 then break end
     end
   end
+  os.remove(COVER1)
+  os.remove(COVER2)
   
   if count>0 then
     -- as if the user wants to open up the folder, where the audiogram got rendered to

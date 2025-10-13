@@ -35,36 +35,62 @@ if length==0 then reaper.MB("Please make a time-selection first!", "No time sele
 
 -- Quality presets
 local qualities = {
-    {label = "Low (Mastodon)", suffix = "-low", vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318},
-    {label = "Medium (TikTok/Instagram)", suffix = "-med", vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98},
-    {label = "High (Youtube Shorts)", suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97},
-    {label = "Super high (Youtube HQ)", suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068}
+    {label = " Square (1:1)"},
+    {label = "Low (Mastodon)",            suffix = "-low",  vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",  vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high", vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068, w=1224, h=1224, textypos=0.08, texth=0.045, waveformh=0.89, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Portrait (9:16)"},
+    {label = "Low Portrait(Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Medium Portrait(TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "High Portrait(Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = "Super High Portrait(Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=1224, h=2176, textypos=0.27, texth=0.025, waveformh=0.8, cover_zoom=-2.16},
+    {label = " "},
+    {label = " Landscape (16:9)"},
+    {label = "Low (Mastodon)",            suffix = "-low",        vid_kbps = 1024, aud_kbps = 128, fps = 20, mult = 1.0318, w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Medium (TikTok/Instagram)", suffix = "-med",        vid_kbps = 2048, aud_kbps = 192, fps = 30, mult = 0.98,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "High (Youtube Shorts)",     suffix = "-high",       vid_kbps = 3500, aud_kbps = 192, fps = 30, mult = 0.97,   w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
+    {label = "Super high (Youtube HQ)",   suffix = "-super_high", vid_kbps = 5500, aud_kbps = 360, fps = 60, mult = 1.068,  w=2176, h=1224, textypos=0.08, texth=0.045, waveformh=0.92, cover_zoom=-4.16},
 }
 
 -- Calculate MB for each quality
 for _, quality in ipairs(qualities) do
-    local total_kbps = quality.vid_kbps + quality.aud_kbps
-    quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    if quality.suffix~=nil then
+      local total_kbps = quality.vid_kbps + quality.aud_kbps
+      quality.mb = tostring((((length * total_kbps) / 1024 / 8) * quality.mult) + 0.00001):match("(.*%...)")
+    end
 end
 
 -- Show menu and get user selection
 local xx, yy = reaper.GetMousePosition()
 local menu = ""
 for i, quality in ipairs(qualities) do
-    menu = menu .. quality.label .. " - ca." .. quality.mb .. "MB|"
+    if quality.label:sub(1,1)~=" " then
+      menu = menu .. quality.label .. " - ca." .. quality.mb .. "MB|"
+    else
+      local label=quality.label:sub(2,-1)
+      if label:len()>0 then label="#"..label end
+      menu=menu..label.."|"
+    end
 end
 local retval = ultraschall.ShowMenu("Choose quality", menu, xx, yy - 50)
 if retval == -1 or retval < 1 or retval > #qualities then return end
-
 -- Set selected quality
+if retval>=7 then retval=retval+1 end
+if retval>=12 then retval=retval+1 end
 local selected_quality = qualities[retval]
 local vidkbps = selected_quality.vid_kbps
 local audkbps = selected_quality.aud_kbps
 local fps_def = selected_quality.fps
-local quality = selected_quality.suffix
-local width_def = 1224
-local height_def = 1224
-
+quality = selected_quality.suffix
+quality2=selected_quality
+local width_def = selected_quality.w
+local height_def = selected_quality.h
+local textposy=selected_quality.textypos
+local texth=selected_quality.texth
+local waveformh=selected_quality.waveformh
+local cover_zoom=selected_quality.cover_zoom
 --if lol==nil then return end
 
 function GetPath(str,sep)
@@ -474,7 +500,7 @@ function InsertForegroundTrack(startTime, endTime, cover, trackname)
   COVER1=cover
   VideoCode1=[[//Image overlay
 //@param1:opacity 'opacity' 1
-//@param2:zoom 'zoom' -2.16 -15 15 0
+//@param2:zoom 'zoom' ]]..cover_zoom..[[ -15 15 0
 //@param3:xoffs 'X offset' 0 -1 1 0
 //@param4:yoffs 'Y offset' 0 -1 1 0
 //@param6:filter 'filter' 0 0 1 0.5 1
@@ -501,12 +527,15 @@ img2 != img1 && input_info(img2,sw,sh) ? (
   );
 );]]
 
+--//@param1:size 'text height' 0.045 0.01 0.2 0.1 0.001
+--//@param2:ypos 'y position' 0.05 0 1 0.5 0.01
+--ABBBBABBBBABBBBABBBBABBBBABBBBABBBB
 VideoCode2=[[// Text/timecode overlay
 #text=""; // set to string to override
 font="Arial";
 
-//@param1:size 'text height' 0.045 0.01 0.2 0.1 0.001
-//@param2:ypos 'y position' 0.05 0 1 0.5 0.01
+//@param1:size 'text height' ]]..texth..[[ 0.01 0.2 0.1 0.001
+//@param2:ypos 'y position' ]]..textposy..[[ 0 1 0.5 0.01
 //@param3:xpos 'x position' 0.5 0 1 0.5 0.01
 //@param4:border 'bg pad' 0.01 0 1 0.5 0.01
 //@param5:fgc 'text bright' 1.0 0 1 0.5 0.01
@@ -686,9 +715,9 @@ function renderAudiogramMac(Audiogram_Title)
   vid_kbps = vidkbps
   aud_kbps = audkbps
   width=math.tointeger(reaper.SNM_GetIntConfigVar("projvidw", -1))
-  if width == 0 then width = 1024 end -- default width
+  if width == 0 then width = 1350 end -- default width
   height=math.tointeger(reaper.SNM_GetIntConfigVar("projvidh", -1))
-  if height == 0 then height = 1024 end -- default height
+  if height == 0 then height = 1350 end -- default height
   
   width=width_def
   height=height_def
@@ -807,7 +836,7 @@ function setAudiogramFX()
 //@param 12:bg_g "background G" 0 0 1 .5 .02
 //@param 13:bg_b "background B" 0 0 1 .5 .02
 //@param 14:cx "center X" .5 0 1 .5 .01
-//@param 15:cy "center Y" .89 0 1 .5 .01
+//@param 15:cy "center Y" ]]..waveformh..[[ 0 1 .5 .01
 
 last_frame && fadespeed > 0 ? (
   xo = project_w*zoom_amt*.25;
@@ -924,8 +953,8 @@ function main2()
   oldvidh=reaper.SNM_GetIntConfigVar("projvidh", 1024) 
   
   -- set video-dimensions to square of 1024x1024 pixels
-  reaper.SNM_SetIntConfigVar("projvidw", 1024) 
-  reaper.SNM_SetIntConfigVar("projvidh", 1024) 
+  reaper.SNM_SetIntConfigVar("projvidw", width_def) 
+  reaper.SNM_SetIntConfigVar("projvidh", height_def) 
   
   -- set correct track-order for rendering the audiogram
   projvidflags=reaper.SNM_GetIntConfigVar("projvidflags", -1)
