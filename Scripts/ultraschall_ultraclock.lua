@@ -64,6 +64,12 @@ local info = debug.getinfo(1,'S');
 script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
 GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
 
+BlinkTime=0
+RemainingBlink_menu=tonumber(ultraschall.GetUSExternalState("ultraschall_clock", "remaining_blink"))
+if RemainingBlink_menu==nil then RemainingBlink=0 else RemainingBlink=RemainingBlink_menu end
+RemainingBlink=RemainingBlink*300
+A11=0
+
 if reaper.osara_outputMessage==nil then
   function reaper.osara_outputMessage()
   end
@@ -284,17 +290,24 @@ function Init()
   uc_menu={} for i=1,10 do uc_menu[i]={} end --create 2d array for 6 menu entries
 
   uc_menu[1]={text="Show LUFS (Master)"    , checked= (preset&1==1)}
-  uc_menu[2]={text="Show Realtime", checked= (preset&2==2)}
-  uc_menu[3]={text="Show Timecode", checked= (preset&4==4)}
+  uc_menu[2]={text="Show Realtime", checked = (preset&2==2)}
+  uc_menu[3]={text="Show Timecode", checked = (preset&4==4)}
 
   uc_menu[4]={text="Show Remaining Project Time"    , checked= (preset&8==8)}
-  uc_menu[5]={text="Show Time-Selection"    , checked= (preset&16==16)}
-  uc_menu[6]={text="Show Project Length"    , checked= (preset&32==32)}
+  uc_menu[5]={text="Show Time-Selection"    , checked = (preset&16==16)}
+  uc_menu[6]={text="Show Project Length"    , checked = (preset&32==32)}
   uc_menu[7]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&64==64)}
 
-  uc_menu[8]={text="", checked=false} -- separator
-  uc_menu[9]={text="Dock Dashboard window to Docker", checked=docked}
-  uc_menu[10]={text="Close Window",checked=false}
+  --uc_menu[8]={text="", checked=false} -- separator
+  uc_menu[8]={text=">Blink when x minutes are left til project end", checked=false}
+  uc_menu[9]={text="never blink", checked=RemainingBlink_menu==0}
+  uc_menu[10]={text="5 minutes", checked=RemainingBlink_menu==1}
+  uc_menu[11]={text="10 minutes", checked=RemainingBlink_menu==2}
+  uc_menu[12]={text="15 minutes", checked=RemainingBlink_menu==3}
+  uc_menu[13]={text="20 minutes", checked=RemainingBlink_menu==4}
+  uc_menu[14]={text="<", checked=false}
+  uc_menu[15]={text="Dock Dashboard window to Docker", checked=docked}
+  uc_menu[16]={text="Close Window",checked=false}
 end
 
 function InitGFX()
@@ -327,6 +340,7 @@ function showmenu(trigger)
   local menu_string=""
   local i=1
   for i=1,#uc_menu do
+    ABBBA=uc_menu[i]
     if uc_menu[i].checked==true then menu_string=menu_string.."!" end
     menu_string=menu_string..uc_menu[i].text.."|"
   end
@@ -335,8 +349,15 @@ function showmenu(trigger)
   local ret2=ret
 
   if ret>0 then -- a line was clicked
-    if ret>7 then ret2=ret+1 end -- separator does not have an id ...
-    if uc_menu[ret2].checked~=nil then
+    if ret>7 then ret2=ret end -- separator does not have an id ...
+    if ret>=8 and ret<=14 then
+      for i=9, 14 do
+        uc_menu[i].checked=false
+      end
+      uc_menu[ret+1].checked=true
+      ultraschall.SetUSExternalState("ultraschall_clock", "remaining_blink", ret-8)  --save state docked
+      RemainingBlink=300*(ret-8)
+    elseif uc_menu[ret2].checked~=nil then
       uc_menu[ret2].checked=not uc_menu[ret2].checked
       preset=0
       for i=1,7 do
@@ -730,7 +751,8 @@ function drawClock()
     checkpos=pos:match("(.-):")
     if checkpos:len()==1 then addzero="0" else addzero="" end
     WriteAlignedText(status,txt_color, clockfont_bold, txt_line[3].size * fsize ,txt_line[3].y*height+border, nil, nil, nil, nil, nil, nil, add_color4) -- print Status (Pause/Play...)
-    time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border, nil, nil, nil, nil, nil, nil, add_color4, focused==4) --print timecode in h:mm:ss format
+    ABBAAAA=add_color4+BlinkTime
+    time_x, time_y, time_w, time_h = WriteAlignedText(plus..addzero..pos, txt_color, clockfont_bold, txt_line[4].size * fsize,txt_line[4].y*height+border, nil, nil, nil, nil, nil, nil, add_color4+BlinkTime, focused==4) --print timecode in h:mm:ss format
     
     projectpos_msg=plus..addzero..format_time_for_tts(pos)
   else
@@ -839,11 +861,10 @@ function MainLoop()
   if Triggered==true then
     local ret=showmenu(menuposition)
     menuposition=nil
-
-    if ret==8 then -- /undock
+    if ret==13 then -- /undock
       dock_state=gfx.dock(-1)
-      if  dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
-    elseif ret==9 then exit_clock()
+      if dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
+    elseif ret==14 then exit_clock()
     end
 
     if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
@@ -903,6 +924,17 @@ function MainLoop()
     gfx.update()
     --ALABAMASONG=GetProjectLength()
     drawn_already_in_this_loop=false
+    A11=A11+1
+    --BlinkTimeRemaining=reaper.GetProjExtState(0, "Ultraschall", "RemainingBlinkTime"
+    if (reaper.GetPlayState()~=0 and reaper.GetPlayState()&2~=2) 
+    and A11>=15 
+    and reaper.GetPlayPosition()>=reaper.GetProjectLength()-RemainingBlink 
+    and reaper.GetPlayPosition()<=reaper.GetProjectLength() then 
+        BlinkTime=1 
+    else 
+        BlinkTime=0 
+    end
+    if A11==30 then A11=0 end
     reaper.defer(MainLoop)
   end
 end
