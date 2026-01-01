@@ -586,15 +586,20 @@ function buildGui()
   -- Die Höhe des Dashboard wurde von NutzerIn geändert
   -----------------------------------------------------
 
-  if gfx.h/dpi_scale ~= WindowHeight and gfx.h > 0 then
-
-    -- print(gfx.h/dpi_scale.."-"..WindowHeight)
-
-    maxlines = round2((gfx.h-(135*dpi_scale))/dpi_scale/36)
-    retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "maxlines", tostring(maxlines)) -- schreibe die neue Höhe in die ultraschall.ini
-    chapter_pagelength = maxlines
-    refresh_gui = true
-
+  if firstrun == false and gfx.h > 0 and gfx.h/dpi_scale ~= WindowHeight then
+    local expected_height = WindowHeight * dpi_scale
+    -- Nur wenn die Abweichung signifikant ist (mehr als 5px), um Initialisierungsprobleme zu vermeiden
+    if math.abs(gfx.h - expected_height) > 5 then
+      -- print(gfx.h/dpi_scale.."-"..WindowHeight)
+      local calculated_maxlines = round2((gfx.h-(135*dpi_scale))/dpi_scale/36)
+      -- Nur aktualisieren, wenn das Ergebnis sinnvoll ist (mindestens 1)
+      if calculated_maxlines >= 1 then
+        maxlines = calculated_maxlines
+        retval = ultraschall.SetUSExternalState("ultraschall_markerdashboard", "maxlines", tostring(maxlines)) -- schreibe die neue Höhe in die ultraschall.ini
+        chapter_pagelength = maxlines
+        refresh_gui = true
+      end
+    end
   end
 
 
@@ -626,7 +631,15 @@ function buildGui()
     if rows > maxlines then rows = maxlines end -- Maximalhöhe
     WindowHeight = 135 + (rows * 36)
 
-    gfx.init("", 820, WindowHeight, 0, GUI.x, GUI.y)
+    -- Aktualisiere GUI.w und GUI.h, damit die GUI-Bibliothek die richtige Größe kennt
+    GUI.w = 820
+    GUI.h = WindowHeight
+    
+    -- Nur gfx.init aufrufen, wenn das Fenster bereits existiert (nach GUI.Init())
+    -- Wenn das Fenster noch nicht existiert, wird GUI.Init() die richtige Größe verwenden
+    if gfx.w > 0 then
+      gfx.init(GUI.name, GUI.w, GUI.h, 0, GUI.x, GUI.y)
+    end
 
     refresh_gui = false
 
