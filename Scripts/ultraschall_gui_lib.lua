@@ -381,6 +381,16 @@ GUI.IsInside = IsInside
 
 function Init()
 
+  if reaper.GetOS() == "Other" and dpi_scale == 2 then
+    linuxScale = 2
+    left,top,right,bottom=reaper.my_getViewport(0,0,0,0,0,0,0,0,false)
+    GUI.x = (right - GUI.w) / 2.7
+    GUI.y = (bottom - GUI.h) / 4
+  else
+    linuxScale = 1
+  end 
+  
+
   -- Create the window
   gfx.clear = GUI.rgb2num(table.unpack(GUI.colors.wnd_bg))
   gfx.init(GUI.name, GUI.w, GUI.h, 0, GUI.x, GUI.y)  -- 0 means "undocked", 1 would dock it in the first dock position (Mixer)
