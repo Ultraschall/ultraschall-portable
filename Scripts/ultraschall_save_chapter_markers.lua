@@ -51,11 +51,12 @@ if project_path_name ~= "" then
 else
   dir = ""
 end
-
-retval, filename = reaper.JS_Dialog_BrowseForSaveFile("Save chapters into...", dir, "chapters.txt", "")
+project_name=reaper.GetProjectName(0):match("(.*)%.")
+retval, filename = reaper.JS_Dialog_BrowseForSaveFile("Save chapters into...", dir, project_name.."-chapters.txt", "")
 if retval==0 then return end
 
 Chapters={}
+
 
 for i=1, ultraschall.CountNormalMarkers() do
   retnumber, shown_number, position, markertitle, guid = ultraschall.EnumerateNormalMarkers(i)
