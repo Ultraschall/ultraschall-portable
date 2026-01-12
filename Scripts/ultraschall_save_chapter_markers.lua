@@ -52,6 +52,7 @@ else
   dir = ""
 end
 project_name=reaper.GetProjectName(0):match("(.*)%.")
+if project_name==nil then project_name="" end
 retval, filename = reaper.JS_Dialog_BrowseForSaveFile("Save chapters into...", dir, project_name.."-chapters.txt", "")
 if retval==0 then return end
 

@@ -64,10 +64,11 @@ function IsProjectSaved()
     if display == 1 then
 
       reaper.Main_OnCommand(40022, 0) -- SAVE AS PROJECT
-
       return IsProjectSaved()
-
+    else 
+      return false
     end
+    
   end
 end
 
@@ -111,5 +112,7 @@ for i=1, #Chapters do
 end
 
 project_name=reaper.GetProjectName(0):match("(.*)%.")
+if project_name==nil then project_name="" end
+if dir=="" then dir="" end
 retval = ultraschall.WriteValueToFile(dir.."/"..project_name.."-chapters.txt", Exportfile, false)
 if retval==-1 then reaper.MB("Couldn't write the file. Can the file/folder be accessed?", "Error", 0) end
