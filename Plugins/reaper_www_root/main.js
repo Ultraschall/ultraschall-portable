@@ -136,15 +136,15 @@ Similar to GET/TRACK/index/xxxxx, but sets the value of this item. You probably 
 
 * SET/TRACK/index/VOL/value
 
-Special case of SET/TRACK/index/xxxx, sets volume for a track via control surface API (meaning it respects automation modes etc). If value starts with + or -, then adjustment is relative (in dB), otherwise adjustment is absolute (1=0dB, etc). If value ends in "g", then ganging is ignored. Does not need SET/UNDO.
+Special case of SET/TRACK/index/xxxx, sets volume for a track via control surface API (meaning it respects automation modes etc). If value starts with + or -, then adjustment is relative (in dB), otherwise adjustment is absolute (1=0dB, etc). If value ends in "g", then ganging is ignored. If there is an e near the end of the value, ends the touch state. Touch states auto-expire in 8s. Does not need SET/UNDO.
 
 * SET/TRACK/index/PAN/value
 
-Special case of SET/TRACK/index/xxxx, sets pan for a track via control surface API. If value starts with + or -, adjustment is relative. Range is always -1..1. If value ends in "g", then ganging is ignored. Does not need SET/UNDO.
+Special case of SET/TRACK/index/xxxx, sets pan for a track via control surface API. If value starts with + or -, adjustment is relative. Range is always -1..1. If value ends in "g", then ganging is ignored. If there is an e near the end of the value, ends the touch state. Touch states auto-expire in 8s. Does not need SET/UNDO.
 *
 * SET/TRACK/index/WIDTH/value
 
-Special case of SET/TRACK/index/xxxx, sets width for a track via control surface API. If value starts with + or -, adjustment is relative. Range is always -1..1. If value ends in "g", then ganging is ignored. Does not need SET/UNDO.
+Special case of SET/TRACK/index/xxxx, sets width for a track via control surface API. If value starts with + or -, adjustment is relative. Range is always -1..1. If value ends in "g", then ganging is ignored. If there is an e near the end of the value, ends the touch state. Touch states auto-expire in 8s. Does not need SET/UNDO.
 
 * SET/TRACK/index/MUTE/value
 
@@ -232,7 +232,7 @@ LYRICS \t trackindex \t beat_position \t lyric \t ...
 
 Retrieves MIDI lyrics for trackindex.
 
-String will have newlines/tabs/backslashes encoded as \\n, \\t and \\. Length is limited to around 16k.
+String will have newlines/tabs/backslashes encoded as \\n, \\t and \\.
 
 * SET/PROJEXTSTATE/section/key/value
 
@@ -246,7 +246,7 @@ PROJEXTSTATE \t section \t key \t string
 
 See: GetProjExtState() API
 
-String will have newlines/tabs/backslashes encoded as \\n, \\t and \\. Length is limited to around 16k.
+String will have newlines/tabs/backslashes encoded as \\n, \\t and \\.
 
 * GET/EXTSTATE/section/key
 

@@ -521,6 +521,7 @@ function volfader(e, istouch) {
   var sh = fader.offsetHeight - handle.offsetHeight;
   if (sh < 10) sh=10;
   var starty = e.pageY || e.clientY || e.touches[0].pageY;
+  var lastdy = null;
 
   var movee = function(e) {
     if (typeof e == 'undefined') e=event;
@@ -533,17 +534,26 @@ function volfader(e, istouch) {
     dy = - 100 * dy / sh;
     if (dy >= 0) dy = "+" + dy;
 
+    lastdy = dy;
     wwr_req("SET/TRACK/" + g_inspect_tridx + "/VOL/" + dy + ";TRACK/" + g_inspect_tridx)
     return false;
   };
 
   if (istouch) {
-    var end = function(e) { document.removeEventListener('touchmove',movee,true); document.removeEventListener('touchend',end,true); return false; };
+    var end = function(e) { 
+      if (lastdy != null) wwr_req("SET/TRACK/" + g_inspect_tridx + "/VOL/" + lastdy + "e;TRACK/" + g_inspect_tridx)
+      document.removeEventListener('touchmove',movee,true);
+      document.removeEventListener('touchend',end,true);
+      return false;
+    };
     document.addEventListener('touchmove',movee,true);
     document.addEventListener('touchend', end,true);
   } else {
     document.onmousemove = movee;
-    document.onmouseup = function(e) { document.onmousemove = null; document.onmouseup=null;  return false; }
+    document.onmouseup = function(e) { 
+      if (lastdy != null) wwr_req("SET/TRACK/" + g_inspect_tridx + "/VOL/" + lastdy + "e;TRACK/" + g_inspect_tridx)
+      document.onmousemove = null; document.onmouseup=null;  return false;
+    }
   }
   return false;
 };
