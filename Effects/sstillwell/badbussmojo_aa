@@ -61,7 +61,7 @@ out_pin:R Output
   drivea=1;
   mixa1 = 1 - mixa;
   drivea1 = 1 / (1 - (drivea / 2));
-  drivea2 = drive / 2;
+  drivea2 = drivea / 2;
   mixb1 = 1 - mixb;
   pts=slider5;
   nts=slider6;
