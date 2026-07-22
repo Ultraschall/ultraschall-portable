@@ -4433,9 +4433,17 @@ else
     ultraschall.LM(25)
     return ultraschall.GetProject_Render_Normalize(table.unpack({...}))
   end
+  function ultraschall.GetProject_Render_Trim(...)
+    ultraschall.LM(25)
+    return ultraschall.GetProject_Render_Trim(table.unpack({...}))
+  end
   function ultraschall.SetProject_Render_Normalize(...)
     ultraschall.LM(25)
     return ultraschall.SetProject_Render_Normalize(table.unpack({...}))
+  end
+  function ultraschall.SetProject_Render_Trim(...)
+    ultraschall.LM(25)
+    return ultraschall.SetProject_Render_Trim(table.unpack({...}))
   end
   function ultraschall.RazorEdit_ProjectHasRazorEdit(...)
     ultraschall.LM(26)

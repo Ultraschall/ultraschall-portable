@@ -4815,7 +4815,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>InsertMediaItemFromFile</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.33
     Reaper=6.20
     SWS=2.9.7
     Lua=5.3
@@ -4835,25 +4835,26 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
                   -  0, insert the file into a newly inserted track after the last track
                   - -1, insert the file into a newly inserted track before the first track
                   - -2, insert into the last touched track
-    number position - the position of the newly inserted item
+    number position - the position of the newly inserted item in seconds
     number length - the length of the newly created mediaitem; -1, use the length of the sourcefile
     integer editcursorpos - the position of the editcursor after insertion of the mediafile
           - 0, the old editcursorposition
           - 1, the position, at which the item was inserted
           - 2, the end of the newly inserted item
-    optional number offset - an offset, to delay the insertion of the item, to overcome possible "too late"-starting of playback of item during recording
+    optional number offset - an offset, to delay the insertion of the item, to overcome possible "too late"-starting of playback of item during recording; in seconds
     optional boolean looped - true, loop source; false or nil, don't loop source
     optional boolean locked - true, lock MediaItem; false or nil, don't lock MediaItem
   </parameters>
   <retvals>
     integer retval - 0, if insertion worked; -1, if it failed
     MediaItem item - the newly created MediaItem
-    number endposition - the endposition of the newly created MediaItem in seconds
+    number length - the length of the newly created MediaItem in seconds
     integer numchannels - the number of channels of the mediafile
     integer Samplerate - the samplerate of the mediafile in hertz
     string Filetype - the type of the mediafile, like MP3, WAV, MIDI, FLAC, etc
     number editcursorposition - the (new) editcursorposition
     MediaTrack track - returns the MediaTrack, in which the item is included
+    number endposition - the endposition of the newly created MediaItem in seconds
   </retvals>
   <chapter_context>
     MediaItem Management
@@ -4886,7 +4887,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   elseif editcursorpos==2 then editcursor=position+ultraschall.GetMediafileAttributes(filename)
   else ultraschall.AddErrorMessage("InsertMediaItemFromFile","editcursorpos", "must be an integer between 0 and 2", -6) return -1
   end
-  
+
   -- if last touched track is requested, set track to last touched track
   if track==-2 then
     local temptrack=reaper.GetLastTouchedTrack()
@@ -4918,6 +4919,10 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
     end
   end
   
+  if length==-1 then
+    length=reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+  end
+  
   -- with special insertion modes, set by track<=0
   if track>0 then
     -- regular track: move item to the track and remove temporary track at the bottom
@@ -4934,7 +4939,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   elseif editcursorpos==1 then
     reaper.SetEditCurPos(position+offset, false, false)  -- set editcursor to old position
   elseif editcursorpos==2 then
-    reaper.SetEditCurPos(position+length+offset, false, false)  -- set editcursor to old position
+    reaper.SetEditCurPos(position+length, false, false)  -- set editcursor to old position
   end
   
   -- reset trackselection
@@ -4954,7 +4959,7 @@ function ultraschall.InsertMediaItemFromFile(filename, track, position, length, 
   
   -- return values and exit
   local Length, Numchannels, Samplerate, Filetype = ultraschall.GetMediafileAttributes(filename) -- mediaattributes, like length
-  return 0, MediaItem, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(MediaItem)
+  return 0, MediaItem, Length, Numchannels, Samplerate, Filetype, editcursor, reaper.GetMediaItem_Track(MediaItem), position+Length
 end
 
 --A,B,C,D,E,F,G,H,I,J=ultraschall.InsertMediaItemFromFile(ultraschall.Api_Path.."/misc/silence.flac", 0, 0, -1, 0)
@@ -7200,18 +7205,23 @@ function ultraschall.GetTakeSourcePosByProjectPos(project_pos, take)
   reaper.SetMediaItemInfo_Value(item, "B_UISEL", 0)
   reaper.SetActiveTake(active_take)
   reaper.SetEditCurPos(oldpos, false, false)
-  
+
   -- get the position and therefore source-position of the added take-marker, then remove it again
   local found=nil
   for i=0, reaper.GetNumTakeMarkers(take) do
     local takemarker_pos, take_marker_name=reaper.GetTakeMarker(take, i)
     if take_marker_name=="" and takemarker_pos~=-1 then    
-      reaper.DeleteTakeMarker(take, i)
+      --reaper.DeleteTakeMarker(take, i)
       found=takemarker_pos
       break
     end
   end
-  
+  reaper.Main_OnCommand(40029, 0)
+  local retval = ultraschall.SelectMediaItems_MediaItemArray(MediaItemArray)
+  reaper.PreventUIRefresh(-1)
+  return found
+end
+--[[
   -- rename take-markers back to their old name
   for i=1, #takemarkers do
     reaper.SetTakeMarker(take, i-1, takemarkers[i][2], takemarkers[i][1], takemarkers[i][3])
@@ -7224,6 +7234,7 @@ function ultraschall.GetTakeSourcePosByProjectPos(project_pos, take)
   reaper.PreventUIRefresh(-1)
   return found
 end
+--]]
 
 
 function ultraschall.GetProjectPosByTakeSourcePos(source_pos, take)

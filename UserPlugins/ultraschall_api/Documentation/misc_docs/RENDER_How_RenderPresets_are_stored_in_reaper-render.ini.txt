@@ -1,4 +1,4 @@
-Render-Presets-docs as of Reaper 7.34
+Render-Presets-docs as of Reaper 7.39
 
 compiled by Meo-Ada Mespotine
 licensed under creative-commons cc-by-license
@@ -30,7 +30,7 @@ As soon, as they are in the reaper-render.ini, they will be shown the next time 
 
 Description of parameters:
 
-RENDERPRESET_EXT
+RENDERPRESET_EXT  (stored by "Options and Format" as well as "All Settings")
     string presetname - the name of the preset; when there's a space in the name, it will be enclosed with "", otherwise not
 
     integer normalize_mode - the normalize method set with the "Normalize"-button in RENDERPRESET_EXT
@@ -43,6 +43,9 @@ RENDERPRESET_EXT
                                6, True Peak
                                8, LUFS-M max
                                10, LUFS-S max
+                               &16, Adjust mono files by an additional-checkbox(see &524288)
+                                    0, off
+                                    1, on
                                &32, Normalize stems to master target-checkbox
                                     0, unchecked(off)
                                     1, checked(on)
@@ -52,13 +55,16 @@ RENDERPRESET_EXT
                                &128, Brickwall Limiting mode
                                      0, Peak
                                      1, True Peak
-                               &256, Only normalize files that are too loud
+                               &256, Only normalize files that are too loud(either this or &2048, not both, otherwise they are both seen as deactivated!)
                                      0, disabled
                                      1, enabled
                                &512, Fade-in-checkbox
                                      0, disabled
                                      1, enabled
                                &1024, Fade-out-checkbox
+                                     0, disabled
+                                     1, enabled
+                               &2048, Only normalize files that are too quiet(either this or &256, not both, otherwise they are both seen as deactivated)
                                      0, disabled
                                      1, enabled
                                &16384, Trim leading silence-checbox
@@ -73,8 +79,13 @@ RENDERPRESET_EXT
                                &131072, Pad end with silence-checbox
                                      0, enabled
                                      1, disabled
+                               &262144, render post-processing options
+                                     0, on
+                                     1, off
+                               &&524288 - adjust mono media additional 
+                                     0, -3dB
+                                     1, +3dB
                                      
-                            
     number normalize_target - the target as MKVOL-value. Use ultraschall.MKVOL2DB to convert it to dB in RENDERPRESET_EXT
 
     number brickwall_target - the target as MKVOL-value. Use ultraschall.MKVOL2DB to convert it to dB in RENDERPRESET_EXT
@@ -110,7 +121,7 @@ RENDERPRESET_EXT
     number pad_end_with_silence_ms - the time for the pad end with silence; it is in seconds here, not(!) milliseconds(even though the dialog asks for ms)
 
 
-<RENDERPRESET    
+<RENDERPRESET  (stored by "Options and Format" as well as "All Settings")   
     string presetname - the name of the preset; when there's a space in the name, it will be enclosed with "", otherwise not
     
     integer SampleRate - the samplerate in hz
@@ -148,6 +159,7 @@ RENDERPRESET_EXT
                                     &4,  Multichannel tracks to multichannel files
                                     &16, Tracks with only mono media to mono files
                                     &256, Embed stretch markers/transient guides
+                                    &512, Embed Metadata
                                     &1024, Embed take markers
                                     &2048, 2nd pass render
                                     &8192, Render stems pre-fader
@@ -158,13 +170,13 @@ RENDERPRESET_EXT
 
     string render_cfg - the render-format-settings(mp3, wav, flac, etc) encoded as BASE64-string
 
-<RENDERPRESET2
+<RENDERPRESET2 (stored by "Options and Format" as well as "All Settings")
     string presetname - the name of the preset; when there's a space in the name, it will be enclosed with "", otherwise not
 
     string render_cfg - the render-format-settings(mp3, wav, flac, etc) for secondary render, encoded as BASE64-string
 
 
-RENDERPRESET_OUTPUT
+RENDERPRESET_OUTPUT (stored by "Bounds and Output" as well as "All Settings")
     string presetname - the name of the preset; when there's a space in the name, it will be enclosed with "", otherwise not
 
     integer bounds_dropdownlist - keeps the settings in the bounds-dropdownlist in RENDERPRESET_OUTPUT
@@ -212,8 +224,8 @@ Some general notes on the Render-Presets:
         Add rendered items to new tracks in project-checkbox
         Do not render files that are likely silent-checkbox
         Save copy of project to outfile.wav.RPP-checkbox
-        Delay queued render to allow samples to load-checkbox
-        Delay queued render seconds-input box - so you can't store the amount of seconds to wait before a queued render is processed
+        Delay queued render to allow samples to load-checkbox as these are stored in the project that has been added to the queue
+        Delay queued render seconds-input box - so you can't store the amount of seconds to wait before a queued render is processed as these are stored in the project that has been added to the queue
         
     - RENDERPRESET_OUTPUT - the purpose of parameter "integer unknown" is unknown, maybe legacy value of features who got removed?
     

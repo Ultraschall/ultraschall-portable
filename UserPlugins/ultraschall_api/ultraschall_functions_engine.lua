@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 503, "5.3","12th of May 2025", "",  "\"Spice Girls - Too Much\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 5032, "5.32","21st of September 2025", "",  "\"Birth Control - No Drugs\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -1158,6 +1158,7 @@ function progresscounter(state)
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_doc_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
+  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."../reagirl.lua")
   
   local filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Modules/")
   for i=1, filecount do
@@ -1914,7 +1915,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
     returns false in case of an error
   </description>
   <retvals>
-    boolean retval  - true, valid action_command_id; false, not a valid action_command_id
+    boolean retval - true, valid action_command_id; false, not a valid action_command_id
   </retvals>
   <parameters>
     actioncommand_id - the ActionCommandID you want to check; either a number or an action_command_id with an underscore at the beginning
@@ -2102,13 +2103,8 @@ function ultraschall.deprecated(functionname)
       If there is a line "Author: authorname" in the file(as usual for ReaPack-compatible scripts), it will show the scripter's name in the dialog.
       
     </description>
-    <retvals>
-      boolean retval - true, defer-instance is running; false, defer-instance isn't running
-    </retvals>
     <parameters>
-      integer deferinstance - 0, to use the parameter identifier
-      optional string identifier - when deferinstance>0 (for Defer1 through Defer20-defer-cycles):a script-identifier of a specific script-instance; nil, for the current script-instance
-                                 - when deferinstance=0 (when using the Defer-function): the identifier of the defer-cycle, you've started with Defer
+      string functionname - the functionname that is deprecated
     </parameter>
     <chapter_context>
       API-Helper functions
@@ -3480,7 +3476,7 @@ function string.utf8_len(source_string)
   </requires>
   <functioncall>integer length = string.utf8_len(string source_string)</functioncall>
   <description>
-    returns the length of an utf8-encoded string
+    returns the length of a utf8-encoded string
 
     Works basically like string.len()
   </description>

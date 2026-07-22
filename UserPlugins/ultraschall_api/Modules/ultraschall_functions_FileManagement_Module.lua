@@ -1549,7 +1549,7 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path, dir_filter, dir
     Reaper=6.20
     Lua=5.3
   </requires>
-  <functioncall>integer found_dirs, array dirs_array, integer found_files, array files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(string path, optional string dir_filter, optional string dir_case_sensitive, optional string file_filter, optional string file_case_sensitive)</functioncall>
+  <functioncall>integer found_dirs, array dirs_array, integer found_files, array files_array = ultraschall.GetAllRecursiveFilesAndSubdirectories(string path, optional string dir_filter, optional boolean dir_case_sensitive, optional string file_filter, optional boolean file_case_sensitive)</functioncall>
   <description>
     Returns all subdirectories and files within a given path.
     
@@ -1563,10 +1563,10 @@ function ultraschall.GetAllRecursiveFilesAndSubdirectories(path, dir_filter, dir
     string path - the path from where to retrieve the files and subdirectories
     optional string dir_filter - a matching-string, that omits all folders, that don't match this string; default is ""
                                - follows Lua's pattern-matching!
-    optional string dir_case_sensitive - true, filter-pattern for dir is case-sensitive(default); false, filter-pattern for dir isn't case-sensitive
+    optional boolean dir_case_sensitive - true, filter-pattern for dir is case-sensitive(default); false, filter-pattern for dir isn't case-sensitive
     optional string file_filter - a matching-string, that omits all files, that don't match this string; default is "" 
                                 - follows Lua's pattern-matching!
-    optional string file_case_sensitive - true, filter-pattern for file is case-sensitive(default); false, filter-pattern for file isn't case-sensitive 
+    optional boolean file_case_sensitive - true, filter-pattern for file is case-sensitive(default); false, filter-pattern for file isn't case-sensitive 
   </parameters>
   <retvals>
     integer found_dirs - the number of directories found; -1, in case of an error
@@ -1857,7 +1857,8 @@ function ultraschall.MoveFileOrFolder(file_foldername, oldpath, newpath)
     boolean retval - true, moving was successful; false, moving was unsuccessful
   </retvals>
   <chapter_context>
-    Manipulate Files
+    File Management
+    Helper functions
   </chapter_context>
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_FileManagement_Module.lua</source_document>

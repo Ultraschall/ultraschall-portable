@@ -9124,6 +9124,9 @@
            >&131072=0, Pad end with silence-checkbox - unchecked
            >&131072=1, Pad end with silence-checkbox - checked
            
+           >&262144=0, render post-processing options-on
+           >&262144=1, render post-processing options-off
+           
            >&524288=0, Adjust mono files by an additional -3dB
            >&524288=1, Adjust mono files by an additional +3dB
 
@@ -9368,7 +9371,7 @@
            >1, Master mix + stems  
            >3, Stems (selected tracks)  
            >8, Region render matrix  
-           >&16, Tracks with only Mono-Media to Mono Files; 
+           >&16, Tracks with only Mono-Media to Mono Files
            >32, Selected media items  
            >128, selected tracks via master
            >&256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  

@@ -95,7 +95,7 @@
               
             If you can't or don't want to install ReaPack, you can also install it manually.  
               
-            1. Just download the zip-file of the current version from [ultraschall_api5.3.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api5.3.zip).    
+            1. Just download the zip-file of the current version from [ultraschall_api5.32.zip](https://github.com/Ultraschall/ultraschall-lua-api-for-reaper/raw/master/ultraschall_api5.32.zip).    
             2. Extract it to the UserPlugins-folder in the Resources-folder of Reaper. You can find the correct Resources-path in the Reaper-menu "Options -> Show REAPER resource path in explorer/finder...".      
                The folder UserPlugins should contain the folder ultraschall\_api and the files ultraschall\_api\_readme.txt, ultraschall\_api.lua and reagirl.lua after this step.    
             3. Restart Reaper.  
@@ -5530,6 +5530,9 @@
             - The sixth parameter is meaningOfUI\_Element, which is a short explanation on what the button is doing and why. This is needed by blind users so they know, what the button is for.  
             - The seventh parameter is a run-function. This function will be run, when the button is clicked. It gets as parameter the element\_id of the button that was clicked.  
             - The eighth parameter is a unique identifier, used to adress this specific ui-element. With that, it's possible to control the ui-element from the outside of a script, like clicking it.
+            - the ninth parameter is the drawing mode of the button, currently unused so set it to 0 or to nil
+            - the tenth parameter is the width of the button. Make it negative to anchor it to the right edge of the window(will ignore the third parameter w\_margin
+            - the eleventh parameter is the height of the button. Make it negative to anchor it to the bottom edge of the window(will ignore the fourth parameter h\_margin
             
             With this, you can add a button to your gui, but there's more that you can do with a button.  
               
@@ -5619,6 +5622,7 @@
             - The sixth parameter is a run-function, that is run when a clickable label is clicked and/or a label is dragged onto another ui-element.  
               You can keep the run-function nil if you don't need a run-function to be run.  
             - The seventh parameter is a unique identifier, used to adress this specific ui-element. With that, it's possible to control the ui-element from the outside of a script, like clicking it.
+            - The eighth parameter is the font-size for this label. Use nil to use the standard-font-size of ReaGirl.
               
             There's more that you can do with labels:  
               
@@ -6226,6 +6230,8 @@
           - reagirl.UI\_Element\_GetFocused - gets the currently focused ui-element  
           - reagirl.UI\_Element\_GetHovered - gets the currently hovered ui-element  
           - reagirl.UI\_Element\_GetSetCaption - gets/sets the caption of a ui-element  
+          - reagirl.UI\_Element\_GetSetExtState - gets/sets an ext-state, which can be used to store additional data with a ui-element
+          - reagirl.UI\_Element\_GetSetIdentifier - gets/sets the unique identifier of a ui-element, that can be used to control it from an external script
           - reagirl.UI\_Element\_GetSetMeaningOfUIElement - gets/sets the meaning of ui-element, like tooltip/screen reader helpmessage  
           - reagirl.UI\_Element\_GetSetPosition - gets/sets the position of a ui-element  
           - reagirl.UI\_Element\_GetSetRunFunction - gets/sets the current run-functions  

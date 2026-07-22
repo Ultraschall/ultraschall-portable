@@ -693,11 +693,11 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ShowMenu</slug>
   <requires>
-    Ultraschall=4.7
-    Reaper=5.95
-    Lua=5.3
+    Ultraschall=5.4
+    Reaper=7.43
+    Lua=5.4
   </requires>
-  <functioncall>integer retval = ultraschall.ShowMenu(string Title, string Entries, integer x, integer y)</functioncall>
+  <functioncall>integer retval = ultraschall.ShowMenu(string Title, string Entries)</functioncall>
   <description>
     Draws a menu at position x,y.
     
@@ -730,19 +730,14 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
     
     One last thing: the title does not count as entry!
     
-    Note for Mac-users: y-coordinates are "reversed", so y=0 is at the bottom
-    Note for Linux: does not work on Linux yet.
-    
     returns -1 in case of an error
   </description>
   <retvals>
     integer retval - the selected entry; 0, nothing selected
   </retvals>
   <parameters>
-    string Title - the title shown on top of the menu
+    string Title - the title shown on top of the menu; set to "" if you don't want a title
     string Entries - the individual entries. See above on how to create such an entry.
-    integer x - the x-position of the menu
-    integer y - the y-position of the menu
   </parameters>
   <chapter_context>
     User Interface
@@ -755,13 +750,11 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
 ]]
   if type(Title)~="string" then ultraschall.AddErrorMessage("ShowMenu", "Title", "must be a string", -1) return -1 end
   if type(Entries)~="string" then ultraschall.AddErrorMessage("ShowMenu", "Entries", "must be a string", -2) return -1 end
-  if math.type(x)~="integer" then ultraschall.AddErrorMessage("ShowMenu", "x", "must be an integer", -3) return -1 end
-  if math.type(y)~="integer" then ultraschall.AddErrorMessage("ShowMenu", "y", "must be an integer", -4) return -1 end
   if Entries=="" then ultraschall.AddErrorMessage("ShowMenu", "Entries", "must have at least one entry", -5) return -1 end
-  if Title:len()<=5 then for i=5-Title:len(),1, -1 do Title=Title.." " end end
+  --if Title:len()<=5 then for i=5-Title:len(),1, -1 do Title=Title.." " end end
 
   local ownwindow=false
-  if gfx.h==0 and gfx.w==0 then gfx.init("Ultraschall-Menu",0,0,0,x,y)
+  if gfx.h==0 and gfx.w==0 then --gfx.init("Ultraschall-Menu",0,0,0,x,y)
     gfx.x=-10
     gfx.y=-25
     ownwindow=true
@@ -771,9 +764,16 @@ function ultraschall.ShowMenu(Title,Entries,x,y)
     gfx.y=convy
   end
   
-  local selection=gfx.showmenu("#"..Title.."||"..Entries)
+  local selection=-1
+  local subtractor=0
+  if Title=="" then 
+    selection=gfx.showmenu(Entries)
+  else
+    selection=gfx.showmenu("#"..Title.."||"..Entries)
+    subtractor=-1
+  end
   if ownwindow==true then gfx.quit() gfx.w=0 gfx.h=0 end
-  return math.floor(selection)-1
+  return math.floor(selection)+subtractor
 end
 
 --L=ultraschall.ShowMenu("","Normal1",-1,-1)

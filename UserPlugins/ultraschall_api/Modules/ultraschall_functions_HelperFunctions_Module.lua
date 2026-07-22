@@ -1924,6 +1924,7 @@ function ultraschall.CompareStringWithAsciiValues(string,...)
 </US_DocBloc>
 --]]
   if type(string)~="string" then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string!", -1) return false end  
+  if string:len()==0 then ultraschall.AddErrorMessage("CompareStringWithAsciiValues","string", "Must be a string with length>0!", -2) return false end  
   local length, Table=ultraschall.ConvertStringToAscii_Array(string)
   local AsciiValues={...}
   local NumEntries=ultraschall.CountEntriesInTable_Main(AsciiValues)

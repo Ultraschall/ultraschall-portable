@@ -1949,13 +1949,13 @@ function ultraschall.Metadata_ExtractCover(media_filename, target_filename)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>Metadata_ExtractCover</slug>
   <requires>
-    Ultraschall=5.1
+    Ultraschall=5.32
     Reaper=7.03
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string filename = ultraschall.Metadata_ExtractCover(string media_filename, string target_filename)</functioncall>
   <description>
-    Extracts the cover-image from a media-file into an image-file.
+    Extracts the cover-image from a media-file into an image-file. Currently supported are files with ID3(usually mp3s) and FLACPIC(usually flac) in them.
     
     Note: don't add the extension to the target-filename, since the filetype is defined by the stored cover-image(usually jpeg or png).
     Use the return value "filename" to get the actual filename of the cover-image.
@@ -1966,10 +1966,34 @@ function ultraschall.Metadata_ExtractCover(media_filename, target_filename)
     boolean retval - true, cover image was extracted; false, cover-image couldn't be extracted
     string filename - the filename of the extracted cover-image
     string image_description - a description of the image
+    string image_type - the image-type
+                      - Other  
+                      - 32x32 pixel file icon (PNG only)  
+                      - Other file icon  
+                      - Cover (front)  
+                      - Cover (back)  
+                      - Leaflet page  
+                      - Media  
+                      - Lead artist/Lead Performer/Solo  
+                      - Artist/Performer  
+                      - Conductor  
+                      - Band/Orchestra  
+                      - Composer  
+                      - Lyricist/Text writer  
+                      - Recording location  
+                      - During recording  
+                      - During performance  
+                      - Movie/video screen capture  
+                      - A bright colored fish  
+                      - Illustration  
+                      - Band/Artist logotype  
+                      - Publisher/Studiotype  
+    string cover_image - the binary-data of the cover-image
+    string cover_type - the type of the cover-image
   </retvals>
   <parameters>
     string media_filename - the media-file, whose cover-image you want to extract
-    string target_filename - the filename, where you want to store the cover-image(don't add an extension)
+    string target_filename - the filename, where you want to store the cover-image(don't add an extension); nil, don't write a file
   </parameters>
   <chapter_context>
     Metadata Management
@@ -1980,22 +2004,30 @@ function ultraschall.Metadata_ExtractCover(media_filename, target_filename)
   <tags>metadata, get, extract, cover image</tags>
 </US_DocBloc>
 ]]
-    if type(media_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "must be a string", -1) return false, "" end
-  if type(target_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "target_filename", "must be a string", -2) return false, "" end
+  if type(media_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "must be a string", -1) return false, "" end
+  if target_filename~=nil and type(target_filename)~="string" then ultraschall.AddErrorMessage("Metadata_ExtractCover", "target_filename", "must be a string", -2) return false, "" end
   if reaper.file_exists(media_filename)==false then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "no such file", -3) return false end
   local PCM_Source=reaper.PCM_Source_CreateFromFile(media_filename)
   local A,B,C=reaper.GetMediaFileMetadata(PCM_Source, "ID3:APIC")
+  if A==0 then
+    A,B,C=reaper.GetMediaFileMetadata(PCM_Source, "FLACPIC:APIC")
+  end
   reaper.PCM_Source_Destroy(PCM_Source)
   if A==0 then ultraschall.AddErrorMessage("Metadata_ExtractCover", "media_filename", "no cover-image", -4) return false end
 
-  local filetype, offset, length = B:match("image/(.-) .- offset:(.-) length:(.*)")
+  local filetype, offset, length = B:match("image/(.-) offset:(.-) length:(.*)")
+
   local image_desc, image_type = B:match("desc:(.*) type:(.-) ")
   if image_desc==nil then
     image_desc=""
     image_type = B:match("type:(.-) ")
   end
   local length, C = ultraschall.ReadBinaryFile_Offset(media_filename, tonumber(offset), tonumber(length))
-  local retval = ultraschall.WriteValueToFile(target_filename.."."..filetype, C, true)
+  local retval
+  if target_filename~=nil then
+    retval = ultraschall.WriteValueToFile(target_filename.."."..filetype, C, true)
+  end
+  if target_filename==nil then target_filename="" else target_filename=target_filename.."."..filetype end
   if retval==-1 then ultraschall.AddErrorMessage("Metadata_ExtractCover", "target_filename", "can't write file", -5) return false, "" end
 
   if image_type=="0" then image_type="Other"
@@ -2019,8 +2051,9 @@ function ultraschall.Metadata_ExtractCover(media_filename, target_filename)
   elseif image_type=="18" then image_type="Illustration" 
   elseif image_type=="19" then image_type="Band/Artist logotype" 
   elseif image_type=="20" then image_type="Publisher/Studio logotype" 
+  else 
+    image_type=""
   end
   
-  return true, target_filename.."."..filetype, image_desc, image_type
+  return true, target_filename, image_desc, image_type, C, filetype
 end
-

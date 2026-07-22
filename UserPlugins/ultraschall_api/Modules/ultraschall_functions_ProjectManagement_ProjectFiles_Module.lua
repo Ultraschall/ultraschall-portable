@@ -81,9 +81,13 @@ function ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, stat
   end
   ProjectStateChunk=ProjectStateChunk:match(state.." (.-)\n")
   if ProjectStateChunk==nil then return end
-  local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(ProjectStateChunk, " ")
+  --local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(ProjectStateChunk, " ")
+  local individual_values={}
+  for v in string.gmatch(ProjectStateChunk.." ", "(.-) ") do
+    individual_values[#individual_values+1]=v
+  end
   if numbertoggle~=false then
-    for i=1, count do
+    for i=1, #individual_values do
         individual_values[i]=tonumber(individual_values[i])
     end
   end
@@ -1693,8 +1697,8 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_RenderStems</slug>
   <requires>
-    Ultraschall=5
-    Reaper=7.16
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>integer render_stems = ultraschall.GetProject_RenderStems(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
@@ -1711,25 +1715,23 @@ function ultraschall.GetProject_RenderStems(projectfilename_with_path, ProjectSt
   </parameters>
   <retvals>
     integer render_stems - the state of Render Stems
-    - 0, Source Master Mix, 
-    - 1, Source Master mix + stems, 
-    - 3, Source Stems, selected tracks, 
-    - &4, Multichannel Tracks to Multichannel Files, 
-    - 8, Source Region Render Matrix, 
-    - &16, Tracks with only Mono-Media to Mono Files,  
-    - 32, Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
-    - 64,  Selected media items via master
-    - 128, Selected tracks via master    
-    - &256, Embed stretch markers/transient guides-checkbox
-    - &512, Embed metadata-checkbox
-    - &1024, Embed Take markers
-    - &2048, 2nd pass rendering
-    - &8192, Render stems pre-fader
+    - 0, Master mix  
+    - 1, Master mix + stems  
+    - 3, Stems (selected tracks)  
+    - 8, Region render matrix  
+    - &16, Tracks with only Mono-Media to Mono Files
+    - 32, Selected media items  
+    - 128, selected tracks via master
+    - &256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
+    - &512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked  
+    - &1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
+    - 4096, Razor edit areas
+    - 4224, Razor edit areas via master
+    - &8192, Render stems pre-fader; 0, unchecked; 1, checked
     - &16384, Only render channels that are sent to parent
     - &32768, (Preserve) Metadata-checkbox
     - &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
-    - 4096, Razor edit areas
-    - 4224, Razor edit areas via master
+    - &524288, Parallel render
   </retvals>
   <chapter_context>
     Project-Management
@@ -6009,8 +6011,8 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_RenderStems</slug>
   <requires>
-    Ultraschall=5
-    Reaper=7.16
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>integer retval, optional string ProjectStateChunk = ultraschall.SetProject_RenderStems(string projectfilename_with_path, integer render_stems, optional string ProjectStateChunk)</functioncall>
@@ -6021,25 +6023,23 @@ function ultraschall.SetProject_RenderStems(projectfilename_with_path, render_st
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     integer render_stems - the state of Render Stems
-    - 0, Source Master Mix, 
-    - 1, Source Master mix + stems, 
-    - 3, Source Stems, selected tracks, 
-    - &4, Multichannel Tracks to Multichannel Files, 
-    - 8, Source Region Render Matrix, 
-    - &16, Tracks with only Mono-Media to Mono Files,  
-    - 32, Selected Media Items(in combination with RENDER_RANGE->Bounds->4, refer to <a href="#GetProject_RenderRange">GetProject_RenderRange</a> to get RENDER_RANGE)
-    - 64, Selected media items via master
-    - 128, Selected tracks via master
-    - &256, Embed stretch markers/transient guides-checkbox 
-    - &512, Embed metadata-checkbox
-    - &1024, Embed Take markers
-    - &2048, 2nd pass rendering
-    - &8192, Render stems pre-fader
+    - 0, Master mix  
+    - 1, Master mix + stems  
+    - 3, Stems (selected tracks)  
+    - 8, Region render matrix  
+    - &16, Tracks with only Mono-Media to Mono Files
+    - 32, Selected media items  
+    - 128, selected tracks via master
+    - &256, "Embed stretch markers/transient guides"-checkbox; 0, unchecked; 1, checked  
+    - &512, "Embed Metadata"-checkbox; 0, unchecked; 1, checked  
+    - &1024, "Take Markers"-checkbox; 0, unchecked; 1, checked
+    - 4096, Razor edit areas
+    - 4224, Razor edit areas via master
+    - &8192, Render stems pre-fader; 0, unchecked; 1, checked
     - &16384, Only render channels that are sent to parent
     - &32768, (Preserve) Metadata-checkbox
     - &65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
-    - 4096, Razor edit areas
-    - 4224, Razor edit areas via master
+    - &524288, Parallel render
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
   </parameters>
   <retvals>
@@ -11873,13 +11873,13 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetProject_Render_Normalize</slug>
   <requires>
-    Ultraschall=4.7
-    Reaper=6.65
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>integer render_normalize_mode, number normalize_target, optional number brickwall_target, optional number fadein_length, optional number fadeout_length, optional integer fadein_shape, optional integer fadeout_shape = ultraschall.GetProject_Render_Normalize(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
   <description>
-    returns the master-view-state of the master-track of the project or a ProjectStateChunk.
+    returns the normalize-state of the render-settings of the project or a ProjectStateChunk.
     
     It's the entry RENDER_NORMALIZE
     
@@ -11891,27 +11891,54 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   </parameters>
   <retvals>
     integer render_normalize_method - the normalize-method
-                                    - &1, Enable normalizing
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - 0, LUFS-I
-                                    - 2 , RMS-I
-                                    - 4, Peak
-                                    - 6, True Peak
-                                    - 8, LUFS-M max
-                                    - 10, LUFS-S max
-                                    - &32, Normalize stems to master target-checkbox
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - &64, Brickwall-enabled-checkbox
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - &128, Brickwall-mode
-                                    -     0, Peak
-                                    -     1, True Peak
-                                    - &256, only normalize files that are too loud
-                                    -     0, disabled
-                                    -     1, enabled
+                               - &1, Enable normalizing
+                               -     0, unchecked(off)
+                               -     1, checked(on)
+                               - 0, LUFS-I
+                               - 2, RMS-I
+                               - 4, Peak
+                               - 6, True Peak
+                               - 8, LUFS-M max
+                               - 10, LUFS-S max
+                               - &16, Adjust mono files by an additional-checkbox(see &524288)
+                               -      0, off
+                               -      1, on
+                               - &32, Normalize stems to master target-checkbox
+                               -      0, unchecked(off)
+                               -      1, checked(on)
+                               - &64, Brickwall limiting-checkbox
+                               -      0, unchecked(off)
+                               -      1, checked(on)
+                               - &128, Brickwall Limiting mode
+                               -       0, Peak
+                               -       1, True Peak
+                               - &256, Only normalize files that are too loud
+                               -       0, disabled
+                               -       1, enabled
+                               - &512, Fade-in-checkbox
+                               -       0, disabled
+                               -       1, enabled
+                               - &1024, Fade-out-checkbox
+                               -       0, disabled
+                               -       1, enabled
+                               - &16384, Trim leading silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &32768, Trim trailing silence-checkbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &65536, Pad start with silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &131072, Pad end with silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &262144, render post-processing options
+                               -       0, on
+                               -       1, off
+                               - &&524288 - adjust mono media additional 
+                               -       0, -3dB
+                               -       1, +3dB
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.
     optional number brickwall_target - the brickwall-target as amp-volume. Use ultraschall.MKVOL2DB to convert it to dB.    
     optional number fadein_length - the length of the fade-in in seconds(use fractions for milliseconds)
@@ -11945,13 +11972,52 @@ function ultraschall.GetProject_Render_Normalize(projectfilename_with_path, Proj
   return ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, "RENDER_NORMALIZE", ProjectStateChunk, "GetProject_Render_Normalize")
 end
 
+function ultraschall.GetProject_Render_Trim(projectfilename_with_path, ProjectStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>GetProject_Render_Trim</slug>
+  <requires>
+    Ultraschall=5.31
+    Reaper=7.39
+    Lua=5.3
+  </requires>
+  <functioncall>number trim_leading_db, number trim_trailing_db, number pad_start_seconds, number pad_end_seconds = ultraschall.GetProject_Render_Trim(string projectfilename_with_path, optional string ProjectStateChunk)</functioncall>
+  <description>
+    returns the trim/pad-settings in the post processing-render-settings of the project or a ProjectStateChunk.
+    
+    It's the entry RENDER_TRIM
+    
+    returns nil in case of an erroror if the entry is not present(i.e. in older project files)
+  </description>
+  <parameters>
+    string projectfilename_with_path - the projectfile+path, from which to get the trackview-states; nil to use ProjectStateChunk
+    optional string ProjectStateChunk - a statechunk of a project, usually the contents of a rpp-project-file
+  </parameters>
+  <retvals>
+    number trim_leading_db - the Trim leading silence-inputbox; use ultraschall.MKVOL2DB() to convert this value to DB
+    number trim_trailing_db - the Trim trailing silence-inputbox; use ultraschall.MKVOL2DB() to convert this value to DB
+    number pad_start_seconds - the Pad start with silence-inputbox in seconds
+    number pad_end_seconds - the Pad end with silence-inputbox in seconds
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Get
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectmanagement, get, view, fade in, fade out, projectstatechunk</tags>
+</US_DocBloc>
+]]
+  return ultraschall.GetProjectState_NumbersOnly(projectfilename_with_path, "RENDER_TRIM", ProjectStateChunk, "GetProject_Render_Normalize")
+end
+
 function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, render_normalize_method, normalize_target, ProjectStateChunk, brickwall_target, fadein_length, fadeout_length, fadein_shape, fadeout_shape)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>SetProject_Render_Normalize</slug>
   <requires>
-    Ultraschall=4.7
-    Reaper=6.65
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>integer retval = ultraschall.SetProject_Render_Normalize(string projectfilename_with_path, integer render_normalize_method, number normalize_target, optional string ProjectStateChunk, optional number brickwall_target, optional number fadein_length, optional number fadeout_length, optional integer fadein_shape, optional integer fadeout_shape)</functioncall>
@@ -11965,27 +12031,54 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   <parameters>
     string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
     integer render_normalize_method - the normalize-method
-                                    - &1, Enable normalizing
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - 0, LUFS-I
-                                    - 2 , RMS-I
-                                    - 4, Peak
-                                    - 6, True Peak
-                                    - 8, LUFS-M max
-                                    - 10, LUFS-S max
-                                    - &32, Normalize stems to master target-checkbox
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - &64, Brickwall-enabled-checkbox
-                                    -     0, unchecked(off)
-                                    -     1, checked(on)
-                                    - &128, Brickwall-mode
-                                    -     0, Peak
-                                    -     1, True Peak
-                                    - &256, only normalize files that are too loud
-                                    -     0, disabled
-                                    -     1, enabled
+                               - &1, Enable normalizing
+                               -     0, unchecked(off)
+                               -     1, checked(on)
+                               - 0, LUFS-I
+                               - 2, RMS-I
+                               - 4, Peak
+                               - 6, True Peak
+                               - 8, LUFS-M max
+                               - 10, LUFS-S max
+                               - &16, Adjust mono files by an additional-checkbox(see &524288)
+                               -      0, off
+                               -      1, on
+                               - &32, Normalize stems to master target-checkbox
+                               -      0, unchecked(off)
+                               -      1, checked(on)
+                               - &64, Brickwall limiting-checkbox
+                               -      0, unchecked(off)
+                               -      1, checked(on)
+                               - &128, Brickwall Limiting mode
+                               -       0, Peak
+                               -       1, True Peak
+                               - &256, Only normalize files that are too loud
+                               -       0, disabled
+                               -       1, enabled
+                               - &512, Fade-in-checkbox
+                               -       0, disabled
+                               -       1, enabled
+                               - &1024, Fade-out-checkbox
+                               -       0, disabled
+                               -       1, enabled
+                               - &16384, Trim leading silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &32768, Trim trailing silence-checkbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &65536, Pad start with silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &131072, Pad end with silence-checbox
+                               -       0, enabled
+                               -       1, disabled
+                               - &262144, render post-processing options
+                               -       0, on
+                               -       1, off
+                               - &&524288 - adjust mono media additional 
+                               -       0, -3dB
+                               -       1, +3dB
     number normalize_target - the normalize-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
     optional string ProjectStateChunk - a projectstatechunk, that you want to be changed
     optional number brickwall_target - the brickwall-normalizatin-target as amp-volume. Use ultraschall.DB2MKVOL to convert it from dB.
@@ -12024,7 +12117,6 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File does not exist", -2) return -1 end
   if projectfilename_with_path~=nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
   if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
-
   if math.type(render_normalize_method)~="integer" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "render_normalize_method", "Must be an integer", -4) return -1 end
   if type(normalize_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "normalize_target", "Must be a number", -5) return -1 end
   if brickwall_target~=nil and type(brickwall_target)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Normalize", "brickwall_target", "Must be a number", -7) return -1 end
@@ -12048,6 +12140,69 @@ function ultraschall.SetProject_Render_Normalize(projectfilename_with_path, rend
   
   if ProjectStateChunk:match("RENDER_NORMALIZE")~=nil then
     ProjectStateChunk=string.gsub(ProjectStateChunk, "\n  RENDER_NORMALIZE .-%c", "\n"..ProjectEntry)
+  else
+    ProjectStateChunk=ProjectStateChunk:match("(.*)  TIMELOCKMODE")..ProjectEntry..ProjectStateChunk:match("(  TIMELOCKMODE.*)")
+  end
+
+  if projectfilename_with_path~=nil then return ultraschall.WriteValueToFile(projectfilename_with_path, ProjectStateChunk), ProjectStateChunk
+  else return 1, ProjectStateChunk
+  end  
+end
+
+function ultraschall.SetProject_Render_Trim(projectfilename_with_path, trim_leading_db, trim_trailing_db, pad_start_seconds, pad_end_seconds, ProjectStateChunk)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>SetProject_Render_Trim</slug>
+  <requires>
+    Ultraschall=5.31
+    Reaper=7.39
+    Lua=5.3
+  </requires>
+  <functioncall>integer retval = ultraschall.SetProject_Render_Trim(string projectfilename_with_path, number trim_leading_db, number trim_trailing_db, number pad_start_seconds, number pad_end_seconds, optional string ProjectStateChunk)</functioncall>
+  <description>
+    Sets the panmode for the master-track of an rpp-projectfile or a ProjectStateChunk.
+    
+    It's the entry RENDER_TRIM
+    
+    Returns -1 in case of error.
+  </description>
+  <parameters>
+    string projectfilename_with_path - the filename of the projectfile; nil, to use Parameter ProjectStateChunk instead
+    number trim_leading_db - the Trim leading silence-inputbox; use ultraschall.MKVOL2DB() to convert this value to DB
+    number trim_trailing_db - the Trim trailing silence-inputbox; use ultraschall.MKVOL2DB() to convert this value to DB
+    number pad_start_seconds - the Pad start with silence-inputbox in seconds
+    number pad_end_seconds - the Pad end with silence-inputbox in seconds
+  </parameters>
+  <retvals>
+    integer retval - -1 in case of error, 1 in case of success
+  </retvals>
+  <chapter_context>
+    Project-Management
+    RPP-Files Set
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_ProjectManagement_ProjectFiles_Module.lua</source_document>
+  <tags>projectfiles, rpp, state, set, render, normalize, pad start, pad end, trim start, trim end/tags>
+</US_DocBloc>
+]]  
+  if projectfilename_with_path==nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Trim", "ProjectStateChunk", "Must be a valid ProjectStateChunk", -1) return -1 end
+  if projectfilename_with_path~=nil and reaper.file_exists(projectfilename_with_path)==false then ultraschall.AddErrorMessage("SetProject_Render_Trim", "projectfilename_with_path", "File does not exist", -2) return -1 end
+  if projectfilename_with_path~=nil then ProjectStateChunk=ultraschall.ReadFullFile(projectfilename_with_path) end
+  if projectfilename_with_path~=nil and ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Trim", "projectfilename_with_path", "File is no valid RPP-Projectfile", -3) return -1 end
+
+  if type(trim_leading_db)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Trim", "trim_leading_db", "Must be a number", -4) return -1 end
+  if type(trim_trailing_db)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Trim", "trim_trailing_db", "Must be a number", -5) return -1 end
+  if type(pad_start_seconds)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Trim", "pad_start_seconds", "Must be a number", -6) return -1 end
+  if type(pad_end_seconds)~="number" then ultraschall.AddErrorMessage("SetProject_Render_Trim", "pad_end_seconds", "Must be a number", -7) return -1 end
+  
+  if ultraschall.IsValidProjectStateChunk(ProjectStateChunk)==false then ultraschall.AddErrorMessage("SetProject_Render_Trim", "projectfilename_with_path", "No valid RPP-Projectfile!", -8) return -1 end
+  
+  local ProjectEntry=""
+  
+  ProjectEntry="  RENDER_TRIM "..trim_leading_db.." "..trim_trailing_db.." "..pad_start_seconds.." "..pad_end_seconds.."\n" 
+  
+  if ProjectStateChunk:match("RENDER_TRIM")~=nil then
+    ProjectStateChunk=string.gsub(ProjectStateChunk, "\n  RENDER_TRIM .-%c", "\n"..ProjectEntry)
   else
     ProjectStateChunk=ProjectStateChunk:match("(.*)  TIMELOCKMODE")..ProjectEntry..ProjectStateChunk:match("(  TIMELOCKMODE.*)")
   end
