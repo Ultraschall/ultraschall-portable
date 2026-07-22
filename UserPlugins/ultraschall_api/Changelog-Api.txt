@@ -440,6 +440,7 @@ Has now 1944 functions, with 5 new ones
 TODO: When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames.
   
 #### New features in 5.33  
+  - Actions: ShowActionList - shows the actionlist and allows setting the filter
 
 #### Changes from 5.32 to 5.33
   - HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -> fixed

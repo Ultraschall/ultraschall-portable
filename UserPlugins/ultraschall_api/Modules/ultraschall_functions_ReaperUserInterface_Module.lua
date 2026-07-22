@@ -1922,6 +1922,7 @@ function ultraschall.GetActionsHWND()
   local count_hwnds, hwnd_array, hwnd_adresses = ultraschall.Windows_Find(translation, true)
   if count_hwnds==0 then return nil
   else
+  --[[
     for i=count_hwnds, 1, -1 do
       if ultraschall.HasHWNDChildWindowNames(hwnd_array[i], 
                                             find_shortcut.."\0"..
@@ -1929,6 +1930,8 @@ function ultraschall.GetActionsHWND()
                                             new.."\0"..
                                             run_close)==true then return hwnd_array[i] end
     end
+    --]]
+    return hwnd_array[1]
   end
   return nil
 end

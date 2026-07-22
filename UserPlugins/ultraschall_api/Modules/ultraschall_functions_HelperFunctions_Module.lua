@@ -7029,3 +7029,46 @@ function ultraschall.SplitReaperString(ReaperString)
   end
   return #Strings, Strings
 end
+
+function ultraschall.ShowActionList(filter)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>ShowActionList</slug>
+  <requires>
+    Ultraschall=5.33
+    Reaper=7.20
+    Lua=5.3
+  </requires>
+  <functioncall>ultraschall.ShowActionList(string filter)</functioncall>
+  <description>
+    returns the project-position-representation of the source-position of a take. 
+    Will obey time-stretch-markers, offsets, etc, as well.
+    
+    Note: due API-limitations, you can only get the project position of take-source-positions 0 and higher, so no negative position is allowed.
+    
+    Also note: when the active take of the parent-item is a different one than the one you've passed, this will temporarily switch the active take to the one you've passed.
+    That could potentially cause audio-glitches!
+    
+    This function is expensive, so don't use it permanently!
+    
+    Returns nil in case of an error
+  </description>
+  <parameters>
+    string filter - the filter of the action-list that you want to set
+  </parameters>
+  <chapter_context>
+    API-Helper functions
+    Action Related Functions
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_HelperFunctions_Module.lua</source_document>
+  <tags>actionlist, show, filter</tags>
+</US_DocBloc>
+]]
+  if type(filter)~="string" then ultraschall.AddErrorMessage("ShowActionList", "filter", "must be a string", -1) return end
+  local hwnd=ultraschall.GetActionsHWND()
+  if hwnd~=nil then reaper.JS_Window_Destroy(hwnd) end
+  retval, inifileentry=reaper.BR_Win32_GetPrivateProfileString("REAPER", "lastactionfilt", "", reaper.get_ini_file())
+  reaper.BR_Win32_WritePrivateProfileString("REAPER", "lastactionfilt", filter, reaper.get_ini_file())
+  reaper.ShowActionList(0, nil)
+end
