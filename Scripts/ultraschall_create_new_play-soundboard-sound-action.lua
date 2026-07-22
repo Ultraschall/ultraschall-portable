@@ -120,6 +120,7 @@ end
 function filepreview_button_runfunction()
   local filename=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
   if filename=="" then return end
+  if reaper.file_exists(filename)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
   if Play~=true then
     
     PCM_source=reaper.PCM_Source_CreateFromFile(filename)
@@ -138,6 +139,7 @@ end
 function action_add_button_runfunction()
   -- create lua-file and add it as action
   local text=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
+  if text=="" then return end
   local volume
   local filename
   
@@ -154,7 +156,15 @@ function action_add_button_runfunction()
   reaper.SetExtState("ultraschall_create_soundboard_action", "target", reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid), true)
   
   filename=string.gsub(text,"\\", "/"):match(".*/(.*)%..*")
-  ultraschall.WriteValueToFile(reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", Comment.."\n\n"..NewSoundboardAction)
+  if filename==nil then filename=string.gsub(text,"\\", "/"):match(".*/(.*)") end
+  if filename==nil then filename=string.gsub(text,"\\", "/") end
+  if reaper.file_exists(text)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
+  retval=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", Comment.."\n\n"..NewSoundboardAction)
+  if retval==-1 then 
+    reaper.MB("Can't create the action-file. Disk full or restricted file-access in the Reaper-folder "..reaper.GetResourcePath().."?", "Oops...", 0)
+    return
+  end
+  
   reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", true)
   reaper.MB("Action created under the name: \nultraschall_"..action..filename..".lua\"", "Success", 0)
   reagirl.Gui_Close()
