@@ -182,9 +182,11 @@ function action_add_button_runfunction()
     return
   end
   
-  reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", true)
-  --reaper.MB("Action created under the name: \nultraschall_"..action..filename..".lua\"", "Success", 0)
-  ultraschall.ShowActionList("ultraschall_"..action..filename..".lua")
+  actioncmd=reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", true)
+  if reaper.MB("Action created under the name: \nultraschall_"..action..filename..".lua\"\n\nDo you want to set it to a shortcut?", "Success", 4)==6 then
+    --ultraschall.ShowActionList("ultraschall_"..action..filename..".lua")
+    reaper.DoActionShortcutDialog(HWND, 0, actioncmd, 0)
+  end
   reagirl.Gui_Close()
 end
 
