@@ -897,6 +897,8 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
   -- check parameters
   if type(filename_with_path)~="string" then ultraschall.AddErrorMessage("CheckForValidFileFormats","filename_with_path", "Must be a string!", -1) return nil end
   if reaper.file_exists(filename_with_path)~=true then ultraschall.AddErrorMessage("CheckForValidFileFormats","filename_with_path", "File does not exist!", -2) return nil end
+  local ext=filename_with_path:match(".*%.(.*)")
+  local supported=reaper.IsMediaExtension(ext, false)
   
   -- prepare variables
   local length, content = ultraschall.ReadBinaryFile_Offset(filename_with_path, 0, 100)
@@ -905,12 +907,12 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
   -- check for a specific imagefile supported by Reaper
   
   --if     content:match("JFIF")~=nil then return "JPG", true, "Image"
-  if ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x45, 0x78, 0x69, 0x66, 0x00)==true then return "JPG", true, "Image"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x4A, 0x46, 0x49, 0x46, 0x00)==true then return "JPG", true, "Image"
-  elseif content:sub(1,3)=="ÿØÿ" then return "JPG", true, "Image"
-  elseif content:sub(2,4)=="PNG" then return "PNG", true, "Image"
-  elseif content:sub(1,2)=="BM" then return "BMP", true, "Image"
-  elseif content:sub(1,3)=="GIF" then return "GIF", true, "Image"
+  if ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x45, 0x78, 0x69, 0x66, 0x00)==true then return "JPG", supported, "Image"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xD8, -1, -1, -1, -1, 0x4A, 0x46, 0x49, 0x46, 0x00)==true then return "JPG", supported, "Image"
+  elseif content:sub(1,3)=="ÿØÿ" then return "JPG", supported, "Image"
+  elseif content:sub(2,4)=="PNG" then return "PNG", supported, "Image"
+  elseif content:sub(1,2)=="BM" then return "BMP", supported, "Image"
+  elseif content:sub(1,3)=="GIF" then return "GIF", supported, "Image"
   elseif ultraschall.CompareStringWithAsciiValues(content, 0x1,0xB0,0xCE)==true then 
         local file=ultraschall.ReadFullFile(filename_with_path,true)
         local frameheader=string.char(1, 176, 206)
@@ -919,29 +921,29 @@ function ultraschall.CheckForValidFileFormats(filename_with_path)
           framecount=framecount+1
           file=file:match(frameheader.."(.*)")
         end
-        return "LCF", true, "Image", framecount-1
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0,0,1,1)==true then return "ICO", true, "Image"
+        return "LCF", supported, "Image", framecount-1
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0,0,1,1)==true then return "ICO", supported, "Image"
   
   -- audio formats
-  elseif content:sub(1,4)=="OggS" then return "OGG", true, "Audio"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x52, 0x49, 0x46, 0x46, -1, -1, -1, -1, 0x57, 0x41, 0x56, 0x45)==true then return "WAV", true, "Audio"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x46, 0x4F, 0x52, 0x4D, -1, -1, -1, -1, 0x41, 0x49, 0x46, 0x46)==true then return "AIFF", true, "Audio"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x30, 0x26, 0xB2, 0x75, 0x8E, 0x66, 0xCF, 0x11, 0xA6, 0xD9, 0x00, 0xAA, 0x00, 0x62, 0xCE, 0x6C)==true then return "ASF/WMA/WMV", true, "Audio/Video"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xFB)==true then return "MP3", true, "Audio"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x49, 0x44, 0x33)==true then return "MP3 - ID3TAG", true, "Audio"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x66, 0x4C, 0x61, 0x43)==true then return "FLAC", true, "Audio"
-  elseif content:sub(1,4)=="MThd" then return "MID", true, "Audio"
+  elseif content:sub(1,4)=="OggS" then return "OGG", supported, "Audio"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x52, 0x49, 0x46, 0x46, -1, -1, -1, -1, 0x57, 0x41, 0x56, 0x45)==true then return "WAV", supported, "Audio"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x46, 0x4F, 0x52, 0x4D, -1, -1, -1, -1, 0x41, 0x49, 0x46, 0x46)==true then return "AIFF", supported, "Audio"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x30, 0x26, 0xB2, 0x75, 0x8E, 0x66, 0xCF, 0x11, 0xA6, 0xD9, 0x00, 0xAA, 0x00, 0x62, 0xCE, 0x6C)==true then return "ASF/WMA/WMV", supported, "Audio/Video"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0xFF, 0xFB)==true then return "MP3", supported, "Audio"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x49, 0x44, 0x33)==true then return "MP3 - ID3TAG", supported, "Audio"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x66, 0x4C, 0x61, 0x43)==true then return "FLAC", supported, "Audio"
+  elseif content:sub(1,4)=="MThd" then return "MID", supported, "Audio"
   
   -- video formats
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x1A, 0x45, 0xDF, 0xA3)==true then return "MKV/MKA/MKS/MK3D/WEBM", true, "Video"
-  elseif ultraschall.CompareStringWithAsciiValues(content, 0x52, 0x49, 0x46, 0x46, -1, -1, -1, -1, 0x41, 0x56, 0x49, 0x20)==true then return "AVI", true, "Video"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x1A, 0x45, 0xDF, 0xA3)==true then return "MKV/MKA/MKS/MK3D/WEBM", supported, "Video"
+  elseif ultraschall.CompareStringWithAsciiValues(content, 0x52, 0x49, 0x46, 0x46, -1, -1, -1, -1, 0x41, 0x56, 0x49, 0x20)==true then return "AVI", supported, "Video"
   else -- Reaper's own projectfiles
     local A,B=ultraschall.ReadBinaryFile_Offset(filename_with_path, 0, 100)
     local C,D=ultraschall.ReadBinaryFile_Offset(filename_with_path, -20, 21)
-    if ultraschall.IsValidProjectStateChunk(B..D)==true then return "RPP_PROJECT", true, "Reaper" end
+    if ultraschall.IsValidProjectStateChunk(B..D)==true then return "RPP_PROJECT", supported, "Reaper" end
       
   -- other formats
-  return "unknown", false, "unknown"
+  return "unknown", supported, "unknown"
   end
 end
 
