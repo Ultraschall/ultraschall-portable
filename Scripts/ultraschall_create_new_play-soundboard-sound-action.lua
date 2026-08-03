@@ -40,7 +40,7 @@ A,B,C,cmd=reaper.get_action_context()
 
 inputlatency, outputLatency = reaper.GetInputOutputLatency()
 for i=0, reaper.CountTracks(0) do
-  if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i end
+  if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i break end
 end
 if soundboard_track==nil then return end
 
@@ -71,7 +71,7 @@ end
 
 
 for i=0, reaper.CountTracks(0) do
-  if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i-1 end
+  if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i-1 break end
 end
 if soundboard_track==nil then return end
 
@@ -126,7 +126,7 @@ function filepreview_button_runfunction()
     PCM_source=reaper.PCM_Source_CreateFromFile(filename)
     CF_Preview=reaper.CF_CreatePreview(PCM_source)
     for i=0, reaper.CountTracks(0) do
-      if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i end
+      if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i break end
     end
     if soundboard_track==nil then 
       return 
