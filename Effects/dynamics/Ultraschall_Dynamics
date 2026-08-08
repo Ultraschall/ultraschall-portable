@@ -519,7 +519,8 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
     gfx_x=i + left; // X-Coordinate starts with left+0
     dbo = (((db_top-db_bottom) * i + gain_db_for_x(i*isz)*(sz)) * db_i_range)|0; // get db-Output Value from LUT
     (abs(dbo - ( (slider_target_LUFS+108)/108 * sz) ) <1.5 ) && Target_Line_Start==left ? Target_Line_Start=i+left; // find Point for LUFS Line on curve
-    gfx_r=1; gfx_g=1; gfx_b=0; // define Color yellow
+    gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
+    gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
 
     // if x= loudness of the live signal draw line and text etc.
     gfx_x==env_x && env_x>left ? (
@@ -555,7 +556,8 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   gfx_a=0.5;
   gfx_r=1.0;gfx_b=gfx_g=0;;
   //gfx_rect(gfx_x-1, bottom-dbo,3,dbo);
-  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=0.75;
+  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
+  gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
   gfx_circle(gfx_x, bottom-dbo,10,1,1);
   Noisefloor_x=gfx_x;
   Noisefloor_y=bottom-dbo;
@@ -567,14 +569,16 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   gfx_r=1.0;gfx_b=gfx_g=0;
   gfx_x<left ? Noisegate_x=left : Noisegate_x=gfx_x;
   //gfx_line(Noisegate_x,bottom,Noisefloor_x,Noisefloor_y);
-  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=0.75;
+  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
+  gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
   gfx_circle(Noisegate_x, bottom-dbo+dbo,10,1,1);
 
   //draw TARGET LUFS Line and Circle
   Target_Level = (slider_target_LUFS+108)/108 *  sz;
   dbo = (((db_top-db_bottom) * Target_Level + gain_db_for_x(Target_Level*isz)*(sz)) * db_i_range)|0;
   gfx_x=left+sz;
-  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=0.75;
+  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
+  gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
   gfx_circle(gfx_x,bottom-Target_Level,10,1,1);
   //gfx_rect(Target_Line_Start, bottom-Target_Level, left+sz - Target_Line_Start,1);
 
