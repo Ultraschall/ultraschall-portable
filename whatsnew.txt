@@ -1,3 +1,51 @@
+v7.78 - July 18 2026
+  + API: ignore midi_reinit() (and related others) when incorrectly called by certain extensions in other threads
+  + API: improve performance of PlayTrackPreview/StopTrackPreview, defer global lock/routing reanalysis if called multiple times within a short window
+  + ARA: apply the final item gain (zero, if item is faded out) to ARA plugin output after the end of the media item being processed
+  + ARA: improve behavior when loading take FX on a multichannel track [p=2935047]
+  + ARA: improve stability when saving project to new directory, or copying/moving/renaming media
+  + ARA: remove various dependencies on track/take channel count
+  + ARA: support head/tail time reported by plugin
+  + ARA: when fx output is shifted early, apply media item starting gain (zero if fade-in exists) to all plugin output samples before the actual media item start
+  + Crossfade editor: properly set media offline/online when crossfade editor is open, updates after external editors were used, etc
+  + DDP: fix incorrect encoding of excess genre packets (thanks chmaha)
+  + Freeze: do not preserve MIDI-only sends to frozen tracks
+  + FX: building multichannel routing will prompt to optionally configure MIDI routing from up to the first 16 added tracks, using pre-receive sends
+  + FX: improve performance of linked parameters
+  + FX reordering: improve default behavior when dragging down and empty slots enabled, provide alternate (7.75-7.77) behavior by holding shift while reordering
+  + Import: do not delete track after multichannel MIDI import if the track has any FX or routing [t=310116]
+  + Linux: improve support for plug-ins that forward keystrokes back to REAPER (thanks David @ u-he)
+  + MIDI editor: improve performance when opening/closing MIDI editor with many editable contexts [t=304834]
+  + MIDI editor: performance improvements with many contexts open [t=304834]
+  + MIDI editor: fix incorrect behaviors of fast mouse moves with marquee select with time selection [p=2952002]
+  + MIDI editor: fix incorrect hit testing of CC handles [t=297357]
+  + MIDI inline editor: improve grid display when in continuous scrolling [t=310056]
+  + Mixer: add mute send/FX bypass slot for all/selected tracks to send context menus
+  + Mixer: fix toggle mute of all/selected track send slot modifier when in non-trim automation mode [t=310017]
+  + Paths: support relative paths for various fields in Preferences/Paths and Preferences/Backups, primarily useful for portable installs [t=305641]
+  + Project: store master track GUID in project files, fixing track view screenset restoration for master track [t=310094]
+  + ReaScript: document gfx_setcursor base64 support (added in 7.77)
+  + ReaScript: MarkTrackItemsDirty() correctly handles pooled MIDI items across tracks [t=310092]
+  + ReaScript: various MIDI_ setting APIs automatically mark relevant tracks dirty for undo [p=1925555]
+  + Render: fix rendering raw PCM files with more than 1 channel [t=310024]
+  + Ruler: improve performance when displaying many named markers [t=309588]
+  + Ruler: increase maximum number of ruler lanes to 48
+  + Sends: add new pre-receive send mode, sending media and monitoring without creating feedback loops (e.g. for sending midi to a sampler and then receiving audio back to the same track)
+  + Sends: tint send level indicator added in 7.75 is now configurable, defined by colortheme/theme tweaker 'Send custom color tint - draw mode'
+  + Snap: fix issues with snap at fixed offset from other media [p=2951116]
+  + Theme: add default option in Preferences/Appearance/Media Items to use faster/less precise item rendering
+  + Theme: optimize drawing themes that use item background images with transparency, faster default theme with selected items
+  + Theme: optimize item_bg theme images if possible for faster drawing speeds
+  + Timecode: allow project start to be set to fractional frame offset (configure via Project Settings/start offset menu) [t=305372]
+  + Tooltips: fix missing commas in locking tooltip [t=310069]
+  + Track hardware outputs: improve labels in various places to include destination channel names
+  + Video: respect fractional frame offsets, if enabled, to match timecode
+  + VST3: avoid reentrance if plug-in requests restartComponent in response to initializing the plug-in [t=310068]
+  + VST3: ignore restartComponent requests if they occur from a thread other than the main thread
+  + VST3: release processor prior to component, fixes warnings from some plug-ins
+  + Windows: fix copy/paste of high unicode codepoints on Windows in ReaScript/Video/JSFX IDEs
+  + Windows: improve sizing of localized controls within save/open dialogs
+
 v7.77 - July 7 2026
   + Actions window: don't show full path for ReaScripts in the default path [t=309902]
   + Batch converter: support pasting converter settings from clipboard [t=309126]
