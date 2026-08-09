@@ -237,6 +237,13 @@ def BR_GetMouseCursorContext_Envelope(p0):
   r=f(byref(t[0]))
   return (rpr_unpackp('TrackEnvelope*',r),int(t[0].value))
 
+def BR_GetMouseCursorContext_EnvelopeEx(p0,p1,p2):
+  a=rpr_getfp('BR_GetMouseCursorContext_EnvelopeEx')
+  f=CFUNCTYPE(c_uint64,c_void_p,c_void_p,c_void_p)(a)
+  t=(c_byte(p0),c_int(p1),c_int(p2))
+  r=f(byref(t[0]),byref(t[1]),byref(t[2]))
+  return (rpr_unpackp('TrackEnvelope*',r),int(t[0].value),int(t[1].value),int(t[2].value))
+
 def BR_GetMouseCursorContext_Item():
   a=rpr_getfp('BR_GetMouseCursorContext_Item')
   f=CFUNCTYPE(c_uint64)(a)
@@ -937,6 +944,13 @@ def CF_SelectTrackFX(p0,p1):
   r=f(t[0],t[1])
   return r
 
+def CF_SendActionShortcut(p0,p1,p2,p3):
+  a=rpr_getfp('CF_SendActionShortcut')
+  f=CFUNCTYPE(c_byte,c_uint64,c_int,c_int,c_void_p)(a)
+  t=(rpr_packp('void*',p0),c_int(p1),c_int(p2),c_int(p3))
+  r=f(t[0],t[1],t[2],byref(t[3]))
+  return (r,p0,p1,p2,int(t[3].value))
+
 def CF_SetClipboard(p0):
   a=rpr_getfp('CF_SetClipboard')
   f=CFUNCTYPE(None,c_char_p)(a)
@@ -953,6 +967,12 @@ def CF_SetMediaSourceOnline(p0,p1):
   a=rpr_getfp('CF_SetMediaSourceOnline')
   f=CFUNCTYPE(None,c_uint64,c_byte)(a)
   t=(rpr_packp('PCM_source*',p0),c_byte(p1))
+  f(t[0],t[1])
+
+def CF_SetTcpScroll(p0,p1):
+  a=rpr_getfp('CF_SetTcpScroll')
+  f=CFUNCTYPE(None,c_uint64,c_int)(a)
+  t=(rpr_packp('MediaTrack*',p0),c_int(p1))
   f(t[0],t[1])
 
 def CF_ShellExecute(p0):
