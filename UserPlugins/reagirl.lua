@@ -7951,10 +7951,18 @@ function reagirl.UI_Element_GetType(element_id)
 end
 
 function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
- 
   if placenext==nil or placenext==false then placenext=0 else placenext=9 end
   local slot=reagirl.UI_Element_GetNextFreeSlot()
   local slot3=slot
+  
+  if reagirl.TempX~=nil then 
+    local x=reagirl.TempX
+    local y=reagirl.TempY
+    reagirl.TempX=nil
+    reagirl.TempY=nil
+    return x, y, slot3    
+  end
+
   if reagirl.Next_Y~=nil then slot=reagirl.Next_Y+1 end
   local slot2
   if x==nil then
@@ -8020,6 +8028,37 @@ function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
   reagirl.NextLine_triggered=nil
   --print_alt(slot, y, reagirl.UI_Element_NextY_Default)
   return x, y, slot3
+end
+
+function reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
+  --[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>AutoPosition_SetNextUIElementAtPosition</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>reagirl.AutoPosition_SetNextUIElementAtPosition(integer x, integer y)</functioncall>
+  <description>
+    Sets the position of the next autopositioned UI-element at x and y position.
+  </description>
+  <parameters>
+    integer x - the x-position of the next autopositioned ui-element
+    integer y - the y-position of the next autopositioned ui-element
+  </parameters>
+  <chapter_context>
+    Autoposition
+  </chapter_context>
+  <target_document>ReaGirl_Docs</target_document>
+  <source_document>reagirl_GuiEngine.lua</source_document>
+  <tags>functions, set, auto position, absolute</tags>
+</US_DocBloc>
+]]
+  if math.type(x)~="integer" then error("AutoPosition_SetNextUIElementAtPosition: param #1 - must be an integer", 2) end
+  if math.type(y)~="integer" then error("AutoPosition_SetNextUIElementAtPosition: param #2 - must be an integer", 2) end
+  reagirl.TempX=x
+  reagirl.TempY=y
 end
 
 function reagirl.UI_Element_GetSet_ContextMenu(element_id, is_set, menu, menu_function)
@@ -10263,8 +10302,8 @@ function reagirl.DecorRectangle_Add(x, y, w, h, radius, r, g, b)
     Note: if you want a clickable color-rectangle, use reagirl.ColorRectangle_Add()
   </description>
   <parameters>
-    optional integer x - the x position of the color-rectangle in pixels; negative anchors the color-rectangle to the right window-side; nil, autoposition after the last ui-element(see description)
-    optional integer y - the y position of the color-rectangle in pixels; negative anchors the color-rectangle to the bottom window-side; nil, autoposition after the last ui-element(see description)
+    integer x - the x position of the color-rectangle in pixels; negative anchors the color-rectangle to the right window-side; nil, autoposition after the last ui-element(see description)
+    integer y - the y position of the color-rectangle in pixels; negative anchors the color-rectangle to the bottom window-side; nil, autoposition after the last ui-element(see description)
     integer w - the width of the color-rectangle in pixels
     integer h - the height of the color-rectangle in pixels
     integer radius - the radius of the rectangle
@@ -10281,17 +10320,17 @@ function reagirl.DecorRectangle_Add(x, y, w, h, radius, r, g, b)
   <tags>decorative color rectangle, add</tags>
 </US_DocBloc>
 --]]
-  if x~=nil and math.type(x)~="integer" then error("DecorRectangle_Add: param #1 - must be either nil or an integer", 2) end
-  if y~=nil and math.type(y)~="integer" then error("DecorRectangle_Add: param #2 - must be either nil or an integer", 2) end
+  if math.type(x)~="integer" then error("DecorRectangle_Add: param #1 - must be either nil or an integer", 2) end
+  if math.type(y)~="integer" then error("DecorRectangle_Add: param #2 - must be either nil or an integer", 2) end
   if math.type(w)~="integer" then error("DecorRectangle_Add: param #3 - must be an integer", 2) end
   if math.type(h)~="integer" then error("DecorRectangle_Add: param #4 - must be an integer", 2) end
   if math.type(radius)~="integer" then error("DecorRectangle_Add: param #5 - must be an integer", 2) end
   if math.type(r)~="integer" then error("DecorRectangle_Add: param #6 - must be an integer", 2) end
   if math.type(g)~="integer" then error("DecorRectangle_Add: param #7 - must be an integer", 2) end
-  if math.type(b)~="integer" then error("DecorRectangle_Add: param #8 - must be an integer", 2) end
+  if math.type(b)~="integer" then error("DecorRectangle_Add: param #8 - must be an integer", 2) end  
+  --local x,y,slot=reagirl.UI_Element_GetNextXAndYPosition(x, y, "DecorativeRectangle_Add")
   
-  
-  local _,_,slot=reagirl.UI_Element_GetNextXAndYPosition(x, y, "DecorRectangle_Add")
+  local x,y,slot=reagirl.UI_Element_GetNextXAndYPosition(x, y, "DecorRectangle_Add")
   --reagirl.UI_Element_NextX_Default=x
   
   --reagirl.SetFont(1, reagirl.Font_Face, reagirl.Font_Size, 0, 1)
@@ -12966,8 +13005,9 @@ function reagirl.ToolbarButton_ReloadImage_Scaled(element_id)
   local scale=reagirl.Window_CurrentScale
   
   local path, filename = string.gsub(image_filename, "\\", "/"):match("(.*)(/.*)")
+  if path==nil then path="" filename=image_filename end
   reagirl.Elements[element_id]["toolbaricon_scale"]=1
-  if reaper.file_exists(image_filename:match("(.*)%.").."-"..scale.."x"..image_filename:match(".*(%..*)"))==true then
+  if reaper.file_exists(image_filename:match("(.*)%."))==true then --.."-"..scale.."x"..  image_filename:match(".*(%..*)"))==true then
     image_filename=image_filename:match("(.*)%.").."-"..scale.."x"..image_filename:match(".*(%..*)")
     reagirl.Elements[element_id]["toolbaricon_scale"]=scale
   elseif reaper.file_exists(path.."/"..scale.."00/"..filename) then
@@ -13084,7 +13124,18 @@ function reagirl.ToolbarButton_Add(x, y, toolbaricon, num_states, default_state,
 --]]
   if x~=nil and math.type(x)~="integer" then error("ToolbarButton_Add: param #1 - must be either nil or an integer", 2) end
   if y~=nil and math.type(y)~="integer" then error("ToolbarButton_Add: param #2 - must be either nil or an integer", 2) end
-  if type(toolbaricon)~="string" then error("ToolbarButton_Add: param #3 - must be a string", 2) end
+  if type(toolbaricon)~="string" and toolbaricon~="" then 
+    error("ToolbarButton_Add: param #3 - must be a string with a filename", 2) 
+  elseif type(toolbaricon)=="string" then
+    local tempmode=mode
+    if tempmode&128==128 then tempmode=tempmode-128 end
+    if tempmode&256==256 then tempmode=tempmode-256 end
+    if tempmode&512==512 then tempmode=tempmode-512 end
+    if tempmode&1024==1024 then tempmode=tempmode-1024 end
+    if toolbaricon=="" and tempmode<3 and tempmode>4 then
+      error("ToolbarButton_Add: param #3 - must be a string with a filename, if mode is not set to text-button", 2) 
+    end
+  end
   if math.type(num_states)~="integer" then error("ToolbarButton_Add: param #4 - must be an integer", 2) end
   if num_states<1 or num_states>32 then error("ToolbarButton_Add: param #4 - must be between 1 and 32", 2) end
   if math.type(default_state)~="integer" then error("ToolbarButton_Add: param #5 - must be an integer", 2) end
@@ -20688,7 +20739,7 @@ function reagirl.AutoPosition_SetNextUIElementRelativeTo(element_id, offset)
   </chapter_context>
   <target_document>ReaGirl_Docs</target_document>
   <source_document>reagirl_GuiEngine.lua</source_document>
-  <tags>functions, set, auto position, next line</tags>
+  <tags>functions, set, auto position, relative</tags>
 </US_DocBloc>
 ]]
   if type(element_id)~="string" then error("AutoPosition_SetNextUIElementRelativeTo: param #1: must be a string", 2) return end
