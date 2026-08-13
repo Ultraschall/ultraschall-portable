@@ -6155,6 +6155,21 @@ function reagirl.Ext_IsAnyReaGirlGuiHovered(register)
   if states:match("true")~=nil then return true else return false end
 end
 
+function reagirl.Manage_Shortcuts(Key)
+  -- add shortcuts for switching to labels
+  -- add a setting that suppresses shortcuts or allows it always
+  -- add a function to get/set if shortcuts are allowed
+  if Key~=9 and reagirl.FocusRectangle_On~=true then
+    if reagirl.GFX_WindowHWND==reaper.JS_Window_GetFocus() then
+      local keys = reaper.JS_VKeys_GetState(-1)
+      for k = 1, #keys do
+        if k ~= 0xD and keys:byte(k) ~= 0 then
+          reaper.CF_SendActionShortcut(reaper.GetMainHwnd(), 0, k)
+        end
+      end
+    end
+  end
+end
 
 function reagirl.Gui_Manage(keep_running)
 -- Note: it's possible to doubleclick the empty area of the gui to dock/undock, but the code is currently deactivated
@@ -7326,6 +7341,10 @@ function reagirl.Gui_Manage(keep_running)
   else
     reagirl.Gui_Manage_keep_running=nil
   end
+  
+  -- manage Reaper-shortcuts
+  --reagirl.Manage_Shortcuts(Key)
+  
   -- reset screenreader messages
   reagirl.osara_AddedMessage=""
 end
@@ -10287,7 +10306,7 @@ function reagirl.DecorRectangle_Add(x, y, w, h, radius, r, g, b)
     Reaper=7.03
     Lua=5.4
   </requires>
-  <functioncall>string decor_rectangle_guid = reagirl.DecorRectangle_Add(optional integer x, optional integer y, integer w, integer h, integer radius, integer r, integer g, integer b)</functioncall>
+  <functioncall>string decor_rectangle_guid = reagirl.DecorRectangle_Add(integer x, integer y, integer w, integer h, integer radius, integer r, integer g, integer b)</functioncall>
   <description>
     Adds a decorative color-rectangle to a gui.
     
@@ -10957,7 +10976,7 @@ function reagirl.ColorRectangle_SetRadius(element_id, radius)
   </description>
   <parameters>
     string element_id - the guid of the color-rectangle, whose radius you want to set
-    integer radius - between 0 and 10
+    integer radius - between 0 and higher(too high may lead to drawing issues, experiment with it)
   </parameters>
   <chapter_context>
     Color Rectangle
@@ -12729,7 +12748,7 @@ function reagirl.Button_SetRadius(element_id, radius)
   </description>
   <parameters>
     string element_id - the guid of the button, whose radius you want to set
-    integer radius - the radius of the edges of the button; between 0 and 10
+    integer radius - the radius of the edges of the button; 0 and higher, too high radius can lead to drawing issues, experiment with it
   </parameters>
   <retvals>
     boolean retval - true, setting was succesful; false, setting was unsuccessful
@@ -12743,8 +12762,8 @@ function reagirl.Button_SetRadius(element_id, radius)
   if type(element_id)~="string" then error("Button_SetRadius: param #1 - must be a string", 2) end
   if reagirl.IsValidGuid(element_id, true)==nil then error("Button_SetRadius: param #1 - must be a valid guid", 2) end
   if math.type(radius)~="integer" then error("Button_SetRadius: param #2 - must be an integer", 2) end
-  if radius>10 then 
-     radius=10 end
+  --[[if radius>10 then 
+     radius=10 end--]]
   if radius<0 then radius=0 end
   element_id = reagirl.UI_Element_GetIDFromGuid(element_id)
   if element_id==-1 then error("Button_SetRadius: param #1 - no such ui-element", 2) end
@@ -13007,7 +13026,7 @@ function reagirl.ToolbarButton_ReloadImage_Scaled(element_id)
   local path, filename = string.gsub(image_filename, "\\", "/"):match("(.*)(/.*)")
   if path==nil then path="" filename=image_filename end
   reagirl.Elements[element_id]["toolbaricon_scale"]=1
-  if reaper.file_exists(image_filename:match("(.*)%."))==true then --.."-"..scale.."x"..  image_filename:match(".*(%..*)"))==true then
+  if reaper.file_exists(image_filename:match("(.*)%.").."-"..scale.."x"..  image_filename:match(".*(%..*)"))==true then
     image_filename=image_filename:match("(.*)%.").."-"..scale.."x"..image_filename:match(".*(%..*)")
     reagirl.Elements[element_id]["toolbaricon_scale"]=scale
   elseif reaper.file_exists(path.."/"..scale.."00/"..filename) then
@@ -13096,6 +13115,7 @@ function reagirl.ToolbarButton_Add(x, y, toolbaricon, num_states, default_state,
     string toolbaricon - filename+path to the toolbar-icon-image; will be ignored for text-toolbar-icons
     integer num_states - number of states when clicked; 1, 1-state; 2, 2-states; 3, 3-states, etc
     integer default_state - default-state(1 or higher); can't be higher than maximum states!
+                          - will be 2, when mode=5!
     table state_names - a table with all state-names. These will be shown in the tooltip/screen reader message when a certain state has been set. 
                       - Each entry must be a string!
     integer mode - 1, toolbar-icon only
@@ -13144,6 +13164,7 @@ function reagirl.ToolbarButton_Add(x, y, toolbaricon, num_states, default_state,
   if type(state_names)~="table" then error("ToolbarButton_Add: param #6 - must be a table", 2) end
   
   if math.type(mode)~="integer" then error("ToolbarButton_Add: param #7 - must be a string", 2) end
+  if mode==5 then num_states=2 end
   if type(caption)~="string" then error("ToolbarButton_Add: param #8 - must be a string", 2) end
   caption=string.gsub(caption, "[\n\r]", "")
   if type(meaningOfUI_Element)~="string" then error("ToolbarButton_Add: param #9 - must be a string", 2) end
@@ -15994,7 +16015,7 @@ function reagirl.Inputbox_Manage(element_id, selected, hovered, clicked, mouse_c
     elseif selected~="not selected" and clicked=="FirstCLK" and (gfx.mouse_y>=y and gfx.mouse_x>=x+w-element_storage.w_dropdownarea*dpi_scale and gfx.mouse_x<=x+w and gfx.mouse_y<=y+h) then 
       element_storage.dropdown_clicked=true
       --reagirl.Gui_ForceRefresh(4638349.2376701)
-    elseif Key==1685026670 and element_storage.w_dropdownarea~=0 then
+    elseif selected~="not selected" and Key==1685026670 and element_storage.w_dropdownarea~=0 then
       element_storage.dropdown_clicked=true
     end
     -- keyboard management
@@ -20659,7 +20680,7 @@ function reagirl.UI_Element_SetFocused(element_id)
   </requires>
   <functioncall>reagirl.UI_Element_SetFocused(string element_id)</functioncall>
   <description>
-    Set an ui-element focused. 
+    Set a ui-element focused. 
   </description>
   <parameters>
     string element_id - the id of the ui-element, which you want to set to focused
@@ -20667,18 +20688,26 @@ function reagirl.UI_Element_SetFocused(element_id)
   <chapter_context>
     UI Elements
   </chapter_context>
-  <target_document>ReaGirl_Docs</target_document>
-  <source_document>reagirl_GuiEngine.lua</source_document>
+  <target_document>ReaGirl_Functions</target_document>
+  <source_document>reagirl.lua</source_document>
   <tags>functions, set, focused, gui</tags>
+  <changelog>
+    ReaGirl 1.33 - crashed when used before Gui_Manage -> fixed
+    ReaGirl 1.0 - added to ReaGirl
+  </changelog>  
 </US_DocBloc>
 ]]
-  if reagirl.Elements.FocusedElement>=#reagirl.Elements-5 then return end
+  if reagirl.Elements.FocusedElement~=nil and (reagirl.Elements.FocusedElement>=#reagirl.Elements-5) then return end
+  if type(element_id)~="string" then error("UI_Element_SetFocused: param #1 - must be a string", 2) end
   local id=reagirl.UI_Element_GetIDFromGuid(element_id)
-  if id==-1 then error("UI_Element_SetFocused: param #1 - no such ui-element", -2) end
+  if id==-1 then error("UI_Element_SetFocused: param #1 - no such ui-element", 2) end
 
+  reagirl.ui_element_selected=nil
+  
   reagirl.Elements.FocusedElement=id
   reagirl.Gui_ForceRefresh(52)
 end
+
 
 function reagirl.UI_Element_SetHiddenFromTable(table_element_ids, visible)
 --[[
