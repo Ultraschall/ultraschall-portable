@@ -46,29 +46,14 @@ if soundboard_track==nil then return end
 
 if reaper.GetPlayState()==0 then position=reaper.GetCursorPosition() else position=reaper.GetPlayPosition() end
 retval, item, endposition, numchannels, Samplerate, Filetype, editcursorposition, track = 
-  ultraschall.InsertMediaItemFromFile(filename, soundboard_track, position+1.5, -1, 2, 0, false, false)
-  volume=reaper.GetMediaItemInfo_Value(item, "D_VOL")
-  volume=reaper.SetMediaItemInfo_Value(item, "D_VOL", volume-0.5)
+ultraschall.InsertMediaItemFromFile(filename, soundboard_track, position+1.5, -1, 2, 0, false, false)
+volume=reaper.SetMediaItemInfo_Value(item, "D_VOL",  ultraschall.DB2MKVOL(volume))
 ]]
 
 NewSoundboardAction=[[
 -- enable Ultraschall-API for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-A,B,C,cmd=reaper.get_action_context()
-
-if reaper.GetExtState("Ultraschall", "Play"..cmd)~="" then 
-  address=tonumber(reaper.GetExtState("Ultraschall", "Play"..cmd))
-  address2=tonumber(reaper.GetExtState("Ultraschall", "Play2"..cmd))
-  
-  reaper.SetExtState("Ultraschall", "Play"..cmd, "", false)
-  reaper.SetExtState("Ultraschall", "Play2"..cmd, "", false)
-  CF_Preview=reaper.JS_Window_HandleFromAddress(address)
-  PCM_source=reaper.JS_Window_HandleFromAddress(address2)
-  reaper.CF_Preview_Stop(CF_Preview) 
-  reaper.PCM_Source_Destroy(PCM_source)
-  return
-end
-
+reaper.set_action_options(1)
 
 for i=0, reaper.CountTracks(0) do
   if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i-1 break end
@@ -79,15 +64,19 @@ PCM_source=reaper.PCM_Source_CreateFromFile(filename)
 CF_Preview=reaper.CF_CreatePreview(PCM_source)
 reaper.CF_Preview_SetOutputTrack(CF_Preview, 0, reaper.GetTrack(0, soundboard_track))
 retval, new_value = reaper.CF_Preview_SetValue(CF_Preview, "D_VOLUME", ultraschall.DB2MKVOL(volume))
-reaper.SetExtState("Ultraschall", "Play"..cmd, "1", false)
 reaper.CF_Preview_Play(CF_Preview)
 
-address = reaper.JS_Window_AddressFromHandle(CF_Preview)
-address2 = reaper.JS_Window_AddressFromHandle(PCM_source)
-reaper.SetExtState("Ultraschall", "Play"..cmd, address, false)
-reaper.SetExtState("Ultraschall", "Play2"..cmd, address2, false)
 
-return
+function atexit()
+  reaper.CF_Preview_Stop(CF_Preview) 
+  reaper.PCM_Source_Destroy(PCM_source)
+end
+reaper.atexit(atexit)
+
+function main()
+  reaper.defer(main)
+end
+main()
 ]]
 
 -- 1. add the run-functions for the ui-elements
@@ -153,41 +142,45 @@ function SliderRunFunc()
   end
 end
 
-function action_add_button_runfunction()
-  -- create lua-file and add it as action
-  local text=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
-  if text=="" then return end
-  local volume=reagirl.Slider_GetValue(playvolume_slider_guid)
-  local filename
-  
-  if reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid)==1 then
-    volume=reagirl.Slider_GetValue(playvolume_slider_guid)
-    NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewSoundboardAction
-    action="play_in_soundboard_input_"
+function action_add_button_runfunction(element_id)
+  if action_help_button_guid==element_id then
+    reaper.MB("This allows you to add an action to the actionlist, that plays a soundfile or adds a soundfile into the soundboardtrack.\n\n   Audiofilename - enter the path+audiofilename\n\n   Playbutton - previews the selected audiofile\n\n   Select filename - click to choose an audiofilename\n\n   Playtarget - choose, whether the audiofile shall be played into the\n   recording-input of the soundboard track or if it shall be inserted into\n   the track as audio-item\n\n   Volume - set the dB-volume of how loud the audiofile shall be\n   (0dB=loudest; -144=silence))\n\n   Help - this dialog\n\n   Create audioplay-action - creates the audioplay-action and allows you\n   to set a shortcut to it\n\nLook into the Actionlist (Menu: Actions -> Show Action list) for the filename that you chose to find the action you've just created.", "Help for audio-play-action", 0) 
   else
-    volume=reagirl.Slider_GetValue(playvolume_slider_guid)
-    NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewInsertItemAction
-    action="insert_file_in_soundboard_track_"
-  end
+    -- create lua-file and add it as action
+    local text=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
+    if text=="" then reaper.MB("No audiofile selected", "Error", 0) return end
+    local volume=reagirl.Slider_GetValue(playvolume_slider_guid)
+    local filename
+    
+    if reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid)==1 then
+      volume=reagirl.Slider_GetValue(playvolume_slider_guid)
+      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewSoundboardAction
+      action="play_in_soundboard_input_"
+    else
+      volume=reagirl.Slider_GetValue(playvolume_slider_guid)
+      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewInsertItemAction
+      action="insert_file_in_soundboard_track_"
+    end
   
-  reaper.SetExtState("ultraschall_create_soundboard_action", "target", reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid), true)
-  
-  filename=string.gsub(text,"\\", "/"):match(".*/(.*)%..*")
-  if filename==nil then filename=string.gsub(text,"\\", "/"):match(".*/(.*)") end
-  if filename==nil then filename=string.gsub(text,"\\", "/") end
-  if reaper.file_exists(text)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
-  retval=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", Comment.."\n\n"..NewSoundboardAction)
-  if retval==-1 then 
-    reaper.MB("Can't create the action-file. Disk full or restricted file-access in the Reaper-folder "..reaper.GetResourcePath().."?", "Oops...", 0)
-    return
+    reaper.SetExtState("ultraschall_create_soundboard_action", "target", reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid), true)
+    
+    filename=string.gsub(text,"\\", "/"):match(".*/(.*)%..*")
+    if filename==nil then filename=string.gsub(text,"\\", "/"):match(".*/(.*)") end
+    if filename==nil then filename=string.gsub(text,"\\", "/") end
+    if reaper.file_exists(text)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
+    retval=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", Comment.."\n\n"..NewSoundboardAction)
+    if retval==-1 then 
+      reaper.MB("Can't create the action-file. Disk full or restricted file-access in the Reaper-folder "..reaper.GetResourcePath().."?", "Oops...", 0)
+      return
+    end
+    
+    actioncmd=reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", true)
+    if reaper.MB("Action created under the name: \nultraschall_"..action..filename..".lua\"\n\nDo you want to set it to a shortcut?", "Success", 4)==6 then
+      --ultraschall.ShowActionList("ultraschall_"..action..filename..".lua")
+      reaper.DoActionShortcutDialog(HWND, 0, actioncmd, 0)
+    end
+    reagirl.Gui_Close()
   end
-  
-  actioncmd=reaper.AddRemoveReaScript(true, 0, reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", true)
-  if reaper.MB("Action created under the name: \nultraschall_"..action..filename..".lua\"\n\nDo you want to set it to a shortcut?", "Success", 4)==6 then
-    --ultraschall.ShowActionList("ultraschall_"..action..filename..".lua")
-    reaper.DoActionShortcutDialog(HWND, 0, actioncmd, 0)
-  end
-  reagirl.Gui_Close()
 end
 
 -- 2. start a new gui
@@ -206,6 +199,7 @@ playtarget_menu_guid = reagirl.DropDownMenu_Add(nil,nil, 350, "Playtarget:", 85,
 reagirl.NextLine()
 playvolume_slider_guid = reagirl.Slider_Add(nil, nil, 388, "Volume", 85, "The volume of how loud the action plays the audio in dB.", "dB", -144, 0, 1, 0, 0, SliderRunFunc, "volume_slider")
 reagirl.NextLine(10)
+action_help_button_guid = reagirl.Button_Add(nil, nil, 0, 0, "Help", "Show help for this dialog.", action_add_button_runfunction, "action_create_button", 0)
 action_add_button_guid = reagirl.Button_Add(-164, nil, 0, 0, "Create audioplay-action", "Create audioplay-action.", action_add_button_runfunction, "action_create_button", 0)
 
 --reagirl.UI_Element_SetFocused(fileinput_inputbox_guid)
