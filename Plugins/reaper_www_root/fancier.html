@@ -81,11 +81,6 @@
 
 <script type="text/javascript">
             
-wwr_req_recur("TRANSPORT;BEATPOS",10);
-wwr_req_recur("NTRACK;TRACK;GET/40364;GET/1157",10);
-wwr_req_recur("MARKER;REGION",500);
-wwr_start();  
-
 var last_transport_state = -1, mouseDown = 0, last_time_str = "",
     last_metronome = false,  nTrack = 0, last_repeat = false, snapState = 0,
     drawnSig=0, drawnBeat=0, ts_numerator=0, ts_denominator=0, playPosSeconds=0, statusPosition=[], statusPositionAr=[],
@@ -126,7 +121,15 @@ function mouseDownEventHandler(msg) {
   }
 }
     
-function mouseUpHandler(event){mouseDown = 0;}
+var volOutputdB = null;
+
+function mouseUpHandler(event){
+  if (mouseDown == 1 && volOutputdB != null) {
+    wwr_req("SET/TRACK/" + this.id + "/VOL/" + volOutputdB + "e")
+  }
+  volOutputdB = null;
+  mouseDown = 0;
+}
 function mouseDownHandler(event, target){mouseDown = 1;}
 function mouseLeaveHandler(event){mouseDown = 0;}
 function mouseMoveHandler(event){
@@ -149,7 +152,7 @@ function mouseMoveHandler(event){
         var vteMove320 = "translate(" + offsetX320 + " 0)";
         volThumb.setAttributeNS(null, "transform", vteMove320);
         var volOutput = (offsetX  / volThumbTrackWidth);
-        var volOutputdB = Math.pow(volOutput, 4) * 4;
+        volOutputdB = Math.pow(volOutput, 4) * 4;
         wwr_req("SET/TRACK/" + this.id + "/VOL/" + volOutputdB)
         }
     }
@@ -340,11 +343,10 @@ function wwr_onreply(results) {
             g_markers.push(tok);
             break;
       case "MARKER_LIST_END":
-            var pos = parseFloat(playPosSeconds);
-            var previ=-1, thisi=-1, nexti=-1;
         break; 
             
         case "REGION_LIST_END":
+            var pos = parseFloat(playPosSeconds).toFixed(6);
             
             //assemble mrMap array : time, marker number, region start number, region end number.
             for (var i=0; i<g_regions.length; i++) {
@@ -386,17 +388,14 @@ function wwr_onreply(results) {
                 mrMapAr[i-1][idx] = parseFloat(a)+parseFloat(b); 
                 }
             
-            var mergeDone=0;        
             for (var i=1; i<mrMapAr.length; i++) {                  //merge cells if at same time, delete the duplicate
                 if(mrMapAr[i-1] && mrMapAr[i][0]===mrMapAr[i-1][0]){
-                    mergeAt(1); mergeAt(2); mergeAt(3);
+                    mergeAt(2); mergeAt(3);
                     mrMapAr.splice(i,1);
                     }
-                if(i==(mrMapAr.length-1)){mergeDone=1}
                 }
             
             var prevl=-1, thisl=-1, nextl=-1;
-            if(mergeDone==1){
                 for (var i=0; i<mrMapAr.length; i++){
                     var diff = (mrMapAr[i][0] - pos);
                     if(diff<0){
@@ -407,7 +406,6 @@ function wwr_onreply(results) {
                         if(i>nextl){nextl = i; break;}
                         }
                     }
-                }
             
             function getValuesFromId(array,id,colourIdx) {
                 for (var i=0, len=array.length; i<len; i++) {
@@ -417,7 +415,7 @@ function wwr_onreply(results) {
                 }
              
             var nextPrevSvg = document.getElementById("nextPrev")
-            if((pos!=newPos || mrMapAr.length!=newMrMapLength) && mergeDone==1 && nextPrevSvg){
+            if((pos!=newPos || mrMapAr.length!=newMrMapLength) && nextPrevSvg){
                 var rIdxAsg = [];
                 search: for(i=0; i<4; i++){                         // 4 is the maximum drawable number of regions
                     if(mrMapAr[prevl] && mrMapAr[prevl][3]>=1){               //region end at prev?
@@ -997,7 +995,12 @@ function hitbox(id) {
     trackHeightsAr[id] ^= 1;
     }  
     
-function init(){
+function init() {
+  wwr_req_recur("TRANSPORT;BEATPOS",10);
+  wwr_req_recur("NTRACK;TRACK;GET/40364;GET/1157",10);
+  wwr_req_recur("MARKER;REGION",500);
+  wwr_start();
+
   if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
     for (let l = 0; l < document.styleSheets.length; l ++) {
       let ss = document.styleSheets[l];

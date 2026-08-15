@@ -1,0 +1,37 @@
+desc:MIDI Choke Group
+//tags: MIDI processing
+//author: Cockos
+
+slider1:1<1,16,1>MIDI Channel
+slider2:60<0,127,1>Choke Note Range Start
+slider3:8<1,128,1>Number Of Choke Notes
+
+in_pin:none
+out_pin:none
+
+@init
+cur_note = -1;
+
+@slider
+chan = (slider1|0)-1;
+nstart = slider2;
+nend = slider2 + slider3;
+
+@block
+
+while (
+  midirecv(msgoffs,msg1,msg2, msg3) ? (
+    passthrough = 1;
+    (msg1&0xef) == (0x80|chan) && msg2 >= nstart && msg2 < nend ? (
+      (msg1&0x10) && msg3 > 0 ? (
+        cur_note >= 0 ? midisend(msgoffs, 0x80|chan, cur_note, 0); // note-on
+        cur_note = msg2;
+      ) : (
+        passthrough = 0; // note-off
+      );
+    );
+    passthrough ? midisend(msgoffs,msg1,msg2,msg3);
+    1;
+  );
+);
+
