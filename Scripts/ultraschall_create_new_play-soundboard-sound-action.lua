@@ -44,6 +44,15 @@ for i=0, reaper.CountTracks(0) do
 end
 if soundboard_track==nil then return end
 
+if markertitle~="" then
+  if reaper.GetPlayState()~=0 then
+    position=reaper.GetPlayPosition()
+  else
+    position=reaper.GetCursorPosition()
+  end
+  marker_number, guid, normal_marker_idx = ultraschall.AddNormalMarker(position, -1, markertitle)
+end
+
 if reaper.GetPlayState()==0 then position=reaper.GetCursorPosition() else position=reaper.GetPlayPosition() end
 retval, item, endposition, numchannels, Samplerate, Filetype, editcursorposition, track = 
 ultraschall.InsertMediaItemFromFile(filename, soundboard_track, position+1.5, -1, 2, 0, false, false)
@@ -60,6 +69,15 @@ for i=0, reaper.CountTracks(0) do
 end
 if soundboard_track==nil then return end
 
+if markertitle~="" then
+  if reaper.GetPlayState()~=0 then
+    position=reaper.GetPlayPosition()
+  else
+    position=reaper.GetCursorPosition()
+  end
+  marker_number, guid, normal_marker_idx = ultraschall.AddNormalMarker(position, -1, markertitle)
+end
+
 PCM_source=reaper.PCM_Source_CreateFromFile(filename)
 CF_Preview=reaper.CF_CreatePreview(PCM_source)
 reaper.CF_Preview_SetOutputTrack(CF_Preview, 0, reaper.GetTrack(0, soundboard_track))
@@ -73,8 +91,14 @@ function atexit()
 end
 reaper.atexit(atexit)
 
+
 function main()
-  reaper.defer(main)
+  retval, pos = reaper.CF_Preview_GetValue(CF_Preview, "D_POSITION")
+  retval, len = reaper.CF_Preview_GetValue(CF_Preview, "D_LENGTH")
+
+  if pos<=len then
+    reaper.defer(main)
+  end
 end
 main()
 ]]
@@ -144,21 +168,22 @@ end
 
 function action_add_button_runfunction(element_id)
   if action_help_button_guid==element_id then
-    reaper.MB("This allows you to add an action to the actionlist, that plays a soundfile or adds a soundfile into the soundboardtrack.\n\n   Audiofilename - enter the path+audiofilename\n\n   Playbutton - previews the selected audiofile\n\n   Select filename - click to choose an audiofilename\n\n   Playtarget - choose, whether the audiofile shall be played into the\n   recording-input of the soundboard track or if it shall be inserted into\n   the track as audio-item\n\n   Volume - set the dB-volume of how loud the audiofile shall be\n   (0dB=loudest; -144=silence))\n\n   Help - this dialog\n\n   Create audioplay-action - creates the audioplay-action and allows you\n   to set a shortcut to it\n\nLook into the Actionlist (Menu: Actions -> Show Action list) for the filename that you chose to find the action you've just created.", "Help for audio-play-action", 0) 
+    reaper.MB("This allows you to add an action to the actionlist, that plays a soundfile or adds a soundfile into the soundboardtrack.\n\n   Audiofilename - enter the path+audiofilename\n\n   Playbutton - previews the selected audiofile\n\n   Select filename - click to choose an audiofilename\n\n   Chaptername - insert a chapter marker when the audio gets played; \n   add the name of the chapter marker here\n\n   Playtarget - choose, whether the audiofile shall be played into the\n   recording-input of the soundboard track or if it shall be inserted into\n   the track as audio-item\n\n   Volume - set the dB-volume of how loud the audiofile shall be\n   (0dB=loudest; -144=silence))\n\n   Help - this dialog\n\n   Create audioplay-action - creates the audioplay-action and allows you\n   to set a shortcut to it\n\nLook into the Actionlist (Menu: Actions -> Show Action list) for the filename that you chose to find the action you've just created.", "Help for audio-play-action", 0) 
   else
     -- create lua-file and add it as action
     local text=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
     if text=="" then reaper.MB("No audiofile selected", "Error", 0) return end
+    markertitle=reagirl.Inputbox_GetText(markertext_inputbox_guid)
     local volume=reagirl.Slider_GetValue(playvolume_slider_guid)
     local filename
     
     if reagirl.DropDownMenu_GetSelectedMenuItem(playtarget_menu_guid)==1 then
       volume=reagirl.Slider_GetValue(playvolume_slider_guid)
-      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewSoundboardAction
+      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\nmarkertitle=\""..markertitle.."\"\n"..NewSoundboardAction
       action="play_in_soundboard_input_"
     else
       volume=reagirl.Slider_GetValue(playvolume_slider_guid)
-      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\n"..NewInsertItemAction
+      NewSoundboardAction="filename=\""..string.gsub(text,"\\", "/").."\"\nvolume="..(volume).."\nmarkertitle=\""..markertitle.."\"\n"..NewInsertItemAction
       action="insert_file_in_soundboard_track_"
     end
   
@@ -190,6 +215,9 @@ reagirl.Gui_New()
 fileinput_inputbox_guid = reagirl.Inputbox_Add(nil, nil, 350, "Audiofilename: ", 85, "The audio-filename that you want to add.", "", run_function_enter, run_function_type, "fileinput_inputbox")
 filepreviewinput_button_guid = reagirl.Button_Add(375, nil, -10, 0, "►", "Preview Chosen File.", filepreview_button_runfunction, "filepreview_button", 0)
 fileinput_button_guid = reagirl.Button_Add(395, nil, 0, 0, "Select Filename", "Choose a file.", fileinput_button_runfunction, "fileinput_button", 0)
+
+reagirl.NextLine()
+markertext_inputbox_guid = reagirl.Inputbox_Add(nil, nil, 350, "Chaptername: ", 85, "The name of the chapter-marker, that shall inserted when you play the audiofile. Leave blank to not insert a chapter-marker.", "", run_function_enter, run_function_type, "chapter_inputbox")
 
 reagirl.NextLine()
 target=tonumber(reaper.GetExtState("ultraschall_create_soundboard_action", "target"))
