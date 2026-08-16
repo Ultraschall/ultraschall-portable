@@ -4060,6 +4060,7 @@ function reagirl.Window_Open(...)
     reagirl.GFX_WindowHWND=reaper.JS_Window_Find(parms[1], true)
     
     -- resize window properly on Retina-macs
+    reaper.MB("Normal: "..temp_y+parms[3].." Integer:"..math.floor(temp_y+parms[3]), "", 0)
     if gfx.w>parms[2] or gfx.h>parms[3] then
       parms[1]=""
       local scalex=gfx.w/(parms[2]/reagirl.Window_GetCurrentScale())
@@ -4067,6 +4068,7 @@ function reagirl.Window_Open(...)
       
       parms[2]=parms[2]/scalex
       parms[3]=parms[3]/scaley
+      
       if reaper.GetOS():match("OS")~=nil then 
         _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(temp_y+parms[3]))
       end
