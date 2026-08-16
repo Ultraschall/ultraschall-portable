@@ -4068,7 +4068,7 @@ function reagirl.Window_Open(...)
       parms[2]=parms[2]/scalex
       parms[3]=parms[3]/scaley
       if reaper.GetOS():match("OS")~=nil then 
-        _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, temp_y+parms[3])
+        _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(temp_y+parms[3]))
       end
       gfx.init(table.unpack(parms))
     end
