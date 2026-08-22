@@ -2137,6 +2137,10 @@ else
     ultraschall.LM(14)
     return ultraschall.SplitReaperString(table.unpack({...}))
   end
+  function ultraschall.ShowActionList(...)
+    ultraschall.LM(14)
+    return ultraschall.ShowActionList(table.unpack({...}))
+  end
   function ultraschall.ResizePNG(...)
     ultraschall.LM(15)
     return ultraschall.ResizePNG(table.unpack({...}))
@@ -4433,9 +4437,17 @@ else
     ultraschall.LM(25)
     return ultraschall.GetProject_Render_Normalize(table.unpack({...}))
   end
+  function ultraschall.GetProject_Render_Trim(...)
+    ultraschall.LM(25)
+    return ultraschall.GetProject_Render_Trim(table.unpack({...}))
+  end
   function ultraschall.SetProject_Render_Normalize(...)
     ultraschall.LM(25)
     return ultraschall.SetProject_Render_Normalize(table.unpack({...}))
+  end
+  function ultraschall.SetProject_Render_Trim(...)
+    ultraschall.LM(25)
+    return ultraschall.SetProject_Render_Trim(table.unpack({...}))
   end
   function ultraschall.RazorEdit_ProjectHasRazorEdit(...)
     ultraschall.LM(26)
@@ -6336,6 +6348,10 @@ else
   function ultraschall.LUFS_Metering_ShowEffect(...)
     ultraschall.LM(35)
     return ultraschall.LUFS_Metering_ShowEffect(table.unpack({...}))
+  end
+  function ultraschall.GetStreamDeckActions(...)
+    ultraschall.LM(35)
+    return ultraschall.GetStreamDeckActions(table.unpack({...}))
   end
   function ultraschall.WebInterface_GetInstalledInterfaces(...)
     ultraschall.LM(36)

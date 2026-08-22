@@ -1422,18 +1422,20 @@ function ultraschall.CreateRenderCFG_GIF(Width, Height, MaxFPS, AspectRatio, Ign
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_GIF</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_GIF(integer Width, integer Height, number MaxFPS, boolean AspectRatio, integer IgnoreLowBits, boolean EncodeTransparency)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_GIF(integer Width, integer Height, number MaxFPS, boolean AspectRatio, integer IgnoreLowBits, boolean EncodeTransparency)</functioncall>
   <description>
     Creates the render-cfg-string for the GIF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected GIF-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected GIF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected GIF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Width - the width of the gif in pixels; 1 to 2147483647
@@ -1473,7 +1475,7 @@ function ultraschall.CreateRenderCFG_GIF(Width, Height, MaxFPS, AspectRatio, Ign
   IgnoreLowBits=IgnoreLowBits*2
   if EncodeTransparency==true then IgnoreLowBits=IgnoreLowBits+1 end
   
-  return ultraschall.Base64_Encoder(" FIG"..Width..Height..MaxFPS..AspectRatio..string.char(IgnoreLowBits).."\0")
+  return ultraschall.Base64_Encoder(" FIG"..Width..Height..MaxFPS..AspectRatio..string.char(IgnoreLowBits).."\0"),  ultraschall.ConvertAscii2Hex(" FIG"..Width..Height..MaxFPS..AspectRatio..string.char(IgnoreLowBits).."\0"), " FIG"..Width..Height..MaxFPS..AspectRatio..string.char(IgnoreLowBits).."\0"
 end
 
 --A=ultraschall.CreateRenderCFG_GIF(640, 360, 30.00, false, 0, false)
@@ -1483,18 +1485,20 @@ function ultraschall.CreateRenderCFG_LCF(Width, Height, MaxFPS, AspectRatio, LCF
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_LCF</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_LCF(integer Width, integer Height, number MaxFPS, boolean AspectRatio, optional string LCFoptionstweak)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_LCF(integer Width, integer Height, number MaxFPS, boolean AspectRatio, optional string LCFoptionstweak)</functioncall>
   <description>
     Creates the render-cfg-string for the LCF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected LCF-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected LCF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected LCF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Width - the width of the lcf in pixels; 1 to 2147483647
@@ -1533,7 +1537,7 @@ function ultraschall.CreateRenderCFG_LCF(Width, Height, MaxFPS, AspectRatio, LCF
   
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
 
-  return ultraschall.Base64_Encoder(" FCL"..Width..Height..MaxFPS..AspectRatio..LCFoptionstweak)
+  return ultraschall.Base64_Encoder(" FCL"..Width..Height..MaxFPS..AspectRatio..LCFoptionstweak), ultraschall.ConvertAscii2Hex(" FCL"..Width..Height..MaxFPS..AspectRatio..LCFoptionstweak), " FCL"..Width..Height..MaxFPS..AspectRatio..LCFoptionstweak
 end
 
 --A=ultraschall.CreateRenderCFG_LCF(10,10,120,true,"Tudelu                                                         A")
@@ -1544,11 +1548,11 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_WebM_Video</slug>
   <requires>
-    Ultraschall=4.3
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WebM_Video(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, integer AudioCodec, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_WebM_Video(integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, integer VideoCodec, integer AudioCodec, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the WebM-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1557,7 +1561,9 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected WebM-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected WebM-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected WebM-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VIDKBPS - the video-bitrate of the video in kbps; 1 to 2147483647
@@ -1629,7 +1635,11 @@ function ultraschall.CreateRenderCFG_WebM_Video(VIDKBPS, AUDKBPS, WIDTH, HEIGHT,
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 --LLL=ultraschall.CreateRenderCFG_WebM_Video(1, 1, 1, 1, 1, true)
@@ -1642,11 +1652,11 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MKV_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MKV_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VIDKBPS, optional integer AUDKBPS, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded= ultraschall.CreateRenderCFG_MKV_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VIDKBPS, optional integer AUDKBPS, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the MKV-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1655,7 +1665,9 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MKV-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MKV-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MKV-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -1754,7 +1766,11 @@ function ultraschall.CreateRenderCFG_MKV_Video(VideoCodec, MJPEG_quality, AudioC
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 --A=ultraschall.CreateRenderCFG_MKVMVideo(1, 1, 1, 1, 1, 1, false)
@@ -1765,11 +1781,11 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_QTMOVMP4_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_QTMOVMP4_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VIDKBPS, optional integer AUDKBPS, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_QTMOVMP4_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VIDKBPS, optional integer AUDKBPS, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the QT/MOV/MP4-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1778,7 +1794,9 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected QT/MOV/MP4-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected QT/MOV/MP4-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected QT/MOV/MP4-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -1872,7 +1890,11 @@ function ultraschall.CreateRenderCFG_QTMOVMP4_Video(VideoCodec, MJPEG_quality, A
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 --A=ultraschall.CreateRenderCFG_QTMOVMP4_Video(1, 1, 1, 1, 1, 1, false)
@@ -1883,11 +1905,11 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_AVI_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_AVI_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded= ultraschall.CreateRenderCFG_AVI_Video(integer VideoCodec, integer MJPEG_quality, integer AudioCodec, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the AVI-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -1896,7 +1918,9 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected AVI-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected GIF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected GIF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -1979,8 +2003,13 @@ function ultraschall.CreateRenderCFG_AVI_Video(VideoCodec, MJPEG_quality, AudioC
   
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
-  return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+  return ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
+         
 end
 
 --A=ultraschall.CreateRenderCFG_AVI_Video(1, 1, 1, 1, 1, 1, false)
@@ -2199,11 +2228,11 @@ function ultraschall.CreateRenderCFG_MP4MAC_Video(Stream, VIDKBPS, AUDKBPS, WIDT
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MP4MAC_Video</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP4MAC_Video(boolean stream, integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MP4MAC_Video(boolean stream, integer VIDKBPS, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
   <description>
     Returns the render-cfg-string for the MP4-Mac-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     Only available on MacOS!
@@ -2211,7 +2240,9 @@ function ultraschall.CreateRenderCFG_MP4MAC_Video(Stream, VIDKBPS, AUDKBPS, WIDT
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MP4-Mac-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MP4-Mac-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MP4-Mac-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     boolean Stream - true, the mp4-video is stream-optimized; false, the video is not stream-optimized
@@ -2261,7 +2292,11 @@ function ultraschall.CreateRenderCFG_MP4MAC_Video(Stream, VIDKBPS, AUDKBPS, WIDT
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"),
+         ultraschall.ConvertAscii2Hex("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"),
+         "FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"
 end
 
 function ultraschall.CreateRenderCFG_M4AMAC(AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio)
@@ -2269,11 +2304,11 @@ function ultraschall.CreateRenderCFG_M4AMAC(AUDKBPS, WIDTH, HEIGHT, FPS, AspectR
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_M4AMAC</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_M4AMAC(integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_M4AMAC(integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
   <description>
     Returns the render-cfg-string for the M4A-Mac-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     Only available on MacOS!
@@ -2281,7 +2316,9 @@ function ultraschall.CreateRenderCFG_M4AMAC(AUDKBPS, WIDTH, HEIGHT, FPS, AspectR
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected M4A-Mac-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected GIF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected GIF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer AUDKBPS - the audio-bitrate for the video; 0 to 2147483647 kbps
@@ -2325,7 +2362,11 @@ function ultraschall.CreateRenderCFG_M4AMAC(AUDKBPS, WIDTH, HEIGHT, FPS, AspectR
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"),
+         ultraschall.ConvertAscii2Hex("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"),
+         "FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality.."\0"
 end
 
 --integer VideoCodec, integer VIDKBPS, integer MJPEG_quality, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, integer FPS, boolean AspectRatio
@@ -2334,11 +2375,11 @@ function ultraschall.CreateRenderCFG_MOVMAC_Video(VideoCodec, VIDKBPS, MJPEG_qua
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MOVMAC_Video</slug>
   <requires>
-    Ultraschall=4.3
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MOVMAC_Video(integer VideoCodec, integer VIDKBPS, integer MJPEG_quality, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VideoFormat)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MOVMAC_Video(integer VideoCodec, integer VIDKBPS, integer MJPEG_quality, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional integer VideoFormat)</functioncall>
   <description>
     Returns the render-cfg-string for the MOV-Mac-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     Only available on MacOS!
@@ -2346,7 +2387,9 @@ function ultraschall.CreateRenderCFG_MOVMAC_Video(VideoCodec, VIDKBPS, MJPEG_qua
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MP4-Mac-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected Mov-Mac-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected Mov-Mac-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for this setting
@@ -2413,7 +2456,11 @@ function ultraschall.CreateRenderCFG_MOVMAC_Video(VideoCodec, VIDKBPS, MJPEG_qua
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality)--, "FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality),
+         ultraschall.ConvertAscii2Hex("FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality),
+         "FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality--, "FVAX"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality
 end
 
 --A,AA=reaper.EnumProjects(3, "")
@@ -2424,8 +2471,8 @@ function ultraschall.GetRenderTable_Project()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_Project</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -2434,33 +2481,38 @@ function ultraschall.GetRenderTable_Project()
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns all stored render-settings for the current project, as a handy table.
             
-            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
+                                        true, checked; 
+                                        false, unchecked
+            RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+            RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
             RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
             RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
             RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-            RenderTable["Bounds"] - 0, Custom time range; 
-                                    1, Entire project; 
-                                    2, Time selection; 
-                                    3, Project regions; 
-                                    4, Selected Media Items(in combination with Source 32); 
-                                    5, Selected regions
-                                    6, Razor edit areas
-                                    7, All project markers
-                                    8, Selected markers
+            RenderTable["Bounds"]    - 0, Custom time range; 
+                                       1, Entire project; 
+                                       2, Time selection; 
+                                       3, Project regions; 
+                                       4, Selected Media Items(in combination with Source 32); 
+                                       5, Selected regions
+                                       6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
-                                      1, mono; 
-                                      2, stereo; 
-                                      higher, the number of channels
-            RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
+                                          1, mono; 
+                                          2, stereo; 
+                                          higher, the number of channels
+            RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; 
+                                              false, don't close it
             RenderTable["Dither"] - &1, dither master mix; 
                                     &2, noise shaping master mix; 
                                     &4, dither stems; 
                                     &8, noise shaping stems
-            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+            RenderTable["EmbedMetaData"]       - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-            RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
+            RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+            RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
             RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
             RenderTable["FadeIn"] - the fade-in-time in seconds
             RenderTable["FadeIn_Shape"] - the fade-in-shape
@@ -2481,35 +2533,49 @@ function ultraschall.GetRenderTable_Project()
                                    - 4, Quartic fade in
                                    - 5, Cosine S-curve fade in
                                    - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
-            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
-            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
-                           0, LUFS-I
-                           1, RMS-I
-                           2, Peak
-                           3, True Peak
-                           4, LUFS-M max
-                           5, LUFS-S max
+            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+            RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
+                                                 false, normalization not enabled
+            RenderTable["Normalize_Method"]    - the normalize-method-dropdownlist
+                                                     0, LUFS-I
+                                                     1, RMS-I
+                                                     2, Peak
+                                                     3, True Peak
+                                                     4, LUFS-M max
+                                                     5, LUFS-S max
             RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
+                                                         true, checkbox checked
+                                                         false, checkbox unchecked
+            RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
             RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
-            RenderTable["Normalize_Target"] - the normalize-target as dB-value
-            RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
+            RenderTable["NoSilentRender"]         - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
-                                                    0, Full-speed Offline
-                                                    1, 1x Offline
-                                                    2, Online Render
-                                                    3, Online Render(Idle)
-                                                    4, Offline Render(Idle)
-            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+                                                        0, Full-speed Offline; 
+                                                        1, 1x Offline; 
+                                                        2, Online Render; 
+                                                        3, Online Render(Idle); 
+                                                        4, Offline Render(Idle)
             RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
-						RenderTable["Preserve_Metadata"] - true, preserve metadata(when selected media items as source); false, don't preserve metadata
-						RenderTable["Preserve_Start_Offset"] - true, preserve start-offset (when selected media items as source); false, don't preserve start-offset
-            RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
-            RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
+            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
+                                               true, checked; 
+                                               false, unchecked
+            RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+            RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+            RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
+            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
+                                                           true, checked; false, unchecked
+            RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
+            RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
+            RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
             RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
             RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
             RenderTable["RenderResample"] - Resample mode-dropdownlist; 
@@ -2525,34 +2591,42 @@ function ultraschall.GetRenderTable_Project()
                                                 9, Sinc Interpolation: 768pt(very slow)
                                                 10, r8brain free (highest quality, fast)
             RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-            RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
-            RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
+            RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
+            RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
 						RenderTable["ReturnToDialog"] - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
-            RenderTable["SampleRate"] - the samplerate of the rendered file(s)
-            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
+            RenderTable["SampleRate"]       - the samplerate of the rendered file(s)
+            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; 
+                                                true, checked; 
+                                                false, unchecked
 						RenderTable["SaveRenderStatsFile"] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
-            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
+            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; 
+                                                        true, checked
+                                                        false, unchecked
             RenderTable["Source"] - 0, Master mix; 
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    32, Selected media items; 
-                                    64, Selected media items via master; 
+                                    32, Selected media items; 64, selected media items via master; 
+                                    64, selected media items via master; 
                                     128, selected tracks via master
                                     136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
-                                      &1, custom time bounds; 
-                                      &2, entire project; 
-                                      &4, time selection; 
-                                      &8, all project regions; 
-                                      &16, selected media items; 
-                                      &32, selected project regions
-                                      &64, razor edit areas
+            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
+                                        &1, custom time bounds; 
+                                        &2, entire project; 
+                                        &4, time selection; 
+                                        &8, all project regions; 
+                                        &16, selected media items; 
+                                        &32, selected project regions
+                                        &64, razor edit areas
             RenderTable["TailMS"] - the amount of milliseconds of the tail
+            RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+            RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
     
     Returns nil in case of an error
   </description>
@@ -2596,6 +2670,7 @@ function ultraschall.GetRenderTable_Project()
   if RenderTable["Source"]&16384~=0 then RenderTable["Source"]=RenderTable["Source"]-16384 RenderTable["OnlyChannelsSentToParent"]=true else RenderTable["OnlyChannelsSentToParent"]=false end
 	if RenderTable["Source"]&32768~=0 then RenderTable["Source"]=RenderTable["Source"]-32768 RenderTable["Preserve_Metadata"]=true else RenderTable["Preserve_Metadata"]=false end
 	if RenderTable["Source"]&65536~=0 then RenderTable["Source"]=RenderTable["Source"]-65536 RenderTable["Preserve_Start_Offset"]=true else RenderTable["Preserve_Start_Offset"]=false end
+  if RenderTable["Source"]&524288~=0 then RenderTable["Source"]=RenderTable["Source"]-524288 RenderTable["ParallelRender"]=true else RenderTable["ParallelRender"]=false end
   
   RenderTable["Bounds"]=math.tointeger(reaper.GetSetProjectInfo(ReaProject, "RENDER_BOUNDSFLAG", 0, false))
   RenderTable["Channels"]=math.tointeger(reaper.GetSetProjectInfo(ReaProject, "RENDER_CHANNELS", 0, false))
@@ -2665,6 +2740,13 @@ function ultraschall.GetRenderTable_Project()
     RenderTable["Normalize_Only_Files_Too_Loud"]=true
     RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-256
   end
+  
+  if RenderTable["Normalize_Method"]&2048==0 then     
+    RenderTable["Normalize_Only_Files_Too_Quiet"]=false
+  elseif RenderTable["Normalize_Method"]&2048==2048 then
+    RenderTable["Normalize_Only_Files_Too_Quiet"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-2048
+  end
  
   if RenderTable["Normalize_Method"]&128==0 then     
     RenderTable["Brickwall_Limiter_Method"]=1    
@@ -2679,6 +2761,61 @@ function ultraschall.GetRenderTable_Project()
   elseif RenderTable["Normalize_Method"]&64==0 then 
     RenderTable["Brickwall_Limiter_Enabled"]=false
   end
+  
+  if RenderTable["Normalize_Method"]&65536==65536 then 
+    RenderTable["PadStartWithSilence"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-65536
+  elseif RenderTable["Normalize_Method"]&65536==0 then 
+    RenderTable["PadStartWithSilence"]=false
+  end
+  
+  if RenderTable["Normalize_Method"]&131072==131072 then 
+    RenderTable["PadEndWithSilence"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-131072
+  elseif RenderTable["Normalize_Method"]&131072==0 then 
+    RenderTable["PadEndWithSilence"]=false
+  end
+  
+  if RenderTable["Normalize_Method"]&16==16 then 
+    RenderTable["AdjustMonoFiles"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-16
+  elseif RenderTable["Normalize_Method"]&16==0 then 
+    RenderTable["AdjustMonoFiles"]=false
+  end
+  
+  if RenderTable["Normalize_Method"]&524288==524288 then 
+    RenderTable["AdjustMonoFilesBy"]=3
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-524288
+  elseif RenderTable["Normalize_Method"]&524288==0 then 
+    RenderTable["AdjustMonoFilesBy"]=-3
+  end
+  
+  if RenderTable["Normalize_Method"]&16384==16384 then 
+    RenderTable["TrimLeadingSilence"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-16384
+  elseif RenderTable["Normalize_Method"]&16384==0 then 
+    RenderTable["TrimLeadingSilence"]=false
+  end
+  
+  if RenderTable["Normalize_Method"]&32768==32768 then 
+    RenderTable["TrimTrailingSilence"]=true
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-32768
+  elseif RenderTable["Normalize_Method"]&32768==0 then 
+    RenderTable["TrimTrailingSilence"]=false
+  end
+  
+  if RenderTable["Normalize_Method"]&262144==262144 then
+    RenderTable["PostProcessingEnabled"]=false
+    RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-262144
+  elseif RenderTable["Normalize_Method"]&262144==0 then
+    RenderTable["PostProcessingEnabled"]=true
+  end
+  
+  RenderTable["TrimLeadingSilenceDB"]=ultraschall.MKVOL2DB(reaper.GetSetProjectInfo(0, "RENDER_TRIMSTART", 0, false))
+  RenderTable["TrimTrailingSilenceDB"]=ultraschall.MKVOL2DB(reaper.GetSetProjectInfo(0, "RENDER_TRIMEND", 0, false))
+  
+  RenderTable["PadStartWithSilenceSeconds"]=reaper.GetSetProjectInfo(0, "RENDER_PADSTART", 0, false)
+  RenderTable["PadEndWithSilenceSeconds"]=reaper.GetSetProjectInfo(0, "RENDER_PADEND", 0, false)
   
   RenderTable["Brickwall_Limiter_Target"]=ultraschall.MKVOL2DB(reaper.GetSetProjectInfo(0, "RENDER_BRICKWALL", 0, false))
   RenderTable["Normalize_Stems_to_Master_Target"]=RenderTable["Normalize_Method"]&32==32
@@ -2701,41 +2838,46 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>table RenderTable = ultraschall.GetRenderTable_ProjectFile(string projectfilename_with_path)</functioncall>
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns all stored render-settings in a projectfile, as a handy table.
             
-            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
+                                        true, checked; 
+                                        false, unchecked
+            RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+            RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
             RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
             RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
             RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-            RenderTable["Bounds"] - 0, Custom time range; 
-                                    1, Entire project; 
-                                    2, Time selection; 
-                                    3, Project regions; 
-                                    4, Selected Media Items(in combination with Source 32); 
-                                    5, Selected regions
-                                    6, Razor edit areas
-                                    7, All project markers
-                                    8, Selected markers
+            RenderTable["Bounds"]    - 0, Custom time range; 
+                                       1, Entire project; 
+                                       2, Time selection; 
+                                       3, Project regions; 
+                                       4, Selected Media Items(in combination with Source 32); 
+                                       5, Selected regions
+                                       6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
-                                      1, mono; 
-                                      2, stereo; 
-                                      higher, the number of channels
-            RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; always true, as this isn't stored in projectfiles
+                                          1, mono; 
+                                          2, stereo; 
+                                          higher, the number of channels
+            RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; 
+                                              false, don't close it
             RenderTable["Dither"] - &1, dither master mix; 
                                     &2, noise shaping master mix; 
                                     &4, dither stems; 
                                     &8, noise shaping stems
-            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+            RenderTable["EmbedMetaData"]       - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-            RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
+            RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"] - the endposition of the rendering selection in seconds            
+            RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
             RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
             RenderTable["FadeIn"] - the fade-in-time in seconds
             RenderTable["FadeIn_Shape"] - the fade-in-shape
@@ -2756,30 +2898,49 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
                                    - 4, Quartic fade in
                                    - 5, Cosine S-curve fade in
                                    - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
-            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
-            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
-                                       0, LUFS-I
-                                       1, RMS-I
-                                       2, Peak
-                                       3, True Peak
-                                       4, LUFS-M max
-                                       5, LUFS-S max
+            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+            RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
+                                                 false, normalization not enabled
+            RenderTable["Normalize_Method"]    - the normalize-method-dropdownlist
+                                                     0, LUFS-I
+                                                     1, RMS-I
+                                                     2, Peak
+                                                     3, True Peak
+                                                     4, LUFS-M max
+                                                     5, LUFS-S max
+            RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                                         true, checkbox checked
+                                                         false, checkbox unchecked
+            RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
             RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
-            RenderTable["Normalize_Target"] - the normalize-target as dB-value
-            RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
+            RenderTable["NoSilentRender"]         - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
-                                                    0, Full-speed Offline; 
-                                                    1, 1x Offline; 
-                                                    2, Online Render; 
-                                                    3, Online Render(Idle); 
-                                                    4, Offline Render(Idle)
+                                                        0, Full-speed Offline; 
+                                                        1, 1x Offline; 
+                                                        2, Online Render; 
+                                                        3, Online Render(Idle); 
+                                                        4, Offline Render(Idle)
             RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
-            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; true, checked; false, unchecked
-            RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog
-            RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog
+            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
+                                               true, checked; 
+                                               false, unchecked
+            RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+            RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+            RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
+            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
+            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
+                                                           true, checked; false, unchecked
+            RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
+            RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
+            RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
             RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
             RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
             RenderTable["RenderResample"] - Resample mode-dropdownlist; 
@@ -2795,34 +2956,42 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
                                                 9, Sinc Interpolation: 768pt(very slow)
                                                 10, r8brain free (highest quality, fast)
             RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-            RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
-            RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
+            RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
+            RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
-						RenderTable["ReturnToDialog"] - not stored in project files
-            RenderTable["SampleRate"] - the samplerate of the rendered file(s)
-            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; always true(checked), as this isn't stored in projectfiles
-						RenderTable["SaveRenderStatsFile"] - not stored in project files
-            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; always false, as this is not stored in projectfiles
+						RenderTable["ReturnToDialog"] - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
+            RenderTable["SampleRate"]       - the samplerate of the rendered file(s)
+            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; 
+                                                true, checked; 
+                                                false, unchecked
+						RenderTable["SaveRenderStatsFile"] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
+            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; 
+                                                        true, checked
+                                                        false, unchecked
             RenderTable["Source"] - 0, Master mix; 
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    32, Selected media items; 
+                                    32, Selected media items; 64, selected media items via master; 
                                     64, selected media items via master; 
                                     128, selected tracks via master
                                     136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
             RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
-                                      &1, custom time bounds; 
-                                      &2, entire project; 
-                                      &4, time selection; 
-                                      &8, all project regions; 
-                                      &16, selected media items; 
-                                      &32, selected project regions
-                                      &64, razor edit areas
+            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
+                                        &1, custom time bounds; 
+                                        &2, entire project; 
+                                        &4, time selection; 
+                                        &8, all project regions; 
+                                        &16, selected media items; 
+                                        &32, selected project regions
+                                        &64, razor edit areas
             RenderTable["TailMS"] - the amount of milliseconds of the tail
+            RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+            RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
                
     Returns nil in case of an error
   </description>
@@ -2876,6 +3045,8 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   
   if RenderTable["Source"]&4~=0 then RenderTable["Source"]=RenderTable["Source"]-4 RenderTable["MultiChannelFiles"]=true else RenderTable["MultiChannelFiles"]=false end
   if RenderTable["Source"]&16~=0 then RenderTable["Source"]=RenderTable["Source"]-16 RenderTable["OnlyMonoMedia"]=true else RenderTable["OnlyMonoMedia"]=false end
+  if RenderTable["Source"]&524288~=0 then RenderTable["Source"]=RenderTable["Source"]-524288 RenderTable["ParallelRender"]=true else RenderTable["ParallelRender"]=false end
+  
   RenderTable["Bounds"]=bounds
   RenderTable["Channels"]=rendernum_chans
   RenderTable["SampleRate"]=render_frequency
@@ -2916,6 +3087,7 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
   RenderTable["FadeOut"],
   RenderTable["FadeIn_Shape"],
   RenderTable["FadeOut_Shape"] = ultraschall.GetProject_Render_Normalize(nil, ProjectStateChunk)
+--print2(RenderTable["Normalize_Method"].." "..ProjectStateChunk:match("(RENDER_NORMALIZE.-\n)"))
   
   if RenderTable["Brickwall_Limiter_Enabled"]==nil then RenderTable["Brickwall_Limiter_Enabled"]=false end
   if RenderTable["FadeIn"]==nil then RenderTable["FadeIn"]=0.0 end
@@ -2960,6 +3132,13 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
       RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-256
     end
   
+    if RenderTable["Normalize_Method"]&2048==0 then     
+      RenderTable["Normalize_Only_Files_Too_Quiet"]=false
+    elseif RenderTable["Normalize_Method"]&2048==2048 then
+      RenderTable["Normalize_Only_Files_Too_Quiet"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-2048
+    end
+  
     if RenderTable["Normalize_Method"]&128==0 then     
       RenderTable["Brickwall_Limiter_Method"]=1    
     elseif RenderTable["Normalize_Method"]&128==128 then
@@ -2973,8 +3152,69 @@ function ultraschall.GetRenderTable_ProjectFile(projectfilename_with_path, Proje
     elseif RenderTable["Normalize_Method"]&64==0 then 
       RenderTable["Brickwall_Limiter_Enabled"]=false
     end
-      
+     
+    if RenderTable["Normalize_Method"]&65536==65536 then 
+      RenderTable["PadStartWithSilence"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-65536
+    elseif RenderTable["Normalize_Method"]&65536==0 then 
+      RenderTable["PadStartWithSilence"]=false
+    end
+    
+    if RenderTable["Normalize_Method"]&131072==131072 then 
+      RenderTable["PadEndWithSilence"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-131072
+    elseif RenderTable["Normalize_Method"]&131072==0 then 
+      RenderTable["PadEndWithSilence"]=false
+    end
+    
+    if RenderTable["Normalize_Method"]&16==16 then 
+      RenderTable["AdjustMonoFiles"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-16
+    elseif RenderTable["Normalize_Method"]&16==0 then 
+      RenderTable["AdjustMonoFiles"]=false
+    end
+    
+    if RenderTable["Normalize_Method"]&524288==524288 then 
+      RenderTable["AdjustMonoFilesBy"]=3
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-524288
+    elseif RenderTable["Normalize_Method"]&524288==0 then 
+      RenderTable["AdjustMonoFilesBy"]=-3
+    end
+    
+    if RenderTable["Normalize_Method"]&16384==16384 then 
+      RenderTable["TrimLeadingSilence"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-16384
+    elseif RenderTable["Normalize_Method"]&16384==0 then 
+      RenderTable["TrimLeadingSilence"]=false
+    end
+    
+    if RenderTable["Normalize_Method"]&32768==32768 then 
+      RenderTable["TrimTrailingSilence"]=true
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-32768
+    elseif RenderTable["Normalize_Method"]&32768==0 then 
+      RenderTable["TrimTrailingSilence"]=false
+    end
+    
+    if RenderTable["Normalize_Method"]&262144==262144 then
+      RenderTable["PostProcessingEnabled"]=false
+      RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-262144
+    elseif RenderTable["Normalize_Method"]&262144==0 then
+      RenderTable["PostProcessingEnabled"]=true
+    end
+     
     RenderTable["Brickwall_Limiter_Target"]=ultraschall.MKVOL2DB(RenderTable["Brickwall_Limiter_Target"])
+    local trim_start, trim_end, pad_start, pad_end=ultraschall.GetProject_Render_Trim(nil, ProjectStateChunk)
+    if trim_start==nil then 
+      RenderTable["TrimLeadingSilenceDB"]=-120
+      RenderTable["TrimTrailingSilenceDB"]=-120
+      RenderTable["PadStartWithSilenceSeconds"]=0
+      RenderTable["PadEndWithSilenceSeconds"]=0
+    else
+      RenderTable["TrimLeadingSilenceDB"]=ultraschall.MKVOL2DB(trim_start)
+      RenderTable["TrimTrailingSilenceDB"]=ultraschall.MKVOL2DB(trim_end)
+      RenderTable["PadStartWithSilenceSeconds"]=pad_start
+      RenderTable["PadEndWithSilenceSeconds"]=pad_end
+    end
 
     if RenderTable["Normalize_Stems_to_Master_Target"]==true then 
       RenderTable["Normalize_Method"]=RenderTable["Normalize_Method"]-32 
@@ -3087,11 +3327,11 @@ function ultraschall.CreateRenderCFG_Opus(Mode, Kbps, Complexity, channel_audio,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_Opus</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_Opus(integer Mode, integer Kbps, integer Complexity, optional boolean channel_audio, optional boolean per_channel)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_Opus(integer Mode, integer Kbps, integer Complexity, optional boolean channel_audio, optional boolean per_channel)</functioncall>
   <description>
     Creates the render-cfg-string for the Opus-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -3100,7 +3340,9 @@ function ultraschall.CreateRenderCFG_Opus(Mode, Kbps, Complexity, channel_audio,
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected Opus-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected Opus-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected Opus-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Mode - the Mode for the Opus-file; 0, VBR; 1, CVBR; 2, HARDCBR
@@ -3135,7 +3377,7 @@ function ultraschall.CreateRenderCFG_Opus(Mode, Kbps, Complexity, channel_audio,
   
   RenderString="SggO\0"..Bitrate..string.char(Mode)..string.char(Complexity).."\0\0\0"..string.char(EncodeChannelAudio).."\0\0\0\0"
   
-  return ultraschall.Base64_Encoder(RenderString)
+  return ultraschall.Base64_Encoder(RenderString), ultraschall.ConvertAscii2Hex(RenderString), RenderString
 end
 
 
@@ -3154,11 +3396,11 @@ function ultraschall.CreateRenderCFG_OGG(Mode, VBR_Quality, CBR_KBPS, ABR_KBPS, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_OGG</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_OGG(integer Mode, number VBR_Quality, integer CBR_KBPS, integer ABR_KBPS, integer ABR_KBPS_MIN, integer ABR_KBPS_MAX)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_OGG(integer Mode, number VBR_Quality, integer CBR_KBPS, integer ABR_KBPS, integer ABR_KBPS_MIN, integer ABR_KBPS_MAX)</functioncall>
   <description>
     Returns the render-cfg-string for the OGG-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     For all mode-settings that you don't need(kbps or quality), you can safely set them to 1.
@@ -3168,7 +3410,9 @@ function ultraschall.CreateRenderCFG_OGG(Mode, VBR_Quality, CBR_KBPS, ABR_KBPS, 
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected OGG-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected OGG-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected OGG-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Mode - the mode for the ogg-file; 0, VBR; 1, CBR; 2, ABR
@@ -3218,7 +3462,7 @@ function ultraschall.CreateRenderCFG_OGG(Mode, VBR_Quality, CBR_KBPS, ABR_KBPS, 
   
   RenderString="vggo"..VBR_Quality..string.char(Mode)..CBR_KBPS..ABR_KBPS..ABR_KBPS_MIN..ABR_KBPS_MAX.."\0"
   
-  return ultraschall.Base64_Encoder(RenderString)
+  return ultraschall.Base64_Encoder(RenderString), ultraschall.ConvertAscii2Hex(RenderString), RenderString
 end
 --A=ultraschall.CreateRenderCFG_OGG(1,1,3,4,5,600)
 
@@ -3227,16 +3471,18 @@ function ultraschall.CreateRenderCFG_DDP()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_DDP</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_DDP()</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_DDP()</functioncall>
   <description>
     Returns the render-cfg-string for the DDP-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected DDP-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected DDP-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected DDP-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <chapter_context>
     Rendering Projects
@@ -3247,7 +3493,7 @@ function ultraschall.CreateRenderCFG_DDP()
   <tags>render management, create, render, outputformat, ddp</tags>
 </US_DocBloc>
 ]]
-  return "IHBkZA=="
+  return "IHBkZA==", ultraschall.ConvertAscii2Hex(ultraschall.Base64_Decoder("IHBkZA==")), ultraschall.Base64_Decoder("IHBkZA==")
 end
 
 --A=ultraschall.CreateRenderCFG_DDP()
@@ -3259,11 +3505,11 @@ function ultraschall.CreateRenderCFG_FLAC(Bitrate, EncSpeed)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_FLAC</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_FLAC(integer Bitrate, integer EncSpeed)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_FLAC(integer Bitrate, integer EncSpeed)</functioncall>
   <description>
     Returns the render-cfg-string for the FLAC-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -3272,7 +3518,9 @@ function ultraschall.CreateRenderCFG_FLAC(Bitrate, EncSpeed)
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected FLAC-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected Flac-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected Flac-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Bitrate - the bitrate of the flac-file; 
@@ -3326,7 +3574,7 @@ function ultraschall.CreateRenderCFG_FLAC(Bitrate, EncSpeed)
   
   renderstring=string.gsub(renderstring, "%[BITRATE%]", Bitrate)
   renderstring=string.gsub(renderstring, "%[ENCSPEED%]", EncSpeed)
-  return renderstring
+  return renderstring, ultraschall.ConvertAscii2Hex(ultraschall.Base64_Decoder(renderstring)), ultraschall.Base64_Decoder(renderstring)
 end
 
 --A=ultraschall.CreateRenderCFG_FLAC(1,1)
@@ -3336,11 +3584,11 @@ function ultraschall.CreateRenderCFG_WAVPACK(Mode, Bitdepth, Writemarkers, Write
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_WAVPACK</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WAVPACK(integer Mode, integer Bitdepth, integer Writemarkers, boolean WriteBWFChunk, boolean IncludeFilenameBWF)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_WAVPACK(integer Mode, integer Bitdepth, integer Writemarkers, boolean WriteBWFChunk, boolean IncludeFilenameBWF)</functioncall>
   <description>
     Returns the render-cfg-string for the WAVPACK-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -3349,7 +3597,9 @@ function ultraschall.CreateRenderCFG_WAVPACK(Mode, Bitdepth, Writemarkers, Write
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected WAVPACK-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected WAVPACK-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected WAVPACK-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer Mode - 0, Normal; 1, Fast; 2, High; 3, Very High(slowest)
@@ -3435,7 +3685,7 @@ function ultraschall.CreateRenderCFG_WAVPACK(Mode, Bitdepth, Writemarkers, Write
   renderstring=string.gsub(renderstring, "%[WRITEMARKERS%]", Writemarkers)
   renderstring=string.gsub(renderstring, "%[BWFCHUNK%]", BWFCHUNK)
   
-  return renderstring
+  return renderstring, ultraschall.ConvertAscii2Hex(ultraschall.Base64_Decoder(renderstring)), ultraschall.Base64_Decoder(renderstring)
 end
 
 --A=ultraschall.CreateRenderCFG_WAVPACK(0, 0, 2, true, true)
@@ -3445,8 +3695,8 @@ function ultraschall.IsValidRenderTable(RenderTable)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>IsValidRenderTable</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>boolean retval = ultraschall.IsValidRenderTable(table RenderTable)</functioncall>
@@ -3526,7 +3776,22 @@ function ultraschall.IsValidRenderTable(RenderTable)
 	
 	if type(RenderTable["ReturnToDialog"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Preserve_Metadata\"] must be a boolean", -40) return false end 
 	if math.type(RenderTable["SaveRenderStatsFile"])~="integer" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"SaveRenderStatsFile\"] must be an integer", -41) return false end 
-	
+
+  if type(RenderTable["PostProcessingEnabled"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"PostProcessingEnabled\"] must be a boolean", -42) return false end 
+  
+  if type(RenderTable["Normalize_Only_Files_Too_Quiet"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"Normalize_Only_Files_Too_Quiet\"] must be a boolean", -43) return false end 
+  if type(RenderTable["PadStartWithSilence"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"PadStartWithSilence\"] must be a boolean", -44) return false end 
+  if type(RenderTable["PadEndWithSilence"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"PadEndWithSilence\"] must be a boolean", -45) return false end 
+  if type(RenderTable["TrimTrailingSilence"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"TrimTrailingSilence\"] must be a boolean", -46) return false end 
+  if type(RenderTable["TrimLeadingSilence"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"TrimLeadingSilence\"] must be a boolean", -47) return false end 
+  if type(RenderTable["ParallelRender"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"ParallelRender\"] must be a boolean", -48) return false end 
+  if type(RenderTable["AdjustMonoFiles"])~="boolean" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"AdjustMonoFiles\"] must be a boolean", -49) return false end 
+  if type(RenderTable["AdjustMonoFilesBy"])~="number" or (RenderTable["AdjustMonoFilesBy"]~=3 and RenderTable["AdjustMonoFilesBy"]~=-3) then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"AdjustMonoFilesBy\"] must be wither 3 or -3", -50) return false end 
+  if type(RenderTable["PadStartWithSilenceSeconds"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"PadStartWithSilenceSeconds\"] must be a number", -51) return false end 
+  if type(RenderTable["PadEndWithSilenceSeconds"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"PadEndWithSilenceSeconds\"] must be a number", -52) return false end 
+  if type(RenderTable["TrimLeadingSilenceDB"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"TrimLeadingSilenceDB\"] must be a number", -53) return false end 
+  if type(RenderTable["TrimTrailingSilenceDB"])~="number" then ultraschall.AddErrorMessage("IsValidRenderTable", "RenderTable", "RenderTable[\"TrimTrailingSilenceDB\"] must be a number", -54) return false end 
+  
   return true
 end
 
@@ -3535,8 +3800,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_Project</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -3552,6 +3817,8 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
                                         true, checked; 
                                         false, unchecked
+            RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+            RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
             RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
             RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
             RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
@@ -3610,8 +3877,9 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
                                                      4, LUFS-M max
                                                      5, LUFS-S max
             RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
+                                                         true, checkbox checked
+                                                         false, checkbox unchecked
+            RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
             RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
             RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
@@ -3626,10 +3894,19 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
                                                true, checked; 
                                                false, unchecked
+            RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+            RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+            RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
             RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
             RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
+            RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
             RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
             RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
             RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
@@ -3679,7 +3956,11 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
                                         &32, selected project regions
                                         &64, razor edit areas
             RenderTable["TailMS"] - the amount of milliseconds of the tail
-            
+            RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+            RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
+  
     Returns false in case of an error
   </description>
   <retvals>
@@ -3715,6 +3996,12 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
     if Source&256==0 then Source=Source+256 end
   else 
     if Source&256~=0 then Source=Source-256 end
+  end
+  
+  if RenderTable["ParallelRender"]==true then 
+    if Source&524288==0 then Source=Source+524288 end
+  else
+    if Source&524288~=0 then Source=Source-524288 end
   end
   
   if RenderTable["EmbedMetaData"]==true then 
@@ -3778,7 +4065,10 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   if RenderTable["Normalize_Enabled"]==false and normalize_method&1==1 then normalize_method=normalize_method-1 end  
 
   if RenderTable["Normalize_Only_Files_Too_Loud"]==true and normalize_method&256==0 then normalize_method=normalize_method+256 end
-  if RenderTable["Normalize_Only_Files_Too_Loud"]==false and normalize_method&256==1 then normalize_method=normalize_method-256 end 
+  if RenderTable["Normalize_Only_Files_Too_Loud"]==false and normalize_method&256==256 then normalize_method=normalize_method-256 end 
+
+  if RenderTable["Normalize_Only_Files_Too_Quiet"]==true and normalize_method&2048==0 then normalize_method=normalize_method+2048 end
+  if RenderTable["Normalize_Only_Files_Too_Quiet"]==false and normalize_method&2048==2048 then normalize_method=normalize_method-2048 end
 
   if RenderTable["Normalize_Stems_to_Master_Target"]==true and normalize_method&32==0 then normalize_method=normalize_method+32 end
   if RenderTable["Normalize_Stems_to_Master_Target"]==false and normalize_method&32==32 then normalize_method=normalize_method-32 end
@@ -3790,7 +4080,37 @@ function ultraschall.ApplyRenderTable_Project(RenderTable, apply_rendercfg_strin
   if RenderTable["Brickwall_Limiter_Method"]==1 and normalize_method&128==128 then normalize_method=normalize_method-128 end
   
   if RenderTable["FadeIn_Enabled"]==true and normalize_method&512==0 then normalize_method=normalize_method+512 end
+  if RenderTable["FadeIn_Enabled"]==false and normalize_method&512==512 then normalize_method=normalize_method-512 end
+  
   if RenderTable["FadeOut_Enabled"]==true and normalize_method&1024==0 then normalize_method=normalize_method+1024 end
+  if RenderTable["FadeOut_Enabled"]==false and normalize_method&1024==1024 then normalize_method=normalize_method-1024 end
+  
+  if RenderTable["TrimLeadingSilence"]==true and normalize_method&16384==0 then normalize_method=normalize_method+16384 end
+  if RenderTable["TrimLeadingSilence"]==false and normalize_method&16384==16384 then normalize_method=normalize_method-16384 end
+  
+  if RenderTable["TrimTrailingSilence"]==true and normalize_method&32768==0 then normalize_method=normalize_method+32768 end
+  if RenderTable["TrimTrailingSilence"]==false and normalize_method&32768==32768 then normalize_method=normalize_method-32768 end
+  
+  if RenderTable["PadStartWithSilence"]==true and normalize_method&65536==0 then normalize_method=normalize_method+65536 end
+  if RenderTable["PadStartWithSilence"]==false and normalize_method&65536==65536 then normalize_method=normalize_method-65536 end
+  
+  if RenderTable["PadEndWithSilence"]==true and normalize_method&131072==0 then normalize_method=normalize_method+131072 end
+  if RenderTable["PadEndWithSilence"]==false and normalize_method&131072==131072 then normalize_method=normalize_method-131072 end
+  
+  if RenderTable["AdjustMonoFiles"]==true and normalize_method&16==0 then normalize_method=normalize_method+16 end
+  if RenderTable["AdjustMonoFiles"]==false and normalize_method&16==16 then normalize_method=normalize_method-16 end
+  
+  if RenderTable["AdjustMonoFilesBy"]==3 and normalize_method&524288==0 then normalize_method=normalize_method+524288 end
+  if RenderTable["AdjustMonoFilesBy"]==-3 and normalize_method&524288==524288 then normalize_method=normalize_method-524288 end
+  
+  if RenderTable["PostProcessingEnabled"]==false and normalize_method&262144==0 then normalize_method=normalize_method+262144 end 
+  if RenderTable["PostProcessingEnabled"]==true and normalize_method&262144==262144 then normalize_method=normalize_method-262144 end 
+
+  reaper.GetSetProjectInfo(0, "RENDER_TRIMSTART", ultraschall.DB2MKVOL(RenderTable["TrimLeadingSilenceDB"]), true)
+  reaper.GetSetProjectInfo(0, "RENDER_TRIMEND", ultraschall.DB2MKVOL(RenderTable["TrimTrailingSilenceDB"]), true)
+  
+  reaper.GetSetProjectInfo(0, "RENDER_PADSTART", RenderTable["PadStartWithSilenceSeconds"], true)
+  reaper.GetSetProjectInfo(0, "RENDER_PADEND", RenderTable["PadEndWithSilenceSeconds"], true)
   
   reaper.GetSetProjectInfo_String(ReaProject, "RENDER_FILE", RenderTable["RenderFile"], true)
   reaper.GetSetProjectInfo_String(ReaProject, "RENDER_PATTERN", RenderTable["RenderPattern"], true)
@@ -3886,8 +4206,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>ApplyRenderTable_ProjectFile</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
   <functioncall>boolean retval, string ProjectStateChunk = ultraschall.ApplyRenderTable_ProjectFile(table RenderTable, string projectfilename_with_path, optional boolean apply_rendercfg_string, optional string ProjectStateChunk)</functioncall>
@@ -3899,6 +4219,8 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
                                         true, checked; 
                                         false, unchecked
+            RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+            RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
             RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
             RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
             RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
@@ -3946,12 +4268,9 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                    - 4, Quartic fade in
                                    - 5, Cosine S-curve fade in
                                    - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
+            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
             RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
                                                  false, normalization not enabled
-            RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
             RenderTable["Normalize_Method"]    - the normalize-method-dropdownlist
                                                      0, LUFS-I
                                                      1, RMS-I
@@ -3959,6 +4278,10 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                                      3, True Peak
                                                      4, LUFS-M max
                                                      5, LUFS-S max
+            RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                                         true, checkbox checked
+                                                         false, checkbox unchecked
+            RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
             RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
             RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
@@ -3973,10 +4296,19 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
                                                true, checked; 
                                                false, unchecked
+            RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+            RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+            RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
             RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
             RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
+            RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
             RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
             RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
             RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
@@ -3997,12 +4329,12 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
             RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
             RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
-						RenderTable["ReturnToDialog"] - not stored in project files
+						RenderTable["ReturnToDialog"] - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
             RenderTable["SampleRate"]       - the samplerate of the rendered file(s)
             RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; 
                                                 true, checked; 
                                                 false, unchecked
-						RenderTable["SaveRenderStatsFile"] - not stored in project files
+						RenderTable["SaveRenderStatsFile"] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
             RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; 
                                                         true, checked
                                                         false, unchecked
@@ -4026,6 +4358,10 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
                                         &32, selected project regions
                                         &64, razor edit areas
             RenderTable["TailMS"] - the amount of milliseconds of the tail
+            RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+            RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
             
     Returns false in case of an error
   </description>
@@ -4070,6 +4406,16 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
     Source=Source+16 
   elseif RenderTable["OnlyMonoMedia"]==false and Source&16==16 then 
     Source=Source-16 
+  end
+  
+  if RenderTable["ParallelRender"]==true then
+    if Source&524288==0 then
+      Source=Source+524288
+     end
+  else
+    if Source&524288~=0 then
+      Source=Source-524288
+    end
   end
   
   if RenderTable["EmbedStretchMarkers"]==true then 
@@ -4143,7 +4489,31 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   if RenderTable["Normalize_Enabled"]==false and normalize_method&1==1 then normalize_method=normalize_method-1 end
   
   if RenderTable["Normalize_Only_Files_Too_Loud"]==true and normalize_method&256==0 then normalize_method=normalize_method+256 end
-  if RenderTable["Normalize_Only_Files_Too_Loud"]==false and normalize_method&256==1 then normalize_method=normalize_method-256 end 
+  if RenderTable["Normalize_Only_Files_Too_Loud"]==false and normalize_method&256==256 then normalize_method=normalize_method-256 end 
+  
+  if RenderTable["Normalize_Only_Files_Too_Quiet"]==true and normalize_method&2048==0 then normalize_method=normalize_method+2048 end
+  if RenderTable["Normalize_Only_Files_Too_Quiet"]==false and normalize_method&2048==2048 then normalize_method=normalize_method-2048 end 
+  
+  if RenderTable["PadStartWithSilence"]==true and normalize_method&65536==0 then normalize_method=normalize_method+65536 end
+  if RenderTable["PadStartWithSilence"]==false and normalize_method&65536==65536 then normalize_method=normalize_method-65536 end 
+  
+  if RenderTable["PadEndWithSilence"]==true and normalize_method&131072==0 then normalize_method=normalize_method+131072 end
+  if RenderTable["PadEndWithSilence"]==false and normalize_method&131072==131072 then normalize_method=normalize_method-131072 end 
+  
+  if RenderTable["TrimLeadingSilence"]==true and normalize_method&16384==0 then normalize_method=normalize_method+16384 end
+  if RenderTable["TrimLeadingSilence"]==false and normalize_method&16384==16384 then normalize_method=normalize_method-16384 end 
+  
+  if RenderTable["TrimTrailingSilence"]==true and normalize_method&32768==0 then normalize_method=normalize_method+32768 end
+  if RenderTable["TrimTrailingSilence"]==false and normalize_method&32768==32768 then normalize_method=normalize_method-32768 end 
+  
+  if RenderTable["AdjustMonoFiles"]==true and normalize_method&16==0 then normalize_method=normalize_method+16 end
+  if RenderTable["AdjustMonoFiles"]==false and normalize_method&16==16 then normalize_method=normalize_method-16 end 
+  
+  if RenderTable["AdjustMonoFilesBy"]==3 and normalize_method&524288==0 then normalize_method=normalize_method+524288 end
+  if RenderTable["AdjustMonoFilesBy"]==-3 and normalize_method&524288==524288 then normalize_method=normalize_method-524288 end 
+  
+  if RenderTable["PostProcessingEnabled"]==false and normalize_method&262144==0 then normalize_method=normalize_method+262144 end
+  if RenderTable["PostProcessingEnabled"]==true and normalize_method&262144==262144 then normalize_method=normalize_method-262144 end 
   
   if RenderTable["Normalize_Stems_to_Master_Target"]==true and normalize_method&32==0 then normalize_method=normalize_method+32 end
   if RenderTable["Normalize_Stems_to_Master_Target"]==false and normalize_method&32==32 then normalize_method=normalize_method-32 end
@@ -4157,11 +4527,13 @@ function ultraschall.ApplyRenderTable_ProjectFile(RenderTable, projectfilename_w
   if RenderTable["FadeIn_Enabled"]==true and normalize_method&512==0 then normalize_method=normalize_method+512 end
   if RenderTable["FadeOut_Enabled"]==true and normalize_method&1024==0 then normalize_method=normalize_method+1024 end  
   
-  retval, ProjectStateChunk = ultraschall.SetProject_Render_Normalize(nil, normalize_method, normalize_target, ProjectStateChunk, brickwall_target, RenderTable["FadeIn"], RenderTable["FadeOut"], RenderTable["FadeInShape"], RenderTable["FadeOutShape"])
+  retval, ProjectStateChunk = ultraschall.SetProject_Render_Normalize(nil, normalize_method, normalize_target, ProjectStateChunk, brickwall_target, RenderTable["FadeIn"], RenderTable["FadeOut"], RenderTable["FadeIn_Shape"], RenderTable["FadeOut_Shape"])
     
   retval, ProjectStateChunk = ultraschall.SetProject_RenderStems(nil, Source, ProjectStateChunk)
   retval, ProjectStateChunk = ultraschall.SetProject_RenderRange(nil, RenderTable["Bounds"], RenderTable["Startposition"], RenderTable["Endposition"], RenderTable["TailFlag"], RenderTable["TailMS"], ProjectStateChunk)  
   retval, ProjectStateChunk = ultraschall.SetProject_RenderFreqNChans(nil, 0, RenderTable["Channels"], RenderTable["SampleRate"], ProjectStateChunk)
+
+  retval, ProjectStateChunk = ultraschall.SetProject_Render_Trim(nil, ultraschall.DB2MKVOL(RenderTable["TrimLeadingSilenceDB"]), ultraschall.DB2MKVOL(RenderTable["TrimTrailingSilenceDB"]), RenderTable["PadStartWithSilenceSeconds"], RenderTable["PadEndWithSilenceSeconds"], ProjectStateChunk)
 
   if RenderTable["AddToProj"]==true then AddToProj=1 else AddToProj=0 end  
   if RenderTable["NoSilentRender"]==true then AddToProj=AddToProj+2 end 
@@ -4211,79 +4583,96 @@ TailMS, RenderFile, RenderPattern, SampleRate, Channels,
 OfflineOnlineRendering, ProjectSampleRateFXProcessing, RenderResample, OnlyMonoMedia, MultiChannelFiles,
 Dither, RenderString, SilentlyIncrementFilename, AddToProj, SaveCopyOfProject, 
 RenderQueueDelay, RenderQueueDelaySeconds, CloseAfterRender, EmbedStretchMarkers, RenderString2, 
-EmbedTakeMarkers, DoNotSilentRender, EmbedMetadata, Enable2ndPassRender, 
+EmbedTakeMarkers, NoSilentRender, EmbedMetadata, Enable2ndPassRender, 
 Normalize_Enabled, Normalize_Method, Normalize_Stems_to_Master_Target, Normalize_Target, 
 Brickwall_Limiter_Enabled, Brickwall_Limiter_Method, Brickwall_Limiter_Target,
 Normalize_Only_Files_Too_Loud, FadeIn_Enabled, FadeIn, FadeIn_Shape, FadeOut_Enabled, FadeOut, FadeOut_Shape, OnlyChannelsSentToParent, 
 RenderStems_Prefader, 
-Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
+Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile, 
+PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, PostProcessingEnabled, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateNewRenderTable</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     Lua=5.3
   </requires>
-  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean DoNotSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Only_Files_Too_Loud, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape, optional boolean OnlyChannelsSentToParent, optional boolean RenderStems_Prefader, optional boolean Preserve_Start_Offset, optional boolean Preserve_Metadata)</functioncall>
+  <functioncall>table RenderTable = ultraschall.CreateNewRenderTable(optional integer Source, optional integer Bounds, optional number Startposition, optional number Endposition, optional integer TailFlag, optional integer TailMS, optional string RenderFile, optional string RenderPattern, optional integer SampleRate, optional integer Channels, optional integer OfflineOnlineRendering, optional boolean ProjectSampleRateFXProcessing, optional integer RenderResample, optional boolean OnlyMonoMedia, optional boolean MultiChannelFiles, optional integer Dither, optional string RenderString, optional boolean SilentlyIncrementFilename, optional boolean AddToProj, optional boolean SaveCopyOfProject, optional boolean RenderQueueDelay, optional integer RenderQueueDelaySeconds, optional boolean CloseAfterRender, optional boolean EmbedStretchMarkers, optional string RenderString2, optional boolean EmbedTakeMarkers, optional boolean NoSilentRender, optional boolean EmbedMetadata, optional boolean Enable2ndPassRender, optional boolean Normalize_Enabled, optional integer Normalize_Method, optional boolean Normalize_Stems_to_Master_Target, optional number Normalize_Target, optional boolean Brickwall_Limiter_Enabled, optional integer Brickwall_Limiter_Method, optional number Brickwall_Limiter_Target, optional boolean Normalize_Only_Files_Too_Loud, optional boolean FadeIn_Enabled, optional number FadeIn, optional integer FadeIn_Shape, optional boolean FadeOut_Enabled, optional number FadeOut, optional integer FadeOut_Shape, optional boolean OnlyChannelsSentToParent, optional boolean RenderStems_Prefader, optional boolean Preserve_Start_Offset, optional boolean Preserve_Metadata, optional integer SaveRenderStatsFile, optional boolean ReturnToDialog, optional boolean PadStartWithSilence, optional number PadStartWithSilenceSeconds, optional boolean PadEndWithSilence, optional number PadEndWithSilenceSeconds, optional boolean PostProcessingEnabled, optional boolean AdjustMonoFiles, optional number AdjustMonoFilesBy, optional boolean TrimLeadingSilence, optional number TrimLeadingSilenceDB, optional boolean TrimTrailingSilence, optional number TrimTrailingSilenceDB, optional boolean Normalize_Only_Files_Too_Quiet, optional boolean ParallelRender)</functioncall>
   <description>
     Creates a new RenderTable.
     
+    IMPORTANT: 
+    you can create a RenderTable with all default factory settings by setting all parameters to nil with: RenderTable = ultraschall.CreateNewRenderTable()
+    Then alter all attributes, that you want to have set differently. This is the easiest way to use this function.    
+        
     Parameters set to nil will create a rendertable with all entries set to that of a vanilla factory-default Reaper installation:
 
     Factory-Default will be set to these settings:
               
-              RenderTable["AddToProj"]=false
-              RenderTable["Brickwall_Limiter_Enabled"]=false
-              RenderTable["Brickwall_Limiter_Method"]=1
-              RenderTable["Brickwall_Limiter_Target"]=1
-              RenderTable["Bounds"]=1
-              RenderTable["Channels"]=2
-              RenderTable["CloseAfterRender"]=true
-              RenderTable["Dither"]=0
-              RenderTable["EmbedMetaData"]=false
-              RenderTable["EmbedStretchMarkers"]=false
-              RenderTable["EmbedTakeMarkers"]=false
-              RenderTable["Enable2ndPassRender"]=false
-              RenderTable["Endposition"]=0
-              RenderTable["FadeIn_Enabled"]=false
-              RenderTable["FadeIn"]=0
-              RenderTable["FadeIn_Shape"]=0
-              RenderTable["FadeOut_Enabled"]=false
-              RenderTable["FadeOut"]=0
-              RenderTable["FadeOut_Shape"]=false
-              RenderTable["MultiChannelFiles"]=false
-              RenderTable["Normalize_Enabled"]=false
-              RenderTable["Normalize_Only_Files_Too_Loud"]=false
-              RenderTable["Normalize_Method"]=0
-              RenderTable["Normalize_Stems_to_Master_Target"]=false
-              RenderTable["Normalize_Target"]=-24
-              RenderTable["NoSilentRender"]=false
-              RenderTable["OfflineOnlineRendering"]=0
-              RenderTable["OnlyChannelsSentToParent"]=false
-              RenderTable["OnlyMonoMedia"]=false
-							RenderTable["ReturnToDialog"]=false
-              RenderTable["ProjectSampleRateFXProcessing"]=true
-              RenderTable["Preserve_Start_Offset"]=false
-              RenderTable["Preserve_Metadata"]=false
-              RenderTable["RenderFile"]=""
-              RenderTable["RenderPattern"]=""
-              RenderTable["RenderQueueDelay"]=false
-              RenderTable["RenderQueueDelaySeconds"]=0
-              RenderTable["RenderResample"]=3
-              RenderTable["RenderStems_Prefader"]=false
-              RenderTable["RenderString"]=""
-              RenderTable["RenderString2"]=""
-              RenderTable["RenderTable"]=true
-							RenderTable["ReturnToDialog"]=false
-              RenderTable["SampleRate"]=44100
-							RenderTable["SaveRenderStatsFile"]=0
-              RenderTable["SaveCopyOfProject"]=false
-              RenderTable["SilentlyIncrementFilename"]=true
-              RenderTable["Source"]=0
-              RenderTable["Startposition"]=0
-              RenderTable["TailFlag"]=18
-              RenderTable["TailMS"]=0
+      RenderTable["AddToProj"]=false
+      RenderTable["AdjustMonoFiles"]=false
+      RenderTable["AdjustMonoFilesBy"]=-3
+      RenderTable["Bounds"]=1
+      RenderTable["Brickwall_Limiter_Enabled"]=false
+      RenderTable["Brickwall_Limiter_Method"]=1
+      RenderTable["Brickwall_Limiter_Target"]=1
+      RenderTable["Channels"]=2
+      RenderTable["CloseAfterRender"]=true
+      RenderTable["Dither"]=0
+      RenderTable["EmbedMetaData"]=false
+      RenderTable["EmbedStretchMarkers"]=false
+      RenderTable["EmbedTakeMarkers"]=false
+      RenderTable["Enable2ndPassRender"]=false
+      RenderTable["Endposition"]=0
+      RenderTable["FadeIn"]=0
+      RenderTable["FadeIn_Enabled"]=false
+      RenderTable["FadeIn_Shape"]=0
+      RenderTable["FadeOut"]=0
+      RenderTable["FadeOut_Enabled"]=false
+      RenderTable["FadeOut_Shape"]=0
+      RenderTable["MultiChannelFiles"]=false
+      RenderTable["NoSilentRender"]=false
+      RenderTable["Normalize_Enabled"]=false
+      RenderTable["Normalize_Method"]=0
+      RenderTable["Normalize_Only_Files_Too_Loud"]=false
+      RenderTable["Normalize_Only_Files_Too_Quiet"]=false
+      RenderTable["Normalize_Stems_to_Master_Target"]=false
+      RenderTable["Normalize_Target"]=-24
+      RenderTable["OfflineOnlineRendering"]=0
+      RenderTable["OnlyChannelsSentToParent"]=false
+      RenderTable["OnlyMonoMedia"]=false
+      RenderTable["PadEndWithSilence"]=false
+      RenderTable["PadEndWithSilenceSeconds"]=0
+      RenderTable["PadStartWithSilence"]=false
+      RenderTable["PadStartWithSilenceSeconds"]=0
+      RenderTable["ParallelRender"]=true
+      RenderTable["PostProcessingEnabled"]=false  
+      RenderTable["Preserve_Metadata"]=false
+      RenderTable["Preserve_Start_Offset"]=false
+      RenderTable["ProjectSampleRateFXProcessing"]=true
+      RenderTable["RenderFile"]=""
+      RenderTable["RenderPattern"]=""
+      RenderTable["RenderQueueDelay"]=false
+      RenderTable["RenderQueueDelaySeconds"]=0
+      RenderTable["RenderResample"]=3
+      RenderTable["RenderStems_Prefader"]=false
+      RenderTable["RenderString"]="ZXZhdw=="
+      RenderTable["RenderString2"]=""
+      RenderTable["RenderTable"]=true
+      RenderTable["ReturnToDialog"]=false
+      RenderTable["SampleRate"]=44100
+      RenderTable["SaveCopyOfProject"]=false
+      RenderTable["SaveRenderStatsFile"]=0
+      RenderTable["SilentlyIncrementFilename"]=true
+      RenderTable["Source"]=0
+      RenderTable["Startposition"]=0
+      RenderTable["TailFlag"]=18
+      RenderTable["TailMS"]=0
+      RenderTable["TrimLeadingSilence"]=false
+      RenderTable["TrimLeadingSilenceDB"]=-120
+      RenderTable["TrimTrailingSilence"]=false
+      RenderTable["TrimTrailingSilenceDB"]=-120
 
     Returns nil in case of an error
   </description>
@@ -4363,7 +4752,7 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
     optional boolean EmbedStretchMarkers - true, Embed stretch markers/transient guides-checkbox=on; false or nil, Embed stretch markers/transient guides"-checkbox=off(default)
     optional string RenderString2 - the render-string for the secondary rendering; default=""
     optional boolean EmbedTakeMarkers - the "Take markers"-checkbox; true, checked; false, unchecked(default)
-    optional boolean DoNotSilentRender - the "Do not render files that are likely silent"-checkbox; true, checked; false, unchecked(default)
+    optional boolean NoSilentRender - the "Do not render files that are likely silent"-checkbox; true, checked; false, unchecked(default)
     optional boolean EmbedMetadata - the "Embed metadata"-checkbox; true, checked; false, unchecked(default)
     optional boolean Enable2ndPassRender - true, 2nd pass render is enabled; false, 2nd pass render is disabled
     optional boolean Normalize_Enabled - true, normalization enabled; false, normalization not enabled
@@ -4404,8 +4793,21 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
     optional boolean RenderStems_Prefader - true, stems will be rendered pre-fader; false, normal rendering of stems
     optional boolean Preserve_Start_Offset - true, preserve start-offset (when selected media items as source); false, don't preserve start-offset
     optional boolean Preserve_Metadata - true, preserve metadata(when selected media items as source); false, don't preserve metadata
-		optional boolean ReturnToDialog - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
-		optional integer SaveRenderStatsFile - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
+		optional boolean ReturnToDialog - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering    
+		optional integer SaveRenderStatsFile - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file    
+    optional boolean PadStartWithSilence - the pad start with silence-checkbox; true, enabled; false, disabled
+    optional number PadStartWithSilenceSeconds - the pad start with silence-inputbox; in seconds
+    optional boolean PadEndWithSilence - the pad end with silence-checkbox; true, enabled; false, disabled
+    optional number PadEndWithSilenceSeconds - the pad end with silence-inputbox; in seconds
+    optional boolean PostProcessingEnabled - true, post processing is enabled; false, post processing is disabled
+    optional boolean AdjustMonoFiles - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+    optional number AdjustMonoFilesBy - adjust monofiles by an additional radio-buttons; -3 for -3db; 3 for +3db
+    optional boolean TrimLeadingSilence - the trim leading silence threshold (peak)-checkbox; true, enabled; false, disabled
+    optional number TrimLeadingSilenceDB - the trim leading silence threshold (peak)-inputbox; in dB
+    optional boolean TrimTrailingSilence - the trim trailing silence threshold (peak)-checkbox; true, enabled; false, disabled 
+    optional number TrimTrailingSilenceDB - the trim trailing silence threshold (peak)-inputbox; in dB 
+    optional boolean Normalize_Only_Files_Too_Quiet - the only normalize files that are too quiet-checkbox
+    optional boolean ParallelRender - the parallel render-checkbox; true, enabled; false, disabled
   </parameters>
   <chapter_context>
     Rendering Projects
@@ -4414,6 +4816,9 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
   <target_document>US_Api_Functions</target_document>
   <source_document>Modules/ultraschall_functions_Render_Module.lua</source_document>
   <tags>render, create, new, rendertable</tags>
+  <changelog>
+    Ultraschall 5.31 - added attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender
+  </changelog>
 </US_DocBloc>
 ]]
   if Source~=nil and math.type(Source)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Source", "#1: must be nil or an integer", -20) return end    
@@ -4446,7 +4851,7 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
   if RenderString2==nil then RenderString2="" end
   
   if EmbedTakeMarkers~=nil and type(EmbedTakeMarkers)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "EmbedTakeMarkers", "#26: must be nil or boolean", -28) return end
-  if DoNotSilentRender~=nil and type(DoNotSilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "DoNotSilentRender", "#27: must be nil or boolean", -29) return end
+  if NoSilentRender~=nil and type(NoSilentRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "NoSilentRender", "#27: must be nil or boolean", -29) return end
   
   if EmbedMetadata~=nil and type(EmbedMetadata)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "CloseAfterRender", "#28: must be nil or a boolean", -30) return end
   if Enable2ndPassRender~=nil and type(Enable2ndPassRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Enable2ndPassRender", "#29: must be nil or a boolean", -31) return end
@@ -4478,6 +4883,19 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
 	if ReturnToDialog~=nil and type(ReturnToDialog)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "ReturnToDialog", "#50: must be nil or a boolean", -51) return end  
   if SaveRenderStatsFile~=nil and math.type(SaveRenderStatsFile)~="integer" then ultraschall.AddErrorMessage("CreateNewRenderTable", "SaveRenderStatsFile", "#51: must be nil or an integer", -52) return end  
 	
+  if PostProcessingEnabled~=nil and type(PostProcessingEnabled)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "PostProcessingEnabled", "#52: must be nil or a boolean", -53) return end  
+  if PadStartWithSilence~=nil and type(PadStartWithSilence)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "PadStartWithSilence", "#53: must be nil or a boolean", -54) return end  
+  if PadStartWithSilenceSeconds~=nil and type(PadStartWithSilenceSeconds)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "PadStartWithSilenceSeconds", "#54: must be nil or a number", -55) return end  
+  if PadEndWithSilence~=nil and type(PadEndWithSilence)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "PadEndWithSilence", "#55: must be nil or a boolean", -56) return end  
+  if PadEndWithSilenceSeconds~=nil and type(PadEndWithSilenceSeconds)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "PadEndWithSilenceSeconds", "#56: must be nil or a number", -57) return end  
+  if AdjustMonoFiles~=nil and type(AdjustMonoFiles)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "AdjustMonoFiles", "#57: must be nil or a boolean", -58) return end  
+  if AdjustMonoFilesBy~=nil and type(AdjustMonoFilesBy)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "AdjustMonoFilesBy", "#58: must be nil or a number", -59) return end  
+  if TrimLeadingSilence~=nil and type(TrimLeadingSilence)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TrimLeadingSilence", "#59: must be nil or a boolean", -60) return end  
+  if TrimLeadingSilenceDB~=nil and type(TrimLeadingSilenceDB)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TrimLeadingSilenceDB", "#60: must be nil or a number", -61) return end  
+  if TrimTrailingSilence~=nil and type(TrimTrailingSilence)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TrimTrailingSilence", "#61: must be nil or a boolean", -62) return end  
+  if TrimTrailingSilenceDB~=nil and type(TrimTrailingSilenceDB)~="number" then ultraschall.AddErrorMessage("CreateNewRenderTable", "TrimTrailingSilenceDB", "#62: must be nil or a number", -63) return end  
+  if Normalize_Only_Files_Too_Quiet~=nil and type(Normalize_Only_Files_Too_Quiet)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "Normalize_Only_Files_Too_Quiet", "#63: must be nil or a boolean", -64) return end  
+  if ParallelRender~=nil and type(ParallelRender)~="boolean" then ultraschall.AddErrorMessage("CreateNewRenderTable", "ParallelRender", "#64: must be nil or a boolean", -65) return end  
 	
   -- create Reaper-vanilla default RenderTable
   local RenderTable={}  
@@ -4531,6 +4949,20 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
   RenderTable["Preserve_Metadata"]=false
   RenderTable["ReturnToDialog"]=false
   RenderTable["SaveRenderStatsFile"]=0
+  RenderTable["PostProcessingEnabled"]=false  
+  RenderTable["PadStartWithSilence"]=false
+  RenderTable["PadStartWithSilenceSeconds"]=0
+  RenderTable["PadEndWithSilence"]=false
+  RenderTable["PadEndWithSilenceSeconds"]=0
+  RenderTable["AdjustMonoFiles"]=false
+  RenderTable["AdjustMonoFilesBy"]=-3
+  RenderTable["TrimLeadingSilence"]=false
+  RenderTable["TrimLeadingSilenceDB"]=-120
+  RenderTable["TrimTrailingSilence"]=false
+  RenderTable["TrimTrailingSilenceDB"]=-120
+  RenderTable["Normalize_Only_Files_Too_Quiet"]=false
+  RenderTable["ParallelRender"]=true
+  -- PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceMS, PadEndWithSilence, PadEndWithSilenceMS, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender
 
   -- set all attributes passed via parameters
   if AddToProj~=nil           then RenderTable["AddToProj"]=AddToProj end
@@ -4555,7 +4987,7 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
   if RenderString~=nil        then RenderTable["RenderString"]=RenderString end
   if SampleRate~=nil          then RenderTable["SampleRate"]=SampleRate end
   if SaveCopyOfProject~=nil   then RenderTable["SaveCopyOfProject"]=SaveCopyOfProject end
-  if DoNotSilentRender~=nil   then RenderTable["NoSilentRender"]=DoNotSilentRender end
+  if NoSilentRender~=nil   then RenderTable["NoSilentRender"]=NoSilentRender end
   if SilentlyIncrementFilename~=nil then RenderTable["SilentlyIncrementFilename"]=SilentlyIncrementFilename end
   if Source~=nil              then RenderTable["Source"]=Source end
   if Startposition~=nil       then RenderTable["Startposition"]=Startposition end
@@ -4583,6 +5015,20 @@ Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile)
  
 	if ReturnToDialog~=nil then RenderTable["ReturnToDialog"]=ReturnToDialog end  
   if SaveRenderStatsFile~=nil then RenderTable["SaveRenderStatsFile"]=SaveRenderStatsFile end  
+ 
+  if PadStartWithSilence~=nil then RenderTable["PadStartWithSilence"]=PadStartWithSilence end
+  if PadStartWithSilenceSeconds~=nil then RenderTable["PadStartWithSilenceSeconds"]=PadStartWithSilenceSeconds end
+  if PadEndWithSilence~=nil then RenderTable["PadEndWithSilence"]=PadEndWithSilence end
+  if PadEndWithSilenceSeconds~=nil then RenderTable["PadEndWithSilenceSeconds"]=PadEndWithSilenceSeconds end
+  if AdjustMonoFiles~=nil then RenderTable["AdjustMonoFiles"]=AdjustMonoFiles end
+  if AdjustMonoFilesBy~=nil then RenderTable["AdjustMonoFilesBy"]=AdjustMonoFilesBy end
+  if TrimLeadingSilence~=nil then RenderTable["TrimLeadingSilence"]=TrimLeadingSilence end
+  if TrimLeadingSilenceDB~=nil then RenderTable["TrimLeadingSilenceDB"]=TrimLeadingSilenceDB end
+  if TrimTrailingSilence~=nil then RenderTable["TrimTrailingSilence"]=TrimTrailingSilence end
+  if TrimTrailingSilenceDB~=nil then RenderTable["TrimTrailingSilenceDB"]=TrimTrailingSilenceDB end
+  if Normalize_Only_Files_Too_Quiet~=nil then RenderTable["Normalize_Only_Files_Too_Quiet"]=Normalize_Only_Files_Too_Quiet end
+  if ParallelRender~=nil then RenderTable["ParallelRender"]=ParallelRender end
+  if PostProcessingEnabled~=nil then RenderTable["PostProcessingEnabled"]=PostProcessingEnabled end
  
   return RenderTable
 end
@@ -5065,8 +5511,8 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>GetRenderPreset_RenderTable</slug>
    <requires>
-     Ultraschall=5.3
-     Reaper=7.34
+     Ultraschall=5.31
+     Reaper=7.39
      Lua=5.3
    </requires>
    <functioncall>table RenderTable = ultraschall.GetRenderPreset_RenderTable(string Bounds_Name, string Options_and_Format_Name)</functioncall>
@@ -5076,97 +5522,116 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
      use [GetRenderPreset_Names](#GetRenderPreset_Names) to get the available render-preset-names.
      
      Some settings aren't stored in Presets and will get default values:
-     TailMS=0, SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false
+          TailMS=0(Reaper 6.61 and earlier), SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false, ReturnToDialog=false, SaveRenderStatsFile=0
      
-     returned table if of the following format:
+     Bounds_Name stores only:
+              RenderTable["Bounds"] - the bounds-dropdownlist, 
+                                      0, Custom time range
+                                      1, Entire project 
+                                      2, Time selection 
+                                      3, Project regions
+                                      4, Selected Media Items(in combination with Source 32)
+                                      5, Selected regions 
+                                      6, Razor edit areas
+                                      7, All project markers
+                                      8, Selected markers
+              RenderTable["Endposition"] - the endposition of the render
+              RenderTable["RenderFile"] - the output-path
+              RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
+              RenderTable["Source"] - the source dropdownlist, includes 
+                                      0, Master mix 
+                                      1, Master mix + stems
+                                      3, Stems (selected tracks)
+                                      8, Region render matrix
+                                      32, Selected media items
+                                      64, selected media items via master
+                                      128, selected tracks via master
+                                      136, Region render matrix via master
+                                      4096, Razor edit areas
+                                      4224, Razor edit areas via master
+              RenderTable["Startposition"] - the startposition of the render
+              RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
+                                        &1, custom time bounds
+                                        &2, entire project
+                                        &4, time selection
+                                        &8, all project regions
+                                        &16, selected media items
+                                        &32, selected project regions
+              RenderTable["TailMS"] - the length of the tail in milliseconds(Reaper 6.62+)
      
-            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
-                                       always false, as this isn't stored in render-presets
-            RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
-            RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
-            RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-            RenderTable["Bounds"]    - 0, Custom time range; 
-                                       1, Entire project; 
-                                       2, Time selection; 
-                                       3, Project regions; 
-                                       4, Selected Media Items(in combination with Source 32); 
-                                       5, Selected regions
-                                       6, Razor edit areas
-                                       7, All project markers
-                                       8, Selected markers
-            RenderTable["Channels"] - the number of channels in the rendered file; 
-                                          1, mono; 
-                                          2, stereo; 
-                                          higher, the number of channels
-            RenderTable["CloseAfterRender"] - close rendering to file-dialog after rendering; 
-                                              always true, as this isn't stored in render-presets
-            RenderTable["Dither"] - &1, dither master mix; 
-                                    &2, noise shaping master mix; 
-                                    &4, dither stems; 
-                                    &8, noise shaping stems
-            RenderTable["EmbedMetaData"]       - Embed metadata; true, checked; false, unchecked
-            RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-            RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
-            RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
-            RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
-            RenderTable["FadeIn"] - the fade-in-time in seconds
-            RenderTable["FadeIn_Shape"] - the fade-in-shape
-                                   - 0, Linear fade in
-                                   - 1, Inverted quadratic fade in
-                                   - 2, Quadratic fade in
-                                   - 3, Inverted quartic fade in
-                                   - 4, Quartic fade in
-                                   - 5, Cosine S-curve fade in
-                                   - 6, Quartic S-curve fade in
-            RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
-            RenderTable["FadeOut"] - the fade-out time in seconds
-            RenderTable["FadeOut_Shape"] - the fade-out-shape
-                                   - 0, Linear fade in
-                                   - 1, Inverted quadratic fade in
-                                   - 2, Quadratic fade in
-                                   - 3, Inverted quartic fade in
-                                   - 4, Quartic fade in
-                                   - 5, Cosine S-curve fade in
-                                   - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked
-            RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
-                                                 false, normalization not enabled
-            RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
-            RenderTable["Normalize_Method"]    - the normalize-method-dropdownlist
-                                                     0, LUFS-I
-                                                     1, RMS-I
-                                                     2, Peak
-                                                     3, True Peak
-                                                     4, LUFS-M max
-                                                     5, LUFS-S max
-            RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems); 
-                                                              false, normalize each file individually
-            RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
-            RenderTable["NoSilentRender"]         - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
-            RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
-                                                        0, Full-speed Offline; 
-                                                        1, 1x Offline; 
-                                                        2, Online Render; 
-                                                        3, Online Render(Idle); 
-                                                        4, Offline Render(Idle)
-            RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
-                                               true, checked; 
-                                               false, unchecked
-            RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
-            RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
-            RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
-                                                           true, checked; false, unchecked
-            RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
-            RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
-            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; 
-                                              always false, as this isn't stored in render-presets
-            RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay; 
-                                                     always 0, as this isn't stored in render-presets
-            RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+     Options_and_Format_Name stores only:
+              RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+              RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
+              RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
+              RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
+              RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
+              RenderTable["Channels"] - the number of channels for the output-file
+              RenderTable["Dither"] - the Dither/Noise shaping-checkboxes: 
+                                      &1, dither master mix
+                                      &2, noise shaping master mix
+                                      &4, dither stems
+                                      &8, noise shaping stems
+              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+              RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
+              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
+              RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+              RenderTable["FadeIn"] - the fade-in-time in seconds
+              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+              RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["FadeOut"] - the fade-out time in seconds
+              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+              RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["MultiChannelFiles"] - multichannel-files-checkbox
+              RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
+              RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+              RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                             - true, checkbox checked
+                                             - false, checkbox unchecked
+              RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                                0, LUFS-I
+                                                1, RMS-I
+                                                2, Peak
+                                                3, True Peak
+                                                4, LUFS-M max
+                                                5, LUFS-S max
+              RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
+                                                                false, normalize each file individually
+              RenderTable["Normalize_Target"] - the normalize-target as dB-value
+              RenderTable["OfflineOnlineRendering"] - the offline/online-dropdownlist 
+                                      0, Full-speed Offline
+                                      1, 1x Offline
+                                      2, Online Render
+                                      3, Online Render(Idle)
+                                      4, Offline Render(Idle); 
+              RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
+              RenderTable["OnlyMonoMedia"] - only mono media-checkbox
+              RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 1, checked; 0, unchecked 
+              RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+              RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+              RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
+              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
+              RenderTable["RenderResample"] - Resample mode-dropdownlist; 
                                                 0, Sinc Interpolation: 64pt (medium quality)
                                                 1, Linear Interpolation: (low quality)
                                                 2, Point Sampling (lowest quality, retro)
@@ -5178,37 +5643,14 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
                                                 8, Sinc Interpolation: 512pt(slow)
                                                 9, Sinc Interpolation: 768pt(very slow)
                                                 10, r8brain free (highest quality, fast)
-            RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-            RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
-            RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
-            RenderTable["RenderTable"]=true - signals, this is a valid render-table
-						RenderTable["ReturnToDialog"] - not stored in presets
-            RenderTable["SampleRate"]       - the samplerate of the rendered file(s)
-            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; always false, as this isn't stored in render-presets
-						RenderTable["SaveRenderStatsFile"] - not stored in presets
-            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; 
-                                                       always true, as this isn't stored in Presets
-            RenderTable["Source"] - 0, Master mix; 
-                                    1, Master mix + stems; 
-                                    3, Stems (selected tracks); 
-                                    8, Region render matrix; 
-                                    32, Selected media items; 64, selected media items via master; 
-                                    64, selected media items via master; 
-                                    128, selected tracks via master
-                                    136, Region render matrix via master
-                                    4096, Razor edit areas
-                                    4224, Razor edit areas via master
-            RenderTable["Startposition"] - the startposition of the rendering selection in seconds
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
-                                        &1, custom time bounds; 
-                                        &2, entire project; 
-                                        &4, time selection; 
-                                        &8, all project regions; 
-                                        &16, selected media items; 
-                                        &32, selected project regions
-                                        &64, razor edit areas
-            RenderTable["TailMS"] - the amount of milliseconds of the tail; for presets stored in Reaper 6.61 and 
-                                  - earlier, it's always 0, as this wasn't stored in render-presets back then
+              RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
+              RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
+              RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings
+              RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
+              RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+              RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
 
      Returns nil in case of an error
    </description>
@@ -5271,6 +5713,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     Source_dropdownlist_and_checkboxes2, Unknown2, _temp2,
     Tail_checkbox2, offset=
     B:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ()")--\"(.*)\"")--%s(.-) ")
+
     local B2=B:sub(offset, -1)
     
     path, offset=B2:match("\"(.-)\"() ")    
@@ -5301,7 +5744,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   
     _temp, SampleRate, Channels, Offline_online_dropdownlist, 
     Useprojectsamplerate_checkbox, Resamplemode_dropdownlist, Various_checkboxes, Various_checkboxes2
-    =A2:match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ")
+    =(A2.." "):match(".- (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) ")    
     if Various_checkboxes2=="" then
       -- management of old Reaper5-render-presets; hopefully, I can remove that code one day...sigh
       _temp, SampleRate, Channels, Offline_online_dropdownlist, 
@@ -5318,6 +5761,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   local Normalize_Method=0
   local Normalize_Target=0.063096
   local Brickwall_Target=1.122018
+  local TrimStart, TrimEnd, PadStart, PadEnd
   for A in string.gmatch(A, "(RENDERPRESET_EXT .-)\n") do
     Quote=A:sub(21,21)
     if Quote=="\"" then
@@ -5326,16 +5770,24 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
       Quote=""
       Presetname2=A:match("%s(.-)%s")
     end
-    local A1, A2, A3, A4, A5, A6, A7 = A:match(".* (%d-) (.*) (.*) (.*) (.*) (.*) (.*)")
-
+    local A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11 = A:match(Presetname2.." (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.-) (.*)")
+    --print2(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11)
+    if A1==nil then
+      A1, A2, A3, A4, A5, A6, A7 = A:match(Presetname2.." (.-) (.-) (.-) (.-) (.-) (.-) (.*)")
+      A8=0
+      A9=0
+      A10=0
+      A11=0
+    end
+    
     if A1==nil then
       A1, A2=A:match(".* (%d-) (.*)")
-      A3=0
+      A3, A4, A5, A6, A7, A8, A9, A10, A11=0, 0, 0, 1, 1, 0, 0, 0, 0
     end
     if A1~=nil then 
-      Normalize_Method, Normalize_Target, Brickwall_Target, FadeIn_Length, FadeOut_Length, FadeIn_Shape, FadeOut_Shape 
+      Normalize_Method, Normalize_Target, Brickwall_Target, FadeIn_Length, FadeOut_Length, FadeIn_Shape, FadeOut_Shape, TrimStart, TrimEnd, PadStart, PadEnd
         = 
-      tonumber(A1), tonumber(A2), tonumber(A3), tonumber(A4), tonumber(A5), tonumber(A6), tonumber(A7)
+      tonumber(A1), tonumber(A2), tonumber(A3), tonumber(A4), tonumber(A5), tonumber(A6), tonumber(A7), tonumber(A8), tonumber(A9), tonumber(A10), tonumber(A11)
     end
     
     if Presetname2==Options_and_Format_Name then found=true break end
@@ -5383,6 +5835,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["OnlyMonoMedia"]=tonumber(Various_checkboxes2)&16==16
   RenderTable["EmbedStretchMarkers"]=tonumber(Various_checkboxes2)&256==256
   RenderTable["EmbedTakeMarkers"]=tonumber(Various_checkboxes2)&1024==1024
+  RenderTable["ParallelRender"]=tonumber(Various_checkboxes2)&524288==524288
   RenderTable["NoSilentRender"]=false
   RenderTable["Source"]=tonumber(Source_dropdownlist_and_checkboxes2)
   RenderTable["Dither"]=tonumber(Various_checkboxes)
@@ -5390,21 +5843,20 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   RenderTable["Enable2ndPassRender"]=tonumber(Various_checkboxes2)&2048==2048
   RenderTable["OnlyChannelsSentToParent"]=tonumber(Various_checkboxes2)&16384==16384
   RenderTable["RenderStems_Prefader"]=tonumber(Various_checkboxes2)&8192==8192
-  RenderTable["Normalize_Enabled"]=Normalize_Method&1==1  
-  RenderTable["Normalize_Stems_to_Master_Target"]=Normalize_Method&32==32
   RenderTable["Preserve_Start_Offset"]=tonumber(Various_checkboxes2)&65536==65536
   RenderTable["Preserve_Metadata"]=tonumber(Various_checkboxes2)&32768==32768
-  if RenderTable["Normalize_Enabled"]==true then Normalize_Method=Normalize_Method-1 end
-  if RenderTable["Normalize_Stems_to_Master_Target"]==true then Normalize_Method=Normalize_Method-32 end
+
+  RenderTable["Normalize_Enabled"]=Normalize_Method&1==1  
+  RenderTable["AdjustMonoFiles"]=Normalize_Method&16==16
+  RenderTable["Normalize_Stems_to_Master_Target"]=Normalize_Method&32==32
   RenderTable["Brickwall_Limiter_Enabled"]=Normalize_Method&64==64
-  if RenderTable["Brickwall_Limiter_Enabled"]==true then Normalize_Method=Normalize_Method-64 end
   if Normalize_Method&128==128 then 
     RenderTable["Brickwall_Limiter_Method"]=2
     Normalize_Method=Normalize_Method-128
   else
     RenderTable["Brickwall_Limiter_Method"]=1
   end  
-  
+  RenderTable["Normalize_Only_Files_Too_Loud"]=Normalize_Method&256==256
   if Normalize_Method&256==0 then     
     RenderTable["Normalize_Only_Files_Too_Loud"]=false
   elseif Normalize_Method&256==256 then
@@ -5419,12 +5871,28 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
     Normalize_Method=Normalize_Method-512
   end
   
-    if Normalize_Method&1024==0 then     
+  if Normalize_Method&1024==0 then     
     RenderTable["FadeOut_Enabled"]=false
   elseif Normalize_Method&1024==1024 then
     RenderTable["FadeOut_Enabled"]=true
     Normalize_Method=Normalize_Method-1024
   end  
+  
+  RenderTable["Normalize_Only_Files_Too_Quiet"]=Normalize_Method&2048==2048
+  RenderTable["TrimLeadingSilence"]=Normalize_Method&16384==16384
+  RenderTable["TrimTrailingSilence"]=Normalize_Method&32768==32768
+  RenderTable["PadStartWithSilence"]=Normalize_Method&65536==65536
+  RenderTable["PadEndWithSilence"]=Normalize_Method&131072==131072
+  RenderTable["PostProcessingEnabled"]=Normalize_Method&262144==262144
+  RenderTable["AdjustMonoFilesBy"]=Normalize_Method&524288==524288
+  if RenderTable["AdjustMonoFilesBy"]==true then RenderTable["AdjustMonoFilesBy"]=3 else RenderTable["AdjustMonoFilesBy"]=-3 end
+  RenderTable["Normalize_Method"]=(Normalize_Method&2)+(Normalize_Method&4)+(Normalize_Method&8)
+  RenderTable["Normalize_Method_Tudel"]=Normalize_Method&2
+  
+  RenderTable["TrimLeadingSilenceDB"]=ultraschall.MKVOL2DB(TrimStart)
+  RenderTable["TrimTrailingSilenceDB"]=ultraschall.MKVOL2DB(TrimEnd)
+  RenderTable["PadStartWithSilenceSeconds"]=PadStart
+  RenderTable["PadEndWithSilenceSeconds"]=PadEnd
   
   if FadeIn_Length==nil then RenderTable["FadeIn"]=0 else RenderTable["FadeIn"]=FadeIn_Length end
   if FadeOut_Length==nil then RenderTable["FadeOut"]=0 else RenderTable["FadeOut"]=FadeOut_Length end
@@ -5433,7 +5901,7 @@ function ultraschall.GetRenderPreset_RenderTable(Bounds_Name, Options_and_Format
   
   RenderTable["Brickwall_Limiter_Target"]=ultraschall.MKVOL2DB(Brickwall_Target)
   
-  RenderTable["Normalize_Method"]=math.tointeger(Normalize_Method/2)
+  RenderTable["Normalize_Method"]=math.floor(RenderTable["Normalize_Method"]>>1)
   RenderTable["Normalize_Target"]=ultraschall.MKVOL2DB(Normalize_Target)
   
   RenderTable["ReturnToDialog"]=false
@@ -5562,8 +6030,8 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>AddRenderPreset</slug>
    <requires>
-     Ultraschall=5.3
-     Reaper=7.34
+     Ultraschall=5.31
+     Reaper=7.39
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.AddRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5577,7 +6045,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
      Note: You can choose, whether to include only Bounds, only RenderFormatOptions of both. The Bounds and the RenderFormatOptions store different parts of the render-presets.
      
      Some settings aren't stored in Presets and will be ignored:
-     TailMS=0(Reaper 6.61 and earlier), SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false
+     TailMS=0(Reaper 6.61 and earlier), SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false, ReturnToDialog=false, SaveRenderStatsFile=0
      
      Bounds_Name stores only:
               RenderTable["Bounds"] - the bounds-dropdownlist, 
@@ -5590,8 +6058,9 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       6, Razor edit areas
                                       7, All project markers
                                       8, Selected markers
-              RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
+              RenderTable["RenderFile"] - the output-path
+              RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
               RenderTable["Source"] - the source dropdownlist, includes 
                                       0, Master mix 
                                       1, Master mix + stems
@@ -5603,8 +6072,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       136, Region render matrix via master
                                       4096, Razor edit areas
                                       4224, Razor edit areas via master
-              RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
-              RenderTable["RenderFile"] - the output-path
+              RenderTable["Startposition"] - the startposition of the render
               RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
                                         &1, custom time bounds
                                         &2, entire project
@@ -5615,33 +6083,43 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["TailMS"] - the length of the tail in milliseconds(Reaper 6.62+)
      
      Options_and_Format_Name stores only:
-              RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
+              RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+              RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
+              RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
+              RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
+              RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
               RenderTable["Channels"] - the number of channels for the output-file
-              RenderTable["OfflineOnlineRendering"] - the offline/online-dropdownlist 
-                                      0, Full-speed Offline
-                                      1, 1x Offline
-                                      2, Online Render
-                                      3, Online Render(Idle)
-                                      4, Offline Render(Idle); 
-              RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 1, checked; 0, unchecked 
-              RenderTable["RenderResample"] - Resample mode-dropdownlist; 
-                                                0, Sinc Interpolation: 64pt (medium quality)
-                                                1, Linear Interpolation: (low quality)
-                                                2, Point Sampling (lowest quality, retro)
-                                                3, Sinc Interpolation: 192pt
-                                                4, Sinc Interpolation: 384pt
-                                                5, Linear Interpolation + IIR
-                                                6, Linear Interpolation + IIRx2
-                                                7, Sinc Interpolation: 16pt
-                                                8, Sinc Interpolation: 512pt(slow)
-                                                9, Sinc Interpolation: 768pt(very slow)
-                                                10, r8brain free (highest quality, fast)
               RenderTable["Dither"] - the Dither/Noise shaping-checkboxes: 
                                       &1, dither master mix
                                       &2, noise shaping master mix
                                       &4, dither stems
                                       &8, noise shaping stems
+              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+              RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
+              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
+              RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+              RenderTable["FadeIn"] - the fade-in-time in seconds
+              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+              RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["FadeOut"] - the fade-out time in seconds
+              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+              RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
               RenderTable["MultiChannelFiles"] - multichannel-files-checkbox
+              RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
               RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
               RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
                                              - true, checkbox checked
@@ -5656,40 +6134,46 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
               RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                                 false, normalize each file individually
               RenderTable["Normalize_Target"] - the normalize-target as dB-value
+              RenderTable["OfflineOnlineRendering"] - the offline/online-dropdownlist 
+                                      0, Full-speed Offline
+                                      1, 1x Offline
+                                      2, Online Render
+                                      3, Online Render(Idle)
+                                      4, Offline Render(Idle); 
               RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-              RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
               RenderTable["OnlyMonoMedia"] - only mono media-checkbox
-              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
-              RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
-              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
-              RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 1, checked; 0, unchecked 
+              RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+              RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
               RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
+              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
+              RenderTable["RenderResample"] - Resample mode-dropdownlist; 
+                                                0, Sinc Interpolation: 64pt (medium quality)
+                                                1, Linear Interpolation: (low quality)
+                                                2, Point Sampling (lowest quality, retro)
+                                                3, Sinc Interpolation: 192pt
+                                                4, Sinc Interpolation: 384pt
+                                                5, Linear Interpolation + IIR
+                                                6, Linear Interpolation + IIRx2
+                                                7, Sinc Interpolation: 16pt
+                                                8, Sinc Interpolation: 512pt(slow)
+                                                9, Sinc Interpolation: 768pt(very slow)
+                                                10, r8brain free (highest quality, fast)
+              RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
               RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
               RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings
-              RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
-              RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
-              RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
-              RenderTable["FadeIn"] - the fade-in-time in seconds
-              RenderTable["FadeIn_Shape"] - the fade-in-shape
-                                     - 0, Linear fade in
-                                     - 1, Inverted quadratic fade in
-                                     - 2, Quadratic fade in
-                                     - 3, Inverted quartic fade in
-                                     - 4, Quartic fade in
-                                     - 5, Cosine S-curve fade in
-                                     - 6, Quartic S-curve fade in
-              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
-              RenderTable["FadeOut"] - the fade-out time in seconds
-              RenderTable["FadeOut_Shape"] - the fade-out-shape
-                                     - 0, Linear fade in
-                                     - 1, Inverted quadratic fade in
-                                     - 2, Quadratic fade in
-                                     - 3, Inverted quartic fade in
-                                     - 4, Quartic fade in
-                                     - 5, Cosine S-curve fade in
-                                     - 6, Quartic S-curve fade in
+              RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
+              RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+              RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
   
      Returns false in case of an error
    </description>
@@ -5728,6 +6212,7 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["Enable2ndPassRender"]==true then CheckBoxes=CheckBoxes+2048 end
   if RenderTable["RenderStems_Prefader"]==true then CheckBoxes=CheckBoxes+8192 end
   if RenderTable["OnlyChannelsSentToParent"]==true then CheckBoxes=CheckBoxes+16384 end
+  if RenderTable["ParallelRender"]==true then CheckBoxes=CheckBoxes+524288 end
   
   if RenderTable["Preserve_Start_Offset"]==true then CheckBoxes=CheckBoxes+65536 end
   if RenderTable["Preserve_Metadata"]==true then CheckBoxes=CheckBoxes+32768 end
@@ -5785,14 +6270,27 @@ function ultraschall.AddRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
       end
       local normalize_method=RenderTable["Normalize_Method"]*2
       if RenderTable["Normalize_Enabled"]==true then normalize_method=normalize_method+1 end
+      if RenderTable["AdjustMonoFiles"]==true then normalize_method=normalize_method+16 end      
       if RenderTable["Normalize_Stems_to_Master_Target"]==true then normalize_method=normalize_method+32 end      
       if RenderTable["Brickwall_Limiter_Enabled"]==true then normalize_method=normalize_method+64 end
       if RenderTable["Brickwall_Limiter_Method"]==2 then normalize_method=normalize_method+128 end
       if RenderTable["Normalize_Only_Files_Too_Loud"]==true then normalize_method=normalize_method+256 end
+      if RenderTable["FadeIn_Enabled"]==true then normalize_method=normalize_method+512 end
+      if RenderTable["FadeOut_Enabled"]==true then normalize_method=normalize_method+1024 end
+      if RenderTable["Normalize_Only_Files_Too_Quiet"]==true then normalize_method=normalize_method+2048 end      
+      if RenderTable["TrimLeadingSilence"]==true then normalize_method=normalize_method+16384 end
+      if RenderTable["TrimTrailingSilence"]==true then normalize_method=normalize_method+32768 end
+      if RenderTable["PadStartWithSilence"]==true then normalize_method=normalize_method+65536 end
+      if RenderTable["PadEndWithSilence"]==true then normalize_method=normalize_method+131072 end
+      if RenderTable["PostProcessingEnabled"]==false then normalize_method=normalize_method+262144 end
+      if RenderTable["AdjustMonoFilesBy"]==3 then normalize_method=normalize_method+524288 end            
+      
       local brickwall_target=ultraschall.DB2MKVOL(RenderTable["Brickwall_Limiter_Target"])
       local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
+      local trim_start=ultraschall.DB2MKVOL(RenderTable["TrimLeadingSilenceDB"])
+      local trim_end=ultraschall.DB2MKVOL(RenderTable["TrimTrailingSilenceDB"])
       --local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target
-      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"]
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name.." "..normalize_method.." "..normalize_target.." "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"].." "..trim_start.." "..trim_end.." "..RenderTable["PadStartWithSilenceSeconds"].." "..RenderTable["PadEndWithSilenceSeconds"]
       A=A..String..String2..String3
   end
     
@@ -5811,8 +6309,8 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
  <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>SetRenderPreset</slug>
    <requires>
-     Ultraschall=5
-     Reaper=7.16
+     Ultraschall=5.31
+     Reaper=7.39
      Lua=5.3
    </requires>
    <functioncall>boolean retval = ultraschall.SetRenderPreset(string Bounds_Name, string Options_and_Format_Name, table RenderTable)</functioncall>
@@ -5826,7 +6324,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
      Note: You can choose, whether to include only Bounds, only RenderFormatOptions of both. The Bounds and the RenderFormatOptions store different parts of the render-presets.
      
      Some settings aren't stored in Presets and will be ignored:
-     TailMS=0(Reaper 6.61 and earlier), SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false
+     TailMS=0(Reaper 6.61 and earlier), SilentlyIncrementFilename=false, AddToProj=false, SaveCopyOfProject=false, RenderQueueDelay=false, RenderQueueDelaySeconds=false, NoSilentRender=false, ReturnToDialog=false, SaveRenderStatsFile=0
      
      Bounds_Name stores only:
               RenderTable["Bounds"] - the bounds-dropdownlist, 
@@ -5835,46 +6333,106 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                       2, Time selection 
                                       3, Project regions
                                       4, Selected Media Items(in combination with Source 32)
-                                      5, Selected regions
+                                      5, Selected regions 
                                       6, Razor edit areas
                                       7, All project markers
                                       8, Selected markers
-              RenderTable["Startposition"] - the startposition of the render
               RenderTable["Endposition"] - the endposition of the render
-              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
-              RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
-              RenderTable["Source"]+RenderTable["MultiChannelFiles"]+RenderTable["OnlyMonoMedia"] - the source dropdownlist, includes 
+              RenderTable["RenderFile"] - the output-path
+              RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
+              RenderTable["Source"] - the source dropdownlist, includes 
                                       0, Master mix 
                                       1, Master mix + stems
                                       3, Stems (selected tracks)
-                                      &4, Multichannel tracks to multichannel files
                                       8, Region render matrix
-                                      &16, Tracks with only mono media to mono files
                                       32, Selected media items
                                       64, selected media items via master
                                       128, selected tracks via master
+                                      136, Region render matrix via master
                                       4096, Razor edit areas
                                       4224, Razor edit areas via master
-              RenderTable["RenderPattern"] - the renderpattern, which hold also the wildcards
+              RenderTable["Startposition"] - the startposition of the render
               RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
-                                      &1, custom time bounds
-                                      &2, entire project
-                                      &4, time selection
-                                      &8, all project regions
-                                      &16, selected media items
-                                      &32, selected project regions 
+                                        &1, custom time bounds
+                                        &2, entire project
+                                        &4, time selection
+                                        &8, all project regions
+                                        &16, selected media items
+                                        &32, selected project regions
               RenderTable["TailMS"] - the length of the tail in milliseconds(Reaper 6.62+)
      
      Options_and_Format_Name stores only:
-              RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
+              RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+              RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
+              RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled
+              RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
+              RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
               RenderTable["Channels"] - the number of channels for the output-file
+              RenderTable["Dither"] - the Dither/Noise shaping-checkboxes: 
+                                      &1, dither master mix
+                                      &2, noise shaping master mix
+                                      &4, dither stems
+                                      &8, noise shaping stems
+              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+              RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
+              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
+              RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
+              RenderTable["FadeIn"] - the fade-in-time in seconds
+              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
+              RenderTable["FadeIn_Shape"] - the fade-in-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["FadeOut"] - the fade-out time in seconds
+              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
+              RenderTable["FadeOut_Shape"] - the fade-out-shape
+                                     - 0, Linear fade in
+                                     - 1, Inverted quadratic fade in
+                                     - 2, Quadratic fade in
+                                     - 3, Inverted quartic fade in
+                                     - 4, Quartic fade in
+                                     - 5, Cosine S-curve fade in
+                                     - 6, Quartic S-curve fade in
+              RenderTable["MultiChannelFiles"] - multichannel-files-checkbox
+              RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
+              RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
+              RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
+                                             - true, checkbox checked
+                                             - false, checkbox unchecked
+              RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
+                                                0, LUFS-I
+                                                1, RMS-I
+                                                2, Peak
+                                                3, True Peak
+                                                4, LUFS-M max
+                                                5, LUFS-S max
+              RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
+                                                                false, normalize each file individually
+              RenderTable["Normalize_Target"] - the normalize-target as dB-value
               RenderTable["OfflineOnlineRendering"] - the offline/online-dropdownlist 
                                       0, Full-speed Offline
                                       1, 1x Offline
                                       2, Online Render
                                       3, Online Render(Idle)
                                       4, Offline Render(Idle); 
+              RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
+              RenderTable["OnlyMonoMedia"] - only mono media-checkbox
               RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 1, checked; 0, unchecked 
+              RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+              RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+              RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+              RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
+              RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
+              RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
               RenderTable["RenderResample"] - Resample mode-dropdownlist; 
                                                 0, Sinc Interpolation: 64pt (medium quality)
                                                 1, Linear Interpolation: (low quality)
@@ -5887,56 +6445,15 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
                                                 8, Sinc Interpolation: 512pt(slow)
                                                 9, Sinc Interpolation: 768pt(very slow)
                                                 10, r8brain free (highest quality, fast)
-              RenderTable["Dither"] - the Dither/Noise shaping-checkboxes: 
-                                      &1, dither master mix
-                                      &2, noise shaping master mix
-                                      &4, dither stems
-                                      &8, noise shaping stems
-              RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked  
-              RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides-checkbox
-              RenderTable["EmbedTakeMarkers"] - Embed Take markers-checkbox
-              RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-              RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
-              RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings; "" to remove it from this preset
-              RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
-              RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
-                                                0, LUFS-I
-                                                1, RMS-I
-                                                2, Peak
-                                                3, True Peak
-                                                4, LUFS-M max
-                                                5, LUFS-S max
-              RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                           - true, checkbox checked
-                                                           - false, checkbox unchecked
-              RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
-                                                                false, normalize each file individually
-              RenderTable["Normalize_Target"] - the normalize-target as dB-value
-              RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
               RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-              RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
-              RenderTable["FadeIn"] - the fade-in-time in seconds
-              RenderTable["FadeIn_Shape"] - the fade-in-shape
-                                     - 0, Linear fade in
-                                     - 1, Inverted quadratic fade in
-                                     - 2, Quadratic fade in
-                                     - 3, Inverted quartic fade in
-                                     - 4, Quartic fade in
-                                     - 5, Cosine S-curve fade in
-                                     - 6, Quartic S-curve fade in
-              RenderTable["FadeOut_Enabled"] - true, fade-out is enabled; false, fade-out is disabled
-              RenderTable["FadeOut"] - the fade-out time in seconds
-              RenderTable["FadeOut_Shape"] - the fade-out-shape
-                                     - 0, Linear fade in
-                                     - 1, Inverted quadratic fade in
-                                     - 2, Quadratic fade in
-                                     - 3, Inverted quartic fade in
-                                     - 4, Quartic fade in
-                                     - 5, Cosine S-curve fade in
-                                     - 6, Quartic S-curve fade in
-              RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
-              RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
-              RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
+              RenderTable["RenderString"] - the render-cfg-string, which holds the render-outformat-settings
+              RenderTable["RenderString2"] - the render-cfg-string, which holds the secondary render-outformat-settings
+              RenderTable["SampleRate"] - the samplerate, with which to render; 0, use project-settings
+              RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+              RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+              RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
+              
      Returns false in case of an error
    </description>
    <parameters>
@@ -5981,6 +6498,7 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
   if RenderTable["Enable2ndPassRender"]==true then MonoMultichannelEmbed=MonoMultichannelEmbed+2048 end
   if RenderTable["RenderStems_Prefader"]==true then CheckBoxes=CheckBoxes+8192 end
   if RenderTable["OnlyChannelsSentToParent"]==true then CheckBoxes=CheckBoxes+16384 end
+  if RenderTable["ParallelRender"]==true then CheckBoxes=CheckBoxes+524288 end
 
   if RenderTable["Preserve_Start_Offset"]==true then CheckBoxes=CheckBoxes+65536 end
   if RenderTable["Preserve_Metadata"]==true then CheckBoxes=CheckBoxes+32768 end
@@ -6052,14 +6570,27 @@ function ultraschall.SetRenderPreset(Bounds_Name, Options_and_Format_Name, Rende
     
       local normalize_method=RenderTable["Normalize_Method"]*2
       if RenderTable["Normalize_Enabled"]==true then normalize_method=normalize_method+1 end
-      if RenderTable["Normalize_Stems_to_Master_Target"]==true then normalize_method=normalize_method+32 end
+      if RenderTable["AdjustMonoFiles"]==true then normalize_method=normalize_method+16 end      
+      if RenderTable["Normalize_Stems_to_Master_Target"]==true then normalize_method=normalize_method+32 end      
       if RenderTable["Brickwall_Limiter_Enabled"]==true then normalize_method=normalize_method+64 end
       if RenderTable["Brickwall_Limiter_Method"]==2 then normalize_method=normalize_method+128 end
       if RenderTable["Normalize_Only_Files_Too_Loud"]==true then normalize_method=normalize_method+256 end
+      if RenderTable["FadeIn_Enabled"]==true then normalize_method=normalize_method+512 end
+      if RenderTable["FadeOut_Enabled"]==true then normalize_method=normalize_method+1024 end
+      if RenderTable["Normalize_Only_Files_Too_Quiet"]==true then normalize_method=normalize_method+2048 end      
+      if RenderTable["TrimLeadingSilence"]==true then normalize_method=normalize_method+16384 end
+      if RenderTable["TrimTrailingSilence"]==true then normalize_method=normalize_method+32768 end
+      if RenderTable["PadStartWithSilence"]==true then normalize_method=normalize_method+65536 end
+      if RenderTable["PadEndWithSilence"]==true then normalize_method=normalize_method+131072 end
+      if RenderTable["PostProcessingEnabled"]==false then normalize_method=normalize_method+262144 end
+      if RenderTable["AdjustMonoFilesBy"]==3 then normalize_method=normalize_method+524288 end
       
       local brickwall_target=ultraschall.DB2MKVOL(RenderTable["Brickwall_Limiter_Target"])
       local normalize_target=ultraschall.DB2MKVOL(RenderTable["Normalize_Target"])
-      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name2.." "..normalize_method.." "..normalize_target.. " "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"]
+      local trim_start=ultraschall.DB2MKVOL(RenderTable["TrimLeadingSilenceDB"])
+      local trim_end=ultraschall.DB2MKVOL(RenderTable["TrimTrailingSilenceDB"])
+      
+      local String3="\nRENDERPRESET_EXT "..Options_and_Format_Name2.." "..normalize_method.." "..normalize_target.. " "..brickwall_target.." "..RenderTable["FadeIn"].." "..RenderTable["FadeOut"].." "..RenderTable["FadeIn_Shape"].." "..RenderTable["FadeOut_Shape"].." "..trim_start.." "..trim_end.." "..RenderTable["PadStartWithSilenceSeconds"].." "..RenderTable["PadEndWithSilenceSeconds"]
       A=A.."\n"
       local RenderNormalization=A:match("\nRENDERPRESET_EXT "..Options_and_Format_Name..".-\n")
       
@@ -7059,18 +7590,20 @@ function ultraschall.CreateRenderCFG_MP3MaxQuality()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MP3MaxQuality</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3MaxQuality(optional boolean write_replay_gain)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MP3MaxQuality(optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with highest quality-settings. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
     Note: Can also be applied as RecCFG!
   </description>
   <retvals>
-    string render_cfg_string - the renderstring for MP3 with maximum quality
+    string render_cfg_string_base64 - the render-cfg-string for the selected MP3-settings(for maximum quality) base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MP3-settings(for maximum quality) hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     optional boolean write_replay_gain - the "Write ReplayGain-tag"-checkbox; true, checked; false, unchecked; default is unchecked
@@ -7084,8 +7617,9 @@ function ultraschall.CreateRenderCFG_MP3MaxQuality()
   <tags>render management, create, render, outputformat, mp3 high quality, mp3</tags>
 </US_DocBloc>
 ]]
-  if write_replay_gain==true then return "bDNwbUABAAAAAAQACgAAAP////8EAAAAQAEAAAAAAAA=" end
-  return "bDNwbUABAAAAAAAACgAAAP////8EAAAAQAEAAAAAAAA="
+  local renderstring="bDNwbUABAAAAAAAACgAAAP////8EAAAAQAEAAAAAAAA="
+  if write_replay_gain==true then renderstring="bDNwbUABAAAAAAQACgAAAP////8EAAAAQAEAAAAAAAA=" end
+  return renderstring, ultraschall.ConvertAscii2Hex(ultraschall.Base64_Decoder(renderstring)), ultraschall.Base64_Decoder(renderstring)
 end
 
 
@@ -7094,11 +7628,11 @@ function ultraschall.CreateRenderCFG_MP3VBR(vbr_quality, quality, no_joint_stere
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MP3VBR</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3VBR(integer vbr_quality, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MP3VBR(integer vbr_quality, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with variable bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7107,7 +7641,9 @@ function ultraschall.CreateRenderCFG_MP3VBR(vbr_quality, quality, no_joint_stere
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MP3-VBR-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MP3(VBR)-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MP3(VBR)-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer vbr_quality - the variable-bitrate quality; 1(for 10%) to 10(for 100%)
@@ -7158,7 +7694,7 @@ function ultraschall.CreateRenderCFG_MP3VBR(vbr_quality, quality, no_joint_stere
     Replaced_string = ultraschall.ReplacePartOfString(Replaced_string, string.char(4), 10, 1)
   end
   
-  return ultraschall.Base64_Encoder(Replaced_string)
+  return ultraschall.Base64_Encoder(Replaced_string), ultraschall.ConvertAscii2Hex(Replaced_string), Replaced_string
 end
 
 --A=ultraschall.CreateRenderCFG_MP3VBR(1, 0)
@@ -7169,11 +7705,11 @@ function ultraschall.CreateRenderCFG_MP3ABR(bitrate, quality, no_joint_stereo, w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MP3ABR</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3ABR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MP3ABR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with average bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7182,7 +7718,9 @@ function ultraschall.CreateRenderCFG_MP3ABR(bitrate, quality, no_joint_stereo, w
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MP3-ABR-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MP3(ABR)-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MP3(ABR)-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer bitrate - the encoding quality for the mp3
@@ -7250,7 +7788,7 @@ function ultraschall.CreateRenderCFG_MP3ABR(bitrate, quality, no_joint_stereo, w
     Replaced_string = ultraschall.ReplacePartOfString(Replaced_string, string.char(4), 10, 1)
   end
   
-  return ultraschall.Base64_Encoder(Replaced_string)  
+  return ultraschall.Base64_Encoder(Replaced_string), ultraschall.ConvertAscii2Hex(Replaced_string), Replaced_string
 end
 
 --A=ultraschall.CreateRenderCFG_MP3ABR(1, 0)
@@ -7260,11 +7798,11 @@ function ultraschall.CreateRenderCFG_MP3CBR(bitrate, quality, no_joint_stereo, w
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MP3CBR</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.975
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MP3CBR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MP3CBR(integer bitrate, integer quality, optional boolean no_joint_stereo, optional boolean write_replay_gain)</functioncall>
   <description>
     Creates the render-cfg-string for the MP3-format with constant bitrate. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7273,7 +7811,9 @@ function ultraschall.CreateRenderCFG_MP3CBR(bitrate, quality, no_joint_stereo, w
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MP3-CBR-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MP3(CBR)-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MP3(CBR)-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer bitrate - the encoding quality for the mp3
@@ -7341,7 +7881,7 @@ function ultraschall.CreateRenderCFG_MP3CBR(bitrate, quality, no_joint_stereo, w
     Replaced_string = ultraschall.ReplacePartOfString(Replaced_string, string.char(4), 10, 1)
   end
   
-  return ultraschall.Base64_Encoder(Replaced_string)  
+  return ultraschall.Base64_Encoder(Replaced_string), ultraschall.ConvertAscii2Hex(Replaced_string), Replaced_string
 end
 --A=ultraschall.CreateRenderCFG_MP3CBR(1, 1)
 
@@ -7353,11 +7893,11 @@ function ultraschall.CreateRenderCFG_WAV(BitDepth, LargeFiles, BWFChunk, Include
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_WAV</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=5.32
     Reaper=6.13
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WAV(integer BitDepth, integer LargeFiles, integer BWFChunk, integer IncludeMarkers, boolean EmbedProjectTempo)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_WAV(integer BitDepth, integer LargeFiles, integer BWFChunk, integer IncludeMarkers, boolean EmbedProjectTempo)</functioncall>
   <description>
     Creates the render-cfg-string for the WAV-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7366,7 +7906,9 @@ function ultraschall.CreateRenderCFG_WAV(BitDepth, LargeFiles, BWFChunk, Include
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected WAV-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected GIF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected GIF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer BitDepth - the bitdepth of the WAV-file
@@ -7480,7 +8022,7 @@ function ultraschall.CreateRenderCFG_WAV(BitDepth, LargeFiles, BWFChunk, Include
   end
   
   local WavEnder="=="
-  return WavHeader..BitDepth..A0..A..B..C..WavEnder  
+  return WavHeader..BitDepth..A0..A..B..C..WavEnder,  ultraschall.Base64_Decoder(WavHeader..BitDepth..A0..A..B..C..WavEnder), ultraschall.ConvertAscii2Hex(ultraschall.Base64_Decoder(WavHeader..BitDepth..A0..A..B..C..WavEnder))
 end
 
 
@@ -7599,11 +8141,11 @@ function ultraschall.CreateRenderCFG_AIFF(bits, EmbedBeatLength)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_AIFF</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_AIFF(integer bits, optional boolean EmbedBeatLength)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_AIFF(integer bits, optional boolean EmbedBeatLength)</functioncall>
   <description>
     Returns the render-cfg-string for the AIFF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7612,7 +8154,9 @@ function ultraschall.CreateRenderCFG_AIFF(bits, EmbedBeatLength)
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected AIFF-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected AIFF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected AIFF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer bits - the bitdepth of the aiff-file; 8, 16, 24 and 32 are supported
@@ -7633,9 +8177,9 @@ function ultraschall.CreateRenderCFG_AIFF(bits, EmbedBeatLength)
   if EmbedBeatLength==nil or EmbedBeatLength==false then EmbedBeatLength=0 else EmbedBeatLength=32 end
   
   local renderstring="ffia"..string.char(bits)..string.char(EmbedBeatLength)..string.char(0)
-  renderstring=ultraschall.Base64_Encoder(renderstring)
+  local renderstring2=ultraschall.Base64_Encoder(renderstring)
 
-  return renderstring
+  return renderstring2, ultraschall.ConvertAscii2Hex(renderstring), renderstring
 end
 
 
@@ -7644,11 +8188,11 @@ function ultraschall.CreateRenderCFG_AudioCD(trackmode, only_markers_starting_wi
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_AudioCD</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=5.77
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_AudioCD(integer trackmode, boolean only_markers_starting_with_hash, integer leadin_silence_tracks, integer leadin_silence_disc, boolean burncd_image_after_render)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_AudioCD(integer trackmode, boolean only_markers_starting_with_hash, integer leadin_silence_tracks, integer leadin_silence_disc, boolean burncd_image_after_render)</functioncall>
   <description>
     Returns the render-cfg-string for the AudioCD-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -7657,7 +8201,9 @@ function ultraschall.CreateRenderCFG_AudioCD(trackmode, only_markers_starting_wi
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected AudioCD-image-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected AudioCD-image-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected AudioCD-image-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer trackmode - Track mode-dropdownlist: 1, Markers define new track; 2, Regions define tracks (other areas ignored); 3, One Track
@@ -7692,7 +8238,7 @@ function ultraschall.CreateRenderCFG_AudioCD(trackmode, only_markers_starting_wi
   
   local RenderString=" osi"..leadin_silence_disc..leadin_silence_tracks..string.char(burncd_image_after_render).."\0\0\0"..string.char(trackmode-1).."\0\0\0"..string.char(only_markers_starting_with_hash).."\0\0\0\0"
   
-  return ultraschall.Base64_Encoder(RenderString)
+  return ultraschall.Base64_Encoder(RenderString), ultraschall.ConvertAscii2Hex(RenderString), RenderString
 end
 
 --A=ultraschall.CreateRenderCFG_AudioCD(1,false,100000,100000,false)
@@ -8611,11 +9157,11 @@ function ultraschall.CreateRenderCFG_CAF(bits, EmbedTempo, include_markers)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_CAF</slug>
   <requires>
-    Ultraschall=4.2
+    Ultraschall=5.32
     Reaper=6.43
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_CAF(integer bits, boolean EmbedTempo, integer include_markers)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_CAF(integer bits, boolean EmbedTempo, integer include_markers)</functioncall>
   <description>
     Returns the render-cfg-string for the CAF-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -8624,7 +9170,9 @@ function ultraschall.CreateRenderCFG_CAF(bits, EmbedTempo, include_markers)
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected CAF-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected CAF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected CAF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
       integer bitdepth - the bitdepth of the CAF-file(8, 16, 24, 32(fp), 33(pcm), 64)
@@ -8663,9 +9211,9 @@ function ultraschall.CreateRenderCFG_CAF(bits, EmbedTempo, include_markers)
   if EmbedTempo==true then include_markers=include_markers+32 end
 
   local renderstring="ffac"..string.char(bits)..string.char(include_markers)..string.char(0)
-  renderstring=ultraschall.Base64_Encoder(renderstring)
+  local renderstring2=ultraschall.Base64_Encoder(renderstring)
   
-  return renderstring
+  return renderstring2, ultraschall.ConvertAscii2Hex(renderstring), renderstring
 end
 
 function ultraschall.GetRenderTargetFiles()
@@ -8940,18 +9488,18 @@ function ultraschall.GetRenderCFG_Settings_FLV_Video(rendercfg)
   
   return VideoCodec, MJPEG_quality[1], AudioCodec, Width[1], Height[1], FPS, AspectRatio, FFMPEG_Options_Video, FFMPEG_Options_Audio
 end
-
+--Mespotine
 
 function ultraschall.CreateRenderCFG_MPEG1_Video(VideoCodec, VIDKBPS, AudioCodec, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoOptions, AudioOptions)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MPEG1_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MPEG1_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MPEG1_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the MPEG-1-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -8960,7 +9508,9 @@ function ultraschall.CreateRenderCFG_MPEG1_Video(VideoCodec, VIDKBPS, AudioCodec
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MPEG-1-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MPEG1-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MPEG1-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -9030,7 +9580,11 @@ function ultraschall.CreateRenderCFG_MPEG1_Video(VideoCodec, VIDKBPS, AudioCodec
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoOptions, AudioOptions)
@@ -9038,11 +9592,11 @@ function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_MPEG2_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_MPEG2_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_MPEG2_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the MPEG-2-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -9051,7 +9605,9 @@ function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MPEG-2-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MPEG2-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MPEG2-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -9122,7 +9678,11 @@ function ultraschall.CreateRenderCFG_MPEG2_Video(VideoCodec, VIDKBPS, AudioCodec
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, AUDKBPS, WIDTH, HEIGHT, FPS, AspectRatio, VideoOptions, AudioOptions)
@@ -9130,11 +9690,11 @@ function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, 
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_FLV_Video</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.62
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_FLV_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_FLV_Video(integer VideoCodec, integer VIDKBPS, integer AudioCodec, integer AUDKBPS, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio, optional string VideoOptions, optional string AudioOptions)</functioncall>
   <description>
     Returns the render-cfg-string for the FLV-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
@@ -9143,7 +9703,9 @@ function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, 
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected MPEG-2-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected MPEG-2-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected MPEG-2-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer VideoCodec - the videocodec used for the video;
@@ -9214,7 +9776,11 @@ function ultraschall.CreateRenderCFG_FLV_Video(VideoCodec, VIDKBPS, AudioCodec, 
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         ultraschall.ConvertAscii2Hex("PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"),
+         "PMFF"..VideoFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0"..MJPEGQuality..AudioOptions.."\0"..VideoOptions.."\0"
 end
 
 
@@ -9223,8 +9789,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetRenderTable_ProjectDefaults</slug>
   <requires>
-    Ultraschall=5.3
-    Reaper=7.34
+    Ultraschall=5.31
+    Reaper=7.39
     SWS=2.10.0.1
     JS=0.972
     Lua=5.3
@@ -9233,34 +9799,38 @@ function ultraschall.GetRenderTable_ProjectDefaults()
   <description markup_type="markdown" markup_version="1.0.1" indent="default">
     Returns all stored render-settings for the project-defaults, as a handy table.
             
-            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; true, checked; false, unchecked
+            RenderTable["AddToProj"] - Add rendered items to new tracks in project-checkbox; 
+                                        true, checked; 
+                                        false, unchecked
+            RenderTable["AdjustMonoFiles"] - the adjust mono files by an additional-checkbox; true, enabled; false, disabled
+            RenderTable["AdjustMonoFilesBy"] - the adjust mono files by an additional-inputbox; -3, -3dB; 3, +3dB
             RenderTable["Brickwall_Limiter_Enabled"] - true, brickwall limiting is enabled; false, brickwall limiting is disabled            
             RenderTable["Brickwall_Limiter_Method"] - brickwall-limiting-mode; 1, peak; 2, true peak
             RenderTable["Brickwall_Limiter_Target"] - the volume of the brickwall-limit
-            RenderTable["Bounds"] - not stored with project defaults; will use the default bounds for the source
-                                    0, Custom time range; 
-                                    1, Entire project; 
-                                    2, Time selection; 
-                                    3, Project regions; 
-                                    4, Selected Media Items(in combination with Source 32); 
-                                    5, Selected regions
-                                    6, Razor edit areas
-                                    7, All project markers
-                                    8, Selected markers
+            RenderTable["Bounds"]    - 0, Custom time range; 
+                                       1, Entire project; 
+                                       2, Time selection; 
+                                       3, Project regions; 
+                                       4, Selected Media Items(in combination with Source 32); 
+                                       5, Selected regions
+                                       6, Razor edit areas
+                                       7, All project markers
+                                       8, Selected markers
             RenderTable["Channels"] - the number of channels in the rendered file; 
-                                      1, mono; 
-                                      2, stereo; 
-                                      higher, the number of channels
-            RenderTable["CloseAfterRender"] - true, closes rendering to file-dialog after render; false, doesn't close it
+                                          1, mono; 
+                                          2, stereo; 
+                                          higher, the number of channels
+            RenderTable["CloseAfterRender"] - true, close rendering to file-dialog after render; 
+                                              false, don't close it
             RenderTable["Dither"] - &1, dither master mix; 
                                     &2, noise shaping master mix; 
                                     &4, dither stems; 
                                     &8, noise shaping stems
-            RenderTable["EmbedMetaData"] - Embed metadata; true, checked; false, unchecked
+            RenderTable["EmbedMetaData"]       - Embed metadata; true, checked; false, unchecked
             RenderTable["EmbedStretchMarkers"] - Embed stretch markers/transient guides; true, checked; false, unchecked
-            RenderTable["EmbedTakeMarkers"] - Embed Take markers; true, checked; false, unchecked                        
+            RenderTable["EmbedTakeMarkers"]    - Embed Take markers; true, checked; false, unchecked
             RenderTable["Enable2ndPassRender"] - true, 2nd pass render is enabled; false, 2nd pass render is disabled
-            RenderTable["Endposition"] - the endposition of the rendering selection in seconds; always 0 because it's not stored with project defaults
+            RenderTable["Endposition"]         - the endposition of the rendering selection in seconds
             RenderTable["FadeIn_Enabled"] - true, fade-in is enabled; false, fade-in is disabled
             RenderTable["FadeIn"] - the fade-in-time in seconds
             RenderTable["FadeIn_Shape"] - the fade-in-shape
@@ -9281,40 +9851,50 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                    - 4, Quartic fade in
                                    - 5, Cosine S-curve fade in
                                    - 6, Quartic S-curve fade in
-            RenderTable["MultiChannelFiles"] - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
-            RenderTable["Normalize_Enabled"] - true, normalization enabled; false, normalization not enabled
-            RenderTable["Normalize_Method"] - the normalize-method-dropdownlist
-                           0, LUFS-I
-                           1, RMS-I
-                           2, Peak
-                           3, True Peak
-                           4, LUFS-M max
-                           5, LUFS-S max
+            RenderTable["MultiChannelFiles"]   - Multichannel tracks to multichannel files-checkbox; true, checked; false, unchecked            
+            RenderTable["Normalize_Enabled"]   - true, normalization enabled; 
+                                                 false, normalization not enabled
+            RenderTable["Normalize_Method"]    - the normalize-method-dropdownlist
+                                                     0, LUFS-I
+                                                     1, RMS-I
+                                                     2, Peak
+                                                     3, True Peak
+                                                     4, LUFS-M max
+                                                     5, LUFS-S max
             RenderTable["Normalize_Only_Files_Too_Loud"] - Only normalize files that are too loud,checkbox
-                                                         - true, checkbox checked
-                                                         - false, checkbox unchecked
+                                                         true, checkbox checked
+                                                         false, checkbox unchecked
+            RenderTable["Normalize_Only_Files_Too_Quiet"] - Only normalize files that are too quiet-checkbox; true, enabled; false, disabled
             RenderTable["Normalize_Stems_to_Master_Target"] - true, normalize-stems to master target(common gain to stems)
                                                               false, normalize each file individually
-            RenderTable["Normalize_Target"] - the normalize-target as dB-value
-            RenderTable["NoSilentRender"] - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
+            RenderTable["Normalize_Target"]       - the normalize-target as dB-value    
+            RenderTable["NoSilentRender"]         - Do not render files that are likely silent-checkbox; true, checked; false, unchecked
             RenderTable["OfflineOnlineRendering"] - Offline/Online rendering-dropdownlist; 
-                                                    0, Full-speed Offline
-                                                    1, 1x Offline
-                                                    2, Online Render
-                                                    3, Online Render(Idle)
-                                                    4, Offline Render(Idle)
+                                                        0, Full-speed Offline; 
+                                                        1, 1x Offline; 
+                                                        2, Online Render; 
+                                                        3, Online Render(Idle); 
+                                                        4, Offline Render(Idle)
             RenderTable["OnlyChannelsSentToParent"] - true, option is checked; false, option is unchecked
-            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; true, checked; false, unchecked
+            RenderTable["OnlyMonoMedia"] - Tracks with only mono media to mono files-checkbox; 
+                                               true, checked; 
+                                               false, unchecked
+            RenderTable["PadEndWithSilence"] - Pad end with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadEndWithSilenceSeconds"] - Pad end with silence-inputbox in seconds
+            RenderTable["PadStartWithSilence"] - Pad start with silence-checkbox; true, enabled; false, disabled
+            RenderTable["PadStartWithSilenceSeconds"] - Pad start with silence-inputbox, in seconds
+            RenderTable["ParallelRender"] - Parallel-render-checkbox; true, enabled; false, disabled
             RenderTable["Preserve_Start_Offset"] - true, preserve start-offset-checkbox(with Bounds=4 and Source=32); false, don't preserve
             RenderTable["Preserve_Metadata"] - true, preserve metadata-checkbox; false, don't preserve
             RenderTable["ProjectSampleRateFXProcessing"] - Use project sample rate for mixing and FX/synth processing-checkbox; 
                                                            true, checked; false, unchecked
-            RenderTable["RenderFile"] - the contents of the Directory-inputbox of the Render to File-dialog; 
-                                        always "" because it's not stored with project defaults
-            RenderTable["RenderPattern"] - the render pattern as input into the File name-inputbox of the Render to File-dialog; 
-                                           always "" because it's not stored with project defaults
-            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; 
-                                              true, checked; false, unchecked
+            RenderTable["PostProcessingEnabled"] - true, enabled; false, disabled; activates AdjustMonoFiles, AdjustMonoFilesBy, Brickwall\_Limiter\_Enabled, Brickwall\_Limiter\_Method, Brickwall\_Limiter\_Target, 
+                                         FadeIn, FadeIn\_Shape, FadeOut\_Enabled, FadeOut, FadeOut\_Shape, Normalize\_Enabled, Normalize\_Method, Normalize\_Only\_Files\_Too\_Quiet, 
+                                         Normalize\_Only\_Files\_Too\_Loud, Normalize\_Stems\_to\_Master\_Target, Normalize\_Target, PadStartWithSilence, PadStartWithSilenceMS, 
+                                         PadEndWithSilence, PadEndWithSilenceMS, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB
+            RenderTable["RenderFile"]       - the contents of the Directory-inputbox of the Render to File-dialog
+            RenderTable["RenderPattern"]    - the render pattern as input into the File name-inputbox of the Render to File-dialog
+            RenderTable["RenderQueueDelay"] - Delay queued render to allow samples to load-checkbox; true, checked; false, unchecked
             RenderTable["RenderQueueDelaySeconds"] - the amount of seconds for the render-queue-delay
             RenderTable["RenderResample"] - Resample mode-dropdownlist; 
                                                 0, Sinc Interpolation: 64pt (medium quality)
@@ -9329,34 +9909,42 @@ function ultraschall.GetRenderTable_ProjectDefaults()
                                                 9, Sinc Interpolation: 768pt(very slow)
                                                 10, r8brain free (highest quality, fast)
             RenderTable["RenderStems_Prefader"] - true, option is checked; false, option is unchecked
-            RenderTable["RenderString"] - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
-            RenderTable["RenderString2"] - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
+            RenderTable["RenderString"]     - the render-cfg-string, that holds all settings of the currently set render-output-format as BASE64 string
+            RenderTable["RenderString2"]    - the render-cfg-string, that holds all settings of the currently set secondary-render-output-format as BASE64 string
             RenderTable["RenderTable"]=true - signals, this is a valid render-table
 						RenderTable["ReturnToDialog"] - true, return to render to file-dialog after rendering; false, don't return to render to file-dialog after rendering
-            RenderTable["SampleRate"] - the samplerate of the rendered file(s)
-            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; true, checked; false, unchecked
+            RenderTable["SampleRate"]       - the samplerate of the rendered file(s)
+            RenderTable["SaveCopyOfProject"] - the "Save copy of project to outfile.wav.RPP"-checkbox; 
+                                                true, checked; 
+                                                false, unchecked
 						RenderTable["SaveRenderStatsFile"] - 0, no render-stats-outfile; 1, Combined; 2, Per rendered file
-            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; true, checked; false, unchecked
+            RenderTable["SilentlyIncrementFilename"] - Silently increment filenames to avoid overwriting-checkbox; 
+                                                        true, checked
+                                                        false, unchecked
             RenderTable["Source"] - 0, Master mix; 
                                     1, Master mix + stems; 
                                     3, Stems (selected tracks); 
                                     8, Region render matrix; 
-                                    32, Selected media items; 
+                                    32, Selected media items; 64, selected media items via master; 
                                     64, selected media items via master; 
                                     128, selected tracks via master
                                     136, Region render matrix via master
                                     4096, Razor edit areas
                                     4224, Razor edit areas via master
-            RenderTable["Startposition"] - the startposition of the rendering selection in seconds; always 0 because it's not stored with project defaults
-            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked
-                                      &1, custom time bounds; 
-                                      &2, entire project; 
-                                      &4, time selection; 
-                                      &8, all project regions; 
-                                      &16, selected media items; 
-                                      &32, selected project regions
-                                      &64, razor edit areas
+            RenderTable["Startposition"] - the startposition of the rendering selection in seconds
+            RenderTable["TailFlag"] - in which bounds is the Tail-checkbox checked? 
+                                        &1, custom time bounds; 
+                                        &2, entire project; 
+                                        &4, time selection; 
+                                        &8, all project regions; 
+                                        &16, selected media items; 
+                                        &32, selected project regions
+                                        &64, razor edit areas
             RenderTable["TailMS"] - the amount of milliseconds of the tail
+            RenderTable["TrimLeadingSilence"] - Trim leading silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimLeadingSilenceDB"] - Trim leading silence, threshold(peak)-inputbox in dB
+            RenderTable["TrimTrailingSilence"] - Trim trailing silence, threshold(peak)-checkbox; true, enabled; false, disabled
+            RenderTable["TrimTrailingSilenceDB"] - Trim trailing silence, threshold(peak)-inputbox in dB
     
     Returns nil in case of an error
   </description>
@@ -9400,7 +9988,11 @@ function ultraschall.GetRenderTable_ProjectDefaults()
     "projrenderfadein",
     "projrenderfadeout",
     "projrenderfadeinshape",
-    "projrenderfadeoutshape"
+    "projrenderfadeoutshape",
+    "projrendertrimstart",
+    "projrendertrimend",
+    "projrenderpadstart",
+    "projrenderpadend"
   }
 
   for i=1, #attributetable do
@@ -9412,6 +10004,11 @@ function ultraschall.GetRenderTable_ProjectDefaults()
       attributetable[attributetable[i]]=temp
     end
   end
+  
+  RenderTable["PadStartWithSilenceSeconds"]=tonumber(attributetable["projrenderpadstart"])
+  RenderTable["PadEndWithSilenceSeconds"]=tonumber(attributetable["projrenderpadend"])
+  RenderTable["TrimLeadingSilenceDB"]=tonumber(ultraschall.MKVOL2DB(attributetable["projrendertrimstart"]))
+  RenderTable["TrimTrailingSilenceDB"]=tonumber(ultraschall.MKVOL2DB(attributetable["projrendertrimend"]))
   
   attributetable["rendercfg"]=ultraschall.ConvertHex2Ascii(attributetable["rendercfg"])
   attributetable["rendercfg"]=ultraschall.Base64_Encoder(attributetable["rendercfg"]:sub(1,-2))
@@ -9456,6 +10053,8 @@ function ultraschall.GetRenderTable_ProjectDefaults()
     RenderTable["RenderStems_Prefader"]=RenderTable["Source"]&2048==2048
     if RenderTable["Source"]&16384==16384 then RenderTable["Source"]=RenderTable["Source"]-16384 end
     
+    if RenderTable["Source"]&524288==524288 then RenderTable["ParallelRender"]=true RenderTable["Source"]=RenderTable["Source"]-524288 else RenderTable["ParallelRender"]=false end
+    
     RenderTable["Bounds"]=1
     if RenderTable["Source"]==8 then RenderTable["Bounds"]=3 end
     if RenderTable["Source"]==32 then RenderTable["Bounds"]=4 end
@@ -9481,6 +10080,26 @@ function ultraschall.GetRenderTable_ProjectDefaults()
     if attributetable["projrendernorm"]&128==128 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-128 end  
   
     RenderTable["Normalize_Only_Files_Too_Loud"]=attributetable["projrendernorm"]&256==256
+    if attributetable["projrendernorm"]&256==256 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-256 end
+    
+    RenderTable["PadStartWithSilence"]=attributetable["projrendernorm"]&65536==65536
+    if attributetable["projrendernorm"]&65536==65536 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-65536 end
+    RenderTable["PadEndWithSilence"]=attributetable["projrendernorm"]&131072==131072
+    if attributetable["projrendernorm"]&131072==131072 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-131072 end
+    RenderTable["TrimLeadingSilence"]=attributetable["projrendernorm"]&16384==16384
+    if attributetable["projrendernorm"]&16384==16384 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-16384 end
+    RenderTable["TrimTrailingSilence"]=attributetable["projrendernorm"]&32768==32768
+    if attributetable["projrendernorm"]&32768==32768 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-32768 end
+    
+    RenderTable["AdjustMonoFiles"]=attributetable["projrendernorm"]&16==16
+    if attributetable["projrendernorm"]&16==16 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-16 end
+    if attributetable["projrendernorm"]&524288==524288 then RenderTable["AdjustMonoFilesBy"]=3 attributetable["projrendernorm"]=attributetable["projrendernorm"]-524288 else RenderTable["AdjustMonoFilesBy"]=-3 end
+    
+    RenderTable["Normalize_Only_Files_Too_Quiet"]=attributetable["projrendernorm"]&2048==2048
+    if attributetable["projrendernorm"]&2048==2048 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-2048 end
+   
+    
+    if attributetable["projrendernorm"]&262144==262144 then RenderTable["PostProcessingEnabled"]=false attributetable["projrendernorm"]=attributetable["projrendernorm"]-262144 else RenderTable["PostProcessingEnabled"]=true end
     if attributetable["projrendernorm"]&256==256 then attributetable["projrendernorm"]=attributetable["projrendernorm"]-256 end
     RenderTable["Normalize_Method"]=attributetable["projrendernorm"]>>1
   end  
@@ -9685,18 +10304,20 @@ function ultraschall.CreateRenderCFG_WMF(OutputFormat, VideoCodec, VideoBitrate,
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_WMF</slug>
   <requires>
-    Ultraschall=4.7
+    Ultraschall=5.32
     Reaper=6.59
     Lua=5.3
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_WMF(integer VideoFormat, integer VideoCodec, integer VideoBitrate, integer AudioCodec, integer AudioBitrate, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_WMF(integer VideoFormat, integer VideoCodec, integer VideoBitrate, integer AudioCodec, integer AudioBitrate, integer WIDTH, integer HEIGHT, number FPS, boolean AspectRatio)</functioncall>
   <description>
     Returns the render-cfg-string for the WMF-Video-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected wmf-Video-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected WMF-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected WMF-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
       integer OutputFormat - the used OutputFormat
@@ -9759,7 +10380,11 @@ function ultraschall.CreateRenderCFG_WMF(OutputFormat, VideoCodec, VideoBitrate,
   if AspectRatio==true then AspectRatio=string.char(1) else AspectRatio=string.char(0) end
   
   return ultraschall.Base64_Encoder(" FMW"..OutputFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
-         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0\0\0\0\0\0")
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0\0\0\0\0\0"),
+         ultraschall.ConvertAscii2Hex(" FMW"..OutputFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0\0\0\0\0\0"),
+         " FMW"..OutputFormat.."\0\0\0"..VideoCodec.."\0\0\0"..VIDKBPS..AudioCodec.."\0\0\0"..AUDKBPS..
+         WIDTH..HEIGHT..FPS..AspectRatio.."\0\0\0\0\0\0\0\0"
 end
 
 CreateRenderCFG_WMF_Video=CreateRenderCFG_WMF -- look above for the actual function!!
@@ -10198,18 +10823,20 @@ function ultraschall.CreateRenderCFG_RAW(bitrate, write_sidecar_file)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>CreateRenderCFG_RAW</slug>
   <requires>
-    Ultraschall=5
+    Ultraschall=5.32
     Reaper=7.0
     Lua=5.4
   </requires>
-  <functioncall>string render_cfg_string = ultraschall.CreateRenderCFG_RAW(integer bitrate, boolean write_sidecar_file)</functioncall>
+  <functioncall>string render_cfg_string_base64, string render_cfg_string_hexstring, string render_cfg_string_unencoded = ultraschall.CreateRenderCFG_RAW(integer bitrate, boolean write_sidecar_file)</functioncall>
   <description>
     Returns the render-cfg-string for the RAW-PCM-format. You can use this in ProjectStateChunks, RPP-Projectfiles and reaper-render.ini
     
     Returns nil in case of an error
   </description>
   <retvals>
-    string render_cfg_string - the render-cfg-string for the selected RAW PCM-settings
+    string render_cfg_string_base64 - the render-cfg-string for the selected RAW-PCM-settings base64-encoded(use this for render-table-functions)
+    string render_cfg_string_hexstring - the render-cfg-string for the selected RAW-PCM-settings hex-string-encoded
+    string render_cfg_string_unencoded - the binary version of the render string, so you can reencode it into other means 
   </retvals>
   <parameters>
     integer bitrate - the bitrate 
@@ -10254,7 +10881,7 @@ function ultraschall.CreateRenderCFG_RAW(bitrate, write_sidecar_file)
   end
   if write_sidecar_file==false then option=option+64 end
   --print2(option)
-  return ultraschall.Base64_Encoder(" war"..string.char(bitrate)..string.char(option))
+  return ultraschall.Base64_Encoder(" war"..string.char(bitrate)..string.char(option)), ultraschall.ConvertAscii2Hex(" war"..string.char(bitrate)..string.char(option)), " war"..string.char(bitrate)..string.char(option)
 end
 
 function ultraschall.GetRenderCFG_Settings_RAW(rendercfg)

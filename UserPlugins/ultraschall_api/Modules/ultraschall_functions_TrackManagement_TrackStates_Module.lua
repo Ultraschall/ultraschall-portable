@@ -81,7 +81,7 @@ function ultraschall.GetTrackState_NumbersOnly(state, TrackStateChunk, functionn
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>GetTrackState_NumbersOnly</slug>
   <requires>
-    Ultraschall=4.00
+    Ultraschall=5.32
     Reaper=6.02
     Lua=5.3
   </requires>
@@ -117,6 +117,9 @@ function ultraschall.GetTrackState_NumbersOnly(state, TrackStateChunk, functionn
   if type(state)~="string" then ultraschall.AddErrorMessage(functionname, "state", "Must be a string", -7) return nil end
   if projectfilename_with_path==nil and ultraschall.IsValidTrackStateChunk(TrackStateChunk)==false then ultraschall.AddErrorMessage(functionname,"TrackStateChunk", "No valid TrackStateChunk!", -2) return nil end
   
+  --TrackStateChunk = ultraschall.StateChunkLayouter(TrackStateChunk)
+  TrackStateChunk2=TrackStateChunk:match("(.-)<ITEM")
+  if TrackStateChunk2~=nil then TrackStateChunk=TrackStateChunk2 end
   TrackStateChunk=TrackStateChunk:match(state.." (.-)\n")
   if TrackStateChunk==nil then return end
   local count, individual_values = ultraschall.CSV2IndividualLinesAsArray(TrackStateChunk, " ")

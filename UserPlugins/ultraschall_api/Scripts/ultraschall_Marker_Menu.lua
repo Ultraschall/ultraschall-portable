@@ -108,12 +108,12 @@ function main()
   end
   Retval=nil
   local X,Y=reaper.GetMousePosition()
-  local HWND_Focus=reaper.JS_Window_FromPoint(X,Y)
-  local MouseState=reaper.JS_Mouse_GetState(-1)
+  HWND_Focus=reaper.JS_Window_FromPoint(X,Y)
+  MouseState=reaper.JS_Mouse_GetState(-1)
   if HWND_Focus==HWND_timeline and MouseState~=0 and MouseState&16~=16 then    
     local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, X, X)
     reaper.BR_GetMouseCursorContext()
-    local Marker, Marker2 = ultraschall.GetMarkerByScreenCoordinates(X)    
+    Marker, Marker2 = ultraschall.GetMarkerByScreenCoordinates(X)    
     if Marker=="" then
       Marker, Marker2 = ultraschall.GetRegionByScreenCoordinates(X)
     end
@@ -125,7 +125,7 @@ function main()
       if MouseState&1==1 then 
         ultraschall.StoreTemporaryMarker(Marker2) 
       end
-      if MarkerMenu~=nil then        
+      if MarkerMenu~=nil then
         if ShowMarkerType_In_Menu==false then
           Markername=""
         else
@@ -134,7 +134,7 @@ function main()
         --for i=1, #MenuEntries do
           --print("A"..tostring(MenuEntries[i]).."A")
         --end
-        Retval = ultraschall.ShowMenu("Markermenu:", Markername..MarkerMenu, X, Y)
+        Retval = ultraschall.ShowMenu("", Markername..MarkerMenu, X, Y)
         if Retval~=-1 then 
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry", MenuEntries[Retval], false)
           reaper.SetExtState("ultraschall_api", "MarkerMenu_Entry_MarkerType", MarkerType, false)

@@ -264,12 +264,14 @@ reagirl.Gui_Open("ReaGirl_Settings", true, "ReaGirl Settings (v."..reagirl.GetVe
 --reagirl.Window_ForceSize_Maximum(355, 470) -- set the maximum size of the window
 
 
-reagirl.ReScale=1
+--reagirl.ReScale=1
 
 function main()
   reagirl.Gui_Manage()
+  --[[
   if reagirl.Key[1]==43 then reagirl.ReScale=reagirl.ReScale+1 end -- +
   if reagirl.Key[1]==45 then reagirl.ReScale=reagirl.ReScale-1 end -- -
+  --]]
   if B==true then
     reagirl.Elements.FocusedElement=i
     reagirl.Gui_ForceRefresh()
@@ -277,4 +279,4 @@ function main()
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end
 main()
---reaper.ShowConsoleMsg("Tudelu")
+
