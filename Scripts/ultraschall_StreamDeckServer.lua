@@ -24,6 +24,8 @@
 ################################################################################
 ]]
 --[[
+-- Alter Code zum Starten des StreamDecks. Wird der noch gebraucht?
+
 operationSystem = reaper.GetOS()
 
 if string.match(operationSystem, "OS") then
@@ -43,6 +45,7 @@ else
   return
 end
 --]]
+
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- send shortcuts from the streamdeck by setting the extstate via WebRC to

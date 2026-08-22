@@ -84,6 +84,8 @@ Section: 0
 --]]
 deferoffset=0.130 -- the offset of delay, introduced by the defer-management of Reaper. Maybe useless?
 
+reaper.set_action_options(3)
+
 if reaper.file_exists(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")==true then
   dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 else
