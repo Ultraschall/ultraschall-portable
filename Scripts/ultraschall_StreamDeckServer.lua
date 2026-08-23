@@ -87,14 +87,22 @@ function main()
   
   -- update StreamDeckAction-States and set them via extstate for retrieval in WebRC
   -- includes current toggle states of with SD-buttons-associated actions
-  CurStreamDeckActionStates=ultraschall.GetStreamDeckActions(NumberSDButtons)
+  CurStreamDeckActionStates, SD_Buttons=ultraschall.GetStreamDeckActions(NumberSDButtons)
   
   -- Check, if WebRC sent via Extstate, that a StreamDeck-button has been pressed and send
   -- corresponding local OSC-message as shortcut
   for i=1, NumberSDButtons do
     if reaper.GetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..i.." pressed")=="1" then
       reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..i.." pressed", "", false)
-      reaper.OscLocalMessageToHost("StreamDeckButton_"..index, 0)
+      local tts=string.gsub(SD_Buttons["StreamDeckButton_"..i],"%(Ultraschall%)", "")
+      tts=string.gsub(tts,"^Script:", "")
+      tts=string.gsub(tts,"^Custom:", "")
+      
+      -- output started action to screenreader, when the action itself doesn't send a message to screenreader
+      if reaper.osara_outputMessage~=nil and reaper.GetExtState("ultraschall TTS", "StreamDeckServer")=="true" then
+        reaper.osara_outputMessage(tts)
+      end
+      reaper.OscLocalMessageToHost("StreamDeckButton_"..i, 0)
     end
   end
   reaper.defer(main)

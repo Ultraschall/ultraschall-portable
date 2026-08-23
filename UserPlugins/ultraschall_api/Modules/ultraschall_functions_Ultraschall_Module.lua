@@ -1538,6 +1538,7 @@ function ultraschall.GetStreamDeckActions(num_sd_buttons)
   local OSC, Section, Unknown, AID, ToggleState, AddText
 
   if ultraschall.OSC_Data==nil then 
+    ultraschall.SD_Buttons={}
     ultraschall.OSC_Data={} 
     ultraschall.OSC_Data["counter"]=15 
   end
@@ -1584,6 +1585,8 @@ function ultraschall.GetStreamDeckActions(num_sd_buttons)
       ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." action description"]=Text
       ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." additional text"]=AddText
       ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." toggle state"]=ToggleState
+
+      ultraschall.SD_Buttons["StreamDeckButton_"..id]=Text
             
       reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." action command id", AID, false)
       reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." section", Section, false)
@@ -1602,5 +1605,5 @@ function ultraschall.GetStreamDeckActions(num_sd_buttons)
       reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..i.." toggle state", ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..i.." toggle state"], false)
      end
   end
-  return ultraschall.OSC_Data["StreamDeckButtons"]
+  return ultraschall.OSC_Data["StreamDeckButtons"], ultraschall.SD_Buttons
 end
