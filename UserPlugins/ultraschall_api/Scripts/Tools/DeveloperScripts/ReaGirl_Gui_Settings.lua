@@ -164,6 +164,8 @@ function SetUpNewGui()
   scaling_override=tonumber(reaper.GetExtState("ReaGirl", "scaling_override", value, true))
   if scaling_override==nil then scaling_override2=0 else scaling_override2=scaling_override end
   tab1.slider_scale = reagirl.Slider_Add(nil, nil, 295, "Scale Override", 110,  "Set the default scaling-factor for all ReaGirl-Gui-windows; 0, scaling depends automatically on the scaling-factor in the prefs or the presence of Retina/HiDPI.", "", 0, 8, 1, 0, 0, ScaleOverride, "Scale Override Slider")
+  
+  --reagirl.Slider_LinkToExtstate(tab1.highlighting, "ReaGirl", "scaling_override", 0, true, 1)
   reagirl.NextLine(15)
   
   -- [[ Blinking Drag-Destinations ]]
@@ -258,22 +260,31 @@ reagirl.Gui_AtEnter(button_apply_and_close)
 SetUpNewGui()
 color=40
 reagirl.Background_GetSetColor(true,color,color,color)
-reagirl.Gui_Open("ReaGirl_Settings", true, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 352, 580, nil, nil, nil)
+reagirl.Gui_Open("ReaGirl_Settings", false, "ReaGirl Settings (v."..reagirl.GetVersion()..")", "various settings for ReaGirl-Accessible Guis.", 352, 580, nil, nil, nil)
   
 --reagirl.Window_ForceSize_Minimum(355, 470) -- set the minimum size of the window
 --reagirl.Window_ForceSize_Maximum(355, 470) -- set the maximum size of the window
 
 
-reagirl.ReScale=1
+--reagirl.ReScale=1
 
 function main()
   reagirl.Gui_Manage()
+  --[[
   if reagirl.Key[1]==43 then reagirl.ReScale=reagirl.ReScale+1 end -- +
   if reagirl.Key[1]==45 then reagirl.ReScale=reagirl.ReScale-1 end -- -
+  --]]
   if B==true then
     reagirl.Elements.FocusedElement=i
     reagirl.Gui_ForceRefresh()
   end
+  scale_value=reagirl.Slider_GetValue(tab1.slider_scale)
+  if old_scale_value~=scale_value then
+    if scale_value==0 then scale_value="" end
+    reaper.SetExtState("ReaGirl", "scaling_override", scale_value, true)
+  end
+  old_scale_value=scale_value
+  
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end
 main()

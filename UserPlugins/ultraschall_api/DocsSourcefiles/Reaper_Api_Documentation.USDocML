@@ -48460,6 +48460,8 @@ Mespotine
             Causes gmem_read()/gmem_write() to read EEL2/JSFX/Video shared memory segment named by parameter. Set to empty string to detach. 6.20+: returns previous shared memory segment name.
 
             Must be called, before you can use a specific gmem-variable-index with gmem_write!
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <retvals>
             string former_attached_gmemname - if you change the attached-gmem from one to a new one, this will hold the name of the previous attached shared memory(gmem)
@@ -48495,6 +48497,8 @@ Mespotine
             Read (number) value from shared memory attached-to by gmem_attach(). index can be [0..1<<25).
 
             returns nil if not available
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <retvals>
             number retval - the stored number-value stored in gmem-variable with index
@@ -48531,6 +48535,8 @@ Mespotine
             Write (number) value to shared memory attached-to by gmem_attach(). index can be [0..1<<25).
 
             Before you can write into a currently unused variable with index "index", you must call gmem_attach first!
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <parameters>
             integer index - the index of the memory-variable to write to; index must be 0 and higher

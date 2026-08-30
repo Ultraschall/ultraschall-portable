@@ -102,6 +102,13 @@ end
 
 gfx.ext_retina=1
 reagirl={}
+reagirl.OS=reaper.GetOS():match("OS")
+if reagirl.OS~=nil then reagirl.OS="Mac"
+elseif reagirl.OS==nil then reagirl.OS=reaper.GetOS():match("Win")
+elseif reagirl.OS==nil then reagirl.OS="Linux" end
+
+reagirl.ReaperVersion=tonumber(reaper.GetAppVersion():match("(.-)/"))
+
 reagirl.Shortcut_Mode=10 -- mode: 10=inline shortcuts
                          --       0=no shortcuts
                          --       1=send shortcut to previously focused Reaper/Midi-Editor/Media-Explorer-window
@@ -471,7 +478,7 @@ reagirl.UI_Element_NextLineX=10 -- don't change
 reagirl.Font_Size=15
 
 if reaper.GetExtState("ReaGirl", "Font_Face")=="" then
-  if reaper.GetOS()=="Other" then
+  if reagirl.OS=="Linux" then
     reagirl.Font_Face="Liberation Sans"
   else
     reagirl.Font_Face="Arial"
@@ -4031,7 +4038,7 @@ function reagirl.Window_Open(...)
 
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
-    if reaper.GetOS():match("OS")~=nil then 
+    if reagirl.OS=="Mac" then 
       parms[2]=parms[2]*2
       parms[3]=parms[3]*2
       _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(parms[6]+parms[3]))
@@ -4068,7 +4075,7 @@ function reagirl.Window_Open(...)
       
       parms[2]=parms[2]/scalex
       parms[3]=parms[3]/scaley
-      if reaper.GetOS():match("OS")~=nil then 
+      if reagirl.OS=="Mac" then 
         _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(temp_y+parms[3]))
       end
       gfx.init(table.unpack(parms))
@@ -4097,7 +4104,7 @@ function reagirl.Window_Open(...)
     end
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
-    if reaper.GetOS():match("OS")~=nil then 
+    if reagirl.OS=="Mac" then 
       _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, parms[6]+parms[3])
     end
     local B=gfx.init(table.unpack(parms)) 
@@ -4113,7 +4120,7 @@ function reagirl.Window_Open(...)
       
       parms[2]=parms[2]/scalex
       parms[3]=parms[3]/scaley
-      if reaper.GetOS():match("OS")~=nil then 
+      if reagirl.OS=="Mac" then 
         _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, temp_y+parms[3])
       end
       gfx.init(table.unpack(parms))
@@ -4240,7 +4247,7 @@ function reagirl.Window_SetBorderless()
   local width=gfx.w
   local retval=reaper.JS_Window_SetStyle(reagirl.GFX_WindowHWND, toggle)
   if toggle=="POPUP" then
-    if reaper.GetOS():match("Win")~=nil then
+    if reagirl.OS=="Win" then
       gfx.init("", gfx.w-14, gfx.h-37)
     end
   end
@@ -5066,7 +5073,7 @@ function reagirl.SetFont(idx, fontface, size, flags, scale_override)
   end
   
   --local font_size = size * (1+reagirl.Window_CurrentScale)*0.5
-  if reaper.GetOS():match("OS")~=nil then size=math.floor(size) end--*0.8) end
+  if reagirl.OS=="Mac" and reagirl.ReaperVersion<7.70 then size=math.floor(size*0.8) end
   gfx.setfont(idx, fontface, size, flags)
   return size
 end
@@ -5156,6 +5163,8 @@ function reagirl.Gui_Open(name, restore_old_window_state, title, description, w,
   if reaper.GetExtState("ReaGirl", "osara_enable_accmessage")~="false" and reaper.GetExtState("ReaGirl", "osara_move_mouse")~="false" then
     description=description.." When tabbing, mouse moves to tabbed ui-element."
   end
+  
+  reagirl.restore_old_window_state=restore_old_window_state
   
   if restore_old_window_state==false or (restore_old_window_state==true and reaper.GetExtState("Reagirl_Window_"..name, "stored")=="") then
     reagirl.Window_name=name
@@ -5277,13 +5286,15 @@ function reagirl.Gui_Close()
 end
 
 function reagirl.UnRegisterWindow()
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "stored", "true", true)
-  
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "x", reagirl.Window_Actual_X, true)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "y", reagirl.Window_Actual_Y, true)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "w", reagirl.Window_Actual_W, true)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "h", reagirl.Window_Actual_H, true)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "dock", reagirl.Window_Actual_Dock, true)
+  if reagirl.restore_old_window_state~=false then
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "stored", "true", true)
+    
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "x", reagirl.Window_Actual_X, true)
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "y", reagirl.Window_Actual_Y, true)
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "w", reagirl.Window_Actual_W, true)
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "h", reagirl.Window_Actual_H, true)
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "dock", reagirl.Window_Actual_Dock, true)
+  end
   
   local instances=reaper.GetExtState("ReaGirl", "WindowInstances").."\n"
   local newinstance=""
@@ -5297,15 +5308,15 @@ end
 
 function reagirl.AtExit()
   reagirl.Ext_IsAnyReaGirlGuiHovered()
-  reagirl.UnRegisterWindow("PUH")
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name, "open", "", false)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "stored", "", true)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "x", "", false)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "y", "", false)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "w", "", false)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "h", "", false)
-  reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "dock", "", false)
-  reaper.SetExtState("ReaGirl", "ProcessTime_"..reagirl.Gui_ScriptInstance, "", false)
+  reagirl.UnRegisterWindow()
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name, "open", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "stored", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "x", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "y", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "w", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "h", false)
+  reaper.DeleteExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "dock", false)
+  reaper.DeleteExtState("ReaGirl", "ProcessTime_"..reagirl.Gui_ScriptInstance, false)
   gfx.quit()
   reagirl.IsWindowOpen_attribute=false
 end
@@ -6878,7 +6889,7 @@ function reagirl.Gui_Manage(keep_running)
   end
   --]]
   if reaper.GetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "stored")~="true" then
-    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "stored", "true", true)
+    reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "stored", "true", false)
   end
   if reaper.GetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "x")~=tostring(x) then
     reaper.SetExtState("Reagirl_Window_"..reagirl.Window_name.."-"..reagirl.Gui_ScriptInstance, "x", x, false)
@@ -6901,7 +6912,7 @@ function reagirl.Gui_Manage(keep_running)
     if reagirl.Font_Face~=reaper.GetExtState("ReaGirl", "Font_Face") and reagirl.Font_Face~="Arial" and reagirl.Font_Face~="Liberation Sans" then
       reagirl.Gui_ForceRefresh(9855.1)
     end
-    if reaper.GetOS()=="Other" then
+    if reagirl.OS=="Linux" then
       reagirl.Font_Face="Liberation Sans"
     else
       reagirl.Font_Face="Arial"
@@ -8398,7 +8409,7 @@ function reagirl.UI_Element_SetFocusRect(override, x, y, w, h)
     sets the rectangle for focused ui-element. Can be used for custom ui-element, who need to control the focus-rectangle due some of their own ui-elements incorporated, like options in radio-buttons, etc.
   </description>
   <parameters>
-    optional boolean override - I forgot...
+    optional boolean override - I forgot...; set to false
     integer x - the x-position of the focus-rectangle; negative, anchor to the right windowborder
     integer y - the y-position of the focus-rectangle; negative, anchor to the bottom windowborder
     integer w - the width of the focus-rectangle; negative, anchor to the right windowborder
@@ -13876,7 +13887,7 @@ function reagirl.Button_Draw(element_id, selected, hovered, clicked, mouse_cap, 
     reagirl.RoundRect(x+dpi_scale, y+dpi_scale, w-dpi_scale, h, (radius-1) * dpi_scale, 1, 1, element_storage["square_topleft"], element_storage["square_bottomleft"], element_storage["square_topright"], element_storage["square_bottomright"])
     
     if element_storage["IsDisabled"]==false then
-      if reaper.GetOS():match("OS")~=nil then offset=1 end
+      if reagirl.OS=="Mac" then offset=1 end
       gfx.x=x+(w-sw)/2+2+scale+dpi_scale
       gfx.y=y+dpi_scale+(h-sh)/2+scale+dpi_scale+dpi_scale
       gfx.set(reagirl.Colors.Buttons_TextBG_r, reagirl.Colors.Buttons_TextBG_g, reagirl.Colors.Buttons_TextBG_b)
@@ -13903,7 +13914,7 @@ function reagirl.Button_Draw(element_id, selected, hovered, clicked, mouse_cap, 
     
     local offset=0
     if element_storage["IsDisabled"]==false then
-      if reaper.GetOS():match("OS")~=nil then offset=1 end
+      if reagirl.OS=="Mac" then offset=1 end
       gfx.x=x+(w-sw)/2+1+dpi_scale
       gfx.y=y+dpi_scale+(h-sh)/2
       gfx.set(reagirl.Colors.Buttons_TextBG_r, reagirl.Colors.Buttons_TextBG_g, reagirl.Colors.Buttons_TextBG_b)
@@ -13914,7 +13925,7 @@ function reagirl.Button_Draw(element_id, selected, hovered, clicked, mouse_cap, 
       gfx.set(reagirl.Colors.Buttons_TextFG_r, reagirl.Colors.Buttons_TextFG_g, reagirl.Colors.Buttons_TextFG_b)
       gfx.drawstr(element_storage["Name"])
     else
-      if reaper.GetOS():match("OS")~=nil then offset=1 end
+      if reagirl.OS=="Mac" then offset=1 end
       
       gfx.x=x+(w-sw)/2+1+dpi_scale
       gfx.y=y+(h-sh)/2+1+offset-1
@@ -15150,7 +15161,7 @@ function reagirl.ToolbarButton_Draw(element_id, selected, hovered, clicked, mous
     
     local offset=0
     gfx.x=x+(w-sw)/2+1
-    if reaper.GetOS():match("OS")~=nil then offset=1 end
+    if reagirl.OS=="Mac" then offset=1 end
     gfx.y=y+(h-sh)/2-dpi_scale
   end
 end

@@ -431,22 +431,39 @@ Chapter images aus chap_-Attributen rausnehmen. Das sollen Content Marker übern
 
 ## Ultraschall Framework - Changelog
 
-### 5.33 - " - " - XX of XXXX XXXX
+### 5.33 - "Take That - Relight my Fire" - XX of XXXX XXXX
 
-Has now 1944 functions, with 5 new ones
+Has now 1944 functions, with X new ones
 
 **new in this release:**  
 
-TODO: When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames.
+TODO: 
+- When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames.
+- ReaGirl on Retina-Macs: 
+  - Fensterposition wird nicht korrekt gemerkt, wenn remember window-position auf true gestellt ist. Die Fenster wandern Stück für Stück nach oben.
+    Vermutung: beim Speichern der Fensterposition vergessen wir auf dem Mac die Höhe des Fensters von der Y-position abzuziehen, so dass es da zu nem Offset kommt.
+    Note: wird die X-Koordinate auch korrekt berechnet? Muss ich da auch was ändern, weil die Retina-Fenster in der Größe nochmal angepasst werden oder läuft das korrekt -> Testen und fixen evtl.
+  - Bei Window_Open x=nil und y=nil wird das Fenster nicht sauber positioniert in der Mitte auf der y-Position. Als ob da was falsch kalkuliert wird.
+    Vermutung: ich positioniere die y-Position korrekt VOR der Mac-Y-Koordinatenanpassung. Dadurch wandert das Fenster nach oben.
+    Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH
+    der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss.
+    ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert.
   
 #### New features in 5.33  
   - Actions: ShowActionList - shows the actionlist and allows setting the filter
+  - ReaGirl: AutoPosition\_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position
+  - StreamDeck: StreamDeck\_GetActions - only relevant for Ultraschall: returns the actions associated with shortcuts StreamDeckButton_001 to StreamDeckButton_255
+  - StreamDeck: StreamDeck\_GetSet_Parameters - only relevant for Ultraschall: gets/sets a parameter of a certain StreamDeckButton-shortcut
+  - StreamDeck: StreamDeck\_GetAllParametersForThisScript - only relevant for Ultraschall; gets all parameters stored for a certain StreamDeckButton-shortcut that ran the current script
+  
 
 #### Changes from 5.32 to 5.33
   - HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -> fixed
   - MediaItems: InsertMediaItemFromFile - length=-1 didn't set the edit-cursor to the end of the inserted item; retval endposition was only returning length of inserted item, added missing info to the docs; when edit-cursor=2 and offset was set, the position wasn't at the end of the item -> fixed
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - created additional undo points -> fixed
   - ReaGirl: UI\_Element\_SetFocused - crashed, when Gui\_Manage hasn't been used yet -> fixed
+  - ReaGirl: Gui\Open - stored window dimensions even when storing it was disabled(though didn't restore it) -> fixed
+  - ReaGirl: General - stored debug-information into reaper-exstate.ini -> fixed
   
 ---
 
@@ -460,7 +477,7 @@ Has now 1944 functions, with 5 new ones
   It's now possible to get/set the color of the label.
   
   - **Buttons**  
-  It's now optionally possible to set width and height of a button. For like buttons spanneing the entire width of a window.
+  It's now optionally possible to set width and height of a button. For buttons spanning the entire width of a window.
   
   - **Metadata Extractor**
   Supports now FLAC for cover images and optionally not saving the cover-image.  

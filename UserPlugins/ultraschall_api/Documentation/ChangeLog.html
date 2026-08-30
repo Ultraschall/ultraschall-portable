@@ -30,7 +30,33 @@
         </div>
       
           <div class="ch"><p></p>
+<p>TODO: speichere mal die mouse-states in Variablen. So dass man dragged Koordinaten beispielsweise nach dem Dragging noch abrufen kann um Dinge zu tun. Mal durchdenken, was für Implikationen das hat für Accessibility....</p>
+<p>Podmeta: chap<em>next</em>chapter<em>numbers and chap</em>previous<em>chapter</em>numbers Make them numbered, like chap<em>previous</em>chapter<em>1 to chap</em>previous<em>chapter</em>X. Also include chap<em>previous</em>chapter<em>description</em>X that describes, what the next/previous chapter is all about.</p>
+<p>Add Contentmarkers, like cntm<em>X</em>position - position of the content cntm<em>X</em>mimetype - the type of the content(mp3, mp4, gif, jpg, png are allowed) cntm<em>X</em>description - the description of the marker cntm<em>X</em>content - the binary content of the marker(Base64) cntm<em>X</em>license - the license of the content cntm<em>X</em>author - the author of the content cntm<em>X</em>url - the url, where the content has been gotten from Contentmarkers allow embedding other content into a podcast, that can optionally be played. Chapterimages can be stored that way, but also other media types, which is more flexible than ID3-chapter-images.</p>
+<p>Chapter images aus chap_-Attributen rausnehmen. Das sollen Content Marker übernehmen.</p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>5.33 - "Take That - Relight my Fire" - XX of XXXX XXXX</h3>
+<p>Has now 1944 functions, with X new ones</p>
+<p><strong>new in this release:</strong></p>
+<p>TODO: - When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames. - ReaGirl on Retina-Macs: - Fensterposition wird nicht korrekt gemerkt, wenn remember window-position auf true gestellt ist. Die Fenster wandern Stück für Stück nach oben. Vermutung: beim Speichern der Fensterposition vergessen wir auf dem Mac die Höhe des Fensters von der Y-position abzuziehen, so dass es da zu nem Offset kommt. Note: wird die X-Koordinate auch korrekt berechnet? Muss ich da auch was ändern, weil die Retina-Fenster in der Größe nochmal angepasst werden oder läuft das korrekt -&gt; Testen und fixen evtl. - Bei Window_Open x=nil und y=nil wird das Fenster nicht sauber positioniert in der Mitte auf der y-Position. Als ob da was falsch kalkuliert wird. Vermutung: ich positioniere die y-Position korrekt VOR der Mac-Y-Koordinatenanpassung. Dadurch wandert das Fenster nach oben. Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss. ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert.</p>
+<h4>New features in 5.33</h4>
+<ul>
+<li>Actions: ShowActionList - shows the actionlist and allows setting the filter</li>
+<li>ReaGirl: AutoPosition_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position</li>
+<li>StreamDeck: StreamDeck_GetActions - only relevant for Ultraschall: returns the actions associated with shortcuts StreamDeckButton<em>001 to StreamDeckButton</em>255</li>
+<li>StreamDeck: StreamDeck_GetSet_Parameters - only relevant for Ultraschall: gets/sets a parameter of a certain StreamDeckButton-shortcut</li>
+<li>StreamDeck: StreamDeck_GetAllParametersForThisScript - only relevant for Ultraschall; gets all parameters stored for a certain StreamDeckButton-shortcut that ran the current script</li>
+</ul>
+<h4>Changes from 5.32 to 5.33</h4>
+<ul>
+<li>HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -&gt; fixed</li>
+<li>MediaItems: InsertMediaItemFromFile - length=-1 didn't set the edit-cursor to the end of the inserted item; retval endposition was only returning length of inserted item, added missing info to the docs; when edit-cursor=2 and offset was set, the position wasn't at the end of the item -&gt; fixed</li>
+<li>MediaItem_Takes: GetTakeSourcePosByProjectPos - created additional undo points -&gt; fixed</li>
+<li>ReaGirl: UI_Element_SetFocused - crashed, when Gui_Manage hasn't been used yet -&gt; fixed</li>
+<li>ReaGirl: Gui\Open - stored window dimensions even when storing it was disabled(though didn't restore it) -&gt; fixed</li>
+<li>ReaGirl: General - stored debug-information into reaper-exstate.ini -&gt; fixed</li>
+</ul>
+<hr />
 <h3>5.32 - "Birth Control - No Drugs" - 21st of September 2025</h3>
 <p>Has now 1944 functions, with 5 new ones</p>
 <p><strong>new in this release:</strong></p>
@@ -38,7 +64,7 @@
 <li><p><strong>Labels</strong><br />
 It's now possible to get/set the color of the label.</p></li>
 <li><p><strong>Buttons</strong><br />
-It's now optionally possible to set width and height of a button. For like buttons spanneing the entire width of a window.</p></li>
+It's now optionally possible to set width and height of a button. For buttons spanning the entire width of a window.</p></li>
 <li><p><strong>Metadata Extractor</strong> Supports now FLAC for cover images and optionally not saving the cover-image.</p></li>
 </ul>
 <h4>New features in 5.32</h4>
