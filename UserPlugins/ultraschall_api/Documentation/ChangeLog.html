@@ -30,7 +30,137 @@
         </div>
       
           <div class="ch"><p></p>
+<p>TODO: speichere mal die mouse-states in Variablen. So dass man dragged Koordinaten beispielsweise nach dem Dragging noch abrufen kann um Dinge zu tun. Mal durchdenken, was für Implikationen das hat für Accessibility....</p>
+<p>Podmeta: chap<em>next</em>chapter<em>numbers and chap</em>previous<em>chapter</em>numbers Make them numbered, like chap<em>previous</em>chapter<em>1 to chap</em>previous<em>chapter</em>X. Also include chap<em>previous</em>chapter<em>description</em>X that describes, what the next/previous chapter is all about.</p>
+<p>Add Contentmarkers, like cntm<em>X</em>position - position of the content cntm<em>X</em>mimetype - the type of the content(mp3, mp4, gif, jpg, png are allowed) cntm<em>X</em>description - the description of the marker cntm<em>X</em>content - the binary content of the marker(Base64) cntm<em>X</em>license - the license of the content cntm<em>X</em>author - the author of the content cntm<em>X</em>url - the url, where the content has been gotten from Contentmarkers allow embedding other content into a podcast, that can optionally be played. Chapterimages can be stored that way, but also other media types, which is more flexible than ID3-chapter-images.</p>
+<p>Chapter images aus chap_-Attributen rausnehmen. Das sollen Content Marker übernehmen.</p>
 <h2>Ultraschall Framework - Changelog</h2>
+<h3>5.33 - "Take That - Relight my Fire" - XX of XXXX XXXX</h3>
+<p>Has now 1944 functions, with X new ones</p>
+<p><strong>new in this release:</strong></p>
+<p>TODO: - When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames. - ReaGirl on Retina-Macs: - Fensterposition wird nicht korrekt gemerkt, wenn remember window-position auf true gestellt ist. Die Fenster wandern Stück für Stück nach oben. Vermutung: beim Speichern der Fensterposition vergessen wir auf dem Mac die Höhe des Fensters von der Y-position abzuziehen, so dass es da zu nem Offset kommt. Note: wird die X-Koordinate auch korrekt berechnet? Muss ich da auch was ändern, weil die Retina-Fenster in der Größe nochmal angepasst werden oder läuft das korrekt -&gt; Testen und fixen evtl. - Bei Window_Open x=nil und y=nil wird das Fenster nicht sauber positioniert in der Mitte auf der y-Position. Als ob da was falsch kalkuliert wird. Vermutung: ich positioniere die y-Position korrekt VOR der Mac-Y-Koordinatenanpassung. Dadurch wandert das Fenster nach oben. Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss. ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert.</p>
+<h4>New features in 5.33</h4>
+<ul>
+<li>Actions: ShowActionList - shows the actionlist and allows setting the filter</li>
+<li>ReaGirl: AutoPosition_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position</li>
+<li>StreamDeck: StreamDeck_GetActions - only relevant for Ultraschall: returns the actions associated with shortcuts StreamDeckButton<em>001 to StreamDeckButton</em>255</li>
+<li>StreamDeck: StreamDeck_GetSet_Parameters - only relevant for Ultraschall: gets/sets a parameter of a certain StreamDeckButton-shortcut</li>
+<li>StreamDeck: StreamDeck_GetAllParametersForThisScript - only relevant for Ultraschall; gets all parameters stored for a certain StreamDeckButton-shortcut that ran the current script</li>
+</ul>
+<h4>Changes from 5.32 to 5.33</h4>
+<ul>
+<li>HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -&gt; fixed</li>
+<li>MediaItems: InsertMediaItemFromFile - length=-1 didn't set the edit-cursor to the end of the inserted item; retval endposition was only returning length of inserted item, added missing info to the docs; when edit-cursor=2 and offset was set, the position wasn't at the end of the item -&gt; fixed</li>
+<li>MediaItem_Takes: GetTakeSourcePosByProjectPos - created additional undo points -&gt; fixed</li>
+<li>ReaGirl: UI_Element_SetFocused - crashed, when Gui_Manage hasn't been used yet -&gt; fixed</li>
+<li>ReaGirl: Gui\Open - stored window dimensions even when storing it was disabled(though didn't restore it) -&gt; fixed</li>
+<li>ReaGirl: General - stored debug-information into reaper-exstate.ini -&gt; fixed</li>
+</ul>
+<hr />
+<h3>5.32 - "Birth Control - No Drugs" - 21st of September 2025</h3>
+<p>Has now 1944 functions, with 5 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>Labels</strong><br />
+It's now possible to get/set the color of the label.</p></li>
+<li><p><strong>Buttons</strong><br />
+It's now optionally possible to set width and height of a button. For buttons spanning the entire width of a window.</p></li>
+<li><p><strong>Metadata Extractor</strong> Supports now FLAC for cover images and optionally not saving the cover-image.</p></li>
+</ul>
+<h4>New features in 5.32</h4>
+<ul>
+<li>ReaGirl: Inputbox_GetTextLength - gets the length of the currently entered text of an inputbox</li>
+<li>ReaGirl: Inputbox_SetCursorOffset - sets the cursor-offset of an inputbox</li>
+<li>ReaGirl: Inputbox_SetSelectedText - sets the text-selection of an inputbox</li>
+<li>ReaGirl: Label_GetColor - gets the color of a label</li>
+<li>ReaGirl: Label_SetColor - sets the color of a label</li>
+</ul>
+<h4>Changes from 5.31 to 5.32</h4>
+<ul>
+<li>MarkerMenu: menus - don't show a title anymore in the menu</li>
+<li>Markers: AddShownoteMarker - solidified the shownote-marker-color</li>
+<li>Menu: ShowMenu - doesn't show helper window anymore on Windows; coordinates are now automatically close at the mouse-cursor</li>
+<li>Metadata: Metadata_ExtractCover - allows now not saving the cover-file; returns now the file-type and the cover-image as binary string; supports now flac as well<br />
+</li>
+<li>ReaGirl: Button_Add - added new parameters mode, width and height; width and height can be anchored to the right and bottom edge of the window</li>
+<li>ReaGirl: Inputbox_GetSelectedText - corrected docs; added new retval for length of the selected text</li>
+<li>ReaGirl: Inputbox_SetText - allows now setting an offset and the length to insert/replace text of an inputbox</li>
+<li>ReaGirl: Inputboxes - removed debug-code; added defaut-context-menu with options for cut/copy/paste and select all text; paste erased all text -&gt; fixed</li>
+<li>ReaGirl: Label_Add - allows now for setting the font-size of a label</li>
+<li>ReaGirl: Settings<em>Global</em>GetSet - added new option Debug<em>Show</em>Gui<em>And</em>UI<em>Names, Window</em>Dragging; returns now nil in case of an error</li>
+<li>Rendering: CreateNewRenderTable - some parameters were not correctly set into the RenderTable -&gt; fixed(thanks to Aurelien)</li>
+<li>Rendering: CreateRenderCFG_GIF - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_LCF - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_WebM_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MKV_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_QTMOVMP4_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_AVI_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MP4MAC_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_M4AMAC - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MOVMAC_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_Opus - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_OGG - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_DDP - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_FLAC - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_WAVPACK - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MP3MaxQuality - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MP3VBR - returns now the render-cfg-string as hex-string and unencoded render-string as well</li>
+<li>Rendering: CreateRenderCFG_MP3ABR - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_MP3CBR - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_AIFF - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_AudioCD - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_CAF - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_MPEG1_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_MPEG2_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_FLV_Video - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_WMF - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>Rendering: CreateRenderCFG_RAW - returns now the render-cfg-string as hex-string and unencoded render-string as well<br />
+</li>
+<li>TrackStates: GetTrackState_NumbersOnly - had problems with differen statechunk-attributes of the same name, like ID -&gt; fixed</li>
+</ul>
+<hr />
+<h3>5.31 - "Herbie Hancock - Hang up your hang ups" - 13th of June 2025</h3>
+<p>Has now 1908 functions, with 4 new ones</p>
+<p><strong>new in this release:</strong></p>
+<ul>
+<li><p><strong>PostProcessing</strong><br />
+All new post-processing features are now supported by the rendering-functions.</p></li>
+<li><p><strong>ReaGirl</strong><br />
+UI-elements now have their own ext-state, which can be used to store metadata with a ui-element</p></li>
+</ul>
+<h4>New features in 5.31</h4>
+<ul>
+<li>ProjectManagement: GetProject_Render_Trim - gets the trim/pad-settings of a project/projectstatechunk</li>
+<li>ProjectManagement: SetProject_Render_Trim - sets the trim/pad-settings of a project/projectstatechunk</li>
+<li>ReaGirl: UI_Element_GetSetExtState - gets/sets additional string-data to a ui-element</li>
+<li>ReaGirl: UI_Element_GetSetIdentifier - gets/sets the unique identifier of a ui-element</li>
+</ul>
+<h4>Changes from 5.3 to 5.31</h4>
+<ul>
+<li>DeveloperTools: Create_New_Script_With_Dialog - shows now resolved script-filename; allows now subfolders in scripts-folder to be added; fixed tooltip</li>
+<li>HelperFunctions: ShowMenu - overwrote the values in gfx.x and gfx.y -&gt; fixed</li>
+<li>ProjectManagement: SetProject_Render_Normalize - didn't correctly store the normalize-values into the project/projectstatechunk -&gt; fixed</li>
+<li>Rendering: ApplyRenderTable_Project - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender; fixed issues with some normalization-attributes</li>
+<li>Rendering: AddRenderPreset - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender, FadeIn/Out</li>
+<li>Rendering: ApplyRenderTable_ProjectFile - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender; fixed issues with some normalization-attributes</li>
+<li>Rendering: CreateNewRenderTable - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender</li>
+<li>Rendering: GetRenderTable_Project - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender</li>
+<li>Rendering: GetRenderTable_ProjectDefaults - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender</li>
+<li>Rendering: GetRenderTable_ProjectFile - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender</li>
+<li>Rendering: GetRenderPreset_RenderTable - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender; fixed various issues with some preset names and settings</li>
+<li>Rendering: SetRenderPreset - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender, FadeIn/Out</li>
+<li>Rendering: IsValidRenderTable - supports now attributes PostProcessingEnabled, PadStartWithSilence, PadStartWithSilenceSeconds, PadEndWithSilence, PadEndWithSilenceSeconds, AdjustMonoFiles, AdjustMonoFilesBy, TrimLeadingSilence, TrimLeadingSilenceDB, TrimTrailingSilence, TrimTrailingSilenceDB, Normalize_Only_Files_Too_Quiet, ParallelRender</li>
+</ul>
+<hr />
 <h3>5.3 - "Spice Girls - Too Much" - 12th of May 2025</h3>
 <p>Has now 1904 functions, with 46 new ones</p>
 <p><strong>new in this release:</strong></p>
@@ -114,14 +244,14 @@ As usual ;)</p></li>
 <li>ReaGirl: Tooltips - the meaning_ofUIElement is now in the first line, the info Has contextmenu, draggable and Allows dropping of files is now in the second line. Looks more clean that way.</li>
 <li>Rendering: AddRenderPreset - improved error-handling when presets already exist</li>
 <li>Rendering: SetRenderPreset - didn't accept all preset-names, should be fixed now - thanks to MountWest</li>
-<li>Rendering: ApplyRenderTable_Project - added new attributes ReturnToDialog, SaveOutfile</li>
-<li>Rendering: CreateNewRenderTable - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveOutfile</li>
+<li>Rendering: ApplyRenderTable_Project - added new attributes ReturnToDialog, SaveRenderStatsFile</li>
+<li>Rendering: CreateNewRenderTable - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile</li>
 <li>Rendering: GetRender_SaveRenderStats - added combined/per rendered file-options; didn't return correct values when render to file-dialog was closed -&gt; fixed</li>
-<li>Rendering: GetRenderTable_Project - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveOutfile</li>
-<li>Rendering: GetRenderTable_ProjectDefaults - added new attributes ReturnToDialog, SaveOutfile</li>
+<li>Rendering: GetRenderTable_Project - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile</li>
+<li>Rendering: GetRenderTable_ProjectDefaults - added new attributes ReturnToDialog, SaveRenderStatsFile</li>
 <li>Rendering: DeleteRenderPreset_Bounds - didn't accept all preset-names, should be fixed now - thanks to MountWest</li>
 <li>Rendering: DeleteRenderPreset_FormatOptions - didn't accept all preset-names, should be fixed now - thanks to MountWest</li>
-<li>Rendering: IsValidRenderTable - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveOutfile</li>
+<li>Rendering: IsValidRenderTable - added new attributes Preserve_Start_Offset, Preserve_Metadata, ReturnToDialog, SaveRenderStatsFile</li>
 <li>Rendering: SetRender_SaveRenderStats - added combined/per rendered file-options</li>
 </ul>
 <hr />
@@ -392,7 +522,7 @@ Functions to get the take-position at a certain project position and the project
 <li>ReaGirl: UI_Element_Last_Element_Current_Position - Returns the x and y position as well as width and height of the last added ui-element.</li>
 <li>ReaGirl: UI_Element_Remove - Removes a ui-element.</li>
 <li>ReaGirl: UI_Element_SetFocusRect - sets the rectangle for focused ui-element. Can be used for custom ui-element, who need to control the focus-rectangle due some of their own ui-elements incorporated, like options in radio-buttons, etc.</li>
-<li>ReaGirl: UI_Element_SetFocused - Set an ui-element focused.</li>
+<li>ReaGirl: UI_Element_SetFocused - Set a ui-element focused.</li>
 <li>ReaGirl: UI_Element_SetHiddenFromTable - Set ui-elements stored in a table to hidden or visible.</li>
 <li>ReaGirl: UI_Elements_OutsideWindow - returns, if any of the gui-elements are outside of the window and by how much.</li>
 <li>ReaGirl: Window_ForceSize_Maximum - Sets a maximum window size that will be enforced by ReaGirl.</li>

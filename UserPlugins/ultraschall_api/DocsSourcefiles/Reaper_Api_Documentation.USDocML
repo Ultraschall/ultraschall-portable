@@ -1407,8 +1407,8 @@
             Reaper=7.20
         </requires>
         <description prog_lang="*">
-      Discouraged, since it's inefficiently coded. For new code, do it the following way:
-      Get the MediaItems using GetMediaItem and check, if it's selected with GetMediaItemInfo_Value and B_UISEL in a loop. Count, how often B_UISEL==1
+          Discouraged, since it's inefficiently coded. For new code, do it the following way:
+          Get the MediaItems using GetMediaItem and check, if it's selected with GetMediaItemInfo_Value and B_UISEL in a loop. Count, how often B_UISEL==1
       
             count the number of selected items in the project (proj=0 for active project)
         </description>
@@ -7212,6 +7212,8 @@
         </requires>
         <description prog_lang="*">
             Get text-based metadata from a media file for a given identifier. Call with identifier="" to list all identifiers contained in the file, separated by newlines. May return "[Binary data]" for metadata that REAPER doesn't handle.
+            
+            Note: for chapter-markers, convert the time into a number and mutiply it by 0.001 to get the correct seconds. That way you can convert the time with format_timestr.
         </description>
         <parameters>
             PCM_source mediaSource - the PCM-source of a file, whose metadata you want to get
@@ -9861,7 +9863,7 @@
         <functioncall prog_lang="lua">number value = reaper.GetSetProjectInfo(ReaProject project, string desc, number value, boolean is_set)</functioncall>
         <functioncall prog_lang="python">Float retval = RPR_GetSetProjectInfo(ReaProject project, String desc, Float value, Boolean is_set)</functioncall>
         <requires>
-            Reaper=7.37
+            Reaper=7.39
         </requires>
         <description>
             Get or set project information.
@@ -9916,7 +9918,7 @@
               &4=dither stems, 
               &8=noise shaping on stems                
             RENDER_NORMALIZE: 
-              &;1=enable, (&;14==0)=LUFS-I, (&;14==2)=RMS, (&;14==4)=peak, (&;14==6)=true peak, (&;14==8)=LUFS-M max, (&;14==10)=LUFS-S max,
+              &1=enable, (&14==0)=LUFS-I, (&14==2)=RMS, (&14==4)=peak, (&14==6)=true peak, (&14==8)=LUFS-M max, (&14==10)=LUFS-S max,
               &16=Adjust mono files by an additional-checkbox(see &524288)
               &64=enable brickwall limit, 
               &128=brickwall limit true peak, 
@@ -9928,8 +9930,9 @@
               &4128=32 = normalize stems as if files play together (common gain), 
               &4128=4096 = normalize to loudest file
               &4128=4128 = normalize as if files play together
-              &524288=0 - adjust mono media additional -3dB; =524288 - adjust mono media additional +3dB
-              &(1<<<16)=pad start with silence, 
+              &262144=0 - render post-processing options-on; &262144=262144, render post-processing options-off
+              &524288=0 - adjust mono media additional -3dB; &524288=524288 - adjust mono media additional +3dB
+              &(1<<16)=pad start with silence, 
               &(2<<16)=pad end with silence, 
               &(4<<16)=disable all render postprocessing, 
               &(32<<16)=limit as if files play together
@@ -9941,8 +9944,8 @@
             RENDER_FADEOUTSHAPE: render fade-out shape
             RENDER_PADSTART: pad render start with silence (0.001 means 1ms, requires RENDER_NORMALIZE&amp;(1&lt;&lt;16))
             RENDER_PADEND: pad render end with silence (0.001 means 1ms, requires RENDER_NORMALIZE&amp;(2&lt;&lt;16))
-            RENDER_TRIMSTART: trim start threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB
-            RENDER_TRIMEND: trim end threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB
+            RENDER_TRIMSTART: trim start threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB; requires RENDER_NORMALIZE&16384
+            RENDER_TRIMEND: trim end threshold peak; use ultraschall.MKVOL2DB() and ultraschall.DB2MKVOL() to convert it from/to dB; requires RENDER_NORMALIZE&32768
             PROJECT_SRATE : samplerate (ignored unless PROJECT_SRATE_USE set)  
             PROJECT_SRATE_USE : set to 1 if project samplerate is used  
         </description>
@@ -17665,6 +17668,42 @@
         <changelog>
         </changelog>
     </US_DocBloc>
+    
+    <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+        <slug>ResolveWildcards</slug>
+        <title>ResolveWildcards</title>
+        <functioncall prog_lang="cpp">void ResolveWildcards(ReaProject* project, double timePosition, const char* wildcards, char* resolvedStringNeedBig, int resolvedStringNeedBig_sz)</functioncall>
+        <functioncall prog_lang="eel">ResolveWildcards(ReaProject project, timePosition, "wildcards", #resolvedString)</functioncall>
+        <functioncall prog_lang="lua">string resolvedString = reaper.ResolveWildcards(ReaProject project, number timePosition, string wildcards, string resolvedString)</functioncall>
+        <functioncall prog_lang="python">(ReaProject project, Float timePosition, String wildcards, String resolvedStringNeedBig, Int resolvedStringNeedBig_sz) = RPR_ResolveWildcards(project, timePosition, wildcards, resolvedStringNeedBig, resolvedStringNeedBig_sz)</functioncall>
+        <requires>
+            Reaper=7.39
+        </requires>
+        <description prog_lang="*">
+            Resolve a wildcard string. Any wildcards that are valid in the Big Clock can be resolved using this function. 
+            
+            Pass in timePosition=-1 to use the current project playback position.
+        </description>
+        <retvals>
+            string resolvedString - the resolved wildcard-string
+        </retvals>
+        <parameters>
+            ReaProject project - the project, that shall be the base for resolving; 0, current project
+            number timePosition - the position in seconds; -1, use the current playback position
+            string wildcards - the string with wildcards, who shall be resolved, as supported ny BigClock or the render-settings
+            string resolvedString - make this ""
+        </parameters>
+        <target_document>Reaper_Api_Documentation</target_document>
+        <source_document>Reaper_Api_Documentation.USDocML</source_document>
+        <chapter_context>
+           Api-Helper-Functions
+           Misc
+        </chapter_context>
+        <tags></tags>
+        <changelog>
+          Reaper 7.39 - added to api
+        </changelog>
+    </US_DocBloc>
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
         <slug>ReverseNamedCommandLookup</slug>
@@ -20767,7 +20806,7 @@
         <functioncall prog_lang="lua">reaper.ShowConsoleMsg(string msg)</functioncall>
         <functioncall prog_lang="python">RPR_ShowConsoleMsg(String msg)</functioncall>
         <requires>
-            Reaper=7.00
+            Reaper=7.28
         </requires>
         <description>
             Show a message to the user (also useful for debugging). 
@@ -20776,7 +20815,9 @@
             "\n" for newline, 
             "" to clear the console
             
-            Prefix string with "!SHOW:" and text will be added to console without opening the window.
+            It's also possible to add messages to the console without showing the window. There will be an indicator at the top of the Reaper-window that shows, that new messages are available.
+            Prefix the string with "!SHOW:" to add a message without opening the console window. The text [MSG] will appear at the top of the Reaper-window.
+            Prefix the string with "!SHOWERR" to add an erorr-message without opening the console window. The text [ERR] will appear at the top of the Reaper-window.
         </description>
         <parameters>
             string msg - a message to be shown in ReaConsole
@@ -48419,6 +48460,8 @@ Mespotine
             Causes gmem_read()/gmem_write() to read EEL2/JSFX/Video shared memory segment named by parameter. Set to empty string to detach. 6.20+: returns previous shared memory segment name.
 
             Must be called, before you can use a specific gmem-variable-index with gmem_write!
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <retvals>
             string former_attached_gmemname - if you change the attached-gmem from one to a new one, this will hold the name of the previous attached shared memory(gmem)
@@ -48454,6 +48497,8 @@ Mespotine
             Read (number) value from shared memory attached-to by gmem_attach(). index can be [0..1<<25).
 
             returns nil if not available
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <retvals>
             number retval - the stored number-value stored in gmem-variable with index
@@ -48490,6 +48535,8 @@ Mespotine
             Write (number) value to shared memory attached-to by gmem_attach(). index can be [0..1<<25).
 
             Before you can write into a currently unused variable with index "index", you must call gmem_attach first!
+            
+            Important: if the attached gmem is not used by another script, jsfx or video processor, it will be reset after the script finishes. So it can NOT(!) be used as alternative to extstates!
         </description>
         <parameters>
             integer index - the index of the memory-variable to write to; index must be 0 and higher
@@ -53115,7 +53162,7 @@ Mespotine
             Reaper=6.26
         </requires>
         <description indent="default">
-            Resolve a wildcard pattern into a set of nul-separated, double-nul terminated render target filenames. Returns the length of the string buffer needed for the returned file list. Call with path=NULL to suppress filtering out illegal pathnames, call with targets=NULL to get just the string buffer length.
+            Resolve a render pattern into a set of nul-separated, double-nul terminated render target filenames. Returns the length of the string buffer needed for the returned file list. Call with path=NULL to suppress filtering out illegal pathnames, call with targets=NULL to get just the string buffer length.
             
             Stored in reaper_plugin_functions.h
         </description>

@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 503, "5.3","12th of May 2025", "",  "\"Spice Girls - Too Much\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 5033, "5.33","", "",  "\"-\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -1158,6 +1158,7 @@ function progresscounter(state)
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_doc_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_gfx_engine.lua")
   A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."/ultraschall_video_engine.lua")
+  A=A..ultraschall.ReadFullFile(ultraschall.Api_Path.."../reagirl.lua")
   
   local filecount, files = ultraschall.GetAllFilenamesInPath(ultraschall.Api_Path.."/Modules/")
   for i=1, filecount do
@@ -1914,7 +1915,7 @@ function ultraschall.CheckActionCommandIDFormat(aid)
     returns false in case of an error
   </description>
   <retvals>
-    boolean retval  - true, valid action_command_id; false, not a valid action_command_id
+    boolean retval - true, valid action_command_id; false, not a valid action_command_id
   </retvals>
   <parameters>
     actioncommand_id - the ActionCommandID you want to check; either a number or an action_command_id with an underscore at the beginning
@@ -2102,13 +2103,8 @@ function ultraschall.deprecated(functionname)
       If there is a line "Author: authorname" in the file(as usual for ReaPack-compatible scripts), it will show the scripter's name in the dialog.
       
     </description>
-    <retvals>
-      boolean retval - true, defer-instance is running; false, defer-instance isn't running
-    </retvals>
     <parameters>
-      integer deferinstance - 0, to use the parameter identifier
-      optional string identifier - when deferinstance>0 (for Defer1 through Defer20-defer-cycles):a script-identifier of a specific script-instance; nil, for the current script-instance
-                                 - when deferinstance=0 (when using the Defer-function): the identifier of the defer-cycle, you've started with Defer
+      string functionname - the functionname that is deprecated
     </parameter>
     <chapter_context>
       API-Helper functions
@@ -3480,7 +3476,7 @@ function string.utf8_len(source_string)
   </requires>
   <functioncall>integer length = string.utf8_len(string source_string)</functioncall>
   <description>
-    returns the length of an utf8-encoded string
+    returns the length of a utf8-encoded string
 
     Works basically like string.len()
   </description>
@@ -3501,6 +3497,218 @@ function string.utf8_len(source_string)
 --]]
   if type(source_string)~="string" then error("bad argument #1, to 'utf8_len' (string expected, got "..type(source_string)..")", 2) end
   return utf8.len(source_string)
+end
+
+function ultraschall.AreWeInAnEclipse()
+  -- return true/false, Percentage, Eclipsetype
+  local SolarEclipse={}
+  SolarEclipse[1]={2027,2,6,16,0,48,28260.0,"Annular"}
+  SolarEclipse[2]={2027,8,2,10,7,50,22980.0,"Total"}
+  SolarEclipse[3]={2028,1,26,15,8,59,37620.0,"Annular"}
+  SolarEclipse[4]={2028,7,22,2,56,40,18600.0,"Total"}
+  SolarEclipse[5]={2029,1,14,17,13,48,0.0,"Partial"}
+  SolarEclipse[6]={2029,6,12,4,6,13,0.0,"Partial"}
+  SolarEclipse[7]={2029,7,11,15,37,19,0.0,"Partial"}
+  SolarEclipse[8]={2029,12,5,15,3,58,0.0,"Partial"}
+  SolarEclipse[9]={2030,6,1,6,29,13,19260.0,"Annular"}
+  SolarEclipse[10]={2030,11,25,6,51,37,13440.0,"Total"}
+  SolarEclipse[11]={2031,5,21,7,16,4,19560.0,"Annular"}
+  SolarEclipse[12]={2031,11,14,21,7,31,4080.0,"Hybrid"}
+  SolarEclipse[13]={2032,5,9,13,26,42,1320.0,"Annular"}
+  SolarEclipse[14]={2032,11,3,5,34,13,0.0,"Partial"}
+  SolarEclipse[15]={2033,3,30,18,2,36,9420.0,"Total"}
+  SolarEclipse[16]={2033,9,23,13,54,31,0.0,"Partial"}
+  SolarEclipse[17]={2034,3,20,10,18,45,14940.0,"Total"}
+  SolarEclipse[18]={2034,9,12,16,19,28,10680.0,"Annular"}
+  SolarEclipse[19]={2035,3,9,23,5,54,2880.0,"Annular"}
+  SolarEclipse[20]={2035,9,2,1,56,46,10440.0,"Total"}
+  SolarEclipse[21]={2036,2,27,4,46,49,0.0,"Partial"}
+  SolarEclipse[22]={2036,7,23,10,32,6,0.0,"Partial"}
+  SolarEclipse[23]={2036,8,21,17,25,45,0.0,"Partial"}
+  SolarEclipse[24]={2037,1,16,9,48,55,0.0,"Partial"}
+  SolarEclipse[25]={2037,7,13,2,40,36,14280.0,"Total"}
+  SolarEclipse[26]={2038,1,5,13,47,11,11880.0,"Annular"}
+  SolarEclipse[27]={2038,7,2,13,32,55,3600.0,"Annular"}
+  SolarEclipse[28]={2038,12,26,1,0,10,8280.0,"Total"}
+  SolarEclipse[29]={2039,6,21,17,12,54,14700.0,"Annular"}
+  SolarEclipse[30]={2039,12,15,16,23,46,6660.0,"Total"}
+  SolarEclipse[31]={2040,5,11,3,43,2,0.0,"Partial"}
+  SolarEclipse[32]={2040,11,4,19,9,2,0.0,"Partial"}
+  SolarEclipse[33]={2041,4,30,11,52,21,6660.0,"Total"}
+  SolarEclipse[34]={2041,10,25,1,36,22,22020.0,"Annular"}
+  SolarEclipse[35]={2042,4,20,2,17,30,17460.0,"Total"}
+  SolarEclipse[36]={2042,10,14,2,0,42,27840.0,"Annular"}
+  SolarEclipse[37]={2043,4,9,18,57,49,0.0,"Total (non-central)"}
+  SolarEclipse[38]={2043,10,3,3,1,49,0.0,"Annular (non-central)"}
+  SolarEclipse[39]={2044,2,28,20,24,40,8820.0,"Annular"}
+  SolarEclipse[40]={2044,8,23,1,17,2,7440.0,"Total"}
+  SolarEclipse[41]={2045,2,16,23,56,7,28020.0,"Annular"}
+  SolarEclipse[42]={2045,8,12,17,42,39,21960.0,"Total"}
+  SolarEclipse[43]={2046,2,5,23,6,26,34920.0,"Annular"}
+  SolarEclipse[44]={2046,8,2,10,21,13,17460.0,"Total"}
+  SolarEclipse[45]={2047,1,26,1,33,18,0.0,"Partial"}
+  SolarEclipse[46]={2047,6,23,10,52,31,0.0,"Partial"}
+  SolarEclipse[47]={2047,7,22,22,36,17,0.0,"Partial"}
+  SolarEclipse[48]={2047,12,16,23,50,12,0.0,"Partial"}
+  SolarEclipse[49]={2048,6,11,12,58,53,17880.0,"Annular"}
+  SolarEclipse[50]={2048,12,5,15,35,27,12480.0,"Total"}
+  SolarEclipse[51]={2049,5,31,13,59,59,17100.0,"Annular"}
+  SolarEclipse[52]={2049,11,25,5,33,48,2280.0,"Hybrid"}
+  SolarEclipse[53]={2050,5,20,20,42,50,1260.0,"Hybrid"}
+  SolarEclipse[54]={2050,11,14,13,30,53,0.0,"Partial"}
+  SolarEclipse[55]={2051,4,11,2,10,39,0.0,"Partial"}
+  SolarEclipse[56]={2051,10,4,21,2,14,0.0,"Partial"}
+  SolarEclipse[57]={2052,3,30,18,31,53,14880.0,"Total"}
+  SolarEclipse[58]={2052,9,22,23,39,10,10260.0,"Annular"}
+  SolarEclipse[59]={2053,3,20,7,8,19,3000.0,"Annular"}
+  SolarEclipse[60]={2053,9,12,9,34,9,11040.0,"Total"}
+  SolarEclipse[61]={2054,3,9,12,33,40,0.0,"Partial"}
+  SolarEclipse[62]={2054,8,3,18,4,2,0.0,"Partial"}
+  SolarEclipse[63]={2054,9,2,1,9,34,0.0,"Partial"}
+  SolarEclipse[64]={2055,1,27,17,54,5,0.0,"Partial"}
+  SolarEclipse[65]={2055,7,24,9,57,50,11820.0,"Total"}
+  SolarEclipse[66]={2056,1,16,22,16,45,10320.0,"Annular"}
+  SolarEclipse[67]={2056,7,12,20,21,59,5160.0,"Annular"}
+  SolarEclipse[68]={2057,1,5,9,47,52,8940.0,"Total"}
+  SolarEclipse[69]={2057,7,1,23,40,15,15780.0,"Annular"}
+  SolarEclipse[70]={2057,12,26,1,14,35,6600.0,"Total"}
+  SolarEclipse[71]={2058,5,22,10,39,25,0.0,"Partial"}
+  SolarEclipse[72]={2058,6,21,0,19,35,0.0,"Partial"}
+  SolarEclipse[73]={2058,11,16,3,23,7,0.0,"Partial"}
+  SolarEclipse[74]={2059,5,11,19,22,16,8580.0,"Total"}
+  SolarEclipse[75]={2059,11,5,9,18,15,25200.0,"Annular"}
+  SolarEclipse[76]={2060,4,30,10,10,0,18900.0,"Total"}
+  SolarEclipse[77]={2060,10,24,9,24,10,29160.0,"Annular"}
+  SolarEclipse[78]={2061,4,20,2,56,49,9420.0,"Total"}
+  SolarEclipse[79]={2061,10,13,10,32,10,13260.0,"Annular"}
+  SolarEclipse[80]={2062,3,11,4,26,16,0.0,"Partial"}
+  SolarEclipse[81]={2062,9,3,8,54,27,0.0,"Partial"}
+  SolarEclipse[82]={2063,2,28,7,43,30,27660.0,"Annular"}
+  SolarEclipse[83]={2063,8,24,1,22,11,20940.0,"Total"}
+  SolarEclipse[84]={2064,2,17,7,0,23,32160.0,"Annular"}
+  SolarEclipse[85]={2064,8,12,17,46,6,16080.0,"Total"}
+  SolarEclipse[86]={2065,2,5,9,52,26,0.0,"Partial"}
+  SolarEclipse[87]={2065,7,3,17,33,52,0.0,"Partial"}
+  SolarEclipse[88]={2065,8,2,5,34,17,0.0,"Partial"}
+  SolarEclipse[89]={2065,12,27,8,39,56,0.0,"Partial"}
+  SolarEclipse[90]={2066,6,22,19,25,48,16800.0,"Annular"}
+  SolarEclipse[91]={2066,12,17,0,23,40,11640.0,"Total"}
+  SolarEclipse[92]={2067,6,11,20,42,26,14700.0,"Annular"}
+  SolarEclipse[93]={2067,12,6,14,3,43,480.0,"Hybrid"}
+  SolarEclipse[94]={2068,5,31,3,56,39,3960.0,"Total"}
+  SolarEclipse[95]={2068,11,24,21,32,30,0.0,"Partial"}
+  SolarEclipse[96]={2069,4,21,10,11,9,0.0,"Partial"}
+  SolarEclipse[97]={2069,5,20,17,53,18,0.0,"Partial"}
+  SolarEclipse[98]={2069,10,15,4,19,56,0.0,"Partial"}
+  SolarEclipse[99]={2070,4,11,2,36,9,14640.0,"Total"}
+  SolarEclipse[100]={2070,10,4,7,8,57,9840.0,"Annular"}
+  SolarEclipse[101]={2071,3,31,15,1,6,3120.0,"Annular"}
+  SolarEclipse[102]={2071,9,23,17,20,28,11460.0,"Total"}
+  SolarEclipse[103]={2072,3,19,20,10,31,0.0,"Partial"}
+  SolarEclipse[104]={2072,9,12,8,59,20,11580.0,"Total"}
+  SolarEclipse[105]={2073,2,7,1,55,59,0.0,"Partial"}
+  SolarEclipse[106]={2073,8,3,17,15,23,8940.0,"Total"}
+  SolarEclipse[107]={2074,1,27,6,44,15,8460.0,"Annular"}
+  SolarEclipse[108]={2074,7,24,3,10,32,7020.0,"Annular"}
+  SolarEclipse[109]={2075,1,16,18,36,4,9720.0,"Total"}
+  SolarEclipse[110]={2075,7,13,6,5,44,17100.0,"Annular"}
+  SolarEclipse[111]={2076,1,6,10,7,27,6540.0,"Total"}
+  SolarEclipse[112]={2076,6,1,17,31,22,0.0,"Partial"}
+  SolarEclipse[113]={2076,7,1,6,50,43,0.0,"Partial"}
+  SolarEclipse[114]={2076,11,26,11,43,1,0.0,"Partial"}
+  SolarEclipse[115]={2077,5,22,2,46,5,10440.0,"Total"}
+  SolarEclipse[116]={2077,11,15,17,7,56,28440.0,"Annular"}
+  SolarEclipse[117]={2078,5,11,17,56,55,20400.0,"Total"}
+  SolarEclipse[118]={2078,11,4,16,55,44,30540.0,"Annular"}
+  SolarEclipse[119]={2079,5,1,10,50,13,10500.0,"Total"}
+  SolarEclipse[120]={2079,10,24,18,11,21,13140.0,"Annular"}
+  SolarEclipse[121]={2080,3,21,12,20,15,0.0,"Partial"}
+  SolarEclipse[122]={2080,9,13,16,38,9,0.0,"Partial"}
+  SolarEclipse[123]={2081,3,10,15,23,31,27360.0,"Annular"}
+  SolarEclipse[124]={2081,9,3,9,7,31,19980.0,"Total"}
+  SolarEclipse[125]={2082,2,27,14,47,0,29520.0,"Annular"}
+  SolarEclipse[126]={2082,8,24,1,16,21,14460.0,"Total"}
+  SolarEclipse[127]={2083,2,16,18,6,36,0.0,"Partial"}
+  SolarEclipse[128]={2083,7,15,0,14,23,0.0,"Partial"}
+  SolarEclipse[129]={2083,8,13,12,34,41,0.0,"Partial"}
+  SolarEclipse[130]={2084,1,7,17,30,23,0.0,"Partial"}
+  SolarEclipse[131]={2084,7,3,1,50,26,15900.0,"Annular"}
+  SolarEclipse[132]={2084,12,27,9,13,48,11040.0,"Total"}
+  SolarEclipse[133]={2085,6,22,3,21,16,12540.0,"Annular"}
+  SolarEclipse[134]={2085,12,16,22,37,48,1140.0,"Annular"}
+  SolarEclipse[135]={2086,6,11,11,7,14,6480.0,"Total"}
+  SolarEclipse[136]={2086,12,6,5,38,55,0.0,"Partial"}
+  SolarEclipse[137]={2087,5,2,18,4,42,0.0,"Partial"}
+  SolarEclipse[138]={2087,6,1,1,27,14,0.0,"Partial"}
+  SolarEclipse[139]={2087,10,26,11,46,57,0.0,"Partial"}
+  SolarEclipse[140]={2088,4,21,10,31,49,14280.0,"Total"}
+  SolarEclipse[141]={2088,10,14,14,48,5,9480.0,"Annular"}
+  SolarEclipse[142]={2089,4,10,22,44,42,3180.0,"Annular"}
+  SolarEclipse[143]={2089,10,4,1,15,23,11640.0,"Total"}
+  SolarEclipse[144]={2090,3,31,3,38,8,0.0,"Partial"}
+  SolarEclipse[145]={2090,9,23,16,56,36,12960.0,"Total"}
+  SolarEclipse[146]={2091,2,18,9,54,40,0.0,"Partial"}
+  SolarEclipse[147]={2091,8,15,0,34,43,5880.0,"Total"}
+  SolarEclipse[148]={2092,2,7,15,10,20,6480.0,"Annular"}
+  SolarEclipse[149]={2092,8,3,9,59,33,9060.0,"Annular"}
+  SolarEclipse[150]={2093,1,27,3,22,16,10680.0,"Total"}
+  SolarEclipse[151]={2093,7,23,12,32,4,18660.0,"Annular"}
+  SolarEclipse[152]={2094,1,16,18,59,3,6660.0,"Total"}
+  SolarEclipse[153]={2094,6,13,0,22,11,0.0,"Partial"}
+  SolarEclipse[154]={2094,7,12,13,24,35,0.0,"Partial"}
+  SolarEclipse[155]={2094,12,7,20,5,56,0.0,"Partial"}
+  SolarEclipse[156]={2095,6,2,10,7,40,11880.0,"Total"}
+  SolarEclipse[157]={2095,11,27,1,2,57,31620.0,"Annular"}
+  SolarEclipse[158]={2096,5,22,1,37,14,22020.0,"Total"}
+  SolarEclipse[159]={2096,11,15,0,36,15,31980.0,"Annular"}
+  SolarEclipse[160]={2097,5,11,18,34,31,11400.0,"Total"}
+  SolarEclipse[161]={2097,11,4,2,1,25,12960.0,"Annular"}
+  SolarEclipse[162]={2098,4,1,20,2,31,0.0,"Partial"}
+  SolarEclipse[163]={2098,9,25,0,31,16,0.0,"Partial"}
+  SolarEclipse[164]={2098,10,24,10,36,11,0.0,"Partial"}
+  SolarEclipse[165]={2099,3,21,22,54,32,27120.0,"Annular"}
+  SolarEclipse[166]={2099,9,14,16,57,53,19080.0,"Total"}
+  SolarEclipse[167]={2100,3,10,22,28,11,26940.0,"Annular"}
+  SolarEclipse[168]={2100,9,4,8,49,20,12720.0,"Total"}
+  --SolarEclipse[168]={2026,8,22,19,40,20,12720.0,"Total"}-- debug
+
+  local curdate=os.date("!*t")
+  for i=1, #SolarEclipse do
+    if SolarEclipse[i][1]==curdate.year then
+      if SolarEclipse[i][2]==curdate.month then
+        if SolarEclipse[i][3]==curdate.day then
+          if SolarEclipse[i][4]==curdate.hour then
+            if SolarEclipse[i][5]>curdate.min-11 and SolarEclipse[i][5]<curdate.min+9 then
+              local Percentage=(curdate.min+10).."TUFF"
+              if SolarEclipse[i][5]==curdate.min-10 then Percentage=100
+              elseif SolarEclipse[i][5]==curdate.min-9 then Percentage=95
+              elseif SolarEclipse[i][5]==curdate.min-8 then Percentage=90
+              elseif SolarEclipse[i][5]==curdate.min-7 then Percentage=85
+              elseif SolarEclipse[i][5]==curdate.min-6 then Percentage=80
+              elseif SolarEclipse[i][5]==curdate.min-5 then Percentage=75
+              elseif SolarEclipse[i][5]==curdate.min-4 then Percentage=70
+              elseif SolarEclipse[i][5]==curdate.min-3 then Percentage=65
+              elseif SolarEclipse[i][5]==curdate.min-2 then Percentage=60
+              elseif SolarEclipse[i][5]==curdate.min-1 then Percentage=55
+              elseif SolarEclipse[i][5]==curdate.min then Percentage=50
+              elseif SolarEclipse[i][5]==curdate.min+1 then Percentage=45
+              elseif SolarEclipse[i][5]==curdate.min+2 then Percentage=40
+              elseif SolarEclipse[i][5]==curdate.min+3 then Percentage=35
+              elseif SolarEclipse[i][5]==curdate.min+4 then Percentage=30
+              elseif SolarEclipse[i][5]==curdate.min+5 then Percentage=25
+              elseif SolarEclipse[i][5]==curdate.min+6 then Percentage=20
+              elseif SolarEclipse[i][5]==curdate.min+7 then Percentage=15
+              elseif SolarEclipse[i][5]==curdate.min+8 then Percentage=10
+              elseif SolarEclipse[i][5]==curdate.min+9 then Percentage=0
+              end
+              return true, Percentage, SolarEclipse[i][8]
+            end
+          end
+        end
+      end
+    end
+  end
+  return false
 end
 
 function ultraschall.Debug_ShowCurrentContext(show)

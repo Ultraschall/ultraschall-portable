@@ -1485,3 +1485,208 @@ function ultraschall.LUFS_Metering_ShowEffect()
 end
 
 --ultraschall.LUFS_Metering_ShowEffect()
+
+function ultraschall.StreamDeck_GetActions(num_sd_buttons)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>StreamDeck_GetActions</slug>
+  <requires>
+    Ultraschall=5.33
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>table StreamDeckButtons = ultraschall.StreamDeck_GetActions(optional integer num_sd_buttons)</functioncall>
+  <description>
+    Reads out, to which action the StreamDeckButtons are associated plus addition information.
+    It returns it in a) a table and b) extstates.
+    
+    The table is of the following format(XXX is from 1(without leading 0!) to 255):
+      StreamDeckButtons["StreamDeckButton_XXX action command id"] - the action command id, to which it is associated; "" if not associated
+      StreamDeckButtons["StreamDeckButton_XXX section"] - the setion to which it is associated; "" if not associated
+      StreamDeckButtons["StreamDeckButton_XXX toggle state"] - toggle state of the action; -1, not available, 0, off, 1, on; "" if not associated
+      StreamDeckButtons["StreamDeckButton_XXX action description"] - description of the associated action; "" if not associated
+      StreamDeckButtons["StreamDeckButton_XXX additional text"] - possible additional text(soundboard-slot-filename, etc), "" if not given
+      
+    The extstates are of the following format(XXX is from 1(without leading 0!) to 255) and are stored as strings:
+    Section: 
+      "Ultraschall StreamDeck"
+    Keys:
+      "StreamDeckButton_XXX action command id"] - the action command id, to which it is associated; "" if not associated
+      "StreamDeckButton_XXX section"] - the setion to which it is associated; "" if not associated
+      "StreamDeckButton_XXX toggle state"] - toggle state of the action; -1, not available, 0, off, 1, on; "" if not associated
+      "StreamDeckButton_XXX action description"] - description of the associated action; "" if not associated
+      "StreamDeckButton_XXX additional text"] - possible additional text(soundboard-slot-filename, etc), "" if not given
+      
+      Returns nil in case of an error
+  </description>
+  <parameters>
+    optional integer num_sd_buttons - the number of StreamDeckbuttons to check for; nil=255
+  </parameters>
+  <retvals>
+    table StreamDeckButtons - a table with all associated stream-deck-buttons. Read description for more details.
+  </retvals>
+  <chapter_context>
+    StreamDeck
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, streamdeck, get, associated, shortcut, action, toggle state, description</tags>
+</US_DocBloc>
+--]]
+  if num_sd_buttons~=nil and math.type(num_sd_buttons)~="integer" then ultraschall.AddErrorMessage("StreamDeck_GetActions", "num_sd_buttons", "must be an integer or nil", -1) return end
+  if num_sd_buttons==nil then num_sd_buttons=255 end
+  local OSC, Section, Unknown, AID, ToggleState, AddText
+
+  if ultraschall.OSC_Data==nil then 
+    ultraschall.SD_Buttons={}
+    ultraschall.OSC_Data={} 
+    ultraschall.OSC_Data["counter"]=15 
+  end
+  ultraschall.OSC_Data["modified"]=false
+  if ultraschall.OSC_Data["counter"]==15 then 
+    ultraschall.OSC_Data["counter"]=0
+    local retval, size, acctime, modifiedtime = reaper.JS_File_Stat(reaper.GetResourcePath().."/OSC/reaper-osc-actions.ini")
+    if ultraschall.OSC_Data["modifiedtime_old"]~=modifiedtime then
+      ultraschall.OSC_Data["modified"]=true
+    end
+    ultraschall.OSC_Data["modifiedtime_old"]=modifiedtime
+  end
+  ultraschall.OSC_Data["counter"]=ultraschall.OSC_Data["counter"]+1
+  
+  if ultraschall.OSC_Data["modified"]==true then
+    local File=ultraschall.ReadFullFile(reaper.GetResourcePath().."/OSC/reaper-osc-actions.ini")
+    if File==nil then File="" end
+    File=File.."\n"
+    for i=1, num_sd_buttons do
+      id=i
+      OSC,Section,Unknown,AID=File:match("(\"StreamDeckButton_"..id.."\") (%d-) (%d-) (.-)\n") 
+      if OSC==nil then 
+        OSC="StreamDeckButton_"..id 
+        Section="" 
+        Unknown="" 
+        AID="" 
+        Text="" 
+        AddText="" 
+        ToggleState=""
+      else
+        Text=reaper.CF_GetCommandText(tonumber(Section), reaper.NamedCommandLookup(AID))
+        AddText="This is a test text, that might hold stuff like Soundboard-slot-filename"
+      end      
+      if ultraschall.OSC_Data["StreamDeckButtons"]==nil then ultraschall.OSC_Data["StreamDeckButtons"]={} end
+      --print2(id, Section)
+      if Section~="" or AID~="" then
+        ToggleState=reaper.GetToggleCommandStateEx(tonumber(Section), reaper.NamedCommandLookup(AID))
+      else
+        ToggleState=""
+      end
+      
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." action command id"]=AID
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." section"]=Section
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." action description"]=Text
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." additional text"]=AddText
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." toggle state"]=ToggleState
+
+      ultraschall.SD_Buttons["StreamDeckButton_"..id]=Text
+            
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." action command id", AID, false)
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." section", Section, false)
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." action description", ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." action description"], false)
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." additional text", ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..id.." additional text"], false)
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..id.." toggle state", ToggleState, false)
+    end
+  end
+  for i=1, num_sd_buttons do
+    local AID=ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..i.." action command id"]
+    local Section=ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..i.." section"]
+    AID=tonumber(reaper.NamedCommandLookup(AID))
+    if AID~="" and Section~="" then
+      ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..i.." toggle state"]=reaper.GetToggleCommandStateEx(Section, AID)
+      reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..i.." toggle state", ultraschall.OSC_Data["StreamDeckButtons"]["StreamDeckButton_"..i.." toggle state"], false)
+    end
+  end
+  return ultraschall.OSC_Data["StreamDeckButtons"], ultraschall.SD_Buttons
+end
+
+
+function ultraschall.StreamDeck_GetSet_Parameters(StreamDeckButtonNr, is_set, parameteridx, parameter)
+  --[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>StreamDeck_GetSet_Parameters</slug>
+  <requires>
+    Ultraschall=5.33
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>string parameter = ultraschall.StreamDeck_GetSet_Parameters(integer StreamDeckButtonNr, boolean is_set, integer parameteridx, string parameter)</functioncall>
+  <description>
+    Gets/sets a parameter for a specific StreamDeckButton-shortcut. This can be read out by the associated script with the StreamDeckButton to do things with it.
+    That way, you can customize the way scripts behave according to the parameters.
+    
+    Use 8th returnvalue from reaper.get_action_context() to get the StreamDeck-shortcut used to run this script.
+  </description>
+  <parameters>
+    integer StreamDeckButtonNr - the StreamDeckButton, whose parameter you want to get/set
+    boolean is_set - true, set the parameter; false, only get it
+    integer parameteridx - the index of the parameter(1-20)
+    string parameter - the parameter stored; will be ignored if is_set=false
+  </parameters>
+  <retvals>
+    string parameter - the parameter of the index stored for this StreamDeckButton
+  </retvals>
+  <chapter_context>
+    StreamDeck
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, streamdeck, get, set, parameter, shortcut</tags>
+</US_DocBloc>
+--]]
+  if math.type(StreamDeckButtonNr)~="integer" then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "StreamDeckButtonNr", "must be an integer", -1) return end
+  if StreamDeckButtonNr<1 or StreamDeckButtonNr>255 then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "StreamDeckButtonNr", "must be between 1 and 255", -2) return end
+  if type(is_set)~="boolean" then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "is_set", "must be a boolean", -3) return end
+  if math.type(parameteridx)~="integer" then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "is_set", "must be an integer", -4) return end
+  if parameteridx<1 or parameteridx>20 then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "parameteridx", "must be between 1 and 20", -2) return end
+  if type(parameter)~="string" then ultraschall.AddErrorMessage("StreamDeck_GetSet_Parameters", "is_set", "must be a string", -6) return end
+  if is_set==true then
+    reaper.SetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..StreamDeckButtonNr.." parameter "..parameteridx, parameter, false)
+  end
+  return reaper.GetExtState("Ultraschall StreamDeck", "StreamDeckButton_"..StreamDeckButtonNr.." parameter "..parameteridx)
+end
+
+function ultraschall.StreamDeck_GetAllParametersForThisScript()
+  --[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+  <slug>StreamDeck_GetAllParametersForThisScript</slug>
+  <requires>
+    Ultraschall=5.33
+    Reaper=6.20
+    Lua=5.3
+  </requires>
+  <functioncall>boolean params_available, table params = ultraschall.StreamDeck_GetAllParametersForThisScript()</functioncall>
+  <description>
+    Gets/sets all parameter for the current script, according to the pressed StreamDeckButton-shortcut. 
+    Means, depending on the pressed StreamDeckButton, the parameters might change!
+    
+    Returns false if no parameters are available. In that case, the table params is empty.
+  </description>
+  <retvals>
+    boolean params_available - true, parameters for this StreamDeckButton are available
+    table params - the parameters available; 20 entries of strings
+  </retvals>
+  <chapter_context>
+    StreamDeck
+  </chapter_context>
+  <target_document>US_Api_Functions</target_document>
+  <source_document>Modules/ultraschall_functions_Ultraschall_Module.lua</source_document>
+  <tags>ultraschall, streamdeck, get, parameters, shortcut</tags>
+</US_DocBloc>
+--]]
+  local is_new_value, filename, section, cmdID, mode, resolution, val, contextstr = reaper.get_action_context()
+  local SDB=tonumber(contextstr:match("osc:StreamDeckButton_(.-):"))
+  if SDB==nil then return false, {} end
+  local PARAMS={}
+  for i=1, 20 do
+    PARAMS[#PARAMS+1]=ultraschall.StreamDeck_GetSet_Parameters(SDB, false, i, "")
+  end
+  return true, PARAMS
+end

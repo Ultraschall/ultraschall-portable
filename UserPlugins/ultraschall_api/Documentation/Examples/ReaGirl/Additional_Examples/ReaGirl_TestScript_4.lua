@@ -30,6 +30,7 @@
 -- Means, you can place ui-elements automatically with either x-position or y-position with the other one a fixed coordinate.
 -- So you can combine them.
 
+  dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
   dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
 
   -- create new gui
@@ -65,13 +66,16 @@
   
   tab1.label_medium=reagirl.Label_Add(nil, nil, "font", "Label with medium font-size.", false, nil)
   reagirl.Label_SetFontSize(tab1.label_medium, 30) -- set to medium font-size
+  reagirl.Label_SetColor(tab1.label_medium, 255, 0, 0, -1, 0, 0)
   
   tab1.label_large=reagirl.Label_Add(nil, nil, "size", "Label with large font-size.", false, nil)
   reagirl.Label_SetFontSize(tab1.label_large, 50) -- set to large font-size
+  reagirl.Label_SetColor(tab1.label_large, 100, 255, 0, -1, 0, 0)
 
   tab1.label_medium_and_style=reagirl.Label_Add(nil, nil, "and style", "Label with medium font-size and some styles.", false, nil)
   reagirl.Label_SetFontSize(tab1.label_medium_and_style, 30) -- set to medium font-size
   reagirl.Label_SetStyle(tab1.label_medium_and_style, 2, 0, 0) -- set to italic
+  reagirl.Label_SetColor(tab1.label_medium_and_style, 255, 255, 0, 255, 0, 0)
   
   reagirl.Label_AutoBackdrop(tab1.label_header, tab1.label_large) -- set backdrop drawn by tab1.label_header
                                                                   -- let it end underneath tab1.label_large - the largest label
@@ -216,17 +220,21 @@
   button_ok_id = reagirl.Button_Add(-133, nil, 0, 0, "OK", "Apply changes and close dialog.", nil)
   button_cancel_id = reagirl.Button_Add(-95, nil, 0, 0, "Cancel", "Discard changes and close dialog.", nil)
 
-
   -- open the new gui
   reagirl.Gui_Open("My Dialog Name", false, "The dialog", "This is a demo dialog with settings for tool xyz.", nil, nil, 0, nil, nil)
   
   function main()
     -- a function that runs the gui-manage function in the background, so the gui is updated correctly
     reagirl.Gui_Manage()
-    --AAA=reaper.GetInputActivityLevel(0)
     -- if the gui-window hasn't been closed, keep the script alive.
+    
     if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
   end
 
   main()
 
+--reagirl.Shortcut_Add(0, 65, "TURTZ.", print2)
+--reagirl.Shortcut_Add(0, 66, "TURTZ2.", print2)
+--reagirl.Shortcut_Add(0, 67, "TURTZ3.", print2)
+--reagirl.ExportShortcutsToFile(reaper.GetResourcePath().."/ShortCutTest.ini", "Tudelu")
+--reagirl.ImportShortcutsFromFile(reaper.GetResourcePath().."/ShortCutTest.ini", "Tudelu")
