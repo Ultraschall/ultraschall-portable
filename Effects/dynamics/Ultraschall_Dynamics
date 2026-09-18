@@ -37,6 +37,17 @@ out_pin:main R
 e=2.718281828459;
 gfx_clear=-1;
 gfx_ext_retina == 0 ? gfx_ext_retina = 1;
+
+gfx_ext_retina>1 ? gfx_setfont(1,"Arial",14*gfx_ext_retina,'b') : gfx_setfont(1, "Arial", 14, 'b');
+gfx_measurestr("T", strw, strh);
+strw=strw>>1;
+strh=strh>>1;
+gfx_measurestr("NF", strw2, strh2);
+strw2=strw2/2;
+strh2=strh2/2;
+gfx_measurestr("NG", strw3, strh3);
+strw3=strw3/2;
+strh3=strh3/2;
 tab=0; // gain amount in dB, evenly divided over db_bottom..db_top
 tab.size == 0 ? (
   // first-time initialization
@@ -553,15 +564,11 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   Noisefloor_Level = (slider_noisefloor+108)/108 *  sz;
   dbo = (((db_top-db_bottom) * Noisefloor_Level + gain_db_for_x(Noisefloor_Level*isz)*(sz)) * db_i_range)|0;
   gfx_x=left+Noisefloor_Level;
-  gfx_a=0.5;
-  gfx_r=1.0;gfx_b=gfx_g=0;;
-  //gfx_rect(gfx_x-1, bottom-dbo,3,dbo);
-  gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
-  gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
+  gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; gfx_a=1; // define Color yellow
   gfx_circle(gfx_x, bottom-dbo,10*gfx_ext_retina,1,1);
-  gfx_measurestr("NF", strw, strh);
-  gfx_x=gfx_ext_retina+gfx_x-strw/2;
-  gfx_y=gfx_ext_retina+bottom-dbo-strh/2;
+  
+  gfx_x=gfx_ext_retina+gfx_x-strw2;
+  gfx_y=gfx_ext_retina+bottom-dbo-strh2;
   gfx_set(0);
   gfx_drawstr("NF");
   gfx_x=gfx_x+6*gfx_ext_retina;
@@ -574,14 +581,12 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   gfx_x=left+Noisegate_Level;
   gfx_r=1.0;gfx_b=gfx_g=0;
   gfx_x<left ? Noisegate_x=left : Noisegate_x=gfx_x;
-  //gfx_line(Noisegate_x,bottom,Noisefloor_x,Noisefloor_y);
   gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
   gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
   gfx_circle(Noisegate_x, bottom-dbo+dbo,10*gfx_ext_retina,1,1);
-  gfx_measurestr("NF", strw, strh);
-  gfx_x=Noisegate_x-strw/2;
-  gfx_y=bottom-dbo+dbo-strh/2;
   
+  gfx_x=gfx_ext_retina+Noisegate_x-strw3;
+  gfx_y=gfx_ext_retina+bottom-dbo+dbo-strh3;
   
   gfx_set(0);
   gfx_drawstr("NG");
@@ -592,11 +597,10 @@ gfx_w != last_w || gfx_h != last_h || (mouse_cap&3) || last_mouse_cap || redraw=
   gfx_x=left+sz;
   gfx_r=1.0;gfx_b=0;gfx_g=141/255;gfx_a=1;//0.75;
   gfx_r=0.9843137254901961; gfx_g=0.8196078431372549; gfx_b=0; // define Color yellow
-  gfx_circle(gfx_x,bottom-Target_Level,10*gfx_ext_retina,1,1);
-  //gfx_rect(Target_Line_Start, bottom-Target_Level, left+sz - Target_Line_Start,1);
-  gfx_x=gfx_x-4*gfx_ext_retina;
-  gfx_y=bottom-Target_Level-6*gfx_ext_retina;
+  gfx_circle(gfx_x,(bottom-Target_Level)|0,10*gfx_ext_retina,1,1);
+  
+  gfx_x=gfx_x-strw;
+  gfx_y=(bottom-Target_Level-strh)|0;
   gfx_set(0);
   gfx_drawstr("T");
-
 );
