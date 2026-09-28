@@ -511,10 +511,10 @@ function SettingsPageSettings()
   ------------------------------------------------------
 
   x_offset = 55
-
-  block = GUI.Area:new(45, header_height + 92, 730, 525,5,1,1,"section_bg")
+  
+  block = GUI.Area:new(45, header_height + 92, 730, 535,5,1,1,"section_bg")
   table.insert(GUI.elms, block)
-
+  header_height=header_height-10
 
   for i = 1, section_count , 1 do
 
@@ -688,3 +688,4 @@ function atexit()
 end
 
 reaper.atexit(atexit)
+
