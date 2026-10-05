@@ -173,6 +173,7 @@ function action_add_button_runfunction(element_id)
     -- create lua-file and add it as action
     local text=reagirl.Inputbox_GetText(fileinput_inputbox_guid)
     if text=="" then reaper.MB("No audiofile selected", "Error", 0) return end
+    if reaper.file_exists(text)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
     markertitle=reagirl.Inputbox_GetText(markertext_inputbox_guid)
     local volume=reagirl.Slider_GetValue(playvolume_slider_guid)
     local filename
@@ -192,7 +193,7 @@ function action_add_button_runfunction(element_id)
     filename=string.gsub(text,"\\", "/"):match(".*/(.*)%..*")
     if filename==nil then filename=string.gsub(text,"\\", "/"):match(".*/(.*)") end
     if filename==nil then filename=string.gsub(text,"\\", "/") end
-    if reaper.file_exists(text)==false then reaper.MB("Audiofile does not exist", "Ooops...", 0) return end
+
     retval=ultraschall.WriteValueToFile(reaper.GetResourcePath().."/Scripts/ultraschall_"..action..filename..".lua", Comment.."\n\n"..NewSoundboardAction)
     if retval==-1 then 
       reaper.MB("Can't create the action-file. Disk full or restricted file-access in the Reaper-folder "..reaper.GetResourcePath().."?", "Oops...", 0)
