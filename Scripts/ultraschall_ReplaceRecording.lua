@@ -27,21 +27,19 @@
 -- enable Ultraschall-API for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
+-- settings to influence replace recording
 
--- skips "Prepare all tracks for editing" and "Record only at the end"-soundchecks
-reaper.SetExtState("Soundcheck_PrepareAllTracksForEditing", "skip", "1", false)
-reaper.SetExtState("SoundCheck_EndOfRecording", "skip", "true", false)
+-- 1=play a preview of the time-selection to be recorded; 0/"", record straight away
+preview_first=tonumber(ultraschall.GetUSExternalState("ultraschall_settings_replace_recording_preview", "Value", "ultraschall-settings.ini"))
+if preview_first==nil then preview_first=1 end
 
---[[
-soundcheck_recatend_id = ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", "ultraschall-settings.ini")
-soundcheck_prepare_all_tracks_id = ultraschall.GetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", "ultraschall-settings.ini")
-EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents2(soundcheck_recatend_id)
-EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused2, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents2(soundcheck_prepare_all_tracks_id)
---ultraschall.EventManager_PauseEvent(soundcheck_recatend_id)
---]]
+-- how long in seconds shall the wait be between preview and actual recording
+rec_wait=tonumber(ultraschall.GetUSExternalState("ultraschall_settings_replace_recording-rec_wait", "Value", "ultraschall-settings.ini"))
+if rec_wait==nil then rec_wait=99 else rec_wait=rec_wait*33 end
 
-preview_first=toboolean(ultraschall.GetUSExternalState("", "", "ultraschall-settings.ini"))
-if preview_first==nil then preview_first=true end
+-- how much "trail" shall the playback of the actual recording have to be able to determine, whether recording was successful(in seconds)?
+playback_at_end=tonumber(ultraschall.GetUSExternalState("ultraschall_settings_replace_recording-playback_at_end", "Value", "ultraschall-settings.ini"))
+if playback_at_end==nil then playback_at_end=2 end
 
 l_start, l_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 if l_start==l_end then 
@@ -56,21 +54,27 @@ if ultraschall.AnyTrackRecarmed()==false then
   reaper.MB("No track armed for recording!", "Problem...", 0)
   return
 end
-cursorpos=reaper.GetCursorPosition()
 
+-- skips "Prepare all tracks for editing" and "Record only at the end"-soundchecks
+reaper.SetExtState("Soundcheck_PrepareAllTracksForEditing", "skip", "1", false)
+reaper.SetExtState("SoundCheck_EndOfRecording", "skip", "true", false)
+
+
+-- check(and set) tape mode and punch in recording
+cursorpos=reaper.GetCursorPosition()
 oldval=reaper.SNM_GetIntConfigVar("autoxfade", -1) 
 oldval2=reaper.SNM_GetIntConfigVar("projrecmode", -1) 
-
 if oldval&4==0 then reaper.Main_OnCommand(41186, 0) end
 if reaper.GetToggleCommandState(40076)==0 then reaper.Main_OnCommand(40076, 1) end
 
---reaper.CSurf_OnRecord()
 
 function main4()
-  if reaper.GetPlayState()&4==4 and reaper.GetPlayPosition()<=l_end+2 then reaper.defer(main4) else reaper.CSurf_OnStop() end
+  -- record, until end of time-selection and playback x-seconds after end of time-selection(determined by settings)
+  if reaper.GetPlayState()&4==4 and reaper.GetPlayPosition()<=l_end+playback_at_end then reaper.defer(main4) else reaper.CSurf_OnStop() end
 end
 
 function atexit()
+  -- reset stuff after recording finished
   reaper.MoveEditCursor(-reaper.GetCursorPosition()+cursorpos, false)
   reaper.SNM_SetIntConfigVar("autoxfade", oldval)
   reaper.SNM_SetIntConfigVar("projrecmode", oldval2)
@@ -78,24 +82,21 @@ function atexit()
   if turn_off_magicrouting==true then
     reaper.Main_OnCommand(cmdid, 0)
   end
-  if EventPaused==false then
-    --ultraschall.EventManager_ResumeEvent(soundcheck_recatend_id)
-  end
-  if EventPaused2==false then
-    --ultraschall.EventManager_ResumeEvent(soundcheck_prepare_all_tracks_id)
-  end
-  -- reignites "Prepare all tracks for editing" and "Record only at the end"-soundchecks
+
+  -- restarts "Prepare all tracks for editing" and "Record only at the end"-soundchecks, if active
   reaper.SetExtState("Soundcheck_PrepareAllTracksForEditing", "skip", "", false)
   reaper.SetExtState("SoundCheck_EndOfRecording", "skip", "", false)
 end
 
 function main3()
+  -- start recording
   reaper.MoveEditCursor(-reaper.GetCursorPosition()+cursorpos, false)
   reaper.CSurf_OnRecord()
   main4()
 end
 
 function WaitCounter()
+  -- wait for x-seconds(determined by settings) until recording starts
   Counter=Counter-1
   local x,y=reaper.GetMousePosition()
   reaper.TrackCtl_SetToolTip("Recording start in "..(math.floor(Counter/33)+1).."s", x+10, y+10, true)
@@ -103,23 +104,28 @@ function WaitCounter()
 end
 
 function main2()
-  if reaper.GetPlayPosition()<l_end then if reaper.GetPlayState()~=0 then reaper.defer(main2) else return end else reaper.CSurf_OnStop() Counter=99 WaitCounter() end
+  -- wait, until playback reaches end of time-selection, then go on further with waiting
+  if reaper.GetPlayPosition()<l_end then if reaper.GetPlayState()~=0 then reaper.defer(main2) else return end else reaper.CSurf_OnStop() Counter=rec_wait WaitCounter() end
 end
 
 function main()
+  -- start preview-playback
   reaper.CSurf_OnPlay()
   main2()
 end
 
+-- temporarily deactivate magic routing
 cmdid=reaper.NamedCommandLookup("_Ultraschall_Toggle_Magicrouting")
 if reaper.GetToggleCommandState(cmdid)==1 then
   reaper.Main_OnCommand(cmdid, 0)
   turn_off_magicrouting=true
 end
 
-if preview_first==true then
+if preview_first==1 then
+  -- do preview before recording
   main()
 else
+  -- record straight away
   main3()
 end
 reaper.atexit(atexit)
