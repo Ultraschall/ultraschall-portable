@@ -92,78 +92,87 @@ end
 
 
 function SoundcheckOverdub(userspace)
-
-
-  if reaper.GetPlayState() ~= 5 then
-    userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
-    -- return false
+  local skip_me = reaper.GetExtState("SoundCheck_EndOfRecording", "skip")
+  --reaper.ShowConsoleMsg(tostring(userspace["skip_overdub_check"]).." BB "..tostring(userspace["overdub_warning"]).." CC "..skip_me.."\n")
+ 
+  if skip_me~="" then
+    --userspace["overdub_warning"]=nil
   end
+ 
+  if skip_me=="" then
+    if reaper.GetPlayState() ~= 5 then
+      userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
+      -- return false
+    end
 
-  if userspace["skip_overdub_check"] == 1 then
-    return false
-  end
+    if userspace["skip_overdub_check"] == 1 then
+      return false
+    end
 
-  preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
-  preroll_dialog = reaper.GetExtState("ultraschall_PreviewRecording", "Dialog")
-  if preroll_rec ~= "" or preroll_dialog == "1" then -- es ist ein Preroll-Recording aktiv, also alles ok
-    return false
-  end
+    preroll_rec = reaper.GetExtState("ultraschall_PreviewRecording", "RecPosition")
+    preroll_dialog = reaper.GetExtState("ultraschall_PreviewRecording", "Dialog")
+    if preroll_rec ~= "" or preroll_dialog == "1" then -- es ist ein Preroll-Recording aktiv, also alles ok
+      return false
+    end
 
-  local length = reaper.GetProjectLength(0)
-  local play = reaper.GetPlayPosition()
-  local cursor = reaper.GetCursorPosition()
+    local length = reaper.GetProjectLength(0)
+    local play = reaper.GetPlayPosition()
+    local cursor = reaper.GetCursorPosition()
 
-  if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
-    userspace["skip_overdub_check"] = 1
-    userspace["overdub_warning"] = 0
-    return false
-
-  elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
-
-    local itemcount = reaper.CountMediaItems(0)
-    if itemcount == 0 then
+    if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
       userspace["skip_overdub_check"] = 1
       userspace["overdub_warning"] = 0
-      return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
-    end
+      return false
 
-    trackstringarmed = ultraschall.CreateTrackString_ArmedTracks() -- gibt einen String aus aller armed tracks mit Kommas getrennt
-
-    armedtracktable = {}
-    for tracknumber in string.gmatch(trackstringarmed, '([^,]+)') do  -- baue einen indexierten Table mit den armed tracks
-      armedtracktable[tracknumber] = "armed"
-    end
-
-
-    for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgendwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
-
-
-      local MediaItem = reaper.GetMediaItem(0, i)
-      local MediaItemTrackChunk = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK") -- in welchem Track ist das Item
-      local MediaItemTrack = reaper.GetMediaTrackInfo_Value(MediaItemTrackChunk, "IP_TRACKNUMBER")
-      local MediaItemTrack = string.format("%." .. (0 or 0) .. "f", MediaItemTrack)
-
-      local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
-
-      if play < end_position and armedtracktable[MediaItemTrack] then -- es ist wirklich ein overdub und der Track ist armed
-        userspace["overdub_warning"] = 1
-        userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
-        return true
+    elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
+      
+      local itemcount = reaper.CountMediaItems(0)
+      if itemcount == 0 then
+        userspace["skip_overdub_check"] = 1
+        userspace["overdub_warning"] = 0
+        return false --ist die erste Aufnahme überhaupt, kann also nicht überlappen
       end
+
+      trackstringarmed = ultraschall.CreateTrackString_ArmedTracks() -- gibt einen String aus aller armed tracks mit Kommas getrennt
+
+      armedtracktable = {}
+      for tracknumber in string.gmatch(trackstringarmed, '([^,]+)') do  -- baue einen indexierten Table mit den armed tracks
+        armedtracktable[tracknumber] = "armed"
+      end
+
+      for i = 0, itemcount-1 do -- gehe alle Items durch ob es irgendwo ein Ende gibt, das hinter der aktuellen Aufnahmeposition steht
+
+
+        local MediaItem = reaper.GetMediaItem(0, i)
+        local MediaItemTrackChunk = reaper.GetMediaItemInfo_Value(MediaItem, "P_TRACK") -- in welchem Track ist das Item
+        local MediaItemTrack = reaper.GetMediaTrackInfo_Value(MediaItemTrackChunk, "IP_TRACKNUMBER")
+        local MediaItemTrack = string.format("%." .. (0 or 0) .. "f", MediaItemTrack)
+
+        local end_position = reaper.GetMediaItemInfo_Value(MediaItem, "D_POSITION") + reaper.GetMediaItemInfo_Value(MediaItem, "D_LENGTH")
+
+        if play < end_position and armedtracktable[MediaItemTrack] then -- es ist wirklich ein overdub und der Track ist armed
+          userspace["overdub_warning"] = 1
+          userspace["skip_overdub_check"] = 0 -- auch weiter prüfen
+          -- Buggy: Mespotine
+          -- löst auch aus, wenn gar nicht aufgenommen wurde...
+          return true
+        end
+      end
+
+      userspace["skip_overdub_check"] = 1
+      userspace["overdub_warning"] = 0
+      return false -- war wohl nur eine Kapitelmarke etc.
+
+    elseif userspace["overdub_warning"] == 1 then
+      userspace["skip_overdub_check"] = 0
+      return true
+
+    else
+      return false
     end
-
-    userspace["skip_overdub_check"] = 1
-    userspace["overdub_warning"] = 0
-    return false -- war wohl nur eine Kapitelmarke etc.
-
-  elseif userspace["overdub_warning"] == 1 then
-    userspace["skip_overdub_check"] = 0
-    return true
-
   else
     return false
   end
-
 end
 
 function SoundcheckMic(userspace)
@@ -235,23 +244,30 @@ function SoundcheckTransitionRecordToStop(userspace)
   local current_playstate=reaper.GetPlayState()
   local retval, editing_started = reaper.GetProjExtState(0, "Editing", "started")
   local retval, recording_started = reaper.GetProjExtState(0, "Recording", "started")
+  -- the following set to ~="" skips the prepare-all-tracks-for-editing-soundcheck, until it's set to ""
+  local skip_me = reaper.GetExtState("Soundcheck_PrepareAllTracksForEditing", "skip")
+  --reaper.ShowConsoleMsg(skip_me.." "..reaper.time_precise().."\n")
+  
+  if skip_me=="" then
+    if current_playstate==5 then --
+      reaper.SetProjExtState(0, "Editing", "started", "0")
+      reaper.SetProjExtState(0, "Recording", "started", "1")
+      userspace["prepare_warning"] = "0"
+      -- userspace["old_playstate"]=current_playstate
+      return false
+    elseif userspace["prepare_warning"] == "1" and editing_started ~= "1" then
+      return true
 
-  if current_playstate==5 then --
-    reaper.SetProjExtState(0, "Editing", "started", "0")
-    reaper.SetProjExtState(0, "Recording", "started", "1")
-    userspace["prepare_warning"] = "0"
-    -- userspace["old_playstate"]=current_playstate
-    return false
-  elseif userspace["prepare_warning"] == "1" and editing_started ~= "1" then
-    return true
+    elseif current_playstate==1 and recording_started == "1" and editing_started ~= "1" then -- 0 = Stop, 5 = recording
+      userspace["prepare_warning"] = "1"
+      reaper.OnStopButton()
 
-  elseif current_playstate==1 and recording_started == "1" and editing_started ~= "1" then -- 0 = Stop, 5 = recording
-    userspace["prepare_warning"] = "1"
-    reaper.OnStopButton()
-
-    return true
+      return true
+    else
+      userspace["prepare_warning"] = "0"
+      return false
+    end
   else
-    userspace["prepare_warning"] = "0"
     return false
   end
 end
