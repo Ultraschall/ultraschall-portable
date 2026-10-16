@@ -36,13 +36,13 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function buildRoutingMatrix ()
 
-	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
+  local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
 
   for i=1, number_of_tracks do
-  	AllMainSends[i]["MainSendOn"] = 1	-- alle Kanäle senden auf den Main - solange Preshow nicht aktiv ist
+    AllMainSends[i]["MainSendOn"] = 1  -- alle Kanäle senden auf den Main - solange Preshow nicht aktiv ist
   end
 
-  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master
+  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)  -- setze alle Sends zum Master
 
   for i=1, number_of_tracks do
 
@@ -64,7 +64,7 @@ function buildRoutingMatrix ()
   end
 end
   
-
+reaper.Undo_BeginBlock()
 
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 retval = ultraschall.AddTrackHWOut(0, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
@@ -90,3 +90,4 @@ reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Recording
 reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Preshow", 0)
 
 reaper.RefreshToolbar2(sec, cmd)
+reaper.Undo_EndBlock("Routing set to editing", -1)
