@@ -25,6 +25,11 @@ function button_run_function_soundcheck_help(element_id)
   reaper.TrackCtl_SetToolTip(reagirl.UI_Element_GetSetMeaningOfUIElement(element_id, false, ""), x, y, true)
 end
 
+function StartSoundcheck(name, function_name)
+  local event_identifier = ultraschall.EventManager_AddEvent(name, 1, 0, false, false, function_name, {"_Ultraschall_Soundcheck_Startgui,0"})
+  ultraschall.SetUSExternalState(name, "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+end
+
 function checkbox_run_function(element_id, checked)
   -- Settings-Tab
   if element_id=="" then
@@ -64,79 +69,55 @@ function checkbox_run_function(element_id, checked)
       reaper.BR_Win32_WritePrivateProfileString("ultraschall_settings_Ultraschall_GUI_largemarkermanager", "Value", "0", ini_file)
     end
     ultraschall.RunCommand("_Ultraschall_Set_View_Record")
-  
+    
   -- Soundcheck Tab
   elseif element_id==tabs2.soundcheck_saveproject then
     if checked==true then
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_unsaved", 1, 0, false, false, SoundcheckUnsaved, {"_Ultraschall_Soundcheck_Startgui,0"})
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_unsaved", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_unsaved", SoundcheckUnsaved)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_unsaved", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_unsaved", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_preparealltracks then
     if checked==true then
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_prepare_for_editing", 1, 0, false, false, SoundcheckTransitionRecordToStop, {"_Ultraschall_Soundcheck_Startgui,0"})
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_prepare_for_editing", SoundcheckTransitionRecordToStop)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_48khz_check then
     if checked==true then
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_samplerate", 1, 0, false, false, SoundcheckSamplerate, {"_Ultraschall_Soundcheck_Startgui,0"})
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_samplerate", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_samplerate", SoundcheckSamplerate)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_samplerate", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_samplerate", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_mic_check then
     if checked==true then
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_mic", 1, 0, false, false, SoundcheckMic, {"_Ultraschall_Soundcheck_Startgui,0"})
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_mic", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_mic", SoundcheckMic)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_mic", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_mic", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_overdub_check then
     if checked==true then
-      local event_paused = toboolean(ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventPaused", "ultraschall-settings.ini"))
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_overdub", 1, 0, false, event_paused, SoundcheckOverdub, {"_Ultraschall_Soundcheck_Startgui,0"})
-      
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_overdub", SoundcheckOverdub)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_unknown_interface then
     if checked==true then
-      local event_paused = toboolean(ultraschall.GetUSExternalState("ultraschall_soundcheck_changed_interface", "EventPaused", "ultraschall-settings.ini"))
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_changed_interface", 1, 0, false, event_paused, SoundcheckChangedInterface, {"_Ultraschall_Soundcheck_Startgui,0"})
-      
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_changed_interface", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_changed_interface", SoundcheckChangedInterface)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_changed_interface", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_changed_interface", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_distortion_prevention then
     if checked==true then
-      local event_paused = toboolean(ultraschall.GetUSExternalState("ultraschall_soundcheck_Bsize", "EventPaused", "ultraschall-settings.ini"))
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_Bsize", 1, 0, false, event_paused, SoundcheckBsize, {"_Ultraschall_Soundcheck_Startgui,0"})
-      
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_Bsize", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_Bsize", SoundcheckBsize)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_Bsize", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_Bsize", "EventIdentifier", "ultraschall-settings.ini"))
     end
   elseif element_id==tabs2.soundcheck_input_wizard then
     if checked==true then
-      local event_paused = toboolean(ultraschall.GetUSExternalState("ultraschall_soundcheck_inputs", "EventPaused", "ultraschall-settings.ini"))
-      local event_identifier = ultraschall.EventManager_AddEvent("ultraschall_soundcheck_inputs", 1, 0, false, event_paused, SoundcheckInputs, {"_Ultraschall_Soundcheck_Startgui,0"})
-      
-      ultraschall.SetUSExternalState("ultraschall_soundcheck_inputs", "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+      StartSoundcheck("ultraschall_soundcheck_inputs", SoundcheckInputs)
     else
-      local event_identifier = ultraschall.GetUSExternalState("ultraschall_soundcheck_inputs", "EventIdentifier", "ultraschall-settings.ini")
-      local retval = ultraschall.EventManager_RemoveEvent(event_identifier)
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_inputs", "EventIdentifier", "ultraschall-settings.ini"))
     end
     
   end
