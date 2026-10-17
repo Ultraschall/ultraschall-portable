@@ -26,7 +26,6 @@
 
 function SoundcheckUnsaved(userspace)
 
-
   -- print(reaper.GetPlayStateEx(0))
   --print(reaper.IsProjectDirty(0))
 
@@ -93,7 +92,6 @@ end
 
 function SoundcheckOverdub(userspace)
 
-
   if reaper.GetPlayState() ~= 5 then
     userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
     -- return false
@@ -115,7 +113,7 @@ function SoundcheckOverdub(userspace)
 
   if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
     userspace["skip_overdub_check"] = 1
-    userspace["overdub_warning"] = 0
+    userspace["overdub_warning"] = 0    
     return false
 
   elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
