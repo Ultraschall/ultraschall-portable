@@ -30,6 +30,10 @@ function StartSoundcheck(name, function_name)
   ultraschall.SetUSExternalState(name, "EventIdentifier", event_identifier, "ultraschall-settings.ini")
 end
 
+function slider_run_func(element_id, value)
+  ultraschall.RunCommand("_Ultraschall_Play_Sound")
+end
+
 function checkbox_run_function(element_id, checked)
   -- Settings-Tab
   if element_id=="" then
@@ -302,7 +306,7 @@ tabs2.button_help8 = reagirl.Button_Add(-100, nil, 0, 0, "?", "Opens the help pa
 reagirl.UI_Element_GetSetExtState(tabs2.button_help8, true, "Value", tabs2.soundcheck_input_wizard)
 
 reagirl.NextLine(30)
-tabs2.soundchecks_description = reagirl.Label_Add(nil, nil, "The soundcheck checks for common mistakes \nand problems, happening during podcast-production.\n\nThe checks try to save you from these problems.\n\nIf you don't need a specific check, deactivate \nthe checkbox for the soundcheck.", "Soundchecks.", false, label_run_function, "label_soundchecks", nil)
+tabs2.soundchecks_description = reagirl.Label_Add(nil, nil, "The soundcheck checks for common mistakes \nand problems, happening during podcast-production.\n\nThese checks try to save you from these problems.\n\nIf you don't need a specific check, deactivate \nthe checkbox for this soundcheck.", "Soundchecks.", false, label_run_function, "label_soundchecks", nil)
 
 reagirl.Label_AutoBackdrop(tabs2.soundchecks, tabs2.soundchecks_description)
 

@@ -99,9 +99,11 @@ liegen.
 
 CoreAudio H6=2
 
-Zum anderen werden dort alle bisher unbekannten Devices mit ihrem Namen eingetragen, die NutzerIn anschließt. Wenn ein bisher unbekanntes Device (noch kein Eintrag in diesen Settings) angeschlossen wird, meldet sich ein Soundcheck mit der Abfrage, ob direct monitoring möglich ist oder nicht. Der Wert wird dann eingetragen.
+Zum anderen werden dort alle bisher unbekannten Devices mit ihrem Namen eingetragen, die NutzerIn anschließt. Wenn ein bisher unbekanntes Device (noch kein Eintrag 
+in diesen Settings) angeschlossen wird, meldet sich ein Soundcheck mit der Abfrage, ob direct monitoring möglich ist oder nicht. Der Wert wird dann eingetragen.
 
-Wird ein Device über die GUI "gelöscht", so verbleibt der Eintrag in den Settings, wird aber auf unsichtbar geschaltet (Wert 2 oder 3). Wenn das Gerät doch noch einmal angeschlossen wird, erscheint dann kein Soundcheck sondern der entsprechende Wert wird auf 0 oder 1 gesetzt.
+Wird ein Device über die GUI "gelöscht", so verbleibt der Eintrag in den Settings, wird aber auf unsichtbar geschaltet (Wert 2 oder 3). Wenn das Gerät doch noch 
+einmal angeschlossen wird, erscheint dann kein Soundcheck sondern der entsprechende Wert wird auf 0 oder 1 gesetzt.
 
 
 die States im Überblick:
