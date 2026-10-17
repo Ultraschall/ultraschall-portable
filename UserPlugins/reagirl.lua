@@ -9246,7 +9246,6 @@ function reagirl.UI_Element_GetType(element_id)
 end
 
 function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
- 
   if placenext==nil or placenext==false then placenext=0 else placenext=9 end
   local slot=reagirl.UI_Element_GetNextFreeSlot()
   local slot3=slot
@@ -9263,7 +9262,11 @@ function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
     reagirl.TempX=nil
     reagirl.TempY=nil
     reagirl.UI_Element_NextX_Default=x+nudgex
-    return x+nudgex, y+nudgey, slot3    
+    
+    reagirl.UI_Element_NextLineY=0
+    reagirl.NextLine_triggered=nil
+    
+    return x+nudgex, y+nudgey, slot3
   end
   
   if reagirl.Next_Y~=nil then slot=reagirl.Next_Y+1 end
@@ -9271,6 +9274,7 @@ function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
   if x==nil then
     if slot==1 or reagirl.UI_Element_NextLineY>0 then
       x=reagirl.UI_Element_NextX_Default
+      --print2(reagirl.UI_Element_NextX_Default)
     elseif reagirl.Next_Y~=nil then
       local offset=0
       if reagirl.Next_Y_offset~=nil then offset=reagirl.Next_Y_offset end
@@ -9293,8 +9297,13 @@ function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
     end
   end
   
+  --reagirl.UI_Element_NextLineX=x
+  --reagirl.UI_Element_NextX_Default=x
+  
+  
   local taboffset=0
   if y==nil and reagirl.Next_Y~=nil and reagirl.NextLine_triggered==true then
+    local x2=reagirl.Elements[reagirl.Next_Y]["x"]
     local y2=reagirl.Elements[reagirl.Next_Y]["y"]
     local h2=reagirl.Elements[reagirl.Next_Y]["h"]
     if reagirl.Elements[reagirl.Next_Y]["GUI_Element_Type"]=="Tabs" then
@@ -9303,6 +9312,7 @@ function reagirl.UI_Element_GetNextXAndYPosition(x, y, functionname, placenext)
       taboffset=4
     end
     reagirl.Next_Y=nil
+
     if y2<0 and y2+h2+reagirl.UI_Element_NextLineY>0 then error(functionname..": param #2 - can't anchor ui-element closer to bottom of window", 2) end
     local offset=0
     if reagirl.Next_Y_offset~=nil then offset=reagirl.Next_Y_offset end
@@ -9368,6 +9378,8 @@ function reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   if math.type(y)~="integer" then error("AutoPosition_SetNextUIElementAtPosition: param #2 - must be an integer", 2) end
   reagirl.TempX=x
   reagirl.TempY=y
+  --reagirl.NudgeX=100
+  --reagirl.NudgeY=200
 end
 
 
@@ -10102,6 +10114,7 @@ function reagirl.UI_Element_GetIDFromGuid(guid)
   if type(guid)~="string" then error("UI_Element_GetIDFromGuid: param #1 - must be a string", 2) end
   if guid:match("{........%-....%-....%-....%-............}")==nil then error("UI_Element_GetIDFromGuid: param #1 - must be a valid guid", 2) end
   for i=1, #reagirl.Elements do
+    
     if guid==reagirl.Elements[i]["Guid"] then return i end
   end
   return -1
@@ -20581,10 +20594,11 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
       local y3=(y-reagirl.MoveItAllUp)/reagirl.Window_GetCurrentScale()
       
       local x2, w2
-      if reagirl.UI_Element_GetIDFromGuid(element_storage["bg_dest_x"])~=nil then
+      if element_storage["bg_dest_x"]~=nil then
         local element_id2=reagirl.UI_Element_GetIDFromGuid(element_storage["bg_dest_x"])
-        x2=reagirl.Elements[element_id]["x"]
-        w2=reagirl.Elements[element_id]["w"]
+        x2=reagirl.Elements[element_id2]["x"]
+        w2=reagirl.Elements[element_id2]["w"]
+        --print2(element_storage["bg_dest_x"], reagirl.Elements[element_id]["w"], element_id2)
       end
       
       if y2>=0 then
@@ -20596,7 +20610,8 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
       if element_storage["bg_dest_x"]==nil then
         element_storage["bg_w"]=bg_w/reagirl.Window_GetCurrentScale()        
       else
-        element_storage["bg_w"]=w2
+        --print(w2)
+        element_storage["bg_w"]=x2+w2-30
       end
       element_storage["bg_h"]=bg_h-1
       element_storage["bg"]=nil
@@ -20879,7 +20894,11 @@ function reagirl.Label_AutoBackdrop(element_id, dest_element_id_y, dest_element_
   if type(dest_element_id_y)~="string" then error("Label_AutoBackdrop: param #2 - must be a string", 2) end
   if reagirl.IsValidGuid(dest_element_id_y, true)==false then error("Label_AutoBackdrop: param #2 - must be a valid guid", 2) end
   if reagirl.UI_Element_GetIDFromGuid(dest_element_id_y)==-1 then error("Label_AutoBackdrop: param #2 - no such ui-element", 2) end
-  
+  if dest_element_id_x~=nil then 
+    if type(dest_element_id_x)~="string" then error("Label_AutoBackdrop: param #3 - must be nil or a string", 2) end
+    if reagirl.IsValidGuid(dest_element_id_x, true)==false then error("Label_AutoBackdrop: param #3 - must be a valid guid", 2) end
+    if reagirl.UI_Element_GetIDFromGuid(dest_element_id_y)==-1 then error("Label_AutoBackdrop: param #3 - no such ui-element", 2) end
+  end
   if reagirl.Elements[element_id]["GUI_Element_Type"]:sub(-5, -1)~="Label" then
     error("Label_AutoBackdrop: param #1 - ui-element is not a label", 2)
   else
@@ -23113,8 +23132,13 @@ function reagirl.AutoPosition_SetNextUIElementRelativeTo(element_id, offset)
   element_id = reagirl.UI_Element_GetIDFromGuid(element_id)
   if element_id==-1 then error("AutoPosition_SetNextUIElementRelativeTo: param #1: no such ui-element", 2) return end
   if reagirl.Elements[element_id]["GUI_Element_Type"]=="Tabs" then reagirl.NextLine() end
+  --reagirl.AutoPosition_SetNextUIElementAtPosition(10, 0)
+  --reagirl.UI_Element_NextX_Margin=10
+  --reagirl.UI_Element_NextY_Margin=2 -- nextline =2
   reagirl.Next_Y=element_id
   reagirl.Next_Y_offset=offset
+  reagirl.TempX=nil
+  reagirl.TempY=nil
 end
 
 -- mespotine
