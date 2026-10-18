@@ -275,7 +275,7 @@ reagirl.Gui_New()
 -- 3. add the ui-elements and set their attributes
 reagirl.Image_Add(0, 0, 65, 42, gfx_path.."settings_logo.png", "Settings-Logo", "Settings-Logo.", nil, nil)
 reagirl.Image_Add(77, 12, 109, 18, gfx_path.."headertxt_settings.png", "Settings-Logo", "Settings-Logo.", nil, nil)
-button_help = reagirl.Button_Add(-104, 12, 20, 5, "Help", "Opens the help page in the manual.", button_run_function, "button_help", mode, width, height)
+button_help = reagirl.Button_Add(-119, 12, 35, 5, "Help", "Opens the help page in the manual.", button_run_function, "button_help", mode, width, height)
 reagirl.Button_SetRadius(button_help, 10)
 
 decor_rectangle_guid = reagirl.DecorRectangle_Add(0, 0, 1500, 41, 0, 37, 37, 37)
@@ -594,7 +594,7 @@ reagirl.UI_Element_GetSetExtState(tabs2.button_help8, true, "Value", tabs2.sound
 reagirl.NextLine(30)
 tabs2.soundchecks_description = reagirl.Label_Add(320, 140, "The soundcheck checks for common mistakes and \nproblems that could happen during podcast-production.\n\nThese checks try to save you from these problems.\n\nIf you don't need a specific check, deactivate \nthe checkbox for this soundcheck.", "Soundchecks.", false, label_run_function, "label_soundchecks_description", nil)
 
-reagirl.Label_SetBackdrop(tabs2.soundchecks, 620, 193)
+reagirl.Label_SetBackdrop(tabs2.soundchecks, 619, 193)
 
 -- add all ui-elements for the Devices-tab
 tabs3={}
