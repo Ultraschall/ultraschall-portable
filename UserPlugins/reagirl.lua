@@ -9382,6 +9382,36 @@ function reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   --reagirl.NudgeY=200
 end
 
+function reagirl.Gui_Label_Background_Width(width)
+  --[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>Gui_Label_Background_Width</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>reagirl.Gui_Label_Background_Width(optional integer width)</functioncall>
+  <description>
+    Sets a new background fixed width, used by auto-backdrops for labels, if the default width doesn't look right in your gui.
+  </description>
+  <parameters>
+    optional integer width - the width of the background in pixels; set to nil for default
+  </parameters>
+  <chapter_context>
+    Gui
+  </chapter_context>
+  <target_document>ReaGirl_Functions</target_document>
+  <source_document>reagirl.lua</source_document>
+  <tags>gui, labels, backdrop, auto, width</tags>
+  <changelog>
+    ReaGirl 1.4 - added to ReaGirl
+  </changelog>
+</US_DocBloc>
+]]
+  if width~=nil and math.type(width)~="integer" then error("Gui_Bavkground_Width: param #1 - must be an integer", 2) end  
+  reagirl.background_width=width
+end
 
 function reagirl.UI_Element_GetSet_ContextMenu(element_id, is_set, menu, menu_function)
 --[[
@@ -20608,7 +20638,6 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
         local element_id2=reagirl.UI_Element_GetIDFromGuid(element_storage["bg_dest_x"])
         x2=reagirl.Elements[element_id2]["x"]
         w2=reagirl.Elements[element_id2]["w"]
-        --print2(element_storage["bg_dest_x"], reagirl.Elements[element_id]["w"], element_id2)
       end
       
       if y2>=0 then
@@ -20618,9 +20647,11 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
         bg_h=y2+h2
       end
       if element_storage["bg_dest_x"]==nil then
-        element_storage["bg_w"]=bg_w/reagirl.Window_GetCurrentScale()        
+        element_storage["bg_w"]=bg_w/reagirl.Window_GetCurrentScale()
+        if reagirl.background_width~=nil then
+          element_storage["bg_w"]=reagirl.background_width
+        end
       else
-        --print(w2)
         element_storage["bg_w"]=w2+10
       end
       element_storage["bg_h"]=bg_h-1
@@ -25252,7 +25283,7 @@ function reagirl.Tabs_Draw(element_id, selected, hovered, clicked, mouse_cap, mo
     if element_storage["w_background"]==nil then 
       _, _, _, _, _, _, _, _, bg_w = reagirl.Gui_GetBoundaries()
       bg_w=(bg_w-x2+19*dpi_scale)--*dpi_scale 
-      element_storage["bg_w"]=bg_w
+      element_storage["bg_w"]=bg_w      
       --element_storage["w_background"]=bg_w
     else 
       if element_storage["w_background"]>0 then bg_w=element_storage["w_background"]*dpi_scale else bg_w=gfx.w+element_storage["w_background"]*dpi_scale-offset_x end

@@ -1,7 +1,10 @@
+--A,B,C=reaper.GetAudioDeviceInfo("IDENT_IN")
+--if lol==nil then return end
+
 --[[
 ################################################################################
 # 
-# Copyright (c) 2023-present Ultraschall - ultraschall.fm
+# Copyright (c) 2014-present Ultraschall - ultraschall.fm
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +36,17 @@ ini_file=reaper.GetResourcePath().."/ultraschall-settings.ini"
 
 -- 0. enable ReaGirl for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+
+--[[
+function reagirl.Checkbox_LinkToIniValue()
+
+end
+
+function reagirl.Slider_LinkToIniValue()
+
+end
+--]]
+
 -- check for required version; alter the version-number if necessary
 if reagirl.GetVersion()<1.4 then reaper.MB("Needs ReaGirl v"..(1.4).." to run", "Too old version", 0) return false end
 
@@ -319,7 +333,7 @@ function Build_Settings_Recording(x, y, width)
   tabs1.replace_rec_tape_mode = reagirl.Checkbox_Add(nil, nil, "Tape Mode Recording", "This turns tape-mode for new recordings, which records over old recordings if recording is not started at end of the project. \n\nTurn off to get old takes-mode(Ultraschall 5.1.1 and earlier).", true, checkbox_run_function, "checkbox_replace_rec_tapemode" )
   reagirl.Checkbox_LinkToIniValue(tabs1.replace_rec_tape_mode, ini_file, "ultraschall_settings_tape_mode_recording", "Value", "0", "1", "1", true)
   reagirl.NextLine(5)
-  tabs1.preroll_time_recording = reagirl.Slider_Add(nil, nil, 300, "Preroll time recording:", 140, "Set the time in seconds by which the program jumps back for a preroll recording.", "Seconds", 1, 10.0, 1, 5, 5, slider_run_func, "slider_preroll_time_recording")
+  tabs1.preroll_time_recording = reagirl.Slider_Add(nil, nil, 500, "Preroll time recording:", 140, "Set the time in seconds by which the program jumps back for a preroll recording.", "Seconds", 1, 10.0, 1, 5, 5, slider_run_func, "slider_preroll_time_recording")
   reagirl.Slider_LinkToIniValue(tabs1.preroll_time_recording, ini_file, "ultraschall_settings_preroll_recording", "Value", 1.7, true, nil)
   if width~=nil then width=tabs1.preroll_time_recording end
   reagirl.Label_AutoBackdrop(tabs1.recording, tabs1.preroll_time_recording, width)--, tabs1.preroll_time_recording)
@@ -334,7 +348,7 @@ function Build_Settings_PlayBack(x, y, width)
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.playback = reagirl.Label_Add(nil, nil, "Playback", "Settings for playback.", false, label_run_function, "label_playback", nil)
   reagirl.NextLine()
-  tabs1.shuttle_stepper_speed = reagirl.Slider_Add(nil, nil, 300, "Shuttle Stepper Speed:", 140, "Sets the speed of stepwise playback by shuttle (Shift+J and Shift+L) in seconds.", "Seconds", 0.1, 8, 0.1, 0.2, 0.2, slider_run_func, "slider_shuttle_stepper_speed ")
+  tabs1.shuttle_stepper_speed = reagirl.Slider_Add(nil, nil, 500, "Shuttle Stepper Speed:", 140, "Sets the speed of stepwise playback by shuttle (Shift+J and Shift+L) in seconds.", "Seconds", 0.1, 8, 0.1, 0.2, 0.2, slider_run_func, "slider_shuttle_stepper_speed ")
   reagirl.Slider_LinkToIniValue(tabs1.shuttle_stepper_speed, ini_file, "ultraschall_settings_shuttle_step_speed", "Value", 0.2, true, nil)
   if width~=nil then width=tabs1.preroll_time_recording end
   reagirl.Label_AutoBackdrop(tabs1.playback, tabs1.shuttle_stepper_speed, width)--tabs1.preroll_time_recording)
@@ -350,7 +364,7 @@ function Build_Settings_Editing(x, y, width)
 
   tabs1.editing= reagirl.Label_Add(nil, nil, "Editing", "Settings for editing.", false, label_run_function, "label_editing", nil)
   reagirl.NextLine()
-  tabs1.preroll_time_preview = reagirl.Slider_Add(nil, nil, 300, "Preroll time preview:", 140, "Set the time in seconds by which the program jumps back when the \"p\" key is used to preview cuts.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "slider_preroll_time_preview")
+  tabs1.preroll_time_preview = reagirl.Slider_Add(nil, nil, 500, "Preroll time preview:", 140, "Set the time in seconds by which the program jumps back when the \"p\" key is used to preview cuts.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "slider_preroll_time_preview")
   reagirl.Slider_LinkToIniValue(tabs1.preroll_time_preview, ini_file, "ultraschall_settings_preroll", "Value", 1.7, true, nil)
   reagirl.NextLine(5)
   tabs1.ripple_cut_review = reagirl.Checkbox_Add(nil, nil, "Review Ripple-Cut-edits", "Review the edit of a ripple-cut after the edit is made. Set the time with the Preroll time preview-slider.", true, checkbox_run_function, "checkbox_ripple_cut_review" )
@@ -377,7 +391,7 @@ function Build_Settings_Soundboard(x, y, width)
   tabs1.soundboard_duck_editing = reagirl.Checkbox_Add(nil, nil, "Soundboard ducking during editing", "Activate ducking of the soundboard during editing. If anyone starts to talk to a microphone, the Soundboard track will be gently reduced in volume.", true, checkbox_run_function, "checkbox_soundboard_duck_editing")
   reagirl.Checkbox_LinkToIniValue(tabs1.soundboard_duck_editing, ini_file, "ultraschall_settings_soundboard_ducking_editing", "Value", "0", "1", "1", true)
   reagirl.NextLine(5)
-  tabs1.soundboard_preshow_music_mix = reagirl.Slider_Add(nil, nil, 300, "Preshow music mix:", 140, "Play some music from the Ultraschall-Soundboard in your preshow to entertain the livestream. If you choose the preshow routing preset, you can mix none (0) some or all (1) of the music to your headphones mix.", "%", 0, 100, 1, 30, 30, slider_run_func, "slider_soundboard_preshow_music_mix")
+  tabs1.soundboard_preshow_music_mix = reagirl.Slider_Add(nil, nil, 500, "Preshow music mix:", 140, "Play some music from the Ultraschall-Soundboard in your preshow to entertain the livestream. If you choose the preshow routing preset, you can mix none (0) some or all (1) of the music to your headphones mix.", "%", 0, 100, 1, 30, 30, slider_run_func, "slider_soundboard_preshow_music_mix")
   reagirl.Slider_LinkToIniValue(tabs1.soundboard_preshow_music_mix, ini_file, "ultraschall_settings_preshow_mix", "Value", 30, true, 0.01)
   if width~=nil then width=tabs1.soundboard_preshow_music_mix end
   reagirl.Label_AutoBackdrop(tabs1.soundboard, tabs1.soundboard_preshow_music_mix, width)
@@ -398,7 +412,7 @@ function Build_Settings_Helpersounds(x, y, width)
   tabs1.sound_when_render_finishes = reagirl.Checkbox_Add(nil, nil, "Play sound when render is finished/aborted", "When checked, it plays a sound when render is finished/aborted.", false, checkbox_run_function, "checkbox_sound_when_render_finishes")
   reagirl.Checkbox_LinkToIniValue(tabs1.sound_when_render_finishes, ini_file, "ultraschall_settings_render_finished_ping", "Value", "0", "1", "0", true)
   reagirl.NextLine(5)
-  tabs1.sound_ping_volume = reagirl.Slider_Add(nil, nil, 300, "Volume of ping-sounds:", 140, "Set volume of the ping sounds.", "%", 0, 100, 1, 50, 50, slider_run_func, "slider_sound_ping_volume")
+  tabs1.sound_ping_volume = reagirl.Slider_Add(nil, nil, 500, "Volume of ping-sounds:", 140, "Set volume of the ping sounds.", "%", 0, 100, 1, 50, 50, slider_run_func, "slider_sound_ping_volume")
   reagirl.Slider_LinkToIniValue(tabs1.sound_ping_volume, ini_file, "ultraschall_settings_tims_chapter_ping_volume", "Value", 50, true, 0.01)
   if width~=nil then width=tabs1.sound_ping_volume end
   reagirl.Label_AutoBackdrop(tabs1.helpersounds, tabs1.sound_ping_volume, width)
@@ -437,7 +451,7 @@ function Build_Settings_VisualSettings(x, y, width)
   tabs1.larger_marker_manager = reagirl.Checkbox_Add(nil, nil, "Large marker manager", "Give way more space to the marker manager on the right.", false, checkbox_run_function, "checkbox_larger_marker_manager")
   reagirl.Checkbox_LinkToIniValue(tabs1.larger_marker_manager, ini_file, "ultraschall_settings_Ultraschall_GUI_largemarkermanager", "Value", "0", "1", "0", true)
   reagirl.NextLine()
-  tabs1.zoom_out_sensitivity = reagirl.Slider_Add(nil, nil, 300, "Zoom Out sensitivity:", 140, "Set the sensitivity of zooming out, when zoomed further out of the project.", "", 0.4, 8, 0.1, 0.4, 0.4, slider_run_func, "slider_zoom_out_sensitivity")
+  tabs1.zoom_out_sensitivity = reagirl.Slider_Add(nil, nil, 500, "Zoom Out sensitivity:", 140, "Set the sensitivity of zooming out, when zoomed further out of the project.", "", 0.4, 8, 0.1, 0.4, 0.4, slider_run_func, "slider_zoom_out_sensitivity")
   reagirl.Slider_LinkToIniValue(tabs1.zoom_out_sensitivity, ini_file, "ultraschall_settings_Zoom_Sensitivity", "Value", 0.4, true, nil)
   if width~=nil then width=tabs1.zoom_out_sensitivity end
   reagirl.Label_AutoBackdrop(tabs1.visual_settings, tabs1.zoom_out_sensitivity, width)
@@ -546,7 +560,7 @@ tabs2.soundchecks = reagirl.Label_Add(nil, nil, "Available Soundchecks", "Soundc
 reagirl.NextLine()
 tabs2.soundcheck_saveproject = reagirl.Checkbox_Add(nil, nil, "Save project before recording", "The project should be saved before recording starts. Ignoring this can lead to difficulties in finding your records or even to loss of data.", true, checkbox_run_function, "checkbox_soundcheck_save_project")
 reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_saveproject, ini_file, "ultraschall_soundcheck_unsaved", "Value", "0", "1", "1", true)
-tabs2.button_help = reagirl.Button_Add(250, nil, 0, 0, "?", "Opens the help page in the manual.", button_run_function_soundcheck_help, "button_help", mode, width, height)
+tabs2.button_help = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for save project before recording.", button_run_function_soundcheck_help, "button_help", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help, true, "Value", tabs2.soundcheck_saveproject)
 
 reagirl.NextLine()
@@ -574,7 +588,7 @@ tabs2.button_help5 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for start rec
 reagirl.UI_Element_GetSetExtState(tabs2.button_help5, true, "Value", tabs2.soundcheck_overdub_check)
 
 reagirl.NextLine()
-tabs2.soundcheck_unknown_interface = reagirl.Checkbox_Add(nil, nil, "Unknown sound interface check", "Watches for a change in your sound interface.", true, checkbox_run_function, "checkbox_soundcheck_unknown_interface")
+tabs2.soundcheck_unknown_interface = reagirl.Checkbox_Add(nil, nil, "Unknown sound interface check", "Watches for a change in your sound interface. This affects Magic Routing, as this will set direct monitoring accordingly in the routing. \n\nIf the interface is unknown yet, the soundcheck will ask, whether direct monitoring(plugging headphones into the audio device) is supported.", true, checkbox_run_function, "checkbox_soundcheck_unknown_interface")
 reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_unknown_interface, ini_file, "ultraschall_soundcheck_changed_interface", "Value", "0", "1", "1", true)
 tabs2.button_help6 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for unknown sound interface check.", button_run_function_soundcheck_help, "button_help6", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help6, true, "Value", tabs2.soundcheck_unknown_interface)
@@ -597,21 +611,71 @@ tabs2.soundchecks_description = reagirl.Label_Add(320, 140, "The soundcheck chec
 reagirl.Label_SetBackdrop(tabs2.soundchecks, 619, 193)
 
 -- add all ui-elements for the Devices-tab
-tabs3={}
+function Build_Devices_Tab()
+  if tabs3~=nil then reagirl.UI_Element_SetHiddenFromTable(tabs3, false) end
+  local tabs3={}
+  
+  local Found=true
+  local Found_Counter=1
+  local Found_Devices={}
+  while Found==true do
+    local found_device=ultraschall.EnumerateIniFileExternalState_key("ultraschall_devices", Found_Counter, reaper.GetResourcePath().."/ultraschall-settings.ini")
+    Found_Devices[#Found_Devices+1]=found_device
+    Found_Counter=Found_Counter+1
+    if found_device==nil then Found=false end
+  end
+  Found_Devices_Monitoring={}
+  for i=1, Found_Counter-2 do
+    Found_Devices_Monitoring[i]=tonumber(ultraschall.GetUSExternalState("ultraschall_devices", Found_Devices[i], "ultraschall-settings.ini"))
+  end
+  
+  for i=Found_Counter-2, 1, -1 do
+    if Found_Devices_Monitoring[i]>1 then table.remove(Found_Devices_Monitoring, i) table.remove(Found_Devices, i) end
+  end
+  
+  -- next codeline for some reason, buggy with reagirl.NextLine() in ReaGirl
+  --reagirl.AutoPosition_SetNextUIElementAtPosition(30, 98) 
+  
+  -- this line works however
+  reagirl.AutoPosition_SetNextUIElementRelativeTo(tabs_guid)
+  tabs3.devices = reagirl.Label_Add(nil, nil, "Used interface-devices", "Currently and previously used interface devices.", false, label_run_function, "label_devices", nil)
+  reagirl.NextLine()
+  tabs3.description= reagirl.Label_Add(nil, nil, "This list shows all audio interfaces you ever connected. \n\nIf you can plug a headphone to your audio interface, it supports Direct Monitoring. \n\nIf you can not connect a headphone direct into your audio interface, make sure \nto uncheck the Direct Monitoring box to get the audio routing right. \n\nYou can delete obsolete devices via the delete button.", "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make sure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices.", false, label_run_function, "label_soundchecks", nil)
+  
+  reagirl.NextLine(10)
+  
+  tabs3.devices2 = reagirl.Label_Add(nil, nil, "Available devices", "Currently and previously used interface devices.", false, label_run_function, "label_devices2", nil)
+  reagirl.NextLine()
+  
+  for i=1, #Found_Devices do
+    tabs3[("interface"..i)] = reagirl.Checkbox_Add(nil, nil, Found_Devices[i], "Device with name "..Found_Devices[i]..". Check, if direct monitoring is available(you can plug in headphones to your device) or not.", Found_Devices_Monitoring[i]==1, checkbox_run_function, ("interface"..i))
+    reagirl.Checkbox_LinkToIniValue(tabs3[("interface"..i)], ini_file, "ultraschall_devices", Found_Devices[i], "0", "1", "1", true)
+    reagirl.NextLine()
+    if i==#Found_Devices then reagirl.Label_AutoBackdrop(tabs3.devices2, tabs3[("interface"..i)]) end
+  end
+  reagirl.UI_Element_SetHiddenFromTable(tabs3, false)
+  return tabs3
+end
 
+tabs3=Build_Devices_Tab()
 
 -- associate tabs with the ui-elements stored in the tables
 reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
 reagirl.Tabs_SetUIElementsForTab(tabs_guid, 2, tabs2)
 reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3)
 
+reagirl.Gui_Label_Background_Width(509)
 
 -- 4. open the gui
-reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", width, 500, nil, nil, nil)
+reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", 670, 490, nil, nil, nil)
 
 -- 5. a main-function that runs the gui-management-function
 function main()
   reagirl.Gui_Manage()
+  
+  local _,_,_,modified=reaper.JS_File_Stat(reaper.GetResourcePath().."/ultraschall-settings.ini")
+  if modified~=old_modified_ini_file then tabs3=Build_Devices_Tab() reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3) reagirl.Gui_ForceRefresh() end
+  old_modified_ini_file=modified
   
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end

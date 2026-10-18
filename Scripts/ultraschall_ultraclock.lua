@@ -842,63 +842,67 @@ function drawClock()
   gfx.set(1)
 end
 
-
+counter=0
 function MainLoop()
-  if reaper.GetExtState("UltraClock", "FocusMe")=="true" then
-    reaper.JS_Window_SetFocus(clock_hwnd)
-    focus_window=true
-    reaper.SetExtState("UltraClock", "FocusMe", "", false)
-  end
-  focus_me()
-  local retval, msg=checkhover()
-  if msg~=oldmsg then
-    reaper.osara_outputMessage(msg)
-  end
-  oldmsg=msg
-  if retval==true then gfx.setcursor(0x7f89, "") else gfx.setcursor(0, "") end
-  if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
-
-  if Triggered==true then
-    local ret=showmenu(menuposition)
-    menuposition=nil
-    if ret==13 then -- /undock
-      dock_state=gfx.dock(-1)
-      if dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
-    elseif ret==14 then exit_clock()
+  if counter==3 then counter=0 end
+  counter=counter+1
+  if counter==1 then
+    if reaper.GetExtState("UltraClock", "FocusMe")=="true" then
+      reaper.JS_Window_SetFocus(clock_hwnd)
+      focus_window=true
+      reaper.SetExtState("UltraClock", "FocusMe", "", false)
     end
-
-    if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
-
-    AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked
-    --ultraschall.ShowErrorMessagesInReascriptConsole()
-  end
+    focus_me()
+    local retval, msg=checkhover()
+    if msg~=oldmsg then
+      reaper.osara_outputMessage(msg)
+    end
+    oldmsg=msg
+    if retval==true then gfx.setcursor(0x7f89, "") else gfx.setcursor(0, "") end
+    if reaper.time_precise() > lasttime+refresh or gfx.w~=lastw or gfx.h~=lasth then drawClock()  end
   
-  if Triggered==nil then
-    if gfx.mouse_cap & 2 == 2 then -- right mousecklick
-      Triggered=true
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --left mouseclick
-      Triggered=true
-      menuposition=1
-      gfx.x=zahnradbutton_posx
-      gfx.y=zahnradbutton_posy
-      gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
-    elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
-      id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
-      reaper.Main_OnCommand(id,0)
-    elseif (gfx.mouse_cap &1 ==1) and gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h and Triggered2==nil then
-      Triggered2=true
-      if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
-      gfx.update()
-      
-      drawClock()
-    elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
-      lufs_pos_y=date_position_y
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
-        openWindowLUFS()
+    if Triggered==true then
+      local ret=showmenu(menuposition)
+      menuposition=nil
+      if ret==13 then -- /undock
+        dock_state=gfx.dock(-1)
+        if dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
+      elseif ret==14 then exit_clock()
       end
+  
+      if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
+  
+      AAA2=ultraschall.SetUSExternalState("ultraschall_clock", "docked", is_docked)  --save state docked
+      --ultraschall.ShowErrorMessagesInReascriptConsole()
     end
-  else
-    Triggered=nil
+    
+    if Triggered==nil then
+      if gfx.mouse_cap & 2 == 2 then -- right mousecklick
+        Triggered=true
+      elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_x>=zahnradbutton_posx and gfx.mouse_x<=zahnradbutton_posx+(zahnradbutton_x*zahnradscale) and gfx.mouse_y>=zahnradbutton_posy and gfx.mouse_y<zahnradbutton_posy+(zahnradbutton_y*zahnradscale) then --left mouseclick
+        Triggered=true
+        menuposition=1
+        gfx.x=zahnradbutton_posx
+        gfx.y=zahnradbutton_posy
+        gfx.blit(zahnradbutton_clicked, zahnradscale, 0)
+      elseif (gfx.mouse_cap & 1 ==1) and gfx.mouse_y>gfx.h-(80*retina_mod) then -- Linksklick auf Soundcheck-Footer
+        id = reaper.NamedCommandLookup("_Ultraschall_Soundcheck_Startgui")
+        reaper.Main_OnCommand(id,0)
+      elseif (gfx.mouse_cap &1 ==1) and gfx.mouse_y>time_y and gfx.mouse_y<time_y+time_h and Triggered2==nil then
+        Triggered2=true
+        if uc_menu[4].checked==true then uc_menu[4].checked=false else uc_menu[4].checked=true end
+        gfx.update()
+        
+        drawClock()
+      elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
+        lufs_pos_y=date_position_y
+        if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+          openWindowLUFS()
+        end
+      end
+    else
+      Triggered=nil
+    end
   end
   if gfx.mouse_cap==0 then
     Triggered2=nil
