@@ -20584,7 +20584,17 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
     
     -- backdrop
     if element_storage["bg"]=="auto" then
-      _, _, _, _, _, _, _, _, bg_w = reagirl.Gui_GetBoundaries()
+      _, _, _, _, _, _, _, _, bg_w = reagirl.Gui_GetBoundaries() 
+      --[[
+      integer minimum_visible_x, 
+      integer maximum_visible_x, 
+      integer minimum_visible_y, 
+      integer maximum_visible_y, 
+      integer minimum_all_x, 
+      integer maximum_all_x, 
+      integer minimum_all_y, 
+      integer maximum_all_y = reagirl.Gui_GetBoundaries()
+      --]]
       bg_w=bg_w-x
       if reagirl.Tabs_Count==nil then bg_w=bg_w+5 end
       local element_id=reagirl.UI_Element_GetIDFromGuid(element_storage["bg_dest_y"])
@@ -20611,7 +20621,7 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
         element_storage["bg_w"]=bg_w/reagirl.Window_GetCurrentScale()        
       else
         --print(w2)
-        element_storage["bg_w"]=x2+w2-30
+        element_storage["bg_w"]=w2+10
       end
       element_storage["bg_h"]=bg_h-1
       element_storage["bg"]=nil
@@ -20733,6 +20743,10 @@ function reagirl.Label_SetColor(element_id, r, g, b, r_clickable, g_clickable, b
     Sets a color for a label.
     
     Don't use 51, 51, 51 as this is the color for the backshadow of label-texts.
+    
+    Default color for labels is r=51, g=51, b=51
+    For clickable labels is r=102, g=165, b=255
+    
   </description>
   <parameters>
     string element_id - the label-element, whose color you want to set
@@ -20799,20 +20813,22 @@ end
 function reagirl.Label_GetColor(element_id)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
-   <slug>Label_SetColor</slug>
+   <slug>Label_CetColor</slug>
   <requires>
     ReaGirl=1.32
     Reaper=7.03
     Lua=5.4
   </requires>
-  <functioncall>integer r, integer g, integer b, integer r_clickable, integer g_clickable, integer b_clickable = reagirl.Label_SetColor(string element_id)</functioncall>
+  <functioncall>integer r, integer g, integer b, integer r_clickable, integer g_clickable, integer b_clickable = reagirl.Label_GetColor(string element_id)</functioncall>
   <description>
-    Sets a color for a label.
+    Gets a color for a label.
     
-    Don't use 51, 51, 51 as this is the color for the backshadow of label-texts.
+    Default color for labels is r=51, g=51, b=51
+    For clickable labels is r=102, g=165, b=255
+    
   </description>
   <parameters>
-    string element_id - the label-element, whose color you want to set
+    string element_id - the label-element, whose color you want to get
   </parameters>
   <retvals>
     integer r - the red-color; 0-255; -1 to reset r, g, b to the default color

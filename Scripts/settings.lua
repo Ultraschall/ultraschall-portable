@@ -44,6 +44,7 @@ function button_run_function(element_id)
 end
 
 function button_run_function_soundcheck_help(element_id)
+  -- shows a tooltip for when the help-buttons in the soundcheck-tab are clicked
   local x,y=reaper.GetMousePosition()
   x=x+20*reagirl.Window_GetCurrentScale()
   y=y+20*reagirl.Window_GetCurrentScale()
@@ -52,16 +53,131 @@ function button_run_function_soundcheck_help(element_id)
 end
 
 function StartSoundcheck(name, function_name)
+  -- starts a specific soundcheck
   local event_identifier = ultraschall.EventManager_AddEvent(name, 1, 0, false, false, function_name, {"_Ultraschall_Soundcheck_Startgui,0"})
   ultraschall.SetUSExternalState(name, "EventIdentifier", event_identifier, "ultraschall-settings.ini")
 end
 
 function slider_run_func(element_id, value)
-  ultraschall.RunCommand("_Ultraschall_Play_Sound")
+  if element_id==tabs1.sound_ping_volume then
+    -- plays a sound, when the helper-sounds-slider is changed
+    ultraschall.RunCommand("_Ultraschall_Play_Sound")
+  end
+end
+
+function SetAllPagesInvisible()
+  -- sets all ui-elements of the settings-pages invisible, so we show only, what we want to show as set in label_run_function()
+  reagirl.UI_Element_SetHiddenFromTable(tab_general, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_recording, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_playback, false)
+  
+  reagirl.UI_Element_SetHiddenFromTable(tab_editing, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_mrouting, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_visuals, false)
+  
+  reagirl.UI_Element_SetHiddenFromTable(tab_soundboard, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_helpersound, false)
+  reagirl.UI_Element_SetHiddenFromTable(tab_soundcheck, false)
+end
+
+function ResetLabelStyle()
+   -- resets the style of all page-labels, so we can set the chosen page-label as bold&italic
+   local r, g, b = 155, 155, 155
+   reagirl.Label_SetStyle(page_general, 0)
+   reagirl.Label_SetStyle(page_rec, 0)
+   reagirl.Label_SetStyle(page_playback, 0)
+   
+   reagirl.Label_SetStyle(page_editing, 0)
+   reagirl.Label_SetStyle(page_magicrouting, 0)
+   reagirl.Label_SetStyle(page_visual_settings, 0)
+   
+   reagirl.Label_SetStyle(page_soundboard, 0)
+   reagirl.Label_SetStyle(page_helper_sounds, 0)
+   reagirl.Label_SetStyle(page_soundcheck, 0)
+   
+   --reagirl.Label_SetColor(page_general, 0, 0, 0, r, g, b)
+   --reagirl.Label_SetColor(page_rec, 0, 0, 0, r, g, b)
+   --reagirl.Label_SetColor(page_playback, 0, 0, 0, r, g, b)
+   
+   reagirl.Label_SetColor(page_editing, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_magicrouting, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_visual_settings, 0, 0, 0, r, g, b)
+   
+   reagirl.Label_SetColor(page_soundboard, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_helper_sounds, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_soundcheck, 0, 0, 0, r, g, b)
+end
+
+function label_run_function(element_id)
+  -- manages switching pages in Settings-Tab, when the user clicks into the index
+  -- also sets the clicked label to bold&italic
+  local style1=0
+  local style2=0
+  local r=251
+  local g=208
+  local b=0
+  ResetLabelStyle()
+  if element_id==page_general then
+    reagirl.Label_SetStyle(page_general, style1, style2)
+    reagirl.Label_SetColor(page_general, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_general)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_rec then
+    reagirl.Label_SetStyle(page_rec, style1, style2)
+    reagirl.Label_SetColor(page_rec, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_recording)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_playback then
+    reagirl.Label_SetStyle(page_playback, style1, style2)
+    reagirl.Label_SetColor(page_playback, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_playback)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_editing then
+    reagirl.Label_SetStyle(page_editing, style1, style2)
+    reagirl.Label_SetColor(page_editing, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_editing)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_magicrouting then
+    reagirl.Label_SetStyle(page_magicrouting, style1, style2)
+    reagirl.Label_SetColor(page_magicrouting, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_mrouting)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_visual_settings then
+    reagirl.Label_SetStyle(page_visual_settings, style1, style2)
+    reagirl.Label_SetColor(page_visual_settings, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_visuals)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_soundboard then
+    reagirl.Label_SetStyle(page_soundboard, style1, style2)
+    reagirl.Label_SetColor(page_soundboard, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_soundboard)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_helper_sounds then
+    reagirl.Label_SetStyle(page_helper_sounds, style1, style2)
+    reagirl.Label_SetColor(page_helper_sounds, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_helpersound)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  elseif element_id==page_soundcheck then
+    reagirl.Label_SetStyle(page_soundcheck, style1, style2)
+    reagirl.Label_SetColor(page_soundcheck, 0, 0, 0, r, g, b)
+    SetAllPagesInvisible()
+    tabs1=concat_tables(pages, tab_soundcheck)
+    reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
+  end
 end
 
 function checkbox_run_function(element_id, checked)
-  -- Settings-Tab
+  -- when checkboxes are clicked, this function is run and does things according to what the checkbox needs
+  
+  -- Checkboxes in the Settings-Tab
   if element_id=="" then
   elseif element_id==tabs1.replace_rec_tape_mode then
     if checked==true then
@@ -100,7 +216,7 @@ function checkbox_run_function(element_id, checked)
     end
     ultraschall.RunCommand("_Ultraschall_Set_View_Record")
     
-  -- Soundcheck Tab
+  -- Checkboxes in the Soundcheck Tab
   elseif element_id==tabs2.soundcheck_saveproject then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_unsaved", SoundcheckUnsaved)
@@ -165,12 +281,14 @@ reagirl.Button_SetRadius(button_help, 10)
 decor_rectangle_guid = reagirl.DecorRectangle_Add(0, 0, 1500, 41, 0, 37, 37, 37)
 reagirl.NextLine()
 
-tabs_guid = reagirl.Tabs_Add(10, 55, 650, nil, "Tabs.", "Tabs.", {"General", "Soundcheck", "Devices"}, 1, tab_run_func, "tab")
+tabs_guid = reagirl.Tabs_Add(10, 55, 650, 400, "Tabs.", "Tabs.", {"General", "Soundcheck", "Devices"}, 1, tab_run_func, "tab")
 
 -- Settings-Tab
 tabs1={}
 function Build_Settings_General(x, y, width)
-  --reagirl.AutoPosition_SetNextUIElementRelativeTo(tabs_guid)
+  -- Adds all ui-elements for the general-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.general = reagirl.Label_Add(nil, nil, "General", "General Settings.", false, label_run_function, "label_general", nil)
   reagirl.NextLine()
@@ -181,12 +299,15 @@ function Build_Settings_General(x, y, width)
   reagirl.Checkbox_LinkToIniValue(tabs1.update, ini_file, "ultraschall_settings_startsceen", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.startscreen end
   reagirl.Label_AutoBackdrop(tabs1.general, tabs1.update, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_Recording(x, y, width)
-  --reagirl.AutoPosition_SetNextUIElementRelativeTo(tabs_guid)
+  -- Adds all ui-elements for the recording-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
-  --reagirl.NextLine(15)
   tabs1.recording = reagirl.Label_Add(nil, nil, "Recording", "Settings for recording.", false, label_run_function, "label_recording", nil)
   reagirl.NextLine()
   tabs1.rec_safemode= reagirl.Checkbox_Add(nil, nil, "Safe-mode when recording", "When checked, it shows a message that warns you from (accidentally) aborting recording when hitting space/enter during recording.\nWhen unchecked, recording immediately stops/pauses.", true, checkbox_run_function, "checkbox_rec_safemode" )
@@ -202,9 +323,14 @@ function Build_Settings_Recording(x, y, width)
   reagirl.Slider_LinkToIniValue(tabs1.preroll_time_recording, ini_file, "ultraschall_settings_preroll_recording", "Value", 1.7, true, nil)
   if width~=nil then width=tabs1.preroll_time_recording end
   reagirl.Label_AutoBackdrop(tabs1.recording, tabs1.preroll_time_recording, width)--, tabs1.preroll_time_recording)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_PlayBack(x, y, width)
+  -- Adds all ui-elements for the playback-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.playback = reagirl.Label_Add(nil, nil, "Playback", "Settings for playback.", false, label_run_function, "label_playback", nil)
   reagirl.NextLine()
@@ -212,9 +338,14 @@ function Build_Settings_PlayBack(x, y, width)
   reagirl.Slider_LinkToIniValue(tabs1.shuttle_stepper_speed, ini_file, "ultraschall_settings_shuttle_step_speed", "Value", 0.2, true, nil)
   if width~=nil then width=tabs1.preroll_time_recording end
   reagirl.Label_AutoBackdrop(tabs1.playback, tabs1.shuttle_stepper_speed, width)--tabs1.preroll_time_recording)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_Editing(x, y, width)
+  -- Adds all ui-elements for the editing-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
 
   tabs1.editing= reagirl.Label_Add(nil, nil, "Editing", "Settings for editing.", false, label_run_function, "label_editing", nil)
@@ -229,9 +360,14 @@ function Build_Settings_Editing(x, y, width)
   reagirl.Checkbox_LinkToIniValue(tabs1.ripple_cut_ignores_locked_tracks, ini_file, "ultraschall_settings_ripplecut_obey_locked", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.preroll_time_preview end
   reagirl.Label_AutoBackdrop(tabs1.editing, tabs1.ripple_cut_ignores_locked_tracks, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_Soundboard(x, y, width)
+  -- Adds all ui-elements for the soundboard-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.soundboard = reagirl.Label_Add(nil, nil, "Soundboard", "Settings for the soundboard.", false, label_run_function, "label_soundboard", nil)
   reagirl.NextLine()
@@ -245,9 +381,14 @@ function Build_Settings_Soundboard(x, y, width)
   reagirl.Slider_LinkToIniValue(tabs1.soundboard_preshow_music_mix, ini_file, "ultraschall_settings_preshow_mix", "Value", 30, true, 0.01)
   if width~=nil then width=tabs1.soundboard_preshow_music_mix end
   reagirl.Label_AutoBackdrop(tabs1.soundboard, tabs1.soundboard_preshow_music_mix, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_Helpersounds(x, y, width)
+  -- Adds all ui-elements for the helper sounds-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.helpersounds = reagirl.Label_Add(nil, nil, "Helpersounds", "Settings for helper sounds.", false, label_run_function, "label_helpersounds", nil)
   reagirl.NextLine()
@@ -261,9 +402,14 @@ function Build_Settings_Helpersounds(x, y, width)
   reagirl.Slider_LinkToIniValue(tabs1.sound_ping_volume, ini_file, "ultraschall_settings_tims_chapter_ping_volume", "Value", 50, true, 0.01)
   if width~=nil then width=tabs1.sound_ping_volume end
   reagirl.Label_AutoBackdrop(tabs1.helpersounds, tabs1.sound_ping_volume, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_Soundcheck(x, y, width)
+  -- Adds all ui-elements for the soundcheck-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.soundcheck = reagirl.Label_Add(nil, nil, "Soundcheck", "Settings for the soundcheck.", false, label_run_function, "label_soundcheck", nil)
   reagirl.NextLine()
@@ -271,9 +417,14 @@ function Build_Settings_Soundcheck(x, y, width)
   reagirl.Checkbox_LinkToIniValue(tabs1.soundcheck_graceful, ini_file, "ultraschall_settings_graceful_soundcheck", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.soundcheck_graceful end
   reagirl.Label_AutoBackdrop(tabs1.soundcheck, tabs1.soundcheck_graceful, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_VisualSettings(x, y, width)
+  -- Adds all ui-elements for the visual settings-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.visual_settings = reagirl.Label_Add(nil, nil, "Visual settings", "Settings for visual appearance/view.", false, label_run_function, "label_visual_settings", nil)
   reagirl.NextLine()
@@ -290,9 +441,14 @@ function Build_Settings_VisualSettings(x, y, width)
   reagirl.Slider_LinkToIniValue(tabs1.zoom_out_sensitivity, ini_file, "ultraschall_settings_Zoom_Sensitivity", "Value", 0.4, true, nil)
   if width~=nil then width=tabs1.zoom_out_sensitivity end
   reagirl.Label_AutoBackdrop(tabs1.visual_settings, tabs1.zoom_out_sensitivity, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
 function Build_Settings_MagicRouting(x, y, width)
+  -- Adds all ui-elements for the magic routing-page in the settings-tab
+  -- If you want to add/edit ui-elements in this page, alter this function
+  local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.magic_routing = reagirl.Label_Add(nil, nil, "Magic Routing", "Settings for Magic Routing.", false, label_run_function, "label_magic_routing", nil)
   reagirl.NextLine()
@@ -300,26 +456,91 @@ function Build_Settings_MagicRouting(x, y, width)
   reagirl.Checkbox_LinkToIniValue(tabs1.magic_routing_always_start_startup, ini_file, "ultraschall_settings_magic_routing_always_on", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.magic_routing_always_start_startup end
   reagirl.Label_AutoBackdrop(tabs1.magic_routing, tabs1.magic_routing_always_start_startup, width)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
 end
 
--- Build and position the settings-elements
 
-Build_Settings_General(30, 98, nil)
-Build_Settings_Recording(30, 170, 1)
-Build_Settings_PlayBack(350, 170, 1)
-Build_Settings_Editing(30, 285, 1)
-Build_Settings_MagicRouting(350, 220, nil)
-Build_Settings_VisualSettings(350, 270, nil)
-Build_Settings_Soundboard(30, 380, 1)
+function concat_tables(tab1, tab2)
+  -- this function concatenates two tables. You can ignore this function mostly, as it is used mostly by label_run_function()
+  local tab={}
+  for k,v in pairs(tab1) do
+    tab[k]=v
+  end
+  
+  for k,v in pairs(tab2) do
+    tab[k]=v
+  end
+  return tab
+end
 
-Build_Settings_Helpersounds(350, 380, nil)
-Build_Settings_Soundcheck(30, 475, nil)
---]]
+function Build_Page_Labels(x, y)
+  -- adds all labels of the indes for the settings-tab
+  -- You can change the order beginning from the reagirl.NextLine()-function to the lines like "page_general=tabs1.page_general"
+  local tabs1={}
+  reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
+  tabs1.page_overview = reagirl.Label_Add(nil, nil, "Settings", "Settings.", false, label_run_function, "label_overview_page", nil)
+  
+  reagirl.NextLine()
+  tabs1.page_general  = reagirl.Label_Add(nil, nil, "General", "General settings-page.", true, label_run_function, "label_general_page", nil)
+  page_general=tabs1.page_general
+  
+  reagirl.NextLine()
+  tabs1.page_rec      = reagirl.Label_Add(nil, nil, "Recording", "Recording settings-page.", true, label_run_function, "label_recording_page", nil)
+  page_rec=tabs1.page_rec
+  
+  reagirl.NextLine()
+  tabs1.page_playback = reagirl.Label_Add(nil, nil, "Playback", "Playback settings-page.", true, label_run_function, "label_playback_page", nil)
+  page_playback=tabs1.page_playback
+  
+  reagirl.NextLine()
+  tabs1.page_editing = reagirl.Label_Add(nil, nil, "Editing", "Editing settings-page.", true, label_run_function, "label_editing_page", nil)
+  page_editing=tabs1.page_editing
+  
+  reagirl.NextLine()
+  tabs1.page_magicrouting = reagirl.Label_Add(nil, nil, "Magic Routing", "Magic Routing settings-page.", true, label_run_function, "label_magic_routing_page", nil)
+  page_magicrouting=tabs1.page_magicrouting
+  
+  reagirl.NextLine()
+  tabs1.page_visual_settings = reagirl.Label_Add(nil, nil, "Visual Settings", "Visual settings-page.", true, label_run_function, "label_visual_settings_page", nil)
+  page_visual_settings=tabs1.page_visual_settings
+  
+  reagirl.NextLine()
+  tabs1.page_soundboard = reagirl.Label_Add(nil, nil, "Soundboard", "Soundboard settings-page.", true, label_run_function, "label_soundboard_page", nil)
+  page_soundboard=tabs1.page_soundboard
+  
+  reagirl.NextLine()
+  tabs1.page_helper_sounds = reagirl.Label_Add(nil, nil, "Helper Sounds", "Helper sounds settings-page.", true, label_run_function, "label_helper_sounds_page", nil)
+  page_helper_sounds=tabs1.page_helper_sounds
+  
+  reagirl.NextLine()
+  tabs1.page_soundcheck= reagirl.Label_Add(nil, nil, "Soundcheck", "Soundcheck settings-page.", true, label_run_function, "label_soundcheck_page", nil)
+  page_soundcheck=tabs1.page_soundcheck
+  
+  reagirl.Label_AutoBackdrop(tabs1.page_overview, tabs1.page_soundcheck, tabs1.page_helper_sounds)
+  reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
+  return tabs1
+end
 
--- Soundcheck-Tab
+-- add all ui-elements for the Settings-Tab
+pages=Build_Page_Labels(30,98)
+tab_general     = Build_Settings_General(140, 98, nil)
+tab_recording   = Build_Settings_Recording(140, 98, nil)
+tab_playback    = Build_Settings_PlayBack(140, 98, nil)
+tab_editing     = Build_Settings_Editing(140, 98, nil)
+tab_mrouting    = Build_Settings_MagicRouting(140, 98, nil)
+tab_visuals     = Build_Settings_VisualSettings(140, 98, nil)
+tab_soundboard  = Build_Settings_Soundboard(140, 98, nil)
+tab_helpersound = Build_Settings_Helpersounds(140, 98, nil)
+tab_soundcheck  = Build_Settings_Soundcheck(140, 98, nil)
+
+-- set the general-page as first tab to see
+label_run_function(page_general)
+
+
+-- add all ui-elements for the Soundcheck-Tab
 tabs2={}
-reagirl.AutoPosition_SetNextUIElementAtPosition(350, 380)
-reagirl.AutoPosition_SetNextUIElementRelativeTo(tabs_guid)
+reagirl.AutoPosition_SetNextUIElementAtPosition(30, 98)
 tabs2.soundchecks = reagirl.Label_Add(nil, nil, "Available Soundchecks", "Soundchecks.", false, label_run_function, "label_soundchecks", nil)
 
 reagirl.NextLine()
@@ -373,21 +594,22 @@ reagirl.UI_Element_GetSetExtState(tabs2.button_help8, true, "Value", tabs2.sound
 reagirl.NextLine(30)
 tabs2.soundchecks_description = reagirl.Label_Add(320, 140, "The soundcheck checks for common mistakes and \nproblems that could happen during podcast-production.\n\nThese checks try to save you from these problems.\n\nIf you don't need a specific check, deactivate \nthe checkbox for this soundcheck.", "Soundchecks.", false, label_run_function, "label_soundchecks_description", nil)
 
---reagirl.Label_AutoBackdrop(tabs2.soundchecks, tabs2.soundcheck_input_wizard)
- reagirl.Label_SetBackdrop(tabs2.soundchecks, 620, 410)
+reagirl.Label_SetBackdrop(tabs2.soundchecks, 620, 193)
+
+-- add all ui-elements for the Devices-tab
+tabs3={}
 
 
 -- associate tabs with the ui-elements stored in the tables
 reagirl.Tabs_SetUIElementsForTab(tabs_guid, 1, tabs1)
 reagirl.Tabs_SetUIElementsForTab(tabs_guid, 2, tabs2)
+reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3)
 
 
 -- 4. open the gui
-reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", width, 550, nil, nil, nil)
---red, green, blue = reagirl.Background_GetSetColor(true, 44, 44, 44)
+reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", width, 500, nil, nil, nil)
+
 -- 5. a main-function that runs the gui-management-function
-
-
 function main()
   reagirl.Gui_Manage()
   
