@@ -95,9 +95,9 @@ function ResetLabelStyle()
    reagirl.Label_SetStyle(page_helper_sounds, 0)
    reagirl.Label_SetStyle(page_soundcheck, 0)
    
-   --reagirl.Label_SetColor(page_general, 0, 0, 0, r, g, b)
-   --reagirl.Label_SetColor(page_rec, 0, 0, 0, r, g, b)
-   --reagirl.Label_SetColor(page_playback, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_general, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_rec, 0, 0, 0, r, g, b)
+   reagirl.Label_SetColor(page_playback, 0, 0, 0, r, g, b)
    
    reagirl.Label_SetColor(page_editing, 0, 0, 0, r, g, b)
    reagirl.Label_SetColor(page_magicrouting, 0, 0, 0, r, g, b)
