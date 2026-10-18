@@ -287,12 +287,18 @@ end
 reagirl.Gui_New()
 
 -- 3. add the ui-elements and set their attributes
-reagirl.Image_Add(0, 0, 65, 42, gfx_path.."settings_logo.png", "Settings-Logo", "Settings-Logo.", nil, nil)
-reagirl.Image_Add(77, 12, 109, 18, gfx_path.."headertxt_settings.png", "Settings-Logo", "Settings-Logo.", nil, nil)
+settings_logo=reagirl.Image_Add(0, 0, 65, 42, gfx_path.."settings_logo.png", "Settings-Logo", "Settings-Logo.", nil, nil)
+reagirl.UI_Element_GetSetSticky(settings_logo, true, false, true)
+
+settings_header=reagirl.Image_Add(77, 12, 109, 18, gfx_path.."headertxt_settings.png", "Settings-Logo", "Settings-Logo.", nil, nil)
+reagirl.UI_Element_GetSetSticky(settings_header, true, false, true)
+
 button_help = reagirl.Button_Add(-119, 12, 35, 5, "Help", "Opens the help page in the manual.", button_run_function, "button_help", mode, width, height)
 reagirl.Button_SetRadius(button_help, 10)
+reagirl.UI_Element_GetSetSticky(button_help, true, false, true)
 
 decor_rectangle_guid = reagirl.DecorRectangle_Add(0, 0, 1500, 41, 0, 37, 37, 37)
+reagirl.UI_Element_GetSetSticky(decor_rectangle_guid, true, false, true)
 reagirl.NextLine()
 
 tabs_guid = reagirl.Tabs_Add(10, 55, 650, 400, "Tabs.", "Tabs.", {"General", "Soundcheck", "Devices"}, 1, tab_run_func, "tab")
