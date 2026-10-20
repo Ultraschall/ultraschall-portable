@@ -22312,8 +22312,14 @@ function reagirl.Window_GetScrollOffset()
 end
 
 function reagirl.Window_SetScrollOffset(x,y)
+-- ToDO: When setting new ui-elements to a tab, the scrolling gets reset.
+--       So everything set by this function gets ignored in this case.
+--       Only in the next defer-cycle, the scrolling gets obeyed by ReaGirl due this function.
+--       BUUUG!
+
 --[[
-<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+
+<US_ DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>Window_GetScrollOffset</slug>
   <requires>
     ReaGirl=1.4
