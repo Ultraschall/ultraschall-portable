@@ -7501,7 +7501,9 @@ function reagirl.Gui_Manage(keep_running)
   reagirl.UI_Element_MaxH=0
   local x2, y2
   reagirl.Window_RescaleIfNeeded()
+  
   reagirl.UI_Elements_Boundaries()
+  
   local scale=reagirl.Window_CurrentScale
   --local Window_State=gfx.getchar(65536)
   
@@ -20532,11 +20534,16 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
   local style=styles[element_storage["style1"]]<<8
   style=style+styles[element_storage["style2"]]<<8
   style=style+styles[element_storage["style3"]]<<8
-  if element_storage["clickable"] then
-    style=style+85
+  if reagirl.Label_Underline==nil then
+    if element_storage["clickable"] then
+      style=style+85
+    end
+  else
+    -- if reagirl.Label_Underline==1, the underline will be turned off for
+    -- clickable labels.
+    -- Undocumented feature...surprise!!!
   end
   
-  --print2(style)
   reagirl.SetFont(1, reagirl.Font_Face, element_storage["font_size"], style)
   local olddest=gfx.dest
   local oldx, oldy = gfx.x, gfx.y
@@ -20652,7 +20659,7 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
           element_storage["bg_w"]=reagirl.background_width
         end
       else
-        element_storage["bg_w"]=w2+10
+        element_storage["bg_w"]=-x+x2+w2+10
       end
       element_storage["bg_h"]=bg_h-1
       element_storage["bg"]=nil
@@ -22302,6 +22309,40 @@ function reagirl.Window_GetScrollOffset()
 </US_DocBloc>
 --]]
   return (-reagirl.MoveItAllRight/reagirl.Window_GetCurrentScale())//1|0, (-reagirl.MoveItAllUp/reagirl.Window_GetCurrentScale())//1|0
+end
+
+function reagirl.Window_SetScrollOffset(x,y)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>Window_GetScrollOffset</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>integer horizontal_scrolloffs, integer vertical_scrolloffs = reagirl.Window_GetScrollOffset()</functioncall>
+  <description>
+    Gets the current scroll-offset of the window's gui.
+    
+    Note: it is the unscaled value, which you can rely on on all scalings. But if you need to draw stuff yourself, you should multiply it with reagirl.Window_GetCurrentScale().
+    
+    0,0 means, that the gui is scrolled to the top-left corner.
+  </description>
+  <retvals>
+    integer horizontal_scrolloffs - the current horizontal scrolling-offset in pixels*scale
+    integer vertical_scrolloffs - the current vertival scrolling-offset in pixels*scale
+  </retvals>
+  <chapter_context>
+    Window
+  </chapter_context>
+  <tags>window, get, scrollposition, vertical, horizontal</tags>
+  <changelog>
+    ReaGirl 1.4 - added to ReaGirl
+  </changelog>
+</US_DocBloc>
+--]]
+  reagirl.MoveItAllRight=math.floor(-x*reagirl.Window_GetCurrentScale())
+  reagirl.MoveItAllUp=math.floor(-y*reagirl.Window_GetCurrentScale())
 end
 
 function reagirl.Window_ForceSize_Minimum(MinW, MinH)
@@ -24727,6 +24768,8 @@ function reagirl.NextLine_GetMargin()
   return reagirl.UI_Element_NextX_Margin, reagirl.UI_Element_NextY_Margin
 end
 
+
+
 function reagirl.Tabs_Add(x, y, w_backdrop, h_backdrop, caption, meaningOfUI_Element, tab_names, selected_tab, run_function, unique_identifier)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
@@ -24882,6 +24925,62 @@ function reagirl.Tabs_Add(x, y, w_backdrop, h_backdrop, caption, meaningOfUI_Ele
   reagirl.NextLine(-2)
   return reagirl.Elements[slot]["Guid"]
 end
+
+function reagirl.Tabs_SetBackdropDimensions(element_id, backdrop_w, backdrop_h)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>Tabs_SetBackdropDimensions</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>reagirl.Tabs_SetBackdropDimensions(string element_id, integer backdrop_w, integer backdrop_h)</functioncall>
+  <description>
+    Sets the backdrop-dimensions for a tabs-element.
+  </description>
+  <parameters>
+    string element_id - the guid of the tabs, whose selected tab you want to set
+    integer backdrop_w - the backdrop width of the tabs; 0 for no backdrop
+    integer backdrop_h - the backdrop height of the tabs; 0 for no backdrop
+  </parameters>
+  <chapter_context>
+    Tabs
+  </chapter_context>
+  <tags>tabs, set, backdrop, width, height</tags>
+  <changelog>
+    ReaGirl 1.4 - added to ReaGirl
+  </changelog>
+</US_DocBloc>
+--]]
+  if type(element_id)~="string" then error("Tabs_SetBackdropDimensions: param #1 - must be a string", 2) end
+  if reagirl.IsValidGuid(element_id, true)==nil then error("Tabs_SetBackdropDimensions: param #1 - must be a valid guid", 2) end
+  if math.type(backdrop_w)~="integer" then error("Tabs_SetBackdropDimensions: param #2 - must be an integer", 2) end
+  if math.type(backdrop_h)~="integer" then error("Tabs_SetBackdropDimensions: param #3 - must be an integer", 2) end
+  element_id = reagirl.UI_Element_GetIDFromGuid(element_id)
+  if element_id==-1 then error("Tabs_SetBackdropDimensions: param #1 - no such ui-element", 2) end
+  if reagirl.Elements[element_id]["GUI_Element_Type"]~="Tabs" then
+    error("Tabs_SetBackdropDimensions: param #1 - ui-element is not a tab", 2)
+  else
+    if backdrop_w==0 then 
+      reagirl.Elements[element_id]["w_background"]="zero" 
+      reagirl.Elements[element_id]["bg_w"]=0
+    else 
+      reagirl.Elements[element_id]["w_background"]=backdrop_w
+      reagirl.Elements[element_id]["bg_w"]=backdrop_w
+    end
+    
+    if h_backdrop==0 then 
+      reagirl.Elements[element_id]["h_background"]="zero" 
+      reagirl.Elements[element_id]["bg_h"]=0
+    else 
+      reagirl.Elements[element_id]["h_background"]=backdrop_h
+      reagirl.Elements[element_id]["bg_h"]=backdrop_h
+    end
+    reagirl.Gui_ForceRefresh(60.1)
+  end
+end
+
 -- mespotine
 function reagirl.Tabs_SetSelected(element_id, selected_tab)
 --[[
@@ -24961,6 +25060,7 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
   if reagirl.Elements[element_id]["GUI_Element_Type"]~="Tabs" then
     error("Tabs_SetUIElementsForTab: param #1 - ui-element is not a tab", 2)
   else
+    --local horizontal_scrolloffs, vertical_scrolloffs = reagirl.Window_GetScrollOffset()
     for k, v in pairs(element_ids_table) do
       if reagirl.IsValidGuid(v, true)==false then
         error("Tabs_SetUIElementsForTab: param #3: value "..tostring(k).." is not a valid element_id", 2)
@@ -24968,6 +25068,7 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
     end
     reagirl.Elements[element_id]["Tab"..tab_number]=element_ids_table
     reagirl.Elements[element_id]["TabRefresh"]=true
+    --reagirl.Window_SetScrollOffset(horizontal_scrolloffs, vertical_scrolloffs)
     reagirl.Gui_ForceRefresh(60)
   end
 end

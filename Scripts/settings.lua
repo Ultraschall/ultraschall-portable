@@ -50,6 +50,22 @@ end
 -- check for required version; alter the version-number if necessary
 if reagirl.GetVersion()<1.4 then reaper.MB("Needs ReaGirl v"..(1.4).." to run", "Too old version", 0) return false end
 
+function tab_run_function(element_id, selected_tab, selected_tab_name)
+  if selected_tab==3 then
+    local x, y, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(last_interface, false, 0, 0)
+    local x2, y2, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(element_id, false, 0, 0)
+    if y-y2+10<280 then 
+      reagirl.Tabs_SetBackdropDimensions(element_id, 650, 280)
+    else
+      reagirl.Tabs_SetBackdropDimensions(element_id, 650, y-y2+10)
+    end
+  elseif selected_tab==1 then
+    reagirl.Tabs_SetBackdropDimensions(element_id, 650, 280)
+  elseif selected_tab==2 then
+    reagirl.Tabs_SetBackdropDimensions(element_id, 650, 280)
+  end
+end
+
 -- 1. add the run-functions for the ui-elements
 function button_run_function(element_id)
   if element_id==button_help then
@@ -282,7 +298,7 @@ function checkbox_run_function(element_id, checked)
     
   end
 end
-
+reagirl.Label_Underline=1 -- sets underline for clickable labels to off
 -- 2. start a new gui
 reagirl.Gui_New()
 
@@ -301,7 +317,7 @@ decor_rectangle_guid = reagirl.DecorRectangle_Add(0, 0, 1500, 41, 0, 37, 37, 37)
 reagirl.UI_Element_GetSetSticky(decor_rectangle_guid, true, false, true)
 reagirl.NextLine()
 
-tabs_guid = reagirl.Tabs_Add(10, 55, 650, 400, "Tabs.", "Tabs.", {"General", "Soundcheck", "Devices"}, 1, tab_run_func, "tab")
+tabs_guid = reagirl.Tabs_Add(10, 55, 650, 100, "Tabs.", "Tabs.", {"General", "Soundcheck", "Devices"}, 1, tab_run_function, "tab")
 
 -- Settings-Tab
 tabs1={}
@@ -368,18 +384,24 @@ function Build_Settings_Editing(x, y, width)
   local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
 
-  tabs1.editing= reagirl.Label_Add(nil, nil, "Editing", "Settings for editing.", false, label_run_function, "label_editing", nil)
+  tabs1.editing= reagirl.Label_Add(nil, nil, "Editing general", "Settings for editing.", false, label_run_function, "label_editing", nil)
   reagirl.NextLine()
   tabs1.preroll_time_preview = reagirl.Slider_Add(nil, nil, 500, "Preroll time preview:", 140, "Set the time in seconds by which the program jumps back when the \"p\" key is used to preview cuts.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "slider_preroll_time_preview")
   reagirl.Slider_LinkToIniValue(tabs1.preroll_time_preview, ini_file, "ultraschall_settings_preroll", "Value", 1.7, true, nil)
+  reagirl.Label_AutoBackdrop(tabs1.editing, tabs1.preroll_time_preview, width)
   reagirl.NextLine(5)
+  tabs1.ripple_cut = reagirl.Label_Add(nil, nil, "Ripple Cut", "Settings for editing.", false, label_run_function, "label_editing", nil)
+  reagirl.NextLine()
+  tabs1.ripple_cut_preroll_review = reagirl.Slider_Add(nil, nil, 500, "Preroll edit-review:", 140, "Set the time in seconds by which the playback jumps back when a ripple-cut is made to review the edit.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "ripple_cut_preroll_review")
+  reagirl.Slider_LinkToIniValue(tabs1.ripple_cut_preroll_review, ini_file, "ultraschall_settings_ripplecut_preroll", "Value", 1.7, true, nil)
+  reagirl.NextLine()
   tabs1.ripple_cut_review = reagirl.Checkbox_Add(nil, nil, "Review Ripple-Cut-edits", "Review the edit of a ripple-cut after the edit is made. Set the time with the Preroll time preview-slider.", true, checkbox_run_function, "checkbox_ripple_cut_review" )
   reagirl.Checkbox_LinkToIniValue(tabs1.ripple_cut_review, ini_file, "ultraschall_settings_ripplecut_review_edit", "Value", "0", "1", "1", true)
   reagirl.NextLine()
   tabs1.ripple_cut_ignores_locked_tracks = reagirl.Checkbox_Add(nil, nil, "Ripple-Cut ignores locked tracks", "Ripple cut will ignore locked tracks when set. When unset, Ripple-Cut will cut locked tracks as well.", false, checkbox_run_function, "checkbox_ripple_cut_ignores_locked_tracks" )
   reagirl.Checkbox_LinkToIniValue(tabs1.ripple_cut_ignores_locked_tracks, ini_file, "ultraschall_settings_ripplecut_obey_locked", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.preroll_time_preview end
-  reagirl.Label_AutoBackdrop(tabs1.editing, tabs1.ripple_cut_ignores_locked_tracks, width)
+  reagirl.Label_AutoBackdrop(tabs1.ripple_cut, tabs1.ripple_cut_ignores_locked_tracks, width)
   reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
   return tabs1
 end
@@ -617,13 +639,24 @@ tabs2.soundchecks_description = reagirl.Label_Add(320, 140, "The soundcheck chec
 reagirl.Label_SetBackdrop(tabs2.soundchecks, 619, 193)
 
 -- add all ui-elements for the Devices-tab
+
+function button_run_function_devices(element_id)
+  local value=reagirl.UI_Element_GetSetExtState(element_id, false, "device")
+  local value2 = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", value, "ultraschall-settings.ini"))
+  ultraschall.SetUSExternalState("ultraschall_devices", value, value2+2, "ultraschall-settings.ini")
+end
+
+function checkbox_run_function2(element_id)
+  override_update=true
+end
+
 function Build_Devices_Tab()
   if tabs3~=nil then reagirl.UI_Element_SetHiddenFromTable(tabs3, false) end
   local tabs3={}
   
   local Found=true
   local Found_Counter=1
-  local Found_Devices={}
+  Found_Devices={}
   while Found==true do
     local found_device=ultraschall.EnumerateIniFileExternalState_key("ultraschall_devices", Found_Counter, reaper.GetResourcePath().."/ultraschall-settings.ini")
     Found_Devices[#Found_Devices+1]=found_device
@@ -646,18 +679,34 @@ function Build_Devices_Tab()
   reagirl.AutoPosition_SetNextUIElementRelativeTo(tabs_guid)
   tabs3.devices = reagirl.Label_Add(nil, nil, "Used interface-devices", "Currently and previously used interface devices.", false, label_run_function, "label_devices", nil)
   reagirl.NextLine()
-  tabs3.description= reagirl.Label_Add(nil, nil, "This list shows all audio interfaces you ever connected. \n\nIf you can plug a headphone to your audio interface, it supports Direct Monitoring. \n\nIf you can not connect a headphone direct into your audio interface, make sure \nto uncheck the Direct Monitoring box to get the audio routing right. \n\nYou can delete obsolete devices via the delete button.", "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make sure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices.", false, label_run_function, "label_soundchecks", nil)
+  tabs3.description= reagirl.Label_Add(nil, nil, "This list shows all audio interfaces you ever connected. \n\nIf you can plug a headphone to your audio interface, it supports Direct Monitoring. \n\nIf you can not connect a headphone direct into your audio interface, make sure \nto uncheck the Direct Monitoring box to get the audio routing right. \n\nYou can delete obsolete devices via the delete from list-button.", "This list shows all audio interfaces you ever connected. If you can plug a headphone to your audio interface, it supports Direct Monitoring. If you can not connect a headphone direct into your audio interface, make sure to uncheck the Direct Monitoring box to get the audio routing right. You can delete obsolete devices.", false, label_run_function, "label_soundchecks", nil)
   
   reagirl.NextLine(10)
   
-  tabs3.devices2 = reagirl.Label_Add(nil, nil, "Available devices", "Currently and previously used interface devices.", false, label_run_function, "label_devices2", nil)
-  reagirl.NextLine()
+  --tabs3.devices2 = reagirl.Label_Add(nil, nil, "Available devices", "Currently and previously used interface devices.", false, label_run_function, "label_devices2", nil)
+  --reagirl.NextLine()
   
   for i=1, #Found_Devices do
-    tabs3[("interface"..i)] = reagirl.Checkbox_Add(nil, nil, Found_Devices[i], "Device with name "..Found_Devices[i]..". Check, if direct monitoring is available(you can plug in headphones to your device) or not.", Found_Devices_Monitoring[i]==1, checkbox_run_function, ("interface"..i))
+    tabs3[("interface"..i)] = reagirl.Checkbox_Add(nil, nil, Found_Devices[i], "Device with name "..Found_Devices[i]..". Check, if direct monitoring is available(you can plug in headphones to your device) or not.", Found_Devices_Monitoring[i]==1, checkbox_run_function2, ("interface"..i))
+    local retval, actual_device=reaper.GetAudioDeviceInfo("IDENT_IN")
+    if actual_device==Found_Devices[i] then
+       tabs3.active_device = reagirl.Label_Add(400, nil, "Active - cannot be deleted", "This currently used device can not be removed from the list.", false, label_run_function, "label_not_removable", nil)
+    else
+      tabs3[("interface_button"..i)] = reagirl.Button_Add(400, nil, 0, 0, "Delete from list", "Delete the interface "..Found_Devices[i].." from list.", button_run_function_devices, ("interface_button"..i), mode, width, height)
+      reagirl.UI_Element_GetSetExtState(tabs3[("interface_button"..i)], true, "device", Found_Devices[i])
+    end
     reagirl.Checkbox_LinkToIniValue(tabs3[("interface"..i)], ini_file, "ultraschall_devices", Found_Devices[i], "0", "1", "1", true)
     reagirl.NextLine()
-    if i==#Found_Devices then reagirl.Label_AutoBackdrop(tabs3.devices2, tabs3[("interface"..i)]) end
+    if i==#Found_Devices then 
+      --reagirl.Label_AutoBackdrop(tabs3.devices, tabs3[("interface"..i)], tabs3.active_device) 
+      
+      last_interface=tabs3[("interface"..i)] 
+      local x, y, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(last_interface, false, 0, 0)
+      local x, y2, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(tabs_guid, false, 0, 0)
+      y=y-y2-30
+      if y<193 then y=193 end
+      reagirl.Label_SetBackdrop(tabs3.devices, 619, y)
+    end
   end
   reagirl.UI_Element_SetHiddenFromTable(tabs3, false)
   return tabs3
@@ -673,16 +722,30 @@ reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3)
 reagirl.Gui_Label_Background_Width(509)
 
 -- 4. open the gui
-reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", 670, 490, nil, nil, nil)
+reagirl.Gui_Open("My Dialog Name", false, "Ultraschall Settings", "Set your preferences for Ultraschall.", 670, 370, nil, nil, nil)
 
 -- 5. a main-function that runs the gui-management-function
 function main()
-  reagirl.Gui_Manage()
-  
   local _,_,_,modified=reaper.JS_File_Stat(reaper.GetResourcePath().."/ultraschall-settings.ini")
-  if modified~=old_modified_ini_file then tabs3=Build_Devices_Tab() reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3) reagirl.Gui_ForceRefresh() end
+  local retval, actual_device=reaper.GetAudioDeviceInfo("IDENT_IN")
+  if modified~=old_modified_ini_file or actual_device~=old_actual_device then 
+    if override_update==nil then
+      horizontal_scrolloffs, vertical_scrolloffs = reagirl.Window_GetScrollOffset()
+      tabs3=Build_Devices_Tab() 
+      reagirl.Tabs_SetUIElementsForTab(tabs_guid, 3, tabs3)
+      tab_run_function(tabs_guid, 3) 
+      -- the following line does not(yet) rescroll to old position. Somehow, the MoveItAllUp-variable is reset to 0
+      -- when setting new ui-elements into tab. I think, the getboundaries-feature somehow measures wrong and assumes,
+      -- the ui-elements weren't available yet and therefor thinks, the tab is blank and resets the scrolling somehow
+      reagirl.Window_SetScrollOffset(horizontal_scrolloffs, vertical_scrolloffs) 
+      reagirl.Gui_ForceRefresh() 
+    end
+  end
+  override_update=nil
   old_modified_ini_file=modified
-  
+  old_actual_device=actual_device
+  reagirl.Gui_Manage()
+
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end
 main()
