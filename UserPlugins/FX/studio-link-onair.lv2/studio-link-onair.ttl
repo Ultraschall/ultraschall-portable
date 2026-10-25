@@ -1,0 +1,37 @@
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+
+<http://studio-link.de/plugins/lv2/studio-link-onair>
+        a lv2:Plugin ;
+        doap:name "Studio Link onAir" ;
+        doap:license <http://opensource.org/licenses/BSD-3-Clause> ;
+        lv2:optionalFeature lv2:hardRTCapable ;
+        lv2:port [
+		a lv2:AudioPort ,
+			lv2:InputPort ;
+		lv2:index 0 ;
+		lv2:symbol "in0" ;
+		lv2:name "In0"
+	] , [
+		a lv2:AudioPort ,
+			lv2:InputPort ;
+		lv2:index 1 ;
+		lv2:symbol "in1" ;
+		lv2:name "In1"
+	] , [
+		a lv2:AudioPort ,
+			lv2:OutputPort ;
+		lv2:index 2 ;
+		lv2:symbol "out0" ;
+		lv2:name "Out0"
+	] , [
+
+		a lv2:AudioPort ,
+			lv2:OutputPort ;
+		lv2:index 3 ;
+		lv2:symbol "out1" ;
+		lv2:name "Out1"
+	] .
