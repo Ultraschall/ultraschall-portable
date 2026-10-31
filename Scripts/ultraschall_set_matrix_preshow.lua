@@ -37,61 +37,61 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function buildRoutingMatrix ()
 
-	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
-	local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
+  local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
+  local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
 
-	soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der Anteil des Soundbards während der Preshow im Monitormix sein
+  soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der Anteil des Soundbards während der Preshow im Monitormix sein
 
---	 print(serialize(AllMainSends))
+--   print(serialize(AllMainSends))
 
   for i=1, number_of_tracks do
 
-  	tracktype = ultraschall.GetTypeOfTrack(i)
+    tracktype = ultraschall.GetTypeOfTrack(i)
 
-    if tracktype == "StudioLink" then	-- Behandlung der StudioLink Spuren
+    if tracktype == "StudioLink" then  -- Behandlung der StudioLink Spuren
 
-    	retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
+      retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
 
-    	for j=1, number_of_tracks do
+      for j=1, number_of_tracks do
 
-    		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
+        if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
-					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
-					if ultraschall.GetTypeOfTrack(j) == "SoundBoard" then
-						send_volume = soundbed_mix
-					else
-						send_volume = 1
-					end
+          -- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
+          if ultraschall.GetTypeOfTrack(j) == "SoundBoard" then
+            send_volume = soundbed_mix
+          else
+            send_volume = 1
+          end
 
-    			setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, send_volume, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
-    			-- print(i.j)
-    		end
-			end
+          setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, send_volume, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
+          -- print(i.j)
+        end
+      end
 
-    elseif tracktype == "SoundBoard" then	-- Behandlung der Soundboard Spuren
+    elseif tracktype == "SoundBoard" then  -- Behandlung der Soundboard Spuren
 
-			AllMainSends[i]["MainSendOn"] = 1 -- Bei der Preshow sendet nur das Soundboard auf den Main
+      AllMainSends[i]["MainSendOn"] = 1 -- Bei der Preshow sendet nur das Soundboard auf den Main
 
       retval = ultraschall.AddTrackHWOut(i, 0, 0, soundbed_mix, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
-		else -- normaler, lokaler Track
+    else -- normaler, lokaler Track
 
-			retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+      retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
-				retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
-			end
+      if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
+        retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
+      end
 
-		end
+    end
   end
 
-  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master
+  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)  -- setze alle Sends zum Master
 
 end
 
 
 -- profile.start()
-
+reaper.Undo_BeginBlock()
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 
 if reaper.CountTracks(0) > 0 then
@@ -124,3 +124,4 @@ reaper.RefreshToolbar2(sec, cmd)
 -- report for the top 10 functions, sorted by execution time
 -- local r = profile.report('time', 10)
 -- print(r)
+reaper.Undo_EndBlock("Routing set to preshow", -1)

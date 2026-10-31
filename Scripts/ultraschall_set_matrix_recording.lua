@@ -33,64 +33,64 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function buildRoutingMatrix ()
 
-	local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
+  local AllMainSends, number_of_tracks = ultraschall.GetAllMainSendStates()
   local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
 
---	 print(serialize(AllMainSends))
+--   print(serialize(AllMainSends))
 
   for i=1, number_of_tracks do
 
-  	AllMainSends[i]["MainSendOn"] = 1	-- alle Kanäle senden auf den Main - solange Preshow nicht aktiv ist
+    AllMainSends[i]["MainSendOn"] = 1  -- alle Kanäle senden auf den Main - solange Preshow nicht aktiv ist
 
-  	tracktype = ultraschall.GetTypeOfTrack(i)
-    if tracktype == "StudioLink" then	-- Behandlung der StudioLink Spuren
+    tracktype = ultraschall.GetTypeOfTrack(i)
+    if tracktype == "StudioLink" then  -- Behandlung der StudioLink Spuren
 
-			retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
+      retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- StudioLink-Spuren gehen immer auf den MainHardwareOut Zurück
 
-    	for j=1, number_of_tracks do
-    		if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
+      for j=1, number_of_tracks do
+        if ultraschall.GetTypeOfTrack(j) ~= "StudioLink" then
 
-					-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
+          -- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
 
-					setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
-    			-- print(i.j)
-    		end
-    	end
-    elseif tracktype == "SoundBoard" then	-- Behandlung der Soundboard Spuren
+          setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, false)
+          -- print(i.j)
+        end
+      end
+    elseif tracktype == "SoundBoard" then  -- Behandlung der Soundboard Spuren
 
-			retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
+      retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- Soundboard-Spuren gehen immer auf den MainHardwareOut Zurück
 
-			if ultraschall.GetUSExternalState("ultraschall_settings_soundboard_ducking","Value", "ultraschall-settings.ini") == "1" then -- Ducking ist in den Settings aktiviert
+      if ultraschall.GetUSExternalState("ultraschall_settings_soundboard_ducking","Value", "ultraschall-settings.ini") == "1" then -- Ducking ist in den Settings aktiviert
 
-				for j=1, number_of_tracks do
-					if ultraschall.GetTypeOfTrack(j) ~= "SoundBoard" then -- jeder Track der nicht Soundboard ist schickt sein Signal auf den 3/4 Kanal des Soundboards
+        for j=1, number_of_tracks do
+          if ultraschall.GetTypeOfTrack(j) ~= "SoundBoard" then -- jeder Track der nicht Soundboard ist schickt sein Signal auf den 3/4 Kanal des Soundboards
 
-						-- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
+            -- boolean retval = ultraschall.AddTrackAUXSendReceives(integer tracknumber, integer recv_tracknumber, integer post_pre_fader, number volume, number pan, integer mute, integer mono_stereo, integer phase, integer chan_src, integer snd_chan, number unknown, integer midichanflag, integer automation, boolean undo)
 
-						setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 2, -1, 0, 0, false)
-						-- print(i.j)
-					end
-				end
-			end
+            setstate = ultraschall.AddTrackAUXSendReceives(i, j, 0, 1, 0, 0, 0, 0, 0, 2, -1, 0, 0, false)
+            -- print(i.j)
+          end
+        end
+      end
 
-		else -- normaler, lokaler Track
+    else -- normaler, lokaler Track
 
-			retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
+      retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
-				retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
-			end
+      if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
+        retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
+      end
 
-		end
+    end
 
   end
 
 
-  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)	-- setze alle Sends zum Master
+  retval = ultraschall.ApplyAllMainSendStates(AllMainSends)  -- setze alle Sends zum Master
 
 end
 
-
+reaper.Undo_BeginBlock()
 retval = ultraschall.ClearRoutingMatrix(true, true, true, true, false)
 buildRoutingMatrix ()
 
@@ -114,3 +114,4 @@ reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Recording
 reaper.SetProjExtState(0, "gui_statemanager", "_Ultraschall_set_Matrix_Preshow", 0)
 
 reaper.RefreshToolbar2(sec, cmd)
+reaper.Undo_EndBlock("Routing set to recording", -1)

@@ -407,7 +407,7 @@ header_path = script_path.."/Ultraschall_Gfx/Headers/"
 ---- Window settings and user functions ----
 
 GUI.name = "Ultraschall - Settings"
-GUI.w, GUI.h = 820, 675   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
+GUI.w, GUI.h = 820, 710   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
 
 ------------------------------------------------------
 -- position always in the center of the screen
@@ -416,7 +416,7 @@ GUI.w, GUI.h = 820, 675   -- ebentuell dynamisch halten nach Anzahl der Devices-
 l, t, r, b = 0, 0, GUI.w, GUI.h
 __, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
 GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
-
+GUI.y=GUI.y-15
 
 
   -- body
@@ -511,10 +511,10 @@ function SettingsPageSettings()
   ------------------------------------------------------
 
   x_offset = 55
-
-  block = GUI.Area:new(45, header_height + 92, 730, 525,5,1,1,"section_bg")
+  
+  block = GUI.Area:new(45, header_height + 92, 730, 560,5,1,1,"section_bg")
   table.insert(GUI.elms, block)
-
+  header_height=header_height-10
 
   for i = 1, section_count , 1 do
 
@@ -688,3 +688,4 @@ function atexit()
 end
 
 reaper.atexit(atexit)
+
