@@ -7306,6 +7306,7 @@ function reagirl.Gui_Manage(keep_running)
   <source_document>reagirl.lua</source_document>
   <tags>gui, functions, manage</tags>
   <changelog>
+    ReaGirl 1.4 - first tabbing will now focus the first, non-decorative ui-element, not the first existing
     ReaGirl 1.1 - added to ReaGirl
   </changelog>
 </US_DocBloc>
@@ -7647,12 +7648,13 @@ function reagirl.Gui_Manage(keep_running)
     reagirl.ui_element_selected="selected"
   end
   local skip_hover_acc_message=false
-  -- Tab-key - next ui-element
+  -- Tab-key - next ui-element 
   if gfx.mouse_cap==0 and Key==9 then 
     local old_selection=reagirl.Elements.FocusedElement
     if reagirl.FocusRectangle_On==false then
       if reagirl.Elements[reagirl.Elements.FocusedElement]["GUI_Element_Type"]~="Edit" then
-        reagirl.Elements["FocusedElement"]=1
+        --reagirl.Elements["FocusedElement"]=1
+        reagirl.Elements["FocusedElement"]=reagirl.UI_Element_GetNext(0, 3)
       else
         reagirl.Elements.FocusedElement=reagirl.Elements.FocusedElement+1
         if reagirl.Elements.FocusedElement>#reagirl.Elements then reagirl.Elements.FocusedElement=1 end
@@ -21369,6 +21371,86 @@ function reagirl.Image_SetDraggable(element_id, draggable, destination_element_i
   end
 end
 
+function reagirl.Image_GetDecorative(element_id, is_decorative)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>Image_GetDecorative</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>reagirl.Image_GetDecorative(string element_id, boolean is_decorative)</functioncall>
+  <description>
+    Gets, if an image is decorative(means, it can't be clicked or tabbed to).
+    
+    !!Very Important Note!!: Set images only to decorative, when they actually are. If they contain important information, keep them as normal images.
+          Otherwise blind people may miss important information in your gui, as they can't tab to it and read the meaningOfUI_Element!
+  </description>
+  <parameters>
+    string element_id - the image-element, whose dragable state you want to set
+  </parameters>
+  <retvals>
+    boolean is_decorative - true, image is decorative and contains no important information for the gui; false, the image contains important information for the gui
+  </retvals>
+  <chapter_context>
+    Image
+  </chapter_context>
+  <tags>image, get, decorative</tags>
+  <changelog>
+    ReaGirl 1.4 - added to ReaGirl
+  </changelog>
+</US_DocBloc>
+--]]
+  if type(element_id)~="string" then error("Image_GetDecorative: param #1 - must be a string", 2) end
+  if reagirl.IsValidGuid(element_id, true)==false then error("Image_GetDecorative: param #1 - must be a valid guid", 2) end
+  if reagirl.UI_Element_GetType(element_id)~="Image" then error("Image_GetDecorative: param #1 - UI-element is not an image", 2) end
+
+  local slot=reagirl.UI_Element_GetIDFromGuid(element_id)
+  if slot==-1 then error("Image_GetDecorative: param #1 - no such ui-element") end
+  if reagirl.Elements[slot]["GUI_Element_Type"]~="Image" then error("Image_SetDraggable: param #1 - ui-element is not an image") end
+  return reagirl.Elements[slot]["IsDecorative"]==true
+end
+
+function reagirl.Image_SetDecorative(element_id, is_decorative)
+--[[
+<US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
+   <slug>Image_SetDecorative</slug>
+  <requires>
+    ReaGirl=1.4
+    Reaper=7.03
+    Lua=5.4
+  </requires>
+  <functioncall>reagirl.Image_SetDecorative(string element_id, boolean is_decorative)</functioncall>
+  <description>
+    Sets an image as decorative(means, it can't be clicked or tabbed to).
+    
+    !!Very Important Note!!: Set images only to decorative, when they actually are. If they contain important information, keep them as normal images.
+          Otherwise blind people may miss important information in your gui, as they can't tab to it and read the meaningOfUI_Element!
+  </description>
+  <parameters>
+    string element_id - the image-element, whose dragable state you want to set
+    boolean is_decorative - true, image is decorative and contains no important information for the gui; false, image is not decorative as it contains important information for the gui
+  </parameters>
+  <chapter_context>
+    Image
+  </chapter_context>
+  <tags>image, set, decorative</tags>
+  <changelog>
+    ReaGirl 1.4 - added to ReaGirl
+  </changelog>
+</US_DocBloc>
+--]]
+  if type(element_id)~="string" then error("Image_SetDecorative: param #1 - must be a string", 2) end
+  if reagirl.IsValidGuid(element_id, true)==false then error("Image_SetDecorative: param #1 - must be a valid guid", 2) end
+  if reagirl.UI_Element_GetType(element_id)~="Image" then error("Image_SetDecorative: param #1 - UI-element is not an image", 2) end
+  if type(is_decorative)~="boolean" then error("Image_SetDecorative: param #2 - must be a boolean", 2) end
+
+  local slot=reagirl.UI_Element_GetIDFromGuid(element_id)
+  if slot==-1 then error("Image_SetDraggable: param #1 - no such ui-element") end
+  if reagirl.Elements[slot]["GUI_Element_Type"]~="Image" then error("Image_SetDraggable: param #1 - ui-element is not an image") end
+  reagirl.Elements[slot]["IsDecorative"]=is_decorative
+end
 
 
 function reagirl.Image_SetDimensions(element_id, width, height)
