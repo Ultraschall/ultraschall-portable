@@ -616,12 +616,13 @@ function drawClock()
   end
   
   if uc_menu[8].checked==true then
-    local retval
+    --local retval
     retval, work_time=reaper.GetProjExtState(0, "ultraschall_project_work_counter", "counter")
+    work_time2=work_time
     if work_time~="" then 
       work_time=reaper.format_timestr(work_time, ""):match("(.-)%.")
     else
-      work_time=""
+      work_time=" - not counted"
     end
   else
     work_time=""
@@ -643,7 +644,7 @@ function drawClock()
     local x_offset=0
     local resizer=0
     local date_position_y = txt_line[2].y*height+border-y_offset
-    WriteAlignedText("Worktime: "..tostring(work_time), 0xb3b3b3, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y-7,0,0, 0, style, nil, nil, 0)
+    WriteAlignedText("Worktime: "..tostring(work_time), 0xb3b3b3, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y-22,0,0, 0, style, nil, nil, 0)
   end
 
   if Date~="" then
@@ -655,10 +656,10 @@ function drawClock()
     if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
     gfx.setfont(1, "Arial", txt_line[2].size,0)
-    Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y-27,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
+    Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
     end
   if time~="" then
-    Time_Length={WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border-27,2, nil, nil, nil, nil, nil, nil, focused==3)} -- print realtime hh:mm:ss
+    Time_Length={WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2, nil, nil, nil, nil, nil, nil, focused==3)} -- print realtime hh:mm:ss
     time_msg=format_time_for_tts(time, true)
   else
     Time_Length={0,0,0,0}
@@ -916,7 +917,7 @@ function MainLoop()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
       lufs_pos_y=date_position_y
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y-28 * retina_mod and gfx.mouse_y > date_position_y*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y * retina_mod and gfx.mouse_y > date_position_y*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
@@ -1028,8 +1029,8 @@ function checkhover()
     return true, remaining.."Project position "..projectpos_msg
   end
   
-  if gfx.mouse_y < lufs_pos_y-28 * retina_mod and 
-     gfx.mouse_y > lufs_pos_y*retina_mod and 
+  if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
+     gfx.mouse_y > lufs_pos_y-28*retina_mod and 
      gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
     add_color3=0.1
     refresh_me()

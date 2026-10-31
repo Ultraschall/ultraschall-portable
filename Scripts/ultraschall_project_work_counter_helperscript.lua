@@ -24,34 +24,41 @@
 ################################################################################
 ]]
 
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
 -- counts the work-time of a project, can be shown in the ultraclock
 reaper.set_action_options(1)
 
 function check_reaper_focus()
-  if reaper.GetMainHwnd()==reaper.JS_Window_GetFocus() then
-    return true
-  elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()) then
-    return true
-  elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())) then
-    return true
-  elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()))) then
-    return true
-  elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())))) then
-    return true
-  elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()))))) then
+  if ultraschall.GetUSExternalState("ultraschall_settings_work_counter_when_reaperfocus", "Value", "ultraschall-settings.ini")=="1" then
     return true
   else
-    return false
+    if reaper.GetMainHwnd()==reaper.JS_Window_GetFocus() then
+      return true
+    elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()) then
+      return true
+    elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())) then
+      return true
+    elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()))) then
+      return true
+    elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus())))) then
+      return true
+    elseif reaper.GetMainHwnd()==reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetParent(reaper.JS_Window_GetFocus()))))) then
+      return true
+    else
+      return false
+    end
   end
 end
 
 timer=reaper.time_precise()
+
 function main()
-  A=check_reaper_focus()
-  if check_reaper_focus()==true then
-    if reaper.time_precise()-timer>1 then
+  if reaper.time_precise()-timer>1 then
+    if check_reaper_focus()==true then
       if reaper.GetProjExtState(0, "ultraschall_project_work_counter", "counter")==0 then
-        if reaper.CountTracks(0)==0 then
+        local proj, projname = reaper.EnumProjects(-1)
+        if projname=="" then
           reaper.SetProjExtState(0, "ultraschall_project_work_counter", "counter", "0")
         end
       end
@@ -61,7 +68,6 @@ function main()
         timer2=tonumber(timer2)
         timer2=timer2+1
         reaper.SetProjExtState(0, "ultraschall_project_work_counter", "counter", timer2)
-        timer3=reaper.format_timestr(timer2, ""):match("(.-)%.")
       end
     end
   end
