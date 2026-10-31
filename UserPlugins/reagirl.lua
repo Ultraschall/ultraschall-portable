@@ -25028,7 +25028,7 @@ function reagirl.Tabs_SetSelected(element_id, selected_tab)
   end
 end
 
-function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_table)
+function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_table, prevent_hiding_old_elements)
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>Tabs_SetUIElementsForTab</slug>
@@ -25037,7 +25037,7 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
     Reaper=7.03
     Lua=5.4
   </requires>
-  <functioncall>reagirl.Tabs_SetUIElementsForTab(string element_id, integer tab_number, table element_ids_table)</functioncall>
+  <functioncall>reagirl.Tabs_SetUIElementsForTab(string element_id, integer tab_number, table element_ids_table, optional boolean prevent_hiding_old_elements)</functioncall>
   <description>
     Sets the ui-elements for a tab from a table.
     
@@ -25047,12 +25047,14 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
     string element_id - the guid of the tabs, whose selected tab you want to set
     integer tab_number - the number of the tab, whose ui-elements you want to set; 1-based
     table element_ids_table - a table with all element_ids of all ui-elements that shall be shown when the tab is selected
+    optional boolean prevent_hiding_old_elements - true, keep the previous old ui-elements shown, when they were visible; false or nil, set the old ui-elements to invisible
   </parameters>
   <chapter_context>
     Tabs
   </chapter_context>
   <tags>tabs, set, ui-elements shown in selected tab</tags>
   <changelog>
+    ReaGirl 1.4 - retains scroll-position when setting ui-elements to the currently shown tab; optional parameter to prevent hiding old ui-elements
     ReaGirl 1.0 - added to ReaGirl
   </changelog>
 </US_DocBloc>
@@ -25061,6 +25063,8 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
   if reagirl.IsValidGuid(element_id, true)==nil then error("Tabs_SetUIElementsForTab: param #1 - must be a valid guid", 2) end
   if math.type(tab_number)~="integer" then error("Tabs_SetUIElementsForTab: param #2 - must be an integer", 2) end
   if type(element_ids_table)~="table" then error("Tabs_SetUIElementsForTab: param #3 - must be a table", 2) end
+  if prevent_hiding_old_elements~=nil and type(prevent_hiding_old_elements)~="boolean" then error("Tabs_SetUIElementsForTab: param #4 - must be boolean or nil", 2) end
+  local tab_selected = reagirl.Tabs_GetSelected(element_id)
   element_id = reagirl.UI_Element_GetIDFromGuid(element_id)
   if element_id==-1 then error("Tabs_SetUIElementsForTab: param #1 - no such ui-element", 2) end
   if reagirl.Elements[element_id]["GUI_Element_Type"]~="Tabs" then
@@ -25072,7 +25076,13 @@ function reagirl.Tabs_SetUIElementsForTab(element_id, tab_number, element_ids_ta
         error("Tabs_SetUIElementsForTab: param #3: value "..tostring(k).." is not a valid element_id", 2)
       end
     end
+    if reagirl.Elements[element_id]["Tab"..tab_number]~=nil and prevent_hiding_old_elements~=true then 
+      reagirl.UI_Element_SetHiddenFromTable(reagirl.Elements[element_id]["Tab"..tab_number], false)
+    end
     reagirl.Elements[element_id]["Tab"..tab_number]=element_ids_table
+    if tab_selected==tab_number and prevent_hiding_old_elements~=true then
+      reagirl.UI_Element_SetHiddenFromTable(reagirl.Elements[element_id]["Tab"..tab_number], true)
+    end
     reagirl.Elements[element_id]["TabRefresh"]=true
     --reagirl.Window_SetScrollOffset(horizontal_scrolloffs, vertical_scrolloffs)
     reagirl.Gui_ForceRefresh(60)

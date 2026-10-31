@@ -309,7 +309,7 @@ reagirl.UI_Element_GetSetSticky(settings_logo, true, false, true)
 settings_header=reagirl.Image_Add(77, 12, 109, 18, gfx_path.."headertxt_settings.png", "Settings-Logo", "Settings-Logo.", nil, nil)
 reagirl.UI_Element_GetSetSticky(settings_header, true, false, true)
 
-button_help = reagirl.Button_Add(-119, 12, 35, 5, "Help", "Opens the help page in the manual.", button_run_function, "button_help", mode, width, height)
+button_help = reagirl.Button_Add(-86, 12, 35, 5, "Help", "Opens the help page in the manual.", button_run_function, "button_help", mode, width, height)
 reagirl.Button_SetRadius(button_help, 10)
 reagirl.UI_Element_GetSetSticky(button_help, true, false, true)
 
