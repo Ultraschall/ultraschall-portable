@@ -6046,7 +6046,7 @@ function reagirl.Ext_Tab_SetSelected(gui_name, tabnumber)
     Reaper=7.03
     Lua=5.4
   </requires>
-  <functioncall>reagirl.Ext_Tab_SetSelected(string gui_name)</functioncall>
+  <functioncall>reagirl.Ext_Tab_SetSelected(string gui_name, integer tabnumber)</functioncall>
   <description>
     Focuses a specific tab of a ReaGirl-gui-window.
     
@@ -6057,6 +6057,7 @@ function reagirl.Ext_Tab_SetSelected(gui_name, tabnumber)
   </description>
   <parameters>
     string gui_name - the name of the gui-window, whose tab you want to set to focused
+    integer tabnumber - the number of the tab to select
   </parameters>
   <chapter_context>
     Ext
