@@ -44,7 +44,7 @@ markertitle=reaper.GetExtState("StreamDeck AudioPlay", "markertitle")
 for i=0, reaper.CountTracks(0) do
   if ultraschall.IsTrackSoundboard(i)==true then soundboard_track=i-1 break end
 end
-if soundboard_track==nil then reaper.MB("No Soudboard Track", "No Soundboard track", 0) return end
+if soundboard_track==nil then reaper.MB("No Soundboard Track", "No Soundboard track", 0) return end
 
 list=reaper.GetExtState("StreamDeck AudioPlay", "filenamePlayingList")
 if list:match(ultraschall.EscapeMagicCharacters_String(filename))~=nil then
