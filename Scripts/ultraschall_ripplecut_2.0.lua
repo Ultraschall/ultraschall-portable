@@ -49,7 +49,7 @@ playstate=reaper.GetPlayState()
 playpos=reaper.GetPlayPosition()
 if playstate&4==4 then return end -- quit if recording
 init_start_timesel, init_end_timesel = reaper.GetSet_LoopTimeRange(false, 0, 0, 0, 0)
-preroll = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preroll", "value","ultraschall-settings.ini"))
+preroll = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_preroll", "value","ultraschall-settings.ini"))
 review_toggle = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_review_edit", "value","ultraschall-settings.ini")
 obey_locked = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_obey_locked", "value","ultraschall-settings.ini")
 obey_crossfade = ultraschall.GetUSExternalState("ultraschall_settings_ripplecut_obey_crossfade", "value","ultraschall-settings.ini")
