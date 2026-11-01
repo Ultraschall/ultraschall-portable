@@ -72,7 +72,7 @@ if (init_end_timesel ~= init_start_timesel) then    -- there is a time selection
   
   -- Ripple Cut
   number_items, MediaItemStateChunkArray = ultraschall.RippleCut(init_start_timesel, 
-                                                                 init_end_timesel, 
+                                                                 init_end_timesel,
                                                                  unlocked_trackstring, 
                                                                  true, -- moveenvelopepoints, 
                                                                  true, -- add_to_clipboard, 
