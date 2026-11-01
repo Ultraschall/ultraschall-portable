@@ -611,26 +611,26 @@ function Build_Page_Labels(x, y)
   -- You can change the order beginning from the reagirl.NextLine()-function to the lines like "page_general=tabs1.page_general"
   local tabs1={}
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
-  tabs1.page_overview = reagirl.Label_Add(nil, nil, "Settings", "Settings.", false, label_run_function, "label_overview_page", nil)
+  tabs1.page_overview = reagirl.Label_Add(nil, nil, "Settings", "Settings pages list.", false, label_run_function, "label_overview_page", nil)
   
   reagirl.NextLine()
-  tabs1.page_general  = reagirl.Label_Add(nil, nil, "General", "General settings-page.", true, label_run_function, "label_general_page", nil)
+  tabs1.page_general  = reagirl.Label_Add(nil, nil, "General", "Show general settings-page.", true, label_run_function, "label_general_page", nil)
   page_general=tabs1.page_general
   
   reagirl.NextLine()
-  tabs1.page_rec      = reagirl.Label_Add(nil, nil, "Recording", "Recording settings-page.", true, label_run_function, "label_recording_page", nil)
+  tabs1.page_rec      = reagirl.Label_Add(nil, nil, "Recording", "Show recording settings-page.", true, label_run_function, "label_recording_page", nil)
   page_rec=tabs1.page_rec
   
   reagirl.NextLine()
-  tabs1.page_playback = reagirl.Label_Add(nil, nil, "Playback", "Playback settings-page.", true, label_run_function, "label_playback_page", nil)
+  tabs1.page_playback = reagirl.Label_Add(nil, nil, "Playback", "Show playback settings-page.", true, label_run_function, "label_playback_page", nil)
   page_playback=tabs1.page_playback
   
   reagirl.NextLine()
-  tabs1.page_editing = reagirl.Label_Add(nil, nil, "Editing", "Editing settings-page.", true, label_run_function, "label_editing_page", nil)
+  tabs1.page_editing = reagirl.Label_Add(nil, nil, "Editing", "Show editing settings-page.", true, label_run_function, "label_editing_page", nil)
   page_editing=tabs1.page_editing
   
   reagirl.NextLine()
-  tabs1.page_magicrouting = reagirl.Label_Add(nil, nil, "Magic Routing", "Magic Routing settings-page.", true, label_run_function, "label_magic_routing_page", nil)
+  tabs1.page_magicrouting = reagirl.Label_Add(nil, nil, "Magic Routing", "Show Magic Routing settings-page.", true, label_run_function, "label_magic_routing_page", nil)
   page_magicrouting=tabs1.page_magicrouting
   
   reagirl.NextLine()
@@ -638,19 +638,19 @@ function Build_Page_Labels(x, y)
   page_visual_settings=tabs1.page_visual_settings
   
   reagirl.NextLine()
-  tabs1.page_soundboard = reagirl.Label_Add(nil, nil, "Soundboard", "Soundboard settings-page.", true, label_run_function, "label_soundboard_page", nil)
+  tabs1.page_soundboard = reagirl.Label_Add(nil, nil, "Soundboard", "Show soundboard settings-page.", true, label_run_function, "label_soundboard_page", nil)
   page_soundboard=tabs1.page_soundboard
   
   reagirl.NextLine()
-  tabs1.page_helper_sounds = reagirl.Label_Add(nil, nil, "Helper Sounds", "Helper sounds settings-page.", true, label_run_function, "label_helper_sounds_page", nil)
+  tabs1.page_helper_sounds = reagirl.Label_Add(nil, nil, "Helper Sounds", "Show helper sounds settings-page.", true, label_run_function, "label_helper_sounds_page", nil)
   page_helper_sounds=tabs1.page_helper_sounds
   
   reagirl.NextLine()
-  tabs1.page_soundcheck= reagirl.Label_Add(nil, nil, "Soundcheck", "Soundcheck settings-page.", true, label_run_function, "label_soundcheck_page", nil)
+  tabs1.page_soundcheck= reagirl.Label_Add(nil, nil, "Soundcheck", "Show soundcheck settings-page.", true, label_run_function, "label_soundcheck_page", nil)
   page_soundcheck=tabs1.page_soundcheck
   
   reagirl.NextLine()
-  tabs1.page_misc= reagirl.Label_Add(nil, nil, "Miscellaneous", "Miscellaneous settings-page.", true, label_run_function, "label_soundcheck_page", nil)
+  tabs1.page_misc= reagirl.Label_Add(nil, nil, "Miscellaneous", "Show miscellaneous settings-page.", true, label_run_function, "label_soundcheck_page", nil)
   page_misc=tabs1.page_misc
   
   reagirl.Label_AutoBackdrop(tabs1.page_overview, tabs1.page_misc, tabs1.page_helper_sounds)
