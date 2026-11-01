@@ -488,7 +488,7 @@ function Build_Settings_Misc(x, y, width)
 
   tabs1.work_counter= reagirl.Label_Add(nil, nil, "Work Counter", "Settings for the work-counter of a project.", false, label_run_function, "label_work_counter", nil)
   reagirl.NextLine()
-  tabs1.work_counter_checkbox = reagirl.Checkbox_Add(nil, nil, "Count worktime also, when Reaper isn't in focus", "Enabled will count the work-time of a project permanently.\n\nDisable, if you want to count only, when Reaper is in focus.\n\nYou can show the current workcounter-time in the Ultraclock.", false, checkbox_run_function, "checkbox_work_counter_always" )
+  tabs1.work_counter_checkbox = reagirl.Checkbox_Add(nil, nil, "Count worktime also, when Reaper isn't in focus", "Enabled will count the work-time of a project permanently.\n\nDisable, if you want to count only, when Reaper is in focus.\n\nYou can show the current workcounter-time in the Ultraclock by clicking the wheel-symbol.", false, checkbox_run_function, "checkbox_work_counter_always" )
   reagirl.Checkbox_LinkToIniValue(tabs1.work_counter_checkbox, ini_file, "ultraschall_settings_work_counter_when_reaperfocus", "Value", "0", "1", "1", true)
   if width~=nil then width=tabs1.preroll_time_preview end
   reagirl.Label_AutoBackdrop(tabs1.work_counter, tabs1.work_counter_checkbox, width)
@@ -835,6 +835,33 @@ function main()
   override_update=nil
   old_modified_ini_file=modified
   old_actual_device=actual_device
+  
+  page=reaper.GetExtState("ultraschall", "settings_page_switch")
+  if page~="" then
+    if page=="page_general" then
+      label_run_function(page_general)
+    elseif page=="page_rec" then
+      label_run_function(page_rec)
+    elseif page=="page_playback" then
+      label_run_function(page_playback)
+    elseif page=="page_editing" then
+      label_run_function(page_editing)
+    elseif page=="page_magicrouting" then
+      label_run_function(page_magicrouting)
+    elseif page=="page_visual_settings" then
+      label_run_function(page_visual_settings)
+    elseif page=="page_soundboard" then
+      label_run_function(page_soundboard)
+    elseif page=="page_helper_sounds" then
+      label_run_function(page_helper_sounds)
+    elseif page=="page_soundcheck" then
+      label_run_function(page_soundcheck)
+    elseif page=="page_misc" then
+      label_run_function(page_misc)
+    end
+  end
+  reaper.SetExtState("ultraschall", "settings_page_switch", "", false)
+  
   reagirl.Gui_Manage()
 
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
