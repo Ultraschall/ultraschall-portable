@@ -4367,7 +4367,13 @@ function reagirl.Window_Open(...)
   maximum_scale_for_dpi = math.floor(maximum_scale_for_dpi)
   local A=gfx.getchar(65536)
   local HWND, retval, _
+  
+  local _, _, _, _, _, w2, _, h2 = reagirl.Gui_GetBoundaries()
+  if parms[2]==nil then parms[2]=w2 end
+  if parms[3]==nil then parms[3]=h2 end
+  
   if A&4==0 then
+    -- if window is not visible
     reagirl.Window_RescaleIfNeeded()
     --reagirl.MoveItAllRight=0
     --reagirl.MoveItAllUp=0
@@ -4464,6 +4470,8 @@ function reagirl.Window_Open(...)
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
     if reagirl.OS=="Mac" then 
+      parms[2]=parms[2]*2
+      parms[3]=parms[3]*2
       _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, parms[6]+parms[3])
     end
     local B=gfx.init(table.unpack(parms)) 
@@ -20647,7 +20655,8 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
       if element_storage["bg_dest_x"]~=nil then
         local element_id2=reagirl.UI_Element_GetIDFromGuid(element_storage["bg_dest_x"])
         x2=reagirl.Elements[element_id2]["x"]
-        w2=reagirl.Elements[element_id2]["w"]
+        w2=gfx.measurestr(reagirl.Elements[element_id2]["Name"])--/reagirl.Window_GetCurrentScale()--reagirl.Elements[element_id2]["w"]
+        print_alt(element_id2, x2, w2)
       end
       
       if y2>=0 then
@@ -20662,7 +20671,7 @@ function reagirl.Label_Draw(element_id, selected, hovered, clicked, mouse_cap, m
           element_storage["bg_w"]=reagirl.background_width
         end
       else
-        element_storage["bg_w"]=-x+x2+w2+10
+        element_storage["bg_w"]=w2
       end
       element_storage["bg_h"]=bg_h-1
       element_storage["bg"]=nil
