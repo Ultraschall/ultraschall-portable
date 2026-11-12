@@ -29,7 +29,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" ,"ultraschall-settings.ini")
+update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, "1" ,"ultraschall-devices.ini")
 -- Gerät kann lokales monitoring
 
 reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	--Routing-Matrix neu aufbauen

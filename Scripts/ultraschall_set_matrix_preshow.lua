@@ -41,6 +41,7 @@ function buildRoutingMatrix ()
 	local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
 
 	soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der Anteil des Soundbards während der Preshow im Monitormix sein
+  if soundbed_mix==nil then soundbed_mix=0.3 end
 
 --	 print(serialize(AllMainSends))
 
@@ -78,7 +79,7 @@ function buildRoutingMatrix ()
 
 			retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
+			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-devices.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
 				retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
 			end
 

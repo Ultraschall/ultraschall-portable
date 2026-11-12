@@ -26,7 +26,6 @@
 
 function SoundcheckUnsaved(userspace)
 
-
   -- print(reaper.GetPlayStateEx(0))
   --print(reaper.IsProjectDirty(0))
 
@@ -93,7 +92,6 @@ end
 
 function SoundcheckOverdub(userspace)
 
-
   if reaper.GetPlayState() ~= 5 then
     userspace["skip_overdub_check"] = 0 -- stoppen der Aufnahme führt dazu, dass beim nächsten Recording der Check wieder durchgeführt wird
     -- return false
@@ -115,7 +113,7 @@ function SoundcheckOverdub(userspace)
 
   if cursor >= length then -- alles in Ordnung, muss für diese Aufnahme nicht weiter geprüft werden.
     userspace["skip_overdub_check"] = 1
-    userspace["overdub_warning"] = 0
+    userspace["overdub_warning"] = 0    
     return false
 
   elseif (play < length and reaper.GetPlayState() == 5) or userspace["overdub_warning"] == 1 then -- es gibt Elemente, die hinter dem Rec-Cursor stehen und eine Aufnahme läuft
@@ -261,7 +259,7 @@ function SoundcheckBsize(userspace)
 
   local retval, actual_bsize = reaper.GetAudioDeviceInfo("BSIZE", "")
   local retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-  local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-settings.ini"))
+  local actual_device_type = tonumber(ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name ,"ultraschall-devices.ini"))
   local retval, step = reaper.GetProjExtState(0, "ultraschall_magicrouting", "step")
 
   if actual_device_name == "" then -- überhaupt kein Device aktiv - vermutlich während des Renderns
@@ -304,7 +302,7 @@ function SoundcheckChangedInterface(userspace)
 
   if actual_device_name ~= userspace["old_device_name"] and actual_device_name ~= "" and reaper.CountTracks(0) > 0 then -- Device wurde gewechselt und es wird nicht gerendert und es gibt mindestens 1 Spur
 
-    local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
+    local known_device_status = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-devices.ini")
 
     if known_device_status == "" then
 
@@ -320,7 +318,7 @@ function SoundcheckChangedInterface(userspace)
         new_status = known_device_status
       end
 
-      local update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, new_status ,"ultraschall-settings.ini")
+      local update = ultraschall.SetUSExternalState("ultraschall_devices", actual_device_name, new_status ,"ultraschall-devices.ini")
 
       reaper.SetProjExtState(0, "ultraschall_magicrouting", "override", "on")	--Routing-Matrix neu aufbauen
 
@@ -344,12 +342,12 @@ function SetSoundcheck(EventName)
 
 
   local sectionName = EventName
-  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds","ultraschall-settings.ini"))
-  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds","ultraschall-settings.ini"))
-  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue","ultraschall-settings.ini"))
-  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused","ultraschall-settings.ini"))
-  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction","ultraschall-settings.ini")]
-  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction","ultraschall-settings.ini")
+  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds","ultraschall-soundchecks.ini"))
+  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds","ultraschall-soundchecks.ini"))
+  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue","ultraschall-soundchecks.ini"))
+  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused","ultraschall-soundchecks.ini"))
+  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction","ultraschall-soundchecks.ini")]
+  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction","ultraschall-soundchecks.ini")
 
   local start_id = tostring(reaper.NamedCommandLookup(StartFunction))
   local start_id = start_id..",0"
@@ -372,6 +370,6 @@ function SetSoundcheck(EventName)
 
   ultraschall.ShowLastErrorMessage()
 
-  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier,"ultraschall-settings.ini")
+  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier,"ultraschall-soundchecks.ini")
 
 end
