@@ -163,7 +163,7 @@ function SetUpNewGui()
   reagirl.NextLine()
   scaling_override=tonumber(reaper.GetExtState("ReaGirl", "scaling_override", value, true))
   if scaling_override==nil then scaling_override2=0 else scaling_override2=scaling_override end
-  tab1.slider_scale = reagirl.Slider_Add(nil, nil, 295, "Scale Override", 110,  "Set the default scaling-factor for all ReaGirl-Gui-windows; 0, scaling depends automatically on the scaling-factor in the prefs or the presence of Retina/HiDPI.", "", 0, 8, 1, 0, 0, ScaleOverride, "Scale Override Slider")
+  tab1.slider_scale = reagirl.Slider_Add(nil, nil, 295, "Scale Override", 110,  "Set the default scaling-factor for all ReaGirl-Gui-windows; 0, scaling depends automatically on the scaling-factor in the prefs or the presence of Retina/HiDPI.", "", 0, 4, 1, 0, 0, ScaleOverride, "Scale Override Slider")
   
   --reagirl.Slider_LinkToExtstate(tab1.highlighting, "ReaGirl", "scaling_override", 0, true, 1)
   reagirl.NextLine(15)

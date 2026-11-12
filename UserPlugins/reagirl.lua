@@ -4194,9 +4194,9 @@ function reagirl.BlitText_AdaptLineLength(text, x, y, width, height, align, sele
           style2=style
         end
         if i>=selected_start and i<=selected_end then
-          gfx.setfont(1, reagirl.Font_Face, font_size*reagirl.Window_GetCurrentScale(), 86+(style2>>8))
+          gfx.setfont(1, -reagirl.Font_Face, font_size*reagirl.Window_GetCurrentScale(), 86+(style2>>8))
         else
-          gfx.setfont(1, reagirl.Font_Face, font_size*reagirl.Window_GetCurrentScale(), style2)
+          gfx.setfont(1, -reagirl.Font_Face, font_size*reagirl.Window_GetCurrentScale(), style2)
         end
         gfx.drawstr(text:sub(i,i), 0)--, x+width, y+height)
       end
@@ -5366,7 +5366,7 @@ function reagirl.Window_SetCurrentScale(newscale)
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>Window_SetCurrentScale</slug>
   <requires>
-    ReaGirl=1.0
+    ReaGirl=1.4
     Reaper=7.03
     Lua=5.4
   </requires>
@@ -5377,7 +5377,7 @@ function reagirl.Window_SetCurrentScale(newscale)
   <retvals>
     optional integer newscale - the scaling factor that shall be used in the script
                               - nil, autoscaling/use preference
-                              - 1-8, scaling factor between 1 and 8
+                              - 1-4, scaling factor between 1 and 8
   </retvals>
   <chapter_context>
     Window
@@ -5386,12 +5386,13 @@ function reagirl.Window_SetCurrentScale(newscale)
   <source_document>reagirl.lua</source_document>
   <tags>window, set, current scale</tags>
   <changelog>
+    ReaGirl 1.4 - limited scaling to maximum of 4x due to api-limitations of Reaper
     ReaGirl 1.0 - added to ReaGirl
   </changelog>
 </US_DocBloc>
 ]]
   if newscale~=nil and math.type(newscale)~="integer" then error("Window_SetCurrentScale: param #1 - must be either nil or an integer", 2) end
-  if newscale~=nil and (newscale<1 or newscale>8) then error("Window_SetCurrentScale: param #1 - must be between 1 and 8", 2) end
+  if newscale~=nil and (newscale<1 or newscale>4) then error("Window_SetCurrentScale: param #1 - must be between 1 and 8", 2) end
   if newscale==nil then reagirl.Window_CurrentScale_Override=nil
   else 
     reagirl.Window_OldScale=newscale
@@ -5466,10 +5467,37 @@ function reagirl.SetFont(idx, fontface, size, flags, scale_override)
   if math.type(flags)~="integer" then error("SetFont: param #4 - must be an integer", 2) end
   if scale_override~=nil and math.type(scale_override)~="integer" then error("SetFont: param #5 - must be either nil(for autoscale) or an integer", 2) end
   if scale_override~=nil and (scale_override<1 or scale_override>8) then error("SetFont: param #5 - must be between 1 and 8 or nil(for autoscale)", 2) end
-  if scale_override~=nil then size=size*scale_override 
-  else 
-    if size~=nil then size=size*reagirl.Window_GetCurrentScale() end
-  end
+  if scale_override==nil then scale_override=reagirl.Window_GetCurrentScale() end
+  
+  local font_sizes={}
+  font_sizes[0]=0
+  font_sizes[0.25]=0.25
+  font_sizes[0.5]=0.5
+  font_sizes[0.75]=0.8
+  
+  font_sizes[1]=1
+  font_sizes[1.25]=1.25
+  font_sizes[1.5]=1.5
+  font_sizes[1.75]=1.75
+
+  font_sizes[2]=2.06
+  font_sizes[2.25]=2.19
+  font_sizes[2.5]=2.5
+  font_sizes[2.75]=2.75
+
+  font_sizes[3]=2.9
+  font_sizes[3.25]=3.12
+  font_sizes[3.5]=3.3
+  font_sizes[3.75]=3.63
+
+  font_sizes[4]=3.9
+  font_sizes[4.25]=4.19
+  font_sizes[4.5]=4.3
+  font_sizes[4.75]=4.5
+  
+  --print2(size, scale_override, font_sizes[scale_override])
+  size=size*font_sizes[scale_override]
+  --print2(size)
   
   --local font_size = size * (1+reagirl.Window_CurrentScale)*0.5
   if reagirl.OS=="Mac" and reagirl.ReaperVersion<7.70 then size=math.floor(size*0.8) end
@@ -7315,7 +7343,7 @@ function reagirl.Gui_Manage(keep_running)
   <source_document>reagirl.lua</source_document>
   <tags>gui, functions, manage</tags>
   <changelog>
-    ReaGirl 1.4 - first tabbing will now focus the first, non-decorative ui-element, not the first existing
+    ReaGirl 1.4 - first tabbing will now focus the first, non-decorative ui-element, not the first existing; mouseclicks makes currently shown tooltip disappear
     ReaGirl 1.1 - added to ReaGirl
   </changelog>
 </US_DocBloc>
@@ -7323,7 +7351,7 @@ function reagirl.Gui_Manage(keep_running)
   -- manages the gui, including tts, mouse and keyboard-management and ui-focused-management
   --gfx.update()
   reagirl.Defer_StartTime=reaper.time_precise()
-  -- initialize shit
+  -- initialize stuff
   if keep_running~=nil and type(keep_running)~="boolean" then error("Gui_Manage: param #1 - must be either nil or a boolean", 2) end
   if keep_running==true then reagirl.Gui_Manage_keep_running=true end
   local message
@@ -7516,6 +7544,12 @@ function reagirl.Gui_Manage(keep_running)
   
   local scale=reagirl.Window_CurrentScale
   --local Window_State=gfx.getchar(65536)
+  
+  if gfx.mouse_cap&1~=0 or gfx.mouse_cap&2~=0 
+  or gfx.mouse_x~=reagirl.OldMouseX or gfx.mouse_y~=reagirl.OldMouseY then
+    -- when mouse click, remove any shown tooltip-window immediately
+    reaper.TrackCtl_SetToolTip("", 0, 0, true)
+  end
   
   -- initialize focus of first element, if not done already
   if reagirl.Elements["FocusedElement"]==nil then reagirl.Elements["FocusedElement"]=reagirl.UI_Element_GetNext(0,2) end
@@ -20921,7 +20955,6 @@ function reagirl.Label_GetColor(element_id)
 end
 
 function reagirl.Label_AutoBackdrop(element_id, dest_element_id_y, dest_element_id_x)
-
 --[[
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
    <slug>Label_AutoBackdrop</slug>
@@ -20930,7 +20963,7 @@ function reagirl.Label_AutoBackdrop(element_id, dest_element_id_y, dest_element_
     Reaper=7.03
     Lua=5.4
   </requires>
-  <functioncall>reagirl.Label_AutoBackdrop(string element_id, string dest_element_id_y, optional string dest_element_x)</functioncall>
+  <functioncall>reagirl.Label_AutoBackdrop(string element_id, string dest_element_id_y)</functioncall>
   <description>
     Sets a backdrop from label to underneath a specific ui-element defined by dest_element_id.
     It will be autosized. The width will be determined from all ui-elements currently visible, the height will be determined by the position and height of dest_element_id.
@@ -20941,17 +20974,20 @@ function reagirl.Label_AutoBackdrop(element_id, dest_element_id_y, dest_element_
   <parameters>
     string element_id - the label-element, that shall draw a backdrop
     string dest_element_id_y - the ui-element, whose bottom edge shall be orientation for the height of the label-backdrop
-    optional string dest_element_x - the ui-element, whose right edge shall be the oritentatio for the width of the label-backdrop
   </parameters>
   <chapter_context>
     Label
   </chapter_context>
   <tags>label, set, auto, backdrop</tags>
   <changelog>
-    ReaGirl 1.4 - added new parameter dest_element_x which allows setting the width of the label-backdrop to the right edge of a certain ui-element
     ReaGirl 1.0 - added to ReaGirl
   </changelog>
 </US_DocBloc>
+    , optional string dest_element_x
+
+    optional string dest_element_x - the ui-element, whose right edge shall be the oritentatio for the width of the label-backdrop
+    
+    ReaGirl 1.4 - added new parameter dest_element_x which allows setting the width of the label-backdrop to the right edge of a certain ui-element
 --]]
   if type(element_id)~="string" then error("Label_AutoBackdrop: param #1 - must be a string", 2) end
   if reagirl.IsValidGuid(element_id, true)==false then error("Label_AutoBackdrop: param #1 - must be a valid guid", 2) end
@@ -23811,7 +23847,7 @@ function reagirl.Settings_Global_GetSet(setting, is_set, value)
   </chapter_context>
   <tags>misc, get, set, options</tags>
   <changelog>
-    ReaGirl 1.4 - added new option DarkMode
+    ReaGirl 1.4 - added new option DarkMode; limited Scaling_Override to maximum of 4x
     ReaGirl 1.32 - added new option Debug_Show_Gui_And_UI_Names, Window_Dragging; returns now nil in case of an error
     ReaGirl 1.3 - added to ReaGirl
   </changelog>
@@ -23916,6 +23952,8 @@ function reagirl.Settings_Global_GetSet(setting, is_set, value)
       reaper.SetExtState("ReaGirl", "InputBox_BlinkSpeed", value, true)
     elseif setting=="Scaling_Override" then
       if value==0 then value="" end
+      if value>4 then value=4 end
+      if value<0 then value=0 end
       reaper.SetExtState("ReaGirl", "scaling_override", value, true)
     elseif setting=="Osara_Enabled" then
       if value==1 then value="" else value="false" end
