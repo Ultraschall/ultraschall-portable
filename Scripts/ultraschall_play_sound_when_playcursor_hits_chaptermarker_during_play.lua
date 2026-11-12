@@ -82,6 +82,7 @@ function main()
         if volume==nil or modtime~=oldmodtime then 
           AA=reaper.time_precise()
           volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini")) 
+          if volume==nil then volume=0.5 end
           volume = volume * 2 
         end
         oldmodtime=modtime
