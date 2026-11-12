@@ -112,7 +112,9 @@ function runloop() --BACKGROUND Loop
         time_passed=(reaper.time_precise()-starttime) * speed_list[speed]
         reaper.MoveEditCursor(start_position-time_passed-reaper.GetCursorPosition(), 0)
         reaper.CSurf_OnPlayRateChange(1.0+speed_list[speed]/10000.0+0.00005) -- encode speed in Playratevalue 1x -> 1.0001, 100x -> 1.0100
-        reaper.defer(runloop) -- restart loop
+        if reaper.GetPlayState()&2 ~= 0 then 
+          reaper.defer(runloop) -- restart loop
+        end
     end
 
     if playing_reverse_state()==3 then --fwd shuttle play was pressed: stop reverse playing and play forward
