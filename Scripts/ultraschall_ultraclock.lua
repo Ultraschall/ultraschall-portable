@@ -222,7 +222,7 @@ function Init()
   txt_line={}
   for i=1,7 do txt_line[i]={} end -- create 2d array for 4 lines of text
   txt_line[2]={y=0.05, size=0.25}    -- current date
-  txt_line[1]={y=0.05 , size=0.25}   -- current time
+  txt_line[1]={y=0.05, size=0.25}   -- current time
   txt_line[3]={y=0.11, size=0.16}  -- current playstate
   txt_line[4]={y=0.17, size=0.9}  -- current position
 
@@ -297,17 +297,18 @@ function Init()
   uc_menu[5]={text="Show Time-Selection"    , checked = (preset&16==16)}
   uc_menu[6]={text="Show Project Length"    , checked = (preset&32==32)}
   uc_menu[7]={text="Show Remaining Time until next Marker/Region/Projectend", checked= (preset&64==64)}
+  uc_menu[8]={text="Show time you worked on your project", checked=(preset&128==128)}
 
   --uc_menu[8]={text="", checked=false} -- separator
-  uc_menu[8]={text=">Blink when x minutes are left til project end", checked=false}
-  uc_menu[9]={text="never blink", checked=RemainingBlink_menu==0}
-  uc_menu[10]={text="5 minutes", checked=RemainingBlink_menu==1}
-  uc_menu[11]={text="10 minutes", checked=RemainingBlink_menu==2}
-  uc_menu[12]={text="15 minutes", checked=RemainingBlink_menu==3}
-  uc_menu[13]={text="20 minutes", checked=RemainingBlink_menu==4}
-  uc_menu[14]={text="<", checked=false}
-  uc_menu[15]={text="Dock Dashboard window to Docker", checked=docked}
-  uc_menu[16]={text="Close Window",checked=false}
+  uc_menu[9]={text=">Blink when x minutes are left til project end", checked=false}
+  uc_menu[10]={text="never blink", checked=RemainingBlink_menu==0}
+  uc_menu[11]={text="5 minutes", checked=RemainingBlink_menu==1}
+  uc_menu[12]={text="10 minutes", checked=RemainingBlink_menu==2}
+  uc_menu[13]={text="15 minutes", checked=RemainingBlink_menu==3}
+  uc_menu[14]={text="20 minutes", checked=RemainingBlink_menu==4}
+  uc_menu[15]={text="<", checked=false}
+  uc_menu[16]={text="Dock Dashboard window to Docker", checked=docked}
+  uc_menu[17]={text="Close Window",checked=false}
 end
 
 function InitGFX()
@@ -340,18 +341,18 @@ function showmenu(trigger)
   local menu_string=""
   local i=1
   for i=1,#uc_menu do
-    ABBBA=uc_menu[i]
     if uc_menu[i].checked==true then menu_string=menu_string.."!" end
     menu_string=menu_string..uc_menu[i].text.."|"
   end
   if trigger==nil then gfx.x, gfx.y= gfx.mouse_x, gfx.mouse_y else gfx.x=zahnradbutton_posx+10 gfx.y=zahnradbutton_posx+10 end
   local ret=gfx.showmenu(menu_string)
   local ret2=ret
+  ABBA3=ret
 
   if ret>0 then -- a line was clicked
-    if ret>7 then ret2=ret end -- separator does not have an id ...
-    if ret>=8 and ret<=14 then
-      for i=9, 14 do
+    if ret>8 then ret2=ret end -- separator does not have an id ...
+    if ret>=9 and ret<=16 then
+      for i=9, 17 do
         uc_menu[i].checked=false
       end
       uc_menu[ret+1].checked=true
@@ -614,6 +615,18 @@ function drawClock()
     Date=""
   end
   
+  if uc_menu[8].checked==true then
+    --local retval
+    retval, work_time=reaper.GetProjExtState(0, "ultraschall_project_work_counter", "counter")
+    work_time2=work_time
+    if work_time~="" then 
+      work_time=reaper.format_timestr(work_time, ""):match("(.-)%.")
+    else
+      work_time=" - not counted"
+    end
+  else
+    work_time=""
+  end
   
   --Date_Length=gfx.measurestr(Date)
   
@@ -622,6 +635,16 @@ function drawClock()
     time=os.date("%H:%M:%S")
   else
     time=""
+  end
+
+  if work_time~="" then
+    local style=0
+    local offset=" "
+    local y_offset=0
+    local x_offset=0
+    local resizer=0
+    local date_position_y = txt_line[2].y*height+border-y_offset
+    WriteAlignedText("Worktime: "..tostring(work_time), 0xb3b3b3, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y-22,0,0, 0, style, nil, nil, 0)
   end
 
   if Date~="" then
@@ -860,11 +883,12 @@ function MainLoop()
 
   if Triggered==true then
     local ret=showmenu(menuposition)
+    ABBA2=ret
     menuposition=nil
-    if ret==13 then -- /undock
+    if ret==14 then -- /undock
       dock_state=gfx.dock(-1)
       if dock_state & 1 == 1 then gfx.dock(dock_state -1) else gfx.dock(dock_state+1) end
-    elseif ret==14 then exit_clock()
+    elseif ret==15 then exit_clock()
     end
 
     if gfx.dock(-1)&1==1 then is_docked="true" else is_docked="false" end
@@ -893,7 +917,7 @@ function MainLoop()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
       lufs_pos_y=date_position_y
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y+30 * retina_mod and gfx.mouse_y > date_position_y-10*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y * retina_mod and gfx.mouse_y > date_position_y*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
         openWindowLUFS()
       end
     end
@@ -1006,7 +1030,7 @@ function checkhover()
   end
   
   if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
-     gfx.mouse_y > lufs_pos_y-10*retina_mod and 
+     gfx.mouse_y > lufs_pos_y-28*retina_mod and 
      gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
     add_color3=0.1
     refresh_me()

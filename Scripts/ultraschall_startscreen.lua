@@ -85,6 +85,7 @@ function check_values()
   local startscreen
 
   startscreen = ultraschall.GetUSExternalState("ultraschall_settings_startsceen", "Value", "ultraschall-settings.ini")
+  if startscreen=="" then startscreen="1" end
 
   if tostring(GUI["elms"][2]["retval"][1]) == "1"  and (startscreen == "0" or startscreen=="-1") then      -- ckeckbox is activated
     ultraschall.SetUSExternalState("ultraschall_settings_startsceen", "Value", "1", "ultraschall-settings.ini")

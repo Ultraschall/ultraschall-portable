@@ -1072,6 +1072,7 @@ function Audiogram_Main()
     -- as if the user wants to open up the folder, where the audiogram got rendered to
     -- play render-finished notification sound, if toggled on by the user
     volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
+    if volume=="" then volume="0.5" end
     play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
     if play_sound=="1" then
       ultraschall.PreviewMediaFile(reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Render-Finished-Sound.flac", tonumber(volume), false, 0)

@@ -77,10 +77,10 @@ function buildRoutingMatrix ()
 
       retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
 
-      if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-settings.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
-        retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
-      end
 
+			if tonumber(ultraschall.GetUSExternalState("ultraschall_devices",actual_device_name,"ultraschall-devices.ini")) == 0 then  -- Audio-Device kann kein lokales Monitoring
+				retval = ultraschall.AddTrackHWOut(i, 0, 0, 1, 0, 0, 0, 0, -1, 0, false) -- sendet auch auf den HWOut in den Kopfhörer
+			end
     end
 
   end
