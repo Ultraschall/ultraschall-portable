@@ -102,6 +102,8 @@ dofile(reaper.GetResourcePath().."/Scripts/ultraschall_soundcheck_functions.lua"
 
 gfx_path=reaper.GetResourcePath().."/Scripts/Ultraschall_Gfx/Headers/"
 ini_file=reaper.GetResourcePath().."/ultraschall-settings.ini"
+ini_file_soundcheck=reaper.GetResourcePath().."/ultraschall-soundchecks.ini"
+ini_file_devices=reaper.GetResourcePath().."/ultraschall-devices.ini"
 
 -- 0. enable ReaGirl for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
@@ -144,7 +146,7 @@ end
 function StartSoundcheck(name, function_name)
   -- starts a specific soundcheck
   local event_identifier = ultraschall.EventManager_AddEvent(name, 1, 0, false, false, function_name, {"_Ultraschall_Soundcheck_Startgui,0"})
-  ultraschall.SetUSExternalState(name, "EventIdentifier", event_identifier, "ultraschall-settings.ini")
+  ultraschall.SetUSExternalState(name, "EventIdentifier", event_identifier, "ultraschall-soundchecks.ini")
 end
 
 function slider_run_func(element_id, value)
@@ -323,49 +325,49 @@ function checkbox_run_function(element_id, checked)
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_unsaved", SoundcheckUnsaved)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_unsaved", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_unsaved", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_preparealltracks then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_prepare_for_editing", SoundcheckTransitionRecordToStop)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_prepare_for_editing", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_48khz_check then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_samplerate", SoundcheckSamplerate)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_samplerate", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_samplerate", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_mic_check then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_mic", SoundcheckMic)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_mic", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_mic", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_overdub_check then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_overdub", SoundcheckOverdub)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_overdub", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_unknown_interface then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_changed_interface", SoundcheckChangedInterface)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_changed_interface", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_changed_interface", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_distortion_prevention then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_Bsize", SoundcheckBsize)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_Bsize", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_Bsize", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
   elseif element_id==tabs2.soundcheck_input_wizard then
     if checked==true then
       StartSoundcheck("ultraschall_soundcheck_inputs", SoundcheckInputs)
     else
-      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_inputs", "EventIdentifier", "ultraschall-settings.ini"))
+      ultraschall.EventManager_RemoveEvent(ultraschall.GetUSExternalState("ultraschall_soundcheck_inputs", "EventIdentifier", "ultraschall-soundchecks.ini"))
     end
     
   end
@@ -692,49 +694,49 @@ tabs2.soundchecks = reagirl.Label_Add(nil, nil, "Available Soundchecks", "Soundc
 
 reagirl.NextLine()
 tabs2.soundcheck_saveproject = reagirl.Checkbox_Add(nil, nil, "Save project before recording", "The project should be saved before recording starts. Ignoring this can lead to difficulties in finding your records or even to loss of data.", true, checkbox_run_function, "checkbox_soundcheck_save_project")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_saveproject, ini_file, "ultraschall_soundcheck_unsaved", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_saveproject, ini_file_soundcheck, "ultraschall_soundcheck_unsaved", "Value", "0", "1", "1", true)
 tabs2.button_help = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for save project before recording.", button_run_function_soundcheck_help, "button_help", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help, true, "Value", tabs2.soundcheck_saveproject)
 
 reagirl.NextLine()
 tabs2.soundcheck_preparealltracks = reagirl.Checkbox_Add(nil, nil, "Prepare all tracks for editing", "Reminder to prepare all tracks for editing after a recording is complete. This starts a series of actions to switch the app from recording to editing behavior.", true, checkbox_run_function, "checkbox_soundcheck_prepare_all_tracks_for_editing")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_preparealltracks, ini_file, "ultraschall_soundcheck_prepare_for_editing", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_preparealltracks, ini_file_soundcheck, "ultraschall_soundcheck_prepare_for_editing", "Value", "0", "1", "1", true)
 tabs2.button_help2 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for Prepare all tracks for editing.", button_run_function_soundcheck_help, "button_help2", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help2, true, "Value", tabs2.soundcheck_preparealltracks )
 
 reagirl.NextLine()
 tabs2.soundcheck_48khz_check = reagirl.Checkbox_Add(nil, nil, "Check for 48 KHz sample rate", "The samplerate of all devices must be set to 48.000 Hz if you want to use StudioLink or StudioLink OnAir.", true, checkbox_run_function, "checkbox_soundcheck_48khz_check")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_48khz_check, ini_file, "ultraschall_soundcheck_samplerate", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_48khz_check, ini_file_soundcheck, "ultraschall_soundcheck_samplerate", "Value", "0", "1", "1", true)
 tabs2.button_help3 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for 48 kilohertz sample rate.", button_run_function_soundcheck_help, "button_help3", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help3, true, "Value", tabs2.soundcheck_48khz_check)
 
 reagirl.NextLine()
 tabs2.soundcheck_mic_check = reagirl.Checkbox_Add(nil, nil, "Check if internal mic is selected", "Prevents you from accidentally recording with the built-in microphone instead of using your dedicated sound interface.", true, checkbox_run_function, "checkbox_soundcheck_mic_check")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_mic_check, ini_file, "ultraschall_soundcheck_mic", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_mic_check, ini_file_soundcheck, "ultraschall_soundcheck_mic", "Value", "0", "1", "1", true)
 tabs2.button_help4 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for check if internal mix is selected.", button_run_function_soundcheck_help, "button_help4", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help4, true, "Value", tabs2.soundcheck_mic_check)
 
 reagirl.NextLine()
 tabs2.soundcheck_overdub_check = reagirl.Checkbox_Add(nil, nil, "Start recording only at the end", "This warning appears when a recording is started in the middle of an existing project, not at the end. This would lead to overlapping takes and is usually undesirable.", true, checkbox_run_function, "checkbox_soundcheck_overdub_check")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_overdub_check, ini_file, "ultraschall_soundcheck_overdub", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_overdub_check, ini_file_soundcheck, "ultraschall_soundcheck_overdub", "Value", "0", "1", "1", true)
 tabs2.button_help5 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for start recording only at the end.", button_run_function_soundcheck_help, "button_help5", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help5, true, "Value", tabs2.soundcheck_overdub_check)
 
 reagirl.NextLine()
 tabs2.soundcheck_unknown_interface = reagirl.Checkbox_Add(nil, nil, "Unknown sound interface check", "Watches for a change in your sound interface. This affects Magic Routing, as this will set direct monitoring accordingly in the routing. \n\nIf the interface is unknown yet, the soundcheck will ask, whether direct monitoring(plugging headphones into the audio device) is supported.", true, checkbox_run_function, "checkbox_soundcheck_unknown_interface")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_unknown_interface, ini_file, "ultraschall_soundcheck_changed_interface", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_unknown_interface, ini_file_soundcheck, "ultraschall_soundcheck_changed_interface", "Value", "0", "1", "1", true)
 tabs2.button_help6 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for unknown sound interface check.", button_run_function_soundcheck_help, "button_help6", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help6, true, "Value", tabs2.soundcheck_unknown_interface)
 
 reagirl.NextLine()
 tabs2.soundcheck_distortion_prevention = reagirl.Checkbox_Add(nil, nil, "Echo and distortion prevention", "If you use a audio device without Direct Monitoring(means, you cannot attach a headphone to it) it is important to set the right block size. \n\nA block size larger than 128 will result in latency and echo effects. A block size smaller than 32 will lead to an unstable audio stack and dropouts. \n\nWe suggest 512 for Direct Monitoring devices and 64 for devices without Direct Monitoring.", true, checkbox_run_function, "checkbox_soundcheck_distortion_prevention")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_unknown_interface, ini_file, "ultraschall_soundcheck_Bsize", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_unknown_interface, ini_file_soundcheck, "ultraschall_soundcheck_Bsize", "Value", "0", "1", "1", true)
 tabs2.button_help7 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for Echo and distortion prevention.", button_run_function_soundcheck_help, "button_help7", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help7, true, "Value", tabs2.soundcheck_distortion_prevention)
 
 reagirl.NextLine()
 tabs2.soundcheck_input_wizard = reagirl.Checkbox_Add(nil, nil, "Input wizard", "Checks if... \na) an input of the sound interface is used multiple times and \nb) if the interchangeable mic channels of a zoom interface are used.", true, checkbox_run_function, "checkbox_soundcheck_input_wizard")
-reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_input_wizard, ini_file, "ultraschall_soundcheck_inputs", "Value", "0", "1", "1", true)
+reagirl.Checkbox_LinkToIniValue(tabs2.soundcheck_input_wizard, ini_file_soundcheck, "ultraschall_soundcheck_inputs", "Value", "0", "1", "1", true)
 tabs2.button_help8 = reagirl.Button_Add(250, nil, 0, 0, "?", "Help for Input wizard-check.", button_run_function_soundcheck_help, "button_help8", mode, width, height)
 reagirl.UI_Element_GetSetExtState(tabs2.button_help8, true, "Value", tabs2.soundcheck_input_wizard)
 
@@ -763,14 +765,15 @@ function Build_Devices_Tab()
   local Found_Counter=1
   Found_Devices={}
   while Found==true do
-    local found_device=ultraschall.EnumerateIniFileExternalState_key("ultraschall_devices", Found_Counter, reaper.GetResourcePath().."/ultraschall-settings.ini")
+    local found_device=ultraschall.EnumerateIniFileExternalState_key("ultraschall_devices", Found_Counter, reaper.GetResourcePath().."/ultraschall-devices.ini")
     Found_Devices[#Found_Devices+1]=found_device
     Found_Counter=Found_Counter+1
     if found_device==nil then Found=false end
   end
   Found_Devices_Monitoring={}
   for i=1, Found_Counter-2 do
-    Found_Devices_Monitoring[i]=tonumber(ultraschall.GetUSExternalState("ultraschall_devices", Found_Devices[i], "ultraschall-settings.ini"))
+    --print2(Found_Devices[i])
+    Found_Devices_Monitoring[i]=tonumber(ultraschall.GetUSExternalState("ultraschall_devices", Found_Devices[i], "ultraschall-devices.ini"))
   end
   
   for i=Found_Counter-2, 1, -1 do
@@ -800,12 +803,12 @@ function Build_Devices_Tab()
       tabs3[("interface_button"..i)] = reagirl.Button_Add(400, nil, 0, 0, "Delete from list", "Delete the interface "..Found_Devices[i].." from list.", button_run_function_devices, ("interface_button"..i), mode, width, height)
       reagirl.UI_Element_GetSetExtState(tabs3[("interface_button"..i)], true, "device", Found_Devices[i])
     end
-    reagirl.Checkbox_LinkToIniValue(tabs3[("interface"..i)], ini_file, "ultraschall_devices", Found_Devices[i], "0", "1", "1", true)
+    reagirl.Checkbox_LinkToIniValue(tabs3[("interface"..i)], ini_file_devices, "ultraschall_devices", Found_Devices[i], "0", "1", "1", true)
     reagirl.NextLine()
     if i==#Found_Devices then 
       --reagirl.Label_AutoBackdrop(tabs3.devices, tabs3[("interface"..i)], tabs3.active_device) 
       
-      last_interface=tabs3[("interface"..i)] 
+      last_interface=tabs3[("interface"..i)]
       local x, y, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(last_interface, false, 0, 0)
       local x, y2, actual_x, actual_y = reagirl.UI_Element_GetSetPosition(tabs_guid, false, 0, 0)
       y=y-y2-30
@@ -831,7 +834,7 @@ reagirl.Gui_Open("Ultraschall Settings", false, "Ultraschall Settings", "Set you
 
 -- 5. a main-function that runs the gui-management-function
 function main()
-  local _,_,_,modified=reaper.JS_File_Stat(reaper.GetResourcePath().."/ultraschall-settings.ini")
+  local _,_,_,modified=reaper.JS_File_Stat(reaper.GetResourcePath().."/ultraschall-devices.ini")
   local retval, actual_device=reaper.GetAudioDeviceInfo("IDENT_IN")
   if modified~=old_modified_ini_file or actual_device~=old_actual_device then 
     if override_update==nil then
