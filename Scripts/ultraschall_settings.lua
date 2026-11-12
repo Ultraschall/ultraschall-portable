@@ -753,45 +753,6 @@ function button_run_function_devices(element_id)
   ultraschall.SetUSExternalState("ultraschall_devices", value, value2+2, "ultraschall-settings.ini")
 end
 
-------------------------------------------------------
---  End of functions
-------------------------------------------------------
-
-
--- Grab all of the functions and classes from our GUI library
-
-local info = debug.getinfo(1,'S');
-script_path = info.source:match[[^@?(.*[\/])[^\/]-$]]
-GUI = dofile(script_path .. "ultraschall_gui_lib.lua")
-gfx_path=script_path.."/Ultraschall_Gfx/Settings/"
-header_path = script_path.."/Ultraschall_Gfx/Headers/"
-
----- Window settings and user functions ----
-
-GUI.name = "Ultraschall - Settings"
-GUI.w, GUI.h = 820, 710   -- ebentuell dynamisch halten nach Anzahl der Devices-Einträge?
-
-------------------------------------------------------
--- position always in the center of the screen
-------------------------------------------------------
-
-l, t, r, b = 0, 0, GUI.w, GUI.h
-__, __, screen_w, screen_h = reaper.my_getViewport(l, t, r, b, l, t, r, b, 1)
-GUI.x, GUI.y = (screen_w - GUI.w) / 2, (screen_h - GUI.h) / 2
-GUI.y=GUI.y-15
-
-
-  -- body
-  ---- GUI Elements ----
-
-
-------------------------------------------------------
---  Aufbau der nicht interaktiven GUI-Elemente wie Logos etc.
-------------------------------------------------------
-
-
-
-function buildGUI()
 function checkbox_run_function2(element_id)
   override_update=true
 end
@@ -818,42 +779,6 @@ function Build_Devices_Tab()
   for i=Found_Counter-2, 1, -1 do
     if Found_Devices_Monitoring[i]>1 then table.remove(Found_Devices_Monitoring, i) table.remove(Found_Devices, i) end
   end
-
-
-end
-
----- Put all of your own functions and whatever here ----
-
-
-function SettingsPageSettings()
-
-  -----------------------------------------------------------------
-  -- initialise the settings - coming from the ultraschall-settings.ini file
-  -----------------------------------------------------------------
-
-  section_count = ultraschall.CountUSExternalState_sec("ultraschall-settings.ini")
-
-  ------------------------------------------------------
-  -- Gehe alle Sektionen der ultraschall.ini durch und baut die normalen Settings auf.
-  -- Kann perspektivisch in eine Funktion ausgelagert werden
-  ------------------------------------------------------
-
-  x_offset = 55
-  
-  block = GUI.Area:new(45, header_height + 92, 730, 560,5,1,1,"section_bg")
-  table.insert(GUI.elms, block)
-  header_height=header_height-10
-
-  for i = 1, section_count , 1 do
-
-    sectionName = ultraschall.EnumerateUSExternalState_sec(i, "ultraschall-settings.ini")
-
-    -- Suche die Sections der ultraschall-settings.ini heraus, die in der Settings-GUI angezeigt werden sollen
-
-    if sectionName and string.find(sectionName, "ultraschall_settings", 1) then
-      if tonumber(ultraschall.GetUSExternalState(sectionName, "position", "ultraschall-settings.ini"))~=nil then
-        position = header_height + 80 + (tonumber(ultraschall.GetUSExternalState(sectionName,"position", "ultraschall-settings.ini")) * 25) -- Feintuning notwendig
-        settings_Type = ultraschall.GetUSExternalState(sectionName, "settingstype","ultraschall-settings.ini")
   
   -- next codeline for some reason, buggy with reagirl.NextLine() in ReaGirl
   --reagirl.AutoPosition_SetNextUIElementAtPosition(30, 98) 
@@ -968,7 +893,4 @@ for i=1, #reagirl.Elements do
     end
   end
 end
-
-reaper.atexit(atexit)
-
 --]]
