@@ -41,6 +41,7 @@ function buildRoutingMatrix ()
   local AllAUXSendReceives, number_of_tracks = ultraschall.GetAllAUXSendReceives()
 
   soundbed_mix = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_preshow_mix", "Value" ,"ultraschall-settings.ini")) -- wie hoch soll der Anteil des Soundbards während der Preshow im Monitormix sein
+  if soundbed_mix==nil then soundbed_mix=0.3 end
 
 --   print(serialize(AllMainSends))
 
