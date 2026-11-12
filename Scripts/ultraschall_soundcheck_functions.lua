@@ -360,12 +360,12 @@ function SetSoundcheck(EventName)
 
 
   local sectionName = EventName
-  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds","ultraschall-soundcheck.ini"))
-  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds","ultraschall-soundcheck.ini"))
-  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue","ultraschall-soundcheck.ini"))
-  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused","ultraschall-soundcheck.ini"))
-  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction","ultraschall-soundcheck.ini")]
-  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction","ultraschall-soundcheck.ini")
+  local CheckAllXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckAllXSeconds","ultraschall-soundchecks.ini"))
+  local CheckForXSeconds =  tonumber(ultraschall.GetUSExternalState(sectionName,"CheckForXSeconds","ultraschall-soundchecks.ini"))
+  local StartActionsOnceDuringTrue = toboolean(ultraschall.GetUSExternalState(sectionName,"StartActionsOnceDuringTrue","ultraschall-soundchecks.ini"))
+  local EventPaused =       toboolean(ultraschall.GetUSExternalState(sectionName,"EventPaused","ultraschall-soundchecks.ini"))
+  local CheckFunction =     _G[ultraschall.GetUSExternalState(sectionName,"CheckFunction","ultraschall-soundchecks.ini")]
+  local StartFunction =     ultraschall.GetUSExternalState(sectionName,"StartFunction","ultraschall-soundchecks.ini")
 
   local start_id = tostring(reaper.NamedCommandLookup(StartFunction))
   local start_id = start_id..",0"
@@ -388,6 +388,6 @@ function SetSoundcheck(EventName)
 
   ultraschall.ShowLastErrorMessage()
 
-  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier,"ultraschall-soundcheck.ini")
+  local update = ultraschall.SetUSExternalState(sectionName, "EventIdentifier", EventIdentifier,"ultraschall-soundchecks.ini")
 
 end
