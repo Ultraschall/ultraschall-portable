@@ -130,7 +130,7 @@ function count_all_warnings(event_count)
     last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
 
     if last_state == true and EventPaused ~= true then -- es ist eine Warnung und sie steht nicht auf ignored
-      DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
+      DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-soundchecks.ini")
       DescriptionWarning = string.gsub(DescriptionWarning, "|", " ")
       local infotable = wrap(DescriptionWarning,80)
 
@@ -239,7 +239,7 @@ function expandEventName(EventNameDisplay)
     retval, actual_bsize = reaper.GetAudioDeviceInfo("BSIZE", "")
 
     retval, actual_device_name = reaper.GetAudioDeviceInfo("IDENT_IN", "")
-    LocalMonitoringState = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-settings.ini")
+    LocalMonitoringState = ultraschall.GetUSExternalState("ultraschall_devices", actual_device_name, "ultraschall-devices.ini")
     if LocalMonitoringState == "1" then LocalMonitoringState = "On" else LocalMonitoringState = "Off" end
     EventNameDisplay = EventNameDisplay .. " (Buffer: ".. actual_bsize .." - Direct Monitoring: " .. LocalMonitoringState .. ")"
 
@@ -488,13 +488,13 @@ function buildGuiWarnings()
     EventIdentifier, EventName, CallerScriptIdentifier, CheckAllXSeconds, CheckForXSeconds, StartActionsOnceDuringTrue, EventPaused, CheckFunction, NumberOfActions, Actions = ultraschall.EventManager_EnumerateEvents(i)
     last_state, last_statechange_precise_time = ultraschall.EventManager_GetLastCheckfunctionState2(EventIdentifier)
 
-    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-settings.ini")
-    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-settings.ini")
-    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-settings.ini")
-    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-settings.ini")
-    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-settings.ini")
-    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-settings.ini")
-    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-settings.ini")
+    Button1Label = ultraschall.GetUSExternalState(EventName, "Button1Label","ultraschall-soundchecks.ini")
+    Button1Action = ultraschall.GetUSExternalState(EventName, "Button1Action","ultraschall-soundchecks.ini")
+    Button2Label = ultraschall.GetUSExternalState(EventName, "Button2Label","ultraschall-soundchecks.ini")
+    Button2Action = ultraschall.GetUSExternalState(EventName, "Button2Action","ultraschall-soundchecks.ini")
+    DescriptionWarning = ultraschall.GetUSExternalState(EventName, "DescriptionWarning","ultraschall-soundchecks.ini")
+    Description = ultraschall.GetUSExternalState(EventName, "Description","ultraschall-soundchecks.ini")
+    EventNameDisplay = ultraschall.GetUSExternalState(EventName, "EventNameDisplay","ultraschall-soundchecks.ini")
 
     -- Name
 
