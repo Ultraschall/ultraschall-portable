@@ -777,7 +777,10 @@ function Build_Devices_Tab()
   end
   
   for i=Found_Counter-2, 1, -1 do
-    if Found_Devices_Monitoring[i]>1 then table.remove(Found_Devices_Monitoring, i) table.remove(Found_Devices, i) end
+    if Found_Devices_Monitoring[i]>1 then 
+      table.remove(Found_Devices_Monitoring, i) 
+      table.remove(Found_Devices, i) 
+    end
   end
   
   -- next codeline for some reason, buggy with reagirl.NextLine() in ReaGirl

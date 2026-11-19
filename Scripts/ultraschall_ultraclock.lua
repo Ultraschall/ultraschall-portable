@@ -644,6 +644,7 @@ function drawClock()
     local x_offset=0
     local resizer=0
     local date_position_y = txt_line[2].y*height+border-y_offset
+    date_y_height=gfx.texth
     WriteAlignedText("Worktime: "..tostring(work_time), 0xb3b3b3, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y-22,0,0, 0, style, nil, nil, 0)
   end
 
@@ -655,8 +656,12 @@ function drawClock()
     local resizer=0
     if Date:match("Analyze")~=nil then style=6 offset="" date_color=reaper.ColorToNative(199, 145, 31) x_offset=1 resizer=1 y_offset=0 end
     date_position_y = txt_line[2].y*height+border-y_offset
+    date_position_y1 = date_position_y
     gfx.setfont(1, "Arial", txt_line[2].size,0)
+    
     Date_Length={WriteAlignedText(offset..Date, date_color, clockfont_bold, txt_line[2].size * fsize-resizer, date_position_y,1,0, x_offset, style, nil, nil, add_color3, focused==2)} -- print realtime hh:mm:ss
+    Date_Length2=Date_Length
+    date_y_height1=Date_Length[4]
     end
   if time~="" then
     Time_Length={WriteAlignedText(time.." ",0xb3b3b3, clockfont_bold, txt_line[1].size * fsize,txt_line[1].y*height+border,2, nil, nil, nil, nil, nil, nil, focused==3)} -- print realtime hh:mm:ss
@@ -917,8 +922,11 @@ function MainLoop()
       drawClock()
     elseif uc_menu[1].checked then  -- Das LUFS-Meter ist aktiviert
       lufs_pos_y=date_position_y
-      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y < date_position_y * retina_mod and gfx.mouse_y > date_position_y*retina_mod and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
-        openWindowLUFS()
+      --gfx.rect(Date_Length[1], Date_Length[2], Date_Length[3], Date_Length[4], 0)
+      if (gfx.mouse_cap & 1 ==1) and gfx.mouse_y > Date_Length[2] and
+          gfx.mouse_y < Date_Length[2]+Date_Length[4] and gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+          --mespotine
+        openWindowLUFS() 
       end
     end
   else
@@ -959,6 +967,8 @@ function MainLoop()
         BlinkTime=0 
     end
     if A11==30 then A11=0 end
+    --gfx.rect(0,date_position_y1,Date_Length[3], Date_Length[4],1)
+    --gfx.rect(0,0,100, 100,1)
     reaper.defer(MainLoop)
   end
 end
@@ -1029,9 +1039,10 @@ function checkhover()
     return true, remaining.."Project position "..projectpos_msg
   end
   
-  if gfx.mouse_y < lufs_pos_y+30 * retina_mod and 
-     gfx.mouse_y > lufs_pos_y-28*retina_mod and 
-     gfx.mouse_x<(Date_Length[3]) then -- Linksklick auf LUFS-Bereich
+  if gfx.mouse_y > Date_Length[2] and 
+     gfx.mouse_y < Date_Length[2]+Date_Length[4] and 
+     gfx.mouse_x<(Date_Length[3]) then -- Hovern auf LUFS-Bereich
+     --gfx.rect(Date_Length[1], Date_Length[2], Date_Length[3], Date_Length[4], 0)
     add_color3=0.1
     refresh_me()
     return true, "Analyze LUFS. "..LUFS_msg
