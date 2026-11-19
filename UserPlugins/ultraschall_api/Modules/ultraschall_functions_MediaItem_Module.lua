@@ -1330,6 +1330,7 @@ function ultraschall.RippleCut(startposition, endposition, trackstring, moveenve
 
   if type(startposition)~="number" then ultraschall.AddErrorMessage("RippleCut", "startposition", "must be a number", -1) return -1 end
   if type(endposition)~="number" then ultraschall.AddErrorMessage("RippleCut", "endposition", "must be a number", -2) return -1 end
+  endposition=endposition+-0.00000000001 -- hack to move markers at exact the endposition as well. Maybe needs to be fixed better?
   if trackstring~="" and ultraschall.IsValidTrackString(trackstring)==false then ultraschall.AddErrorMessage("RippleCut", "trackstring", "must be a valid trackstring", -3) return -1 end
   if type(add_to_clipboard)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "add_to_clipboard", "must be a boolean", -4) return -1 end  
   if type(moveenvelopepoints)~="boolean" then ultraschall.AddErrorMessage("RippleCut", "moveenvelopepoints", "must be a boolean", -5) return -1 end

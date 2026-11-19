@@ -48,10 +48,11 @@ logscale = {
 Filename = reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/ok.flac"
 
 volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
+if volume==nil then volume=0.5 end
 
-volume = volume * 10
+volume = volume * 2
 
-volume = logscale[volume]
+--volume = logscale[volume]
 
 -- print (volume)
 

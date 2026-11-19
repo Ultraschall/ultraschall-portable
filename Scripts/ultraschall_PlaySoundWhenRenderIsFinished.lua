@@ -8,6 +8,7 @@ if reaper.GetExtState("ultraschall_rooster_sound", "running")=="true" then retur
 function main()
   if ultraschall.IsReaperRendering()==false and oldrender==true then
     volume=ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value", "ultraschall-settings.ini")
+    if volume=="" then volume="0.5" end
     play_sound=ultraschall.GetUSExternalState("ultraschall_settings_render_finished_ping", "Value", "ultraschall-settings.ini")
     if play_sound=="1" then
       ultraschall.PreviewMediaFile(reaper.GetResourcePath().."/Scripts/Ultraschall_Sounds/Render-Finished-Sound.flac", tonumber(volume), false, 0)

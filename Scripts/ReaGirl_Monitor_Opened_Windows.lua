@@ -24,4 +24,21 @@
 ################################################################################
 ]] 
 
-reaper.SetExtState("ReaGirl", "scaling_override", "6", true)
+-- enable Ultraschall-API for the script
+dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+
+-- 0. enable ReaGirl for the script
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+reaper.set_action_options(1)
+
+function main() 
+  window_count, window_instances = reagirl.Ext_Window_GetInstances()
+  A=""
+  for i=1, window_count do
+    A=A.."name:"..window_instances[i][1].." guid:"..window_instances[i][2].."\n   processtime:"..reagirl.Ext_Window_GetProcessTime(window_instances[i][2]).."\n"
+  end
+  print_update("number open ReaGirl-windows:"..window_count.."\n"..A)
+  reaper.defer(main)
+end
+
+main()

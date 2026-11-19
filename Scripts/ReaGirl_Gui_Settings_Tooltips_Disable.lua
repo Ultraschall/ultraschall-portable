@@ -24,4 +24,4 @@
 ################################################################################
 ]] 
 
-reaper.SetExtState("ReaGirl", "scaling_override", "7", true)
+reaper.SetExtState("ReaGirl", "show_tooltips", tostring(false), true)

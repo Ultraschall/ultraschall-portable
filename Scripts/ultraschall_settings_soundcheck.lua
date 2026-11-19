@@ -25,5 +25,10 @@
 ]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
-ultraschall.SetUSExternalState("ultraschall_gui","settingsview","2")          -- set settings tab to devices
-reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Settings"), 0)  -- start settings windows
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
+if reagirl.Ext_Window_IsOpen("Ultraschall Settings")==false then
+  reaper.Main_OnCommand(reaper.NamedCommandLookup("_Ultraschall_Settings"), 0)  -- start settings windows
+end
+
+reagirl.Ext_Tab_SetSelected("Ultraschall Settings", 2)
+--ultraschall.SetUSExternalState("ultraschall_gui","settingsview","3")          -- set settings tab to devices

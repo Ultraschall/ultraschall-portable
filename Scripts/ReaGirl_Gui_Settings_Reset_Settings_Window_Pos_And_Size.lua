@@ -23,5 +23,7 @@
 # 
 ################################################################################
 ]] 
+-- resets settings window position and size
+dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
 
-reaper.SetExtState("ReaGirl", "scaling_override", "8", true)
+reagirl.Ext_Window_ResetToDefault("ReaGirl_Settings")

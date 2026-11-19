@@ -311,6 +311,10 @@ cmd=reaper.NamedCommandLookup("_Ultraschall_Follow_Auto_Off")
 reaper.Main_OnCommand(cmd,0)
 
 
+--------------------------------
+-- Start Project Work Counter --
+--------------------------------
+ultraschall.RunCommand("_Ultraschall_Project_Work_Counter_Helper")
 
 --------------------------
 -- Starte die Ulraclock

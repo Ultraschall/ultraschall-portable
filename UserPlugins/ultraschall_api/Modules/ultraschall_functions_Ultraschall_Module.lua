@@ -745,6 +745,7 @@ function ultraschall.EnumerateUSExternalState_key(section, number, filename)
     if startcount==1 and line:match(".*=.*") then
       count=count+1
       if count==number then local temp=line:match(".*=") return temp:sub(1,-2) end
+    elseif line=="" then
     else
       startcount=0
       if "["..section.."]" == check then startcount=1 end

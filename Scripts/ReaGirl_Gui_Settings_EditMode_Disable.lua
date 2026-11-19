@@ -24,4 +24,4 @@
 ################################################################################
 ]] 
 
-reaper.SetExtState("ReaGirl", "scaling_override", "5", true)
+reaper.SetExtState("ReaGirl", "edit_mode", tostring(false), true)

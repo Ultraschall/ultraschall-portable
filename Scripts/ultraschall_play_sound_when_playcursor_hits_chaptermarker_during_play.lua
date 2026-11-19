@@ -30,6 +30,7 @@
 --
 -- plays a sound, if the playposition hits a marker, when playstate==play
 
+reaper.set_action_options(1)
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
@@ -77,9 +78,18 @@ function main()
         else 
           Filename = Filename_edit 
         end
-        volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini"))
-        volume = volume * 10
-        volume = logscale[volume]
+        retval, size, acctime, modtime = reaper.JS_File_Stat("ultraschall-settings.ini")
+        if volume==nil or modtime~=oldmodtime then 
+          AA=reaper.time_precise()
+          volume = tonumber(ultraschall.GetUSExternalState("ultraschall_settings_tims_chapter_ping_volume", "Value" ,"ultraschall-settings.ini")) 
+          if volume==nil then volume=0.5 end
+          volume = volume * 2 
+        end
+        oldmodtime=modtime
+        
+        
+        --volume = logscale[volume]
+        --volume=100/100*volume
   
         if volume == nil then
           volume = 0

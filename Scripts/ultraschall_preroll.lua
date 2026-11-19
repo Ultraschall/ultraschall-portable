@@ -27,4 +27,5 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 String = ultraschall.GetUSExternalState("ultraschall_settings_preroll", "value","ultraschall-settings.ini")
+if String=="" then String=0 end
 reaper.MoveEditCursor(-String, false)

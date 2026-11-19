@@ -48,7 +48,7 @@ if state == 5 then -- is recording
 
   if SafeModeToggleState=="0" then -- If Safe-Mode is OFF, show no message-box
       result = 6
-  elseif SafeModeToggleState=="1" then -- If Safe-Mode is ON or was never toggled, show the message-box
+  elseif SafeModeToggleState=="1" or SafeModeToggleState=="" then -- If Safe-Mode is ON or was never toggled, show the message-box
       result=reaper.ShowMessageBox( msg, title, msgboxtype )
   end
 
