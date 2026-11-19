@@ -762,7 +762,7 @@ function Build_Devices_Tab()
   local tabs3={}
   
   local Found=true
-  local Found_Counter=1
+  Found_Counter=1
   Found_Devices={}
   while Found==true do
     local found_device=ultraschall.EnumerateIniFileExternalState_key("ultraschall_devices", Found_Counter, reaper.GetResourcePath().."/ultraschall-devices.ini")
@@ -777,8 +777,8 @@ function Build_Devices_Tab()
   end
   
   for i=Found_Counter-2, 1, -1 do
-    if Found_Devices_Monitoring[i]>1 then 
-      table.remove(Found_Devices_Monitoring, i) 
+    if Found_Devices_Monitoring[i]~=nil and Found_Devices_Monitoring[i]>1 then 
+      table.remove(Found_Devices_Monitoring, i)
       table.remove(Found_Devices, i) 
     end
   end
