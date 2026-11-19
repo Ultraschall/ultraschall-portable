@@ -31,6 +31,10 @@ sec:"StreamDeck AudioPlay", key:"filename"    - the filename of the file to play
 sec:"StreamDeck AudioPlay", key:"volumedB"    - the dB of the audio, -144 (silence) to 0(regular volume) and higher(boost volume)
 sec:"StreamDeck AudioPlay", key:"markertitle" - this adds a chaptermarker, set it to a markertitle; ""=no marker
 
+
+Get from the following extstate the current playposition; "" if play hasn't started yet/is finished
+
+sec:"StreamDeck AudioPlay" key:the filename with path of the audiofile you want are playing, as set in key:"filename"
 --]]
 
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
@@ -89,6 +93,7 @@ function atexit()
   list=reaper.GetExtState("StreamDeck AudioPlay", "filenamePlayingList")
   list=string.gsub(list, ultraschall.EscapeMagicCharacters_String(filename), "")
   reaper.SetExtState("StreamDeck AudioPlay", "filenamePlayingList", list, false)
+  reaper.SetExtState("StreamDeck AudioPlay", filename, "", false)
 end
 reaper.atexit(atexit)
 
@@ -97,6 +102,7 @@ function main()
   retval, pos = reaper.CF_Preview_GetValue(CF_Preview, "D_POSITION")
   retval, len = reaper.CF_Preview_GetValue(CF_Preview, "D_LENGTH")
   filename2=reaper.GetExtState("StreamDeck AudioPlay", "filename")
+  reaper.SetExtState("StreamDeck AudioPlay", filename, pos, false)
   if pos<=len and filename2~=filename then
     reaper.defer(main)
   end
