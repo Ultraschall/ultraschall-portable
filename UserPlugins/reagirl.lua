@@ -100,10 +100,10 @@ function shortcuts(shortcut, shortcut_name, shortcut_modifier)
   reaper.MB(shortcut, shortcut_name.." "..shortcut_modifier, 0)
 end
 
+reagirl={}
 reagirl.RetinaMac=gfx.ext_retina~=1
 
 gfx.ext_retina=1
-reagirl={}
 reagirl.OS=reaper.GetOS():match("OS")
 if reagirl.OS~=nil then reagirl.OS="Mac"
 elseif reagirl.OS==nil then reagirl.OS=reaper.GetOS():match("Win")
