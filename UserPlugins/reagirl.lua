@@ -4407,8 +4407,8 @@ function reagirl.Window_Open(...)
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
     if reagirl.OS=="Mac" then 
-      parms[2]=parms[2]*2
-      parms[3]=parms[3]*2
+      parms[2]=parms[2]*double
+      parms[3]=parms[3]*double
       _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(parms[6]+parms[3]))
     end
     
