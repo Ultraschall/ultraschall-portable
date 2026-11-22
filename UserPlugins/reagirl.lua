@@ -101,7 +101,12 @@ function shortcuts(shortcut, shortcut_name, shortcut_modifier)
 end
 
 reagirl={}
-reagirl.RetinaMac=gfx.ext_retina~=1
+
+if gfx.ext_retina<2 then
+  reagirl.RetinaMac=false
+else
+  reagirl.RetinaMac=true
+end
 
 gfx.ext_retina=1
 reagirl.OS=reaper.GetOS():match("OS")
