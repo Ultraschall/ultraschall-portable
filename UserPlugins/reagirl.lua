@@ -100,6 +100,8 @@ function shortcuts(shortcut, shortcut_name, shortcut_modifier)
   reaper.MB(shortcut, shortcut_name.." "..shortcut_modifier, 0)
 end
 
+reagirl.RetinaMac=gfx.ext_retina~=1
+
 gfx.ext_retina=1
 reagirl={}
 reagirl.OS=reaper.GetOS():match("OS")
@@ -4401,9 +4403,10 @@ function reagirl.Window_Open(...)
       parms[6]=(D-parms[3])/2
     end
     
+    -- Ugly Hack for 
     local double=1
-    if gfx.ext_retina==2 then double=2 end
-    
+    if reagirl.RetinaMac==true then double=2 end
+    reaper.MB("Is Retina Mac:"..tostring(reagirl.RetinaMac), "gfx_retina:"..gfx.ext_retina, 0)
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
     if reagirl.OS=="Mac" then 
