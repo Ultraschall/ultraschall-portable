@@ -4400,7 +4400,10 @@ function reagirl.Window_Open(...)
     if parms[6]==nil then
       parms[6]=(D-parms[3])/2
     end
-
+    
+    local double=1
+    if gfx.ext_retina==2 then double=2 end
+    
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
     if reagirl.OS=="Mac" then 
