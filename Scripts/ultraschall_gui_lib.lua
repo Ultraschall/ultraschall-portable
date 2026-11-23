@@ -393,7 +393,7 @@ function Init()
 
   -- Create the window
   gfx.clear = GUI.rgb2num(table.unpack(GUI.colors.wnd_bg))
-  gfx.init(GUI.name, GUI.w, GUI.h, 0, GUI.x, GUI.y)  -- 0 means "undocked", 1 would dock it in the first dock position (Mixer)
+  gfx.init(GUI.name, GUI.w*linuxScale, GUI.h*linuxScale, 0, GUI.x, GUI.y)  -- 0 means "undocked", 1 would dock it in the first dock position (Mixer)
 
 -- mespotine hack
 -- If a window is opened, there is a new external state written:
