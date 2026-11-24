@@ -1787,12 +1787,11 @@ function ultraschall.ReadSubtitles_SRT(filename_with_path)
   A=ultraschall.ReadFullFile(filename_with_path)
   i=0
   local caption=""
-  if A:match("(.-)\n"):len()>0 then A="\n"..A line=-1 else line=0 end
+  if A:match("(.-)\n"):len()>0 then A="\n"..A line=-1 else line=0 end  
   A=A.."\n"
-  
-  for k in string.gmatch(A, "(.-)\n") do
-    line=line+1
+  A=string.gsub(A, "\n\n\n", "\n\n")
 
+  for k in string.gmatch(A, "(.-)\n") do
     if i==3 and k~="" then
       -- get the captions
       caption=caption..k.."\n"

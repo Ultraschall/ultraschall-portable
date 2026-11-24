@@ -1,0 +1,72 @@
+// Youtube Short
+// Video Processor that shows text according to project positions
+// can be used as a basis for video with transcriptions/shorts
+
+//@gmem=Ultraschall_video_user_space
+//@param1:size 'text height' 0.05 0.01 0.2 0.1 0.001
+//@param2:y_delta 'text y-delta' 0 0 0.95 0 0.001
+
+//Signal, if the code had been initialized
+(gmem[2]!=2) || project_time<0.5 ? (
+  // do initializing stuff in here
+  gmem[1]=1;
+  gmem[2]=2;
+);
+
+// Text to show; every other index is the project-position
+Transcript[0]=0.5;
+Transcript[1]="";
+Transcript[2]=0.5;
+Transcript[3]="Controlling The stuff";
+Transcript[4]=1;
+Transcript[5]="Me Noodling too";
+Transcript[6]=2;
+Transcript[7]="Enlighten Mark One";
+Transcript[8]=3;
+Transcript[9]="Marshmallow Yo";
+Transcript[10]=4;
+Transcript[11]="Tudelu";
+Transcript[12]=5;
+Transcript[13]="udeluT";
+Transcript[14]=5.1;
+Transcript[15]="deluTu";
+Transcript[16]=5.2;
+Transcript[17]="eluTud";
+Transcript[18]=5.3;
+Transcript[19]="luTude";
+Transcript[20]=5.4;
+Transcript[21]="uTudel";
+Transcript[22]=5.5;
+Transcript[23]="Tudelu";
+Transcript[24]=5.6;
+Transcript[25]="";
+Transcript[26]=100000000000000000;
+
+// display the text on the screen
+gfx_setfont(size*project_h,font);
+(Transcript[gmem[1]+1] <= project_time) ? (
+  gmem[1]=gmem[1]+2;
+  Val=Transcript[gmem[1]];
+  string_length = gfx_str_measure(Val, width, height);
+);
+
+(gmem[1]>=26) ? (
+  Val="";
+  width=0;
+  height=0;
+);
+
+gmem[3]=width;
+gmem[4]=y_delta;
+
+x=(project_w-width)/2;
+y=((project_h-height/2))*y_delta;
+
+//gfx_set(1);
+//gfx_fillrect(x, y, project_w, project_h);
+
+gfx_blit(0, 1);
+gfx_set(0);
+gfx_fillrect(x, y, width, height);
+gfx_set(1);
+gfx_str_draw(Val, x, y);
