@@ -27,7 +27,7 @@
 dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 -- counts the work-time of a project, can be shown in the ultraclock
-reaper.set_action_options(1)
+reaper.set_action_options(3)
 
 function check_reaper_focus()
   if ultraschall.GetUSExternalState("ultraschall_settings_work_counter_when_reaperfocus", "Value", "ultraschall-settings.ini")=="1" then
