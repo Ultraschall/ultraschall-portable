@@ -446,7 +446,9 @@ function Build_Settings_PlayBack(x, y, width)
   reagirl.AutoPosition_SetNextUIElementAtPosition(x, y)
   tabs1.playback = reagirl.Label_Add(nil, nil, "Playback", "Settings for playback.", false, label_run_function, "label_playback", nil)
   reagirl.NextLine()
-  tabs1.shuttle_stepper_speed = reagirl.Slider_Add(nil, nil, 500, "Shuttle Stepper Speed:", 140, "Sets the speed of stepwise playback by shuttle (Shift+J and Shift+L) in seconds.", "Seconds", 0.1, 8, 0.1, 0.2, 0.2, slider_run_func, "slider_shuttle_stepper_speed")
+  local retval, shiftPlusJ=reaper.GetActionShortcutDesc(0, reaper.NamedCommandLookup("_Ultraschall_Shuttle_Backward_Stepwise"), 0)
+  local retval, shiftPlusL=reaper.GetActionShortcutDesc(0, reaper.NamedCommandLookup("_Ultraschall_Shuttle_Forward_Stepwise"), 0)
+  tabs1.shuttle_stepper_speed = reagirl.Slider_Add(nil, nil, 500, "Shuttle Stepper Speed:", 140, "Sets the speed of stepwise playback by shuttle (\""..shiftPlusJ.."\" and \""..shiftPlusL.."\") in seconds.", "Seconds", 0.1, 8, 0.1, 0.2, 0.2, slider_run_func, "slider_shuttle_stepper_speed")
   reagirl.Slider_LinkToIniValue(tabs1.shuttle_stepper_speed, ini_file, "ultraschall_settings_shuttle_step_speed", "Value", 0.2, true, nil)
   reagirl.NextLine(10)
   
@@ -472,7 +474,8 @@ function Build_Settings_Editing(x, y, width)
 
   tabs1.editing= reagirl.Label_Add(nil, nil, "Editing general", "Settings for editing.", false, label_run_function, "label_editing", nil)
   reagirl.NextLine()
-  tabs1.preroll_time_preview = reagirl.Slider_Add(nil, nil, 500, "Preroll time preview:", 140, "Set the time in seconds by which the program jumps back when the \"p\" key is used to preview cuts.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "slider_preroll_time_preview")
+  local retval, p_key=reaper.GetActionShortcutDesc(0, reaper.NamedCommandLookup("_Ultraschall_SkipLoopPlayback_Absolute"), 0)
+  tabs1.preroll_time_preview = reagirl.Slider_Add(nil, nil, 500, "Preroll time preview:", 140, "Set the time in seconds by which the program jumps back when the \""..p_key.."\" key is used to preview cuts.", "Seconds", 0.2, 6.0, 0.1, 1.8, 1.8, slider_run_func, "slider_preroll_time_preview")
   reagirl.Slider_LinkToIniValue(tabs1.preroll_time_preview, ini_file, "ultraschall_settings_preroll", "Value", 1.7, true, nil)
   reagirl.Label_AutoBackdrop(tabs1.editing, tabs1.preroll_time_preview, width)
   reagirl.NextLine(5)
@@ -486,8 +489,20 @@ function Build_Settings_Editing(x, y, width)
   reagirl.NextLine()
   tabs1.ripple_cut_ignores_locked_tracks = reagirl.Checkbox_Add(nil, nil, "Ripple-Cut ignores locked tracks", "Ripple cut will ignore locked tracks when set. When unset, Ripple-Cut will cut locked tracks as well.", false, checkbox_run_function, "checkbox_ripple_cut_ignores_locked_tracks" )
   reagirl.Checkbox_LinkToIniValue(tabs1.ripple_cut_ignores_locked_tracks, ini_file, "ultraschall_settings_ripplecut_obey_locked", "Value", "0", "1", "1", true)
-  if width~=nil then width=tabs1.preroll_time_preview end
   reagirl.Label_AutoBackdrop(tabs1.ripple_cut, tabs1.ripple_cut_ignores_locked_tracks, width)
+  
+  reagirl.NextLine()
+  tabs1.zoom = reagirl.Label_Add(nil, nil, "Zoom", "Settings for zoom.", false, label_run_function, "label_editing", nil)
+  reagirl.NextLine()
+  local retval, zoomkey=reaper.GetActionShortcutDesc(0, reaper.NamedCommandLookup("_Ultraschall_Toggle_Arrange_Zoom"), 0)
+  reagirl.NextLine()
+  tabs1.quickzoom = reagirl.Slider_Add(nil, nil, 500, "Quick Zoom Factor:", 140, "Set the zoom-factor when hitting the \""..zoomkey.."\"-key.\n\nSmaller values=zoom out; higher values=zoom in.", "", 1, 10000, 1, 4, 4, slider_run_func, "slider_quick_zoom")
+  reagirl.Slider_LinkToIniValue(tabs1.quickzoom, ini_file, "ultraschall_settings_QuickZoomFactor", "Value", 400, true, 100)
+  reagirl.Label_AutoBackdrop(tabs1.zoom, tabs1.quickzoom, width)
+  
+  if width~=nil then width=tabs1.preroll_time_preview end
+  
+  
   reagirl.UI_Element_SetHiddenFromTable(tabs1, false)
   return tabs1
 end
