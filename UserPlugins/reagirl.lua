@@ -102,12 +102,6 @@ end
 
 reagirl={}
 
-if gfx.ext_retina<2 then
-  reagirl.RetinaMac=false
-else
-  reagirl.RetinaMac=true
-end
-
 gfx.ext_retina=1
 reagirl.OS=reaper.GetOS():match("OS")
 if reagirl.OS~=nil then reagirl.OS="Mac"
@@ -4408,20 +4402,20 @@ function reagirl.Window_Open(...)
       parms[6]=(D-parms[3])/2
     end
     
-    -- Ugly Hack for 
-    local double=1
-    if reagirl.RetinaMac==true then double=2 end
-
     local temp_y=parms[6]
     reagirl.Window_TempY=temp_y
     if reagirl.OS=="Mac" then 
-      parms[2]=parms[2]*double
-      parms[3]=parms[3]*double
+      parms[2]=parms[2]
+      parms[3]=parms[3]
       _, parms[6] = reaper.JS_Window_ClientToScreen(reaper.GetMainHwnd(), 10, math.floor(parms[6]+parms[3]))
     end
     
     if reaper.JS_Window_SetTitle==nil then 
       local B=gfx.init(table.unpack(parms)) 
+      if gfx.ext_retina==2 and reagirl.OS=="Mac" then
+        -- Mac OS Hack to open the correct window-size
+        gfx.init("", parms[2]*gfx.ext_retina, parms[3]*gfx.ext_retina)      
+      end
       return B 
     end
     
@@ -4436,7 +4430,10 @@ function reagirl.Window_Open(...)
     
     -- open window  
     retval=gfx.init(table.unpack(parms))
-    
+    if gfx.ext_retina==2 and reagirl.OS=="Mac" then
+    -- Mac OS Hack
+      gfx.init("", parms[2]*gfx.ext_retina, parms[3]*gfx.ext_retina)      
+    end
     -- set window-state-variable
     reagirl.Window_State=gfx.getchar(65536)
     
