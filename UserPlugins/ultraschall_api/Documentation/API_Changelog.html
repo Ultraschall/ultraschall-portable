@@ -1,0 +1,1048 @@
+<html>
+  <head>
+    <title>
+      Ultraschall API Changelog
+    </title>
+
+    <link href="style.css" rel="stylesheet">
+    <link href="custom.css" rel="stylesheet">
+
+  </head>
+    <body>    
+        <a class="anch" id="This-is-the-TopOfTheWorld"></a>
+        <div style="position: sticky; top:0; padding-left:4%; z-index:100;">
+            <div style="background-color:#282828; width:95%; font-family:tahoma; font-size:16;">
+                <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button_Un.png" alt="Ultraschall Internals Documentation"></a>  
+                <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
+                <a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
+                <a href="Downloads.html"><img style="position:absolute; left:66.1%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+                <a href="API_ChangeLog.html"><img style="position:absolute; left:73%; width:8.3%;" src="gfx/API_Changelog.png" alt="Changelog of API"></a>
+                <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
+                <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
+                <div style="padding-top:2.5%">
+                    <table border="0" style="color:#aaaaaa; width:101%;">
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table><hr color="#444444">
+                    <div style="position:absolute; right:6%; top:60%;"><a style="color:#CCCCCC;" href="#This-is-the-TopOfTheWorld">Jump to Top</a></div>
+                </div>
+            </div>
+        </div>
+
+<div style="width:75%; padding-left:14%;">
+<h3>Introduction</h3>
+This page lists all changes made in the API of Reaper and various extensions available. This should make it easier for you to spot, whether your script needs updates or changes as well as knowing, what has changed so new opportunities arrive in your scripting endeavours.<br>
+The Reaper/Extension-version itself is also an anchor, that works as a link. So forum's-linking to the specific changelog of a Reaper/Extension-version is possible as well.<p>
+
+  <a href="#Reaper_API_Changes">Reaper API Changes</a><br>
+  <a href="#Reaper_Config_Variables_Changes">Reaper Config Variables Changes</a><br>
+  <br>
+  <a href="#SWS_API_Changes">SWS API Changes</a><br>
+  <a href="#JS_Extension_API_Changes">JS Extension API Changes</a><br>
+  <a href="#ReaPack_API_Changes">ReaPack API Changes</a><br>
+  <a href="#ReaImGui_API_Changes">ReaImGui API Changes</a><br>
+  <a href="#Osara_API_Changes">Osara API Changes</a><br>
+  <a href="#ReaBlink_API_Changes">ReaBlink API Changes</a><br>
+  <a href="#ReaLLM_API_Changes">ReaLLM API Changes</a><br>
+  <a href="#ReaFab_API_Changes">ReaFab API Changes</a><br>
+  <a href="#ReaMCULive_API_Changes">ReaMCULive API Changes</a><br>
+  <a href="#PeloReaper_API_Changes">PeloReaper API Changes</a><br>
+  <br>
+  <a href="#ReaGirl_API_Changes">ReaGirl API Changes</a><br>
+</div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="Reaper_API_Changes">Reaper_API Changes</a><br></h3>
+  
+
+	<h4><a id="Reaper 7.70"></a><a href="#Reaper 7.70">^ Reaper 7.70:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_setfont">gfx_setfont</a></td><td> font-sizes are now identical on all platforms(used to need font_size*.8 on Mac)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.setfont">gfx.setfont</a></td><td> font-sizes are now identical on all platforms(used to need font_size*.8 on Mac)</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.40"></a><a href="#Reaper 7.40">^ Reaper 7.40:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CrossfadeEditor_OnCommand">CrossfadeEditor_OnCommand</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CrossfadeEditor_Show">CrossfadeEditor_Show</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> RENDER_FORMAT got new settings &4096=render razor edits, &8192=pre-fader stems (not if via master), &16384=only stem channels sent to parent, &32768=preserve source metadata if possible, &(1&lt;&lt;16)=preserve source start offset if possible, &(2&lt;&lt;16)=preserve source media sample rate if possible, &(4&lt;&lt;16)=if rendering selected items or razor edits, render as a single file, &(8&lt;&lt;16)=parallel render via master</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for is_instrument</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.39"></a><a href="#Reaper 7.39">^ Reaper 7.39:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#ResolveWildcards">ResolveWildcards</a></td><td> added to api</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.37"></a><a href="#Reaper 7.37">^ Reaper 7.37:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> TRIMSTART, TRIMEND, RENDER_PADSTART, RENDER_PADEND and additional flags for enabling pad-start/padend in RENDER_NORMALIZE added as new attributes</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: col_vudbscale and col_vudbscale2</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.36"></a><a href="#Reaper 7.36">^ Reaper 7.36:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "RECTAG" added as new attribute</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#MIDIEditor_GetSetting_int">MIDIEditor_GetSetting_int</a></td><td> added 0x209=aftertouch for the attribute last_clicked_cc_lane</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.35"></a><a href="#Reaper 7.35">^ Reaper 7.35:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#MediaExplorerGetLastPlayedFileInfo">MediaExplorerGetLastPlayedFileInfo</a></td><td> added to api</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.34"></a><a href="#Reaper 7.34">^ Reaper 7.34:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaItemTakeInfo_Value">GetMediaItemTakeInfo_Value</a></td><td> new attributes added: IP_SPECEDIT:CNT, IP_SPECEDIT:DELETE:x, IP_SPECEDIT:ADD, IP_SPECEDIT:SORT, I_SPECEDIT:FFT_SIZE, D_SPECEDIT:x:POSITION, D_SPECEDIT:x:LENGTH, F_SPECEDIT:x:GAIN, F_SPECEDIT:x:FADE_IN, F_SPECEDIT:x:FADE_OUT, F_SPECEDIT:x:FADE_LOW, F_SPECEDIT:x:FADE_HI, I_SPECEDIT:x:CHAN, I_SPECEDIT:x:FLAGS, F_SPECEDIT:x:GATE_THRESH, F_SPECEDIT:x:GATE_FLOOR, F_SPECEDIT:x:COMP_THRESH, F_SPECEDIT:x:COMP_RATIO, B_SPECEDIT:x:SELECTED, I_SPECEDIT:x:TOPFREQ_CNT, I_SPECEDIT:x:TOPFREQ_ADD:pos:val, I_SPECEDIT:x:TOPFREQ_DEL:y, F_SPECEDIT:x:TOPFREQ_POS:y, F_SPECEDIT:x:TOPFREQ_FREQ:y, I_SPECEDIT:x:BOTFREQ_CNT, I_SPECEDIT:x:BOTFREQ_ADD:pos:val, I_SPECEDIT:x:BOTFREQ_DEL:y, F_SPECEDIT:x:BOTFREQ_POS:y, F_SPECEDIT:x:BOTFREQ_FREQ:y</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemTakeInfo">GetSetMediaItemTakeInfo</a></td><td> new attributes added: IP_SPECEDIT:CNT, IP_SPECEDIT:DELETE:x, IP_SPECEDIT:ADD, IP_SPECEDIT:SORT, I_SPECEDIT:FFT_SIZE, D_SPECEDIT:x:POSITION, D_SPECEDIT:x:LENGTH, F_SPECEDIT:x:GAIN,	F_SPECEDIT:x:FADE_IN, F_SPECEDIT:x:FADE_OUT, F_SPECEDIT:x:FADE_LOW, F_SPECEDIT:x:FADE_HI, I_SPECEDIT:x:CHAN, I_SPECEDIT:x:FLAGS, F_SPECEDIT:x:GATE_THRESH, F_SPECEDIT:x:GATE_FLOOR, F_SPECEDIT:x:COMP_THRESH, F_SPECEDIT:x:COMP_RATIO, B_SPECEDIT:x:SELECTED, I_SPECEDIT:x:TOPFREQ_CNT, I_SPECEDIT:x:TOPFREQ_ADD:pos:val,	I_SPECEDIT:x:TOPFREQ_DEL:y, F_SPECEDIT:x:TOPFREQ_POS:y, F_SPECEDIT:x:TOPFREQ_FREQ:y, I_SPECEDIT:x:BOTFREQ_CNT, I_SPECEDIT:x:BOTFREQ_ADD:pos:val, I_SPECEDIT:x:BOTFREQ_DEL:y, F_SPECEDIT:x:BOTFREQ_POS:y, F_SPECEDIT:x:BOTFREQ_FREQ:y</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Main_SaveProjectEx">Main_SaveProjectEx</a></td><td> added flag &8, which sets the saved projectfilename as the new one for the current ReaProject</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaItemTakeInfo_Value">SetMediaItemTakeInfo_Value</a></td><td> new attributes added: IP_SPECEDIT:CNT, IP_SPECEDIT:DELETE:x, IP_SPECEDIT:ADD, IP_SPECEDIT:SORT, I_SPECEDIT:FFT_SIZE, D_SPECEDIT:x:POSITION, D_SPECEDIT:x:LENGTH, F_SPECEDIT:x:GAIN, F_SPECEDIT:x:FADE_IN, F_SPECEDIT:x:FADE_OUT, F_SPECEDIT:x:FADE_LOW, F_SPECEDIT:x:FADE_HI, I_SPECEDIT:x:CHAN, I_SPECEDIT:x:FLAGS, F_SPECEDIT:x:GATE_THRESH, F_SPECEDIT:x:GATE_FLOOR, F_SPECEDIT:x:COMP_THRESH, F_SPECEDIT:x:COMP_RATIO, B_SPECEDIT:x:SELECTED, I_SPECEDIT:x:TOPFREQ_CNT, I_SPECEDIT:x:TOPFREQ_ADD:pos:val, I_SPECEDIT:x:TOPFREQ_DEL:y, F_SPECEDIT:x:TOPFREQ_POS:y, F_SPECEDIT:x:TOPFREQ_FREQ:y, I_SPECEDIT:x:BOTFREQ_CNT, I_SPECEDIT:x:BOTFREQ_ADD:pos:val, I_SPECEDIT:x:BOTFREQ_DEL:y, F_SPECEDIT:x:BOTFREQ_POS:y, F_SPECEDIT:x:BOTFREQ_FREQ:y</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.26"></a><a href="#Reaper 7.26">^ Reaper 7.26:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#InsertMedia">InsertMedia</a></td><td> added flag for applying ripple according to project settings when inserting media</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.23"></a><a href="#Reaper 7.23">^ Reaper 7.23:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#AdvancePlaybackPosition">AdvancePlaybackPosition</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetPlayLoopCnt">GetPlayLoopCnt</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> RENDER_NORMALIZE allows now for normalize to loudest file, normalize as if one long file and adjust mono media additional</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetTrackGroupMembershipEx">GetSetTrackGroupMembershipEx</a></td><td> added to API</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.20"></a><a href="#Reaper 7.20">^ Reaper 7.20:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CountSelectedMediaItems">CountSelectedMediaItems</a></td><td> function is now deprecated</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSelectedMediaItem">GetSelectedMediaItem</a></td><td> function is now deprecated</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.19"></a><a href="#Reaper 7.19">^ Reaper 7.19:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetEnvelopeInfo_String">GetSetEnvelopeInfo_String</a></td><td> added attributes ACTIVE, ARM, VISIBLE, SHOWLANE</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetTempoTimeSigMarkerFlag">GetSetTempoTimeSigMarkerFlag</a></td><td> added to api</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: mouseitem_color, mouseitem_mode</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.18"></a><a href="#Reaper 7.18">^ Reaper 7.18:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#InsertTrackInProject">InsertTrackInProject</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#MIDI_RefreshEditors">MIDI_RefreshEditors</a></td><td> added</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.17"></a><a href="#Reaper 7.17">^ Reaper 7.17:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: take_marker_sel, region_lane_text</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.16"></a><a href="#Reaper 7.16">^ Reaper 7.16:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-colors: region_edge, region_edge_sel, marker_edge, marker_edge_sel; removed: marker_lane_text</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: region_edge, region_edge_sel, marker_edge, marker_edge_sel; removed: marker_lane_text</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for chain_pdc_actual, chain_pdc_reporting</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.12"></a><a href="#Reaper 7.12">^ Reaper 7.12:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> C_LANESETTINGS, I_MIDI_INPUT_CHANMAP, I_MIDI_CTL_CHAN, I_MIDI_TRACKSEL_FLAG</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> C_LANESETTINGS, I_MIDI_INPUT_CHANMAP, I_MIDI_CTL_CHAN, I_MIDI_TRACKSEL_FLAG</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> C_LANESETTINGS, I_MIDI_INPUT_CHANMAP, I_MIDI_CTL_CHAN, I_MIDI_TRACKSEL_FLAG</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.10"></a><a href="#Reaper 7.10">^ Reaper 7.10:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Menu_GetHash">Menu_GetHash</a></td><td> added to API</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.09"></a><a href="#Reaper 7.09">^ Reaper 7.09:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetTrackSendInfo">GetSetTrackSendInfo</a></td><td> I_MIDIFLAGS supports now 31=Midi send disabled, &1024 for faders-send MIDI vol/pan as well as indicating the source and send bus</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetTrackSendInfo_Value">GetTrackSendInfo_Value</a></td><td> I_MIDIFLAGS supports now 31=Midi send disabled, &1024 for faders-send MIDI vol/pan as well as indicating the source and send bus</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackSendInfo_Value">SetTrackSendInfo_Value</a></td><td> I_MIDIFLAGS supports now 31=Midi send disabled, &1024 for faders-send MIDI vol/pan as well as indicating the source and send bus</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.08"></a><a href="#Reaper 7.08">^ Reaper 7.08:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaItemTakeInfo_Value">GetMediaItemTakeInfo_Value</a></td><td> new attributes added: I_STRETCHFLAGS, F_STRETCHFADESIZE, I_RECPASSID</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> C_ALLLANESPLAY added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemTakeInfo">GetSetMediaItemTakeInfo</a></td><td> I_STRETCHFLAGS, F_STRETCHFADESIZE, I_RECPASSID added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> C_ALLLANESPLAY added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> RENDER_NORMALIZE allows now for normalize files that are too quiet</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaItemTakeInfo_Value">SetMediaItemTakeInfo_Value</a></td><td> new attributes added: I_STRETCHFLAGS, F_STRETCHFADESIZE, I_RECPASSID</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> C_ALLLANESPLAY added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_getchar">gfx_getchar</a></td><td> 65537 queries special flags but does not do the mouse click hit testing (faster)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.getchar">gfx.getchar</a></td><td> 65537 queries special flags but does not do the mouse click hit testing (faster)</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.07"></a><a href="#Reaper 7.07">^ Reaper 7.07:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaItemInfo_Value">GetMediaItemInfo_Value</a></td><td> C_LANEPLAYS has now -1 as possible return value</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaItemTakeInfo_Value">GetMediaItemTakeInfo_Value</a></td><td> new attribute added: I_TAKEFX_NCH</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemInfo">GetSetMediaItemInfo</a></td><td> C_LANEPLAYS has now -1 as possible return value</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemTakeInfo">GetSetMediaItemTakeInfo</a></td><td> I_TAKEFX_NCH added as new attribute</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> C_LANEPLAYS supports now -1 as returnvalue</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo_String">GetSetMediaTrackInfo_String</a></td><td> added P_LANENAME to rename lane-names</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaItemInfo_Value">SetMediaItemInfo_Value</a></td><td> C_LANEPLAYS supports now -1 as returnvalue</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaItemTakeInfo_Value">SetMediaItemTakeInfo_Value</a></td><td> new attributes added: I_TAKEFX_NCH</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> C_LANEPLAYS supports now -1 as returnvalue</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.06"></a><a href="#Reaper 7.06">^ Reaper 7.06:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetFXEnvelope">GetFXEnvelope</a></td><td> If the envelope already exists and is bypassed and create=true, then the envelope will be unbypassed.</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNamedConfigParm">TakeFX_GetNamedConfigParm</a></td><td> added support for parent_container, container_item.X, container.map.add.FXID.PARMIDX, container.map.get.FXID.PARMIDX, chain_sel, focused, last_touched</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetNamedConfigParm">TakeFX_SetNamedConfigParm</a></td><td> added support for chain_sel, focused, last_touched</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for parent_container, container_item.X, container.map.add.FXID.PARMIDX, container.map.get.FXID.PARMIDX, chain_sel, focused, last_touched</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetNamedConfigParm">TrackFX_SetNamedConfigParm</a></td><td> added support for chain_sel, focused, last_touched</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.03"></a><a href="#Reaper 7.03">^ Reaper 7.03:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_getchar">gfx_getchar</a></td><td> added support for querying 65536 with &8, if a mouse-hit would hit the gfx-window</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_set_action_options">set_action_options</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.getchar">gfx.getchar</a></td><td> added support for querying 65536 with &8, if a mouse-hit would hit the gfx-window</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_set_action_options">set_action_options</a></td><td> added to api</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.02"></a><a href="#Reaper 7.02">^ Reaper 7.02:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThingFromPoint">GetThingFromPoint</a></td><td> "spacer_0" now supported</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.01"></a><a href="#Reaper 7.01">^ Reaper 7.01:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> I_LANESCOLLAPSED renamed to C_LANESCOLLAPSED</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> I_LANESCOLLAPSED renamed to C_LANESCOLLAPSED</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> I_LANESCOLLAPSED renamed to C_LANESCOLLAPSED</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.00"></a><a href="#Reaper 7.00">^ Reaper 7.00:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#EnumInstalledFX">EnumInstalledFX</a></td><td> added to the api</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaItemInfo_Value">GetMediaItemInfo_Value</a></td><td> added new attributes C_LANEPLAYS, I_FIXEDLANE and B_FIXEDLANE_HIDDEN</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> enhanced I_NCHAN to 128; added new attributes I_SPACER, I_NUMFIXEDLANES, I_LANESCOLLAPSED; B_HEIGHTLOCK is deprecated</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemInfo">GetSetMediaItemInfo</a></td><td> added new attributes C_LANEPLAYS, I_FIXEDLANE and B_FIXEDLANE_HIDDEN</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> enhanced I_NCHAN to 128; added new attributes I_SPACER, I_NUMFIXEDLANES, I_LANESCOLLAPSED; B_HEIGHTLOCK is deprecated</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "raw" added as new render-output format</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-colors: selitem_dot, track_lane_tabcol, track_lanesolo_tabcol, track_lanesolo_text, track_lane_gutter, track_lane_gutter_drawmode, linkedlane_fill, linkedlane_fillmode, linkedlane_outline, linkedlane_outlinemode, linkedlane_unsynced, linkedlane_unsynced_mode, vu_gr_bgcol, vu_gr_fgcol</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetTouchedOrFocusedFX">GetTouchedOrFocusedFX</a></td><td> added to the api</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetTrackFromPoint">GetTrackFromPoint</a></td><td> supports now track-lanes</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#MIDIEditorFlagsForTrack">MIDIEditorFlagsForTrack</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaItemInfo_Value">SetMediaItemInfo_Value</a></td><td> added new attributes C_LANEPLAYS, I_FIXEDLANE and B_FIXEDLANE_HIDDEN</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> enhanced I_NCHAN to 128; added new attributes I_SPACER, I_NUMFIXEDLANES, I_LANESCOLLAPSED; B_HEIGHTLOCK is deprecated</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMouseModifier">SetMouseModifier</a></td><td> new contexts available</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: selitem_dot, track_lane_tabcol, track_lanesolo_tabcol, track_lanesolo_text, track_lane_gutter, track_lane_gutter_drawmode, linkedlane_fill, linkedlane_fillmode, linkedlane_outline, linkedlane_outlinemode, linkedlane_unsynced, linkedlane_unsynced_mode, vu_gr_bgcol, vu_gr_fgcol</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#ShowConsoleMsg">ShowConsoleMsg</a></td><td> string can now be prefixed with "!SHOW:" to add text in the console without opening the window</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_AddByName">TakeFX_AddByName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_CopyToTake">TakeFX_CopyToTake</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_CopyToTrack">TakeFX_CopyToTrack</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_Delete">TakeFX_Delete</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_EndParamEdit">TakeFX_EndParamEdit</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_FormatParamValue">TakeFX_FormatParamValue</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_FormatParamValueNormalized">TakeFX_FormatParamValueNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetChainVisible">TakeFX_GetChainVisible</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetCount">TakeFX_GetCount</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetEnabled">TakeFX_GetEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetEnvelope">TakeFX_GetEnvelope</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetFXGUID">TakeFX_GetFXGUID</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetFXName">TakeFX_GetFXName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetFloatingWindow">TakeFX_GetFloatingWindow</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetFormattedParamValue">TakeFX_GetFormattedParamValue</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetIOSize">TakeFX_GetIOSize</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNamedConfigParm">TakeFX_GetNamedConfigParm</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNumParams">TakeFX_GetNumParams</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetOffline">TakeFX_GetOffline</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetOpen">TakeFX_GetOpen</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParam">TakeFX_GetParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParamEx">TakeFX_GetParamEx</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParamFromIdent">TakeFX_GetParamFromIdent</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParamIdent">TakeFX_GetParamIdent</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParamName">TakeFX_GetParamName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParamNormalized">TakeFX_GetParamNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetParameterStepSizes">TakeFX_GetParameterStepSizes</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetPinMappings">TakeFX_GetPinMappings</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetPreset">TakeFX_GetPreset</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetPresetIndex">TakeFX_GetPresetIndex</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetUserPresetFilename">TakeFX_GetUserPresetFilename</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_NavigatePresets">TakeFX_NavigatePresets</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetEnabled">TakeFX_SetEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetNamedConfigParm">TakeFX_SetNamedConfigParm</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetOffline">TakeFX_SetOffline</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetOpen">TakeFX_SetOpen</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetParam">TakeFX_SetParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetParamNormalized">TakeFX_SetParamNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetPinMappings">TakeFX_SetPinMappings</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetPreset">TakeFX_SetPreset</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetPresetByIndex">TakeFX_SetPresetByIndex</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_Show">TakeFX_Show</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_AddByName">TrackFX_AddByName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_CopyToTake">TrackFX_CopyToTake</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_CopyToTrack">TrackFX_CopyToTrack</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_Delete">TrackFX_Delete</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_EndParamEdit">TrackFX_EndParamEdit</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_FormatParamValue">TrackFX_FormatParamValue</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_FormatParamValueNormalized">TrackFX_FormatParamValueNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetByName">TrackFX_GetByName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetChainVisible">TrackFX_GetChainVisible</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetCount">TrackFX_GetCount</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQ">TrackFX_GetEQ</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQBandEnabled">TrackFX_GetEQBandEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQParam">TrackFX_GetEQParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEnabled">TrackFX_GetEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetFXGUID">TrackFX_GetFXGUID</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetFXName">TrackFX_GetFXName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetFloatingWindow">TrackFX_GetFloatingWindow</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetFormattedParamValue">TrackFX_GetFormattedParamValue</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetIOSize">TrackFX_GetIOSize</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetInstrument">TrackFX_GetInstrument</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNumParams">TrackFX_GetNumParams</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetOffline">TrackFX_GetOffline</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetOpen">TrackFX_GetOpen</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParam">TrackFX_GetParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParamEx">TrackFX_GetParamEx</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParamFromIdent">TrackFX_GetParamFromIdent</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParamIdent">TrackFX_GetParamIdent</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParamName">TrackFX_GetParamName</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParamNormalized">TrackFX_GetParamNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetParameterStepSizes">TrackFX_GetParameterStepSizes</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetPinMappings">TrackFX_GetPinMappings</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetPreset">TrackFX_GetPreset</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetPresetIndex">TrackFX_GetPresetIndex</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetRecChainVisible">TrackFX_GetRecChainVisible</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetRecCount">TrackFX_GetRecCount</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetUserPresetFilename">TrackFX_GetUserPresetFilename</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_NavigatePresets">TrackFX_NavigatePresets</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQBandEnabled">TrackFX_SetEQBandEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQParam">TrackFX_SetEQParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEnabled">TrackFX_SetEnabled</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetNamedConfigParm">TrackFX_SetNamedConfigParm</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetOffline">TrackFX_SetOffline</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetOpen">TrackFX_SetOpen</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetParam">TrackFX_SetParam</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetParamNormalized">TrackFX_SetParamNormalized</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetPinMappings">TrackFX_SetPinMappings</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetPreset">TrackFX_SetPreset</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetPresetByIndex">TrackFX_SetPresetByIndex</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_Show">TrackFX_Show</a></td><td> added support for fx-containers</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#UpdateItemLanes">UpdateItemLanes</a></td><td> added to api</td></tr>
+	</table>
+
+	<h4><a id="Reaper 7.0"></a><a href="#Reaper 7.0">^ Reaper 7.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#LICE_CombinePixels">LICE_CombinePixels</a></td><td> added to C++-API</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.82"></a><a href="#Reaper 6.82">^ Reaper 6.82:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_showmenu">gfx_showmenu</a></td><td> on Windows: can now be used without opening a window with gfx.init first()</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.showmenu">gfx.showmenu</a></td><td> on Windows: can now be used without opening a window with gfx.init first()</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.81"></a><a href="#Reaper 6.81">^ Reaper 6.81:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_FormatParamValue">TrackFX_FormatParamValue</a></td><td> fix inconsistent rounding for TrackFX_FormatParamValue on bypass envelopes</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.79"></a><a href="#Reaper 6.79">^ Reaper 6.79:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetTrackSendInfo_Value">GetTrackSendInfo_Value</a></td><td> improved docs for I_SRCCHAN and I_DSTCHAN</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackSendInfo_Value">SetTrackSendInfo_Value</a></td><td> improved docs for I_SRCCHAN and I_DSTCHAN</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added original_name to get original name and renamed_name to get (re-)name of fx-instances</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetNamedConfigParm">TrackFX_SetNamedConfigParm</a></td><td> added renamed_name to rename an FX-instance</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.76"></a><a href="#Reaper 6.76">^ Reaper 6.76:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "OPENCOPY_CFGIDX", "RECORD_FORMAT" and "APPLYFX_FORMAT" - added as new attributes</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SendMIDIMessageToHardware">SendMIDIMessageToHardware</a></td><td> added function to Reaper</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#kbd_translateMouse">kbd_translateMouse</a></td><td> removed from API</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.74"></a><a href="#Reaper 6.74">^ Reaper 6.74:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-colors: col_routingact, wiring_activity</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMouseModifier">SetMouseModifier</a></td><td> you can now specify commands instead of mouse-commands now(see note in description)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: col_routingact, wiring_activity</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNamedConfigParm">TakeFX_GetNamedConfigParm</a></td><td> added support for x,y coordinates of acs</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetNamedConfigParm">TakeFX_SetNamedConfigParm</a></td><td> added support for x,y coordinates of acs</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_getchar">gfx_getchar</a></td><td> added support for unicode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_mem_insert_shuffle">mem_insert_shuffle</a></td><td> added function to Reaper</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_mem_multiply_sum">mem_multiply_sum</a></td><td> added function to Reaper</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.getchar">gfx.getchar</a></td><td> added retval for unicode-characters</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.72"></a><a href="#Reaper 6.72">^ Reaper 6.72:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CountActionShortcuts">CountActionShortcuts</a></td><td> section allows now the section-numbers as parameter section</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#DeleteActionShortcut">DeleteActionShortcut</a></td><td> section allows now the section-numbers as parameter section</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#DoActionShortcutDialog">DoActionShortcutDialog</a></td><td> section allows now the section-numbers as parameter section</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetActionShortcutDesc">GetActionShortcutDesc</a></td><td> section allows now the section-numbers as parameter section; removed Lua-parameters desc, desclen</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetTrackGroupMembershipHigh">GetSetTrackGroupMembershipHigh</a></td><td> added MEDIA_EDIT_LEAD and MEDIA_EDIT_FOLLOW as groupname</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SectionFromUniqueID">SectionFromUniqueID</a></td><td> section allows now the section-numbers as parameter section</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#ShowActionList">ShowActionList</a></td><td> parameter section allows now the section-numbers to be given</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNamedConfigParm">TakeFX_GetNamedConfigParm</a></td><td> added support for autobypass, instance oversample shift, chain oversample shift and chain pdc-mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetNamedConfigParm">TakeFX_SetNamedConfigParm</a></td><td> added support for autobypass, instance oversample shift, chain oversample shift and chain pdc-mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_AddByName">TrackFX_AddByName</a></td><td> improve JSFX name matching in TrackFX_AddByName() [p=2621360] [p=2622666]</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for autobypass, instance oversample shift, chain oversample shift and chain pdc-mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetNamedConfigParm">TrackFX_SetNamedConfigParm</a></td><td> added support for autobypass, instance oversample shift, chain oversample shift and chain pdc-mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_getchar">gfx_getchar</a></td><td> improved handling of the Alt-Gr-modifier key</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.getchar">gfx.getchar</a></td><td> improved handling of the Alt-Gr-modifier key</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.71"></a><a href="#Reaper 6.71">^ Reaper 6.71:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CountActionShortcuts">CountActionShortcuts</a></td><td> exposed to ReaScript-API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#DeleteActionShortcut">DeleteActionShortcut</a></td><td> exposed to ReaScript-API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#DoActionShortcutDialog">DoActionShortcutDialog</a></td><td> exposed to ReaScript-API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetActionShortcutDesc">GetActionShortcutDesc</a></td><td> exposed to ReaScript-API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetEnvelopeUIState">GetEnvelopeUIState</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "MARKER_INDEX_FROM_GUID:{GUID}" - added, which allows getting marker-index by marker-guid</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SectionFromUniqueID">SectionFromUniqueID</a></td><td> exposed to ReaScript-API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetProjectMarkerByIndex2">SetProjectMarkerByIndex2</a></td><td> new flag&2 to prevent sorting temporarily(see description for details on how to use it!)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIInputMonitor">SetTrackUIInputMonitor</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIMute">SetTrackUIMute</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIPan">SetTrackUIPan</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIPolarity">SetTrackUIPolarity</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIRecArm">SetTrackUIRecArm</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUISolo">SetTrackUISolo</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIVolume">SetTrackUIVolume</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetTrackUIWidth">SetTrackUIWidth</a></td><td> added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetNamedConfigParm">TakeFX_GetNamedConfigParm</a></td><td> added support for parameter modulation/linking; vst/videoprocessor-data getting</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_SetNamedConfigParm">TakeFX_SetNamedConfigParm</a></td><td> added support for parameter modulation/linking; vst/videoprocessor-data setting</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetNamedConfigParm">TrackFX_GetNamedConfigParm</a></td><td> added support for parameter modulation/linking; vst/videoprocessor-data getting</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetNamedConfigParm">TrackFX_SetNamedConfigParm</a></td><td> added support for parameter modulation/linking; vst/videoprocessor-data setting</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#kbd_enumerateActions">kbd_enumerateActions</a></td><td> added</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.70"></a><a href="#Reaper 6.70">^ Reaper 6.70:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "RENDER_TARGETS_EX" - fixed bug with NULL-separation</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_AddByName">TakeFX_AddByName</a></td><td> improve behavior with Track/TakeFX_AddByName() for JSFX [t=271878]</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_AddByName">TrackFX_AddByName</a></td><td> improve behavior with Track/TakeFX_AddByName() for JSFX [t=271878]</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.69"></a><a href="#Reaper 6.69">^ Reaper 6.69:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CalcMediaSrcLoudness">CalcMediaSrcLoudness</a></td><td> fixed return value-bug</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "RENDER_TARGETS_EX" - added, but buggy; NULL-separation doesn't work</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_AddByName">TrackFX_AddByName</a></td><td> fix TrackFX_AddByName with only VST2-UID specified</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#eel_gfx_getdropfile">eel_getdropfile</a></td><td> added possibility to for drag/drop from FX browser to gfx windows with send filenames are @fx:fx_ident</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#lua_gfx.getdropfile">gfx.getdropfile</a></td><td> added possibility to for drag/drop from FX browser to gfx windows with send filenames are @fx:fx_ident</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.68"></a><a href="#Reaper 6.68">^ Reaper 6.68:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "RENDER_STATS" returns now nothing, when user cancelled rendering</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetRegionRenderMatrix">SetRegionRenderMatrix</a></td><td> allows now forcing number of rendered channels using additional flag-values for addorremove-parameter</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#realloc_cmd_clear">realloc_cmd_clear</a></td><td> added to Reaper</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#realloc_cmd_register_buf">realloc_cmd_register_buf</a></td><td> added to Reaper</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.65"></a><a href="#Reaper 6.65">^ Reaper 6.65:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> attribute "I_PANLAW_FLAGS" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> attribute "I_PANLAW_FLAGS" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> attribute "I_PANLAW_FLAGS" added</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.64"></a><a href="#Reaper 6.64">^ Reaper 6.64:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CalcMediaSrcLoudness">CalcMediaSrcLoudness</a></td><td> added to the API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> FadeIn/FadeOut now supported in RENDER_NORMALIZE, RENDER_FADEIN, RENDER_FADEINSHAPE, RENDER_FADEOUT, RENDER_FADEOUTSHAPE</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.62"></a><a href="#Reaper 6.62">^ Reaper 6.62:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> RENDER_BOUNDSFLAG and RENDER_TAILFLAG support now markers as well</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.60"></a><a href="#Reaper 6.60">^ Reaper 6.60:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> attribute "I_RECMODE_FLAGS" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> attribute "I_RECMODE_FLAGS" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> attribute "I_RECMODE_FLAGS" added</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.59"></a><a href="#Reaper 6.59">^ Reaper 6.59:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaFileMetadata">GetMediaFileMetadata</a></td><td> supports now getting any BPM-metadata, with identifier being "Generic:BPM"</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> changes with color: col_env7 added width to it</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> changes with color: col_env7 added width to it</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.57"></a><a href="#Reaper 6.57">^ Reaper 6.57:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo_String">GetSetMediaTrackInfo_String</a></td><td> higher precision for the razor-edit start and end-positions</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-colors: inactive_take_overlay_col, inactive_take_overlay_mode; mute_overlay_col, mute_overlay_mode doesn't work on inactive takes anymore, but rather on items</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: inactive_take_overlay_col, inactive_take_overlay_mode; mute_overlay_col, mute_overlay_mode doesn't work on inactive takes anymore, but rather on items</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.54"></a><a href="#Reaper 6.54">^ Reaper 6.54:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#AddRemoveReaScript">AddRemoveReaScript</a></td><td> fixed bug, were scripts could be added but not removed when using / as separator</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetMediaTrackInfo_Value">GetMediaTrackInfo_Value</a></td><td> attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaItemInfo">GetSetMediaItemInfo</a></td><td> fix GetSetMediaItemInfo with F_FREEMODE_Y, F_FREEMODE_H</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo">GetSetMediaTrackInfo</a></td><td> attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetMediaTrackInfo_String">GetSetMediaTrackInfo_String</a></td><td> added attribute "P_RAZOREDITS_EXT", which has extended support for razor-edits with track-lanes/free item positioning</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme colors: track_lane_tabcol, track_lanesolo_tabcol, track_lane_gutter, track_lane_gutter_drawmode, mute_overlay_col, mute_overlay_mode, locked_overlay_col, locked_overlay_mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThingFromPoint">GetThingFromPoint</a></td><td> hidden envelopes can now be found correctly</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetMediaTrackInfo_Value">SetMediaTrackInfo_Value</a></td><td> attribute "I_FREEMODE" includes new value 2=track fixed lanes enabled</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme colors: track_lane_tabcol, track_lanesolo_tabcol, track_lane_gutter, track_lane_gutter_drawmode, mute_overlay_col, mute_overlay_mode, locked_overlay_col, locked_overlay_mode</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.53"></a><a href="#Reaper 6.53">^ Reaper 6.53:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-colors: explorer_grid and explorer_pitchtext</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Main_SaveProjectEx">Main_SaveProjectEx</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-colors: explorer_grid and explorer_pitchtext</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.48"></a><a href="#Reaper 6.48">^ Reaper 6.48:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "wmf" added as new render-output-format</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.47"></a><a href="#Reaper 6.47">^ Reaper 6.47:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo">GetSetProjectInfo</a></td><td> added new normalization-modes &128=brickwall limit true peak, &256=only normalize files that are too loud</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> RENDER_METADATA supports now strings longer than 1024 bytes</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#midi_init">midi_init</a></td><td> added to API</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.44"></a><a href="#Reaper 6.44">^ Reaper 6.44:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetThemeColor">GetThemeColor</a></td><td> new theme-color: col_nodarkmodemiscwnd added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SetThemeColor">SetThemeColor</a></td><td> new theme-color: col_nodarkmodemiscwnd added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQBandEnabled">TrackFX_GetEQBandEnabled</a></td><td> new bandtypes added, parallel bandpass(7)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQParam">TrackFX_GetEQParam</a></td><td> new bandtypes added, parallel bandpass(7)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQBandEnabled">TrackFX_SetEQBandEnabled</a></td><td> new bandtypes added, parallel bandpass(7)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQParam">TrackFX_SetEQParam</a></td><td> new bandtypes added, parallel bandpass(7)</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.43"></a><a href="#Reaper 6.43">^ Reaper 6.43:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Envelope_Evaluate">Envelope_Evaluate</a></td><td> the following retvals and parameters aren't optional anymore: 
+			<br>CPP: valueOut, dVdSOut, ddVdSOut, dddVdSOut
+			<br>EEL2: value, dVdS, ddVdS, dddVdS
+			<br>Lua: value, dVdS, ddVdS, dddVdS
+			<br>Python: valueOut, dVdSOut, ddVdSOut, dddVdSOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Envelope_GetParentTake">Envelope_GetParentTake</a></td><td> the following retvals and parameters aren't optional anymore:
+			<br>CPP: indexOut, index2Out
+			<br>EEL2: index, index2
+			<br>Lua: index, index2
+			<br>Python: indexOut, index2Out</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Envelope_GetParentTrack">Envelope_GetParentTrack</a></td><td> the following retvals and parameters aren't optional anymore:
+			<br>CPP: indexOut, index2Out
+			<br>EEL2: index, index2
+			<br>Lua: index, index2
+			<br>Python: indexOut, index2Out</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetEnvelopePoint">GetEnvelopePoint</a></td><td> the following retvals and parameters aren't optional anymore
+			<br>CPP: timeOut, valueOut, shapeOut, tensionOut, selectedOut
+			<br>EEL2: time, value, shape, tension, selected
+			<br>Lua: time, value, shape, tension, selected
+			<br>Python: timeOut, valueOut, shapeOut, tensionOut, selectedOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetEnvelopePointEx">GetEnvelopePointEx</a></td><td> the following retvals and parameters aren't optional anymore
+			<br>CPP: timeOut, valueOut, shapeOut, tensionOut, selectedOut
+			<br>EEL2: time, value, shape, tension, selected
+			<br>Lua: time, value, shape, tension, selected
+			<br>Python: timeOut, valueOut, shapeOut, tensionOut, selectedOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetSetProjectInfo_String">GetSetProjectInfo_String</a></td><td> "caff" as render-outputformat for the CAF-format now supported</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#GetUnderrunTime">GetUnderrunTime</a></td><td> the following retvals and parameters aren't optional anymore:
+			<br>CPP: audio_xrunOut, media_xrunOut, curtimeOut
+			<br>EEL2: audio_xrun, media_xrun, curtime
+			<br>LUA: audio_xrun, media_xrun, curtime
+			<br>Python: audio_xrunOut, media_xrunOut, curtimeOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetIOSize">TakeFX_GetIOSize</a></td><td> the following retvals and parameters are not optional anymore:
+			<br>CPP: inputPinsOut, outputPinsOut
+			<br>EEL2: inputPins, outputPins
+			<br>LUA: inputPins, outputPins
+			<br>Python: inputPinsOut, outputPinsOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TakeFX_GetPinMappings">TakeFX_GetPinMappings</a></td><td> the following retvals and parameters aren't optional anymore
+			<br>CPP: high32Out
+			<br>EEL2: high32
+			<br>Lua: high32
+			<br>Python: high32Out</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TimeMap_curFrameRate">TimeMap_curFrameRate</a></td><td> the following retvals and parameters aren't optional anymore:
+			<br>CPP: dropFrameOut
+			<br>EEL2: dropFrame
+			<br>Lua: dropFrame
+			<br>Python: dropFrameOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQBandEnabled">TrackFX_GetEQBandEnabled</a></td><td> new bandtypes added, master gain(-1) and bandpass(6); bandidx is ignored by master gain</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetEQParam">TrackFX_GetEQParam</a></td><td> new bandtypes added, bandpass(6)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetIOSize">TrackFX_GetIOSize</a></td><td> the following retvals and parameters are not optional anymore
+			<br>CPP: inputPinsOut, outputPinsOut
+			<br>EEL2: inputPins, outputPins
+			<br>Lua: inputPins, outputPins
+			<br>Python: inputPinsOut, outputPinsOut</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_GetPinMappings">TrackFX_GetPinMappings</a></td><td> the following retvals and parameters aren't optional anymore
+			<br>CPP: high32Out
+			<br>EEL2: high32
+			<br>Lua: high32
+			<br>Python: high32Out</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQBandEnabled">TrackFX_SetEQBandEnabled</a></td><td> new bandtypes added, master gain(-1) and bandpass(6); bandidx is ignored by master gain</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TrackFX_SetEQParam">TrackFX_SetEQParam</a></td><td> new bandtypes added: bandpass(6)</td></tr>
+	</table>
+
+	<h4><a id="Reaper 6.28"></a><a href="#Reaper 6.28">^ Reaper 6.28:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#TimeMap_GetMetronomePattern">TimeMap_GetMetronomePattern</a></td><td> supports new pattern-schemes, returning the current pattern including beat types and triples representations; supports setting of patterns</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="Reaper_Config_Variables_Changes">Reaper Config Variables Changes</a><br></h3>
+  
+
+	<h4><a id="Reaper 7.40"></a><a href="#Reaper 7.40">^ Reaper 7.40:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Config_Variables.html#projrenderstems">projrenderstems</a></td><td> got new settings &4096=render razor edits, &8192=pre-fader stems (not if via master), &16384=only stem channels sent to parent, &32768=preserve source metadata if possible, &(1<<16)=preserve source start offset if possible, &(2<<16)=preserve source media sample rate if possible, &(4<<16)=if rendering selected items or razor edits, render as a single file, &(8<<16)=parallel render via master</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="SWS_API_Changes">SWS API Changes</a><br></h3>
+  
+
+	<h4><a id="SWS 2.14.0.4"></a><a href="#SWS 2.14.0.4">^ SWS 2.14.0.4:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#BR_GetMouseCursorContext_EnvelopeEx">BR_GetMouseCursorContext_EnvelopeEx</a></td><td> added to API</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_SetTcpScroll">CF_SetTcpScroll</a></td><td> added to API</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.14.0.3"></a><a href="#SWS 2.14.0.3">^ SWS 2.14.0.3:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#BR_Win32_GetWindowText">BR_Win32_GetWindowText</a></td><td> on CPP and Python, parameters textOut are textOutNeedBig now</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.14.0.2"></a><a href="#SWS 2.14.0.2">^ SWS 2.14.0.2:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_NormalizeUTF8">CF_NormalizeUTF8</a></td><td> limited functionality under Windows XP</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.14.0.1"></a><a href="#SWS 2.14.0.1">^ SWS 2.14.0.1:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_SendActionShortcut">CF_SendActionShortcut</a></td><td> added to sws</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.14.0.0"></a><a href="#SWS 2.14.0.0">^ SWS 2.14.0.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_NormalizeUTF8">CF_NormalizeUTF8</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_PCM_Source_SetSectionInfo">CF_PCM_Source_SetSectionInfo</a></td><td> added new parameter fadeIn</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_GetOutputTrack">CF_Preview_GetOutputTrack</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_SelectTakeFX">CF_SelectTakeFX</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#JB_GetSWSExtraProjectNotes">JB_GetSWSExtraProjectNotes</a></td><td> added to sws</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#JB_SetSWSExtraProjectNotes">JB_SetSWSExtraProjectNotes</a></td><td> added to sws</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_GetThemeDefaultTCPHeights">NF_GetThemeDefaultTCPHeights</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SNM_GetIntConfigVarEx">SNM_GetIntConfigVarEx</a></td><td> added to sws</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SNM_GetLongConfigVarEx">SNM_GetLongConfigVarEx</a></td><td> added to sws</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#SNM_SetIntConfigVarEx">SNM_SetIntConfigVarEx</a></td><td> added to sws</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.13.2.0"></a><a href="#SWS 2.13.2.0">^ SWS 2.13.2.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_CreatePreview">CF_CreatePreview</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_PCM_Source_SetSectionInfo">CF_PCM_Source_SetSectionInfo</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_GetPeak">CF_Preview_GetPeak</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_GetValue">CF_Preview_GetValue</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_Play">CF_Preview_Play</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_SetOutputTrack">CF_Preview_SetOutputTrack</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_SetValue">CF_Preview_SetValue</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_Stop">CF_Preview_Stop</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_Preview_StopAll">CF_Preview_StopAll</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_Base64_Decode">NF_Base64_Decode</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_Base64_Encode">NF_Base64_Encode</a></td><td> added to SWS</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_ScrollHorizontallyByPercentage">NF_ScrollHorizontallyByPercentage</a></td><td> added to SWS</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.13.1.0"></a><a href="#SWS 2.13.1.0">^ SWS 2.13.1.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_GetCustomColor">CF_GetCustomColor</a></td><td> new function added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_SetCustomColor">CF_SetCustomColor</a></td><td> new function added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_DeleteTakeFromItem">NF_DeleteTakeFromItem</a></td><td> new function added</td></tr>
+	</table>
+
+	<h4><a id="SWS 2.13.0.0"></a><a href="#SWS 2.13.0.0">^ SWS 2.13.0.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#BR_TrackFX_GetFXModuleName">BR_TrackFX_GetFXModuleName</a></td><td> deprecated from now on</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#BR_Win32_WritePrivateProfileString">BR_Win32_WritePrivateProfileString</a></td><td> allows now deleting ini-entries, when passing an empty string as parameter</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#CF_EnumMediaSourceCues">CF_EnumMediaSourceCues</a></td><td> added new retval isChapter(Lua and EEL) or isChapterOut(CPP and Python)</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#NF_TakeFX_GetFXModuleName">NF_TakeFX_GetFXModuleName</a></td><td> function deprecated</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="JS_Extension_API_Changes">JS Extension API Changes</a><br></h3>
+  
+
+	<h4><a id="JS 1.301"></a><a href="#JS 1.301">^ JS 1.301:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#JS_ListView_GetItemState">JS_ListView_GetItemState</a></td><td> the bitmask-values 1 and 2 were switched in their meaning to focused(1) and selected(2); used to be the other way round</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#JS_ListView_SetItemState">JS_ListView_SetItemState</a></td><td> the bitmask-values 1 and 2 were switched in their meaning to focused(1) and selected(2); used to be the other way round</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaPack_API_Changes">ReaPack API Changes</a><br></h3>
+  
+
+	<h4><a id="ReaPack 1.2.4"></a><a href="#ReaPack 1.2.4">^ ReaPack 1.2.4:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#ReaPack_GetEntryInfo">ReaPack_GetEntryInfo(ReaPack)</a></td><td> retval pinned changed from boolean to integer and renamed flag; supports now bleeding edge-flag</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaImGui_API_Changes">ReaImGui API Changes</a><br></h3>
+  </div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="Osara_API_Changes">Osara API Changes</a><br></h3>
+  
+
+	<h4><a id="Osara 2024"></a><a href="#Osara 2024">^ Osara 2024:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#osara_getVersion">osara_getVersion</a></td><td> added to API</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaBlink_API_Changes">ReaBlink API Changes</a><br></h3>
+  
+
+	<h4><a id="ReaBlink 0.5.0"></a><a href="#ReaBlink 0.5.0">^ ReaBlink 0.5.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Blink_SetPuppet">Blink_SetPuppet(Blink)</a></td><td> added to API</td></tr>
+	</table>
+
+	<h4><a id="ReaBlink 0.4.4"></a><a href="#ReaBlink 0.4.4">^ ReaBlink 0.4.4:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Blink_SetCaptureTransportCommands">Blink_SetCaptureTransportCommands(Blink)</a></td><td> updated documentation</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaLLM_API_Changes">ReaLLM API Changes</a><br></h3>
+  </div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaFab_API_Changes">ReaFab API Changes</a><br></h3>
+  
+
+	<h4><a id="ReaFab 0.3.10"></a><a href="#ReaFab 0.3.10">^ ReaFab 0.3.10:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Fab_Clear">Fab_Clear</a></td><td> added as new function</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Fab_Do">Fab_Do</a></td><td> added as new function</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Fab_Dump">Fab_Dump</a></td><td> added as new function</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Fab_Get">Fab_Get</a></td><td> added as new function</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="Reaper_Api_Documentation.html#Fab_Map">Fab_Map</a></td><td> added as new function</td></tr>
+	</table></div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaMCULive_API_Changes">ReaMCULive API Changes</a><br></h3>
+  </div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="PeloReaper_API_Changes">PeloReaper API Changes</a><br></h3>
+  </div>
+<hr width="80%">
+  
+  <div style="width:80%; padding-left:14%;">
+  <h3><a id="ReaGirl_API_Changes">ReaGirl API Changes</a><br></h3>
+  
+
+	<h4><a id="ReaGirl 1.4"></a><a href="#ReaGirl 1.4">^ ReaGirl 1.4:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#AutoPosition_SetNextUIElementAtPosition">AutoPosition_SetNextUIElementAtPosition</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_LinkToIniValue">Checkbox_LinkToIniValue</a></td><td> fixed datatype of "default" to string, as the docs mentioned</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Color_GetSet">Color_GetSet</a></td><td> added setting colors for dark and bright mode</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DarkMode_Get">DarkMode_Get</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DarkMode_Toggle">DarkMode_Toggle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_IsAnyReaGirlGuiHovered">Ext_IsAnyReaGirlGuiHovered</a></td><td> returns now the hovered gui-script-instance-guid as second return value</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_AtEnter">Gui_AtEnter</a></td><td> RunFunction gets now the currently focused ui-element's element_id as first parameter passed over</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_Label_Background_Width">Gui_Label_Background_Width</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_Manage">Gui_Manage</a></td><td> first tabbing will now focus the first, non-decorative ui-element, not the first existing; mouseclicks makes currently shown tooltip disappear</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetDecorative">Image_GetDecorative</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_SetDecorative">Image_SetDecorative</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Settings_Global_GetSet">Settings_Global_GetSet</a></td><td> added new option DarkMode; limited Scaling_Override to maximum of 4x</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToIniValue">Slider_LinkToIniValue</a></td><td> fixed docs for parameter default, which is supposed to be number</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_SetBackdropDimensions">Tabs_SetBackdropDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_SetUIElementsForTab">Tabs_SetUIElementsForTab</a></td><td> retains scroll-position when setting ui-elements to the currently shown tab; optional parameter to prevent hiding old ui-elements</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_Find_By_Pattern">UI_Element_Find_By_Pattern</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetMeaningOfUIElement">UI_Element_GetSetMeaningOfUIElement</a></td><td> fixed bug, that getting the meaning without setting neeeded a "." in the parameter meaningOfUI_Element</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_SetCurrentScale">Window_SetCurrentScale</a></td><td> limited scaling to maximum of 4x due to api-limitations of Reaper</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.32"></a><a href="#ReaGirl 1.32">^ ReaGirl 1.32:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_Add">Button_Add</a></td><td> added new parameters mode, width and height</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetSelectedText">Inputbox_GetSelectedText</a></td><td> added new return-value selection_length; documented retvals selection_startoffset and selection_endoffset</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetTextLength">Inputbox_GetTextLength</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetCursorOffset">Inputbox_SetCursorOffset</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetSelectedText">Inputbox_SetSelectedText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetText">Inputbox_SetText</a></td><td> added new parameters insert_at_offset and replace_until_offset</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_Add">Label_Add</a></td><td> added new parameter font_size</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_CetColor">Label_CetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetColor">Label_SetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Settings_Global_GetSet">Settings_Global_GetSet</a></td><td> added new option Debug_Show_Gui_And_UI_Names, Window_Dragging; returns now nil in case of an error</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetDimension">UI_Element_GetDimension</a></td><td> added to ReaGirl</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.31"></a><a href="#ReaGirl 1.31">^ ReaGirl 1.31:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetExtState">UI_Element_GetSetExtState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetIdentifier">UI_Element_GetSetIdentifier</a></td><td> added to ReaGirl</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.3"></a><a href="#ReaGirl 1.3">^ ReaGirl 1.3:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Burgermenu_Add">Burgermenu_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_Add">Button_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_GetEdgeStyle">Button_GetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_SetEdgeStyle">Button_SetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_Add">Checkbox_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_Add">ColorRectangle_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Color_GetSet">Color_GetSet</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_Add">DropDownMenu_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_GetSelectedMenuItem">DropDownMenu_GetSelectedMenuItem</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_SetSelectedMenuItem">DropDownMenu_SetSelectedMenuItem</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_SendEvent">Ext_SendEvent</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_SendEventByID">Ext_SendEventByID</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_Close">Ext_Window_Close</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_Add">Image_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetDropShadow">Image_GetDropShadow</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_SetDropShadow">Image_SetDropShadow</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_Add">Inputbox_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetTextSuggestions">Inputbox_GetTextSuggestions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetTextSuggestions">Inputbox_SetTextSuggestions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_Add">Label_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_Add">Meter_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_GetLink">Meter_GetLink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_GetMode">Meter_GetMode</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_GetOptions">Meter_GetOptions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_GetPeak">Meter_GetPeak</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_GetScreenreaderOptions">Meter_GetScreenreaderOptions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_LinkToHWInput">Meter_LinkToHWInput</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_LinkToTrack">Meter_LinkToTrack</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_SetMode">Meter_SetMode</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_SetOptions">Meter_SetOptions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_SetPeak">Meter_SetPeak</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_SetScreenreaderOptions">Meter_SetScreenreaderOptions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Meter_Unlink">Meter_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Settings_Global_GetSet">Settings_Global_GetSet</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_Add">Slider_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToDoubleConfigVar">Slider_LinkToDoubleConfigVar</a></td><td> new parameter "factor" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToExtstate">Slider_LinkToExtstate</a></td><td> new parameter "factor" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToIniValue">Slider_LinkToIniValue</a></td><td> new parameter "factor" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToIntConfigVar">Slider_LinkToIntConfigVar</a></td><td> new parameter "factor" added</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_Add">Tabs_Add</a></td><td> added new parameter unique_id for a unique identifier</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_Add">ToolbarButton_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_GetColor">ToolbarButton_GetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_GetDropShadow">ToolbarButton_GetDropShadow</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_GetEdgeStyle">ToolbarButton_GetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_GetRadius">ToolbarButton_GetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_GetState">ToolbarButton_GetState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_LinkToExtstate">ToolbarButton_LinkToExtstate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_LinkToIniValue">ToolbarButton_LinkToIniValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_LinkToIntConfigVar">ToolbarButton_LinkToIntConfigVar</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_LinkToIntConfigVarBit">ToolbarButton_LinkToIntConfigVarBit</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_LinkToToggleState">ToolbarButton_LinkToToggleState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_SetColor">ToolbarButton_SetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_SetDropShadow">ToolbarButton_SetDropShadow</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_SetEdgeStyle">ToolbarButton_SetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_SetRadius">ToolbarButton_SetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_SetState">ToolbarButton_SetState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ToolbarButton_Unlink">ToolbarButton_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_DragOnEmptyArea">Window_DragOnEmptyArea</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_SetBorderless">Window_SetBorderless</a></td><td> added to ReaGirl</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.2"></a><a href="#ReaGirl 1.2">^ ReaGirl 1.2:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Burgermenu_Add">Burgermenu_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Burgermenu_GetMenu">Burgermenu_GetMenu</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Burgermenu_SetMenu">Burgermenu_SetMenu</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_Add">ColorRectangle_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_GetColor">ColorRectangle_GetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_GetEdgeStyle">ColorRectangle_GetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_GetRadius">ColorRectangle_GetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_SetColor">ColorRectangle_SetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_SetEdgeStyle">ColorRectangle_SetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ColorRectangle_SetRadius">ColorRectangle_SetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_Add">DecorRectangle_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_GetColor">DecorRectangle_GetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_GetEdgeStyle">DecorRectangle_GetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_GetRadius">DecorRectangle_GetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_SetColor">DecorRectangle_SetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_SetEdgeStyle">DecorRectangle_SetEdgeStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DecorRectangle_SetRadius">DecorRectangle_SetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_GetProcessTime">Ext_Window_GetProcessTime</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_GetSetStickyOffset">Gui_GetSetStickyOffset</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetAutoUpdate">Image_GetAutoUpdate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_SetAutoUpdate">Image_SetAutoUpdate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Menu_GetEntryName">Menu_GetEntryName</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetSticky">UI_Element_GetSetSticky</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSet_ContextMenu">UI_Element_GetSet_ContextMenu</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_GetHWND">Window_GetHWND</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_GetScrollOffset">Window_GetScrollOffset</a></td><td> added to ReaGirl</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.1"></a><a href="#ReaGirl 1.1">^ ReaGirl 1.1:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_LinkToConfigVar">Checkbox_LinkToConfigVar</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_LinkToExtstate">Checkbox_LinkToExtstate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_LinkToIniValue">Checkbox_LinkToIniValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_LinkToToggleState">Checkbox_LinkToToggleState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_Unlink">Checkbox_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Color_EnumerateNames">Color_EnumerateNames</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Color_GetColorValuesByName">Color_GetColorValuesByName</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Color_GetName">Color_GetName</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_LinkToExtstate">DropDownMenu_LinkToExtstate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_LinkToIniValue">DropDownMenu_LinkToIniValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_Unlink">DropDownMenu_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_IsAnyReaGirlGuiHovered">Ext_IsAnyReaGirlGuiHovered</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_UI_Element_GetHovered">Ext_UI_Element_GetHovered</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_Focus">Ext_Window_Focus</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_GetInstances">Ext_Window_GetInstances</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_SetState">Ext_Window_SetState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_GetCurrentScriptInstance">Gui_GetCurrentScriptInstance</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_Manage">Gui_Manage</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_LinkToConfigVar">Inputbox_LinkToConfigVar</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_LinkToExtstate">Inputbox_LinkToExtstate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_LinkToIniValue">Inputbox_LinkToIniValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_Unlink">Inputbox_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetLabelText">Label_GetLabelText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToDoubleConfigVar">Slider_LinkToDoubleConfigVar</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToExtstate">Slider_LinkToExtstate</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToIniValue">Slider_LinkToIniValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_LinkToIntConfigVar">Slider_LinkToIntConfigVar</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_Unlink">Slider_Unlink</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_ResizedFunc">Window_ResizedFunc</a></td><td> added to ReaGirl</td></tr>
+	</table>
+
+	<h4><a id="ReaGirl 1.0"></a><a href="#ReaGirl 1.0">^ ReaGirl 1.0:</a></h4>
+	<table style="padding-left:4%; margin-top:-1.5%;" width="100%" border="0">
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#AutoPosition_SetNextUIElementRelativeTo">AutoPosition_SetNextUIElementRelativeTo</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Background_GetSetColor">Background_GetSetColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Base64_Decoder">Base64_Decoder</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Base64_Encoder">Base64_Encoder</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_Add">Button_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_GetDisabled">Button_GetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_GetRadius">Button_GetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_SetDisabled">Button_SetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Button_SetRadius">Button_SetRadius</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_Add">Checkbox_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_GetCheckState">Checkbox_GetCheckState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_GetDisabled">Checkbox_GetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_SetCheckState">Checkbox_SetCheckState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Checkbox_SetDisabled">Checkbox_SetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_Add">DropDownMenu_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_GetDimensions">DropDownMenu_GetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_GetDisabled">DropDownMenu_GetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_GetMenuItems">DropDownMenu_GetMenuItems</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_SetDimensions">DropDownMenu_SetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_SetDisabled">DropDownMenu_SetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#DropDownMenu_SetMenuItems">DropDownMenu_SetMenuItems</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Tab_SetSelected">Ext_Tab_SetSelected</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_GetState">Ext_Window_GetState</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_IsOpen">Ext_Window_IsOpen</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Ext_Window_ResetToDefault">Ext_Window_ResetToDefault</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#GetVersion">GetVersion</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_AtExit">Gui_AtExit</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_Close">Gui_Close</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_ForceRefresh">Gui_ForceRefresh</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_GetBoundaries">Gui_GetBoundaries</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_IsOpen">Gui_IsOpen</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_New">Gui_New</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_Open">Gui_Open</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_PreventCloseViaEscForOneCycle">Gui_PreventCloseViaEscForOneCycle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_PreventEnterForOneCycle">Gui_PreventEnterForOneCycle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Gui_PreventScrollingForOneCycle">Gui_PreventScrollingForOneCycle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_Add">Image_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_ClearToColor">Image_ClearToColor</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetDimensions">Image_GetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetDraggable">Image_GetDraggable</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_GetImageFilename">Image_GetImageFilename</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_KeepAspectRatio">Image_KeepAspectRatio</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_Load">Image_Load</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_ReloadImage_Scaled">Image_ReloadImage_Scaled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_SetDimensions">Image_SetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Image_SetDraggable">Image_SetDraggable</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_Add">Inputbox_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetCursorOffset">Inputbox_GetCursorOffset</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetDisabled">Inputbox_GetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetPassword">Inputbox_GetPassword</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetSelectedText">Inputbox_GetSelectedText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_GetText">Inputbox_GetText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetDisabled">Inputbox_SetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetEmptyText">Inputbox_SetEmptyText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetPassword">Inputbox_SetPassword</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Inputbox_SetText">Inputbox_SetText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#IsValidGuid">IsValidGuid</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_Add">Label_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_AutoBackdrop">Label_AutoBackdrop</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetAlignement">Label_GetAlignement</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetBackdrop">Label_GetBackdrop</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetDraggable">Label_GetDraggable</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetFontSize">Label_GetFontSize</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_GetStyle">Label_GetStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetAlignment">Label_SetAlignment</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetBackdrop">Label_SetBackdrop</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetDraggable">Label_SetDraggable</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetFontSize">Label_SetFontSize</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetLabelText">Label_SetLabelText</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Label_SetStyle">Label_SetStyle</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Mouse_GetCap">Mouse_GetCap</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#NextLine">NextLine</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ReserveImageBuffer">ReserveImageBuffer</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ResizeImageKeepAspectRatio">ResizeImageKeepAspectRatio</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#ScreenReader_SendMessage">ScreenReader_SendMessage</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_Add">Slider_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetDefaultValue">Slider_GetDefaultValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetDimensions">Slider_GetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetDisabled">Slider_GetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetEndValue">Slider_GetEndValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetStartValue">Slider_GetStartValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_GetValue">Slider_GetValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_ResetToDefaultValue">Slider_ResetToDefaultValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetDefaultValue">Slider_SetDefaultValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetDimensions">Slider_SetDimensions</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetDisabled">Slider_SetDisabled</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetEndValue">Slider_SetEndValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetStartValue">Slider_SetStartValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Slider_SetValue">Slider_SetValue</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_Add">Tabs_Add</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_GetSelected">Tabs_GetSelected</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_SetSelected">Tabs_SetSelected</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Tabs_SetUIElementsForTab">Tabs_SetUIElementsForTab</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetFocusRect">UI_Element_GetFocusRect</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetFocused">UI_Element_GetFocused</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetHovered">UI_Element_GetHovered</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetCaption">UI_Element_GetSetCaption</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetMeaningOfUIElement">UI_Element_GetSetMeaningOfUIElement</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetPosition">UI_Element_GetSetPosition</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetRunFunction">UI_Element_GetSetRunFunction</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSetVisibility">UI_Element_GetSetVisibility</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetSet_DropZoneFunction">UI_Element_GetSet_DropZoneFunction</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_GetType">UI_Element_GetType</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_IsElementAtMousePosition">UI_Element_IsElementAtMousePosition</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_Last_Element_Current_Position">UI_Element_Last_Element_Current_Position</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_Remove">UI_Element_Remove</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_SetFocusRect">UI_Element_SetFocusRect</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_SetFocused">UI_Element_SetFocused</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Element_SetHiddenFromTable">UI_Element_SetHiddenFromTable</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#UI_Elements_OutsideWindow">UI_Elements_OutsideWindow</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_ForceSize_Maximum">Window_ForceSize_Maximum</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_ForceSize_Minimum">Window_ForceSize_Minimum</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_GetCurrentScale">Window_GetCurrentScale</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_SetCurrentScale">Window_SetCurrentScale</a></td><td> added to ReaGirl</td></tr>
+		<tr><td width="25%" style="vertical-align:top;"><a href="ReaGirl_Functions.html#Window_SetFocus">Window_SetFocus</a></td><td> added to ReaGirl</td></tr>
+	</table></div>
+<hr width="80%"></body></html>

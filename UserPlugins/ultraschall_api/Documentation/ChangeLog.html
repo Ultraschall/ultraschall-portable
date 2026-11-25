@@ -15,7 +15,8 @@
                 <a href="US_Api_Functions.html"><img style="position: absolute; left:4.2%; width:11%;" src="gfx/US_Button.png" alt="Ultraschall Internals Documentation"></a>  
                 <a href="Reaper_Api_Documentation.html"><img style="position: absolute; left:15.2%; width:8.7%;" src="gfx/Reaper_Button_Un.png" alt="Reaper Internals Documentation"></a>
                 <a href="ReaGirl_Functions.html"><img style="position: absolute; left:23.95%; width:8.7%;" src="gfx/ReaGirl_Button_Un.png" alt="ReaGirl Documentation"></a>
-                <a href="Downloads.html"><img style="position:absolute; left:74.4%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+                <a href="Downloads.html"><img style="position:absolute; left:66.1%; width:6.9%;" src="gfx/Downloads_Un.png" alt="Downloads"></a>
+                <a href="API_ChangeLog.html"><img style="position:absolute; left:73%; width:8.3%;" src="gfx/API_Changelog_un.png" alt="Changelog of API"></a>
                 <a href="ChangeLog.html"><img style="position:absolute; left:81.3%; width:6.9%;" src="gfx/Changelog_Un.png" alt="Changelog of documentation"></a>
                 <a href="Impressum.html"><img style="position:absolute; left:88.2%; width:6.9%;" src="gfx/Impressum_Un.png" alt="Impressum and Contact"></a>
                 <div style="padding-top:2.5%">
@@ -35,26 +36,35 @@
 <p>Add Contentmarkers, like cntm<em>X</em>position - position of the content cntm<em>X</em>mimetype - the type of the content(mp3, mp4, gif, jpg, png are allowed) cntm<em>X</em>description - the description of the marker cntm<em>X</em>content - the binary content of the marker(Base64) cntm<em>X</em>license - the license of the content cntm<em>X</em>author - the author of the content cntm<em>X</em>url - the url, where the content has been gotten from Contentmarkers allow embedding other content into a podcast, that can optionally be played. Chapterimages can be stored that way, but also other media types, which is more flexible than ID3-chapter-images.</p>
 <p>Chapter images aus chap_-Attributen rausnehmen. Das sollen Content Marker übernehmen.</p>
 <h2>Ultraschall Framework - Changelog</h2>
-<h3>5.33 - "Take That - Relight my Fire" - XX of XXXX XXXX</h3>
+<h3>5.4 - "Take That - Relight my Fire" - XX of XXXX XXXX</h3>
 <p>Has now 1944 functions, with X new ones</p>
 <p><strong>new in this release:</strong></p>
-<p>TODO: - When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames. - ReaGirl on Retina-Macs: - Fensterposition wird nicht korrekt gemerkt, wenn remember window-position auf true gestellt ist. Die Fenster wandern Stück für Stück nach oben. Vermutung: beim Speichern der Fensterposition vergessen wir auf dem Mac die Höhe des Fensters von der Y-position abzuziehen, so dass es da zu nem Offset kommt. Note: wird die X-Koordinate auch korrekt berechnet? Muss ich da auch was ändern, weil die Retina-Fenster in der Größe nochmal angepasst werden oder läuft das korrekt -&gt; Testen und fixen evtl. - Bei Window_Open x=nil und y=nil wird das Fenster nicht sauber positioniert in der Mitte auf der y-Position. Als ob da was falsch kalkuliert wird. Vermutung: ich positioniere die y-Position korrekt VOR der Mac-Y-Koordinatenanpassung. Dadurch wandert das Fenster nach oben. Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss. ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert.</p>
-<h4>New features in 5.33</h4>
+<p>TODO: - When rendering without importing audio, the audio is added and then removed, which seems to create undo-points. Fix this by undoing instead of removing the tracks after you got the filenames. - ReaGirl on Retina-Macs: - Fensterposition wird nicht korrekt gemerkt, wenn remember window-position auf true gestellt ist. Die Fenster wandern Stück für Stück nach oben. Vermutung: beim Speichern der Fensterposition vergessen wir auf dem Mac die Höhe des Fensters von der Y-position abzuziehen, so dass es da zu nem Offset kommt. Note: wird die X-Koordinate auch korrekt berechnet? Muss ich da auch was ändern, weil die Retina-Fenster in der Größe nochmal angepasst werden oder läuft das korrekt -&gt; Testen und fixen evtl. - Bei Window<em>Open x=nil und y=nil wird das Fenster nicht sauber positioniert in der Mitte auf der y-Position. Als ob da was falsch kalkuliert wird. Vermutung: ich positioniere die y-Position korrekt VOR der Mac-Y-Koordinatenanpassung. Dadurch wandert das Fenster nach oben. Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss. ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert. - Script: ultraschall</em>developertool<em>Create</em>New<em>Script</em>With<em>Dialog.lua stoppt mit ner Nil-Fehlermeldung, wenn SWS&amp;JS-Extensions nicht installiert sind, obwohl es nach "Kein SWS/JS-Extension" stoppen sollte. - Füge noch die Option für ReaImGui-Shims hinzu. - ReaGirl: drop down menü für Toobar-Buttons: sprich, am rechten Rand gibts noch ne Erweiterung mit nem DropDownMenü, das es ermöglich zusätzliche Optionen auszuwählen. Brauchen wir für den Aufnahmebutton im Transportfeld, so dass man beim normalen Aufnahmebutton-Bereich klicken ne normale Aufnahme startet und wenn man am rechten Rand klickt, bekommt man zur Auswahl normale Aufnahme, Ripple Insert, preview Recording als Aufnahmemodi. Vielleicht sollten wir dann die Buttongrafik enstsprechend ändern, dass sie anzeigt, welcher Modus grad ausgewählt ist. Das Tooltip muss dann erklären, welche Modi es gibt und wie man sie wechselt. Wichtig! Der Dropdownbereich kommt zusätzlich an den rechten Rand, so dass der Button nicht mehr quadratisch ist sondern breiter, damit genug Klickfläche im Button bleibt. - ReaGirl: Man kann Farben nicht setzen, bevor man die Gui-Manage-Funktion nutzt, weil der Dark/Bright-Mode check alles überschreibt. Sprich: man ist gebunden an die Farben, die das Theme setzt, was nicht sein sollte. Ich könnte ein "Color-Override" machen für gesetzte Farben und nur den Rest umändern, aber das könnte sich farblich beißen mit Guis. Oder ich schalte Dark/Bright-Mode aus, sobald ne Farbe gesetzt wurde, aber dann gibts nicht mehr die Möglichkeit ein Theme immer zu setzen von Userseite aus. - ReaGirl: linked Funktionen sollten optional erlauben, bei wechsel des States die run-function zu triggern - ReaGirl: Sometimes, Labels and buttons get added multiple times(see Ultraschall Settings Dialog for elements with ID "label</em>interfaces<em>helptext" "label</em>devices2" "interface1" "interface<em>button1" "interface2" "interface</em>button2") - GetUSExternalState findet reaper.GetResourcePath().."/ultraschall-devices.ini" nicht aber "ultraschall-devices.ini", obwohl gleiches Verzeichnis!</p>
+<h4>New features in 5.4</h4>
 <ul>
-<li>Actions: ShowActionList - shows the actionlist and allows setting the filter</li>
+<li>Actions: ShowActionList - shows the actionlist and allows setting the filter<br />
+</li>
+<li>Docs: API Changelog - added changelog for API-changes in extensions and ReaGirl</li>
 <li>ReaGirl: AutoPosition_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position</li>
-<li>StreamDeck: StreamDeck_GetActions - only relevant for Ultraschall: returns the actions associated with shortcuts StreamDeckButton<em>001 to StreamDeckButton</em>255</li>
-<li>StreamDeck: StreamDeck_GetSet_Parameters - only relevant for Ultraschall: gets/sets a parameter of a certain StreamDeckButton-shortcut</li>
-<li>StreamDeck: StreamDeck_GetAllParametersForThisScript - only relevant for Ultraschall; gets all parameters stored for a certain StreamDeckButton-shortcut that ran the current script</li>
+<li>ReaGirl: DarkMode_Get - gets whether this current gui is currently in dark mode or bright mode</li>
+<li>ReaGirl: DarkMode_Toggle - toggles ReaGirl between dark mode and bright mode and ReaGirl's preferences</li>
 </ul>
-<h4>Changes from 5.32 to 5.33</h4>
+<h4>Changes from 5.32 to 5.4</h4>
 <ul>
+<li>Developer Tool: Create_New_Script_With_Dialog - fixed various bugs, should work now much smoother</li>
 <li>HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -&gt; fixed</li>
 <li>MediaItems: InsertMediaItemFromFile - length=-1 didn't set the edit-cursor to the end of the inserted item; retval endposition was only returning length of inserted item, added missing info to the docs; when edit-cursor=2 and offset was set, the position wasn't at the end of the item -&gt; fixed</li>
+<li>MediaItem: RippleCut - didn't move markers that were at the exact endposition -&gt; fixed</li>
 <li>MediaItem_Takes: GetTakeSourcePosByProjectPos - created additional undo points -&gt; fixed</li>
-<li>ReaGirl: UI_Element_SetFocused - crashed, when Gui_Manage hasn't been used yet -&gt; fixed</li>
+<li>ReaGirl: Ext_IsAnyReaGirlGuiHovered - returns now the guid-script-instance of the hovered ReaGirl-gui-window</li>
+<li>ReaGirl: General - stored debug-information into reaper-exstate.ini -&gt; fixed<br />
+</li>
+<li>ReaGirl: General - fixed font-sizes and window sizes on Retina-Macs</li>
+<li>ReaGirl: Refresh - removed unneeded refreshes, which could cause flickering backshadow on images and toolbar-images</li>
+<li>ReaGirl: InputBoxes - doesn't run the run-function for enter, when using the inputbox with screenreader to avoid complications</li>
+<li>ReaGirl: Gui_AtEnter - the run-function gets now the element-id of the currently focused ui-element as first parameter</li>
 <li>ReaGirl: Gui\Open - stored window dimensions even when storing it was disabled(though didn't restore it) -&gt; fixed</li>
-<li>ReaGirl: General - stored debug-information into reaper-exstate.ini -&gt; fixed</li>
+<li>ReaGirl: UI_Element_SetFocused - crashed, when Gui_Manage hasn't been used yet -&gt; fixed</li>
 </ul>
 <hr />
 <h3>5.32 - "Birth Control - No Drugs" - 21st of September 2025</h3>

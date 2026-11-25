@@ -431,7 +431,7 @@ Chapter images aus chap_-Attributen rausnehmen. Das sollen Content Marker übern
 
 ## Ultraschall Framework - Changelog
 
-### 5.33 - "Take That - Relight my Fire" - XX of XXXX XXXX
+### 5.4 - "Take That - Relight my Fire" - XX of XXXX XXXX
 
 Has now 1944 functions, with X new ones
 
@@ -448,22 +448,49 @@ TODO:
     Was ich also vermutlich tun muss ist mir temporör zu merken, ob die Y-Koordinate=nil ist und dann in der Mac-Retina-Weiche die Y-Position nochmal neu kalkulieren NACH
     der Rekalkulation des finalen Fensters. So dass die y-Position quasi nochmal nachaktualisiert werden muss.
     ZUM GLÜCK: haut die X-Koordinate sauber hin, die wird korrekt positioniert.
-  
-#### New features in 5.33  
-  - Actions: ShowActionList - shows the actionlist and allows setting the filter
-  - ReaGirl: AutoPosition\_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position
-  - StreamDeck: StreamDeck\_GetActions - only relevant for Ultraschall: returns the actions associated with shortcuts StreamDeckButton_001 to StreamDeckButton_255
-  - StreamDeck: StreamDeck\_GetSet_Parameters - only relevant for Ultraschall: gets/sets a parameter of a certain StreamDeckButton-shortcut
-  - StreamDeck: StreamDeck\_GetAllParametersForThisScript - only relevant for Ultraschall; gets all parameters stored for a certain StreamDeckButton-shortcut that ran the current script
-  
+  - Script: ultraschall_developertool_Create_New_Script_With_Dialog.lua stoppt mit ner Nil-Fehlermeldung, wenn SWS&JS-Extensions nicht installiert sind, obwohl es nach "Kein SWS/JS-Extension" stoppen sollte.
+      - Füge noch die Option für ReaImGui-Shims hinzu.
+  - ReaGirl: drop down menü für Toobar-Buttons: sprich, am rechten Rand gibts noch ne Erweiterung mit nem DropDownMenü, das es ermöglich zusätzliche Optionen auszuwählen.
+              Brauchen wir für den Aufnahmebutton im Transportfeld, so dass man beim normalen Aufnahmebutton-Bereich klicken ne normale Aufnahme startet und wenn man am rechten
+              Rand klickt, bekommt man zur Auswahl normale Aufnahme, Ripple Insert, preview Recording als Aufnahmemodi.
+              Vielleicht sollten wir dann die Buttongrafik enstsprechend ändern, dass sie anzeigt, welcher Modus grad ausgewählt ist.
+              Das Tooltip muss dann erklären, welche Modi es gibt und wie man sie wechselt.
+              Wichtig! Der Dropdownbereich kommt zusätzlich an den rechten Rand, so dass der Button nicht mehr quadratisch ist sondern breiter, damit genug Klickfläche im Button bleibt.
+  - ReaGirl: Man kann Farben nicht setzen, bevor man die Gui-Manage-Funktion nutzt, weil der Dark/Bright-Mode check alles überschreibt.
+             Sprich: man ist gebunden an die Farben, die das Theme setzt, was nicht sein sollte.
+             Ich könnte ein "Color-Override" machen für gesetzte Farben und nur den Rest umändern, aber das könnte sich farblich beißen mit Guis.
+             Oder ich schalte Dark/Bright-Mode aus, sobald ne Farbe gesetzt wurde, aber dann gibts nicht mehr die Möglichkeit ein Theme immer zu setzen von Userseite aus.
+  - ReaGirl: linked Funktionen sollten optional erlauben, bei wechsel des States die run-function zu triggern
+  - ReaGirl: Sometimes, Labels and buttons get added multiple times(see Ultraschall Settings Dialog for elements with ID
+                "label_interfaces_helptext"
+                "label_devices2"
+                "interface1"
+                "interface_button1"
+                "interface2"
+                "interface_button2")
+   - GetUSExternalState findet reaper.GetResourcePath().."/ultraschall-devices.ini" nicht aber "ultraschall-devices.ini", obwohl gleiches Verzeichnis!
 
-#### Changes from 5.32 to 5.33
+#### New features in 5.4  
+  - Actions: ShowActionList - shows the actionlist and allows setting the filter  
+  - Docs: API Changelog - added changelog for API-changes in extensions and ReaGirl
+  - ReaGirl: AutoPosition\_SetNextUIElementAtPosition - sets the next autopositioned ui-element at x,y-position
+  - ReaGirl: DarkMode\_Get - gets whether this current gui is currently in dark mode or bright mode
+  - ReaGirl: DarkMode\_Toggle - toggles ReaGirl between dark mode and bright mode and ReaGirl's preferences
+
+#### Changes from 5.32 to 5.4
+  - Developer Tool: Create\_New\_Script\_With\_Dialog - fixed various bugs, should work now much smoother
   - HelperFunctions: CompareStringWithAsciiValues - crashed, when string was 0-bytes long -> fixed
   - MediaItems: InsertMediaItemFromFile - length=-1 didn't set the edit-cursor to the end of the inserted item; retval endposition was only returning length of inserted item, added missing info to the docs; when edit-cursor=2 and offset was set, the position wasn't at the end of the item -> fixed
+  - MediaItem: RippleCut - didn't move markers that were at the exact endposition -> fixed
   - MediaItem\_Takes: GetTakeSourcePosByProjectPos - created additional undo points -> fixed
-  - ReaGirl: UI\_Element\_SetFocused - crashed, when Gui\_Manage hasn't been used yet -> fixed
+  - ReaGirl: Ext\_IsAnyReaGirlGuiHovered - returns now the guid-script-instance of the hovered ReaGirl-gui-window
+  - ReaGirl: General - stored debug-information into reaper-exstate.ini -> fixed  
+  - ReaGirl: General - fixed font-sizes and window sizes on Retina-Macs
+  - ReaGirl: Refresh - removed unneeded refreshes, which could cause flickering backshadow on images and toolbar-images
+  - ReaGirl: InputBoxes - doesn't run the run-function for enter, when using the inputbox with screenreader to avoid complications
+  - ReaGirl: Gui\_AtEnter - the run-function gets now the element-id of the currently focused ui-element as first parameter
   - ReaGirl: Gui\Open - stored window dimensions even when storing it was disabled(though didn't restore it) -> fixed
-  - ReaGirl: General - stored debug-information into reaper-exstate.ini -> fixed
+  - ReaGirl: UI\_Element\_SetFocused - crashed, when Gui\_Manage hasn't been used yet -> fixed
   
 ---
 

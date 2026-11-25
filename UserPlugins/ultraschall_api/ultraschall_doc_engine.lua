@@ -2635,7 +2635,7 @@ function ultraschall.Docs_GetAllUSDocBlocsFromFile(filename)
     Reaper=5.978
     Lua=5.3
   </requires>
-  <functioncall>integer found_usdocblocs, array all_found_usdocblocs = ultraschall.Docs_GetAllUSDocBlocsFromString(string filename)</functioncall>
+  <functioncall>integer found_usdocblocs, array all_found_usdocblocs = ultraschall.Docs_GetAllUSDocBlocsFromFile(string filename)</functioncall>
   <description>
     returns all US_DocBloc-elements from a file.
     

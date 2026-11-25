@@ -30,7 +30,7 @@ dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
 reaper.set_action_options(1)
 
 reagirl.Settings_Override=true
-dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
+--dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 
 function toboolean(value, default)
     -- converts a value to boolean, or returns nil, if not convertible
@@ -163,7 +163,7 @@ function SetUpNewGui()
   reagirl.NextLine()
   scaling_override=tonumber(reaper.GetExtState("ReaGirl", "scaling_override", value, true))
   if scaling_override==nil then scaling_override2=0 else scaling_override2=scaling_override end
-  tab1.slider_scale = reagirl.Slider_Add(nil, nil, 295, "Scale Override", 110,  "Set the default scaling-factor for all ReaGirl-Gui-windows; 0, scaling depends automatically on the scaling-factor in the prefs or the presence of Retina/HiDPI.", "", 0, 4, 1, 0, 0, ScaleOverride, "Scale Override Slider")
+  tab1.slider_scale = reagirl.Slider_Add(nil, nil, 295, "Scale Override", 110,  "Set the default scaling-factor for all ReaGirl-Gui-windows; 0, scaling depends automatically on the scaling-factor in the prefs or the presence of Retina/HiDPI.", "", 0, 8, 1, 0, 0, ScaleOverride, "Scale Override Slider")
   
   --reagirl.Slider_LinkToExtstate(tab1.highlighting, "ReaGirl", "scaling_override", 0, true, 1)
   reagirl.NextLine(15)
@@ -240,8 +240,6 @@ function SetUpNewGui()
   tab4.Label_Development=reagirl.Label_Add(nil, nil, "Development", "Settings for developers.", false, nil, "Development Label")
   reagirl.Label_SetBackdrop(tab4.Label_Development, 355, 85) -- set a backdrop around the next few labels
   
-  value = reagirl.UI_Element_GetSetExtState(tab4.Label_Development, true, "Tudel", "Loo")
-  
   reagirl.NextLine()
   tab4.checkbox_osara_debug_id = reagirl.Checkbox_Add(nil, nil, "Show screen reader messages in console", "Checking this will show the screen reader messages in the console for debugging purposes.", false, checkbox, "Show Screen Reader Messages In Console Checkbox")
   reagirl.Checkbox_LinkToExtstate(tab4.checkbox_osara_debug_id, "ReaGirl", "osara_debug", "", "true", false, true)  
@@ -284,7 +282,6 @@ function main()
   if reagirl.Key[1]==43 then reagirl.ReScale=reagirl.ReScale+1 end -- +
   if reagirl.Key[1]==45 then reagirl.ReScale=reagirl.ReScale-1 end -- -
   --]]
-  
   if B==true then
     reagirl.Elements.FocusedElement=i
     reagirl.Gui_ForceRefresh()
@@ -295,7 +292,6 @@ function main()
     reaper.SetExtState("ReaGirl", "scaling_override", scale_value, true)
   end
   old_scale_value=scale_value
-  
   
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end

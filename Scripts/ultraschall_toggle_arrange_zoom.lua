@@ -31,7 +31,9 @@ ZoomedInLevelDef=400              -- set this to the "zoom in"-level, you want t
                                   -- 0.007(max zoom out) to 1000000(max zoom in) is valid,
                                   -- 400 is recommended
 Zoomstate=ultraschall.GetUSExternalState("ultraschall_view","zoom_toggle_state")
-ZoomedInLevel=ultraschall.GetUSExternalState("ultraschall_view","zoomin_level")
+ZoomedInLevel=ultraschall.GetUSExternalState("ultraschall_settings_QuickZoomFactor","Value","ultraschall-settings.ini")
+--SLEM()
+--print2(ZoomedInLevel)
 ZoomedInLevel=tonumber(ZoomedInLevel)
 if ZoomedInLevel==-1 or ZoomedInLevel==nil then
   ZoomedInLevel=ZoomedInLevelDef

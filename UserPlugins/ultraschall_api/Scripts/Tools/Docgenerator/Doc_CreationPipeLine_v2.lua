@@ -57,6 +57,7 @@ FileA[#FileA+1]="Ultraschall_ApiDownloads_Generator.lua"
 FileA[#FileA+1]="Ultraschall_ConceptsDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_VideoProcessorDocConverter_v2.lua"
 FileA[#FileA+1]="Reaper_ReaScriptConverter_v2.lua"
+FileA[#FileA+1]="API_Changelog_Generator.lua"
 
 --FileA[#FileA+1]="Reaper_FileTypeDocConverter_v2.lua"
 dofile(ultraschall.Api_Path.."/Scripts/Tools/ultraschall_ModulerLoader_Generator.lua")

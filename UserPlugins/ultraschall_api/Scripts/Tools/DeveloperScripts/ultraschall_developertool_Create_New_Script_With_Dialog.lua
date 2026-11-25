@@ -4,6 +4,16 @@ dofile(reaper.GetResourcePath().."/UserPlugins/ultraschall_api.lua")
 -- 0. enable ReaGirl for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
 
+if reaper.BR_EnvAlloc==nil then
+  reaper.MB("SWS-extension not installed, please install via ReaPack from ReaTeam extensions-repository", "Error", 0)
+  return
+end
+
+if reaper.JS_Window_Find==nil then
+  reaper.MB("JS-extension not installed, please install via ReaPack from ReaTeam extensions-repository", "Error", 0)
+  return
+end
+
 reaper.set_action_options(1)
 
 -- check for required version; alter the version-number if necessary
@@ -49,9 +59,15 @@ function CreateScript()
   if us_api==true then us_api=1 else us_api=0 end
   reagirl_set=reagirl.Checkbox_GetCheckState(tab1.checkbox_add_reagirl)
   if reagirl_set==true then reagirl_set=2 else reagirl_set=0 end
-
+  
+  reaimguishims_set=reagirl.Checkbox_GetCheckState(tab1.checkbox_add_reaimgui_shims)
+  if reaimguishims_set==true then reaimguishims_set=4 else reaimguishims_set=0 end
+  
+  reaimguigfx2imgui_set=reagirl.Checkbox_GetCheckState(tab1.checkbox_add_reaimgui_gfx2imgui)
+  if reaimguigfx2imgui_set==true then reaimguigfx2imgui_set=8 else reaimguigfx2imgui_set=0 end
+  
   ultraschall.EditReaScript(filename,
-                            us_api+reagirl_set, 
+                            us_api+reagirl_set+reaimguishims_set+reaimguigfx2imgui_set, 
                             nil, 
                             x_pos, y_pos, width, height, showstate, watchlist_size, watchlist_size_row1, watchlist_size_row2, 
                             default_script_content)
@@ -64,7 +80,7 @@ function CreateScript()
 end
 
 function Button(element_id)
-  if element_id==tab1.button_add or tab1.inputbox_choose_file then
+  if element_id==tab1.button_add or (element_id==tab1.inputbox_choose_file and reaper.osara_outputMessage==nil) then
     CreateScript()
   elseif element_id==tab1.button_choose_file then
     retval, filename = reaper.GetUserFileNameForRead(reaper.GetResourcePath().."/Scripts/", "Choose Script", "*.lua;*.py;*.eel")
@@ -72,7 +88,7 @@ function Button(element_id)
       reagirl.Inputbox_SetText(tab1.inputbox_choose_file, filename)
     end
   end
-  reaper.SetExtState("Ultraschall-API", "CreateNewScriptDialog_Filename", filename, true)
+  --reaper.SetExtState("Ultraschall-API", "CreateNewScriptDialog_Filename", filename, true)
 end
 
 -- 2. start a new gui
@@ -80,7 +96,7 @@ reagirl.Gui_New()
 
 -- 3. add the ui-elements and set their attributes
 tab1={}
-filename=reaper.GetExtState("Ultraschall-API", "CreateNewScriptDialog_Filename", filename, true)
+filename=""--reaper.GetExtState("Ultraschall-API", "CreateNewScriptDialog_Filename", filename, true)
 tab1.inputbox_choose_file = reagirl.Inputbox_Add(nil, nil, 300, "Scriptname", 80, "The name of the script to be created.\nWill be created in scripts-folder.\nsubfolders are possible.\n\nWith wildcards, you can customize the filename, without having to type in stuff time and again.\n\n  \t$Date - the current date.\n  \t$Time - the current time.", filename, Button, UpdateText)
 --reagirl.NextLine()
 tab1.button_choose_file = reagirl.Button_Add(nil, nil, 0, 0, "Choose File", "Let's you choose an already existing scriptfile.", Button)
@@ -90,6 +106,10 @@ reagirl.NextLine()
 tab1.checkbox_add_ultraschall_api = reagirl.Checkbox_Add(100, nil, "Enable Ultraschall-API in new script", "Enables Ultraschall-API to the new script.", true, CheckBox)
 reagirl.NextLine()
 tab1.checkbox_add_reagirl = reagirl.Checkbox_Add(100, nil, "Enable ReaGirl in new script", "Adds the basic ReaGirl-structure to the new script.", false, CheckBox)
+reagirl.NextLine()
+tab1.checkbox_add_reaimgui_shims = reagirl.Checkbox_Add(100, nil, "Enable ReaImGui-shims into new script", "Adds the basic ReaImGui-shims to the new script.", false, CheckBox)
+reagirl.NextLine()
+tab1.checkbox_add_reaimgui_gfx2imgui = reagirl.Checkbox_Add(100, nil, "Enable ReaImGui-gfx2imgui-bridge in new script", "Adds the basic ReaimGui-gfx2imgui-bridge to the new script.", false, CheckBox)
 
 reagirl.NextLine(10)
 tab1.label_add_sections = reagirl.Label_Add(nil, nil, "Add to Section(s)", "Choose the sections to which you want to add the new script.", false, nil)
@@ -106,7 +126,13 @@ tab1.button_add = reagirl.Button_Add(-138, nil, 0, 0, "Create/Open Script", "Cre
 
 reagirl.Background_GetSetColor(true, 55, 55, 55)
 
-reagirl.Gui_AtEnter(CreateScript)
+function CheckForButton(element_id)
+  if element_id~=tab1.button_choose_file then
+    CreateScript()
+  end
+end
+
+reagirl.Gui_AtEnter(CheckForButton)
 
 -- 4. open the gui
 reagirl.Gui_Open("ReaGirl Testdialog #1", false, "Create new script", "A dialog that let's you create new scripts and associate them to specific sections.", nil, nil, nil, nil, nil)

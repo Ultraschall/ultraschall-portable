@@ -190,7 +190,7 @@ function ultraschall.GetApiVersion()
 </US_DocBloc>
 --]]
   local retval, BuildNumber = reaper.BR_Win32_GetPrivateProfileString("Ultraschall-Api-Build", "API-Build", "", ultraschall.Api_Path.."IniFiles/ultraschall_api.ini")
-  return 5033, "5.33","", "",  "\"-\"", "xx of xxxx xxxx", BuildNumber..".00"
+  return 504, "5.4","", "",  "\"-\"", "xx of xxxx xxxx", BuildNumber..".00"
 end
 
 --A,B,C,D,E,F,G,H,I=ultraschall.GetApiVersion()
@@ -2527,7 +2527,7 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
 <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">
   <slug>EditReaScript</slug>
   <requires>
-    Ultraschall=5.0
+    Ultraschall=5.4
     Reaper=7.03
     Lua=5.3
   </requires>
@@ -2545,9 +2545,10 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
     optional string filename - the filename of the new reascript-file to create(add .lua or .py or .eel to select the language).
                              - nil, opens the last ReaScript-file you opened with this function
     optional integer add_ultraschall_api_or_reagirl - 0 or false or nil, create a blank script
-                                           1 or true, add Ultraschall-API-call into the script(only in newly created ones!)
-                                           2, add basic ReaGirl-structure into the script(only in newly crated ones!)
-                                           3, add Ultraschall-API-functioncall and ReaGirl basic structure into the script
+                                           &1 or true, add Ultraschall-API-call into the script(only in newly created ones!)
+                                           &2, add basic ReaGirl-structure into the script(only in newly crated ones!)
+                                           &4, add ReaImGui-shims into script
+                                           &8, add ReaImGui-gfx2imgui-bridge into script
     optional integer add_to_actionlist_section - the section, into which you want to add the script
                                                - nil, don't add, only open the script in IDE
                                                - 0, Main
@@ -2582,6 +2583,7 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
   <tags>developer, edit, reascript, ide</tags>
 </US_DocBloc>
 ]]
+
   if filename~=nil and type(filename)~="string" then ultraschall.AddErrorMessage("EditReaScript", "filename", "must be a string", -1) return false end
   if x_pos~=nil and math.type(x_pos)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "x_pos", "must be nil or an integer", -2) return false end
   if y_pos~=nil and math.type(y_pos)~="integer" then ultraschall.AddErrorMessage("EditReaScript", "y_pos", "must be nil or an integer", -3) return false end
@@ -2626,7 +2628,7 @@ function ultraschall.EditReaScript(filename, add_ultraschall_api, add_to_actionl
       content=content..[[-- 0. enable ReaGirl for the script
 dofile(reaper.GetResourcePath().."/UserPlugins/reagirl.lua")
 -- check for required version; alter the version-number if necessary
-if reagirl.GetVersion()<]]..vers..[[ then reaper.MB("Needs ReaGirl v"..(]]..vers..[[).." to run", "Too old version", 2) return false end
+if reagirl.GetVersion()<]]..vers..[[ then reaper.MB("Needs ReaGirl v"..(]]..vers..[[).." to run", "Too old version", 0) return false end
 
 -- 1. add the run-functions for the ui-elements
 
@@ -2646,7 +2648,17 @@ function main()
 
   if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
 end
-main()]]
+main()
+
+]]
+    end
+    
+    if add_ultraschall_api&4==4 then
+      content=content.."dofile(reaper.GetResourcePath()..\"/Scripts/ReaTeam Extensions/API/imgui.lua\")\n\n"
+    end
+    
+    if add_ultraschall_api&8==8 then
+      content=content.."dofile(reaper.GetResourcePath()..\"/Scripts/ReaTeam Extensions/API/gfx2imgui.lua\")\n\n"
     end
     created_new_script=reaper.file_exists(filename)
     ultraschall.WriteValueToFile(filename, content)

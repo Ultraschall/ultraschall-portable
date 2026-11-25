@@ -9383,7 +9383,10 @@
            >&16384, Only render channels that are sent to parent
            >&32768, (Preserve) Metadata-checkbox
            >&65536, (Preserve) Start offset-checkbox(only with Selected media items as source)
-           >&524288, Parallel render
+           >&(1<<16)=preserve source start offset if possible
+           >&(2<<16)=preserve source media sample rate if possible
+           >&(4<<16)=if rendering selected items or razor edits, render as a single file
+           >&(8<<16)=parallel render via master
            
           Stored in reaper.ini under the same name in the section REAPER, when Save as default project settings has been clicked.  
       </description>  
@@ -9393,6 +9396,9 @@
       </chapter_context>
       <source_document>Reaper_Config_Variables.USDocML</source_document>
       <target_document>Reaper_Config_Variables</target_document>  
+        <changelog>
+          Reaper 7.40 - got new settings &4096=render razor edits, &8192=pre-fader stems (not if via master), &16384=only stem channels sent to parent, &32768=preserve source metadata if possible, &(1<<16)=preserve source start offset if possible, &(2<<16)=preserve source media sample rate if possible, &(4<<16)=if rendering selected items or razor edits, render as a single file, &(8<<16)=parallel render via master
+        </changelog>
     </US_DocBloc>  
 
     <US_DocBloc version="1.0" spok_lang="en" prog_lang="*">  

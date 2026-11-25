@@ -1,3 +1,4 @@
+--reaper.SetExtState("ReaGirl", "HoveredWindows", "", false)
 --[[
 ################################################################################
 # 
@@ -59,7 +60,7 @@
   
   tab1.label_styled=reagirl.Label_Add(nil, nil, "Styled label", "A styled label.", false, nil)
   reagirl.Label_SetStyle(tab1.label_styled, 7, 2, 0) -- set to inverted and italic
-
+  
   reagirl.NextLine()
   tab1.label_small=reagirl.Label_Add(nil, nil, "different", "Label with small font-size.", false, nil)
   reagirl.Label_SetFontSize(tab1.label_small, 10) -- set to small font-size
@@ -227,14 +228,17 @@
     -- a function that runs the gui-manage function in the background, so the gui is updated correctly
     reagirl.Gui_Manage()
     -- if the gui-window hasn't been closed, keep the script alive.
-    
     if reagirl.Gui_IsOpen()==true then reaper.defer(main) end
   end
 
   main()
+
+
 
 --reagirl.Shortcut_Add(0, 65, "TURTZ.", print2)
 --reagirl.Shortcut_Add(0, 66, "TURTZ2.", print2)
 --reagirl.Shortcut_Add(0, 67, "TURTZ3.", print2)
 --reagirl.ExportShortcutsToFile(reaper.GetResourcePath().."/ShortCutTest.ini", "Tudelu")
 --reagirl.ImportShortcutsFromFile(reaper.GetResourcePath().."/ShortCutTest.ini", "Tudelu")
+
+
